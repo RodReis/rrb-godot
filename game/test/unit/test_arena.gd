@@ -170,6 +170,23 @@ func test_baus_de_base_a_3u_um_do_outro() -> void:
 				assert_true(a.position.distance_to(b.position) >= 3.0, "%s/%s" % [a.name, b.name])
 
 
+func test_toda_agua_desenhada_tem_colisao_de_rio() -> void:
+	var river_at: Array[Vector3] = []
+	for node: Node in _arena.get_node("River").get_children():
+		river_at.append((node as Node3D).position)
+	var water := 0
+	for tile: Node in _arena.get_node("Tiles").get_children():
+		if not tile.scene_file_path.ends_with("hex_water.gltf"):
+			continue
+		water += 1
+		var at := (tile as Node3D).position
+		var covered := false
+		for p: Vector3 in river_at:
+			covered = covered or Vector2(p.x, p.z).distance_to(Vector2(at.x, at.z)) < 0.01
+		assert_true(covered, "agua sem colisao em %s" % at)
+	assert_eq(water, river_at.size())
+
+
 func test_dois_portoes_e_seis_moitas() -> void:
 	var teams: Array[int] = []
 	for node: Node in _arena.find_children("*", "StaticBody3D", true, false):

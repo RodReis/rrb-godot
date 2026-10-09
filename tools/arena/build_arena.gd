@@ -26,6 +26,8 @@ const BAND_HALF: float = 2.0
 ## fica a >= 0,77 u do eixo e a capsula (0,4 u) passa.
 const BRIDGE_HALF: float = 2.5
 const BRIDGE_CENTER: float = 15.556
+## Modelo da ponte (1,33 x 1,92 u) esticado para cobrir a faixa andavel sobre a coroa.
+const BRIDGE_MODEL_SCALE: Vector3 = Vector3(4.1, 1, 3.9)
 const RIVER_HEIGHT: float = 2.0
 
 # Cratera (SPEC §2): 8 pilares no raio 6 u, entradas de 4 u em 45/135/225/315.
@@ -209,7 +211,8 @@ func _build_floor(cells: Dictionary) -> void:
 	var tiles := _group("Tiles")
 	for key: Vector2i in cells:
 		var p: Vector2 = cells[key]
-		var model := "hex_water" if _is_river(p, false) else "hex_grass"
+		# Mesmo predicado da colisao: toda agua desenhada bloqueia; a ponte vira chao.
+		var model := "hex_water" if _is_river(p, true) else "hex_grass"
 		var tile := _instance(tiles, model, "T%d_%d" % [key.x, key.y])
 		tile.transform = Transform3D(Basis().scaled(Vector3.ONE * TILE_SCALE), Vector3(p.x, 0, p.y))
 
@@ -230,7 +233,7 @@ func _build_river(cells: Dictionary) -> void:
 	var bridges := _group("Bridges")
 	for flip: float in [1.0, -1.0]:
 		var bridge := _instance(bridges, "building_bridge_A", "Bridge%s" % _team_tag(flip))
-		var basis := Basis.looking_at(AXIS_A * flip).scaled(Vector3(3, 1, 3))
+		var basis := Basis.looking_at(AXIS_A * flip) * Basis.from_scale(BRIDGE_MODEL_SCALE)
 		bridge.transform = Transform3D(basis, AXIS_A * flip * BRIDGE_CENTER)
 
 
