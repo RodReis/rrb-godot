@@ -73,14 +73,16 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 |---|---|---|---|
 | **1** | 0 | 0 | Q1 |
 | **2** | 90 | 90 | Q1, E1 |
-| **3** | 140 | 230 | Q2, E1 |
-| **4** | 210 | 440 | Q2, E2 |
+| **3** | 135 | 225 | Q2, E1 |
+| **4** | 215 | 440 | Q2, E2 |
 | **5** | 300 | 740 | Q3, E2 |
 | **6** | 420 | 1160 | Q3, E2, R1 (Pico de Poder) |
 | **7** | 560 | 1720 | Q4, E2, R1 |
 | **8** | 720 | 2440 | Q4, E3, R1 |
 | **9** | 900 | 3340 | Q5, E3, R1 |
 | **10** | 1100 | 4440 | Q5, E3, R2 (Nível Máximo) |
+
+*Nível 3 em 225 XP (era 230) para o farm completo de uma base (§5.2) dar nível 3 — decisão do PI em 2026-10-09 (F9). Os demais acumulados não mudam.*
 
 ### 3.3 Regras de Catch-up e Experiência em PvP
 - **Multiplicador de Retardo (Catch-up):** Se $\text{Nível}_{\text{Jogador}} \le \text{Nível}_{\text{Adversário}} - 2$, todo ganho de XP de monstros e objetivos recebe bônus fixo de $+25\%$.
@@ -175,6 +177,18 @@ Os monstros não respawnam. A quantidade é limitada para forçar a disputa do c
 | **Esqueleto Mago** | 2 | 2 (ambos no centro) | Centro Contestado | 260 | 38 (Ranged 7u) | 1.5 s | 80 | Item Comum ou Raro |
 | **Golem de Pedra** | 3 | 2 (ambos no centro) | Centro Contestado | 680 | 50 (Melee AoE) | 1.6 s | 190 | Item Raro Garantido |
 | **Rei Esqueleto (Boss)** | Boss | 1 (surge em 3:30) | Centro Absoluto | 2400 | 75 (AoE + Knockback)| 1.4 s | 550 | 1 Item Épico Garantido |
+
+#### Comportamento dos monstros não-boss (decisão do PI em 2026-10-09, F9)
+| Parâmetro | Valor | Efeito |
+|---|---|---|
+| **Aggro** | $6.0\text{ u}$ | Monstro parado percebe o herói mais próximo nessa distância e passa a persegui-lo. |
+| **Leash** | $10.0\text{ u}$ do ponto de spawn | Passou disso, desiste, volta ao spawn e regenera o HP cheio. |
+| **Velocidade** | $4.0\text{ u/s}$ | Abaixo dos heróis (5,8 e 6,2): dá para fugir. |
+| **Alcance corpo a corpo** | $1.8\text{ u}$ | Esqueleto, Esqueleto Guerreiro e Golem golpeiam o alvo nesse alcance. |
+| **Área do Golem** | raio $2.5\text{ u}$ | O golpe acerta todos os heróis em volta do Golem. |
+| **Esqueleto Mago** | $7.0\text{ u}$, acerto instantâneo | Sem projétil: não é bloqueado pela Muralha do Cavaleiro. |
+
+Valores em `shared/data/monsters/*.tres` (`aggro_range`, `leash_range`, `move_speed`, `melee_range`, `area_radius`). O Rei Esqueleto (Boss) fica para o F11.
 
 ### 5.2 Alocação Teórica Máxima de XP na Fase 1
 - Farm Completo de uma Base: $(4 \times 35) + (1 \times 85) = 225\text{ XP} \rightarrow$ Nível 3 garantido no primeiro 1:30 min.

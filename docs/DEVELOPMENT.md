@@ -75,7 +75,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [ ] **F21** — `backend/`: NestJS 11, Drizzle + Postgres, `auth`, `users`, zod, Pino; e2e com Postgres em container; `openapi.json`.
 - [ ] **F22** — `matchmaking`, `orchestrator` (Dockerode, pool, token, heartbeat), `matches` internos.
 - [ ] **F23** — Game server: `--token`, `BackendClient`, `ResultReporter`, códigos de saída (`ARCHITECTURE-GAME.md` §6).
-- [ ] **F24** — `launcher/`: `App`, `ScreenStack`, `Router`, `SettingsStore` + `settings.cfg` compartilhado, tela Configurações, Theme completo, galeria.
+- [ ] **F24** — `launcher/`: `App`, `ScreenStack`, `Router`, `SettingsStore` + `settings.cfg` compartilhado, tela Configurações, Theme completo, galeria. **Obrigação de licença:** créditos do jogo com o Golem de Pedra ("Lava Golem", vladimirmejia, CC-BY 3.0 — `shared/assets/LICENSES.md`) antes de qualquer build distribuída; fatia que leva a tela de créditos a confirmar pelo Cowork (registrado pelo PI em 2026-10-09).
 - [ ] **F25** — `AuthService`, `ApiClient`, `QueueService`, `GameProcess`; telas Login e Lobby (diorama); treino vs bot.
 - [ ] **F26** — `HistoryService`, tela Histórico, `GET /matches`.
 - [ ] **F27** — `CatalogService`, Bestiário, Forja com simulador (`shared/core`).
