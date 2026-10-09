@@ -6,10 +6,37 @@ extends RefCounted
 const MIN_TARGET_DISTANCE: float = 0.001
 
 
-## Mitigacao pela DEF em Stats (GDB §2.2); dano efetivo arredondado.
-static func apply_damage(hp: int, damage: int, defense: int) -> int:
-	var effective := roundi(Stats.damage_after_defense(damage, defense))
-	return maxi(hp - effective, 0)
+## Dano bruto depois da DEF (Stats, GDB §2.2), arredondado.
+static func mitigated(raw_damage: int, defense: float) -> int:
+	return roundi(Stats.damage_after_defense(raw_damage, defense))
+
+
+## Golpe de [param source] e frontal para quem esta em [param target_pos] olhando
+## [param target_forward]: semicirculo de 180 graus a frente (PI 2026-10-09).
+static func is_frontal(target_pos: Vector3, target_forward: Vector3, source: Vector3) -> bool:
+	var to_source := source - target_pos
+	to_source.y = 0.0
+	var flat_forward := Vector3(target_forward.x, 0.0, target_forward.z)
+	return to_source.length() < MIN_TARGET_DISTANCE or flat_forward.dot(to_source) >= 0.0
+
+
+## Escudo absorve o dano (ja mitigado pela DEF; PI 2026-10-09): (dano no HP, escudo restante).
+static func absorb(damage: int, shield: int) -> Vector2i:
+	var absorbed := mini(damage, shield)
+	return Vector2i(damage - absorbed, shield - absorbed)
+
+
+## [param target] a no maximo [param radius] de [param center], no plano.
+static func in_radius(center: Vector3, target: Vector3, radius: float) -> bool:
+	return Vector2(target.x - center.x, target.z - center.z).length() <= radius
+
+
+## Empurrao horizontal de [param distance] na direcao dada; direcao nula = sem empurrao.
+static func push_vector(direction: Vector3, distance: float) -> Vector3:
+	var flat := Vector3(direction.x, 0.0, direction.z)
+	if flat.length() < MIN_TARGET_DISTANCE:
+		return Vector3.ZERO
+	return flat.normalized() * distance
 
 
 static func is_in_melee_arc(

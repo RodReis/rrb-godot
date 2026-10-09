@@ -50,3 +50,4 @@ import/blender/enabled=false
 3d_physics/layer_2="river"
 3d_physics/layer_3="gate_a"
 3d_physics/layer_4="gate_b"
+3d_physics/layer_5="shield"

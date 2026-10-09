@@ -2,37 +2,46 @@ class_name HitLedger
 extends RefCounted
 ## Golpes recebidos por tick, guardados fora do estado de rollback.
 ## Ressimular o alvo reaplica os golpes (leitura nao consome); ressimular o
-## atacante nao duplica (um golpe por atacante por tick).
+## atacante nao duplica (um efeito por fonte = atacante + habilidade, por tick).
 
-var _hits: Dictionary = {}  # tick (int) -> { attacker_id (int) -> damage (int) }
+enum Slot { BASIC, Q, E, R }
+
+const SLOT_COUNT: int = 4
+
+var _hits: Dictionary = {}  # tick (int) -> { source_key (int) -> HitEffect }
+
+
+## Chave da fonte: o mesmo atacante pode acertar com habilidades diferentes no mesmo tick.
+static func source_key(attacker_id: int, slot: Slot) -> int:
+	return attacker_id * SLOT_COUNT + slot
 
 
 func is_empty() -> bool:
 	return _hits.is_empty()
 
 
-func set_hit(tick: int, attacker_id: int, damage: int) -> void:
+func set_hit(tick: int, source: int, effect: HitEffect) -> void:
 	if not _hits.has(tick):
 		_hits[tick] = {}
-	var by_attacker: Dictionary = _hits[tick]
-	by_attacker[attacker_id] = damage
+	var by_source: Dictionary = _hits[tick]
+	by_source[source] = effect
 
 
-func clear_hit(tick: int, attacker_id: int) -> void:
+func clear_hit(tick: int, source: int) -> void:
 	if not _hits.has(tick):
 		return
-	var by_attacker: Dictionary = _hits[tick]
-	by_attacker.erase(attacker_id)
-	if by_attacker.is_empty():
+	var by_source: Dictionary = _hits[tick]
+	by_source.erase(source)
+	if by_source.is_empty():
 		_hits.erase(tick)
 
 
-func damages_at(tick: int) -> Array[int]:
-	var result: Array[int] = []
+func effects_at(tick: int) -> Array[HitEffect]:
+	var result: Array[HitEffect] = []
 	if _hits.has(tick):
-		var by_attacker: Dictionary = _hits[tick]
-		for damage: int in by_attacker.values():
-			result.append(damage)
+		var by_source: Dictionary = _hits[tick]
+		for effect: HitEffect in by_source.values():
+			result.append(effect)
 	return result
 
 

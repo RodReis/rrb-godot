@@ -9,6 +9,9 @@ static var autopilot: bool = false
 var movement: Vector3 = Vector3.ZERO
 var aim: Vector3 = Vector3.ZERO
 var attack: bool = false
+var skill_q: bool = false
+var skill_e: bool = false
+var skill_r: bool = false
 
 var _gamepad: bool = false
 var _last_stick_aim: Vector3 = Vector3.ZERO
@@ -31,6 +34,9 @@ func _gather() -> void:
 	)
 	movement = CameraRig.to_world(v, yaw)
 	attack = Input.is_action_pressed(InputActions.PRIMARY_ATTACK)
+	skill_q = Input.is_action_pressed(InputActions.SKILL_Q)
+	skill_e = Input.is_action_pressed(InputActions.SKILL_E)
+	skill_r = Input.is_action_pressed(InputActions.SKILL_R)
 	aim = _stick_aim(yaw) if _gamepad else _mouse_aim()
 
 

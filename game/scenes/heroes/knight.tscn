@@ -1,0 +1,52 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/net/hero.gd" id="1_hero"]
+[ext_resource type="Script" path="res://scripts/net/player_input.gd" id="2_input"]
+[ext_resource type="Script" path="res://scripts/net/hero_visual.gd" id="3_visual"]
+[ext_resource type="Resource" path="res://shared/data/heroes/knight.tres" id="4_data"]
+[ext_resource type="Resource" path="res://shared/data/rules/xp_table.tres" id="5_xp"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers/Knight.glb" id="6_model"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wall"]
+size = Vector3(2, 2, 0.4)
+
+[node name="Knight" type="CharacterBody3D"]
+script = ExtResource("1_hero")
+hero_data = ExtResource("4_data")
+xp_curve = ExtResource("5_xp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_hero")
+
+[node name="Model" parent="." instance=ExtResource("6_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0)
+
+[node name="Visual" type="Node" parent="." node_paths=PackedStringArray("model")]
+script = ExtResource("3_visual")
+model = NodePath("../Model")
+hidden_parts = Array[StringName]([&"1H_Sword_Offhand", &"2H_Sword", &"Rectangle_Shield", &"Round_Shield", &"Spike_Shield"])
+
+[node name="HpLabel" type="Label3D" parent="."]
+position = Vector3(0, 2.4, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0 / 0"
+font_size = 96
+outline_size = 24
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_input")
+
+[node name="ShieldBlocker" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 0
+monitoring = false
+
+[node name="Shape" type="CollisionShape3D" parent="ShieldBlocker"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.8)
+shape = SubResource("BoxShape3D_wall")

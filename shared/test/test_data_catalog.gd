@@ -163,6 +163,9 @@ func test_curva_de_xp() -> void:
 	)
 	assert_eq(curve.catch_up_level_gap, 2)
 	assert_almost_eq(curve.catch_up_bonus, 0.25, EPS)
+	assert_eq(curve.typical_q_rank, PackedInt32Array([1, 1, 2, 2, 3, 3, 4, 4, 5, 5]))
+	assert_eq(curve.typical_e_rank, PackedInt32Array([0, 1, 1, 2, 2, 2, 2, 3, 3, 3]))
+	assert_eq(curve.typical_r_rank, PackedInt32Array([0, 0, 0, 0, 0, 1, 1, 1, 1, 2]))
 
 
 func test_ritmo_da_partida() -> void:

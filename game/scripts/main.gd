@@ -3,9 +3,11 @@ extends Node3D
 ## NetworkTime e iniciado pelo NetworkEvents do netfox (netfox/events/enabled).
 
 const MAX_PLAYERS: int = 2
-const PLAYER_SCENE: String = "res://scenes/player.tscn"
+const HERO_SCENE: String = "res://scenes/heroes/knight.tscn"
 
-var _player_scene: PackedScene = preload(PLAYER_SCENE)
+var _hero_scene: PackedScene = preload(HERO_SCENE)
+## Nivel dos herois spawnados por este servidor (--level de dev ate o F9).
+var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 
 @onready var players: Node3D = $Players
 @onready var spawner: MultiplayerSpawner = $MultiplayerSpawner
@@ -23,6 +25,7 @@ func _ready() -> void:
 
 	var args := LaunchArgs.parse(OS.get_cmdline_user_args())
 	PlayerInput.autopilot = args["autopilot"]
+	_hero_level = args["level"]
 	if args["mode"] == "server" or OS.has_feature("dedicated_server"):
 		start_server(args["port"])
 	elif args["host"] != "":
@@ -90,17 +93,19 @@ func _on_peer_connected(id: int) -> void:
 	var team := (
 		GateRules.TEAM_A if players.get_child_count() % MAX_PLAYERS == 0 else GateRules.TEAM_B
 	)
-	spawner.spawn({"id": id, "team": team})
+	spawner.spawn({"id": id, "team": team, "level": _hero_level})
 
 
-## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao e mascara de time.
+## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao, time, nivel e mascara.
 func _spawn_player(data: Dictionary) -> Node:
 	var team: int = data["team"]
-	var player := _player_scene.instantiate() as CharacterBody3D
-	player.name = str(data["id"])
-	player.collision_mask = GateRules.hero_mask(team)
-	player.transform = _hero_spawn(team)
-	return player
+	var hero := _hero_scene.instantiate() as Hero
+	hero.name = str(data["id"])
+	hero.team = team
+	hero.level = data["level"]
+	hero.collision_mask = GateRules.hero_mask(team)
+	hero.transform = _hero_spawn(team)
+	return hero
 
 
 func _hero_spawn(team: int) -> Transform3D:
