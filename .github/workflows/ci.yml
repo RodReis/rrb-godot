@@ -93,23 +93,21 @@ jobs:
         with:
           version: ${{ env.GODOT_VERSION }}
 
-      # untyped_declaration = erro no project.godot: o parser do Godot é a prova de tipagem.
-      - name: Tipagem estática (godot --check-only)
+      # untyped_declaration = erro no project.godot: o compilador do Godot é a prova de tipagem.
+      # --check-only não carrega autoloads (netfox), por isso compila com o projeto de pé.
+      - name: Tipagem estática (compila no Godot)
         if: ${{ !cancelled() && env.LINT_FILES != '' }}
         run: |
           failed=0
           for project in game launcher; do
             [ -d "$project" ] || continue
-            mine=$(printf '%s\n' $LINT_FILES | grep -E "^($project|shared)/" || true)
+            # game/x.gd -> res://x.gd; shared/x.gd -> res://shared/x.gd (link).
+            mine=$(printf '%s\n' $LINT_FILES | grep -E "^($project|shared)/" \
+              | sed -E "s#^$project/#res://#; s#^shared/#res://shared/#" || true)
             [ -n "$mine" ] || continue
             "$GODOT_PATH" --headless --path "$project" --import > /dev/null 2>&1 || true
-            for f in $mine; do
-              # game/x.gd -> res://x.gd; shared/x.gd -> res://shared/x.gd (link).
-              if ! "$GODOT_PATH" --headless --path "$project" --check-only -s "res://${f#$project/}" \
-                  > /tmp/check.log 2>&1; then
-                cat /tmp/check.log; failed=1
-              fi
-            done
+            "$GODOT_PATH" --headless --path "$project" -s "$PWD/tools/ci/check_scripts.gd" -- $mine \
+              || failed=1
           done
           exit $failed
 
