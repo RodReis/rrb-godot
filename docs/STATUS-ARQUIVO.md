@@ -16,4 +16,4 @@ Complementa `STATUS.md`: prosa longa, decisões de rota, fatias canceladas, resu
 
 | Gate | Data | Resultado | ADR |
 |---|---|---|---|
-| M0 Godot × Unity | — | pendente | 0001 (a escrever) |
+| M0 Godot × Unity | 2026-10-09 | **segue Godot** — A e B (100 ms RTT simétrico, 2% perda) com 7/7 OK; C (200 ms, jitter 30, 5%) falhou só no item 2 (informativo); netem passou a simétrico após o B inicial reprovar no item 2 | [0001](adr/0001-gate-m0.md) |
