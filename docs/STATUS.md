@@ -10,7 +10,8 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Módulo em foco | `game/` |
 | Próximo gate | Gate M0: Godot × Unity (ADR-0001, a escrever) |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos) |
-| Bloqueios do PI | `RASTREABILIDADE.md` §5 — R-PEND-01…10; nenhum bloqueia o MVP0 |
+| Board | issue-pai [MVP0] #1; F1–F5 em `proplan:todo` (#2–#6); [GATE] #7 em `proplan:backlog` |
+| Bloqueios do PI | `RASTREABILIDADE.md` §5 — R-PEND-01…11; nenhum bloqueia o MVP0 |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
 
@@ -28,12 +29,12 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 
 | F / SPEC | MVP | Mód. | Fatia (Slice do MVP) | Estado |
 |---|---|---|---|---|
-| F1 / SPEC-001 | MVP0 | game, infra | Slice 0.1 — Reestruturar em `game/`, addons netfox + GUT, runner de testes | — |
-| F2 / SPEC-002 | MVP0 | game | Slice 0.2 — Regras puras: `LaunchArgs`, `CombatRules`, `AimMath`, `InputActions` (TDD) | — |
-| F3 / SPEC-003 | MVP0 | game | Slice 0.3 — Arena, cena principal, conexão servidor/cliente, player com rollback | — |
-| F4 / SPEC-004 | MVP0 | game | Slice 0.4 — Ataque corpo a corpo validado no servidor, HUD de rede, autopilot | — |
-| F5 / SPEC-005 | MVP0 | infra | Slice 0.5 — Servidor em Docker com latência/perda simuladas | — |
-| [GATE] | MVP0 | — | Protocolo do gate M0 e ADR-0001 | — |
+| F1 / SPEC-001 | MVP0 | game, infra | Slice 0.1 — Reestruturar em `game/`, addons netfox + GUT, runner de testes | todo (#2) |
+| F2 / SPEC-002 | MVP0 | game | Slice 0.2 — Regras puras: `LaunchArgs`, `CombatRules`, `AimMath`, `InputActions` (TDD) | todo (#3) |
+| F3 / SPEC-003 | MVP0 | game | Slice 0.3 — Arena, cena principal, conexão servidor/cliente, player com rollback | todo (#4) |
+| F4 / SPEC-004 | MVP0 | game | Slice 0.4 — Ataque corpo a corpo validado no servidor, HUD de rede, autopilot | todo (#5) |
+| F5 / SPEC-005 | MVP0 | infra | Slice 0.5 — Servidor em Docker com latência/perda simuladas | todo (#6) |
+| [GATE] | MVP0 | — | Protocolo do gate M0 e ADR-0001 | backlog (#7) |
 | F6 / SPEC-006 | MVP1 | shared | Slice 1.1 — `shared/` por junction; classes Resource; `.tres` de heróis, itens, monstros, regras (GDB §8); `stats.gd`, `xp_table.gd`, `set_bonus.gd`, `item_rules.gd`; cena de alinhamento | — |
 | F7 / SPEC-007 | MVP1 | game | Slice 1.2 — Arena hexagonal 3 zonas, portões por time, marcadores de spawn | — |
 | F8 / SPEC-008 | MVP1 | game | Slice 1.3 — Cavaleiro (modelo KayKit, Q/E/R, ataque básico), câmera 3ª pessoa, controles teclado/mouse/gamepad | — |
