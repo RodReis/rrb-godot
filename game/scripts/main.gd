@@ -99,6 +99,8 @@ func _on_peer_connected(id: int) -> void:
 		GateRules.TEAM_A if players.get_child_count() % MAX_PLAYERS == 0 else GateRules.TEAM_B
 	)
 	spawner.spawn({"id": id, "team": team, "level": _hero_level})
+	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+		(node as Chest).send_state(id)
 
 
 ## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao, time, nivel e mascara.

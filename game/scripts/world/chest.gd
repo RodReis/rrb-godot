@@ -26,6 +26,9 @@ var opened: bool = false
 ## Item esperando troca no bau aberto; Ids.NONE = vazio.
 var item: int = Ids.NONE
 
+## So no servidor: tick em que abriu. A troca so conta de um F apertado depois (confirmacao).
+var _opened_tick: int = 0
+
 @onready var _body: MeshInstance3D = $Body
 @onready var _lid: Node3D = $Lid
 @onready var _lid_mesh: MeshInstance3D = $Lid/Mesh
@@ -45,14 +48,23 @@ func in_reach(point: Vector3) -> bool:
 
 
 ## Servidor apenas. [param held_ticks] = ticks seguidos com F (1 = toque) do [param hero].
+# ponytail: abrir/trocar e irreversivel e vale pela ordem de chegada no servidor; ressimulacao
+# que tire o heroi do alcance depois nao desfaz. Raro (input atrasado); servidor segue autoritativo.
 func interact(hero: Hero, tick: int, held_ticks: int) -> void:
+	var pressed_tick := tick - held_ticks + 1
 	if held_ticks == 1 and not opened:
 		_open(hero, tick)
-	elif item != Ids.NONE and held_ticks == _hold_ticks():
+	elif item != Ids.NONE and held_ticks == _hold_ticks() and pressed_tick > _opened_tick:
 		_give(hero, tick)
 	else:
 		return
-	_show.rpc(opened, item)
+	_show.rpc(tick, opened, item)
+
+
+## Servidor apenas: estado atual ao peer que acabou de conectar (baus abertos antes dele).
+func send_state(peer: int) -> void:
+	if opened:
+		_show.rpc_id(peer, NetworkTime.tick, opened, item)
 
 
 func _hold_ticks() -> int:
@@ -61,6 +73,7 @@ func _hold_ticks() -> int:
 
 func _open(hero: Hero, tick: int) -> void:
 	opened = true
+	_opened_tick = tick
 	if drop == ChestRules.HEAL:
 		var effect := HitEffect.new()
 		effect.heal = roundi(rules.heal_amount)
@@ -94,8 +107,9 @@ func _refresh_visual() -> void:
 		)
 
 
+## [param _tick] do evento (ARCHITECTURE-GAME §3.2); a UI do F13 usa.
 @rpc("authority", "call_local", "reliable")
-func _show(p_opened: bool, p_item: int) -> void:
+func _show(_tick: int, p_opened: bool, p_item: int) -> void:
 	opened = p_opened
 	item = p_item
 	_refresh_visual()

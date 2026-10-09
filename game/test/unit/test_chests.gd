@@ -135,6 +135,16 @@ func test_raridade_igual_fica_no_bau_ate_segurar_f() -> void:
 	assert_eq(chest.item, Ids.NONE)
 
 
+func test_segurar_f_desde_a_abertura_nao_troca_sem_ver_a_oferta() -> void:
+	_equip(&"sword_t2")
+	var chest := _chest_with(_number(&"sword_t1"))
+	_run(_hold_ticks(chest) * 2, true)
+	_run(1, false)
+	assert_true(chest.opened)
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t2"))
+	assert_eq(chest.item, _number(&"sword_t1"))
+
+
 func test_soltar_f_antes_de_04_s_nao_troca() -> void:
 	_equip(&"sword_t2")
 	var chest := _chest_with(_number(&"sword_t1"))

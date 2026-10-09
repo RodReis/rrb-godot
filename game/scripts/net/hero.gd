@@ -112,6 +112,8 @@ func _ready() -> void:
 
 
 func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
+	# Ressimulacao restaura xp/equipment mas nao attributes: recalcula antes de usar DEF/HP max.
+	_refresh_attributes()
 	if multiplayer.is_server() and not _hits.is_empty():
 		_apply_hits(tick)
 	_refresh_attributes()
