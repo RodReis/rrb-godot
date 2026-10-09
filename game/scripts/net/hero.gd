@@ -51,6 +51,11 @@ func _ready() -> void:
 	set_multiplayer_authority(1)
 	input.set_multiplayer_authority(peer_id)
 
+	# Heroi planar (#41): perto de muro a despenetracao mexia no y e o encaixe no chao do
+	# move_and_slide() passava a depender de is_on_floor() do tick anterior, que fica fora do
+	# rollback; servidor e cliente divergiam. Com y travado o encaixe nao tem o que mover.
+	axis_lock_linear_y = true
+
 	_rollback = RollbackSynchronizer.new()
 	_rollback.name = "RollbackSynchronizer"
 	_rollback.root = self
