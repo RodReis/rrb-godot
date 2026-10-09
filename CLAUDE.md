@@ -106,6 +106,7 @@ Ordem dentro do arquivo: `class_name` → `extends` → doc `##` → constantes/
 - Valores de balanceamento em Resources `.tres` em `shared/data/` (a partir de F6), não espalhados em código.
 - Regra de dependência entre camadas e entre módulos está em `docs/ARCHITECTURE-GAME.md` §2 e `docs/ARCHITECTURE-LAUNCHER.md` §3.2. Launcher nunca referencia netfox/ENet/cenas de arena; Game nunca referencia telas do launcher.
 - Mostre a **saída real** de testes e comandos antes de dizer que algo funciona. Verificação visual (janelas do jogo) é do usuário: pare e peça.
+- **O Code executa todos os comandos, em background**: servidor (`run-server.ps1`), Docker (`docker compose ... up`), clientes (`run-clients.ps1`), editor e afins. Isso inclui abrir o Docker Desktop e fechar processos de jogo ou servidor deixados por testes anteriores. O PI não digita comando; na verificação visual, o Code sobe tudo, deixa as janelas abertas e pede ao PI só o que olhar. Depois coleta os logs e encerra os processos.
 - Commits em pt-BR, no formato `tipo(escopo): descrição` (`feat`, `fix`, `refactor`, `test`, `docs`, `chore`).
 - Não adicione nada fora do PRD/plano. Achou problema no plano → pare e pergunte.
 - **Não crie regras de negócio, consentimento, LGPD, aceites ou requisitos que o usuário não tenha passado.**
