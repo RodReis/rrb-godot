@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="MatchRules" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/match_rules.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+phase1_duration = 300.0
+max_match_duration = 600.0
+boss_warning_time = 180.0
+boss_spawn_time = 210.0
+respawn_phase1 = 8.0
+respawn_phase2 = 6.0
+phase1_kill_xp = 80
+phase2_kill_xp_base = 150
+phase2_kill_xp_per_level = 20
+kill_goal = 5
+respawn_off_at = 240.0
+zone_times = PackedFloat64Array(0.0, 60.0, 120.0, 180.0, 240.0, 300.0)
+zone_radius = PackedFloat64Array(35.0, 26.0, 17.5, 8.75, 3.5, 0.0)
+zone_damage_pct = PackedFloat64Array(0.01, 0.02, 0.03, 0.04, 0.05, 0.05)
+zone_collapse_doubling = 10.0
+common_chests_per_base = 6
+rare_chests = 4
+common_chest_item_chance = 0.7
+common_chest_heal_chance = 0.3
+rare_chest_rare_chance = 0.65
+rare_chest_common_chance = 0.25
+rare_chest_epic_chance = 0.1
+heal_amount = 120.0
+swap_hold_time = 0.4

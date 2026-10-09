@@ -1,0 +1,78 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"ranger_basic"
+display_name = "Disparo com Arco"
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(0.8)
+attack_ratio = 1.0
+attack_range = 9.0
+radius = 0.3
+speed = 20.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"ranger_q"
+display_name = "Flecha Perfurante"
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(7.0)
+base_amount = PackedFloat64Array(65.0, 100.0, 135.0, 170.0, 205.0)
+attack_ratio = 0.95
+attack_range = 11.0
+pierce_decay = 0.15
+pierce_min = 0.4
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"ranger_e"
+display_name = "Rolamento"
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(9.0, 8.2, 7.4, 6.6, 5.8)
+distance = 4.2
+duration = PackedFloat64Array(0.35)
+invulnerability = 0.3
+resets_basic_attack = true
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"ranger_r"
+display_name = "Chuva de Flechas"
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(45.0, 38.0)
+base_amount = PackedFloat64Array(30.0, 48.0)
+intelligence_ratio = 0.25
+attack_ratio = 0.15
+radius = 4.0
+cast_range = 8.0
+duration = PackedFloat64Array(3.0)
+pulse_count = 6
+pulse_interval = 0.5
+slow = 0.25
+
+[resource]
+script = ExtResource("1_script")
+id = &"ranger"
+display_name = "Arqueira"
+base_move_speed = 6.2
+base_hp = 380.0
+hp_per_level = 28.0
+base_defense = 10.0
+defense_per_level = 1.2
+base_attack = 55.0
+attack_per_level = 5.0
+base_intelligence = 15.0
+intelligence_per_level = 1.5
+base_agility = 25.0
+agility_per_level = 2.2
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")

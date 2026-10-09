@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="XpCurve" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/xp_curve.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+cumulative_xp = PackedInt32Array(0, 90, 230, 440, 740, 1160, 1720, 2440, 3340, 4440)
+catch_up_level_gap = 2
+catch_up_bonus = 0.25

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"hunter_helm_t3"
+display_name = "Elmo do Caçador"
+slot = 1
+rarity = 2
+set_id = &"hunter"
+attack = 15.0
+agility = 12.0

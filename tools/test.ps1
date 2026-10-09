@@ -9,6 +9,9 @@ $project = Join-Path $repo $Module
 if (-not $env:GODOT_PATH) { Write-Host 'GODOT_PATH nao definido. Rode tools\setup-godot-mcp.ps1.' -ForegroundColor Red; exit 1 }
 $cli = $env:GODOT_PATH -replace '\.exe$', '_console.exe'
 if (-not (Test-Path $cli)) { $cli = $env:GODOT_PATH }
+if ((Test-Path (Join-Path $repo 'shared')) -and -not (Test-Path (Join-Path $project 'shared'))) {
+    Write-Host "$Module/shared nao existe. Rode tools\link-shared.ps1 (ADR-0003)." -ForegroundColor Red; exit 1
+}
 $dirs = 'res://test/unit'
 if (Test-Path (Join-Path $project 'shared/test')) { $dirs += ',res://shared/test' }
 

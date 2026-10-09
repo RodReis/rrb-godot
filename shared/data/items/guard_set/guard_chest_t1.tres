@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"guard_chest_t1"
+display_name = "Peitoral da Guarda"
+slot = 2
+rarity = 0
+set_id = &"guard"
+hp = 50.0
+defense = 5.0

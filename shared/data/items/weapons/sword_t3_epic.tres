@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"sword_t3_epic"
+display_name = "Arma Épica"
+slot = 0
+rarity = 2
+attack = 45.0
+passive = &"fury"
+passive_value = 0.06

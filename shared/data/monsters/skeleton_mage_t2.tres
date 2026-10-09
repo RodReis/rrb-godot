@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MonsterData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/monster_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"skeleton_mage_t2"
+display_name = "Esqueleto Mago"
+tier = 1
+count = 2
+hp = 260.0
+damage = 38.0
+attack_interval = 1.5
+xp = 80
+ranged_range = 7.0
+drop_common_chance = 0.35
+drop_rare_chance = 0.65

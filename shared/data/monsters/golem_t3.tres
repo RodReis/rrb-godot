@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MonsterData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/monster_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"golem_t3"
+display_name = "Golem de Pedra"
+tier = 2
+count = 2
+hp = 680.0
+damage = 50.0
+attack_interval = 1.6
+xp = 190
+area_attack = true
+drop_rare_chance = 1.0
