@@ -1,7 +1,7 @@
 class_name Monster
 extends Combatant
-## Monstro da fase 1 (GDB §5.1), inclusive o Rei Esqueleto (F11: so dados e cena mudam). IA so no servidor, a cada tick (MonsterRules); posicao, HP e
-## golpe replicados por StateSynchronizer + TickInterpolator, fora do rollback. Golpe no heroi
+## Monstro da fase 1 (GDB §5.1), inclusive o Rei Esqueleto (F11: so dados e cena mudam). IA so
+## no servidor, a cada tick (MonsterRules); posicao, HP e golpe replicados por StateSynchronizer + TickInterpolator, fora do rollback. Golpe no heroi
 ## vai para o ledger dele; golpe de heroi entra aqui na hora, uma vez por tick + fonte. Ao
 ## morrer da o XP ao matador (com catch-up, GDB §3.3). Nao respawna (GDB §5).
 
