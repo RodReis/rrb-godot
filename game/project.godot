@@ -39,3 +39,10 @@ window/size/viewport_height=720
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/netfox.extras/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox/plugin.cfg")
+
+[layer_names]
+
+3d_physics/layer_1="world"
+3d_physics/layer_2="river"
+3d_physics/layer_3="gate_a"
+3d_physics/layer_4="gate_b"

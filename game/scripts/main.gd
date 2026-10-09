@@ -4,7 +4,6 @@ extends Node3D
 
 const MAX_PLAYERS: int = 2
 const PLAYER_SCENE: String = "res://scenes/player.tscn"
-const SPAWN_POINTS: Array[Vector3] = [Vector3(-8, 0, 0), Vector3(8, 0, 0)]
 
 var _player_scene: PackedScene = preload(PLAYER_SCENE)
 
@@ -19,7 +18,7 @@ var _player_scene: PackedScene = preload(PLAYER_SCENE)
 func _ready() -> void:
 	InputActions.ensure()
 	spawner.spawn_path = spawner.get_path_to(players)
-	spawner.add_spawnable_scene(PLAYER_SCENE)
+	spawner.spawn_function = _spawn_player
 	connect_button.pressed.connect(_on_connect_pressed)
 
 	var args := LaunchArgs.parse(OS.get_cmdline_user_args())
@@ -88,10 +87,29 @@ func _on_connect_pressed() -> void:
 
 func _on_peer_connected(id: int) -> void:
 	print("[server] peer %d conectou" % id)
-	var player := _player_scene.instantiate() as Node3D
-	player.name = str(id)
-	player.position = SPAWN_POINTS[players.get_child_count() % SPAWN_POINTS.size()]
-	players.add_child(player, true)
+	var team := (
+		GateRules.TEAM_A if players.get_child_count() % MAX_PLAYERS == 0 else GateRules.TEAM_B
+	)
+	spawner.spawn({"id": id, "team": team})
+
+
+## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao e mascara de time.
+func _spawn_player(data: Dictionary) -> Node:
+	var team: int = data["team"]
+	var player := _player_scene.instantiate() as CharacterBody3D
+	player.name = str(data["id"])
+	player.collision_mask = GateRules.hero_mask(team)
+	player.transform = _hero_spawn(team)
+	return player
+
+
+func _hero_spawn(team: int) -> Transform3D:
+	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
+		var marker := node as SpawnMarker
+		if marker.kind == SpawnMarker.Kind.HERO and marker.team == team:
+			return marker.global_transform
+	push_error("[arena] sem marcador HERO do time %d" % team)
+	return Transform3D.IDENTITY
 
 
 func _on_peer_disconnected(id: int) -> void:
