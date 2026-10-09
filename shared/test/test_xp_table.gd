@@ -3,7 +3,7 @@ extends GutTest
 
 func _curve() -> XpCurve:
 	var curve := XpCurve.new()
-	curve.cumulative_xp = PackedInt32Array([0, 90, 230, 440, 740, 1160, 1720, 2440, 3340, 4440])
+	curve.cumulative_xp = PackedInt32Array([0, 90, 225, 440, 740, 1160, 1720, 2440, 3340, 4440])
 	curve.catch_up_level_gap = 2
 	curve.catch_up_bonus = 0.25
 	return curve
@@ -56,6 +56,22 @@ func test_no_catch_up_when_one_level_behind() -> void:
 func test_monster_xp_applies_catch_up_and_rounds() -> void:
 	assert_eq(XpTable.monster_xp(_curve(), 85, 2, 5), 106)
 	assert_eq(XpTable.monster_xp(_curve(), 85, 5, 5), 85)
+
+
+func test_level_never_drops_as_xp_grows() -> void:
+	# I7: XP monotonico -> nivel monotonico.
+	var last := 1
+	for xp: int in range(0, 5000, 5):
+		var level := XpTable.level_for_xp(_curve(), xp)
+		assert_true(level >= last, "nivel caiu em %d XP" % xp)
+		last = level
+
+
+func test_farm_de_uma_base_da_nivel_3() -> void:
+	# GDB §5.2: 4 x 35 + 85 = 225 -> nivel 3 (curva do .tres, PI 2026-10-09).
+	var curve := load("res://shared/data/rules/xp_table.tres") as XpCurve
+	assert_eq(XpTable.level_for_xp(curve, 4 * 35 + 85), 3)
+	assert_eq(XpTable.level_for_xp(curve, 4 * 35 + 85 - 1), 2)
 
 
 func test_pvp_kill_xp_phase_one_is_flat() -> void:

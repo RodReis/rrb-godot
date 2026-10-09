@@ -17,6 +17,9 @@ const DODGE: StringName = &"dodge"
 const SCOREBOARD: StringName = &"scoreboard"
 const CANCEL: StringName = &"cancel"
 const OPEN_BESTIARY: StringName = &"open_bestiary"
+const LEARN_Q: StringName = &"learn_q"
+const LEARN_E: StringName = &"learn_e"
+const LEARN_R: StringName = &"learn_r"
 
 const ALL: Array[StringName] = [
 	MOVE_FORWARD,
@@ -33,6 +36,15 @@ const ALL: Array[StringName] = [
 	CANCEL,
 	OPEN_BESTIARY,
 ]
+
+## Gastar ponto de habilidade em Q, E, R (indice = SkillRules.SLOT_*): Ctrl + tecla da skill.
+## So teclado ate os botoes +Q/+E/+R da HUD (F13) (PI 2026-10-09).
+const LEARN: Array[StringName] = [LEARN_Q, LEARN_E, LEARN_R]
+const CTRL_KEYS: Dictionary = {
+	LEARN_Q: KEY_Q,
+	LEARN_E: KEY_E,
+	LEARN_R: KEY_R,
+}
 
 # Mapeamento padrao: DV §3.3; esquiva no gamepad = A/Cruz (PI 2026-10-09).
 const KEYS: Dictionary = {
@@ -73,7 +85,7 @@ const JOY_BUTTONS: Dictionary = {
 
 
 static func ensure() -> void:
-	for action: StringName in ALL:
+	for action: StringName in ALL + LEARN:
 		if InputMap.has_action(action):
 			continue
 		InputMap.add_action(action)
@@ -81,6 +93,11 @@ static func ensure() -> void:
 			var key := InputEventKey.new()
 			key.physical_keycode = KEYS[action]
 			InputMap.action_add_event(action, key)
+		if CTRL_KEYS.has(action):
+			var combo := InputEventKey.new()
+			combo.physical_keycode = CTRL_KEYS[action]
+			combo.ctrl_pressed = true
+			InputMap.action_add_event(action, combo)
 		if MOUSE_BUTTONS.has(action):
 			var click := InputEventMouseButton.new()
 			click.button_index = MOUSE_BUTTONS[action]

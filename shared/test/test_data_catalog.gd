@@ -156,10 +156,24 @@ func test_monstros_batem_com_o_gdb() -> void:
 	assert_almost_eq((_by_id[&"skeleton_mage_t2"] as MonsterData).ranged_range, 7.0, EPS)
 
 
+func test_ia_dos_monstros_nao_boss() -> void:
+	# Aggro, leash, velocidade e alcance: proposta aprovada pelo PI em 2026-10-09 (F9).
+	for id: StringName in [
+		&"skeleton_t1", &"skeleton_warrior_t2", &"skeleton_mage_t2", &"golem_t3"
+	]:
+		var m := _by_id[id] as MonsterData
+		assert_eq([m.aggro_range, m.leash_range, m.move_speed], [6.0, 10.0, 4.0], id)
+		assert_almost_eq(m.melee_range, 1.8, EPS, id)
+	var golem := _by_id[&"golem_t3"] as MonsterData
+	assert_true(golem.area_attack)
+	assert_almost_eq(golem.area_radius, 2.5, EPS)
+
+
 func test_curva_de_xp() -> void:
+	# Nivel 3 em 225 (PI 2026-10-09): farm de uma base = 4 x 35 + 85 (GDB §5.2).
 	var curve := _by_id[&"xp_table"] as XpCurve
 	assert_eq(
-		curve.cumulative_xp, PackedInt32Array([0, 90, 230, 440, 740, 1160, 1720, 2440, 3340, 4440])
+		curve.cumulative_xp, PackedInt32Array([0, 90, 225, 440, 740, 1160, 1720, 2440, 3340, 4440])
 	)
 	assert_eq(curve.catch_up_level_gap, 2)
 	assert_almost_eq(curve.catch_up_bonus, 0.25, EPS)

@@ -101,6 +101,24 @@ func test_teclas_da_dv() -> void:
 	assert_true(_has_key(InputActions.OPEN_BESTIARY, KEY_B))
 
 
+func _key(key: Key, ctrl: bool) -> InputEventKey:
+	var ev := InputEventKey.new()
+	ev.physical_keycode = key
+	ev.ctrl_pressed = ctrl
+	ev.pressed = true
+	return ev
+
+
+func test_ponto_de_habilidade_em_ctrl_mais_tecla_da_skill() -> void:
+	# PI 2026-10-09 (F9): so teclado; gamepad entra com os botoes +Q/+E/+R da HUD (F13).
+	InputActions.ensure()
+	var keys: Array[Key] = [KEY_Q, KEY_E, KEY_R]
+	for i: int in InputActions.LEARN.size():
+		var action := InputActions.LEARN[i]
+		assert_true(InputMap.event_is_action(_key(keys[i], true), action), action)
+		assert_false(InputMap.event_is_action(_key(keys[i], false), action), action)
+
+
 func test_gamepad_da_dv() -> void:
 	assert_true(_has_axis(InputActions.MOVE_FORWARD, JOY_AXIS_LEFT_Y, -1.0))
 	assert_true(_has_axis(InputActions.MOVE_BACK, JOY_AXIS_LEFT_Y, 1.0))
