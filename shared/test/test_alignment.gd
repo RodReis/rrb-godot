@@ -42,6 +42,15 @@ func test_esqueleto_e_um_pouco_menor_que_o_cavaleiro() -> void:
 
 func test_tem_tile_e_modelos_da_arena() -> void:
 	for node_name: String in [
-		"HexUnderKnight", "HexWater", "Wall", "Gate", "Bridge", "Rock", "BorderMountain"
+		"HexUnderKnight",
+		"HexWater",
+		"Wall",
+		"Gate",
+		"Bridge",
+		"Rock",
+		"BorderMountain",
+		"CraterPillar",
+		"TallGrass4x4",
+		"TallGrass4x3",
 	]:
 		assert_not_null(_scene.get_node_or_null(node_name), node_name)

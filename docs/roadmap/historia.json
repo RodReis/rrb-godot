@@ -100,7 +100,8 @@
         { "valor": "45°", "rotulo": "de inclinação da câmera" }
       ],
       "imagens": [
-        { "arquivo": "mvp1-f34-pilar-e-mato-blender.webp", "legenda": "Pilar da cratera e moitas modelados no Blender, antes de entrar no jogo.", "tipo": "em-construcao" }
+        { "arquivo": "mvp1-f34-pilar-e-mato-blender.webp", "legenda": "Pilar da cratera e moitas modelados no Blender, antes de entrar no jogo.", "tipo": "em-construcao" },
+        { "arquivo": "mvp1-f34-cratera-e-mato-no-jogo.webp", "legenda": "Os pilares da cratera e as moitas de grama, modelados no Blender, já dentro da arena: o Cavaleiro cruza a ponte rumo ao centro.", "tipo": "entregue" }
       ]
     },
     "MVP2": {
