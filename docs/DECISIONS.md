@@ -27,7 +27,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 
 | ADR | Título | Status | Data |
 |---|---|---|---|
-| 0001 (`adr/0001-gate-m0.md`, ainda não existe) | Resultado do gate M0: Godot × Unity | **reservado** — escrito pelo Code na Tarefa 12 do plano M0 | — |
+| [0001](adr/0001-gate-m0.md) | Gate M0: Godot 4 + netfox para ação em rede — segue Godot | aceito | 2026-10-09 |
 | [0002](adr/0002-dois-modulos-launcher-e-game.md) | Dois módulos independentes: Launcher (Godot) e Game; backend no Launcher; pick e fim de partida no Game | aceito | 2026-10-08 |
 | [0003](adr/0003-shared-por-junction.md) | `shared/` montado nos dois projetos por junction NTFS | aceito | 2026-10-08 |
 | [0004](adr/0004-gdb-vence-numeros.md) | Em divergência numérica, o GDB vence o PRD | aceito | 2026-10-08 |
