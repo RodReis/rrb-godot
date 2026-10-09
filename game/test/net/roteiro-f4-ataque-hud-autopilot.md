@@ -21,10 +21,10 @@ Pré-requisitos e terminais iguais aos do `roteiro-f3-conexao-movimento.md`. Rei
 | Passo | Resultado |
 |---|---|
 | 1 | OK. RTT local de 12 a 22 ms (o plano esperava 0 a 2) |
-| 2 | OK. HP 232/600 idêntico nas duas janelas após 4 acertos (600 − 4×92) |
-| 3 | Não verificado isoladamente |
-| 4 | Não verificado isoladamente |
-| 5 | Não verificado |
+| 2 | OK. 1ª execução: 232/600 idêntico nas duas janelas (4 acertos). 2ª execução, após o HitLedger: 600 → 508 → 416 → 324, idêntico nas duas janelas |
+| 3 | OK (2ª execução, após o HitLedger) |
+| 4 | OK (2ª execução) |
+| 5 | OK (2ª execução): 600 após 7 acertos |
 | 6 | OK. `peer ... saiu` 2x |
 | 7 | OK |
 | 8 | OK |
@@ -33,3 +33,4 @@ Observações:
 - Na primeira tentativa, o texto de HP (fonte padrão do `Label3D`) ficou ilegível a ~15 m. Aumentei para `font_size` 96, `pixel_size` 0.01 e contorno.
 - A Parte B falhou numa tentativa em que o servidor ainda tinha um jogador da Parte A: com o limite de 2, o cliente em autopilot foi recusado. Por isso o roteiro manda reiniciar o servidor entre as partes.
 - O dano é calculado só no servidor (decisão do PI). O atacante vê o HP cair depois de ~1 RTT.
+- Depois da revisão do PR #13, o dano passou a ser registrado no `HitLedger` do alvo, que o aplica no próprio `_rollback_tick` do tick seguinte. Os passos 2–5 foram refeitos depois dessa mudança.
