@@ -94,6 +94,21 @@ func test_roll_devolve_numero_de_item_da_raridade_ou_cura() -> void:
 		assert_not_null(catalog.find(rare))
 
 
+func test_boss_da_um_dos_7_epicos_uniforme_com_a_arma() -> void:
+	# Arma Epica (Furia) + 6 armaduras epicas, cada um 1/7 (PI 2026-10-09, F11).
+	var rng := _rng()
+	var catalog := load(CATALOG) as ItemCatalog
+	var counts: Dictionary = {}
+	for i: int in SAMPLES:
+		var item := catalog.find(ChestRules.boss_drop(_items, rng))
+		assert_eq(item.rarity, ItemData.Rarity.EPIC)
+		counts[item.id] = counts.get(item.id, 0) + 1
+	assert_eq(counts.size(), 7)
+	assert_true(counts.has(&"sword_t3_epic"))
+	for id: StringName in counts:
+		assert_almost_eq(float(counts[id]) / SAMPLES, 1.0 / 7.0, TOLERANCE, id)
+
+
 func test_mesma_seed_mesmos_drops() -> void:
 	var a := _rng(7)
 	var b := _rng(7)

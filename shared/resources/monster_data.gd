@@ -24,7 +24,8 @@ enum Tier { T1, T2, T3, BOSS }
 ## Distancia maxima do ponto de spawn; passou, volta e regenera o HP (u).
 @export var leash_range: float
 @export var move_speed: float
-@export var knockback: bool
+## Empurrao do golpe para longe do monstro (u); 0 = sem empurrao.
+@export var knockback: float
 @export var xp: int
 @export var drop_common_chance: float
 @export var drop_rare_chance: float

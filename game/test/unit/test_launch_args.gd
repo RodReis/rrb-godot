@@ -58,6 +58,13 @@ func test_nivel_invalido_volta_ao_padrao() -> void:
 	assert_eq(LaunchArgs.parse(PackedStringArray(["--level=abc"]))["level"], 1)
 
 
+func test_tempo_inicial_de_dev() -> void:
+	assert_eq(LaunchArgs.parse(PackedStringArray([]))["time"], 0.0)
+	assert_eq(LaunchArgs.parse(PackedStringArray(["--server", "--time=200"]))["time"], 200.0)
+	assert_eq(LaunchArgs.parse(PackedStringArray(["--time=-5"]))["time"], 0.0)
+	assert_eq(LaunchArgs.parse(PackedStringArray(["--time=abc"]))["time"], 0.0)
+
+
 func test_seed_dos_baus() -> void:
 	assert_eq(LaunchArgs.parse(PackedStringArray([]))["seed"], 0)
 	assert_eq(LaunchArgs.parse(PackedStringArray(["--server", "--seed=1234"]))["seed"], 1234)

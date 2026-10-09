@@ -103,7 +103,8 @@
         { "arquivo": "mvp1-f34-pilar-e-mato-blender.webp", "legenda": "Pilar da cratera e moitas modelados no Blender, antes de entrar no jogo.", "tipo": "em-construcao" },
         { "arquivo": "mvp1-f34-cratera-e-mato-no-jogo.webp", "legenda": "Os pilares da cratera e as moitas de grama, modelados no Blender, já dentro da arena: o Cavaleiro cruza a ponte rumo ao centro.", "tipo": "entregue" },
         { "arquivo": "mvp1-f9-centro-golem.webp", "legenda": "Com a base limpa, o Cavaleiro sobe de nível e chega ao centro, guardado pelo Golem de Pedra, pelo Esqueleto Guerreiro e pelo Esqueleto Mago. Golem baseado em \"Lava Golem\" de vladimirmejia (CC-BY).", "tipo": "entregue" },
-        { "arquivo": "mvp1-f10-bau-guarda-completa.webp", "legenda": "Baús da base abertos: com elmo, peitoral e botas da Guarda, o conjunto fecha e a vida máxima do Cavaleiro sobe 15 %.", "tipo": "entregue" }
+        { "arquivo": "mvp1-f10-bau-guarda-completa.webp", "legenda": "Baús da base abertos: com elmo, peitoral e botas da Guarda, o conjunto fecha e a vida máxima do Cavaleiro sobe 15 %.", "tipo": "entregue" },
+        { "arquivo": "mvp1-f11-rei-esqueleto.webp", "legenda": "Aos 3:30 o Rei Esqueleto desperta no centro da cratera. Seu golpe empurra quem chega perto; derrotado, deixa um baú dourado com um item épico.", "tipo": "entregue" }
       ]
     },
     "MVP2": {

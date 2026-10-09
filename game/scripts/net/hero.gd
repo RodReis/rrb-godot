@@ -33,6 +33,9 @@ var shield_ticks: int = 0
 var stun_ticks: int = 0
 var dash_ticks: int = 0
 var dash_direction: Vector3 = Vector3.ZERO
+## Empurrao recebido (Investida, golpe do boss): desliza knockback_ticks a knockback_velocity.
+var knockback_ticks: int = 0
+var knockback_velocity: Vector3 = Vector3.ZERO
 var basic_cooldown: int = 0
 var q_cooldown: int = 0
 var e_cooldown: int = 0
@@ -82,6 +85,8 @@ func _ready() -> void:
 		":stun_ticks",
 		":dash_ticks",
 		":dash_direction",
+		":knockback_ticks",
+		":knockback_velocity",
 		":basic_cooldown",
 		":q_cooldown",
 		":e_cooldown",
@@ -125,7 +130,10 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	# Input vem do cliente: nunca confiar no valor recebido.
 	var movement := InputRules.sanitize_direction(input.movement)
 	var aim := InputRules.sanitize_direction(input.aim)
-	if stun_ticks > 0:
+	if knockback_ticks > 0:
+		velocity = knockback_velocity
+		knockback_ticks -= 1
+	elif stun_ticks > 0:
 		velocity = Vector3.ZERO
 	elif dash_ticks > 0:
 		velocity = dash_direction * hero_data.skill_q.speed
@@ -323,6 +331,7 @@ func _apply_hits(tick: int) -> void:
 		if hp == 0:
 			hp = attributes.max_hp  # sem morte ate o respawn (F15): so reinicia o HP
 		if not effect.push.is_zero_approx():
-			move_and_collide(effect.push)
+			knockback_ticks = CombatRules.knockback_ticks(NetworkTime.tickrate)
+			knockback_velocity = effect.push * NetworkTime.tickrate / knockback_ticks
 		stun_ticks = maxi(stun_ticks, effect.stun_ticks)
 	_hits.trim_before(tick - NetworkRollback.history_limit)

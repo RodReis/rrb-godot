@@ -8,8 +8,12 @@ const HERO_SCENE: String = "res://scenes/heroes/knight.tscn"
 var _hero_scene: PackedScene = preload(HERO_SCENE)
 ## Nivel dos herois spawnados por este servidor (--level de dev ate o F9).
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
+## Segundos em que o relogio da partida comeca (--time de dev).
+var _start_time: float = LaunchArgs.DEFAULT_TIME
 
 @onready var players: Node3D = $Players
+@onready var spawns: SpawnDirector = $Spawns
+@onready var clock: MatchClock = $MatchClock
 @onready var spawner: MultiplayerSpawner = $MultiplayerSpawner
 @onready var connect_panel: Control = $UI/ConnectPanel
 @onready var address_edit: LineEdit = $UI/ConnectPanel/Address
@@ -24,10 +28,15 @@ func _ready() -> void:
 	spawner.spawn_path = spawner.get_path_to(players)
 	spawner.spawn_function = _spawn_player
 	connect_button.pressed.connect(_on_connect_pressed)
+	clock.boss_warning.connect(_on_clock_boss_warning)
+	clock.boss_spawned.connect(spawns.spawn_boss)
+	clock.phase1_ended.connect(_on_clock_phase1_ended)
+	spawns.boss_killed.connect(_on_spawns_boss_killed)
 
 	var args := LaunchArgs.parse(OS.get_cmdline_user_args())
 	PlayerInput.autopilot = args["autopilot"]
 	_hero_level = args["level"]
+	_start_time = args["time"]
 	if args["mode"] == "server" or OS.has_feature("dedicated_server"):
 		start_server(args["port"])
 	elif args["host"] != "":
@@ -42,11 +51,12 @@ func _process(_delta: float) -> void:
 		return
 	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
 	status_label.text = (
-		"peer %d | RTT %d ms | tick %d%s"
+		"peer %d | RTT %d ms | tick %d | %s%s"
 		% [
 			multiplayer.get_unique_id(),
 			rtt,
 			NetworkTime.tick,
+			_clock_text(),
 			" | AUTOPILOT" if PlayerInput.autopilot else ""
 		]
 	)
@@ -99,6 +109,12 @@ func _on_peer_connected(id: int) -> void:
 		GateRules.TEAM_A if players.get_child_count() % MAX_PLAYERS == 0 else GateRules.TEAM_B
 	)
 	spawner.spawn({"id": id, "team": team, "level": _hero_level})
+	# ponytail: relogio comeca no 1o peer; LOBBY_WAIT/HERO_PICK do MatchController sao do F15.
+	if clock.is_started():
+		clock.send_state(id)
+	else:
+		clock.start(NetworkTime.tick, NetworkTime.tickrate, _start_time)
+	spawns.send_state(id)  # antes dos baus: cria o BossChest no cliente
 	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
 		(node as Chest).send_state(id)
 
@@ -124,6 +140,11 @@ func _hero_spawn(team: int) -> Transform3D:
 	return Transform3D.IDENTITY
 
 
+func _clock_text() -> String:
+	var seconds := maxi(floori(clock.elapsed(NetworkTime.tick)), 0)  # cliente ainda sincronizando
+	return "%d:%02d" % [floori(seconds / 60.0), seconds % 60]
+
+
 func _inventory_text(hero: Hero) -> String:
 	var items := Inventory.items(hero.equipment, hero.item_catalog)
 	var lines := PackedStringArray()
@@ -141,6 +162,20 @@ func _on_peer_disconnected(id: int) -> void:
 	var player := players.get_node_or_null(str(id))
 	if player:
 		player.queue_free()
+
+
+func _on_clock_boss_warning(tick: int) -> void:
+	print("[match] aviso do boss (3:00), tick %d" % tick)
+
+
+func _on_clock_phase1_ended(tick: int) -> void:
+	print("[match] fim da fase 1 (5:00), portoes caem, tick %d" % tick)
+	for node: Node in get_tree().get_nodes_in_group(Gate.GROUP):
+		(node as Gate).fall()
+
+
+func _on_spawns_boss_killed(peer: int) -> void:
+	print("[match] Rei Esqueleto morto por %d" % peer)
 
 
 func _on_server_disconnected() -> void:

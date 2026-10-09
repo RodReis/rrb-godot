@@ -4,6 +4,9 @@ extends RefCounted
 
 ## Abaixo desta distancia o alvo esta "colado" e e atingido em qualquer direcao.
 const MIN_TARGET_DISTANCE: float = 0.001
+## Duracao do empurrao em heroi (s): deslize no estado de rollback em vez de salto, para o
+## cliente ressimular e corrigir so o trecho da latencia (F11). Netcode, nao balanceamento.
+const KNOCKBACK_SECONDS: float = 0.25
 
 
 ## Dano bruto depois da DEF (Stats, GDB §2.2), arredondado.
@@ -32,6 +35,11 @@ static func in_radius(center: Vector3, target: Vector3, radius: float) -> bool:
 
 
 ## Empurrao horizontal de [param distance] na direcao dada; direcao nula = sem empurrao.
+## Ticks do deslize do empurrao ([constant KNOCKBACK_SECONDS]); pelo menos 1.
+static func knockback_ticks(tickrate: int) -> int:
+	return maxi(roundi(KNOCKBACK_SECONDS * tickrate), 1)
+
+
 static func push_vector(direction: Vector3, distance: float) -> Vector3:
 	var flat := Vector3(direction.x, 0.0, direction.z)
 	if flat.length() < MIN_TARGET_DISTANCE:
