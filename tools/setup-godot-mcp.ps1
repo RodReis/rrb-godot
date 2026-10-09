@@ -22,7 +22,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$ProjectDir = Split-Path -Parent $PSScriptRoot
+$RepoDir = Split-Path -Parent $PSScriptRoot
+$ProjectDir = Join-Path $RepoDir 'game'
 
 function Step($msg) { Write-Host "==> $msg" -ForegroundColor Cyan }
 function Ok($msg)   { Write-Host "    OK  $msg" -ForegroundColor Green }
@@ -101,7 +102,7 @@ if ($errors) { Write-Host $out; Fail "O projeto rodou com erros (acima)." }
 Ok "Cena principal rodou sem erros"
 
 # --- 6. .mcp.json do Claude Code (escopo de projeto) ----------------------
-$mcpJson = Join-Path $ProjectDir '.mcp.json'
+$mcpJson = Join-Path $RepoDir '.mcp.json'
 if (Test-Path $mcpJson) {
     Ok ".mcp.json ja existe - mantido como esta"
 } else {
@@ -159,6 +160,6 @@ if ($ClaudeDesktop) {
 
 Write-Host ""
 Write-Host "Pronto. Proximos passos:" -ForegroundColor Yellow
-Write-Host "  - Claude Code: abra um terminal NOVO, rode 'claude' em $ProjectDir e aprove o servidor 'godot' (.mcp.json)."
+Write-Host "  - Claude Code: abra um terminal NOVO, rode 'claude' em $RepoDir e aprove o servidor 'godot' (.mcp.json)."
 if ($ClaudeDesktop) { Write-Host "  - Claude Desktop: reinicie o app; as ferramentas do godot aparecem como servidor local." }
 Write-Host "  - Abrir o editor: & '$godotExe' -e --path '$ProjectDir'"
