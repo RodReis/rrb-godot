@@ -10,7 +10,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Módulo em foco | `game/` |
 | Próximo gate | [GATE] MVP1 — fase 1 completa contra bot, offline |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos) |
-| Board | issue-pai [MVP1] #16; `todo`: [INFRA] #17, F6 #18, F7 #19, F31 #20, F8 #21; `planejado`: F13 #26 (paleta); `backlog`: F9–F12, [GATE] #27. MVP0 #1–#7 `done`, aguardando aceite do PI |
+| Board | issue-pai [MVP1] #16; `todo`: [INFRA] #17, F6 #18, F7 #19, F31 #20, F8 #21; `backlog`: F9–F13, [GATE] #27. MVP0 #1–#7 `done`, aguardando aceite do PI |
 | Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. R-PEND-11 decidida em 2026-10-09 (paleta e fontes de `docs/prd/telas/`). Abertos: 02, 03, 04, 06, 07, 10 (04 e 06 antes do MVP2) |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
@@ -43,7 +43,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F10 / SPEC-010 | MVP1 | game | Slice 1.6 — Baús, itens, inventário 4 slots, substituição, bônus de conjunto | backlog (#23) |
 | F11 / SPEC-011 | MVP1 | game | Slice 1.7 — Rei Esqueleto aos 3:30, drop épico | backlog (#24) |
 | F12 / SPEC-012 | MVP1 | game | Slice 1.8 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | backlog (#25) |
-| F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | planejado (#26) — R-PEND-11 decidida em 2026-10-09 |
+| F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | backlog (#26) |
 | [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | backlog (#27) |
 | [INFRA] | MVP1 | ci | CI: `lint-gd` (tipagem, literais em `core/`, I9), path filter por módulo, `shared/test` no `test-game` — antes de F6 | todo (#17) |
 | [INFRA] | — | infra | Pipeline Blender (ADR-0005): `art/`, `.gitattributes`/`.gitignore`, import de `.blend` desligado — antes do primeiro asset via Blender | todo (#34) |
