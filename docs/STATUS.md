@@ -6,12 +6,12 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 
 | Campo | Valor |
 |---|---|
-| Marco / MVP ativo | **MVP0 — Spike de netcode** (`docs/prd/mvp/MVP-0.md`, plano `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md`) |
+| Marco / MVP ativo | **MVP1 — Arena single-player** (`docs/prd/mvp/MVP-1.md`); MVP0 fechado em 2026-10-09 (ADR-0001: segue Godot) |
 | Módulo em foco | `game/` |
-| Próximo gate | [GATE] MVP2 — 1x1 online termina sempre; soak verde (gate M0 aprovado em 2026-10-09: segue Godot, ADR-0001) |
+| Próximo gate | [GATE] MVP1 — fase 1 completa contra bot, offline |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos) |
 | Board | issue-pai [MVP0] #1; F1–F5 e [GATE] #7 em `proplan:done` (#2–#7) |
-| Bloqueios do PI | `RASTREABILIDADE.md` §5 — R-PEND-01…11; nenhum bloqueia o MVP0 |
+| Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. Abertos: 02, 03, 04, 06, 07, 10, 11 (R-PEND-11 precisa de decisão antes de F13; 04 e 06 antes do MVP2) |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
 
@@ -37,12 +37,15 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | [GATE] | MVP0 | — | Protocolo do gate M0 e ADR-0001 | done (#7) |
 | F6 / SPEC-006 | MVP1 | shared | Slice 1.1 — `shared/` por junction; classes Resource; `.tres` de heróis, itens, monstros, regras (GDB §8); `stats.gd`, `xp_table.gd`, `set_bonus.gd`, `item_rules.gd`; cena de alinhamento | — |
 | F7 / SPEC-007 | MVP1 | game | Slice 1.2 — Arena hexagonal 3 zonas, portões por time, marcadores de spawn | — |
-| F8 / SPEC-008 | MVP1 | game | Slice 1.3 — Cavaleiro (modelo KayKit, Q/E/R, ataque básico), câmera 3ª pessoa, controles teclado/mouse/gamepad | — |
-| F9 / SPEC-009 | MVP1 | game | Slice 1.4 — Monstros tier 1–3 com IA, XP, níveis, pontos de skill, catch-up | — |
-| F10 / SPEC-010 | MVP1 | game | Slice 1.5 — Baús, itens, inventário 4 slots, substituição, bônus de conjunto | — |
-| F11 / SPEC-011 | MVP1 | game | Slice 1.6 — Rei Esqueleto aos 3:30, drop épico | — |
-| F12 / SPEC-012 | MVP1 | game | Slice 1.7 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | — |
-| F13 / SPEC-013 | MVP1 | game | Slice 1.8 — HUD fase 1 + relógio de partida + componentes base do design system usados pela HUD | — |
+| F31 / SPEC-031 | MVP1 | game, shared | Slice 1.3 — Câmera 3ª pessoa, controles teclado/mouse/gamepad, cena de alinhamento KayKit (avaliação de câmera B-02 pelo PI) | — |
+| F8 / SPEC-008 | MVP1 | game | Slice 1.4 — Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha, R Terremoto, lendo `shared/data` | — |
+| F9 / SPEC-009 | MVP1 | game | Slice 1.5 — Monstros tier 1–3 com IA, XP, níveis, pontos de skill, catch-up | — |
+| F10 / SPEC-010 | MVP1 | game | Slice 1.6 — Baús, itens, inventário 4 slots, substituição, bônus de conjunto | — |
+| F11 / SPEC-011 | MVP1 | game | Slice 1.7 — Rei Esqueleto aos 3:30, drop épico | — |
+| F12 / SPEC-012 | MVP1 | game | Slice 1.8 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | — |
+| F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | — |
+| [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | — |
+| [INFRA] | MVP1 | ci | CI: `lint-gd` (tipagem, literais em `core/`, I9), path filter por módulo, `shared/test` no `test-game` — antes de F6 | — |
 | F14 / SPEC-014 | MVP2 | game | Slice 2.1 — Arqueira: projétil validado no servidor, Q perfurante, E rolamento, R chuva | — |
 | F15 / SPEC-015 | MVP2 | game | Slice 2.2 — Ciclo de partida: `MatchController` (FSM), seleção de heróis, PvP fase 1, respawn, eventos por RPC | — |
 | F16 / SPEC-016 | MVP2 | game | Slice 2.3 — Fase 2: zona, dano, respawn, kills, morte súbita, regras de vitória | — |
@@ -64,11 +67,11 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F30 / SPEC-030 | MVP4 | shared | Slice 4.2 — Ajustes de balanceamento pós-playtest (só `.tres`) | — |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
-Próximo número livre: **F31 / SPEC-031**.
+Próximo número livre: **F32 / SPEC-032**.
 
 ## 4. Regras deste índice
 
-- Só o Cowork aloca número. Partir uma fatia = número novo (nunca sufixo). Fatia cancelada mantém a linha com estado `cancelada` e motivo em `STATUS-ARQUIVO.md`.
+- Só o Cowork aloca número. Partir uma fatia = número novo (nunca sufixo). Ex.: F8 partido em 2026-10-09 → F31 (câmera/controles) saiu dele e **entra antes** dele na ordem. Fatia cancelada mantém a linha com estado `cancelada` e motivo em `STATUS-ARQUIVO.md`.
 - A issue-pai de cada MVP tem título `[MVPn] <título>`; cada F é sub-issue nativa dela (`GITHUB.md` §9).
 - Os próximos 5 cards da ordem ficam em `proplan:todo`.
 - `shared` como módulo: a fatia muda `shared/` e, por isso, dispara CI de `game` e `launcher`.
