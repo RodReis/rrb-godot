@@ -9,12 +9,12 @@ signal boss_warning(tick: int)
 signal boss_spawned(tick: int)
 signal phase1_ended(tick: int)
 
-const NOT_STARTED: int = -1
-
 @export var rules: MatchRules
 
-var start_tick: int = NOT_STARTED
+## Valido so com is_started() (pode ser negativo com --time adiantado).
+var start_tick: int = 0
 
+var _started: bool = false
 var _tickrate: int = 0
 var _event_ticks: PackedInt64Array = PackedInt64Array()
 var _events: Array[Signal] = []
@@ -26,7 +26,7 @@ func _ready() -> void:
 
 
 func is_started() -> bool:
-	return start_tick != NOT_STARTED
+	return _started
 
 
 ## Servidor apenas. [param elapsed_seconds] > 0 comeca adiantado (dev, --time). Repetir e ignorado.
@@ -60,6 +60,7 @@ func update(tick: int) -> void:
 func _begin(p_start_tick: int, tickrate: int) -> void:
 	if is_started():
 		return
+	_started = true
 	start_tick = p_start_tick
 	_tickrate = tickrate
 	_events = [boss_warning, boss_spawned, phase1_ended]

@@ -49,9 +49,10 @@ func _ready() -> void:
 		add_child(spawned)
 
 
-## Servidor e clientes (boss_spawned do MatchClock). Repetir e ignorado.
+## Servidor e clientes (boss_spawned do MatchClock). Repetir, ou boss ja morto (cliente que
+## entrou depois), e ignorado.
 func spawn_boss(_tick: int = 0) -> void:
-	if has_node(BOSS_NAME):
+	if has_node(BOSS_NAME) or has_node(BOSS_CHEST_NAME):
 		return
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker
@@ -69,13 +70,12 @@ func spawn_boss(_tick: int = 0) -> void:
 	push_error("[spawn] sem marcador BOSS")
 
 
-## Servidor apenas: bau do boss ao peer que acabou de conectar.
+## Servidor apenas: cria o bau do boss no peer que acabou de conectar (o estado do bau vai
+## depois, com os outros baus).
 func send_state(peer: int) -> void:
 	var chest := get_node_or_null(BOSS_CHEST_NAME) as Chest
-	if chest == null:
-		return
-	_boss_defeated.rpc_id(peer, _boss_killer, chest.position)
-	chest.send_state(peer)
+	if chest != null:
+		_boss_defeated.rpc_id(peer, NetworkTime.tick, _boss_killer, chest.uid, chest.position)
 
 
 func _monster(marker: SpawnMarker, number: int) -> Monster:
@@ -98,18 +98,18 @@ func _chest(marker: SpawnMarker, number: int) -> Chest:
 	return chest
 
 
-## Nos dois lados. O drop so vale no servidor.
+## Nos dois lados; o uid vem do servidor. O drop so vale no servidor.
 @rpc("authority", "call_local", "reliable")
-func _boss_defeated(killer_id: int, where: Vector3) -> void:
+func _boss_defeated(_tick: int, killer_id: int, chest_uid: int, where: Vector3) -> void:
 	if has_node(BOSS_CHEST_NAME):
 		return
 	_boss_killer = killer_id
-	_last_number += 1
 	var chest := _chest_scene.instantiate() as Chest
 	chest.name = BOSS_CHEST_NAME
-	chest.uid = -_last_number
+	chest.uid = chest_uid
 	chest.epic = true
-	chest.drop = ChestRules.boss_drop(chest.catalog.items, _rng)
+	if multiplayer.is_server():
+		chest.drop = ChestRules.boss_drop(chest.catalog.items, _rng)
 	chest.position = where
 	add_child(chest)
 	boss_killed.emit(killer_id)
@@ -117,4 +117,6 @@ func _boss_defeated(killer_id: int, where: Vector3) -> void:
 
 ## Servidor apenas (Monster.died).
 func _on_boss_died(killer_id: int) -> void:
-	_boss_defeated.rpc(killer_id, (get_node(BOSS_NAME) as Node3D).position)
+	_last_number += 1
+	var where := (get_node(BOSS_NAME) as Node3D).position
+	_boss_defeated.rpc(NetworkTime.tick, killer_id, -_last_number, where)

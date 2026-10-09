@@ -17,7 +17,9 @@ func before_each() -> void:
 	add_child_autofree(_clock)
 	for event: StringName in [&"boss_warning", &"boss_spawned", &"phase1_ended"]:
 		_fired[event] = []
-		_clock.connect(event, func(tick: int) -> void: (_fired[event] as Array).append(tick))
+		Signal(_clock, event).connect(
+			func(tick: int) -> void: (_fired[event] as Array).append(tick)
+		)
 
 
 func _run(from: int, to: int) -> void:
@@ -59,6 +61,12 @@ func test_comecar_adiantado_dispara_o_que_ja_passou_no_primeiro_tick() -> void:
 	assert_eq(_fired[&"boss_spawned"], [])
 	_run(START + 1, START + 10 * RATE)
 	assert_eq(_fired[&"boss_spawned"], [START + 10 * RATE])
+
+
+func test_inicio_no_tick_negativo_conta_como_comecado() -> void:
+	_clock.start(0, RATE, 1.0 / RATE)
+	assert_true(_clock.is_started())
+	assert_eq(_clock.start_tick, -1)
 
 
 func test_start_de_novo_e_ignorado() -> void:

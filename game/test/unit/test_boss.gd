@@ -93,6 +93,13 @@ func test_surgir_de_novo_nao_duplica() -> void:
 	assert_eq(bosses, 1)
 
 
+func test_cliente_que_entra_depois_da_morte_nao_cria_boss_vivo() -> void:
+	_director._boss_defeated(0, 1, -99, Vector3.ZERO)
+	_director.spawn_boss()
+	assert_null(_boss())
+	assert_eq((_director.get_node(SpawnDirector.BOSS_CHEST_NAME) as Chest).uid, -99)
+
+
 func test_golpe_em_area_fere_e_empurra_pelo_ledger() -> void:
 	_director.spawn_boss()
 	var boss := _boss()

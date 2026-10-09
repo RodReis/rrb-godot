@@ -114,9 +114,9 @@ func _on_peer_connected(id: int) -> void:
 		clock.send_state(id)
 	else:
 		clock.start(NetworkTime.tick, NetworkTime.tickrate, _start_time)
+	spawns.send_state(id)  # antes dos baus: cria o BossChest no cliente
 	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
 		(node as Chest).send_state(id)
-	spawns.send_state(id)
 
 
 ## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao, time, nivel e mascara.
@@ -141,7 +141,7 @@ func _hero_spawn(team: int) -> Transform3D:
 
 
 func _clock_text() -> String:
-	var seconds := floori(clock.elapsed(NetworkTime.tick))
+	var seconds := maxi(floori(clock.elapsed(NetworkTime.tick)), 0)  # cliente ainda sincronizando
 	return "%d:%02d" % [floori(seconds / 60.0), seconds % 60]
 
 
