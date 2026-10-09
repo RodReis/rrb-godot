@@ -1,0 +1,14 @@
+services:
+  gameserver:
+    build:
+      context: ..
+      dockerfile: infra/gameserver/Dockerfile
+    ports:
+      - "7000:7000/udp"
+    cap_add:
+      - NET_ADMIN
+    environment:
+      PORT: "7000"
+      NETEM_DELAY_MS: "${NETEM_DELAY_MS:-}"
+      NETEM_JITTER_MS: "${NETEM_JITTER_MS:-}"
+      NETEM_LOSS_PCT: "${NETEM_LOSS_PCT:-}"
