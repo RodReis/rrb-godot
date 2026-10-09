@@ -44,6 +44,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F11 / SPEC-011 | MVP1 | game | Slice 1.7 — Rei Esqueleto aos 3:30, drop épico | backlog (#24) |
 | F12 / SPEC-012 | MVP1 | game | Slice 1.8 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | backlog (#25) |
 | F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | backlog (#26) |
+| F34 / SPEC-034 | MVP1 | game, shared | Slice 1.10 — Pilares da cratera e mato alto com assets do Blender (só visual; colisão do F7 intacta) — depois do [INFRA] #34 | todo (#38) |
 | [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | backlog (#27) |
 | [INFRA] | MVP1 | ci | CI: `lint-gd` (tipagem, literais em `core/`, I9), path filter por módulo, `shared/test` no `test-game` — antes de F6 | todo (#17) |
 | [INFRA] | — | infra | Pipeline Blender (ADR-0005): `art/`, `.gitattributes`/`.gitignore`, import de `.blend` desligado — antes do primeiro asset via Blender | todo (#34) |

@@ -17,6 +17,7 @@
 | 1.7 | F11 / SPEC-011 | Rei Esqueleto 3:30, drop épico, relógio de partida | PRD §3.2; GDB §5.1 |
 | 1.8 | F12 / SPEC-012 | bot fase 1, modo `--offline --bot` | PRD §3.7 |
 | 1.9 | F13 / SPEC-013 | HUD fase 1 + aviso global do boss aos 3:00 (banner + som) + bestiário em partida pela tecla `B` (modal com `CatalogList`/`DetailCard` de `shared/ui`) + componentes base + Theme inicial | DV telas 3 e 5; BM §3.2; `design-system/` |
+| 1.10 | F34 / SPEC-034 | pilares da cratera e mato alto trocados pelos assets do Blender conforme [`spec/SPEC-034.md`](spec/SPEC-034.md) — só visual | ADR-0005; SPEC-007 |
 | gate | `[GATE]` | fase 1 completa contra bot, offline, avaliada pelo PI | PRD §9.1 |
 | infra | `[INFRA]` | CI com `lint-gd`, path filter e `shared/test` — **antes de F6** | `CI-PR.md` §2 |
 
