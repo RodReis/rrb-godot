@@ -8,6 +8,7 @@ export_presets.cfg
 # shared/ ligado por junction/symlink (ADR-0003)
 /game/shared
 /launcher/shared
+/art/
 
 # Builds
 /build/

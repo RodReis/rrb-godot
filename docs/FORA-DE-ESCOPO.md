@@ -25,7 +25,9 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Câmera isométrica + mira assistida (plano B) | PRD §3.6 | decidir com dados | MVP4 | playtest mostrar perda de visão/aversão |
 | Armas específicas por herói | PRD §6 | dado genérico basta | fase B | — |
 | N partidas por processo (custo R7) | PRD §9.3 | irrelevante na fase A | fase B | custo medido no M3 ultrapassar meta |
-| Recuperação de senha, verificação de e-mail | não está no PRD (R-PEND-07) | backend fino | decisão do PI | PI incluir no PRD |
+| Nível/XP de conta, "14V–6D" como progressão | DV tela 1; R-PEND-02 | decidido: perfil mostra só V–D | pós-MVP4 | decisão do PI após playtest |
+| Avatar no backend / visível a outros jogadores | R-PEND-02 | exige armazenamento e moderação de imagem; público 10+ | fase B | decisão do PI + moderação definida |
+| Recuperação de senha, verificação de e-mail | R-PEND-07 (decidido 2026-10-09: roadmap) | backend fino | pós-MVP4 | primeiro pedido real de reset de senha |
 | Reconexão à partida | PRD §8.5 | fora da fatia | fase B | relato de desconexão frequente no playtest |
 | Múltiplas regiões, autoscaling | PRD §8.5 | 1 VPS, Brasil | fase B | jogadores fora do Brasil |
 | WebSocket para fila (em vez de polling 2 s) | `ARCHITECTURE-LAUNCHER.md` §3.3 | backend fino | quando medir | polling custar > 5% CPU do backend ou latência de match > 5 s |

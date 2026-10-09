@@ -32,7 +32,7 @@
       "Edit(game/**)",
       "Edit(tools/**)",
       "Edit(infra/**)",
-      "Edit(docs/**)",
+      "Edit(docs/**)",      
       "Edit(.github/**)"
     ]
   }

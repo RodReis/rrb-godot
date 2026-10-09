@@ -17,11 +17,12 @@
 | 3.7 | F27 / SPEC-027 | bestiário e forja | DV telas 5, 6 |
 | 3.8 | F28 / SPEC-028 | deploy VPS, exports, pacote de instalação | PRD §8.5 |
 | 3.9 | F33 / SPEC-033 | tela Arena & Mapa: render da arena real, marcadores, regras das 2 fases (números do GDB) | DV tela 10; SPEC-007; decisão PI 2026-10-09 |
+| 3.10 | F35 / SPEC-035 | perfil de conta: nickname único (prefixo `#` automático), avatar predefinido ou upload local; sem XP de conta, sem data de nascimento | R-PEND-02 (`RASTREABILIDADE.md` §5) |
 | gate | `[GATE]` | dois amigos jogam pela internet | PRD §9.1 |
 
 ## Pendências do PI
 
-R-PEND-02 (perfil de conta), R-PEND-03 (lembrar-me), R-PEND-07 (recuperação de senha). Sem decisão: F25 sem perfil, sem persistência de sessão; F21 sem recuperação.
+Decididas em 2026-10-09: R-PEND-03 não (sem persistência de sessão); R-PEND-07 roadmap (F21 sem recuperação nem verificação de e-mail). R-PEND-02: sem XP de conta; perfil com nickname único e avatar vira a fatia F35 (fora do F25; pode ser adiada sem travar o resto). Sem data de nascimento.
 
 ## Fora deste MVP
 

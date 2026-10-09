@@ -114,12 +114,12 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ID | Pendência | Opções | Impacto se não decidir |
 |---|---|---|---|
 | ~~R-PEND-01~~ | **Decidido 2026-10-09:** GDB — baú raro 10 % | — | — |
-| R-PEND-02 | Perfil de conta com nível/XP/avatar no lobby (DV) | incluir no PRD / excluir | F25 sem perfil (só e-mail/nome) |
-| R-PEND-03 | "Lembrar-me" / sessão persistida no Launcher | sim / não | sem persistência: login a cada abertura |
+| ~~R-PEND-02~~ | **Decidido 2026-10-09:** sem nível/XP de conta (só V–D do histórico). Perfil no Launcher (fatia F35): nickname **único**, prefixo `#` **automático** (ex.: `#RodReis`); avatar por imagem predefinida ou upload, **guardado só local no Launcher** (não vai ao backend, não aparece para outros jogadores). **Sem data de nascimento.** Falta o PI definir: caracteres e tamanho do nickname; formato e tamanho máximos do upload. PRD ainda não editado | — | — |
+| ~~R-PEND-03~~ | **Decidido 2026-10-09:** não — sem "lembrar-me"; JWT só em memória, login a cada abertura | — | — |
 | R-PEND-04 | Timeout de pick sem escolha → herói padrão por slot? | padrão / aleatório / abandono | F15 bloqueia |
 | ~~R-PEND-05~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
 | R-PEND-06 | Monstros vivos ao entrar na fase 2: ficam ou somem? | ficam / somem | F16 bloqueia |
-| R-PEND-07 | Recuperação de senha / verificação de e-mail | fatia / roadmap | F21 sem ambos |
+| ~~R-PEND-07~~ | **Decidido 2026-10-09:** roadmap — F21 sem recuperação de senha nem verificação de e-mail (fica em `FORA-DE-ESCOPO.md`) | — | — |
 | ~~R-PEND-08~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
 | ~~R-PEND-09~~ | **Decidido 2026-10-09:** Golem de Pedra | — | — |
 | ~~R-PEND-11~~ | **Decidido 2026-10-09:** `telas/` — paleta e fontes de `docs/prd/telas/` (Space Grotesk / Outfit / JetBrains Mono) substituem as do DV §1.2–1.3; `TOKENS.md` atualizado. A estrutura das telas continua a do DV; o Pop-up Tático segue sem requisito | — | — |

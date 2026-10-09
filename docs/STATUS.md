@@ -64,6 +64,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F26 / SPEC-026 | MVP3 | launcher, backend | Slice 3.6 — Histórico de partidas (`GET /matches`) | — |
 | F27 / SPEC-027 | MVP3 | launcher | Slice 3.7 — Bestiário e Forja (simulador com `shared/core`) | — |
 | F33 / SPEC-033 | MVP3 | launcher, shared | Slice 3.9 — Tela Arena & Mapa (DV tela 10): render da arena real, marcadores (POIs), regras das 2 fases pelos números do GDB | — |
+| F35 / SPEC-035 | MVP3 | launcher | Slice 3.10 — Perfil de conta: nickname único com prefixo `#` automático; avatar (predefinido ou upload), guardado só local no Launcher; sem XP de conta, sem data de nascimento (R-PEND-02) | — |
 | F28 / SPEC-028 | MVP3 | infra | Slice 3.8 — Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets, pacote de instalação (`launcher/` + `game/`) | — |
 | [GATE] | MVP3 | — | Dois amigos jogam pela internet sem intervenção do dev | — |
 | F29 / SPEC-029 | MVP4 | backend, launcher, game | Slice 4.1 — Telemetria: ping médio, duração, líder de nível F1 × vencedor; painel de KPIs no histórico | — |
@@ -71,7 +72,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F32 / SPEC-032 | MVP2 | game | Slice 2.8 — Mato alto: herói dentro da moita não é replicado para o adversário (visibilidade no servidor); regra e números em `CONVENTION.md` §4.8 | — |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
-Próximo número livre: **F35 / SPEC-035**.
+Próximo número livre: **F36 / SPEC-036**.
 
 ## 4. Regras deste índice
 
