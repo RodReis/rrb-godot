@@ -8,6 +8,9 @@
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/building_bridge_A.gltf" id="6_bridge"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/mountain_A.gltf" id="7_mountain"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/hex_water.gltf" id="8_water"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/crater_pillar.glb" id="9_pillar"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/tall_grass_4x4.glb" id="10_grass44"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/tall_grass_4x3.glb" id="11_grass43"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ref"]
 radius = 0.4
@@ -52,3 +55,12 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 19, 0, 0)
 
 [node name="BorderMountain" parent="." instance=ExtResource("7_mountain")]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 23, 0, 0)
+
+[node name="CraterPillar" parent="." instance=ExtResource("9_pillar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, 0)
+
+[node name="TallGrass4x4" parent="." instance=ExtResource("10_grass44")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 0)
+
+[node name="TallGrass4x3" parent="." instance=ExtResource("11_grass43")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 0, 0)

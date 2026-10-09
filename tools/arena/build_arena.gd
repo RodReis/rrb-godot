@@ -8,6 +8,8 @@ extends SceneTree
 
 const OUT: String = "res://scenes/arena/arena.tscn"
 const KAYKIT: String = "res://shared/assets/kaykit/medieval_hexagon/"
+## Arte propria do Blender (ADR-0005, SPEC-034): so visual; colisao continua aqui.
+const RRB_ARENA: String = "res://shared/assets/rrb/arena/"
 const GATE_SCENE: String = "res://scenes/world/gate.tscn"
 
 # Grade (SPEC §1): hex de topo pontudo, faces planas em +-X; o tile do pack mede 2,0 u.
@@ -89,9 +91,6 @@ const BORDER_HEIGHT: float = 4.0
 const BORDER_DECOR_STEP_DEG: float = 6.0
 const BORDER_DECOR_SCALE: float = 2.2
 const GRASS_HEIGHT: float = 1.2
-
-const STONE: Color = Color(0.42, 0.4, 0.45)
-const GRASS: Color = Color(0.2, 0.42, 0.18)
 
 var _root: Node3D
 var _scenes: Dictionary = {}
@@ -245,17 +244,16 @@ func _build_crater() -> void:
 	var shape := CylinderShape3D.new()
 	shape.radius = PILLAR_RADIUS
 	shape.height = PILLAR_HEIGHT
-	var mesh := CylinderMesh.new()
-	mesh.top_radius = PILLAR_RADIUS
-	mesh.bottom_radius = PILLAR_RADIUS
-	mesh.height = PILLAR_HEIGHT
-	mesh.material = _material(STONE)
+	var i := 0
 	for entry: float in ENTRY_AZIMUTHS:
 		for side: float in [-1.0, 1.0]:
-			var at := _polar(entry + side * PILLAR_OFFSET_DEG, CRATER_RADIUS)
-			var pos := at + Vector3.UP * PILLAR_HEIGHT / 2
-			_shape(crater, shape, pos)
-			_mesh(crater, mesh, pos)
+			var azimuth := entry + side * PILLAR_OFFSET_DEG
+			var at := _polar(azimuth, CRATER_RADIUS)
+			_shape(crater, shape, at + Vector3.UP * PILLAR_HEIGHT / 2)
+			# Base do asset em y = 0; yaw fixo = azimute (sem RNG, SPEC-034 §2).
+			var pillar := _asset(crater, RRB_ARENA + "crater_pillar.glb", "Pillar%d" % i)
+			pillar.transform = Transform3D(Basis(Vector3.UP, deg_to_rad(azimuth)), at)
+			i += 1
 
 
 func _build_border() -> void:
@@ -298,7 +296,8 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 		_rock(walls, _local(YARD_ROCKS[i], flip), "Yard%s%d" % [tag, i])
 	for i: int in range(YARD_GRASS.size()):
 		var at := _local(YARD_GRASS[i], flip)
-		_tall_grass(at, YARD_GRASS_SIZE, _tangent_basis(LATERAL * flip), "Grass%s%d" % [tag, i])
+		var label := "Grass%s%d" % [tag, i]
+		_tall_grass(at, YARD_GRASS_SIZE, _tangent_basis(LATERAL * flip), label, "tall_grass_4x4")
 
 	var markers := _group("Markers")
 	var hero := _marker(markers, "Hero%s" % tag, _local(Vector2(SPAWN_S, 0), flip))
@@ -383,9 +382,8 @@ func _build_center(walls: StaticBody3D) -> void:
 	for i: int in range(CENTER_GRASS.size()):
 		var g: Vector2 = CENTER_GRASS[i]
 		var at := _polar(g.x, g.y)
-		_tall_grass(
-			at, CENTER_GRASS_SIZE, _tangent_basis(Vector3(-at.z, 0, at.x)), "GrassCenter%d" % i
-		)
+		var basis := _tangent_basis(Vector3(-at.z, 0, at.x))
+		_tall_grass(at, CENTER_GRASS_SIZE, basis, "GrassCenter%d" % i, "tall_grass_4x3")
 
 
 # --- construtores ------------------------------------------------------------------------
@@ -413,7 +411,8 @@ func _rock(walls: StaticBody3D, at: Vector3, label: String) -> void:
 	visual.transform = Transform3D(Basis().scaled(Vector3.ONE * ROCK_SCALE), at)
 
 
-func _tall_grass(at: Vector3, size: Vector2, basis: Basis, label: String) -> void:
+## Area3D do mato (colisao da SPEC-007) + asset do Blender [param model] como visual.
+func _tall_grass(at: Vector3, size: Vector2, basis: Basis, label: String, model: String) -> void:
 	var area := Area3D.new()
 	area.name = label
 	area.collision_layer = 0
@@ -424,10 +423,7 @@ func _tall_grass(at: Vector3, size: Vector2, basis: Basis, label: String) -> voi
 	var box := BoxShape3D.new()
 	box.size = Vector3(size.x, GRASS_HEIGHT * 2, size.y)
 	_shape(area, box, Vector3.UP * GRASS_HEIGHT)
-	var mesh := BoxMesh.new()
-	mesh.size = Vector3(size.x, GRASS_HEIGHT, size.y)
-	mesh.material = _material(GRASS)
-	_mesh(area, mesh, Vector3.UP * GRASS_HEIGHT / 2)
+	_asset(area, RRB_ARENA + model + ".glb", "Visual")
 
 
 func _monster(
@@ -482,15 +478,12 @@ func _shape(parent: Node3D, shape: Shape3D, at: Vector3) -> CollisionShape3D:
 	return node
 
 
-func _mesh(parent: Node3D, mesh: Mesh, at: Vector3) -> void:
-	var node := MeshInstance3D.new()
-	node.mesh = mesh
-	node.position = at
-	_add(parent, node)
-
-
 func _instance(parent: Node3D, model: String, label: String) -> Node3D:
-	var node := _scene(KAYKIT + model + ".gltf").instantiate() as Node3D
+	return _asset(parent, KAYKIT + model + ".gltf", label)
+
+
+func _asset(parent: Node3D, path: String, label: String) -> Node3D:
+	var node := _scene(path).instantiate() as Node3D
 	node.name = label
 	_add(parent, node)
 	return node
@@ -505,12 +498,6 @@ func _scene(path: String) -> PackedScene:
 func _add(parent: Node, child: Node) -> void:
 	parent.add_child(child)
 	child.owner = _root
-
-
-func _material(color: Color) -> StandardMaterial3D:
-	var m := StandardMaterial3D.new()
-	m.albedo_color = color
-	return m
 
 
 # --- geometria ---------------------------------------------------------------------------
