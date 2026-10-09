@@ -5,6 +5,7 @@ extends RefCounted
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
 
+
 static func parse(args: PackedStringArray) -> Dictionary:
 	var result := {"mode": "client", "host": "", "port": DEFAULT_PORT, "autopilot": false}
 	for arg: String in args:
@@ -20,6 +21,7 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			if parts.size() > 1:
 				result["port"] = _port_or_default(parts[1])
 	return result
+
 
 static func _port_or_default(text: String) -> int:
 	if text.is_valid_int():

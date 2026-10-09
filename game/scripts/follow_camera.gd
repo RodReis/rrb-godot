@@ -3,9 +3,11 @@ extends Camera3D
 
 const OFFSET: Vector3 = Vector3(0, 12, 9)
 
+
 func _ready() -> void:
 	global_position = OFFSET
 	look_at(Vector3.ZERO, Vector3.UP)
+
 
 func _process(_delta: float) -> void:
 	if multiplayer.is_server():

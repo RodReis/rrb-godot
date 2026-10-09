@@ -15,6 +15,7 @@ var _player_scene: PackedScene = preload(PLAYER_SCENE)
 @onready var connect_button: Button = $UI/ConnectPanel/ConnectButton
 @onready var status_label: Label = $UI/Status
 
+
 func _ready() -> void:
 	InputActions.ensure()
 	spawner.spawn_path = spawner.get_path_to(players)
@@ -28,6 +29,7 @@ func _ready() -> void:
 	elif args["host"] != "":
 		start_client(args["host"], args["port"])
 
+
 func _process(_delta: float) -> void:
 	if multiplayer.is_server():
 		return
@@ -35,8 +37,16 @@ func _process(_delta: float) -> void:
 	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
 		return
 	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
-	status_label.text = "peer %d | RTT %d ms | tick %d%s" % [
-		multiplayer.get_unique_id(), rtt, NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]
+	status_label.text = (
+		"peer %d | RTT %d ms | tick %d%s"
+		% [
+			multiplayer.get_unique_id(),
+			rtt,
+			NetworkTime.tick,
+			" | AUTOPILOT" if PlayerInput.autopilot else ""
+		]
+	)
+
 
 func start_server(port: int) -> void:
 	var peer := ENetMultiplayerPeer.new()
@@ -51,6 +61,7 @@ func start_server(port: int) -> void:
 	connect_panel.hide()
 	status_label.text = "servidor na porta %d" % port
 	print("[server] escutando na porta %d" % port)
+
 
 func start_client(host: String, port: int) -> void:
 	var peer := ENetMultiplayerPeer.new()
@@ -67,9 +78,13 @@ func start_client(host: String, port: int) -> void:
 	await NetworkTime.after_sync
 	print("[client] NetworkTime sincronizado, tick %d" % NetworkTime.tick)
 
+
 func _on_connect_pressed() -> void:
-	var args := LaunchArgs.parse(PackedStringArray(["--connect=" + address_edit.text.strip_edges()]))
+	var args := LaunchArgs.parse(
+		PackedStringArray(["--connect=" + address_edit.text.strip_edges()])
+	)
 	start_client(args["host"], args["port"])
+
 
 func _on_peer_connected(id: int) -> void:
 	print("[server] peer %d conectou" % id)
@@ -78,11 +93,13 @@ func _on_peer_connected(id: int) -> void:
 	player.position = SPAWN_POINTS[players.get_child_count() % SPAWN_POINTS.size()]
 	players.add_child(player, true)
 
+
 func _on_peer_disconnected(id: int) -> void:
 	print("[server] peer %d saiu" % id)
 	var player := players.get_node_or_null(str(id))
 	if player:
 		player.queue_free()
+
 
 func _on_server_disconnected() -> void:
 	status_label.text = "desconectado do servidor"

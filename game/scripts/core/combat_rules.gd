@@ -7,12 +7,19 @@ const DEFENSE_SCALE: float = 100.0
 ## Abaixo desta distancia o alvo esta "colado" e e atingido em qualquer direcao.
 const MIN_TARGET_DISTANCE: float = 0.001
 
+
 static func apply_damage(hp: int, damage: int, defense: int) -> int:
 	var effective := roundi(damage * DEFENSE_SCALE / (DEFENSE_SCALE + maxi(defense, 0)))
 	return maxi(hp - effective, 0)
 
-static func is_in_melee_arc(attacker_pos: Vector3, forward: Vector3, target_pos: Vector3,
-		attack_range: float, half_angle_deg: float) -> bool:
+
+static func is_in_melee_arc(
+	attacker_pos: Vector3,
+	forward: Vector3,
+	target_pos: Vector3,
+	attack_range: float,
+	half_angle_deg: float
+) -> bool:
 	var to_target := target_pos - attacker_pos
 	to_target.y = 0.0
 	var dist := to_target.length()
