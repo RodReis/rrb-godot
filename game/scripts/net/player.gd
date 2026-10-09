@@ -37,9 +37,12 @@ func _ready() -> void:
 	_rollback.process_settings()
 
 func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool) -> void:
-	if input.aim != Vector3.ZERO:
-		look_at(global_position + input.aim, Vector3.UP)
-	velocity = input.movement.normalized() * SPEED
+	# Input vem do cliente: nunca confiar no valor recebido.
+	var aim := InputRules.sanitize_direction(input.aim)
+	var movement := InputRules.sanitize_direction(input.movement)
+	if not aim.is_zero_approx():
+		look_at(global_position + aim, Vector3.UP)
+	velocity = movement.normalized() * SPEED
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
