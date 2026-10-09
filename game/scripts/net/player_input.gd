@@ -13,9 +13,14 @@ func _gather() -> void:
 	if autopilot:
 		_gather_autopilot()
 		return
-	var v := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var v := Input.get_vector(
+		InputActions.MOVE_LEFT,
+		InputActions.MOVE_RIGHT,
+		InputActions.MOVE_FORWARD,
+		InputActions.MOVE_BACK
+	)
 	movement = Vector3(v.x, 0.0, v.y)
-	attack = Input.is_action_pressed("attack")
+	attack = Input.is_action_pressed(InputActions.PRIMARY_ATTACK)
 	aim = _mouse_aim()
 
 

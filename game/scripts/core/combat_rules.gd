@@ -2,14 +2,13 @@ class_name CombatRules
 extends RefCounted
 ## Regras puras de combate. Sem estado, sem nodes: testavel em isolamento.
 
-## Mitigacao do PRD §4.2: dano efetivo = dano * DEFENSE_SCALE / (DEFENSE_SCALE + defesa).
-const DEFENSE_SCALE: float = 100.0
 ## Abaixo desta distancia o alvo esta "colado" e e atingido em qualquer direcao.
 const MIN_TARGET_DISTANCE: float = 0.001
 
 
+## Mitigacao pela DEF em Stats (GDB §2.2); dano efetivo arredondado.
 static func apply_damage(hp: int, damage: int, defense: int) -> int:
-	var effective := roundi(damage * DEFENSE_SCALE / (DEFENSE_SCALE + maxi(defense, 0)))
+	var effective := roundi(Stats.damage_after_defense(damage, defense))
 	return maxi(hp - effective, 0)
 
 
