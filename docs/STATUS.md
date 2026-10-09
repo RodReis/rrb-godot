@@ -10,7 +10,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Módulo em foco | `game/` |
 | Próximo gate | [GATE] MVP1 — fase 1 completa contra bot, offline |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos) |
-| Board | issue-pai [MVP1] #16; `todo`: [INFRA] #17, F6 #18, F31 #20, F8 #21; `planejado`: F7 #19 (mapa), F13 #26 (paleta); `backlog`: F9–F12, [GATE] #27. MVP0 #1–#7 `done`, aguardando aceite do PI |
+| Board | issue-pai [MVP1] #16; `todo`: [INFRA] #17, F6 #18, F7 #19, F31 #20, F8 #21; `planejado`: F13 #26 (paleta); `backlog`: F9–F12, [GATE] #27. MVP0 #1–#7 `done`, aguardando aceite do PI |
 | Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. Abertos: 02, 03, 04, 06, 07, 10, 11 (R-PEND-11 precisa de decisão antes de F13; 04 e 06 antes do MVP2) |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
@@ -36,7 +36,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F5 / SPEC-005 | MVP0 | infra | Slice 0.5 — Servidor em Docker com latência/perda simuladas | done (#6) |
 | [GATE] | MVP0 | — | Protocolo do gate M0 e ADR-0001 | done (#7) |
 | F6 / SPEC-006 | MVP1 | shared | Slice 1.1 — `shared/` por junction; classes Resource; `.tres` de heróis, itens, monstros, regras (GDB §8); `stats.gd`, `xp_table.gd`, `set_bonus.gd`, `item_rules.gd`; cena de alinhamento | todo (#18) |
-| F7 / SPEC-007 | MVP1 | game | Slice 1.2 — Arena hexagonal 3 zonas, portões por time, marcadores de spawn | planejado (#19) — aguarda SPEC-007 (mapa) |
+| F7 / SPEC-007 | MVP1 | game | Slice 1.2 — Arena "Vale Rúnico": layout da `spec/SPEC-007.md`, rio + 2 pontes, cratera com pilares, portões, mato (geometria), marcadores | todo (#19) |
 | F31 / SPEC-031 | MVP1 | game, shared | Slice 1.3 — Câmera 3ª pessoa, controles teclado/mouse/gamepad, cena de alinhamento KayKit (avaliação de câmera B-02 pelo PI) | todo (#20) |
 | F8 / SPEC-008 | MVP1 | game | Slice 1.4 — Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha, R Terremoto, lendo `shared/data` | todo (#21) |
 | F9 / SPEC-009 | MVP1 | game | Slice 1.5 — Monstros tier 1–3 com IA, XP, níveis, pontos de skill, catch-up | backlog (#22) |
@@ -65,9 +65,10 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | [GATE] | MVP3 | — | Dois amigos jogam pela internet sem intervenção do dev | — |
 | F29 / SPEC-029 | MVP4 | backend, launcher, game | Slice 4.1 — Telemetria: ping médio, duração, líder de nível F1 × vencedor; painel de KPIs no histórico | — |
 | F30 / SPEC-030 | MVP4 | shared | Slice 4.2 — Ajustes de balanceamento pós-playtest (só `.tres`) | — |
+| F32 / SPEC-032 | MVP2 | game | Slice 2.8 — Mato alto: herói dentro da moita não é replicado para o adversário (visibilidade no servidor); regra e números em `CONVENTION.md` §4.8 | — |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
-Próximo número livre: **F32 / SPEC-032**.
+Próximo número livre: **F33 / SPEC-033**.
 
 ## 4. Regras deste índice
 

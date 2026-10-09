@@ -15,6 +15,7 @@
 | 2.5 | F18 / SPEC-018 | fim de partida com estatísticas | DV tela 7 |
 | 2.6 | F19 / SPEC-019 | bot fase 2, soak 50 partidas | PRD §3.7, §8.7 |
 | 2.7 | F20 / SPEC-020 | monstros/baús/boss replicados para 2 clientes reais | PRD §8.3 |
+| 2.8 | F32 / SPEC-032 | mato alto: herói dentro da moita deixa de ser replicado para o adversário (filtro de visibilidade no servidor); revela ao atacar | `CONVENTION.md` §4.8; SPEC-007 §2 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 
 ## Riscos herdados do MVP0 (ADR-0001) — entram no critério de aceite das fatias
