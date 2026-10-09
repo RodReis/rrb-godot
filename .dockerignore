@@ -4,3 +4,6 @@ game/.godot
 docs
 tools
 build
+game/shared
+launcher/shared
+art

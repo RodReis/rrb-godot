@@ -50,6 +50,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [x] **F31** — `follow_camera` 3ª pessoa 45° distância fixa, yaw fixo do time; `InputActions` completo (teclado/mouse/gamepad, DV §3.3, esquiva no A); `shared/assets/_alignment.tscn` com Knight ≈ 1,8 u; **B-02: PI manteve a 3ª pessoa** (2026-10-09, `STATUS-ARQUIVO.md`). (#20)
 - [x] **F8** — `knight.tscn` (KayKit Knight + animações); ataque básico, Q (empurrão via ledger), E (escudo absorve + bloqueia projétil — hitbox de bloqueio), R (stun via ledger) lendo `knight.tres`; remove as constantes de spike de `player.gd`. Entregue: `Hero` genérico + `knight.tscn`; `--level` de dev até o F9 (PI 2026-10-09). (#21)
 - [x] **F34** — pilares da cratera e mato alto com os assets do Blender (`shared/assets/rrb/arena/*.glb`, fonte `art/arena/crater_props.blend`); só visual, colisão do F7 mantida; captura no roadmap. (#38)
+- [x] **[FIX] Docker sem `shared/`** — a imagem do servidor copiava só `game/` e `game/shared` (junction) virava symlink quebrado: `hero.gd` não compilava e a arena perdia nós. `Dockerfile` copia `shared/` para `/game/shared`; `.dockerignore` ignora as junctions e `art/`. (#42)
 - [ ] **F9** — `monster_ai.gd`, 4 monstros não-boss com `.tres`; XP, nível, pontos de skill, catch-up (`XpTable` GUT); `SpawnDirector`.
 - [ ] **F10** — `chest.tscn`, `Inventory`, `ItemRules` (auto/`F` 0,4 s), bônus de conjunto; teste I5 (servidor = Forja) com fixture.
 - [ ] **F11** — Rei Esqueleto aos 3:30, drop épico, `MatchClock` com eventos de tempo.
