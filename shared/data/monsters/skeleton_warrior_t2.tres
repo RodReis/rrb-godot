@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MonsterData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/monster_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"skeleton_warrior_t2"
+display_name = "Esqueleto Guerreiro"
+tier = 1
+count = 4
+hp = 360.0
+damage = 28.0
+attack_interval = 1.1
+xp = 85
+drop_common_chance = 1.0

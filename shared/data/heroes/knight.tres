@@ -1,0 +1,71 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"knight_basic"
+display_name = "Espada Curta"
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.0)
+attack_ratio = 1.0
+attack_range = 2.2
+arc_degrees = 70.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"knight_q"
+display_name = "Investida"
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(8.0)
+base_amount = PackedFloat64Array(50.0, 80.0, 110.0, 140.0, 170.0)
+attack_ratio = 0.75
+speed = 14.0
+distance = 6.0
+knockback = 1.5
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"knight_e"
+display_name = "Muralha"
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(11.0)
+base_amount = PackedFloat64Array(120.0, 170.0, 220.0, 270.0, 320.0)
+max_hp_ratio = 0.15
+duration = PackedFloat64Array(3.0)
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"knight_r"
+display_name = "Terremoto"
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(50.0, 42.0)
+base_amount = PackedFloat64Array(160.0, 260.0)
+intelligence_ratio = 1.1
+radius = 5.0
+stun_duration = PackedFloat64Array(1.2, 1.6)
+
+[resource]
+script = ExtResource("1_script")
+id = &"knight"
+display_name = "Cavaleiro"
+base_move_speed = 5.8
+base_hp = 600.0
+hp_per_level = 45.0
+base_defense = 30.0
+defense_per_level = 3.0
+base_attack = 40.0
+attack_per_level = 3.5
+base_intelligence = 10.0
+intelligence_per_level = 1.0
+base_agility = 10.0
+agility_per_level = 1.0
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")

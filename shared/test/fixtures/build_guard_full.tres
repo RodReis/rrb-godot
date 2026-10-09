@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BuildFixture" format=3]
+
+[ext_resource type="Script" path="res://shared/test/fixtures/build_fixture.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/item_data.gd" id="2_item"]
+[ext_resource type="Resource" path="res://shared/data/heroes/knight.tres" id="3_knight"]
+[ext_resource type="Resource" path="res://shared/data/items/weapons/sword_t3_epic.tres" id="4_weapon"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_helm_t2.tres" id="5_helm"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_chest_t2.tres" id="6_chest"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_boots_t2.tres" id="7_boots"]
+
+[resource]
+script = ExtResource("1_script")
+hero = ExtResource("3_knight")
+level = 10
+items = Array[ExtResource("2_item")]([ExtResource("4_weapon"), ExtResource("5_helm"), ExtResource("6_chest"), ExtResource("7_boots")])

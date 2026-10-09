@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MonsterData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/monster_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"skeleton_king_boss"
+display_name = "Rei Esqueleto"
+tier = 3
+count = 1
+hp = 2400.0
+damage = 75.0
+attack_interval = 1.4
+xp = 550
+area_attack = true
+knockback = true
+drop_epic_chance = 1.0

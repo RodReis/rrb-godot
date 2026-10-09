@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"guard_boots_t1"
+display_name = "Botas da Guarda"
+slot = 3
+rarity = 0
+set_id = &"guard"
+agility_pct = 0.05

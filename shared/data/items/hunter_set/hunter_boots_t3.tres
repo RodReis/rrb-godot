@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/item_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"hunter_boots_t3"
+display_name = "Botas do Caçador"
+slot = 3
+rarity = 2
+set_id = &"hunter"
+attack = 8.0
+agility_pct = 0.24

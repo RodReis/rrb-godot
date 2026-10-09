@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SetBonusData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/set_bonus_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+set_id = &"guard"
+pieces_required = 3
+max_hp_pct = 0.15
+defense = 10.0
