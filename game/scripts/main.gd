@@ -22,10 +22,21 @@ func _ready() -> void:
 	connect_button.pressed.connect(_on_connect_pressed)
 
 	var args := LaunchArgs.parse(OS.get_cmdline_user_args())
+	PlayerInput.autopilot = args["autopilot"]
 	if args["mode"] == "server" or OS.has_feature("dedicated_server"):
 		start_server(args["port"])
 	elif args["host"] != "":
 		start_client(args["host"], args["port"])
+
+func _process(_delta: float) -> void:
+	if multiplayer.is_server():
+		return
+	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
+	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		return
+	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
+	status_label.text = "peer %d | RTT %d ms | tick %d%s" % [
+		multiplayer.get_unique_id(), rtt, NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]
 
 func start_server(port: int) -> void:
 	var peer := ENetMultiplayerPeer.new()
