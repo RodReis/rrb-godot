@@ -3,8 +3,13 @@ extends Node3D
 ## NetworkTime e iniciado pelo NetworkEvents do netfox (netfox/events/enabled).
 
 const MAX_PLAYERS: int = 2
+const PLAYER_SCENE: String = "res://scenes/player.tscn"
+const SPAWN_POINTS: Array[Vector3] = [Vector3(-8, 0, 0), Vector3(8, 0, 0)]
+
+var _player_scene: PackedScene = preload(PLAYER_SCENE)
 
 @onready var players: Node3D = $Players
+@onready var spawner: MultiplayerSpawner = $MultiplayerSpawner
 @onready var connect_panel: Control = $UI/ConnectPanel
 @onready var address_edit: LineEdit = $UI/ConnectPanel/Address
 @onready var connect_button: Button = $UI/ConnectPanel/ConnectButton
@@ -12,6 +17,8 @@ const MAX_PLAYERS: int = 2
 
 func _ready() -> void:
 	InputActions.ensure()
+	spawner.spawn_path = spawner.get_path_to(players)
+	spawner.add_spawnable_scene(PLAYER_SCENE)
 	connect_button.pressed.connect(_on_connect_pressed)
 
 	var args := LaunchArgs.parse(OS.get_cmdline_user_args())
@@ -55,9 +62,16 @@ func _on_connect_pressed() -> void:
 
 func _on_peer_connected(id: int) -> void:
 	print("[server] peer %d conectou" % id)
+	var player := _player_scene.instantiate() as Node3D
+	player.name = str(id)
+	player.position = SPAWN_POINTS[players.get_child_count() % SPAWN_POINTS.size()]
+	players.add_child(player, true)
 
 func _on_peer_disconnected(id: int) -> void:
 	print("[server] peer %d saiu" % id)
+	var player := players.get_node_or_null(str(id))
+	if player:
+		player.queue_free()
 
 func _on_server_disconnected() -> void:
 	status_label.text = "desconectado do servidor"
