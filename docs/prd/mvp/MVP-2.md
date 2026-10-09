@@ -17,6 +17,15 @@
 | 2.7 | F20 / SPEC-020 | monstros/baús/boss replicados para 2 clientes reais | PRD §8.3 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 
+## Riscos herdados do MVP0 (ADR-0001) — entram no critério de aceite das fatias
+
+| Risco | Fatia que resolve | Critério |
+|---|---|---|
+| Jogador desconectado deixa de ser simulado (`enable_prediction=false`) e fica imune a zona/dano | F15 | servidor sintetiza input vazio; teste: peer desconectado morre pela zona |
+| Diff states descartados sob perda com jitter (`Reference tick missing`); remoto congela | F20 | cenário C do ADR-0001 com ≤ 30 % de frames parados do remoto (hoje 79 %) ou decisão registrada de que C está fora da meta |
+| ~20 % de frames parados do remoto no cenário B, imperceptível com 1 cápsula | F14, F20 | medir de novo com projéteis e monstros replicados; meta ≤ 20 % no B |
+| RPC de estado chega antes do spawn (`Node not found`) sob perda | F20 | spawn confiável antes do primeiro estado; 0 ocorrências em 10 min no B |
+
 ## Pendências do PI
 
 R-PEND-04 (herói padrão no timeout), R-PEND-06 (monstros na fase 2). **Bloqueiam F15 e F16** se não decididas.

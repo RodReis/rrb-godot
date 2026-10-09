@@ -19,6 +19,6 @@ paths:
 ## Project-specific (rrb-godot)
 
 - Gameplay state lives in netfox `RollbackSynchronizer` state properties and is simulated in `_rollback_tick`; never mutate it in `_process`/`_physics_process`.
-- After changing another node's state inside a rollback tick, call `NetworkRollback.mutate(node)`.
+- Do NOT rely on `NetworkRollback.mutate(node)` for cross-node effects (netfox 1.35.3 loses the change when the target is resimulated). Record the effect in a server-only ledger outside rollback state (`HitLedger`) and let the TARGET apply it in its own `_rollback_tick`.
 - Client input goes only through `BaseNetInput` subclasses (input broadcast disabled). Raw `@rpc` only for discrete, non-simulated events (UI, match lifecycle).
 - Pure rules (damage, ranges, loot) go in `game/scripts/core/` with GUT tests; network scripts call them.

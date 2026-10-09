@@ -17,6 +17,12 @@
 | 1.7 | F12 / SPEC-012 | bot fase 1, modo `--offline --bot` | PRD §3.7 |
 | 1.8 | F13 / SPEC-013 | HUD fase 1 + componentes base + Theme inicial | DV tela 3; `design-system/` |
 
+## Herança do MVP0 que este MVP tem de absorver
+
+- `game/scripts/net/player.gd` tem números do spike (`MAX_HP 600`, `SPEED 5.0`, `ATTACK_DAMAGE 120`, cooldown 0,5 s) — **não são o GDB**. F6 cria os `.tres`; F8 faz o Cavaleiro ler deles e remove as constantes. Até lá, I4 (nenhum número fora de `.tres`) está suspenso só para esse arquivo.
+- Padrão `HitLedger` (efeito aplicado pelo alvo no próprio `_rollback_tick`) é a regra para todo efeito entre nodes: empurrão do Q, escudo do E, stun do R, dano de monstro, consumível — `ARCHITECTURE-GAME.md` §3.2.
+- CI tem só `test-game` + `gate`; `lint-gd` (números literais, I9) e path filter entram por card `[INFRA]` antes de F6.
+
 ## Pendências do PI que afetam este MVP
 
 R-PEND-01 (épico em baú raro), R-PEND-05 (aviso 3:00), R-PEND-08 (`B` em partida), R-PEND-09 (Golem × Aranha). Sem decisão: F10 segue GDB; F13 sem aviso e sem `B`; F9 bloqueia no asset do tier 3.

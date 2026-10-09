@@ -94,7 +94,8 @@ Ordem dentro do arquivo: `class_name` → `extends` → doc `##` → constantes/
 
 - **Toda regra de jogo roda no servidor.** O cliente só envia input.
 - Estado de gameplay = *state properties* do `RollbackSynchronizer`, simulado em `_rollback_tick(delta, tick, is_fresh)`. Não mexa nesse estado em `_process`/`_physics_process`.
-- Alterou estado de **outro** node dentro do rollback → `NetworkRollback.mutate(node)`.
+- **Efeito sobre outro node (dano, empurrão, lentidão) não usa `NetworkRollback.mutate`**: no netfox 1.35.3 a mudança se perde quando o alvo é ressimulado. Padrão do projeto: o atacante registra o efeito num *ledger* fora do estado (`HitLedger`, só no servidor) e o **alvo aplica no próprio `_rollback_tick`** (ADR-0001, aprendizado #5).
+- Node sem input no tick (jogador desconectado) **não é simulado nem transmitido** pelo servidor com `enable_prediction=false`; quem precisa sofrer dano/zona sem input tem de ter input sintetizado pelo servidor (ver `ARCHITECTURE-GAME.md` §6).
 - Movimento: `velocity *= NetworkTime.physics_factor` antes de `move_and_slide()` e divida depois.
 - Input só por subclasses de `BaseNetInput` (broadcast desligado). `@rpc` cru apenas para eventos discretos fora da simulação (UI, ciclo de partida).
 - Pooling de objetos que participam do rollback (projéteis) precisa ser compatível com a forma de spawn do netfox — confirme no addon antes de implementar.
