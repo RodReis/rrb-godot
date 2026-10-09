@@ -15,6 +15,9 @@ Cada pasta de pack guarda o `LICENSE.txt` original. Crédito não obrigatório: 
 
 **Crédito obrigatório (CC-BY):** Golem de Pedra baseado em "Lava Golem" de vladimirmejia (blendswap.com/blend/6023), CC-BY 3.0 — modificado (escala, faces planas, cores). Tem de aparecer nos créditos do jogo e do roadmap público.
 
+- Roadmap público: feito (`docs/roadmap/historia.json` → `creditos`, F9).
+- Créditos do jogo: **pendente** — ainda não há tela de créditos; entra na primeira que existir (registrado no F24 em `docs/DEVELOPMENT.md`, fatia a confirmar pelo Cowork). Build distribuída sem esse crédito descumpre a licença.
+
 ## Escalas de referência (`_alignment.tscn`)
 
 | Asset | Escala | Por quê |
