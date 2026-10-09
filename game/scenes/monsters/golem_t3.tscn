@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ai/monster.gd" id="1_monster"]
+[ext_resource type="Script" path="res://scripts/ai/monster_visual.gd" id="2_visual"]
+[ext_resource type="Resource" path="res://shared/data/monsters/golem_t3.tres" id="3_data"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.7
+height = 2.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rock"]
+albedo_color = Color(0.45, 0.43, 0.4, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_golem"]
+material = SubResource("StandardMaterial3D_rock")
+size = Vector3(1.6, 2.4, 1.2)
+
+[node name="GolemT3" type="CharacterBody3D"]
+collision_layer = 0
+collision_mask = 15
+script = ExtResource("1_monster")
+data = ExtResource("3_data")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 1.2, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Model" type="Node3D" parent="."]
+
+[node name="Body" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+mesh = SubResource("BoxMesh_golem")
+
+[node name="Visual" type="Node" parent="." node_paths=PackedStringArray("model")]
+script = ExtResource("2_visual")
+model = NodePath("../Model")
+
+[node name="HpLabel" type="Label3D" parent="."]
+position = Vector3(0, 3.0, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0 / 0"
+font_size = 64
+outline_size = 18

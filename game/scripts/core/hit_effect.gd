@@ -2,12 +2,15 @@ class_name HitEffect
 extends RefCounted
 ## Efeito de um golpe sobre um heroi, aplicado pelo proprio alvo no _rollback_tick
 ## (ARCHITECTURE-GAME §3.2): dano bruto (antes da DEF), origem (para o escudo frontal),
-## empurrao e atordoamento.
+## empurrao, atordoamento e XP (recompensa de abate, GDB §3.3/§5.1). attacker_id = peer_id do
+## heroi que golpeou (o monstro morto da o XP a ele).
 
 var damage: int = 0
 var source: Vector3 = Vector3.ZERO
 var push: Vector3 = Vector3.ZERO
 var stun_ticks: int = 0
+var xp: int = 0
+var attacker_id: int = 0
 
 
 func _init(

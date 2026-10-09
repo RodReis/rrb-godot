@@ -6,7 +6,7 @@ Todo asset de terceiro entra aqui com pack, autor, licença, origem e o que foi 
 |---|---|---|---|---|---|
 | `kaykit/medieval_hexagon/` | KayKit Medieval Hexagon Pack 1.0 | Kay Lousberg | CC0 1.0 | github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0 | `hex_grass`, `hex_water`, `building_bridge_A`, `mountain_A`, `wall_straight`, `wall_straight_gate` (glTF) + `hexagons_medieval.png` |
 | `kaykit/adventurers/` | KayKit Character Pack: Adventurers 1.0 | Kay Lousberg | CC0 1.0 | github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0 | `Knight.glb` |
-| `kaykit/skeletons/` | KayKit Character Pack: Skeletons 1.0 | Kay Lousberg | CC0 1.0 | github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0 | `Skeleton_Minion.glb` |
+| `kaykit/skeletons/` | KayKit Character Pack: Skeletons 1.0 | Kay Lousberg | CC0 1.0 | github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0 | `Skeleton_Minion.glb`, `Skeleton_Warrior.glb`, `Skeleton_Mage.glb` |
 
 | `rrb/arena/` | Arte própria (Blender, ADR-0005) | projeto rrb-godot | do projeto | fonte `art/arena/crater_props.blend` | `crater_pillar.glb`, `tall_grass_4x4.glb`, `tall_grass_4x3.glb` (cores do atlas KayKit embutido) |
 
