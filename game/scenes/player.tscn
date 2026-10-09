@@ -31,8 +31,11 @@ mesh = SubResource("BoxMesh_nose")
 
 [node name="HpLabel" type="Label3D" parent="."]
 position = Vector3(0, 2.3, 0)
+pixel_size = 0.01
 billboard = 1
 text = "600 / 600"
+font_size = 96
+outline_size = 24
 
 [node name="Input" type="Node" parent="."]
 script = ExtResource("2_input")
