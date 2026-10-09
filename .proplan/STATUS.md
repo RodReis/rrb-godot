@@ -7,7 +7,9 @@ updated: 2026-10-09
 
 ## Backlog
 
-_(vazio)_
+### Sem épico
+
+- Câmera: girar em volta do herói com o botão direito segurado (#47)
 
 ## A Fazer
 
@@ -16,12 +18,12 @@ _(vazio)_
 - [MVP1][SPEC-013][F13] HUD da fase 1, aviso do boss aos 3:00, bestiário por B e componentes base do design system (#26)
 - [MVP1][GATE] Homologação: fase 1 completa contra bot, offline (#27)
 - [MVP1][SPEC-012][F12] Bot da fase 1 (BotInput) e modo offline com servidor embutido (#25)
-- [MVP1][SPEC-011][F11] Rei Esqueleto aos 3:30, drop épico e relógio de partida (#24)
-- [MVP1][SPEC-010][F10] Baús, itens, inventário de 4 slots, substituição e bônus de conjunto (#23)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP1] Arena single-player (#16)
+
+- [MVP1][SPEC-011][F11] Rei Esqueleto aos 3:30, drop épico e relógio de partida (#24)
 
 ## Feito
 
@@ -31,6 +33,7 @@ _(vazio)_
 
 ### [MVP1] Arena single-player (#16)
 
+- [MVP1][SPEC-010][F10] Baús, itens, inventário de 4 slots, substituição e bônus de conjunto (#23, finalizado em: 2026-10-09)
 - [MVP1][SPEC-009][F9] Monstros tier 1–3 com IA, XP, níveis, pontos de skill e catch-up (#22, finalizado em: 2026-10-09)
 - [MVP1][FIX] Herói é puxado de volta (rollback) ao passar pelo portão/muro da base (#41, finalizado em: 2026-10-09)
 - [MVP1][SPEC-005][FIX] Servidor Docker sobe sem shared/ e o herói não compila (#42, finalizado em: 2026-10-09)
