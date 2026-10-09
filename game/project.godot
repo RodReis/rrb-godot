@@ -40,6 +40,10 @@ window/size/viewport_height=720
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/netfox.extras/plugin.cfg", "res://addons/netfox.internals/plugin.cfg", "res://addons/netfox/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [layer_names]
 
 3d_physics/layer_1="world"

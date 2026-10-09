@@ -5,3 +5,5 @@
 *.ogg binary
 *.ttf binary
 *.bin binary
+*.glb binary
+*.blend binary

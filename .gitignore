@@ -18,3 +18,7 @@ export_presets.cfg
 .DS_Store
 Thumbs.db
 .vscode/
+
+# Blender (ADR-0005): backups
+*.blend1
+*.blend2
