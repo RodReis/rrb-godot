@@ -38,7 +38,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [x] **F2** — Tarefas 3 (`LaunchArgs`), 4, 5, 6
 - [x] **F3** — Tarefas 7, 8 (roteiro: `game/test/net/roteiro-f3-conexao-movimento.md`)
 - [x] **F4** — Tarefas 9, 10 (roteiro: `game/test/net/roteiro-f4-ataque-hud-autopilot.md`)
-- [ ] **F5** — Tarefa 11
+- [x] **F5** — Tarefa 11 (roteiro: `game/test/net/roteiro-f5-docker-netem.md`)
 - [ ] **[GATE] M0** — Tarefa 12 → ADR-0001 → decisão do PI
 
 ### MVP1 — Arena single-player (`game`, `shared`)
