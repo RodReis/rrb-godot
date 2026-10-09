@@ -9,7 +9,6 @@ updated: 2026-10-09
 
 ### [MVP1] Arena single-player (#16)
 
-- [MVP1][FIX] Herói é puxado de volta (rollback) ao passar pelo portão/muro da base (#41)
 - [MVP1][SPEC-013][F13] HUD da fase 1, aviso do boss aos 3:00, bestiário por B e componentes base do design system (#26)
 - [MVP1][GATE] Homologação: fase 1 completa contra bot, offline (#27)
 - [MVP1][SPEC-012][F12] Bot da fase 1 (BotInput) e modo offline com servidor embutido (#25)
@@ -19,7 +18,9 @@ updated: 2026-10-09
 
 ## A Fazer
 
-_(vazio)_
+### [MVP1] Arena single-player (#16)
+
+- [MVP1][FIX] Herói é puxado de volta (rollback) ao passar pelo portão/muro da base (#41)
 
 ## Em Andamento
 
