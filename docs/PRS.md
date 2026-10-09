@@ -68,3 +68,4 @@ Consolidadas pelo Code no fecho de cada MVP a partir de `gh pr list --state merg
 - Número do GDB copiado para um script "só por enquanto".
 - Tela sem estado `error`/`empty` "porque nunca acontece".
 - Afirmar "funciona" sem saída real de comando na descrição.
+
