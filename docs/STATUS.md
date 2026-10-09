@@ -10,7 +10,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Módulo em foco | `game/` |
 | Próximo gate | [GATE] MVP1 — fase 1 completa contra bot, offline |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos) |
-| Board | issue-pai [MVP0] #1; F1–F5 e [GATE] #7 em `proplan:done` (#2–#7) |
+| Board | issue-pai [MVP1] #16; `todo`: [INFRA] #17, F6 #18, F31 #20, F8 #21; `planejado`: F7 #19 (mapa), F13 #26 (paleta); `backlog`: F9–F12, [GATE] #27. MVP0 #1–#7 `done`, aguardando aceite do PI |
 | Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. Abertos: 02, 03, 04, 06, 07, 10, 11 (R-PEND-11 precisa de decisão antes de F13; 04 e 06 antes do MVP2) |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
@@ -35,17 +35,17 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F4 / SPEC-004 | MVP0 | game | Slice 0.4 — Ataque corpo a corpo validado no servidor, HUD de rede, autopilot | done (#5) |
 | F5 / SPEC-005 | MVP0 | infra | Slice 0.5 — Servidor em Docker com latência/perda simuladas | done (#6) |
 | [GATE] | MVP0 | — | Protocolo do gate M0 e ADR-0001 | done (#7) |
-| F6 / SPEC-006 | MVP1 | shared | Slice 1.1 — `shared/` por junction; classes Resource; `.tres` de heróis, itens, monstros, regras (GDB §8); `stats.gd`, `xp_table.gd`, `set_bonus.gd`, `item_rules.gd`; cena de alinhamento | — |
-| F7 / SPEC-007 | MVP1 | game | Slice 1.2 — Arena hexagonal 3 zonas, portões por time, marcadores de spawn | — |
-| F31 / SPEC-031 | MVP1 | game, shared | Slice 1.3 — Câmera 3ª pessoa, controles teclado/mouse/gamepad, cena de alinhamento KayKit (avaliação de câmera B-02 pelo PI) | — |
-| F8 / SPEC-008 | MVP1 | game | Slice 1.4 — Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha, R Terremoto, lendo `shared/data` | — |
-| F9 / SPEC-009 | MVP1 | game | Slice 1.5 — Monstros tier 1–3 com IA, XP, níveis, pontos de skill, catch-up | — |
-| F10 / SPEC-010 | MVP1 | game | Slice 1.6 — Baús, itens, inventário 4 slots, substituição, bônus de conjunto | — |
-| F11 / SPEC-011 | MVP1 | game | Slice 1.7 — Rei Esqueleto aos 3:30, drop épico | — |
-| F12 / SPEC-012 | MVP1 | game | Slice 1.8 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | — |
-| F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | — |
-| [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | — |
-| [INFRA] | MVP1 | ci | CI: `lint-gd` (tipagem, literais em `core/`, I9), path filter por módulo, `shared/test` no `test-game` — antes de F6 | — |
+| F6 / SPEC-006 | MVP1 | shared | Slice 1.1 — `shared/` por junction; classes Resource; `.tres` de heróis, itens, monstros, regras (GDB §8); `stats.gd`, `xp_table.gd`, `set_bonus.gd`, `item_rules.gd`; cena de alinhamento | todo (#18) |
+| F7 / SPEC-007 | MVP1 | game | Slice 1.2 — Arena hexagonal 3 zonas, portões por time, marcadores de spawn | planejado (#19) — aguarda SPEC-007 (mapa) |
+| F31 / SPEC-031 | MVP1 | game, shared | Slice 1.3 — Câmera 3ª pessoa, controles teclado/mouse/gamepad, cena de alinhamento KayKit (avaliação de câmera B-02 pelo PI) | todo (#20) |
+| F8 / SPEC-008 | MVP1 | game | Slice 1.4 — Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha, R Terremoto, lendo `shared/data` | todo (#21) |
+| F9 / SPEC-009 | MVP1 | game | Slice 1.5 — Monstros tier 1–3 com IA, XP, níveis, pontos de skill, catch-up | backlog (#22) |
+| F10 / SPEC-010 | MVP1 | game | Slice 1.6 — Baús, itens, inventário 4 slots, substituição, bônus de conjunto | backlog (#23) |
+| F11 / SPEC-011 | MVP1 | game | Slice 1.7 — Rei Esqueleto aos 3:30, drop épico | backlog (#24) |
+| F12 / SPEC-012 | MVP1 | game | Slice 1.8 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | backlog (#25) |
+| F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | planejado (#26) — aguarda R-PEND-11 |
+| [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | backlog (#27) |
+| [INFRA] | MVP1 | ci | CI: `lint-gd` (tipagem, literais em `core/`, I9), path filter por módulo, `shared/test` no `test-game` — antes de F6 | todo (#17) |
 | F14 / SPEC-014 | MVP2 | game | Slice 2.1 — Arqueira: projétil validado no servidor, Q perfurante, E rolamento, R chuva | — |
 | F15 / SPEC-015 | MVP2 | game | Slice 2.2 — Ciclo de partida: `MatchController` (FSM), seleção de heróis, PvP fase 1, respawn, eventos por RPC | — |
 | F16 / SPEC-016 | MVP2 | game | Slice 2.3 — Fase 2: zona, dano, respawn, kills, morte súbita, regras de vitória | — |
