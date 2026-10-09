@@ -43,3 +43,16 @@ func test_porta_invalida_cai_no_padrao() -> void:
 func test_autopilot() -> void:
 	var r := LaunchArgs.parse(PackedStringArray(["--connect=127.0.0.1:7000", "--autopilot"]))
 	assert_true(r["autopilot"])
+
+
+func test_nivel_padrao_e_1() -> void:
+	assert_eq(LaunchArgs.parse(PackedStringArray([]))["level"], 1)
+
+
+func test_nivel_de_dev() -> void:
+	assert_eq(LaunchArgs.parse(PackedStringArray(["--server", "--level=6"]))["level"], 6)
+
+
+func test_nivel_invalido_volta_ao_padrao() -> void:
+	assert_eq(LaunchArgs.parse(PackedStringArray(["--level=0"]))["level"], 1)
+	assert_eq(LaunchArgs.parse(PackedStringArray(["--level=abc"]))["level"], 1)

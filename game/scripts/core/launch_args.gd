@@ -4,15 +4,25 @@ extends RefCounted
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
+## --level=N e argumento de dev ate a progressao do F9 (PI 2026-10-09).
+const DEFAULT_LEVEL: int = 1
 
 
 static func parse(args: PackedStringArray) -> Dictionary:
-	var result := {"mode": "client", "host": "", "port": DEFAULT_PORT, "autopilot": false}
+	var result := {
+		"mode": "client",
+		"host": "",
+		"port": DEFAULT_PORT,
+		"autopilot": false,
+		"level": DEFAULT_LEVEL
+	}
 	for arg: String in args:
 		if arg == "--server":
 			result["mode"] = "server"
 		elif arg == "--autopilot":
 			result["autopilot"] = true
+		elif arg.begins_with("--level="):
+			result["level"] = _level_or_default(arg.trim_prefix("--level="))
 		elif arg.begins_with("--port="):
 			result["port"] = _port_or_default(arg.trim_prefix("--port="))
 		elif arg.begins_with("--connect="):
@@ -29,3 +39,9 @@ static func _port_or_default(text: String) -> int:
 		if port > 0 and port <= MAX_PORT:
 			return port
 	return DEFAULT_PORT
+
+
+static func _level_or_default(text: String) -> int:
+	if text.is_valid_int() and text.to_int() >= DEFAULT_LEVEL:
+		return text.to_int()
+	return DEFAULT_LEVEL
