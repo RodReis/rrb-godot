@@ -34,7 +34,7 @@ A ordem é a do Índice (`STATUS.md` §3). Dentro de cada MVP, o Code pega o pri
 
 Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 0–12). Mapeamento:
 
-- [ ] **F1** — Tarefas 0, 1, 2, 3 (snapshot, `game/`, netfox + GUT, runner `tools/test.ps1`)
+- [x] **F1** — Tarefas 0, 1, 2, 3 (snapshot, `game/`, netfox + GUT, runner `tools/test.ps1`) + CI mínimo (`test-game` + `gate`, `CI-PR.md` §2)
 - [ ] **F2** — Tarefas 3 (`LaunchArgs`), 4, 5, 6
 - [ ] **F3** — Tarefas 7, 8
 - [ ] **F4** — Tarefas 9, 10

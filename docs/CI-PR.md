@@ -27,6 +27,8 @@ Jobs paralelos por módulo, **um gate agregado**, duração medida, limites expl
 
 Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker própria em `infra/ci/` se a action não oferecer a versão — decidir em F1, registrar aqui). Cache: `~/.cache/pnpm`, `.godot/imported` por módulo (chave = hash dos `.import`).
 
+**Decisão F1 (#2):** binário oficial `Godot_v4.7.2-stable_linux.x86_64.zip` baixado por `curl` e guardado em `actions/cache` (sem action de terceiro); os testes rodam pelo mesmo `tools/test.ps1` local, via `pwsh`. Implementado hoje: só `test-game` (sem path filter) + `gate`. `changes`, `lint-gd`, `lint-docs` e os demais jobs entram por card `[INFRA]`.
+
 ## 3. Path filter
 
 ```yaml
