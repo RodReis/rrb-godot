@@ -10,6 +10,7 @@ Todo asset de terceiro entra aqui com pack, autor, licença, origem e o que foi 
 
 | `rrb/arena/` | Arte própria (Blender, ADR-0005) | projeto rrb-godot | do projeto | fonte `art/arena/crater_props.blend` | `crater_pillar.glb`, `tall_grass_4x4.glb`, `tall_grass_4x3.glb` (cores do atlas KayKit embutido) |
 | `rrb/monsters/` | "Lava Golem", adaptado no Blender (ADR-0005) | **vladimirmejia** (Blend Swap) | **CC-BY 3.0 — crédito obrigatório** | blendswap.com/blend/6023 (PI 2026-10-09); fonte adaptada `art/monsters/golem.blend` | `golem.glb`: malha original (1.142 triângulos), escalada a 2,5 u, faces planas, texturas de lava trocadas pela faixa cinza do atlas KayKit (Golem de Pedra) |
+| `rrb/monsters/crown.glb` | Arte própria (Blender, ADR-0005) | projeto rrb-godot | do projeto | fonte `art/monsters/crown.blend` | `crown.glb`: coroa do Rei Esqueleto, 24 triângulos, faixa dourada do atlas KayKit embutido (F11) |
 
 Cada pasta de pack guarda o `LICENSE.txt` original. Crédito não obrigatório: Kay Lousberg, www.kaylousberg.com.
 
@@ -26,3 +27,4 @@ Cada pasta de pack guarda o `LICENSE.txt` original. Crédito não obrigatório: 
 | Tiles hex | 1,5 | 2,0 u → 3,0 u face a face (SPEC-007 §1) |
 | Muro, portão, ponte, rocha, montanha da borda | 1,5 × 2,27 × 1 · 2,5 · 4,1 × 1 × 3,9 · 1,5 · 2,2 | as da arena (`tools/arena/build_arena.gd`) |
 | Pilar da cratera, moitas (`rrb/arena/`) | 1,0 | modelados em metros: pilar ≈ 3,4 × 3,0 u cobre a colisão r 1,4 × h 3,0; moitas 4 × 4 e 4 × 3 u (SPEC-034) |
+| Rei Esqueleto (`Skeleton_Minion` + `crown.glb`) | 1,35 | ~2,9 u de crânio + coroa até ~3,2 u, maior que o Cavaleiro (F11); coroa no osso `head` (`test_boss.gd`) |
