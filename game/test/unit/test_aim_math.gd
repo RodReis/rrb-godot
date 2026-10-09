@@ -29,3 +29,16 @@ func test_mouse_em_cima_do_player_retorna_zero() -> void:
 		AimMath.aim_on_ground(Vector3(0, 10, 0), Vector3(0, -1, 0), Vector3(0.05, 0, 0)),
 		Vector3.ZERO
 	)
+
+
+func test_analogico_direito_mira_relativo_a_camera() -> void:
+	var aim := AimMath.stick_aim(Vector2(0, -1), 0.0)
+	assert_almost_eq(aim, Vector3.FORWARD, Vector3(0.001, 0.001, 0.001))
+
+
+func test_analogico_direito_mira_normalizada() -> void:
+	assert_almost_eq(AimMath.stick_aim(Vector2(0.6, 0), 0.0).length(), 1.0, 0.001)
+
+
+func test_analogico_dentro_da_zona_morta_nao_mira() -> void:
+	assert_eq(AimMath.stick_aim(Vector2(0.1, 0.1), 0.0), Vector3.ZERO)
