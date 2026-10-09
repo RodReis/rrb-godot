@@ -17,7 +17,7 @@ O PRD (v0.1) e o GDB (v1.0) foram escritos no mesmo dia; o GDB é mais detalhado
 | N5 | Rolamento (E) | 4 u | 4,2 u em 0,35 s | GDB |
 | N6 | Nível farmando só a base | "~7–8" | "~5" (§5.2) | GDB |
 | N7 | Respawn fase 1 | 8 s | 8,0 s | iguais |
-| N8 | Set épico | "épico só cai do boss e pertence ao conjunto sorteado" | baús raros têm 10% de épico | GDB (baú raro pode dar épico) — **PI confirmar** |
+| N8 | Set épico | "épico só cai do boss e pertence ao conjunto sorteado" | baús raros têm 10% de épico | GDB — **confirmado pelo PI em 2026-10-09** |
 
 ## Decisão
 

@@ -58,8 +58,9 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 ## 4. Regras por tema (fonte → seção)
 
 ### 4.1 Fase 1 — preparação
-- Portões: só o time dono passa (PRD §3.1). Centro é PvP desde 0:00.
-- Monstros: quantidade fixa, não respawnam; distribuição e XP em GDB §5.1. Boss surge aos **3:30**; aviso global aos **3:00** (benchmark §3.2 — **R-PEND-05**: o aviso aos 3:00 não está no PRD).
+- Mapa: layout, escala e marcadores em `docs/prd/mvp/spec/SPEC-007.md` (raio 35 u; spawn→centro ~6 s; rio bloqueia, 2 pontes; cratera com 4 entradas).
+- Portões: só o time dono passa (PRD §3.1). Centro (ilha + anel) é PvP desde 0:00.
+- Monstros: quantidade fixa, não respawnam; distribuição e XP em GDB §5.1. Boss surge aos **3:30**; aviso global aos **3:00** (banner + som + pista visual no portal — decisão do PI 2026-10-09, origem benchmark §3.2).
 - Morte na fase 1: respawn 8,0 s na própria base, **não** conta kill, matador recebe 80 XP (GDB §3.3). Sem perda de itens.
 - Catch-up: `nível ≤ nível_adversário − 2` → +25% em todo XP de monstro/objetivo (GDB §3.3).
 
@@ -72,7 +73,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - 4 slots: arma, elmo, peitoral, botas. Catálogo GDB §6.1.
 - Substituição: raridade maior → automática; igual ou "escolha lateral" → `F` segurado 0,4 s (GDB §6.2).
 - Bônus de conjunto 3/3: Guarda +15% HP máx e +10 DEF; Caçador +10% vel. ataque e +8% vel. movimento (GDB; ADR-0004 N1/N2).
-- Épico: drop garantido do boss; baú raro 10% (GDB §6.2; ADR-0004 N8 pendente).
+- Épico: drop garantido do boss; baú raro 10 % (GDB §6.2; confirmado pelo PI 2026-10-09).
 - Consumível de cura +120 HP (GDB §6.2, baú comum 30%) — único consumível da fatia.
 
 ### 4.4 Fase 2 — confronto
@@ -91,7 +92,13 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - FSM PRD §3.7: `Farmar → Saquear → Contestar (3:00, se nível ≥ adversário) → Lutar (vantagem) → Recuar (HP < 30%)`; fase 2: `Perseguir`, `Fugir da zona`.
 - Bot produz input; não tem informação além do que um cliente teria (sem ler estado interno do servidor fora do replicado). **Invariante de honestidade do bot.**
 
-### 4.7 Conta e fila
+### 4.7 Mato alto (regra nova — decisão do PI 2026-10-09, origem Astro Arena / Brawl Stars)
+- Herói dentro de uma moita (`Area3D` grupo `tall_grass`, SPEC-007 §2) **não é visível** para o adversário que está fora dela: o servidor deixa de replicar sua posição para aquele peer (F32).
+- Vê quem está na mesma moita. Atacar ou usar skill de dentro revela o herói por um tempo (**número a definir no GDB — R-PEND-12**).
+- Monstros e bot seguem a mesma regra que um jogador (invariante de honestidade do bot, §4.6).
+- Geometria entra no F7; a regra de visibilidade é F32 (MVP2), porque depende de filtro de replicação do netfox.
+
+### 4.8 Conta e fila
 - Conta: e-mail + senha (PRD §8.4). Sem verificação de e-mail, sem recuperação de senha na fatia (**R-PEND-07** — não está no PRD; registrado em `FORA-DE-ESCOPO.md`).
 - Fila 1x1 FIFO, sem rating (PRD §8.4). Um ticket por conta por vez.
 - Histórico: partidas da própria conta, com os campos de `match_players` (`ARCHITECTURE-LAUNCHER.md` §4.3).
@@ -112,7 +119,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 
 ## 6. Nomes de ações de input (InputMap)
 
-Definidos uma vez em `shared/core/input_actions.gd` e usados pelo Game (jogo) e pelo Launcher (tela de controles): `move_forward`, `move_back`, `move_left`, `move_right`, `primary_attack`, `skill_q`, `skill_e`, `skill_r`, `interact`, `dodge`, `scoreboard`, `cancel`. Mapeamento padrão: design visual §3.3. (`open_bestiary` em partida: **R-PEND-08**, não está no PRD.)
+Definidos uma vez em `shared/core/input_actions.gd` e usados pelo Game (jogo) e pelo Launcher (tela de controles): `move_forward`, `move_back`, `move_left`, `move_right`, `primary_attack`, `skill_q`, `skill_e`, `skill_r`, `interact`, `dodge`, `scoreboard`, `cancel`. Mapeamento padrão: design visual §3.3. `open_bestiary` (`B`) abre o bestiário em partida sem pausar (decisão do PI 2026-10-09).
 
 ## 7. Divergências e pendências
 

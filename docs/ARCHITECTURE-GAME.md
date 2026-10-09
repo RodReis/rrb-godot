@@ -71,12 +71,15 @@ O que vai em `shared/core` e não em `game/scripts/core`: o que o Launcher tamb�
 
 ### 3.2 `net/` — simulação com netfox
 
-- Tick fixo **30 Hz** (`NetworkTime.tickrate`). `physics_ticks_per_second` do projeto alinhado ao tick.
+- Tick fixo **30 Hz** (`NetworkTime.tickrate`). `physics_ticks_per_second` fica no padrão (60) salvo medição contrária; o netfox compensa por `physics_factor`. Confirmar na documentação do addon instalado antes de mudar.
 - Cada herói: `CharacterBody3D` + `RollbackSynchronizer` (state: `transform`, `velocity`, `hp`, `cooldowns`, `status_flags`; input: do `BaseNetInput`). Movimento em `_rollback_tick` com `velocity *= NetworkTime.physics_factor` antes de `move_and_slide()`.
 - Input só por subclasse de `BaseNetInput` (`PlayerInput` do cliente humano, `BotInput` do bot). Broadcast de input desligado.
 - Monstros: `StateSynchronizer`/`TickInterpolator` (não precisam de rollback; o servidor simula, clientes interpolam). Projéteis: `RollbackSynchronizer` com spawn compatível com o addon (confirmar no código do addon antes de implementar — `CLAUDE.md`).
 - `@rpc` cru **apenas** para eventos discretos fora da simulação: pick de herói, mudança de fase, kill, baú aberto, level up, fim de partida. Sempre `reliable`, sempre com `tick` no payload.
+- **Efeito entre nodes (padrão `HitLedger`, nascido no F4):** `NetworkRollback.mutate` **não** é usado — no netfox 1.35.3 a mudança se perde quando o alvo é ressimulado (`rollback-history-recorder.gd`, ADR-0001). O atacante/sistema registra `{tick, alvo, efeito}` num ledger **fora do estado**, só no servidor; o alvo lê o ledger e aplica no **próprio** `_rollback_tick`. Vale para dano, empurrão (Q do Cavaleiro), lentidão (R da Arqueira), zona e consumíveis. O ledger é idempotente por `tick` para sobreviver a ressimulação.
 - Lag compensation de hits com `NetworkRollback` (hitbox no tick do atacante). Compensação só até N ticks (parâmetro em `match_pacing.tres`).
+- O servidor valida faixa/NaN de todo input (`InputRules`): o `sanitize` do netfox só confere o dono da propriedade, não o valor.
+- `enable_prediction=false` (padrão): node sem input no tick não é simulado nem transmitido. Bots e jogadores desconectados precisam de input (`BotInput` ou input vazio sintetizado pelo servidor) para continuar sendo simulados — ver §6.
 - Logging de rede com rate limit; validação de tamanho e faixa de todo campo recebido (`.claude/rules/network-code.md`).
 
 ### 3.3 `match/` — ciclo da partida
@@ -90,7 +93,7 @@ PHASE1 (5:00) ─(relógio)─▶ TRANSITION (5 s) ─▶ PHASE2 ─(4:00 da fas
 ```
 
 - `MatchClock`: relógio autoritativo em ticks; `t_match`, `t_phase`. Boss aos 3:30, aviso aos 3:00, portões aos 5:00, zona fecha em 4:00 de fase 2, respawn desliga aos 9:00, colapso aos 10:00 (GDB §7.1).
-- `ZoneController`: raio e dano por tempo (tabela GDB §7.1 em `match_pacing.tres`); aplica dano no `_rollback_tick` do servidor com `NetworkRollback.mutate`.
+- `ZoneController`: raio e dano por tempo (tabela GDB §7.1 em `match_pacing.tres`); registra o dano no ledger de cada herói fora do círculo, e cada herói aplica no próprio `_rollback_tick` (padrão `HitLedger`, §3.2).
 - `KillTracker` + `VictoryRules`: ordem de avaliação GDB §7.2. Nunca empate.
 - `SpawnDirector`: monstros, baús e boss por `arena.tscn` (marcadores) + `.tres`; **seed por partida** vinda do token/servidor para drops determinísticos e auditáveis.
 - Eventos públicos (sinais do `MatchController`, consumidos pela UI e pelo `ResultReporter`): `phase_changed(from, to, tick)`, `hero_picked(peer, hero_id)`, `player_leveled(peer, level)`, `player_died(peer, killer, phase)`, `kill_scored(peer, total)`, `item_equipped(peer, slot, item_id)`, `chest_opened(peer, chest_id, drop)`, `zone_updated(radius, dps, t_next)`, `boss_spawned`, `match_ended(winner, reason, stats)`.
@@ -130,7 +133,7 @@ Mesmo binário, `--offline --bot`: `ClientMain` sobe um `ServerMain` **no mesmo 
 
 | Situação | Comportamento |
 |---|---|
-| Cliente desconecta na partida | Servidor marca `disconnected`; herói fica parado e morre normalmente; sem reconexão (PRD §8.5). Partida termina pelas regras normais; resultado reportado. |
+| Cliente desconecta na partida | Servidor marca `disconnected` e passa a **sintetizar input vazio** para o herói (senão o netfox para de simulá-lo e ele fica imune a zona e dano — §3.2); herói fica parado e morre normalmente; sem reconexão (PRD §8.5). Partida termina pelas regras normais; resultado reportado. |
 | Servidor cai | Clientes recebem `server_disconnected` → tela de erro → encerram. Backend marca partida `aborted` por timeout do heartbeat (ver `ARCHITECTURE-LAUNCHER.md` §6). |
 | Token inválido | Servidor recusa peer no handshake; cliente encerra com código 2. |
 | Backend indisponível ao reportar | `ResultReporter` retenta 3× com backoff; falhou → grava `user://results/<match_id>.json` e encerra com código 3; o orquestrador coleta pelo volume. |
