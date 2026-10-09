@@ -15,6 +15,8 @@ RUN curl -fsSL -o /tmp/godot.zip \
 
 WORKDIR /game
 COPY game/ /game/
+# game/shared e junction local (ADR-0003), ignorada aqui; a imagem leva a copia real.
+COPY shared/ /game/shared/
 RUN godot --headless --path /game --import
 
 COPY infra/gameserver/entrypoint.sh /entrypoint.sh
