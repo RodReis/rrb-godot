@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" path="res://scenes/arena/arena.tscn" id="2_arena"]
 [ext_resource type="Script" path="res://scripts/follow_camera.gd" id="3_cam"]
 [ext_resource type="Script" path="res://scripts/match/spawn_director.gd" id="4_spawn"]
+[ext_resource type="Script" path="res://scripts/match/match_clock.gd" id="5_clock"]
+[ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="6_rules"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
@@ -12,6 +14,10 @@ script = ExtResource("1_main")
 
 [node name="Spawns" type="Node3D" parent="."]
 script = ExtResource("4_spawn")
+
+[node name="MatchClock" type="Node" parent="."]
+script = ExtResource("5_clock")
+rules = ExtResource("6_rules")
 
 [node name="Players" type="Node3D" parent="."]
 

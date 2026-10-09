@@ -167,6 +167,17 @@ func test_ia_dos_monstros_nao_boss() -> void:
 	var golem := _by_id[&"golem_t3"] as MonsterData
 	assert_true(golem.area_attack)
 	assert_almost_eq(golem.area_radius, 2.5, EPS)
+	assert_eq(golem.knockback, 0.0)
+
+
+func test_ia_do_rei_esqueleto() -> void:
+	# Proposta aprovada pelo PI em 2026-10-09 (F11): nao sai da cratera, golpe em area empurra.
+	var king := _by_id[&"skeleton_king_boss"] as MonsterData
+	assert_eq([king.aggro_range, king.leash_range, king.move_speed], [7.0, 8.0, 3.5])
+	assert_almost_eq(king.melee_range, 2.2, EPS)
+	assert_true(king.area_attack)
+	assert_almost_eq(king.area_radius, 3.0, EPS)
+	assert_almost_eq(king.knockback, 2.5, EPS)
 
 
 func test_curva_de_xp() -> void:

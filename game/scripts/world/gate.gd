@@ -1,7 +1,9 @@
 class_name Gate
 extends StaticBody3D
 ## Portao de base: barra o time adversario por camada de colisao (GateRules) ate fall(),
-## chamado no gates_fallen (5:00).
+## chamado no fim da fase 1 (MatchClock.phase1_ended, 5:00).
+
+const GROUP: StringName = &"gates"
 
 @export var team: int = GateRules.TEAM_A
 
@@ -10,6 +12,7 @@ extends StaticBody3D
 
 
 func _ready() -> void:
+	add_to_group(GROUP)
 	collision_layer = GateRules.gate_layer(team)
 	collision_mask = 0
 

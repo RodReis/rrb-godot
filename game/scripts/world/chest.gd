@@ -14,9 +14,12 @@ const RARITY_NAMES: Array[String] = ["Comum", "Raro", "Épico"]
 @export var catalog: ItemCatalog
 @export var common_material: Material
 @export var rare_material: Material
+@export var epic_material: Material
 
 ## Definidos pelo SpawnDirector antes de entrar na arvore.
 var rare: bool = false
+## Bau que o Rei Esqueleto deixa ao morrer (F11).
+var epic: bool = false
 ## Negativo e unico entre baus e monstros (chave do ledger).
 var uid: int = 0
 ## So no servidor: numero de Ids ou ChestRules.HEAL.
@@ -37,7 +40,11 @@ var _opened_tick: int = 0
 
 func _ready() -> void:
 	add_to_group(GROUP)
-	var material := rare_material if rare else common_material
+	var material := common_material
+	if epic:
+		material = epic_material
+	elif rare:
+		material = rare_material
 	_body.material_override = material
 	_lid_mesh.material_override = material
 	_refresh_visual()

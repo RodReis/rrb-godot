@@ -5,6 +5,9 @@ extends Combatant
 ## vai para o ledger dele; golpe de heroi entra aqui na hora, uma vez por tick + fonte. Ao
 ## morrer da o XP ao matador (com catch-up, GDB §3.3). Nao respawna (GDB §5).
 
+## Servidor apenas. [param killer_id] = peer_id de quem deu o golpe final.
+signal died(killer_id: int)
+
 const GROUP: StringName = &"monsters"
 
 @export var data: MonsterData
@@ -115,17 +118,24 @@ func _chase(tick: int, target_dist: float) -> void:
 		_attack(tick)
 
 
-## O heroi aplica no proprio _rollback_tick de tick+1 (ARCHITECTURE-GAME §3.2).
+## O heroi aplica no proprio _rollback_tick de tick+1 (ARCHITECTURE-GAME §3.2). Empurrao
+## (knockback) para longe do monstro.
 func _attack(tick: int) -> void:
-	var effect := HitEffect.new(roundi(data.damage), global_position)
 	var source := HitLedger.source_key(uid, HitLedger.Slot.BASIC)
 	if not data.area_attack:
-		_target.receive_hit(tick + 1, source, effect)
+		_target.receive_hit(tick + 1, source, _effect_on(_target))
 		return
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
 		if CombatRules.in_radius(global_position, hero.global_position, data.area_radius):
-			hero.receive_hit(tick + 1, source, effect)
+			hero.receive_hit(tick + 1, source, _effect_on(hero))
+
+
+func _effect_on(hero: Hero) -> HitEffect:
+	var away := hero.global_position - global_position
+	away.y = 0.0
+	var push := CombatRules.push_vector(away.normalized(), data.knockback)
+	return HitEffect.new(roundi(data.damage), global_position, push)
 
 
 ## XP de monstro com catch-up contra o heroi do outro time de maior nivel.
@@ -133,6 +143,7 @@ func _die(tick: int, killer_id: int) -> void:
 	state = MonsterRules.State.IDLE
 	velocity = Vector3.ZERO
 	collision_mask = 0
+	died.emit(killer_id)
 	var heroes := get_tree().get_nodes_in_group(Hero.GROUP)
 	var killer: Hero = null
 	for node: Node in heroes:

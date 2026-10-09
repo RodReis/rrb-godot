@@ -1,7 +1,7 @@
 class_name ChestRules
 extends RefCounted
 ## Sorteio do bau (GDB §6.2). Comum: item comum ou cura. Raro: raro, comum ou epico (10 %, PI
-## 2026-10-09). Epico de bau so de armadura: a arma epica e do boss (PI 2026-10-09). Item
+## 2026-10-09). Epico de bau so de armadura: a arma epica e do boss (boss_drop). Item
 ## uniforme entre os da raridade sorteada (PI 2026-10-09). RNG injetado: seed por partida.
 
 ## Drop de cura (consumivel +heal_amount); nao colide com numero de Ids nem com Ids.NONE.
@@ -34,6 +34,16 @@ static func pool(items: Array[ItemData], rarity: int) -> Array[ItemData]:
 
 static func pick(candidates: Array[ItemData], rng: RandomNumberGenerator) -> ItemData:
 	return candidates[rng.randi_range(0, candidates.size() - 1)]
+
+
+## Drop do Rei Esqueleto (GDB §5.1): um epico garantido, uniforme entre todos, arma inclusa
+## (PI 2026-10-09, F11).
+static func boss_drop(items: Array[ItemData], rng: RandomNumberGenerator) -> int:
+	var epics: Array[ItemData] = []
+	for item: ItemData in items:
+		if item.rarity == ItemData.Rarity.EPIC:
+			epics.append(item)
+	return Ids.to_int(pick(epics, rng).id)
 
 
 ## Numero de Ids do item sorteado, ou HEAL.
