@@ -20,7 +20,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | D6 | Fatia 1x1 com 2 heróis | game |
 | D7 | Engine Godot 4.7, condicionada ao gate M0 | ambos |
 | D8 | GDScript (não C#) | ambos |
-| D9 | Assets KayKit (principal) + Quaternius (secundário), cena de alinhamento | shared |
+| D9 | Assets KayKit (principal) + Quaternius (secundário), cena de alinhamento; ajustes e arte própria no Blender (ADR-0005) | shared |
 | D10 | Backend meta em NestJS + Postgres | launcher |
 
 ## ADRs
@@ -31,6 +31,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0002](adr/0002-dois-modulos-launcher-e-game.md) | Dois módulos independentes: Launcher (Godot) e Game; backend no Launcher; pick e fim de partida no Game | aceito | 2026-10-08 |
 | [0003](adr/0003-shared-por-junction.md) | `shared/` montado nos dois projetos por junction NTFS | aceito | 2026-10-08 |
 | [0004](adr/0004-gdb-vence-numeros.md) | Em divergência numérica, o GDB vence o PRD | aceito | 2026-10-08 |
+| [0005](adr/0005-blender-pipeline-de-assets.md) | Blender no pipeline de assets 3D (criação, acabamento, ajustes, rascunhos); fonte `.blend` em `art/`, só glTF em `shared/assets/` | aceito | 2026-10-09 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 

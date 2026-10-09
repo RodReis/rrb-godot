@@ -41,9 +41,9 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | Contas e-mail/senha, fila 1x1 | Steam, ranked, amigos |
 | Sem economia | moedas, gemas, vales, sorteios, loja, passe semanal, skins |
 | PC | mobile |
-| Arte CC0 (KayKit/Quaternius) | arte própria/comissionada |
+| Arte CC0 (KayKit/Quaternius) + arte própria no Blender quando necessário (ADR-0005) | arte comissionada |
 
-Nada do roadmap entra antes do M4 concluído.
+Nada do roadmap entra antes do M4 concluído. Exceção decidida pelo PI em 2026-10-09: arte própria feita no Blender (ADR-0005).
 
 ---
 
@@ -59,7 +59,7 @@ Nada do roadmap entra antes do M4 concluído.
 | D6 | Fatia 1x1 com 2 heróis | 3x3 direto; 1x1 com 5 heróis | netcode/zona/loot são o risco técnico; classes e times são conteúdo |
 | D7 | Engine: **Godot 4.7** | Unity 6; Godot + servidor Node/Java | ver §10 |
 | D8 | GDScript | C# | iteração, ecossistema (netfox, tutoriais, godot-mcp), export iOS |
-| D9 | Assets KayKit (principal) + Quaternius (secundário) com cena de alinhamento | só KayKit; Synty | variedade sem perder coerência visual |
+| D9 | Assets KayKit (principal) + Quaternius (secundário) com cena de alinhamento; Blender para ajustes e arte própria (ADR-0005, 2026-10-09) | só KayKit; Synty | variedade sem perder coerência visual |
 | D10 | Backend meta em Node.js/NestJS + Postgres | Spring Boot | backend fino; Spring é aceitável se preferido, não muda arquitetura |
 
 ---
@@ -286,7 +286,7 @@ Total ≈ 15 semanas.
 | R3 | Câmera 3ª pessoa afasta casuais | plano B isométrico + mira assistida (M4) |
 | R4 | Scope creep | separação fatia × roadmap; roadmap só após M4 |
 | R5 | Sorteios pagos × público infantil | risco regulatório documentado; revisão na fase B |
-| R6 | Arte CC0 genérica | aceitável até M4; arte própria na fase B |
+| R6 | Arte CC0 genérica | ajustes e arte própria no Blender quando necessário (ADR-0005); arte comissionada na fase B |
 | R7 | Custo 1 container/partida | irrelevante na fase A; medir na B; N partidas/processo se preciso |
 | R8 | Tempo do dev (solo, meio período) | marcos fixos, prazos elásticos; nada paralelo |
 
@@ -329,6 +329,8 @@ Fontes: [UGS Pricing](https://unity.com/products/gaming-services/pricing) · [Un
 - **Família secundária:** Quaternius (monstros não-humanoides) — CC0, glTF.
 - **Evitar:** Synty/Polygon e packs com textura fotográfica.
 - **Regra de alinhamento:** todo asset novo entra em `scenes/_alignment.tscn` ao lado do Cavaleiro (altura ≈ 1,8 u), mesma luz, material flat; ajusta escala/cor ou descarta.
+- **Blender (ADR-0005, decisão do PI em 2026-10-09):** usado sempre que necessário para criação (arte própria, feita pelo Claude via Blender MCP), acabamento, ajustes dos packs CC0 e rascunhos (blockout de arena e peças). Fonte `.blend` em `art/`; em `shared/assets/` só entra glTF (pack CC0 como vem; o que passou pelo Blender, exportado em `.glb`).
+- **Pack KayKit Adventurers:** versão grátis (Knight, Barbarian, Mage, Rogue, Ranger); a versão Extra é compra futura do PI.
 
 ---
 

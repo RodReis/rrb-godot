@@ -47,6 +47,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-37 | Marcos M0–M4 e critérios | PRD §9.1 | `STATUS.md`, `docs/prd/mvp/` | — | — | mantido (MVP-n = M-n) |
 | P-38 | Critérios de sucesso M4 | PRD §9.2 | F29, GATE MVP4 | — | MVP4 | mantido |
 | P-39 | Assets KayKit/Quaternius; cena de alinhamento | PRD §11 | F31 | shared | MVP1 | mantido |
+| P-39a | Blender para criação, acabamento, ajustes e rascunhos; arte própria liberada; `.blend` em `art/`, só glTF em `shared/assets/` (decisão PI 2026-10-09) | PRD §11, ADR-0005 | fatias que tocam asset 3D; `[INFRA]` (gitattributes, import `.blend` off) | shared | MVP1+ | mantido |
 | P-40 | Fora de escopo explícito (§12) | PRD §12 | `FORA-DE-ESCOPO.md` | — | — | excluído |
 
 ## 2. GDB

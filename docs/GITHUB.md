@@ -226,7 +226,7 @@ Tudo o mais — nome de campo, ordem de implementação interna, estrutura de pa
 
 - `.gitignore` cobre `.godot/`, `build/`, `*.exe`, `*.pck`, `export_presets.cfg`, `export_credentials.cfg`, `game/shared`, `launcher/shared`, `backend/node_modules/`, `backend/dist/`, `coverage/`, `.env*` (exceto `.env.example`).
 - **`.env.example` versionado e atualizado** na mesma PR que introduz variável nova. Variável nova sem exemplo quebra o próximo ambiente.
-- Arquivo binário grande (screenshot de evidência, protótipo) fica sob `docs/`, com peso vigiado; acima de ~2MB, justificar na PR. Assets glTF/texturas ficam em `shared/assets/` e passam por `.gitattributes` (LFS se o repo passar de 500 MB — decisão em F6).
+- Arquivo binário grande (screenshot de evidência, protótipo) fica sob `docs/`, com peso vigiado; acima de ~2MB, justificar na PR. Assets glTF/texturas ficam em `shared/assets/` e passam por `.gitattributes` (LFS se o repo passar de 500 MB — decisão em F6). Fonte `.blend` fica em `art/` (ADR-0005): `*.glb` e `*.blend` marcados `binary`; `*.blend1` (backup do Blender) ignorado.
 - Hook local (`lefthook`) roda `gdlint`/`gdformat --check` e, em `backend/`, `tsc --noEmit` no `pre-push` — **nunca substitui a CI**, que é a única prova válida.
 ---
 

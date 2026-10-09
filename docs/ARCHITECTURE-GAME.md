@@ -54,10 +54,12 @@ shared/
   core/        fórmulas puras compartilhadas com o Launcher: stats.gd (DEF→mitigação, INT→CDR, AGI→velocidade), set_bonus.gd, xp_table.gd, item_rules.gd (regra de substituição)
   data/        heroes/, items/, monsters/, rules/ (match_pacing.tres, xp_table.tres) — GDB §8
   resources/   classes Resource: HeroData, SkillData, ItemData, MonsterData, MatchRules
-  assets/      glTF KayKit/Quaternius + cena _alignment.tscn (PRD §11)
+  assets/      glTF: KayKit/Quaternius como vêm do pack; ajustes e arte própria exportados do Blender em .glb; cena _alignment.tscn (PRD §11, ADR-0005)
   ui/theme/    theme_moba.tres, fontes, StyleBoxes (consumidos pela HUD também)
   test/        GUT das fórmulas de shared/core
 ```
+
+Fonte dos assets 3D: `art/` na raiz (arquivos `.blend`, nunca importados pelo Godot; importação de `.blend` desligada no `project.godot`). Em `shared/assets/` só entra glTF (ADR-0005).
 
 **Regra de dependência (unidirecional):** `ui` → `match` → `net` → `core`/`shared`. `core` e `shared/core` não importam nada acima. `ai` depende de `match` (lê estado) e `net` (gera input como um `BaseNetInput`). Violação = P1 em revisão.
 

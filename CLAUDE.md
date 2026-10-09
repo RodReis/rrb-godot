@@ -30,7 +30,7 @@ Você atua como **engenheiro sênior de Godot 4 / GDScript** neste repositório.
 - MOBA 3D de 2 tempos (preparação 5 min → confronto com zona), multiplayer com **servidor autoritativo**.
 - Fonte de verdade de escopo: `docs/prd/PRD.md`. Números e fórmulas: `docs/prd/GDB.md` (vence o PRD — ADR-0004). Telas: `docs/prd/DESIGN-VISUAL-LAUNCHER.md`. Benchmark: `docs/prd/REFER.md`. Plano ativo: `docs/superpowers/plans/`. Decisões: `docs/adr/` (índice em `docs/DECISIONS.md`).
 - Marco atual: **MVP0 / M0 — spike de netcode** (`docs/superpowers/plans/2026-10-08-m0-spike-netcode.md`). MVP-n = marco M-n do PRD.
-- Stack: **Godot 4.7.2** (Forward+), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, a partir do MVP3). Windows + PowerShell.
+- Stack: **Godot 4.7.2** (Forward+), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, a partir do MVP3), **Blender 5.2 LTS + Blender MCP** (assets 3D, ADR-0005). Windows + PowerShell.
 - **Dois módulos independentes** (ADR-0002), mesmo monorepo, sem importar nada um do outro:
   - **Game** (`game/`): partida — cliente + servidor dedicado. Seleção de heróis, HUDs, fim de partida. `docs/ARCHITECTURE-GAME.md`.
   - **Launcher** (`launcher/` + `backend/`): fora da partida — login, lobby, fila, histórico, bestiário, forja, configurações; backend de auth/fila/orquestração. `docs/ARCHITECTURE-LAUNCHER.md`.
@@ -56,6 +56,7 @@ launcher/             projeto Godot B — fora da partida
   shared/ -> ../shared
 shared/               comum, sem project.godot: core/, data/, resources/, assets/, ui/theme, ui/components, test/
 backend/              NestJS + Postgres (auth, matchmaking, orchestrator, matches, telemetry)
+art/                  fontes .blend (Blender) — nunca importadas pelo Godot; exporta .glb para shared/assets/ (ADR-0005)
 infra/                Docker do game server, compose, deploy
 tools/                scripts PowerShell (test, run, link-shared, soak)
 docs/                 ver "Documentação do projeto"
@@ -79,6 +80,14 @@ docs/                 ver "Documentação do projeto"
 - Para linha de comando use o `*_console.exe` (`$env:GODOT_PATH -replace '\.exe$','_console.exe'`); o `.exe` principal não imprime no terminal.
 - No PowerShell 5.1, stderr de executável nativo vira exceção com `$ErrorActionPreference='Stop'` — use `'Continue'` ao chamar o Godot.
 - godot-mcp: se o jogo crashar, `get_debug_output` perde a saída; rode pelo terminal para ver o erro.
+
+## Assets 3D (Blender — ADR-0005)
+
+- Use o **Blender sempre que necessário** para criação (arte própria), acabamento, ajustes (escala, pivô, origem, cor, troca de peças dos packs CC0) e rascunhos (blockout de arena e peças). O PI não modela: o Claude opera o Blender pelo **Blender MCP**; a verificação visual é do PI.
+- Fonte `.blend` em `art/`. Em `shared/assets/` só entra glTF: pack CC0 como vem; o que passou pelo Blender, exportado em `.glb`. Nunca coloque `.blend` em `game/`, `launcher/` ou `shared/` (importação de `.blend` desligada no `project.godot`).
+- Colisão, navegação e occluder pelos sufixos de nome do importador: `-col`, `-convcol`, `-colonly`, `-convcolonly`, `-navmesh`, `-occ`, `-occonly`; `-noimp` remove nó auxiliar; `-loop` em animação de laço.
+- Asset novo ou alterado passa pela cena de alinhamento (PRD §11).
+- MCP: modo interativo exige o Blender aberto com o servidor do addon ligado (porta 9876); modo em segundo plano (`*_for_cli`) usa `BLENDER_PATH`. O MCP executa código sem proteção (risco aceito pelo PI): trabalhe só sobre arquivos versionados.
 
 ## Regras de código GDScript (obrigatórias)
 

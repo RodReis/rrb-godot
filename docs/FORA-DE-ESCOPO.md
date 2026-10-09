@@ -5,6 +5,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 ## Regras
 
 - Nada daqui entra em código antes do MVP4 concluído (PRD §1.3: "nada do roadmap entra antes do M4").
+- Arte própria saiu desta lista em 2026-10-09 por decisão do PI (ADR-0005): entra em qualquer MVP quando a fatia precisar.
 - Item do design visual ou do benchmark que não está no PRD **não é requisito** — fica aqui ou em `RASTREABILIDADE.md` §5 até o PI decidir.
 - "Adiado" tem MVP ou fase de destino; "excluído" tem motivo.
 
@@ -20,7 +21,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Steam, ranked, amigos | PRD §1.3 | fatia usa e-mail/senha e fila FIFO | fase B | decisão comercial |
 | Moedas, gemas, vales, sorteios, loja, passe, skins | PRD §1.3, §7 | monetização é fase B; risco regulatório R5 | fase B | revisão regulatória + decisão do PI |
 | Mobile (câmera/controles revisados, Mobile renderer) | PRD §1.2, §8.2 | PC primeiro (D1) | fase B | PC validado |
-| Arte própria/comissionada | PRD §1.3, R6 | CC0 aceitável até M4 | fase B | produto comercial |
+| Arte comissionada | PRD §1.3, R6 | CC0 + arte própria no Blender bastam (ADR-0005) | fase B | produto comercial |
 | Câmera isométrica + mira assistida (plano B) | PRD §3.6 | decidir com dados | MVP4 | playtest mostrar perda de visão/aversão |
 | Armas específicas por herói | PRD §6 | dado genérico basta | fase B | — |
 | N partidas por processo (custo R7) | PRD §9.3 | irrelevante na fase A | fase B | custo medido no M3 ultrapassar meta |
