@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#ffb3ad", "on-background": "#dae2fd", "on-secondary-fixed": "#001d31", "inverse-on-surface": "#283044", "error-container": "#93000a", "surface": "#0b1326", "surface-tint": "#ffb95f", "tertiary-fixed": "#ffdad7", "surface-container": "#171f33", "tertiary-container": "#ff938c", "secondary-fixed": "#cce5ff", "on-secondary": "#003351", "inverse-primary": "#855300", "on-surface-variant": "#d8c3ad", "on-error": "#690005", "surface-container-high": "#222a3d", "secondary-fixed-dim": "#93ccff", "secondary-container": "#3198dc", "on-primary-fixed-variant": "#653e00", "outline-variant": "#534434", "on-primary-fixed": "#2a1700", "on-tertiary-container": "#8d0012", "primary-fixed": "#ffddb8", "surface-container-low": "#131b2e", "on-primary": "#472a00", "tertiary": "#ffbcb7", "on-tertiary-fixed-variant": "#930013", "secondary": "#93ccff", "error": "#ffb4ab", "primary-fixed-dim": "#ffb95f", "inverse-surface": "#dae2fd", "on-surface": "#dae2fd", "surface-variant": "#2d3449", "on-tertiary-fixed": "#410004", "on-primary-container": "#613b00", "on-secondary-fixed-variant": "#004b73", "on-secondary-container": "#002c47", "outline": "#a08e7a", "surface-bright": "#31394d", "surface-dim": "#0b1326", "surface-container-lowest": "#060e20", "on-tertiary": "#68000a", "surface-container-highest": "#2d3449", "primary": "#ffc174", "background": "#0b1326", "on-error-container": "#ffdad6", "primary-container": "#f59e0b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2rem", "space-sm": "0.5rem", "margin": "1rem", "space-md": "0.75rem", "gutter": "0.75rem", "space-lg": "1.25rem", "space-xs": "0.25rem" }, "fontFamily": { "label-numeric-md": [ "JetBrains Mono" ], "headline-lg": [ "Space Grotesk" ], "headline-lg-mobile": [ "Space Grotesk" ], "display-hero-mobile": [ "Space Grotesk" ], "headline-sm": [ "Space Grotesk" ], "body-sm": [ "Outfit" ], "headline-md": [ "Space Grotesk" ], "body-lg": [ "Outfit" ], "label-numeric-lg": [ "JetBrains Mono" ], "label-numeric-sm": [ "JetBrains Mono" ], "body-md": [ "Outfit" ], "display-hero": [ "Space Grotesk" ], "hotkey-cap": [ "Space Grotesk" ] }, "fontSize": { "label-numeric-md": [ "14px", { "lineHeight": "18px", "fontWeight": "700" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "700" } ], "display-hero-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-sm": [ "18px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ], "headline-md": [ "22px", { "lineHeight": "28px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "22px", "fontWeight": "500" } ], "label-numeric-lg": [ "20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-numeric-sm": [ "11px", { "lineHeight": "14px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "hotkey-cap": [ "11px", { "lineHeight": "12px", "letterSpacing": "0.05em", "fontWeight": "700" } ] } } } }</script></head><body class="bg-background text-on-surface font-body-md text-body-md select-none"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]"><div class="h-20 w-full px-gutter flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[28px]">swords</span><div class="flex flex-col leading-none"><span class="font-headline-sm text-headline-sm tracking-wider uppercase text-primary">ARENA 1V1</span><span class="font-label-numeric-sm text-label-numeric-sm tracking-widest uppercase text-on-surface-variant">KAYKIT EDITION</span></div></div><div class="h-8 w-px bg-surface-variant/40"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm text-headline-sm shadow-[0_0_12px_rgba(245,158,11,0.4)]"><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="lobby" href="#">LOBBY</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="herois" href="#">HERÓIS</a><a aria-current="page" class="px-space-md py-space-xs rounded tracking-wide transition-all bg-primary-container text-on-primary-container font-headline-sm text-headline-sm shadow-[0_0_12px_rgba(245,158,11,0.4)]" data-path="arena-e-mapa" href="#">ARENA &amp; MAPA</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="guia-e-bestiario" href="#">GUIA &amp; BESTIÁRIO</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="historico" href="#">HISTÓRICO</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ajustes" href="#">AJUSTES</a></nav></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-md px-space-md py-space-xs rounded bg-surface-container-low"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">NETFOX</span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary">30Hz</span></div><div class="h-3 w-px bg-surface-variant"></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px] text-primary">wifi_tethering</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">PING</span><span class="font-label-numeric-sm text-label-numeric-sm text-primary">24ms</span></div></div><div class="flex items-center gap-space-md pl-space-xs"><div class="text-right leading-tight"><div class="font-headline-sm text-headline-sm text-on-surface">Duelista_01</div><div class="flex items-center justify-end gap-space-xs"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">ELO</span><span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">1480</span></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full text-on-surface">
+<div class="w-full px-gutter py-space-lg flex flex-col gap-space-lg">
+<!-- HEADER DA TELA DE ARENA -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-space-lg shadow-xl">
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -left-20 -bottom-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-0.5 rounded bg-primary text-on-primary font-hotkey-cap text-hotkey-cap tracking-widest uppercase">
+              SELETOR TÁTICO M0-M4
+            </span>
+<span class="flex items-center gap-1 font-label-numeric-sm text-label-numeric-sm text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+              REDE AUTORITATIVA 30Hz
+            </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg uppercase tracking-tight text-primary">
+            ARENA HEXAGONAL: VALE DOS ESQUELETOS (MODO 1v1 APOCALÍPTICO)
+          </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-4xl">
+            KayKit Hex Grid • Fenda Rúnica Energética de Plasma • Transição Dinâmica de 2 Tempos (5 min Farm ➔ 5 min Zona Mortal)
+          </p>
+</div>
+<!-- Telemetria Rápida / Badges -->
+<div class="flex flex-wrap lg:flex-nowrap items-center gap-space-sm font-label-numeric-sm text-label-numeric-sm">
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded bg-surface-container-high shadow-md">
+<span class="material-symbols-outlined text-primary text-[18px]">timer</span>
+<div class="flex flex-col">
+<span class="text-on-surface-variant uppercase text-[10px] leading-tight">Travessia Total</span>
+<span class="text-primary font-bold">20s (Base ao Centro: 8s)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded bg-surface-container-high shadow-md">
+<span class="material-symbols-outlined text-secondary text-[18px]">grid_4x4</span>
+<div class="flex flex-col">
+<span class="text-on-surface-variant uppercase text-[10px] leading-tight">Escala da Grade</span>
+<span class="text-secondary font-bold">24 × 18 Hexágonos</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs px-space-md py-space-sm rounded bg-surface-container-high shadow-md">
+<span class="material-symbols-outlined text-tertiary text-[18px]">sports_kabaddi</span>
+<div class="flex flex-col">
+<span class="text-on-surface-variant uppercase text-[10px] leading-tight">Engine Match</span>
+<span class="text-tertiary font-bold">Duelo Puro 1v1</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ÁREA PRINCIPAL: MAPA TÁTICO + PAINEL DE DINÂMICAS -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- COLUNA ESQUERDA / CENTRO: VISUALIZADOR DO MAPA INTERATIVO (8 COLS) -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<!-- Frame Principal do Mapa -->
+<div class="relative rounded-xl overflow-hidden bg-surface-container-lowest shadow-2xl p-space-sm">
+<!-- Top Bar do Frame Tático (Coordenadas e Status) -->
+<div class="flex items-center justify-between px-space-md py-space-xs bg-surface-container mb-space-xs rounded font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">
+<div class="flex items-center gap-space-md">
+<span class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[16px]">radar</span> SELETOR TÁTICO [A1 - F6]
+              </span>
+<span class="hidden sm:inline text-on-surface-variant">HEX PROJECTION: ORTHOGRAPHIC 45°</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="px-space-xs py-0.5 rounded bg-surface-variant text-[10px] text-on-surface font-bold uppercase">
+                CLIQUE NUM P.O.I. PARA ANALISAR
+              </span>
+</div>
+</div>
+<!-- Wrapper da Imagem com Overlays e Grid -->
+<div class="relative w-full aspect-[16/9] max-h-[640px] rounded overflow-hidden select-none bg-surface-container-highest group">
+<!-- Imagem Gerada da Arena Tática M0-M4 -->
+<img alt="Mapa tático isométrico da arena hexagonal 1v1 Vale dos Esqueletos com duas bases opostas, rio de plasma verde brilhante, torres rúnicas e cratera central vulcânica" class="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClSygQoE0yxPKEOe3icol-tmEN1f9A5V9XlGSVCwMKmu9wq9qITwHT0D6LZPoA11EAY8v1yfPwNfhIfVktYIA7zmNvMh2fDlix74ddQXqjb49FizJDFVL3og6v2eclUtDPP-XTJtWkWyRJsJu_IzKJN0peugW4PzwyUSS4ZiVBLljqJ3M6jMGtiijAv7UQSH0AoAYtLE0itK83n_AOG2_bp5bj7nM5hm_yshaTxWkrhne7XVMAxeAg"/>
+<!-- Efeito de Linhas de Scanner Cibernético -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/5 to-transparent pointer-events-none opacity-40"></div>
+<!-- Régua de Coordenadas Hexagonais Sci-Fi -->
+<div class="absolute top-2 left-3 right-3 flex justify-between font-label-numeric-sm text-label-numeric-sm text-secondary/60 pointer-events-none drop-shadow">
+<span>A1</span><span>B2</span><span>C3</span><span>D4</span><span>E5</span><span>F6</span>
+</div>
+<div class="absolute bottom-2 left-3 right-3 flex justify-between font-label-numeric-sm text-label-numeric-sm text-secondary/60 pointer-events-none drop-shadow">
+<span>A6</span><span>B5</span><span>C4</span><span>D3</span><span>E2</span><span>F1</span>
+</div>
+<!-- OVERLAYS INTERATIVOS (PONTOS DE INTERESSE) -->
+<!-- POI 1: Base da Ordem (Inferior Esquerda) -->
+<button class="absolute left-[14%] bottom-[20%] -translate-x-1/2 -translate-y-1/2 group/pin flex flex-col items-center focus:outline-none transition-transform hover:scale-110" id="poi-order" onclick="selectPoi('order')" title="Base da Ordem (Spawn Jogador A)">
+<div class="relative flex items-center justify-center w-10 h-10 rounded-full bg-secondary/90 text-on-secondary shadow-[0_0_15px_rgba(147,204,255,0.8)]">
+<span class="material-symbols-outlined text-[22px]">shield</span>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-secondary rounded-full animate-ping"></span>
+</div>
+<div class="mt-1 px-space-xs py-0.5 rounded bg-surface-container-lowest/90 font-label-numeric-sm text-label-numeric-sm text-secondary shadow backdrop-blur whitespace-nowrap">
+                BASE ORDEM (P1)
+              </div>
+</button>
+<!-- POI 2: Base da Ruína (Superior Direita) -->
+<button class="absolute right-[14%] top-[22%] translate-x-1/2 -translate-y-1/2 group/pin flex flex-col items-center focus:outline-none transition-transform hover:scale-110" id="poi-ruin" onclick="selectPoi('ruin')" title="Base da Ruína (Spawn Jogador B)">
+<div class="relative flex items-center justify-center w-10 h-10 rounded-full bg-error-container text-on-error-container shadow-[0_0_15px_rgba(255,180,171,0.8)]">
+<span class="material-symbols-outlined text-[22px]">fort</span>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-error rounded-full animate-ping"></span>
+</div>
+<div class="mt-1 px-space-xs py-0.5 rounded bg-surface-container-lowest/90 font-label-numeric-sm text-label-numeric-sm text-error shadow backdrop-blur whitespace-nowrap">
+                BASE RUÍNA (P2)
+              </div>
+</button>
+<!-- POI 3: Cratera Central / Boss Neutro (Centro Absoluto) -->
+<button class="absolute left-[50%] top-[50%] -translate-x-1/2 -translate-y-1/2 group/pin flex flex-col items-center focus:outline-none transition-transform hover:scale-110" id="poi-boss" onclick="selectPoi('boss')" title="Cratera Central — Rei Esqueleto">
+<div class="relative flex items-center justify-center w-12 h-12 rounded-full bg-primary-container text-on-primary-container shadow-[0_0_20px_rgba(245,158,11,0.9)] animate-pulse">
+<span class="material-symbols-outlined text-[26px]">skull</span>
+</div>
+<div class="mt-1 px-space-sm py-0.5 rounded bg-surface-container-lowest/95 font-label-numeric-sm text-label-numeric-sm text-primary shadow backdrop-blur font-bold uppercase tracking-wider">
+                BOSS: 03:30
+              </div>
+</button>
+<!-- POI 4: Fenda de Plasma / Rio Tóxico (Corte Diagonal) -->
+<button class="absolute left-[36%] top-[34%] -translate-x-1/2 -translate-y-1/2 group/pin flex flex-col items-center focus:outline-none transition-transform hover:scale-110" id="poi-river" onclick="selectPoi('river')" title="Fenda Rúnica de Plasma">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-high/90 text-secondary shadow-[0_0_10px_rgba(147,204,255,0.5)]">
+<span class="material-symbols-outlined text-[18px]">water_drop</span>
+</div>
+<div class="mt-0.5 px-space-xs py-0.5 rounded bg-surface-container-lowest/80 font-label-numeric-sm text-[10px] text-secondary backdrop-blur">
+                PLASMA VITAL
+              </div>
+</button>
+<!-- POI 5: Campo de Monstros Neutros (Tier 2/3) -->
+<button class="absolute left-[62%] bottom-[32%] -translate-x-1/2 -translate-y-1/2 group/pin flex flex-col items-center focus:outline-none transition-transform hover:scale-110" id="poi-jungle" onclick="selectPoi('jungle')" title="Acampamentos de Creeps Neutros">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-high/90 text-primary shadow-[0_0_10px_rgba(255,193,116,0.5)]">
+<span class="material-symbols-outlined text-[18px]">swords</span>
+</div>
+<div class="mt-0.5 px-space-xs py-0.5 rounded bg-surface-container-lowest/80 font-label-numeric-sm text-[10px] text-primary backdrop-blur">
+                CREEPS T2-T3
+              </div>
+</button>
+<!-- POI 6: Torres de Plasma Automatizadas -->
+<button class="absolute left-[38%] bottom-[24%] -translate-x-1/2 -translate-y-1/2 group/pin flex flex-col items-center focus:outline-none transition-transform hover:scale-110" id="poi-tower" onclick="selectPoi('tower')" title="Torres Rúnicas Automatizadas">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-high/90 text-on-surface shadow-[0_0_10px_rgba(218,226,253,0.5)]">
+<span class="material-symbols-outlined text-[18px]">nest_heat_link_gen_3</span>
+</div>
+<div class="mt-0.5 px-space-xs py-0.5 rounded bg-surface-container-lowest/80 font-label-numeric-sm text-[10px] text-on-surface backdrop-blur">
+                TORRE PLASMA
+              </div>
+</button>
+<!-- Indicador Flutuante no Canto Inferior -->
+<div class="absolute bottom-3 left-3 flex items-center gap-space-xs px-space-sm py-1 rounded bg-surface-container-lowest/80 backdrop-blur font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-[14px]">tune</span>
+<span>SIMULAÇÃO DE ILUMINAÇÃO: DINÂMICA PBR KAYKIT</span>
+</div>
+</div>
+</div>
+<!-- PAINEL DINÂMICO DE DETALHE DO POI CLICADO (FEEDBACK VISUAL) -->
+<div class="rounded-xl bg-surface-container-low p-space-md shadow-lg transition-all duration-300" id="poi-detail-card">
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center shadow-md" id="poi-icon-box">
+<span class="material-symbols-outlined text-[28px]" id="poi-icon">skull</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="px-space-xs py-0.5 rounded bg-primary text-on-primary font-hotkey-cap text-hotkey-cap" id="poi-tag">
+                    ZONA CRÍTICA NEUTRA
+                  </span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant" id="poi-coords">
+                    COORD: C3-D4 • CRATERA
+                  </span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface" id="poi-title">
+                  Cratera Central &amp; Rei Esqueleto
+                </h3>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full md:w-auto">
+<div class="px-space-md py-space-xs rounded bg-surface-container font-label-numeric-sm text-label-numeric-sm text-primary">
+<span class="text-on-surface-variant">DROP:</span> ITEM LENDÁRIO / ÉPICO (100%)
+              </div>
+<div class="px-space-md py-space-xs rounded bg-surface-container font-label-numeric-sm text-label-numeric-sm text-secondary">
+<span class="text-on-surface-variant">SPAWN:</span> 03:30 (M0)
+              </div>
+</div>
+</div>
+<p class="mt-space-sm font-body-md text-body-md text-on-surface-variant leading-relaxed" id="poi-desc">
+            Área de maior tensão da partida. O Rei Esqueleto desperta exatamente aos 03:30 de jogo. Derrotá-lo garante o buff temporário "Aura do Flagelo" e derruba 1 Baú Dourado com orbes de ascensão rúnica imediata. Durante a Fase 2, esta cratera é o ponto focal final da tempestade tóxica.
+          </p>
+</div>
+<!-- Mosaico Secundário: Detalhe 3D Isométrico da Cratera Central -->
+<div class="rounded-xl bg-surface-container-low p-space-md shadow-xl flex flex-col md:flex-row gap-space-md items-center">
+<div class="w-full md:w-1/3 aspect-square rounded overflow-hidden shadow-md relative bg-surface-container-highest">
+<img alt="Detalhe isométrico 3D detalhado da cratera central com rio de plasma cintilante, pontes rúnicas destruídas e torre de vigia KayKit" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWuMXA0zLykPix3AU8E8sgi7d2DhfthMtfJFQVL3ta6FpextHnuCejKgRLiZeEbFBXnuBHD5S9ScN5N3_KUB4RVMAmENF730O9Q81W5R5QzrKk6QRne6jD3nf3uaWJ_Yip5_gv9GgwT71fNfe3mTBqTcDDXSA3R6Kol94s5B3RxOcAKLakE0YNT0e9vAcoZTfIF2Qr3GTtlJ65iA5JFDLQxM0pbW1Wqj4Zs62VkBJhiMXsergkXDrE"/>
+<div class="absolute bottom-2 left-2 px-space-xs py-0.5 rounded bg-surface-container-lowest/80 text-secondary font-label-numeric-sm text-[10px] backdrop-blur">
+              ZOOM ISOMÉTRICO 3D
+            </div>
+</div>
+<div class="w-full md:w-2/3 flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">architecture</span>
+<span class="font-headline-sm text-headline-sm text-primary uppercase">Topologia e Bloqueio Visual</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              A cratera é contornada por anéis de basalto vulcânico de 2m de altura gerando oclusão de linha de visão (Line of Sight - Fog of War). Habilidades de projétil reto colidem com os pilares, forçando aproximação em curvas fechadas e combate corpo a corpo tático.
+            </p>
+<div class="grid grid-cols-3 gap-space-xs mt-space-xs font-label-numeric-sm text-label-numeric-sm">
+<div class="p-space-xs rounded bg-surface-container">
+<span class="text-on-surface-variant text-[11px] block">Elevação</span>
+<span class="text-on-surface font-bold">-1.8m Depressão</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container">
+<span class="text-on-surface-variant text-[11px] block">Penalidade Lama</span>
+<span class="text-tertiary font-bold">-15% Velocidade</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container">
+<span class="text-on-surface-variant text-[11px] block">Risco de Emboscada</span>
+<span class="text-error font-bold">Extremo (4 Entradas)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- COLUNA DIREITA: SISTEMA DE 2 TEMPOS + TELEMETRIA E CONTROLES (4 COLS) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<!-- CARD FASE 1: PREPARAÇÃO & FARM -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-space-md shadow-xl">
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="font-hotkey-cap text-hotkey-cap uppercase text-secondary tracking-wider">FASE 1 • M0 A M4</span>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high font-label-numeric-sm text-label-numeric-sm text-secondary font-bold">
+              00:00 — 05:00
+            </span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">
+            Preparação, Creeps &amp; Farm
+          </h2>
+<ul class="mt-space-sm space-y-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">lock</span>
+<span><strong>Portões de Base Ativos:</strong> Invulnerabilidade na área de spawn. Jogadores não podem invadir o quintal adversário nos primeiros 5 minutos.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">inventory_2</span>
+<span><strong>12 Baús de Recursos:</strong> 6 baús comuns em cada base concedem ouro imediato para upgrade das 3 habilidades elementais.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">swords</span>
+<span><strong>PvP de Centro Liberado:</strong> Mortes antes dos 05:00 possuem penalidade branda (Respawn de 8s na base, sem conceder vitória direta).</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">schedule</span>
+<span><strong>Alerta do Boss Central:</strong> Anúncio sonoro aos 03:00, spawn aos 03:30 na cratera central.</span>
+</li>
+</ul>
+<div class="mt-space-md p-space-xs rounded bg-surface-container-low flex items-center justify-between font-label-numeric-sm text-label-numeric-sm">
+<span class="text-on-surface-variant">PROGRESSÃO DE OURO:</span>
+<span class="text-secondary font-bold">18g / segundo + Creeps</span>
+</div>
+</div>
+<!-- CARD FASE 2: CONFRONTO & ZONA ENCOLHENDO -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container p-space-md shadow-xl">
+<div class="flex items-center justify-between mb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-error animate-ping"></span>
+<span class="font-hotkey-cap text-hotkey-cap uppercase text-error tracking-wider">FASE 2 • M0 A M4</span>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high font-label-numeric-sm text-label-numeric-sm text-error font-bold">
+              05:00 — 10:00
+            </span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">
+            Confronto &amp; Tempestade Tóxica
+          </h2>
+<ul class="mt-space-sm space-y-space-xs font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">lock_open</span>
+<span><strong>Queda das Barricadas:</strong> Portões de ambas as bases entram em colapso. Todo o território se torna zona de fogo cruzado.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">crisis_alert</span>
+<span><strong>Círculo Mortal (Gas Rúnico):</strong> Encolhe gradualmente das bordas externas em direção à cratera central durante 4 minutos.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">heart_broken</span>
+<span><strong>Dano da Zona:</strong> Inicia em 1.5% HP Max por segundo, escalando para 6% HP/s no último minuto de encolhimento.</span>
+</li>
+<li class="flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">emoji_events</span>
+<span><strong>Condição de Vitória:</strong> Primeiro a atingir 5 Kills OU o último sobrevivente na arena reduzida.</span>
+</li>
+</ul>
+<!-- Indicador Gráfico do Raio de Encolhimento -->
+<div class="mt-space-md flex flex-col gap-1">
+<div class="flex justify-between font-label-numeric-sm text-label-numeric-sm">
+<span class="text-on-surface-variant">RAIO RESTANTE DA ARENA</span>
+<span class="text-error font-bold" id="shrink-pct">65% (ÁREA SEGURA)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container-low overflow-hidden">
+<div class="h-full bg-error transition-all duration-500 rounded-full" style="width: 65%;"></div>
+</div>
+</div>
+</div>
+<!-- SELETOR DE CÂMERA & MIRA ASSISTIDA (PRD §3.6) -->
+<div class="rounded-xl bg-surface-container-low p-space-md shadow-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface">Configuração de Visão</span>
+<span class="material-symbols-outlined text-primary text-[20px]">videocam</span>
+</div>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="flex flex-col items-center justify-center p-space-sm rounded bg-primary-container text-on-primary-container shadow font-headline-sm text-[13px] transition-all" id="cam-iso" onclick="setCameraMode('iso')">
+<span class="material-symbols-outlined text-[20px] mb-1">view_in_ar</span>
+<span>ISOMÉTRICA (45°)</span>
+<span class="text-[10px] opacity-80 font-label-numeric-sm">Mira Assistida</span>
+</button>
+<button class="flex flex-col items-center justify-center p-space-sm rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface shadow font-headline-sm text-[13px] transition-all" id="cam-3p" onclick="setCameraMode('3p')">
+<span class="material-symbols-outlined text-[20px] mb-1">sports_esports</span>
+<span>3ª PESSOA ALTA</span>
+<span class="text-[10px] opacity-80 font-label-numeric-sm">Visão Tática PC</span>
+</button>
+</div>
+<div class="flex items-center justify-between px-space-xs font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">
+<span>FOV HORIZONTAL: <strong>68°</strong></span>
+<span>ALTURA ÂNCORA: <strong>14.5m</strong></span>
+</div>
+</div>
+</div>
+</div>
+<!-- RODAPÉ TÁTICO: AÇÕES E RESUMO DO TERRENO -->
+<div class="rounded-xl bg-surface-container-low p-space-lg shadow-xl flex flex-col lg:flex-row items-center justify-between gap-space-lg">
+<!-- Detalhes Numéricos de Terreno -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-md w-full lg:w-auto font-label-numeric-sm text-label-numeric-sm">
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">hexagon</span>
+</div>
+<div>
+<div class="text-on-surface-variant text-[10px] uppercase">Grelha Hex</div>
+<div class="text-on-surface font-bold">432 Células</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">lock_clock</span>
+</div>
+<div>
+<div class="text-on-surface-variant text-[10px] uppercase">Baús Totais</div>
+<div class="text-on-surface font-bold">16 Baús (12+4)</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">cloud_upload</span>
+</div>
+<div>
+<div class="text-on-surface-variant text-[10px] uppercase">Torres Rúnicas</div>
+<div class="text-on-surface font-bold">4 (2 por Lado)</div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<div class="w-9 h-9 rounded bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[18px]">pest_control</span>
+</div>
+<div>
+<div class="text-on-surface-variant text-[10px] uppercase">Boss Neutro</div>
+<div class="text-on-surface font-bold">1 Rei Esqueleto</div>
+</div>
+</div>
+</div>
+<!-- Botões de Ação Tática -->
+<div class="flex flex-wrap items-center gap-space-sm w-full lg:w-auto justify-end">
+<button class="px-space-md py-space-sm rounded bg-surface-container-high text-on-surface font-headline-sm text-headline-sm hover:bg-surface-bright transition-all shadow flex items-center gap-space-xs" onclick="triggerRouteSimulation()">
+<span class="material-symbols-outlined text-secondary text-[18px]">alt_route</span>
+<span>ROTAS DE FARM</span>
+</button>
+<button class="px-space-md py-space-sm rounded bg-surface-container-high text-on-surface font-headline-sm text-headline-sm hover:bg-surface-bright transition-all shadow flex items-center gap-space-xs" onclick="toggleStormPreview()">
+<span class="material-symbols-outlined text-error text-[18px]">timelapse</span>
+<span>SIMULAR TEMPESTADE</span>
+</button>
+<button class="px-space-lg py-space-sm rounded bg-primary-container text-on-primary-container font-headline-sm text-headline-sm hover:bg-primary transition-all shadow-[0_4px_0_#78350f] active:translate-y-0.5 active:shadow-none flex items-center gap-space-xs" onclick="startPracticeBot()">
+<span class="material-symbols-outlined text-on-primary-container text-[20px]">play_arrow</span>
+<span>INICIAR TREINO NO VALE (BOT M1)</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Interatividade e troca de POIs do Mapa
+  const poiData = {
+    order: {
+      tag: "SPAWN AZUL • JOGADOR 1",
+      coords: "COORD: A1-B2 • BASE DA ORDEM",
+      title: "Cidadela da Ordem (Spawn do Jogador A)",
+      desc: "Fortaleza rúnica reforçada com tecnologia KayKit. Contém 6 Baús Comuns exclusivos para farm no início da partida, canhão de defesa de curto alcance e portão impenetrável durante os primeiros 5 minutos.",
+      icon: "shield",
+      iconClass: "bg-secondary text-on-secondary",
+      drop: "6x BAÚS COMUNS INICIAIS",
+      spawn: "IMEDIATO (00:00)"
+    },
+    ruin: {
+      tag: "SPAWN VERMELHO • JOGADOR 2",
+      coords: "COORD: E5-F6 • BASE DA RUÍNA",
+      title: "Fortaleza da Ruína (Spawn do Jogador B)",
+      desc: "Fortaleza corrompida oposta à cidadela. Possui layout idêntico e espelhado para neutralidade competitiva 1v1, com 6 Baús Comuns, torre de defesa de plasma e campo de visão protegido.",
+      icon: "fort",
+      iconClass: "bg-error-container text-on-error-container",
+      drop: "6x BAÚS COMUNS INICIAIS",
+      spawn: "IMEDIATO (00:00)"
+    },
+    boss: {
+      tag: "ZONA CRÍTICA NEUTRA",
+      coords: "COORD: C3-D4 • CRATERA",
+      title: "Cratera Central & Rei Esqueleto",
+      desc: "Área de maior tensão da partida. O Rei Esqueleto desperta exatamente aos 03:30 de jogo. Derrotá-lo garante o buff temporário 'Aura do Flagelo' e derruba 1 Baú Dourado com orbes de ascensão rúnica imediata. Durante a Fase 2, esta cratera é o ponto focal final da tempestade tóxica.",
+      icon: "skull",
+      iconClass: "bg-primary-container text-on-primary-container",
+      drop: "ITEM LENDÁRIO / ÉPICO (100%)",
+      spawn: "03:30 (M0)"
+    },
+    river: {
+      tag: "BARREIRA TOPOLÓGICA",
+      coords: "COORD: DIAGONAL CENTRAL • RIO DE PLASMA",
+      title: "Rio de Plasma Tóxico (Fenda Rúnica)",
+      desc: "Corta diagonalmente a arena conectando as zonas neutras. Cruza o terreno com fluido radioativo verde-ciano. Caminhar dentro do canal desacelera o duelista em 15% e gera partículas de revelação que cancelam invisibilidade.",
+      icon: "water_drop",
+      iconClass: "bg-surface-variant text-secondary",
+      drop: "VELOCIDADE -15% / REVELAÇÃO",
+      spawn: "PERMANENTE"
+    },
+    jungle: {
+      tag: "FARM INTERMEDIÁRIO",
+      coords: "COORD: B3 & D5 • CAMPOS NEUTROS",
+      title: "Campos de Monstros Neutros (Tier 1 a 3)",
+      desc: "Contém grupos de esqueletos guerreiros, arqueiros e um mini-golem de rocha escura. Fonte essencial de orbes de experiência antes do confronto direto da Fase 2. Respawn de 45 segundos após abate.",
+      icon: "swords",
+      iconClass: "bg-surface-variant text-primary",
+      drop: "XP ORBS + 65 OURO CADA",
+      spawn: "RESPAWN: 45s"
+    },
+    tower: {
+      tag: "DEFESA ESTRUTURAL",
+      coords: "COORD: A3 & E3 • CANHÕES DE PLASMA",
+      title: "Torres de Plasma Automatizadas",
+      desc: "Torres de pedra com cristais de energia rúnica. Disparam rajadas autoguiadas contra invasores que atacam heróis aliados dentro do seu perímetro protetor (alcance de 12 metros, dano percentual por disparo).",
+      icon: "nest_heat_link_gen_3",
+      iconClass: "bg-surface-container-high text-on-surface",
+      drop: "COBERTURA DE RETAGUARDA",
+      spawn: "ATIVO FASE 1"
+    }
+  };
+
+  function selectPoi(key) {
+    const data = poiData[key];
+    if (!data) return;
+
+    document.getElementById("poi-tag").innerText = data.tag;
+    document.getElementById("poi-coords").innerText = data.coords;
+    document.getElementById("poi-title").innerText = data.title;
+    document.getElementById("poi-desc").innerText = data.desc;
+    document.getElementById("poi-icon").innerText = data.icon;
+    
+    const iconBox = document.getElementById("poi-icon-box");
+    iconBox.className = `w-12 h-12 rounded-lg flex items-center justify-center shadow-md ${data.iconClass}`;
+  }
+
+  function setCameraMode(mode) {
+    const btnIso = document.getElementById("cam-iso");
+    const btn3p = document.getElementById("cam-3p");
+
+    if (mode === 'iso') {
+      btnIso.className = "flex flex-col items-center justify-center p-space-sm rounded bg-primary-container text-on-primary-container shadow font-headline-sm text-[13px] transition-all";
+      btn3p.className = "flex flex-col items-center justify-center p-space-sm rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface shadow font-headline-sm text-[13px] transition-all";
+    } else {
+      btn3p.className = "flex flex-col items-center justify-center p-space-sm rounded bg-primary-container text-on-primary-container shadow font-headline-sm text-[13px] transition-all";
+      btnIso.className = "flex flex-col items-center justify-center p-space-sm rounded bg-surface-container-high text-on-surface-variant hover:text-on-surface shadow font-headline-sm text-[13px] transition-all";
+    }
+  }
+
+  let stormShrinking = false;
+  function toggleStormPreview() {
+    const indicator = document.getElementById("shrink-pct");
+    stormShrinking = !stormShrinking;
+    if (stormShrinking) {
+      indicator.innerText = "20% (ZONA FINAL: CRATERA CENTRAL)";
+      indicator.classList.add("text-error", "animate-pulse");
+    } else {
+      indicator.innerText = "65% (ÁREA SEGURA)";
+      indicator.classList.remove("animate-pulse");
+    }
+  }
+
+  function triggerRouteSimulation() {
+    selectPoi('jungle');
+  }
+
+  function startPracticeBot() {
+    alert("Iniciando Duelo no Vale Rúnico 1v1 contra Bot M1...");
+  }
+</script></main><footer class="w-full bg-surface-container-lowest/80 backdrop-blur-md py-space-md"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm"><span>ARENA 1V1 • PROTOCOLO RUNICO v1.0.4</span><span>SERVIDORES: SA-L1 ATIVO • TICKRATE 30Hz • NAT OPEN</span></div></footer></body></html>

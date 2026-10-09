@@ -1,0 +1,32 @@
+Tela de Heróis (Galeria de Heróis — Catálogo dos 10 Campeões)
+Estrutura Clássica Inspirada na Referência (Imagem 1):
+
+Barra de Sub-Navegação & Breadcrumbs: HOME ▸ DUELISTA_01'S PROFILE ▸ HERÓIS & CAMPEÕES, com abas de contexto (Heróis (Ativa), Runas, Talentos, Maestrias e Feitiços).
+Coluna Lateral de Filtros (Estilo 'Find / Owned / Attributes'):
+Buscar / Find: Campo com foco rúnico e atalho [ESC] para busca rápida de duelista.
+Adquiridos / Owned: Seletor com filtro de Desbloqueados (6), Bloqueados (4) e toggle de Grade Compacta.
+Classes & Funções: Filtros por tags táticas (Tanque / Vanguard, Atirador / Ranger, Mago / Arcano, Algoz / Assassino, Lutador / Bárbaro).
+Ordenação: Por Maestria, Dificuldade, Dano DPS e Mobilidade.
+Catálogo Completo dos 10 Heróis (Adventurers & Skeletons Packs):
+
+6 Heróis Vivos (KayKit Adventurers — Referência 2):
+Cavaleiro da Aurora — Tanque / Vanguard (Fatia M0–M4 • Maestria 5)
+Arqueira dos Ventos — Atiradora / Ranger (Fatia M0–M4 • Selecionada em Destaque)
+Bárbaro da Fera — Lutador / Brawler (Armadura de pele de urso)
+Ladino Sombrio — Algoz / Assassino Furtivo (Capa verde e adagas)
+Mago Crepúsculo — Mago / Dano Arcano (Chapéu pontudo e cajado)
+Paladino Errante — Suporte / Duelo (Capa azul e escudo)
+4 Heróis Mortos-Vivos (KayKit Skeletons — Referência 3):
+Guardião Ósseo — Tanque Morto-Vivo (1.200 Vales de Arena)
+Mago Cadavérico — Necromante Arcano (1.200 Vales de Arena)
+Bone Slayer — Lutador / DPS Rápido (1.200 Vales de Arena)
+Ceifador Sombrio — Algoz / Execução (1.500 Vales de Arena)
+Painel Lateral de Prévia & Inspeção do Campeão (Arqueira dos Ventos):
+
+Estatísticas Rápidas: Alcance Longo (650u), Dano Físico Primário (88 AD), Gráficos de barra de Burst (92), Vitalidade (34) e Kiting/Mobilidade (88).
+Quarteto de Habilidades Táticas (PRD §4.3):
+[Passiva] Foco
+[Q] Tiro Rápido / Flecha Perfurante
+[E] Salto Evasivo
+[R] Chuva Rúnica de Flechas
+Ações Imediatas: Botão prioritário dourado TESTAR NO TREINO [M1 BOT], além de acesso rápido a Builds & Guia e Skins (1/3).

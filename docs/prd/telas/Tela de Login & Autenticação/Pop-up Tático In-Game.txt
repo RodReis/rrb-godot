@@ -1,0 +1,18 @@
+As duas telas solicitadas, cobrindo tanto o fluxo inicial de entrada no jogo quanto a mecânica tática de progressão in-game prevista no seu PRD (§3.2, §4.3 e §8.4):
+
+1. 🔐 Tela de Login & Autenticação — Game Client Launcher (Login & Autenticação — NestJS Client Launcher)
+Estruturada como a tela de inicialização do executável Godot 4.7 conectando ao ecossistema NestJS backend:
+
+Key Visual & Branding:
+Logotipo oficial ARENA 1V1 — KAYKIT EDITION, com visual 3D isométrica da arena e dos heróis.
+Ticker informativo com atualizações do patch: Patch 1.4.2 Atualizado: Netfox 30Hz Netcode Live • Arena Hexagonal Ativa • Duelos Rápidos < 10min.
+Indicadores técnicos rápidos: 30 Hz Tickrate, < 25ms Latência Média SA, ciclo de milestone M0–M4.
+Formulário de Autenticação (PRD §8.4):
+Abas intuitivas de ENTRAR e CRIAR CONTA.
+Campos de E-mail/Usuário e Senha com toggle de visibilidade e opção "Lembrar credenciais".
+Seletor de Região & Gateway de Servidores:
+🇧🇷 SA-East (São Paulo): 24ms (Recomendado para Brasil & LATAM) com telemetria ativa.
+🇺🇸 NA-East (Virginia): 112ms como servidor alternativo.
+Botão principal com brilho rúnico: ENTRAR NA ARENA.
+Acesso de desenvolvimento/treino rápido: "Entrar como Convidado / Teste Local (Bot Offline M1)".
+Rodapé de Diagnóstico: Status operacional dos serviços (NestJS Auth API v1.2 JWT, Godot 4.7 Forward+, Pool de 12 Servidores Dedicados Docker/Coolify).

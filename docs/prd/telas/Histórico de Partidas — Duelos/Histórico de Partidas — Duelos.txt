@@ -1,0 +1,24 @@
+Histórico de Partidas — Duelos 1v1 & Auditoria M4, fechando com chave de ouro todos os pilares essenciais do seu PRD — MOBA de 2 Tempos!
+
+📜 Destaques da Tela de Histórico (Histórico de Partidas & Auditoria M4)
+KPI Cards Táticos de Desempenho Global:
+
+Taxa de Vitória Global: 68.0% (34V / 16D em 50 partidas auditadas) — mantendo conformidade com o teto de balanceamento.
+Tempo Médio de Duelo: 08:34 min — cumprindo a meta de 100% dos duelos finalizados em ≤ 10:00 min (a partida mais longa foi de 09:55 min).
+Eficácia de Catch-Up & Viradas: 31% dos duelos com desvantagem inicial na Fase 1 foram revertidos na Fase 2 graças ao bônus passivo de +25% XP.
+Desempenho Balanceado por Herói:
+Arqueira: 67.8% WR (19-9) | KDA 3.8.
+Cavaleiro: 68.1% WR (15-7) | KDA 2.9 (comprovando paridade competitiva entre melee e ranged).
+Cards Detalhados do Histórico de Duelos (Feed Central):
+
+Duelo #8941 (Vitória Recente — Destaque Principal): Arqueira (Você Nv 10) 5 ⚔️ 3 Cavaleiro (Nv 9) em 08:42 min (+24 ELO para 1504 pts). Exibe os ícones do Set do Caçador 3/3 e o Arco Espectral do Rei Titã, além da cronologia com o roubo do boss às 03:30.
+Duelo #8938 (Derrota Honrosa): Cavaleiro (Você Nv 9) 3 ⚔️ 5 Arqueira em 09:15 min (-18 ELO), com detalhes de ativação do Catch-Up e colapso da zona central.
+Duelo #8929 (Vitória Fast 6m): Arqueira 5 ⚔️ 1 Cavaleiro com controle total de creeps na Fase 1.
+Duelo #8915 (Virada Épica via Catch-Up): Cavaleiro 5 ⚔️ 4 Arqueira em 09:55 min (2 níveis atrás revertidos no combate final da zona).
+Painel Lateral de Auditoria de Critérios M4 (PRD §9.2):
+
+Duração Máxima ≤ 10 min: 100% aprovado.
+Latência Netfox ≤ 80ms: Média de 24ms (SA-East), zero borracha.
+Snowball sob Controle (< 75%): Líder da Fase 1 venceu 71.4% das partidas, garantindo a janela de virada.
+Estabilidade Soak Test (50 Partidas): 50 partidas automatizadas bot/bot consecutivas sem crashes de engine.
+Distribuição de picks (Arqueira 56% vs Cavaleiro 44%) e miniatura da Arena Hexagonal KayKit.

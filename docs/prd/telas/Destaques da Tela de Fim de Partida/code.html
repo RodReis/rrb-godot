@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#a08e7a","on-secondary":"#003351","on-primary":"#472a00","primary-container":"#f59e0b","surface-container-low":"#131b2e","on-surface":"#dae2fd","tertiary":"#ffbcb7","on-surface-variant":"#d8c3ad","primary-fixed-dim":"#ffb95f","inverse-surface":"#dae2fd","tertiary-fixed-dim":"#ffb3ad","secondary":"#93ccff","surface-container":"#171f33","surface-bright":"#31394d","surface-tint":"#ffb95f","surface-container-highest":"#2d3449","secondary-fixed":"#cce5ff","on-tertiary-container":"#8d0012","background":"#0b1326","on-secondary-fixed-variant":"#004b73","surface-container-high":"#222a3d","on-error-container":"#ffdad6","on-tertiary-fixed-variant":"#930013","on-primary-fixed":"#2a1700","on-background":"#dae2fd","inverse-on-surface":"#283044","surface-container-lowest":"#060e20","on-tertiary":"#68000a","tertiary-fixed":"#ffdad7","secondary-container":"#3198dc","secondary-fixed-dim":"#93ccff","outline-variant":"#534434","primary":"#ffc174","on-primary-container":"#613b00","primary-fixed":"#ffddb8","surface-dim":"#0b1326","tertiary-container":"#ff938c","error":"#ffb4ab","inverse-primary":"#855300","surface-variant":"#2d3449","error-container":"#93000a","on-secondary-fixed":"#001d31","on-primary-fixed-variant":"#653e00","on-secondary-container":"#002c47","on-error":"#690005","surface":"#0b1326","on-tertiary-fixed":"#410004"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"0.75rem","space-xl":"2rem","space-sm":"0.5rem","gutter":"0.75rem","space-lg":"1.25rem","margin":"1rem","space-xs":"0.25rem"},fontFamily:{"display-hero-mobile":["Space Grotesk"],"label-numeric-md":["JetBrains Mono"],"label-numeric-sm":["JetBrains Mono"],"display-hero":["Space Grotesk"],"body-sm":["Outfit"],"headline-sm":["Space Grotesk"],"body-lg":["Outfit"],"hotkey-cap":["Space Grotesk"],"headline-lg":["Space Grotesk"],"headline-lg-mobile":["Space Grotesk"],"body-md":["Outfit"],"headline-md":["Space Grotesk"],"label-numeric-lg":["JetBrains Mono"]},fontSize:{"display-hero-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-numeric-md":["14px",{"lineHeight":"18px","fontWeight":"700"}],"label-numeric-sm":["11px",{"lineHeight":"14px","fontWeight":"700"}],"display-hero":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"22px","fontWeight":"500"}],"hotkey-cap":["11px",{"lineHeight":"12px","letterSpacing":"0.05em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}],"label-numeric-lg":["20px",{"lineHeight":"24px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-low/95 backdrop-blur-md shadow-[0_4px_20px_rgba(6,14,32,0.8)]"><div class="h-16 w-full px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 bg-surface-container-highest rounded-lg flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><span class="material-symbols-outlined text-primary text-[22px]">swords</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-primary leading-none">Arena 1v1</span><span class="font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest text-on-surface-variant leading-none mt-space-xs">Kaykit Edition</span></div></div><div class="h-6 w-px bg-surface-variant mx-space-xs"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm text-headline-sm uppercase rounded-lg shadow-[0_0_12px_rgba(245,158,11,0.35)]"><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="lobby" href="#">Lobby</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="herois" href="#">Heróis</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="guia-e-bestiario" href="#">Guia &amp; Bestiário</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="historico" href="#">Histórico</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="ajustes" href="#">Ajustes</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm bg-surface-container-lowest px-space-md py-space-xs rounded-lg shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#93ccff]"></span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase">Netfox 30Hz</span></div><span class="text-outline-variant font-label-numeric-sm text-label-numeric-sm">|</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">24ms</span></div><div class="flex items-center gap-space-sm bg-surface-container px-space-md py-space-xs rounded-lg"><div class="flex flex-col text-right"><span class="font-headline-sm text-headline-sm text-on-surface leading-none">Duelista_01</span><div class="flex items-center justify-end gap-space-xs mt-space-xs"><span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase">ELO</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">1480</span></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,193,116,0.3)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div><div class="flex items-center gap-space-xs"><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors" title="Configurações" type="button"><span class="material-symbols-outlined text-[20px]">settings</span></button><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:text-on-error hover:bg-error-container transition-colors" title="Sair do Combate" type="button"><span class="material-symbols-outlined text-[20px]">power_settings_new</span></button></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Dynamic Ambient Backdrop & Glow Canvas -->
+<div class="relative w-full overflow-hidden px-margin py-space-lg flex flex-col gap-space-lg">
+<!-- Top Floating Glow Aura -->
+<div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[340px] bg-primary-container/20 blur-[130px] pointer-events-none rounded-full transition-colors duration-500" id="ambientGlow"></div>
+<div class="absolute top-48 right-12 w-96 h-96 bg-secondary/10 blur-[120px] pointer-events-none rounded-full"></div>
+<div class="absolute bottom-12 left-10 w-80 h-80 bg-primary/10 blur-[100px] pointer-events-none rounded-full"></div>
+<!-- 1. Header Banner & Win State Switcher -->
+<section class="relative z-10 w-full flex flex-col items-center text-center">
+<!-- Mode & State Mode Toggle (Tático Sandbox) -->
+<div class="flex items-center justify-between w-full max-w-7xl mb-space-sm px-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-space-md py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-numeric-sm text-label-numeric-sm uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+            Partida Finalizada #DUEL-8941
+          </span>
+<span class="text-outline-variant font-label-numeric-sm text-label-numeric-sm">•</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Arena Hexagonal KayKit</span>
+</div>
+<!-- Dev State Toggle for Victory/Defeat Preview -->
+<div class="flex items-center gap-space-xs bg-surface-container-lowest p-1 rounded-lg shadow-inner">
+<button class="px-space-md py-1 rounded bg-primary-container text-on-primary-container font-headline-sm text-label-numeric-sm uppercase tracking-wider transition-all duration-150 flex items-center gap-1.5 shadow-sm" id="btnStateVit" onclick="setMatchOutcome('victory')">
+<span class="material-symbols-outlined text-[16px]">trophy</span>
+            Vitória
+          </button>
+<button class="px-space-md py-1 rounded text-on-surface-variant font-headline-sm text-label-numeric-sm uppercase tracking-wider hover:text-on-surface hover:bg-surface-container-high transition-all duration-150 flex items-center gap-1.5" id="btnStateDer" onclick="setMatchOutcome('defeat')">
+<span class="material-symbols-outlined text-[16px]">skull</span>
+            Derrota
+          </button>
+</div>
+</div>
+<!-- Main Crest and Banner Title -->
+<div class="relative w-full max-w-4xl py-space-md flex flex-col items-center">
+<!-- Laurel & Hex Crest Icon -->
+<div class="w-20 h-20 mb-space-sm rounded-2xl bg-gradient-to-b from-primary-fixed to-primary-container p-0.5 shadow-[0_0_35px_rgba(245,158,11,0.5)] transition-all duration-300" id="crestContainer">
+<div class="w-full h-full bg-surface-container-lowest rounded-[14px] flex items-center justify-center relative overflow-hidden" id="crestInner">
+<div class="absolute inset-0 bg-primary/10 animate-pulse"></div>
+<span class="material-symbols-outlined text-primary text-[42px]" id="crestIcon" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+</div>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="h-0.5 w-16 bg-gradient-to-r from-transparent to-primary"></div>
+<h1 class="font-display-hero text-display-hero uppercase tracking-tight text-primary drop-shadow-[0_4px_16px_rgba(245,158,11,0.4)]" id="bannerTitle">
+            VITÓRIA TÁTICA
+          </h1>
+<div class="h-0.5 w-16 bg-gradient-to-l from-transparent to-primary"></div>
+</div>
+<!-- Subtitle & Rules Compliance -->
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-space-xs max-w-2xl">
+          Duelo 1v1 — Arena Hexagonal KayKit • Duração: <span class="text-on-surface font-label-numeric-md text-label-numeric-md">08:42</span> <span class="text-secondary font-label-numeric-sm text-label-numeric-sm">(Meta ≤ 10 min atingida)</span>
+</p>
+<!-- Win Condition Tag Badge -->
+<div class="mt-space-md inline-flex items-center gap-space-sm px-space-lg py-1.5 rounded-full bg-surface-container-high text-primary shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]" id="winCondTag">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span class="font-headline-sm text-label-numeric-sm uppercase tracking-wide">
+            CONDIÇÃO DE VITÓRIA: Meta de 5 Kills atingida na Fase 2 (Zona Nível 2)
+          </span>
+</div>
+</div>
+</section>
+<!-- 2. Match Scoreboard Quick Bar & Netfox Live Telemetry -->
+<section class="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-space-md items-center bg-surface-container-low/90 backdrop-blur-md p-space-md rounded-xl shadow-[0_8px_30px_rgba(6,14,32,0.7)]">
+<!-- Left: Player Score Big Read -->
+<div class="md:col-span-5 flex items-center justify-start gap-space-md">
+<div class="flex items-center gap-space-sm">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-primary text-[28px]">token</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md uppercase text-on-surface leading-none">ARQUEIRA</span>
+<span class="font-label-numeric-sm text-label-numeric-sm px-1.5 py-0.5 rounded bg-primary-container/20 text-primary uppercase">Você</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Guilda dos Patrulheiros</span>
+</div>
+</div>
+<div class="font-display-hero text-display-hero text-primary font-label-numeric-lg leading-none ml-auto mr-4">
+          5
+        </div>
+</div>
+<!-- Center: Clash Icon & Badges -->
+<div class="md:col-span-2 flex flex-col items-center justify-center text-center">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant shadow-md">
+<span class="material-symbols-outlined text-primary text-[20px]">swords</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest text-outline mt-1">PLACAR 1v1</span>
+</div>
+<!-- Right: Opponent Score Big Read -->
+<div class="md:col-span-5 flex items-center justify-end gap-space-md">
+<div class="font-display-hero text-display-hero text-on-surface-variant font-label-numeric-lg leading-none mr-auto ml-4">
+          3
+        </div>
+<div class="flex items-center gap-space-sm text-right">
+<div>
+<div class="flex items-center justify-end gap-space-xs">
+<span class="font-label-numeric-sm text-label-numeric-sm px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant uppercase">Rival</span>
+<span class="font-headline-md text-headline-md uppercase text-on-surface leading-none">CAVALEIRO</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ordem da Torre Real</span>
+</div>
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-[28px]">shield</span>
+</div>
+</div>
+</div>
+<!-- Full-Width Ribbon: Accolades & Match Highlights -->
+<div class="md:col-span-12 flex flex-wrap items-center justify-between gap-space-sm pt-space-xs bg-surface-container-lowest/60 px-space-md py-space-sm rounded-lg">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-primary-container text-on-primary-container font-headline-sm text-label-numeric-sm uppercase shadow-sm">
+<span class="material-symbols-outlined text-[15px]">award_star</span>
+            MVP da Partida
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high text-primary font-headline-sm text-label-numeric-sm uppercase">
+<span class="material-symbols-outlined text-[15px]">bolt</span>
+            Kill Decisiva: Chuva de Flechas
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high text-secondary font-headline-sm text-label-numeric-sm uppercase">
+<span class="material-symbols-outlined text-[15px]">crown</span>
+            Controle do Boss Central (Rei Esqueleto)
+          </span>
+</div>
+<div class="flex items-center gap-space-md font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">
+<span class="flex items-center gap-1 text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_6px_#93ccff]"></span>
+            Netfox 30Hz • Tick Loss: 0%
+          </span>
+<span>Ping Médio: 24ms</span>
+<span>Tickrate: 33.3ms</span>
+</div>
+</div>
+</section>
+<!-- 3. Dual Champion Cards Comparison (Arqueira vs Cavaleiro) -->
+<section class="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-space-lg">
+<!-- Player Card: Arqueira (Vencedor) -->
+<div class="relative bg-surface-container-low rounded-xl p-space-lg shadow-[0_8px_32px_rgba(6,14,32,0.85)] flex flex-col justify-between overflow-hidden">
+<!-- Top Radiant Header Stripe -->
+<div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary via-primary-container to-secondary"></div>
+<div class="absolute -right-16 -top-16 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div>
+<!-- Champion Header & Art Row -->
+<div class="flex items-start justify-between gap-space-md mb-space-md">
+<div class="flex items-center gap-space-md">
+<!-- Visual Character Avatar Container with KayKit Hooded Archer Stylized Motif -->
+<div class="relative w-24 h-24 rounded-xl bg-surface-container-highest p-1 shadow-lg overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover rounded-lg" data-alt="Low poly 3D stylized game character render of a female archer hero wearing an emerald green hooded cloak, brown leather tunic with bronze buckle, wielding a recurve wooden bow, warm rim lighting on cosmic slate dark background, KayKit fantasy arcade style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDesYGHxRyvH2F7z5Hw9ivJqRdaX8JZQoFu_cZwk7bs9n6GXt2QCudW-KIoHkHufRCKyPsweUWZKIo54crIVSdt06kfqPQ7uQhN_XyIioLfaz6EwxgD-J5HZXx_h9X3U83qIS7H-xXsmCsjXuTgJwfxaAJqw7iqmLwkUPlW4T_6CoUE9op7AGAmH0xtVjhC_QGTSiDAYczHUb4iYdj_aipb86Nn1l4WGfqqUNq9MzB_a6XLXMLMzG0x"/>
+<span class="absolute bottom-1 right-1 bg-primary text-on-primary font-label-numeric-sm text-label-numeric-sm px-1.5 py-0.5 rounded shadow">
+                  Nv. 10
+                </span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-lg text-headline-lg uppercase text-primary leading-none">ARQUEIRA</span>
+<span class="material-symbols-outlined text-primary text-[20px]" title="Vencedora">workspace_premium</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant mt-0.5">Atiradora Ágil • Dano à Distância</span>
+<div class="inline-flex items-center gap-space-xs mt-2 px-space-sm py-0.5 rounded bg-surface-container-highest font-label-numeric-sm text-label-numeric-sm text-primary uppercase w-fit">
+<span>Resultado: Vitória Limpa</span>
+</div>
+</div>
+</div>
+<!-- KDA Metric Badge -->
+<div class="flex flex-col items-end bg-surface-container-lowest px-space-md py-space-sm rounded-lg">
+<span class="font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest text-outline">K / D / A</span>
+<span class="font-headline-lg text-headline-lg font-label-numeric-lg text-primary leading-tight">5 / 3 / 0</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">KDA Ratio: 2.67</span>
+</div>
+</div>
+<!-- Combat Stats Grid -->
+<div class="grid grid-cols-3 gap-space-sm mb-space-md bg-surface-container p-space-md rounded-lg">
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Dano Causado</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface font-label-numeric-lg">14.850</span>
+<span class="font-body-sm text-body-sm text-primary">+22% vs Rival</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Dano Evitado (I-Frames)</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary font-label-numeric-lg">6.200</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">4 Esquivas Perfeitas</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Monstros / Baús</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface font-label-numeric-lg">14 / 4</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ouro Total: 2.840g</span>
+</div>
+</div>
+<!-- Inventory Slots (PRD M3 Match Mechanics) -->
+<div class="flex flex-col gap-space-xs mb-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-label-numeric-sm uppercase text-on-surface-variant">Inventário Final • Conjunto Ativo</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary">Set do Caçador 3/3 (+10% Vel. Ataque)</span>
+</div>
+<div class="grid grid-cols-4 gap-space-sm">
+<!-- Item 1: Epic Bow (Rei Esqueleto Drop) -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center relative group">
+<div class="w-10 h-10 rounded bg-primary-container/20 flex items-center justify-center text-primary mb-1">
+<span class="material-symbols-outlined text-[24px]">architecture</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-primary truncate w-full">Arco Épico</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Drop Boss</span>
+</div>
+<!-- Item 2: Hunter Cowl -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center relative">
+<div class="w-10 h-10 rounded bg-secondary/20 flex items-center justify-center text-secondary mb-1">
+<span class="material-symbols-outlined text-[24px]">visibility</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-on-surface truncate w-full">Capuz Caçador</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Set 1/3</span>
+</div>
+<!-- Item 3: Hunter Quiver -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center relative">
+<div class="w-10 h-10 rounded bg-secondary/20 flex items-center justify-center text-secondary mb-1">
+<span class="material-symbols-outlined text-[24px]">flash_on</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-on-surface truncate w-full">Aljava Veloz</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Set 2/3</span>
+</div>
+<!-- Item 4: Hunter Boots -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center relative">
+<div class="w-10 h-10 rounded bg-secondary/20 flex items-center justify-center text-secondary mb-1">
+<span class="material-symbols-outlined text-[24px]">sprint</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-on-surface truncate w-full">Botas Élficas</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Set 3/3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Ability Loadout Summary -->
+<div class="pt-space-sm flex items-center justify-between bg-surface-container-lowest/70 px-space-md py-space-xs rounded-lg mt-space-sm">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HABILIDADES UTILIZADAS:</span>
+<div class="flex items-center gap-space-sm font-label-numeric-sm text-label-numeric-sm">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface"><b class="text-primary">Q:</b> Tiro Triplo</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface"><b class="text-primary">E:</b> Esquiva Ágil</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-primary"><b class="text-primary">R:</b> Chuva de Flechas</span>
+</div>
+</div>
+</div>
+<!-- Opponent Card: Cavaleiro (Derrotado) -->
+<div class="relative bg-surface-container-low rounded-xl p-space-lg shadow-[0_8px_32px_rgba(6,14,32,0.85)] flex flex-col justify-between overflow-hidden opacity-90 hover:opacity-100 transition-opacity">
+<!-- Top Muted Stripe -->
+<div class="absolute top-0 left-0 w-full h-1.5 bg-surface-variant"></div>
+<div>
+<!-- Champion Header & Art Row -->
+<div class="flex items-start justify-between gap-space-md mb-space-md">
+<div class="flex items-center gap-space-md">
+<!-- Visual Character Avatar Container with KayKit Knight Full Helm Motif -->
+<div class="relative w-24 h-24 rounded-xl bg-surface-container-highest p-1 shadow-lg overflow-hidden flex-shrink-0 grayscale-[25%]">
+<img class="w-full h-full object-cover rounded-lg" data-alt="Low poly 3D stylized game character render of a medieval armored knight with steel bucket helmet, plate armor with red trim, broad steel sword and wooden heater shield, cold atmospheric lighting on deep sapphire slate background, KayKit modular arcade game asset" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrMvPG66HNc6g2EZ24zRT0NmgBpu9HANStDdR3aKXs_wbsL8fJRC-GC7ARugO1cgP1et2MmpnMMTC-K-7fA4e37bAWAKtBU92h9vTJjWUtgu_5ARlWe26Y9zjh7AujiqZxSsxUbV6JTjJjwA16NSmZa9Zl9kxfaS7IfUHKTr1Z7rTxL5K3LEukzNXv1tiyL_BxWD_CeDoZLpP5zVZiDkUrAh0Ar8jIMrxYY1rELb7aJsG7aJEgshcm"/>
+<span class="absolute bottom-1 right-1 bg-surface-variant text-on-surface font-label-numeric-sm text-label-numeric-sm px-1.5 py-0.5 rounded shadow">
+                  Nv. 9
+                </span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-lg text-headline-lg uppercase text-on-surface leading-none">CAVALEIRO</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">shield</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant mt-0.5">Guerreiro de Vanguarda • Defensivo</span>
+<div class="inline-flex items-center gap-space-xs mt-2 px-space-sm py-0.5 rounded bg-surface-container-highest font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase w-fit">
+<span>Resultado: Derrota Honrosa</span>
+</div>
+</div>
+</div>
+<!-- KDA Metric Badge -->
+<div class="flex flex-col items-end bg-surface-container-lowest px-space-md py-space-sm rounded-lg">
+<span class="font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest text-outline">K / D / A</span>
+<span class="font-headline-lg text-headline-lg font-label-numeric-lg text-on-surface leading-tight">3 / 5 / 0</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">KDA Ratio: 0.60</span>
+</div>
+</div>
+<!-- Combat Stats Grid -->
+<div class="grid grid-cols-3 gap-space-sm mb-space-md bg-surface-container p-space-md rounded-lg">
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Dano Causado</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface font-label-numeric-lg">12.100</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">-18% vs Você</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Dano Bloqueado</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary font-label-numeric-lg">11.450</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Muralha de Ferro</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Monstros / Baús</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface font-label-numeric-lg">12 / 3</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ouro Total: 2.310g</span>
+</div>
+</div>
+<!-- Inventory Slots -->
+<div class="flex flex-col gap-space-xs mb-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-label-numeric-sm uppercase text-on-surface-variant">Inventário Final • Conjunto Ativo</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">Set da Guarda 3/3 (+15% HP)</span>
+</div>
+<div class="grid grid-cols-4 gap-space-sm">
+<!-- Item 1: Rare Sword -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center">
+<div class="w-10 h-10 rounded bg-surface-variant flex items-center justify-center text-on-surface mb-1">
+<span class="material-symbols-outlined text-[24px]">swords</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-on-surface truncate w-full">Espada de Aço</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Rara (Drop 2)</span>
+</div>
+<!-- Item 2: Heavy Helm -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center">
+<div class="w-10 h-10 rounded bg-secondary/10 flex items-center justify-center text-secondary mb-1">
+<span class="material-symbols-outlined text-[24px]">security</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-on-surface truncate w-full">Elmo da Guarda</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Set 1/3</span>
+</div>
+<!-- Item 3: Iron Plate -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center">
+<div class="w-10 h-10 rounded bg-secondary/10 flex items-center justify-center text-secondary mb-1">
+<span class="material-symbols-outlined text-[24px]">shield</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-on-surface truncate w-full">Peitoral Pesado</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Set 2/3</span>
+</div>
+<!-- Item 4: Greaves -->
+<div class="bg-surface-container-highest p-2 rounded-lg flex flex-col items-center text-center">
+<div class="w-10 h-10 rounded bg-secondary/10 flex items-center justify-center text-secondary mb-1">
+<span class="material-symbols-outlined text-[24px]">footprint</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm font-semibold text-on-surface truncate w-full">Grevas da Torre</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Set 3/3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Ability Loadout Summary -->
+<div class="pt-space-sm flex items-center justify-between bg-surface-container-lowest/70 px-space-md py-space-xs rounded-lg mt-space-sm">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HABILIDADES UTILIZADAS:</span>
+<div class="flex items-center gap-space-sm font-label-numeric-sm text-label-numeric-sm">
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface"><b class="text-on-surface-variant">Q:</b> Golpe Pesado</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface"><b class="text-on-surface-variant">W:</b> Muralha</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface"><b class="text-on-surface-variant">R:</b> Salto Heróico</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Macro Progression, Timeline & Anti-Snowball Chart (PRD §3.2 & §9.2) -->
+<section class="relative z-10 w-full max-w-7xl mx-auto bg-surface-container-low rounded-xl p-space-lg shadow-[0_8px_30px_rgba(6,14,32,0.8)]">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm mb-space-md">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md uppercase text-on-surface">Evolução da Partida &amp; Dinâmica Anti-Snowball</span>
+<span class="px-2 py-0.5 rounded bg-primary-container/20 text-primary font-label-numeric-sm text-label-numeric-sm uppercase">PRD M0-M4</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Progressão temporal de ouro, XP e intervenção das mecânicas de contenção (Catch-Up System) entre Fase 1 e Fase 2.
+          </p>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2 font-label-numeric-sm text-label-numeric-sm">
+<span class="w-3 h-3 rounded-full bg-primary inline-block"></span>
+<span class="text-on-surface">Arqueira (Você)</span>
+</div>
+<div class="flex items-center gap-2 font-label-numeric-sm text-label-numeric-sm">
+<span class="w-3 h-3 rounded-full bg-secondary inline-block"></span>
+<span class="text-on-surface-variant">Cavaleiro (Rival)</span>
+</div>
+<div class="flex items-center gap-2 font-label-numeric-sm text-label-numeric-sm">
+<span class="w-2.5 h-2.5 bg-error-container rotate-45 inline-block"></span>
+<span class="text-error">Evento Chave</span>
+</div>
+</div>
+</div>
+<!-- Inline SVG Progression Chart -->
+<div class="relative w-full h-56 bg-surface-container-lowest rounded-xl p-space-md overflow-hidden">
+<!-- Phase Delimiter Labels -->
+<div class="absolute top-2 left-4 z-10 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-label-numeric-sm text-label-numeric-sm uppercase">Fase 1: Farm &amp; Desbloqueio (00:00 - 05:00)</span>
+</div>
+<div class="absolute top-2 right-4 z-10 flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-primary font-label-numeric-sm text-label-numeric-sm uppercase">Fase 2: Confinamento &amp; Duelo (05:00 - 08:42)</span>
+</div>
+<!-- Phase Separator Line at ~58% of timeline (05:00 mark) -->
+<div class="absolute top-0 bottom-0 left-[58%] w-px bg-surface-variant/80 z-0 flex flex-col justify-end pb-2">
+<span class="text-outline-variant font-label-numeric-sm text-label-numeric-sm -translate-x-1/2 bg-surface-container-lowest px-1 rounded">05:00 Portões Caem</span>
+</div>
+<!-- SVG Line graph showing both hero curves and catch-up inflection -->
+<svg class="w-full h-full overflow-visible" preserveaspectratio="none" viewbox="0 0 1000 200">
+<defs>
+<lineargradient id="archerGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#f59e0b" stop-opacity="0.35"></stop>
+<stop offset="100%" stop-color="#f59e0b" stop-opacity="0.0"></stop>
+</lineargradient>
+<lineargradient id="knightGradient" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#93ccff" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#93ccff" stop-opacity="0.0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#171f33" stroke-width="1" x1="0" x2="1000" y1="40" y2="40"></line>
+<line stroke="#171f33" stroke-width="1" x1="0" x2="1000" y1="90" y2="90"></line>
+<line stroke="#171f33" stroke-width="1" x1="0" x2="1000" y1="140" y2="140"></line>
+<!-- Knight Fill & Line -->
+<path d="M 0,180 Q 150,165 300,150 T 580,120 Q 720,80 1000,65 L 1000,195 L 0,195 Z" fill="url(#knightGradient)"></path>
+<path d="M 0,180 Q 150,165 300,150 T 580,120 Q 720,80 1000,65" fill="none" stroke="#93ccff" stroke-dasharray="4 2" stroke-width="3"></path>
+<!-- Archer Fill & Line -->
+<path d="M 0,185 Q 150,155 350,110 T 580,75 Q 800,45 1000,20 L 1000,195 L 0,195 Z" fill="url(#archerGradient)"></path>
+<path d="M 0,185 Q 150,155 350,110 T 580,75 Q 800,45 1000,20" fill="none" stroke="#ffc174" stroke-width="3.5"></path>
+<!-- Event Dots -->
+<!-- Event 1: 01:30 Base Chest -->
+<circle cx="170" cy="160" fill="#f59e0b" r="5"></circle>
+<!-- Event 2: 03:30 Skeleton King Boss Steal by Archer -->
+<circle cx="400" cy="100" fill="#f59e0b" r="7" stroke="#060e20" stroke-width="2"></circle>
+<!-- Event 3: 05:00 Gates Drop -->
+<circle cx="580" cy="75" fill="#dae2fd" r="6"></circle>
+<!-- Event 4: 06:15 Anti-Snowball Catch-Up Activation (+25% XP Knight) -->
+<circle cx="720" cy="80" fill="#93ccff" r="7" stroke="#060e20" stroke-width="2"></circle>
+<!-- Event 5: 08:42 Final Kill -->
+<circle cx="1000" cy="20" fill="#f59e0b" r="8" stroke="#ffddb8" stroke-width="3"></circle>
+</svg>
+<!-- Time Axis Tick markers -->
+<div class="w-full flex justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm pt-2 px-1">
+<span>00:00 Início</span>
+<span>02:00</span>
+<span>03:30 (Boss Spawn)</span>
+<span>05:00 (Queda dos Portões)</span>
+<span>06:30 (Catch-Up Ativado)</span>
+<span class="text-primary font-bold">08:42 (Fim da Partida)</span>
+</div>
+</div>
+<!-- Timeline Highlights Grid (Key milestones in PRD M0-M4 flow) -->
+<div class="grid grid-cols-1 md:grid-cols-5 gap-space-sm mt-space-md">
+<div class="bg-surface-container p-space-sm rounded-lg flex flex-col">
+<div class="flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm mb-1">
+<span class="text-primary font-bold">01:30</span>
+<span class="material-symbols-outlined text-[16px]">inventory_2</span>
+</div>
+<span class="font-headline-sm text-label-numeric-sm text-on-surface uppercase">1º Baú Aberto</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant mt-0.5">Arqueira garante bônus de mobilidade inicial na base norte.</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg flex flex-col">
+<div class="flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm mb-1">
+<span class="text-primary font-bold">03:30</span>
+<span class="material-symbols-outlined text-primary text-[16px]">skull</span>
+</div>
+<span class="font-headline-sm text-label-numeric-sm text-primary uppercase">Roubo do Boss Central</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant mt-0.5">Rei Esqueleto abatido (+500 XP &amp; Drop do Arco Épico).</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg flex flex-col">
+<div class="flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm mb-1">
+<span class="text-secondary font-bold">05:00</span>
+<span class="material-symbols-outlined text-[16px]">door_open</span>
+</div>
+<span class="font-headline-sm text-label-numeric-sm text-on-surface uppercase">Queda dos Portões</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant mt-0.5">Fase 2 ativada. Hexágonos da borda sofrem dano periódico.</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg flex flex-col">
+<div class="flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm mb-1">
+<span class="text-secondary font-bold">06:15</span>
+<span class="material-symbols-outlined text-secondary text-[16px]">trending_up</span>
+</div>
+<span class="font-headline-sm text-label-numeric-sm text-secondary uppercase">Bônus Catch-Up</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant mt-0.5">Cavaleiro 2 níveis atrás ganha +25% XP por creep abatido.</span>
+</div>
+<div class="bg-surface-container p-space-sm rounded-lg flex flex-col">
+<div class="flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm mb-1">
+<span class="text-primary font-bold">08:42</span>
+<span class="material-symbols-outlined text-primary text-[16px]">flag</span>
+</div>
+<span class="font-headline-sm text-label-numeric-sm text-primary uppercase">5ª Kill &amp; Vitória</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant mt-0.5">Chuva de flechas final na zona central colapsada.</span>
+</div>
+</div>
+<!-- Anti-Snowball Protocol Validation Tag -->
+<div class="mt-space-md flex items-center justify-between bg-surface-container-highest/60 px-space-md py-space-xs rounded-lg text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span class="flex items-center gap-1.5 text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[16px]">health_and_safety</span>
+          Auditoria M4 de Balanceamento: <strong class="text-primary font-bold">Duelo Competitivo Válido</strong> (Margem de recuperação permaneceu aberta até 07:15)
+        </span>
+<span class="text-outline">Godot 4.3 Netfox State Sync Validado</span>
+</div>
+</section>
+<!-- 5. ELO Calibration, Player Progression & Honors -->
+<section class="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Card A: ELO Ranking Calibration -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-md">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">Classificação ELO</span>
+<span class="px-2 py-0.5 rounded bg-primary-container/20 text-primary font-label-numeric-sm text-label-numeric-sm">1v1 Solo</span>
+</div>
+<div class="flex items-center gap-space-md my-space-sm">
+<div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[32px]">shield_with_heart</span>
+</div>
+<div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-display-hero text-headline-lg font-label-numeric-lg text-primary leading-none">1504</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">+24 pts</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">Tier: Ouro Tático II (KayKit Ladder)</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs">
+<div class="flex justify-between font-label-numeric-sm text-label-numeric-sm text-on-surface-variant mb-1">
+<span>Progresso para Ouro I (1550)</span>
+<span>46 pts restantes</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container-lowest overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container w-[72%] rounded"></div>
+</div>
+</div>
+</div>
+<!-- Card B: Duelist Level Progression & Match Rewards -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-md">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">Nível do Duelista</span>
+<span class="px-2 py-0.5 rounded bg-secondary-container/30 text-secondary font-label-numeric-sm text-label-numeric-sm">+850 XP</span>
+</div>
+<div class="flex items-center gap-space-md my-space-sm">
+<div class="w-14 h-14 rounded-xl bg-surface-container-highest flex items-center justify-center text-secondary shadow-inner">
+<span class="material-symbols-outlined text-[32px]">auto_awesome</span>
+</div>
+<div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-display-hero text-headline-lg font-label-numeric-lg text-on-surface leading-none">Nv. 15</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase">Subiu de Nível!</span>
+</div>
+<span class="font-body-md text-body-md text-on-surface-variant">Desbloqueio: Ícone Esqueleto Titã</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs">
+<div class="flex justify-between font-label-numeric-sm text-label-numeric-sm text-on-surface-variant mb-1">
+<span>XP para Nível 16</span>
+<span>150 / 1.000 XP</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container-lowest overflow-hidden">
+<div class="h-full bg-secondary w-[15%] rounded"></div>
+</div>
+</div>
+</div>
+<!-- Card C: Combat Badges & Commendations -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex flex-col justify-between shadow-md">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">Medalhas de Honra</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">3 Conquistadas</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs mt-space-sm text-center">
+<div class="bg-surface-container p-2 rounded-lg flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-[24px]">crisis_alert</span>
+<span class="font-headline-sm text-label-numeric-sm text-on-surface mt-1">Mira Real</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">88% Tiros</span>
+</div>
+<div class="bg-surface-container p-2 rounded-lg flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary text-[24px]">skull</span>
+<span class="font-headline-sm text-label-numeric-sm text-on-surface mt-1">Boss Slayer</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">Roubo 03:30</span>
+</div>
+<div class="bg-surface-container p-2 rounded-lg flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-[24px]">fast_forward</span>
+<span class="font-headline-sm text-label-numeric-sm text-on-surface mt-1">Rápido 10m</span>
+<span class="font-body-sm text-label-numeric-sm text-on-surface-variant">08m42s</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-space-sm py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-headline-sm text-label-numeric-sm uppercase transition-colors flex items-center justify-center gap-1.5 shadow-sm" id="btnHonorRival" onclick="honorRival()">
+<span class="material-symbols-outlined text-[16px] text-primary">thumb_up</span>
+          Honrar Rival (Cavaleiro_02)
+        </button>
+</div>
+</section>
+<!-- 6. Sticky Action Controls / Bottom Match Navigation -->
+<section class="relative z-10 w-full max-w-7xl mx-auto pt-space-sm pb-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md">
+<!-- Left Secondary CTA Hub -->
+<div class="flex flex-wrap items-center gap-space-sm w-full md:w-auto">
+<a class="px-space-md py-space-sm rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-headline-sm text-headline-sm uppercase tracking-wide transition-all flex items-center gap-2" href="#lobby">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          Voltar ao Lobby
+        </a>
+<a class="px-space-md py-space-sm rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-headline-sm text-headline-sm uppercase tracking-wide transition-all flex items-center gap-2" href="#historico">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+          Histórico Completo
+        </a>
+<a class="px-space-md py-space-sm rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface-variant hover:text-on-surface font-headline-sm text-headline-sm uppercase tracking-wide transition-all flex items-center gap-2" href="#guia-e-bestiario">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+          Bestiário
+        </a>
+</div>
+<!-- Right Dominant Combat CTA Buttons -->
+<div class="flex items-center gap-space-md w-full md:w-auto justify-end">
+<!-- Revanche Quick Trigger -->
+<button class="px-space-lg py-space-sm rounded-lg bg-surface-container-high hover:bg-surface-bright text-secondary font-headline-sm text-headline-sm uppercase tracking-wide transition-all flex items-center gap-2 shadow-sm" id="btnRematch" onclick="requestRematch()">
+<span class="material-symbols-outlined text-[22px]">replay</span>
+<span id="rematchLabel">Pedir Revanche</span>
+</button>
+<!-- Primary Matchmaking CTA: Chunky Tactical Button -->
+<button class="px-space-xl py-space-sm rounded-lg bg-primary-container hover:bg-primary text-on-primary-container font-headline-sm text-headline-sm uppercase tracking-wider transition-all duration-150 flex items-center gap-space-sm shadow-[0_4px_0_#78350F,0_0_20px_rgba(245,158,11,0.4)] active:translate-y-1 active:shadow-none" onclick="findNextMatch()">
+<span class="material-symbols-outlined text-[24px]">swords</span>
+<span>Jogar Novamente</span>
+</button>
+</div>
+</section>
+</div>
+</div>
+<script>
+  // Dynamic End-of-Game Screen State Switcher (Vitória / Derrota Showcase)
+  function setMatchOutcome(outcome) {
+    const bannerTitle = document.getElementById('bannerTitle');
+    const winCondTag = document.getElementById('winCondTag');
+    const crestIcon = document.getElementById('crestIcon');
+    const crestContainer = document.getElementById('crestContainer');
+    const ambientGlow = document.getElementById('ambientGlow');
+    const btnVit = document.getElementById('btnStateVit');
+    const btnDer = document.getElementById('btnStateDer');
+
+    if (outcome === 'victory') {
+      bannerTitle.innerText = 'VITÓRIA TÁTICA';
+      bannerTitle.className = 'font-display-hero text-display-hero uppercase tracking-tight text-primary drop-shadow-[0_4px_16px_rgba(245,158,11,0.4)]';
+      
+      crestIcon.innerText = 'military_tech';
+      crestIcon.className = 'material-symbols-outlined text-primary text-[42px]';
+      crestContainer.className = 'w-20 h-20 mb-space-sm rounded-2xl bg-gradient-to-b from-primary-fixed to-primary-container p-0.5 shadow-[0_0_35px_rgba(245,158,11,0.5)] transition-all duration-300';
+      ambientGlow.className = 'absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[340px] bg-primary-container/20 blur-[130px] pointer-events-none rounded-full transition-colors duration-500';
+
+      winCondTag.innerHTML = `
+        <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+        <span class="font-headline-sm text-label-numeric-sm uppercase tracking-wide">
+          CONDIÇÃO DE VITÓRIA: Meta de 5 Kills atingida na Fase 2 (Zona Nível 2)
+        </span>
+      `;
+      winCondTag.className = 'mt-space-md inline-flex items-center gap-space-sm px-space-lg py-1.5 rounded-full bg-surface-container-high text-primary shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]';
+
+      btnVit.className = 'px-space-md py-1 rounded bg-primary-container text-on-primary-container font-headline-sm text-label-numeric-sm uppercase tracking-wider transition-all duration-150 flex items-center gap-1.5 shadow-sm';
+      btnDer.className = 'px-space-md py-1 rounded text-on-surface-variant font-headline-sm text-label-numeric-sm uppercase tracking-wider hover:text-on-surface hover:bg-surface-container-high transition-all duration-150 flex items-center gap-1.5';
+    } else {
+      bannerTitle.innerText = 'DERROTA EM COMBATE';
+      bannerTitle.className = 'font-display-hero text-display-hero uppercase tracking-tight text-error drop-shadow-[0_4px_16px_rgba(255,180,171,0.4)]';
+
+      crestIcon.innerText = 'heart_broken';
+      crestIcon.className = 'material-symbols-outlined text-error text-[42px]';
+      crestContainer.className = 'w-20 h-20 mb-space-sm rounded-2xl bg-gradient-to-b from-error to-error-container p-0.5 shadow-[0_0_35px_rgba(147,0,10,0.6)] transition-all duration-300';
+      ambientGlow.className = 'absolute -top-32 left-1/2 -translate-x-1/2 w-[720px] h-[340px] bg-error-container/20 blur-[130px] pointer-events-none rounded-full transition-colors duration-500';
+
+      winCondTag.innerHTML = `
+        <span class="material-symbols-outlined text-error text-[18px]">gavel</span>
+        <span class="font-headline-sm text-label-numeric-sm uppercase tracking-wide text-error">
+          FIM DE CONFRONTO: Adversário atingiu a cota de 5 abates no colapso hexagonal
+        </span>
+      `;
+      winCondTag.className = 'mt-space-md inline-flex items-center gap-space-sm px-space-lg py-1.5 rounded-full bg-surface-container-high text-error shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]';
+
+      btnDer.className = 'px-space-md py-1 rounded bg-error-container text-on-error font-headline-sm text-label-numeric-sm uppercase tracking-wider transition-all duration-150 flex items-center gap-1.5 shadow-sm';
+      btnVit.className = 'px-space-md py-1 rounded text-on-surface-variant font-headline-sm text-label-numeric-sm uppercase tracking-wider hover:text-on-surface hover:bg-surface-container-high transition-all duration-150 flex items-center gap-1.5';
+    }
+  }
+
+  function requestRematch() {
+    const label = document.getElementById('rematchLabel');
+    const btn = document.getElementById('btnRematch');
+    label.innerText = 'Aguardando Rival (14s)...';
+    btn.classList.add('animate-pulse', 'text-primary');
+    setTimeout(() => {
+      label.innerText = 'Revanche Aceita!';
+      btn.classList.remove('animate-pulse');
+      btn.classList.add('bg-primary-container', 'text-on-primary-container');
+    }, 1800);
+  }
+
+  function honorRival() {
+    const btn = document.getElementById('btnHonorRival');
+    btn.innerHTML = '<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span> Honra Enviada (+10 Fair Play)';
+    btn.classList.add('text-secondary', 'cursor-default');
+    btn.disabled = true;
+  }
+
+  function findNextMatch() {
+    const btn = event.currentTarget;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-[24px]">progress_activity</span><span>Buscando Duelista (1480-1530 ELO)...</span>';
+  }
+</script></main><footer class="w-full bg-surface-container-lowest py-space-md"><div class="w-full px-margin flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm"><div class="flex items-center gap-space-md"><span class="text-primary font-headline-sm text-headline-sm uppercase tracking-wide">Arena 1v1</span><span>Compêndio Tático • Versão 1.4.2</span></div><div class="flex items-center gap-space-lg"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Servidor: SA-East (São Paulo)</span><span>© 2025 Arena 1v1 Studios. Todos os direitos reservados.</span></div></div></footer></body></html>

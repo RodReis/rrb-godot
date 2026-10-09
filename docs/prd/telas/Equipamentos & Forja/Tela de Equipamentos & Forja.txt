@@ -1,0 +1,24 @@
+Tela de Equipamentos & Forja
+Os 2 Grandes Conjuntos de Armadura (Bônus Sinérgico 3/3):
+
+Set da Guarda Real (Vanguarda / Cavaleiro):
+Bônus de 3 Peças: +15% HP Máximo Total.
+Progressão dos 3 slots (Elmo, Peitoral, Grevas) nos tiers Comum, Raro e Épico.
+Destaque para o escalonamento defensivo que maximiza o valor da fórmula de absorção do PRD.
+Set do Caçador Élfico (Ranger / Arqueira):
+Bônus de 3 Peças: +10% Velocidade de Ataque & +5% Velocidade de Movimento.
+Progressão dos 3 slots (Capuz das Folhas, Gibão de Couro, Passo Silencioso) nos tiers Comum, Raro e Épico.
+As 3 Armas Universais (Adaptação Visual por Classe):
+
+Tier 1 (Comum): Lâmina / Arco de Recruta (+15 ATQ) — disponível nos 6 baús comuns de base.
+Tier 2 (Raro): Espada / Arco do Guardião (+32 ATQ, +5 INT) — disponível nos 4 baús centrais e monstros médios.
+Tier 3 (Épico): Lâmina Espectral / Arco do Rei Titã (+55 ATQ, +10 AGI) — drop 100% garantido do Rei Esqueleto às 03:30, com passiva de quebra de armadura.
+Mecânicas de Inventário & Baús (PRD §3.2 e §6):
+
+4 Slots Fixos: Arma, Elmo, Peitoral e Botas.
+Regra de Troca: Substituição automática se o item for de maior raridade; segurar tecla [F] por 0.5s para trocar por item de raridade igual ou inferior.
+Spawns Fixos: Contagem estrita de baús (6 na base, 4 no centro, 1 drop do boss) sem respawn.
+Simulador Tático de Atributos & Mitigação:
+
+Permite alternar entre Cavaleiro e Arqueira para inspecionar o status final.
+Aplica a fórmula oficial do PRD: Dano Recebido = Dano × 100 / (100 + Def).

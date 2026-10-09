@@ -1,0 +1,34 @@
+Arena & Mapa — O Vale Rúnico Apocalíptico, unindo a estrutura tática clássica de MOBAs como League of Legends (Summoner's Rift) e Dota 2 com o estilo KayKit Hexagonal, ambientação medieval e estética pós-apocalíptica futurista/cyber-rúnica, em escala compacta 1v1 conforme o seu PRD (§3.1, §3.2, §3.4 e §11)!
+
+🗺️ O que foi concebido e estruturado:
+Topologia do Mapa no Estilo LoL / Dota 2 (Compacto & Hexagonal):
+
+Escala Compacta 1v1: Travessia total em ~20 segundos (base ao centro em ~8 segundos), mantendo o ritmo acelerado e dinâmico das partidas de 10 minutos.
+Duas Fortificações Opostas:
+Base da Ordem (P1): Castelo medieval de pedra reforçado com condutos de energia ciano e torre de defesa rúnica.
+Base da Ruína (P2): Cidadela corrompida com fortificações de ferro e plasma vulcânico alaranjado.
+O Rio de Fenda Tóxica / Plasma Vital: Um corte diagonal que divide o mapa de ponta a ponta (como o rio tradicional de Summoner's Rift e Dota 2), fluindo com plasma rúnico luminescente e vapores apocalípticos.
+Cratera Central Contestado (Boss Pit): No ponto de maior tensão do mapa, há uma cratera vulcânica onde o Rei Esqueleto (Boss Neutro) desperta aos 03:30, com drop garantido de item lendário/épico.
+Overlay Tático e Grid de Coordenadas (A1–F6):
+
+Pontos de interesse mapeados com ícones de radar tático:
+🛡️ Bases Protegidas com Barricadas da Fase 1
+⚡ Torres Rúnicas com canhões de pulso
+💀 Covil do Boss Central (03:30)
+⚔️ Rotas de Creeps & Farm Neutro (Tier 1 a Tier 3)
+💧 Fenda de Plasma & Pontes de Travessia
+Janela de zoom tático em 3D isométrico destacando a topologia de elevação (-1.8m de depressão central) e bloqueio de linha de visão (Line of Sight / Fog of War).
+Painel de Regras dos 2 Tempos (PRD §3.2 & §3.4):
+
+Fase 1: Preparação, Creeps & Farm (00:00 – 05:00):
+Portões de base intransponíveis (impossível invadir o quintal adversário).
+12 baús comuns distribuídos nas bases (6 por lado) + 4 baús raros no centro.
+Mortes no centro durante a Fase 1 possuem respawn brando de 8s e não contam kill para vitória.
+Fase 2: Confronto & Tempestade Tóxica (05:00 – 10:00):
+Queda das barricadas e colapso das bases.
+Círculo mortal / gás rúnico que encolhe das bordas externas em direção à cratera central durante 4 minutos (dano progressivo de 1.5% a 6% HP/s).
+Condição de vitória: Primeiro a atingir 5 Kills ou último sobrevivente.
+Alternador de Câmera: Suporte a visão Isométrica 45° (com Mira Assistida) e 3ª Pessoa Alta (PC 14.5m).
+Ações Rápidas de Jogo:
+
+Botões de Iniciar Treino no Vale (Bot M1), Rotas de Farm e Simular Tempestade integrados ao rodapé tático.

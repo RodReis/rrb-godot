@@ -1,0 +1,23 @@
+telas de Menu Principal (Lobby de Partida 1v1) e Seleção de Heróis (Cavaleiro vs Arqueira), integradas com fidelidade total aos dados do seu PRD:
+
+🏰 1. Menu Principal — Lobby 1v1 (Menu Principal — Lobby 1v1)
+Painel Central de Duelo & Fila:
+Card chamativo de "BUSCAR PARTIDA 1v1" com fila estimada em ~15s (Algoritmo FIFO netfox) e tempo limite de partida de 10 minutos.
+Seleção de modos destacando a Fatia Vertical M0–M4 ativa e sinalizando os futuros modos do roadmap (2v2 Duplas Estratégicas e 3v3 Trio Real com Chefes Neutros como bloqueados).
+Herói em Destaque:
+Exibição do duelista atualmente ativo (Cavaleiro da Aurora em pedestal hexagonal) com botão rápido para "Mudar".
+Acessos Rápidos & Telemetria:
+Atalhos para Treino Solo contra Bot IA (máquina de estados do PRD: farmar, saquear, contestar e lutar) e Histórico de Batalhas (Taxa de vitória 64%, KDA 3.8).
+Rodapé técnico contextual de PC: Build v0.1 • Motor: Godot 4.3 • Rede: Netfox Deterministic Tick 30 Hz e servidor online em São Paulo com 24ms de ping.
+⚔️ 2. Seleção de Heróis — Cavaleiro vs Arqueira (Seleção de Heróis — Cavaleiro vs Arqueira)
+Comparativo Completo das Classes:
+Cavaleiro (Tanque): HP 600, Def 30, Atq 40, Int 10, Agi 10.
+Kit de combate: Golpe em Arco Curto (M1), Investida (Q - 6u), Muralha (E - 70% absorção por 3s) e Ultimate Terremoto (R - Nv 6, atordoamento de 1,5s).
+Recomendação sinérgica: Set da Guarda (+15% HP total).
+Arqueira (Ranger): HP 380, Def 10, Atq 55, Int 15, Agi 25.
+Kit de combate: Flecha Reta (0.8s recarga), Flecha Perfurante (Q), Rolamento (E - I-Frame de 0.3s) e Ultimate Chuva de Flechas (R - área contínua por 3s).
+Recomendação sinérgica: Set do Caçador (+10% Velocidade de Ataque).
+Radar de Balanço Tático:
+Gráfico comparativo de radar confrontando Vitalidade, Dano, Agilidade e Controle de Grupo (CC).
+Fluxo Competitivo:
+Timer regressivo de turno (39s restante), indicador de oponente conectado e botões de ação: "Confirmar Escolha" e "Testar no Modo Treino".

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#a08e7a","on-secondary":"#003351","on-primary":"#472a00","primary-container":"#f59e0b","surface-container-low":"#131b2e","on-surface":"#dae2fd","tertiary":"#ffbcb7","on-surface-variant":"#d8c3ad","primary-fixed-dim":"#ffb95f","inverse-surface":"#dae2fd","tertiary-fixed-dim":"#ffb3ad","secondary":"#93ccff","surface-container":"#171f33","surface-bright":"#31394d","surface-tint":"#ffb95f","surface-container-highest":"#2d3449","secondary-fixed":"#cce5ff","on-tertiary-container":"#8d0012","background":"#0b1326","on-secondary-fixed-variant":"#004b73","surface-container-high":"#222a3d","on-error-container":"#ffdad6","on-tertiary-fixed-variant":"#930013","on-primary-fixed":"#2a1700","on-background":"#dae2fd","inverse-on-surface":"#283044","surface-container-lowest":"#060e20","on-tertiary":"#68000a","tertiary-fixed":"#ffdad7","secondary-container":"#3198dc","secondary-fixed-dim":"#93ccff","outline-variant":"#534434","primary":"#ffc174","on-primary-container":"#613b00","primary-fixed":"#ffddb8","surface-dim":"#0b1326","tertiary-container":"#ff938c","error":"#ffb4ab","inverse-primary":"#855300","surface-variant":"#2d3449","error-container":"#93000a","on-secondary-fixed":"#001d31","on-primary-fixed-variant":"#653e00","on-secondary-container":"#002c47","on-error":"#690005","surface":"#0b1326","on-tertiary-fixed":"#410004"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"0.75rem","space-xl":"2rem","space-sm":"0.5rem","gutter":"0.75rem","space-lg":"1.25rem","margin":"1rem","space-xs":"0.25rem"},fontFamily:{"display-hero-mobile":["Space Grotesk"],"label-numeric-md":["JetBrains Mono"],"label-numeric-sm":["JetBrains Mono"],"display-hero":["Space Grotesk"],"body-sm":["Outfit"],"headline-sm":["Space Grotesk"],"body-lg":["Outfit"],"hotkey-cap":["Space Grotesk"],"headline-lg":["Space Grotesk"],"headline-lg-mobile":["Space Grotesk"],"body-md":["Outfit"],"headline-md":["Space Grotesk"],"label-numeric-lg":["JetBrains Mono"]},fontSize:{"display-hero-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-numeric-md":["14px",{"lineHeight":"18px","fontWeight":"700"}],"label-numeric-sm":["11px",{"lineHeight":"14px","fontWeight":"700"}],"display-hero":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"22px","fontWeight":"500"}],"hotkey-cap":["11px",{"lineHeight":"12px","letterSpacing":"0.05em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}],"label-numeric-lg":["20px",{"lineHeight":"24px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-low/95 backdrop-blur-md shadow-[0_4px_20px_rgba(6,14,32,0.8)]"><div class="h-16 w-full px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 bg-surface-container-highest rounded-lg flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><span class="material-symbols-outlined text-primary text-[22px]">swords</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-primary leading-none">Arena 1v1</span><span class="font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest text-on-surface-variant leading-none mt-space-xs">Kaykit Edition</span></div></div><div class="h-6 w-px bg-surface-variant mx-space-xs"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm text-headline-sm uppercase rounded-lg shadow-[0_0_12px_rgba(245,158,11,0.35)]"><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="lobby" href="#">Lobby</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="herois" href="#">Heróis</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="guia-e-bestiario" href="#">Guia &amp; Bestiário</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="historico" href="#">Histórico</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="ajustes" href="#">Ajustes</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm bg-surface-container-lowest px-space-md py-space-xs rounded-lg shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#93ccff]"></span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase">Netfox 30Hz</span></div><span class="text-outline-variant font-label-numeric-sm text-label-numeric-sm">|</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">24ms</span></div><div class="flex items-center gap-space-sm bg-surface-container px-space-md py-space-xs rounded-lg"><div class="flex flex-col text-right"><span class="font-headline-sm text-headline-sm text-on-surface leading-none">Duelista_01</span><div class="flex items-center justify-end gap-space-xs mt-space-xs"><span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase">ELO</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">1480</span></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,193,116,0.3)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div><div class="flex items-center gap-space-xs"><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors" title="Configurações" type="button"><span class="material-symbols-outlined text-[20px]">settings</span></button><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:text-on-error hover:bg-error-container transition-colors" title="Sair do Combate" type="button"><span class="material-symbols-outlined text-[20px]">power_settings_new</span></button></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Sub-Header & Tactical Breadcrumb -->
+<section class="w-full px-margin py-space-md bg-surface-container-low shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm tracking-wider uppercase">
+<span class="text-primary font-bold">Arena 1v1 Compêndio</span>
+<span>/</span>
+<span>Fatia M0-M4</span>
+<span>/</span>
+<span class="text-on-surface">Guia de Equipamentos &amp; Forja</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface uppercase tracking-tight mt-space-xs flex items-center gap-space-sm">
+          Arsenal &amp; Sets Sinérgicos
+          <span class="bg-primary-container text-on-primary-container font-label-numeric-sm text-label-numeric-sm px-space-sm py-0.5 rounded-full uppercase tracking-wider font-bold">12 Itens Ativos</span>
+</h1>
+</div>
+<!-- Quick Metrics Pill -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest px-space-lg py-space-sm rounded-lg shadow-inner">
+<div class="flex flex-col items-center">
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary">12</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Equipamentos</span>
+</div>
+<div class="w-px h-7 bg-surface-variant"></div>
+<div class="flex flex-col items-center">
+<span class="font-label-numeric-lg text-label-numeric-lg text-secondary">02</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Conjuntos 3/3</span>
+</div>
+<div class="w-px h-7 bg-surface-variant"></div>
+<div class="flex flex-col items-center">
+<span class="font-label-numeric-lg text-label-numeric-lg text-tertiary">03</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Tiers de Raridade</span>
+</div>
+</div>
+</div>
+<!-- Segmented Navigation Tabs -->
+<div class="flex items-center gap-space-xs mt-space-md">
+<a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all flex items-center gap-space-xs" href="#">
+<span class="material-symbols-outlined text-[18px]">skull</span>
+        Bestiário (5 Monstros)
+      </a>
+<a class="px-space-md py-space-xs bg-primary-container text-on-primary-container font-headline-sm text-headline-sm uppercase tracking-wide rounded-lg shadow-md flex items-center gap-space-xs" href="#">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">shield</span>
+        Equipamentos &amp; Sets (12 Itens)
+      </a>
+<a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all flex items-center gap-space-xs" href="#">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+        Arena &amp; Baús
+      </a>
+</div>
+</section>
+<!-- Section 1: Regras do Sistema de Itens (PRD §6 & §3.2) -->
+<section class="w-full px-margin py-space-lg">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Card A -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full pointer-events-none blur-xl"></div>
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[24px]">view_quilt</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase tracking-widest font-bold">PRD §6 • Estrutura</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface uppercase">4 Slots de Equipamento</h2>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+          Cada duelista equipa <strong class="text-on-surface">Arma, Elmo, Peitoral e Botas</strong>. Itens impactam diretamente nos atributos centrais: Ataque, Defesa, Agilidade e Inteligência.
+        </p>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-space-sm py-1 rounded">
+<span class="material-symbols-outlined text-secondary text-[16px]">info</span>
+          Slots 2 a 4 ativam Bônus de Conjunto 3/3
+        </div>
+</div>
+<!-- Card B -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-secondary/5 rounded-full pointer-events-none blur-xl"></div>
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0 text-secondary">
+<span class="material-symbols-outlined text-[24px]">swap_horizontal_circle</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase tracking-widest font-bold">Mecânica • Swap</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface uppercase">Troca &amp; Substituição</h2>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+          Ao recolher item de slot ocupado, substitui <strong class="text-on-surface">instantaneamente</strong> se for de tier superior. Se igual ou inferior, requer confirmação segurando a tecla.
+        </p>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-space-sm py-1 rounded">
+<span class="font-hotkey-cap text-hotkey-cap bg-surface-variant text-primary px-1.5 py-0.5 rounded">F</span>
+<span>Segure 0.5s para forçar substituição de slot</span>
+</div>
+</div>
+<!-- Card C -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col justify-between shadow-sm relative overflow-hidden">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-tertiary/5 rounded-full pointer-events-none blur-xl"></div>
+<div class="flex items-start gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center shrink-0 text-primary-fixed-dim">
+<span class="material-symbols-outlined text-[24px]">lock_clock</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary-fixed-dim uppercase tracking-widest font-bold">PRD §3.2 • Spawns</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface uppercase">Distribuição Fixa de Baús</h2>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+<strong class="text-on-surface">6 Baús Comuns</strong> por base, <strong class="text-secondary">4 Baús Raros</strong> na zona central contestada e <strong class="text-primary">1 Drop Épico Garantido</strong> do Rei Esqueleto (03:30).
+        </p>
+<div class="mt-space-md pt-space-xs flex items-center gap-space-xs text-error font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-space-sm py-1 rounded">
+<span class="material-symbols-outlined text-error text-[16px]">block</span>
+<span>Baús abertos NÃO reabrem na mesma partida</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Search & Filtering Controls -->
+<section class="w-full px-margin mb-space-md">
+<div class="bg-surface-container-low p-space-md rounded-lg shadow-sm flex flex-col lg:flex-row items-center justify-between gap-space-md">
+<!-- Category Tabs -->
+<div class="flex flex-wrap items-center gap-space-xs w-full lg:w-auto">
+<button class="filter-btn px-space-md py-space-xs bg-primary text-on-primary font-headline-sm text-headline-sm uppercase rounded-lg shadow-sm" id="filter-all" onclick="filterItems('all')">
+          Todos (12)
+        </button>
+<button class="filter-btn px-space-md py-space-xs bg-surface-container-high text-on-surface-variant hover:text-on-surface font-headline-sm text-headline-sm uppercase rounded-lg" id="filter-weapons" onclick="filterItems('weapon')">
+          Armas (3)
+        </button>
+<button class="filter-btn px-space-md py-space-xs bg-surface-container-high text-on-surface-variant hover:text-on-surface font-headline-sm text-headline-sm uppercase rounded-lg" id="filter-guard" onclick="filterItems('guard')">
+          Set da Guarda (4)
+        </button>
+<button class="filter-btn px-space-md py-space-xs bg-surface-container-high text-on-surface-variant hover:text-on-surface font-headline-sm text-headline-sm uppercase rounded-lg" id="filter-hunter" onclick="filterItems('hunter')">
+          Set do Caçador (4)
+        </button>
+</div>
+<!-- Search Field -->
+<div class="relative w-full lg:w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-space-xs bg-surface-container-lowest text-on-surface rounded-lg placeholder-on-surface-variant font-body-md text-body-md focus:outline-none focus:bg-surface-container-high" id="item-search" oninput="searchItems()" placeholder="Buscar por nome ou atributo..." type="text"/>
+</div>
+</div>
+</section>
+<!-- Section 2: Destaque dos 2 Grandes Conjuntos Sinérgicos (Set 3/3) -->
+<section class="w-full px-margin mb-space-xl">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[24px]">verified</span>
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase">Conjuntos de Armadura Especializada</h2>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase tracking-widest">3 Peças por Conjunto = Bônus Passivo Máximo</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-lg">
+<!-- SET DA GUARDA -->
+<div class="item-card bg-surface-container p-space-lg rounded-xl shadow-md flex flex-col justify-between relative overflow-hidden" data-category="guard" data-tags="guarda cavaleiro defesa hp elmo peitoral grevas">
+<div class="absolute -right-8 -top-8 w-40 h-40 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div>
+<!-- Header do Conjunto -->
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-14 h-14 bg-surface-container-lowest rounded-lg flex items-center justify-center shadow-inner text-primary">
+<span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase font-bold tracking-widest">Conjunto de Vanguarda • Tanque</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface uppercase">Set da Guarda Real</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Recomendado para: Cavaleiro da Aurora (Combate Melee)</span>
+</div>
+</div>
+<div class="bg-primary/20 text-primary font-label-numeric-sm text-label-numeric-sm px-space-sm py-1 rounded uppercase font-bold">
+              3/3 Peças
+            </div>
+</div>
+<!-- Bônus Passivo de Set -->
+<div class="my-space-md bg-surface-container-lowest p-space-md rounded-lg flex items-center justify-between shadow-inner">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">add_moderator</span>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase font-bold">Efeito Sinérgico de 3 Peças:</span>
+<p class="font-headline-sm text-headline-sm text-on-surface uppercase">+15% HP Máximo Total</p>
+</div>
+</div>
+<span class="font-label-numeric-md text-label-numeric-md text-primary font-bold">PASSIVA ATIVA</span>
+</div>
+<!-- Peças do Conjunto -->
+<div class="space-y-space-sm">
+<!-- Elmo da Guarda -->
+<div class="bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 bg-surface-container-lowest rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface uppercase">Elmo da Guarda</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Slot: Cabeça / Proteção Superior</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Comum:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">+10 Def</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Raro:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">+20 Def, +5 Atq</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">Épico (Coroa):</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">+35 Def, +10 Int, +50 HP</span>
+</div>
+</div>
+</div>
+<!-- Peitoral da Guarda -->
+<div class="bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 bg-surface-container-lowest rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">arrow_left</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface uppercase">Peitoral de Ferro</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Slot: Tronco / Armadura Principal</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Comum:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">+15 Def</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Raro:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">+28 Def</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">Épico (Sagrada):</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">+45 Def, -5% Recarga</span>
+</div>
+</div>
+</div>
+<!-- Grevas da Guarda -->
+<div class="bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 bg-surface-container-lowest rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">footprint</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface uppercase">Grevas do Bastião</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Slot: Pés / Botas Pesadas</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Comum:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">+8 Def, +2 Agi</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Raro:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">+16 Def, +5 Agi</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">Épico (Passos):</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">+25 Def, Imune a Slow</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Rodapé do Card -->
+<div class="mt-space-md pt-space-sm flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span>Escalamento Defensivo: Máximo de Redução de Dano</span>
+<span class="text-primary">Estatística Total: Até +105 Defesa</span>
+</div>
+</div>
+<!-- SET DO CAÇADOR -->
+<div class="item-card bg-surface-container p-space-lg rounded-xl shadow-md flex flex-col justify-between relative overflow-hidden" data-category="hunter" data-tags="caçador arqueira agilidade velocidade dano capuz gibão aljava">
+<div class="absolute -right-8 -top-8 w-40 h-40 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div>
+<!-- Header do Conjunto -->
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-14 h-14 bg-surface-container-lowest rounded-lg flex items-center justify-center shadow-inner text-secondary">
+<span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">speed</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase font-bold tracking-widest">Conjunto de Mobilidade • Ranger</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface uppercase">Set do Caçador Élfico</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Recomendado para: Arqueira Élfica (Kiting &amp; Dano Crítico)</span>
+</div>
+</div>
+<div class="bg-secondary/20 text-secondary font-label-numeric-sm text-label-numeric-sm px-space-sm py-1 rounded uppercase font-bold">
+              3/3 Peças
+            </div>
+</div>
+<!-- Bônus Passivo de Set -->
+<div class="my-space-md bg-surface-container-lowest p-space-md rounded-lg flex items-center justify-between shadow-inner">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[24px]">electric_bolt</span>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase font-bold">Efeito Sinérgico de 3 Peças:</span>
+<p class="font-headline-sm text-headline-sm text-on-surface uppercase">+10% Vel. Ataque &amp; +5% Vel. Movimento</p>
+</div>
+</div>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary font-bold">PASSIVA ATIVA</span>
+</div>
+<!-- Peças do Conjunto -->
+<div class="space-y-space-sm">
+<!-- Capuz do Caçador -->
+<div class="bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 bg-surface-container-lowest rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">blind</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface uppercase">Capuz das Folhas</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Slot: Cabeça / Camuflagem Tática</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Comum:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">+6 Agi, +4 Atq</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Raro:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">+12 Agi, +8 Atq</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">Épico (Sombras):</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">+20 Agi, +0.1s I-Frame Roll</span>
+</div>
+</div>
+</div>
+<!-- Gibão do Caçador -->
+<div class="bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 bg-surface-container-lowest rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface uppercase">Gibão de Couro Nobre</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Slot: Tronco / Armadura Leve</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Comum:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">+8 Def, +5 Agi</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Raro:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">+15 Def, +10 Agi</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">Épico (Colete):</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">+22 Def, +10% Dano Crítico</span>
+</div>
+</div>
+</div>
+<!-- Botas Élficas -->
+<div class="bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 bg-surface-container-lowest rounded flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">sprint</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface uppercase">Passo Silencioso</h4>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Slot: Pés / Calçado Ágil</span>
+</div>
+</div>
+<div class="text-right">
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Comum:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">+8 Agi</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Raro:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">+15 Agi</span>
+</div>
+<div class="flex items-center gap-space-xs justify-end">
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">Épico (Élficas):</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">+24 Agi, +12% Movimento</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Rodapé do Card -->
+<div class="mt-space-md pt-space-sm flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span>Escalamento Ofensivo: Foco em Frequência de Disparos</span>
+<span class="text-secondary">Estatística Total: Até +62 Agilidade</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Armas Universais (Adaptação Visual por Herói - PRD §6) -->
+<section class="w-full px-margin mb-space-xl">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-space-md gap-space-xs">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[24px]">colorize</span>
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase">Armas Universais (3 Tiers de Poder)</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+          O equipamento adapta visualmente seu modelo 3D ao herói: <span class="text-primary font-bold">Espada</span> para o Cavaleiro da Aurora e <span class="text-secondary font-bold">Arco Longo</span> para a Arqueira Élfica.
+        </p>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">PRD §6 • Slot 1: Primário</span>
+</div>
+<!-- Visual 3D Preview Mosaic -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Arma 1: Recruta (Comum) -->
+<div class="item-card bg-surface-container p-space-md rounded-xl shadow-sm flex flex-col justify-between" data-category="weapon" data-tags="recruta arma espada arco comum base tier 1">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-numeric-sm text-label-numeric-sm bg-surface-container-highest text-on-surface-variant px-space-sm py-0.5 rounded font-bold uppercase">Tier 1 • Comum</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Base / Creeps</span>
+</div>
+<div class="w-full h-32 bg-surface-container-lowest rounded-lg mb-space-md overflow-hidden relative flex items-center justify-center shadow-inner">
+<img class="object-cover w-full h-full opacity-80 hover:opacity-100 transition-opacity" data-alt="Chunky stylized 3D low-poly iron sword and wooden short bow side by side, clean studio dark navy lighting, KayKit game style, game weapon asset icon, sharp edges, metallic sheen, dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqZsDhfmmZ9oPiRuLILQdeiQk06jE8qqZGtXdq895NStOynhxXtis45lPqckfPmmnvYcBxqkKt9YGtquERibNZmZRfKircVoZ6tGxK8vUFeJa54v3MozTQmFFCmQyrBtWJTZrinh6cvJ8c7nI08mCUdMeF9Bia_MYkdLqJt-lkLBn5sHqeKxJ6siT1ffgbeNxwGsrDNLyoFahuJp1WqHgf_TPdNOg9E4vGRkSb_-U-8UJQ7lQwbxjl"/>
+<div class="absolute bottom-2 left-2 bg-surface-container-lowest/80 backdrop-blur-md px-2 py-0.5 rounded text-on-surface font-label-numeric-sm text-label-numeric-sm">
+              Espada / Arco Recruta
+            </div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase">Lâmina / Arco de Recruta</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            Armamento básico de treinamento forjado na fortaleza inicial. Fácil acesso nos primeiros 60 segundos de duelo.
+          </p>
+<div class="my-space-md bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-medium">Bônus de Ataque</span>
+<span class="font-label-numeric-lg text-label-numeric-lg text-on-surface font-bold">+15 ATQ</span>
+</div>
+</div>
+<div class="pt-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Disponível nos 6 Baús Comuns da Base</span>
+</div>
+</div>
+<!-- Arma 2: Guardião (Raro) -->
+<div class="item-card bg-surface-container p-space-md rounded-xl shadow-sm flex flex-col justify-between" data-category="weapon" data-tags="guardião raro espada arco centro contestado tier 2">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-numeric-sm text-label-numeric-sm bg-secondary/20 text-secondary px-space-sm py-0.5 rounded font-bold uppercase">Tier 2 • Raro</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Centro Contestado</span>
+</div>
+<div class="w-full h-32 bg-surface-container-lowest rounded-lg mb-space-md overflow-hidden relative flex items-center justify-center shadow-inner">
+<img class="object-cover w-full h-full opacity-90 hover:opacity-100 transition-opacity" data-alt="Chunky stylized 3D low-poly steel longsword and curved elven composite bow with glowing blue magical runes, KayKit isometric game aesthetic, dark slate background, volumetric cyan lighting rim, high contrast game icon" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAItnYndTQUaT5JBV2UoFj-KRLTU3lafgQbSQJEuG7ow4VtOIqq9Q7TfN8F4EIH12zoGIvZVm_LhHgrjt-Kua5ShE-_0Er4lvNjqzVZ12aNTK02RP_7l8P6CHSBiVXjq-jld7aOHSMXHZqpPc8-I4pb3z9QvA5BY_c5GHHbrZ-O4ZgdwOMzPAT7v3I4CUzwG4PbtRSrzNFrAPrxFTZ3z6ndKTBEnoRPkih3Z8uLgPCjLUso4vRhLgCX"/>
+<div class="absolute bottom-2 left-2 bg-surface-container-lowest/80 backdrop-blur-md px-2 py-0.5 rounded text-secondary font-label-numeric-sm text-label-numeric-sm">
+              Espada / Arco Guardião
+            </div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase">Espada / Arco do Guardião</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            Imbuído com essência arcana, reduz a latência dos feitiços e aumenta o impacto dos disparos e estocadas.
+          </p>
+<div class="my-space-md bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-medium">Bônus Primários</span>
+<div class="text-right">
+<span class="font-label-numeric-lg text-label-numeric-lg text-secondary font-bold">+32 ATQ</span>
+<span class="block font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">+5 INT (Recarga)</span>
+</div>
+</div>
+</div>
+<div class="pt-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[16px]">stars</span>
+<span>4 Baús Centrais &amp; Creeps Mágicos</span>
+</div>
+</div>
+<!-- Arma 3: Titã Espectral (Épico) -->
+<div class="item-card bg-surface-container p-space-md rounded-xl shadow-sm flex flex-col justify-between" data-category="weapon" data-tags="espectral titã boss épico ouro drop rei esqueleto">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-numeric-sm text-label-numeric-sm bg-primary/20 text-primary px-space-sm py-0.5 rounded font-bold uppercase">Tier 3 • Épico Boss Drop</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">Drop 100% Garantido</span>
+</div>
+<div class="w-full h-32 bg-surface-container-lowest rounded-lg mb-space-md overflow-hidden relative flex items-center justify-center shadow-inner">
+<img class="object-cover w-full h-full opacity-90 hover:opacity-100 transition-opacity" data-alt="Chunky stylized 3D low-poly golden spectral greatsword and ornate celestial war bow wrapped with fiery golden embers, dark fantasy dungeon studio backdrop, KayKit style, radiant ambient glow, legendary game loot aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEx9MupwaaHjETnPo9J4mRxiQvHm4Rc-ZYadhlIo1C42CjLXuWg8sFurkaOrobSqDm2i1IH45eeYBf92pXIdGCXdSTSch-ecm-15OeZKjLawge2Cjw667KCSjMur1RswqHo7ee7cW1CcOu-QtVNHRM2CTiWgeW_SiscdtuCBPfi2CWRv2VD0tDUOk2pSW4DuOICFXwhNpTz9PapjPAStwWpCZhD9F9IdFuFAEuBq57y4TSfdDgXSz_"/>
+<div class="absolute bottom-2 left-2 bg-surface-container-lowest/80 backdrop-blur-md px-2 py-0.5 rounded text-primary font-label-numeric-sm text-label-numeric-sm font-bold">
+              Lâmina / Arco Rei Titã
+            </div>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface uppercase">Lâmina Espectral do Rei Titã</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+            Espólio do Rei Esqueleto ao atingir 03:30 de partida. Concede quebra de armadura contínua no oponente.
+          </p>
+<div class="my-space-md bg-surface-container-high p-space-sm rounded-lg flex items-center justify-between">
+<span class="font-body-md text-body-md text-on-surface font-medium">Bônus Primários</span>
+<div class="text-right">
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary font-bold">+55 ATQ</span>
+<span class="block font-label-numeric-sm text-label-numeric-sm text-secondary font-bold">+10 AGI</span>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded text-primary font-label-numeric-sm text-label-numeric-sm flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px]">flare</span>
+<span>Passiva: Ataques reduzem -5% armadura (acumula 3x)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Simulador Rápido de Build & Painel de Atributos Táticos -->
+<section class="w-full px-margin mb-space-xl">
+<div class="bg-surface-container-low p-space-lg rounded-xl shadow-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md pb-space-md border-b-0">
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase font-bold tracking-widest">Calculadora Tática Integrada</span>
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase mt-1">Simulador de Atributos &amp; Mitigação de Dano</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Fórmula Oficial PRD: <code class="font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-2 py-0.5 rounded text-primary">Dano Recebido = Dano × 100 / (100 + Def)</code>
+</p>
+</div>
+<!-- Hero Selector Switch -->
+<div class="flex items-center bg-surface-container-lowest p-space-xs rounded-lg shadow-inner">
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-primary text-on-primary transition-all flex items-center gap-space-xs" id="hero-knight-btn" onclick="selectHero('knight')">
+<span class="material-symbols-outlined text-[18px]">security</span>
+            Cavaleiro da Aurora
+          </button>
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-space-xs" id="hero-archer-btn" onclick="selectHero('archer')">
+<span class="material-symbols-outlined text-[18px]">adjust</span>
+            Arqueira Élfica
+          </button>
+</div>
+</div>
+<!-- Live Calculation Display -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md mt-space-md">
+<!-- Slot Arma Atual -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col justify-between">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Slot 1 • Arma</span>
+<select class="bg-surface-container-highest text-on-surface font-body-md text-body-md p-space-xs rounded mt-space-xs focus:outline-none" id="sim-weapon" onchange="updateSim()">
+<option value="none">Nenhuma (0 ATQ)</option>
+<option value="common">Recruta (+15 ATQ)</option>
+<option value="rare">Guardião (+32 ATQ, +5 INT)</option>
+<option selected="" value="epic">Rei Titã (+55 ATQ, +10 AGI)</option>
+</select>
+<div class="mt-space-md flex items-center justify-between text-on-surface font-label-numeric-sm text-label-numeric-sm">
+<span>Dano Físico Base:</span>
+<span class="text-primary font-bold" id="stat-weapon-atk">+55</span>
+</div>
+</div>
+<!-- Slot Armadura 3/3 -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col justify-between">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Slots 2, 3 e 4 • Armadura</span>
+<select class="bg-surface-container-highest text-on-surface font-body-md text-body-md p-space-xs rounded mt-space-xs focus:outline-none" id="sim-set" onchange="updateSim()">
+<option value="none">Sem Armaduras (0 DEF)</option>
+<option value="guard-common">Guarda Comum (+33 DEF)</option>
+<option value="guard-rare">Guarda Raro (+64 DEF, +5 ATQ)</option>
+<option selected="" value="guard-epic">Guarda Épico Completo (+105 DEF, +15% HP)</option>
+<option value="hunter-common">Caçador Comum (+14 DEF, +19 AGI)</option>
+<option value="hunter-rare">Caçador Raro (+27 DEF, +37 AGI)</option>
+<option value="hunter-epic">Caçador Épico Completo (+66 AGI, +10% AtkSpeed)</option>
+</select>
+<div class="mt-space-md flex items-center justify-between text-on-surface font-label-numeric-sm text-label-numeric-sm">
+<span>Bônus de Sinergia:</span>
+<span class="text-secondary font-bold" id="stat-set-synergy">ATIVO 3/3</span>
+</div>
+</div>
+<!-- Defesa & Mitigação Exata -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col justify-between">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Mitigação de Impacto</span>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary" id="stat-defense-total">105</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">DEFESA TOTAL</span>
+</div>
+<div class="mt-space-md">
+<div class="flex items-center justify-between font-label-numeric-sm text-label-numeric-sm mb-1">
+<span class="text-on-surface-variant">Absorção de Dano:</span>
+<span class="text-secondary font-bold" id="stat-mitigation-pct">51.2%</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-2 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full transition-all duration-300" id="stat-mitigation-bar" style="width: 51.2%;"></div>
+</div>
+</div>
+</div>
+<!-- Sobrevivência Final -->
+<div class="bg-surface-container p-space-md rounded-lg flex flex-col justify-between">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Estatística Efetiva de Combate</span>
+<div>
+<div class="flex items-baseline gap-space-xs mt-space-xs">
+<span class="font-label-numeric-lg text-label-numeric-lg text-tertiary" id="stat-hp-effective">1150</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HP MÁXIMO</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1" id="stat-description">
+              Capacidade de sustentar 2,357 de dano bruto antes de cair.
+            </p>
+</div>
+<div class="mt-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+<span>Alta Resistência Melee</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Ações Táticas Finais & Roteamento -->
+<section class="w-full px-margin pb-space-xl">
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md bg-surface-container p-space-md rounded-lg shadow-sm">
+<div class="flex items-center gap-space-sm text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-primary text-[24px]">terminal</span>
+<span>Pronto para aplicar a forja e estratégias na arena real?</span>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-space-xs w-full sm:w-auto">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+          Guia do Bestiário
+        </button>
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-space-xs w-full sm:w-auto">
+<span class="material-symbols-outlined text-[18px]">groups</span>
+          Ver Heróis
+        </button>
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-primary-container text-on-primary-container hover:bg-primary transition-all flex items-center justify-center gap-space-xs shadow-md w-full sm:w-auto font-bold">
+<span class="material-symbols-outlined text-[18px]">swords</span>
+          Buscar Partida 1v1
+        </button>
+</div>
+</div>
+</section>
+<!-- Interactive Logic for Simulator and Filtering -->
+<script>
+    let currentHero = 'knight';
+
+    function selectHero(hero) {
+      currentHero = hero;
+      const kBtn = document.getElementById('hero-knight-btn');
+      const aBtn = document.getElementById('hero-archer-btn');
+
+      if (hero === 'knight') {
+        kBtn.className = 'px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-primary text-on-primary transition-all flex items-center gap-space-xs';
+        aBtn.className = 'px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-space-xs';
+        document.getElementById('sim-set').value = 'guard-epic';
+      } else {
+        aBtn.className = 'px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-secondary text-on-secondary transition-all flex items-center gap-space-xs';
+        kBtn.className = 'px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-space-xs';
+        document.getElementById('sim-set').value = 'hunter-epic';
+      }
+      updateSim();
+    }
+
+    function updateSim() {
+      const weapon = document.getElementById('sim-weapon').value;
+      const setVal = document.getElementById('sim-set').value;
+
+      let atk = 0;
+      if (weapon === 'common') atk = 15;
+      else if (weapon === 'rare') atk = 32;
+      else if (weapon === 'epic') atk = 55;
+      document.getElementById('stat-weapon-atk').textContent = '+' + atk;
+
+      let baseHp = currentHero === 'knight' ? 1000 : 750;
+      let def = 0;
+      let hpBonusPct = 1.0;
+      let synergyText = 'INATIVO';
+
+      if (setVal === 'guard-common') {
+        def = 33;
+        synergyText = 'PARCIAL';
+      } else if (setVal === 'guard-rare') {
+        def = 64;
+        synergyText = 'PARCIAL (+5 ATQ)';
+      } else if (setVal === 'guard-epic') {
+        def = 105;
+        hpBonusPct = 1.15;
+        synergyText = 'ATIVO (+15% HP)';
+      } else if (setVal === 'hunter-common') {
+        def = 14;
+        synergyText = 'PARCIAL (+19 AGI)';
+      } else if (setVal === 'hunter-rare') {
+        def = 27;
+        synergyText = 'PARCIAL (+37 AGI)';
+      } else if (setVal === 'hunter-epic') {
+        def = 42;
+        synergyText = 'ATIVO (+10% VEL. ATQ)';
+      }
+
+      const totalHp = Math.round(baseHp * hpBonusPct);
+      const mitigation = (100 - (100 * 100 / (100 + def))).toFixed(1);
+      const effectiveHp = Math.round(totalHp / (100 / (100 + def)));
+
+      document.getElementById('stat-set-synergy').textContent = synergyText;
+      document.getElementById('stat-defense-total').textContent = def;
+      document.getElementById('stat-mitigation-pct').textContent = mitigation + '%';
+      document.getElementById('stat-mitigation-bar').style.width = mitigation + '%';
+      document.getElementById('stat-hp-effective').textContent = totalHp;
+      document.getElementById('stat-description').textContent = 'Capacidade de sustentar ' + effectiveHp.toLocaleString('pt-BR') + ' de dano bruto antes de ser eliminado.';
+    }
+
+    function filterItems(type) {
+      const cards = document.querySelectorAll('.item-card');
+      const buttons = document.querySelectorAll('.filter-btn');
+
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-on-primary');
+        btn.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+      });
+
+      const activeBtn = document.getElementById('filter-' + type);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+        activeBtn.classList.add('bg-primary', 'text-on-primary');
+      }
+
+      cards.forEach(card => {
+        if (type === 'all' || card.getAttribute('data-category') === type) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function searchItems() {
+      const q = document.getElementById('item-search').value.toLowerCase();
+      const cards = document.querySelectorAll('.item-card');
+
+      cards.forEach(card => {
+        const tags = (card.getAttribute('data-tags') || '').toLowerCase();
+        const text = card.textContent.toLowerCase();
+        if (tags.includes(q) || text.includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Inicializar simulador
+    updateSim();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest py-space-md"><div class="w-full px-margin flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm"><div class="flex items-center gap-space-md"><span class="text-primary font-headline-sm text-headline-sm uppercase tracking-wide">Arena 1v1</span><span>Compêndio Tático • Versão 1.4.2</span></div><div class="flex items-center gap-space-lg"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Servidor: SA-East (São Paulo)</span><span>© 2025 Arena 1v1 Studios. Todos os direitos reservados.</span></div></div></footer></body></html>

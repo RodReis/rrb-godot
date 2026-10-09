@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#a08e7a","on-secondary":"#003351","on-primary":"#472a00","primary-container":"#f59e0b","surface-container-low":"#131b2e","on-surface":"#dae2fd","tertiary":"#ffbcb7","on-surface-variant":"#d8c3ad","primary-fixed-dim":"#ffb95f","inverse-surface":"#dae2fd","tertiary-fixed-dim":"#ffb3ad","secondary":"#93ccff","surface-container":"#171f33","surface-bright":"#31394d","surface-tint":"#ffb95f","surface-container-highest":"#2d3449","secondary-fixed":"#cce5ff","on-tertiary-container":"#8d0012","background":"#0b1326","on-secondary-fixed-variant":"#004b73","surface-container-high":"#222a3d","on-error-container":"#ffdad6","on-tertiary-fixed-variant":"#930013","on-primary-fixed":"#2a1700","on-background":"#dae2fd","inverse-on-surface":"#283044","surface-container-lowest":"#060e20","on-tertiary":"#68000a","tertiary-fixed":"#ffdad7","secondary-container":"#3198dc","secondary-fixed-dim":"#93ccff","outline-variant":"#534434","primary":"#ffc174","on-primary-container":"#613b00","primary-fixed":"#ffddb8","surface-dim":"#0b1326","tertiary-container":"#ff938c","error":"#ffb4ab","inverse-primary":"#855300","surface-variant":"#2d3449","error-container":"#93000a","on-secondary-fixed":"#001d31","on-primary-fixed-variant":"#653e00","on-secondary-container":"#002c47","on-error":"#690005","surface":"#0b1326","on-tertiary-fixed":"#410004"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"0.75rem","space-xl":"2rem","space-sm":"0.5rem","gutter":"0.75rem","space-lg":"1.25rem","margin":"1rem","space-xs":"0.25rem"},fontFamily:{"display-hero-mobile":["Space Grotesk"],"label-numeric-md":["JetBrains Mono"],"label-numeric-sm":["JetBrains Mono"],"display-hero":["Space Grotesk"],"body-sm":["Outfit"],"headline-sm":["Space Grotesk"],"body-lg":["Outfit"],"hotkey-cap":["Space Grotesk"],"headline-lg":["Space Grotesk"],"headline-lg-mobile":["Space Grotesk"],"body-md":["Outfit"],"headline-md":["Space Grotesk"],"label-numeric-lg":["JetBrains Mono"]},fontSize:{"display-hero-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-numeric-md":["14px",{"lineHeight":"18px","fontWeight":"700"}],"label-numeric-sm":["11px",{"lineHeight":"14px","fontWeight":"700"}],"display-hero":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"22px","fontWeight":"500"}],"hotkey-cap":["11px",{"lineHeight":"12px","letterSpacing":"0.05em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}],"label-numeric-lg":["20px",{"lineHeight":"24px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-low/95 backdrop-blur-md shadow-[0_4px_20px_rgba(6,14,32,0.8)]"><div class="h-16 w-full px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 bg-surface-container-highest rounded-lg flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><span class="material-symbols-outlined text-primary text-[22px]">swords</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-primary leading-none">Arena 1v1</span><span class="font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest text-on-surface-variant leading-none mt-space-xs">Kaykit Edition</span></div></div><div class="h-6 w-px bg-surface-variant mx-space-xs"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm text-headline-sm uppercase rounded-lg shadow-[0_0_12px_rgba(245,158,11,0.35)]"><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="lobby" href="#">Lobby</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="herois" href="#">Heróis</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="guia-e-bestiario" href="#">Guia &amp; Bestiário</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="historico" href="#">Histórico</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="ajustes" href="#">Ajustes</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm bg-surface-container-lowest px-space-md py-space-xs rounded-lg shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#93ccff]"></span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase">Netfox 30Hz</span></div><span class="text-outline-variant font-label-numeric-sm text-label-numeric-sm">|</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">24ms</span></div><div class="flex items-center gap-space-sm bg-surface-container px-space-md py-space-xs rounded-lg"><div class="flex flex-col text-right"><span class="font-headline-sm text-headline-sm text-on-surface leading-none">Duelista_01</span><div class="flex items-center justify-end gap-space-xs mt-space-xs"><span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase">ELO</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">1480</span></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,193,116,0.3)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div><div class="flex items-center gap-space-xs"><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors" title="Configurações" type="button"><span class="material-symbols-outlined text-[20px]">settings</span></button><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:text-on-error hover:bg-error-container transition-colors" title="Sair do Combate" type="button"><span class="material-symbols-outlined text-[20px]">power_settings_new</span></button></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Compendium Header & Tactical Overview -->
+<section class="relative w-full bg-surface-container-low px-margin py-space-xl overflow-hidden shadow-xl">
+<div class="absolute -right-24 -top-24 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute left-1/3 -bottom-20 w-80 h-80 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="relative z-10 max-w-7xl mx-auto flex flex-col gap-space-lg">
+<div class="flex flex-wrap items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs text-primary font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest">
+<span class="material-symbols-outlined text-primary text-[16px]">menu_book</span>
+<span>Documentação Oficial de Balanceamento</span>
+<span class="text-outline-variant">•</span>
+<span class="text-on-surface-variant">PRD §5 &amp; §6</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase mt-space-xs flex items-center gap-space-sm">
+<span>Compêndio Tático</span>
+<span class="px-space-sm py-0.5 rounded bg-primary-container text-on-primary-container font-label-numeric-sm text-label-numeric-sm uppercase font-bold tracking-normal shadow-sm">
+              Fatia Vertical M0–M4
+            </span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mt-space-xs">
+            Guia completo de atributos de campo, tabela de saques dos 12 equipamentos e guia tático das 5 criaturas da Arena Hexagonal KayKit.
+          </p>
+</div>
+<!-- Macro Stats Ribbon -->
+<div class="flex items-center gap-space-sm bg-surface-container-lowest/80 p-space-sm rounded-xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]">
+<div class="flex flex-col px-space-md py-space-xs border-r border-surface-variant/40">
+<span class="font-label-numeric-sm text-label-numeric-sm uppercase text-on-surface-variant">Criaturas</span>
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary">05 <span class="text-xs font-normal text-on-surface-variant">Unid</span></span>
+</div>
+<div class="flex flex-col px-space-md py-space-xs border-r border-surface-variant/40">
+<span class="font-label-numeric-sm text-label-numeric-sm uppercase text-on-surface-variant">Equipamentos</span>
+<span class="font-label-numeric-lg text-label-numeric-lg text-secondary">12 <span class="text-xs font-normal text-on-surface-variant">Itens</span></span>
+</div>
+<div class="flex flex-col px-space-md py-space-xs">
+<span class="font-label-numeric-sm text-label-numeric-sm uppercase text-on-surface-variant">Boss Spawn</span>
+<span class="font-label-numeric-lg text-label-numeric-lg text-tertiary">03:30 <span class="text-xs font-normal text-on-surface-variant">F1</span></span>
+</div>
+</div>
+</div>
+<!-- Compendium Navigation Tabs & Filters -->
+<div class="flex flex-wrap items-center justify-between gap-space-md pt-space-sm border-t border-surface-variant/30">
+<div class="flex items-center gap-space-xs bg-surface-container-lowest p-1 rounded-xl shadow-inner">
+<button class="tab-trigger active px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase transition-all duration-150 bg-primary-container text-on-primary-container shadow-sm flex items-center gap-space-xs" id="tab-btn-bestiario" onclick="switchMainTab('bestiario')" type="button">
+<span class="material-symbols-outlined text-[18px]">skull</span>
+<span>Bestiário (5 Monstros)</span>
+</button>
+<button class="tab-trigger px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase transition-all duration-150 text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center gap-space-xs" id="tab-btn-itens" onclick="switchMainTab('itens')" type="button">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+<span>Equipamentos &amp; Sets</span>
+</button>
+<button class="tab-trigger px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase transition-all duration-150 text-on-surface-variant hover:text-on-surface hover:bg-surface-container flex items-center gap-space-xs" id="tab-btn-mecanicas" onclick="switchMainTab('mecanicas')" type="button">
+<span class="material-symbols-outlined text-[18px]">hexagon</span>
+<span>Arena &amp; Mecânicas</span>
+</button>
+</div>
+<!-- Filter Pills & Search -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center gap-space-xs bg-surface-container px-space-sm py-1 rounded-lg">
+<button class="filter-pill active px-space-sm py-0.5 rounded font-label-numeric-sm text-label-numeric-sm uppercase bg-primary text-on-primary" onclick="filterTier('all')" type="button">Todos</button>
+<button class="filter-pill px-space-sm py-0.5 rounded font-label-numeric-sm text-label-numeric-sm uppercase text-on-surface-variant hover:text-on-surface" onclick="filterTier('tier1')" type="button">Tier 1 Base</button>
+<button class="filter-pill px-space-sm py-0.5 rounded font-label-numeric-sm text-label-numeric-sm uppercase text-on-surface-variant hover:text-on-surface" onclick="filterTier('tier2')" type="button">Tier 2 Médio</button>
+<button class="filter-pill px-space-sm py-0.5 rounded font-label-numeric-sm text-label-numeric-sm uppercase text-on-surface-variant hover:text-on-surface" onclick="filterTier('tier3')" type="button">Tier 3 Elite</button>
+<button class="filter-pill px-space-sm py-0.5 rounded font-label-numeric-sm text-label-numeric-sm uppercase text-tertiary hover:bg-tertiary-container/30" onclick="filterTier('boss')" type="button">Boss (3:30)</button>
+</div>
+<div class="relative flex items-center">
+<input class="bg-surface-container-highest/60 text-on-surface font-body-sm text-body-sm pl-8 pr-3 py-1.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary w-48 transition-all duration-200 focus:w-60" id="compendium-search" oninput="searchCompendium(this.value)" placeholder="Buscar atributo, monstro..." type="text"/>
+<span class="material-symbols-outlined absolute left-2 text-on-surface-variant text-[18px] pointer-events-none">search</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TAB 1: BESTIÁRIO DE MONSTROS -->
+<section class="w-full max-w-7xl mx-auto px-margin py-space-xl flex flex-col gap-space-xl" id="view-bestiario">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs text-primary font-label-numeric-sm text-label-numeric-sm uppercase">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>Fauna da Arena Hexagonal</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase mt-space-xs tracking-wide">
+          Bestiário Tático: 5 Criaturas
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+          Monstros têm contagem fixa por partida (não respawnam). Limpar toda a base garante nível 7–8; a disputa no centro é mandatória para o nível 10.
+        </p>
+</div>
+<!-- Quick Rule Pill -->
+<div class="bg-surface-container px-space-md py-space-sm rounded-xl flex items-center gap-space-md shadow-md">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">timer</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Respawn de Monstros</span>
+<span class="font-headline-sm text-headline-sm text-error uppercase">Desativado (Qtd Fixa)</span>
+</div>
+</div>
+</div>
+<!-- Monster Cards Grid (5 Creatures) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg" id="monster-grid">
+<!-- MONSTRO 1: Esqueleto (Tier 1) -->
+<div class="monster-card group bg-surface-container rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-name="esqueleto farm inicial base segura" data-tier="tier1">
+<div>
+<div class="relative h-48 w-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Charming low-poly 3D cartoon skeleton warrior minion model standing in T-pose from KayKit pack. Stylized rounded proportions with oversized skull, glowing golden socket eyes, wearing a weathered bronze pauldron and leather belt, warm studio rim light against dark midnight background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHShTgMEJF_927i2KUR7kvaohCsefod_uOKqj76zB0gQAN6BfbXMR3tOaa-pFbWnwJpJsDyACd4iPVEr8NE0oiDRWx62vu5FN32hmqaiQ_rRroOx4w1G91x5IdCsjqlMZXr7LeMEOmUlsS11eO_8q4zals3yAzfS6yE1kNs1kwNJxMxDEROdmuO9uaM4qqzBKD99-biBupKuzb7MJFq-OjfYJE7cW5rk1ax-NOOsPLKNVyO4A4H7_H"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent"></div>
+<div class="absolute top-space-sm left-space-sm flex items-center gap-space-xs">
+<span class="px-space-sm py-0.5 rounded bg-surface-container-lowest/90 text-on-surface font-label-numeric-sm text-label-numeric-sm uppercase">Tier 1 • Base Segura</span>
+</div>
+<div class="absolute top-space-sm right-space-sm bg-surface-container-lowest/90 px-space-sm py-0.5 rounded text-primary font-label-numeric-sm text-label-numeric-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+<span>+65 XP</span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase tracking-wide">Esqueleto</h3>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">KayKit Skeletons</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">
+                Inimigo básico das alas protegidas. Não impõe grande ameaça e concede recursos rápidos de início de partida.
+              </p>
+</div>
+<!-- Stats Table -->
+<div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest p-space-sm rounded-lg shadow-inner">
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HP MÁX</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">220</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">DEFESA</span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">5</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">ATAQUE</span>
+<span class="font-label-numeric-md text-label-numeric-md text-error">15</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Função Tática:</span>
+<span class="text-on-surface font-medium">Farm Inicial de Rota</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Drop Típico:</span>
+<span class="text-primary-fixed-dim font-medium">Moedas + Baú Comum adjacente</span>
+</div>
+</div>
+</div>
+</div>
+<div class="px-space-lg pb-space-lg pt-0">
+<div class="p-space-sm rounded-lg bg-surface-container-high/60 flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">tips_and_updates</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+              Elimine os 3 esqueletos da sua rota antes de abrir o primeiro baú para obter skill nível 2.
+            </p>
+</div>
+</div>
+</div>
+<!-- MONSTRO 2: Esqueleto Guerreiro (Tier 2) -->
+<div class="monster-card group bg-surface-container rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-name="esqueleto guerreiro farm intermediario bloqueio escudo" data-tier="tier2">
+<div>
+<div class="relative h-48 w-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Charming 3D stylized low-poly armored skeleton warrior with horned iron helmet, jagged iron breastplate and large circular round wooden shield KayKit style. Frontal isometric pose with glowing amber ocular lights, cinematic studio lighting with blue fill rim and slate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_JYupY6JpQvErUxRzLSwQLg98_z1-4SRJjl1ZzwkDLwd0G6OmzwusbcRLGQtf2Lb_DFomdsUmNNfidLykd5k5IIiDqLmAtNm0IUQofoUOisFd5_dVNTKPOGFUPTbMSeQViExH8DW9qOYFby2HMi407_HDioEJilXBDcznd5rQ0iTFYEUFSlaIdWhiAz6qaL3eoZ5E4C-yi6ukc-MUsssF5US3skq00DF6x7rD619SmmbDw5_HYzgV"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent"></div>
+<div class="absolute top-space-sm left-space-sm flex items-center gap-space-xs">
+<span class="px-space-sm py-0.5 rounded bg-secondary-container/90 text-on-secondary-container font-label-numeric-sm text-label-numeric-sm uppercase font-bold">Tier 2 • Base &amp; Centro</span>
+</div>
+<div class="absolute top-space-sm right-space-sm bg-surface-container-lowest/90 px-space-sm py-0.5 rounded text-primary font-label-numeric-sm text-label-numeric-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+<span>+130 XP</span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase tracking-wide">Guerreiro Esqueleto</h3>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">KayKit Skeletons</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">
+                Infanteria blindada. Possui postura de guarda com escudo frontal que anula 50% do dano direto recebido.
+              </p>
+</div>
+<!-- Stats Table -->
+<div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest p-space-sm rounded-lg shadow-inner">
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HP MÁX</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">450</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">DEFESA</span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">15</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">ATAQUE</span>
+<span class="font-label-numeric-md text-label-numeric-md text-error">28</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Habilidade Passiva:</span>
+<span class="text-on-surface font-medium">Bloqueio Frontal (-50%)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Spawn:</span>
+<span class="text-on-surface font-medium">2 nas bases / 3 no anel central</span>
+</div>
+</div>
+</div>
+</div>
+<div class="px-space-lg pb-space-lg pt-0">
+<div class="p-space-sm rounded-lg bg-surface-container-high/60 flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">markdown_copy</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+              Ataque pelas costas com o Rolamento da Arqueira ou quebre a guarda com a Investida do Cavaleiro.
+            </p>
+</div>
+</div>
+</div>
+<!-- MONSTRO 3: Esqueleto Mago (Tier 2) -->
+<div class="monster-card group bg-surface-container rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-name="esqueleto mago cajado centro contestado magia arcana" data-tier="tier2">
+<div>
+<div class="relative h-48 w-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Stylized low-poly 3D necromancer skeleton wizard wearing a tattered pointed crimson sorcerer hat and crimson robes KayKit characters pack. Holding a bone staff with miniature horned skull on top, floating arcane orbs and glowing warm eyes against deep cosmic slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgn8iLnVF61-nSwmXWH2JfsAYe78fjb4hhWz9sRJmn4l0khAyEbz8ZMs0vCzn_eEECmL_XXpWVrChNMzsnABlyztDI11YIUX7wKmhBCoMJXvNdH-eyszDh_Uhq6r-ajtOLj8TjfAG68J-gENlWXCztfTCL2AAsXn7rDe4T6jHu-WMd2GEfWjm7uyA7BlNfzivTEy1DmHjg8rG6ilLqwbdlZPz3EmwH0g9D-e_-9vCtpGZL_5CBu9dm"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent"></div>
+<div class="absolute top-space-sm left-space-sm flex items-center gap-space-xs">
+<span class="px-space-sm py-0.5 rounded bg-secondary-container/90 text-on-secondary-container font-label-numeric-sm text-label-numeric-sm uppercase font-bold">Tier 2 • Centro Contestado</span>
+</div>
+<div class="absolute top-space-sm right-space-sm bg-surface-container-lowest/90 px-space-sm py-0.5 rounded text-primary font-label-numeric-sm text-label-numeric-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+<span>+150 XP</span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase tracking-wide">Esqueleto Mago</h3>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">KayKit Skeletons</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">
+                Ameaça à distância no centro. Dispara esferas espectrais arcanas que ignoram armadura física convencional.
+              </p>
+</div>
+<!-- Stats Table -->
+<div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest p-space-sm rounded-lg shadow-inner">
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HP MÁX</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">320</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">DEFESA</span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">8</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">ATAQUE</span>
+<span class="font-label-numeric-md text-label-numeric-md text-error">42</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Alcance:</span>
+<span class="text-on-surface font-medium">8.0 unidades (Projétil Lento)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Perigo Adicional:</span>
+<span class="text-tertiary font-medium">Projétil com dano penetrante</span>
+</div>
+</div>
+</div>
+</div>
+<div class="px-space-lg pb-space-lg pt-0">
+<div class="p-space-sm rounded-lg bg-surface-container-high/60 flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-tertiary text-[18px] shrink-0 mt-0.5">warning</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+              Não lute contra o bot oponente sob o fogo do mago; o dano mágico acelera a perda de vida em 40%.
+            </p>
+</div>
+</div>
+</div>
+<!-- MONSTRO 4: Golem de Pedra (Tier 3) -->
+<div class="monster-card group bg-surface-container rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-name="golem de pedra aranha quaternius tier 3 elite atordoamento centro" data-tier="tier3">
+<div>
+<div class="relative h-48 w-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Quaternius style low-poly stone golem rock elemental monster with massive chiseled boulder arms and glowing cyan glyph veins. Monolithic stylized fantasy 3D creature with moss and cracked mineral textures, standing in an isometric ready pose with dramatic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDrwJw7p1Dp3pT-C1vDBGvc36QeucHFKXy-NnhXTNu5mHWI8Sx-PZlWq1iKjriRbtQLjTATdPcraursDo4xtFjQDxZdOBpetmKzJWVXgGZPNXfpAW-813c4ZU2tuaqkaKA7ECaSc0yYn8mb_wxHVhB62TgnQKSFZRwQ8joh7pV9GY4eh2NBoUCdR8FT4MF05wbEVSmodcBB1PW580PDIJ-fFk3LY1CY1WsN80V52GFUI7ofV2NXTmF"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent"></div>
+<div class="absolute top-space-sm left-space-sm flex items-center gap-space-xs">
+<span class="px-space-sm py-0.5 rounded bg-surface-tint/90 text-on-primary font-label-numeric-sm text-label-numeric-sm uppercase font-bold">Tier 3 • Elite do Centro</span>
+</div>
+<div class="absolute top-space-sm right-space-sm bg-surface-container-lowest/90 px-space-sm py-0.5 rounded text-primary font-label-numeric-sm text-label-numeric-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+<span>+260 XP</span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div>
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase tracking-wide">Golem de Pedra</h3>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Quaternius Pack</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">
+                Guardião colosso dos anéis externos do centro. Golpes pesados no chão geram ondas de choque com atordoamento.
+              </p>
+</div>
+<!-- Stats Table -->
+<div class="grid grid-cols-3 gap-space-xs bg-surface-container-lowest p-space-sm rounded-lg shadow-inner">
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HP MÁX</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">750</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">DEFESA</span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">25</span>
+</div>
+<div class="flex flex-col text-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">ATAQUE</span>
+<span class="font-label-numeric-md text-label-numeric-md text-error">50</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Habilidade Ativa:</span>
+<span class="text-on-surface font-medium">Pisada Sísmica (Stun 1.0s)</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-on-surface-variant">Drop Especial:</span>
+<span class="text-secondary font-medium">Chave para Baú Raro</span>
+</div>
+</div>
+</div>
+</div>
+<div class="px-space-lg pb-space-lg pt-0">
+<div class="p-space-sm rounded-lg bg-surface-container-high/60 flex items-start gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">lightbulb</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">
+              Mantenha o cavaleiro usando Muralha (E) exatamente antes do golem erguer ambos os braços.
+            </p>
+</div>
+</div>
+</div>
+<!-- MONSTRO 5: REI ESQUELETO (BOSS) -->
+<div class="monster-card group lg:col-span-2 bg-gradient-to-br from-surface-container via-surface-container to-surface-container-high rounded-xl overflow-hidden shadow-2xl flex flex-col md:flex-row justify-between relative" data-name="rei esqueleto boss 3:30 drop epico centro ira espectral" data-tier="boss">
+<div class="absolute -right-10 -bottom-10 w-44 h-44 bg-primary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+<div class="w-full md:w-5/12 relative h-64 md:h-auto bg-surface-container-lowest shrink-0 overflow-hidden">
+<img class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Majestic low-poly 3D Skeleton King boss character KayKit pack. Giant imposing crowned skeleton warlord with golden spiked diadem, ornate tattered crimson regal mantle, glowing fierce yellow fiery eyes, and a massive jagged broadsword standing in dynamic battle stance with ambient embers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEOT5h30UTvvZy3SOob9TpR8G2tYnfLx5NsDLHbfUsrMDcveZpplA3soK0zlZIi6dDjvXxL-r2-PnDTCxr8cBSb7rTatZrvXZfLsm8KKQdoVJfNqDrUVXzPAL9NiOzXPgM2mKIOZxH9B6kYyx6bD0l_7-MmwFvxbXfkjbWtVAY8ZsB8-6hc7qCTSoDnB1kJYo6FMwqHNaKMYv5pNc47VBjc6xUgdo07Z81BYsIqv7PmdGvhuhltm7S"/>
+<div class="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-surface-container/90 hidden md:block"></div>
+<div class="absolute top-space-sm left-space-sm">
+<span class="px-space-sm py-1 rounded bg-error-container text-on-error-container font-headline-sm text-headline-sm uppercase font-bold tracking-wider shadow-md">
+              CHEFE DA ARENA • SURGE ÀS 03:30
+            </span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col justify-between w-full md:w-7/12 gap-space-md">
+<div>
+<div class="flex items-center justify-between">
+<div>
+<h3 class="font-headline-lg text-headline-lg text-primary uppercase tracking-tight">Rei Esqueleto</h3>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Ponto de Inflexão Decisivo da Fase 1</span>
+</div>
+<div class="text-right">
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary">+500 XP</span>
+<span class="block font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Loot Épico 100%</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+              O evento principal da fase de preparação. Surge no pedestal central exatos 90 segundos antes da queda dos portões. Derrotá-lo praticamente assegura a transição para a Fase 2 com vantagem esmagadora de estatísticas.
+            </p>
+<!-- Heavy Boss Stats Bar -->
+<div class="grid grid-cols-3 gap-space-sm bg-surface-container-lowest p-space-md rounded-lg shadow-inner mt-space-md">
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HP MÁXIMO</span>
+<span class="font-label-numeric-lg text-label-numeric-lg text-error">1.800</span>
+<div class="w-full h-1.5 bg-surface-variant rounded-full mt-1 overflow-hidden">
+<div class="w-full h-full bg-error"></div>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">DEFESA BASE</span>
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary">35</span>
+<div class="w-full h-1.5 bg-surface-variant rounded-full mt-1 overflow-hidden">
+<div class="w-3/4 h-full bg-primary"></div>
+</div>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">ATAQUE BASE</span>
+<span class="font-label-numeric-lg text-label-numeric-lg text-secondary">75</span>
+<div class="w-full h-1.5 bg-surface-variant rounded-full mt-1 overflow-hidden">
+<div class="w-4/5 h-full bg-secondary"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container-high flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded bg-error-container text-on-error flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">cyclone</span>
+</div>
+<div>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">Ira Espectral (Habilidade)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Gira sua espada colossal causando dano a 360° num raio de 4m.</p>
+</div>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-error font-bold">120 Dano</span>
+</div>
+<div class="flex items-center justify-between pt-space-xs border-t border-surface-variant/30">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<span>Drop: 1 Equipamento Épico (Guarda ou Caçador) + Orbe de Dominação</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase font-bold">Sem Respawn</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- TAB 2: TABELA DE ITENS E CONJUNTOS (PRD §6) -->
+<section class="hidden w-full max-w-7xl mx-auto px-margin py-space-xl flex flex-col gap-space-xl" id="view-itens">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs text-secondary font-label-numeric-sm text-label-numeric-sm uppercase">
+<span class="material-symbols-outlined text-secondary text-[16px]">inventory_2</span>
+<span>Sistemas de Loot &amp; Atributos (PRD §6)</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase mt-space-xs tracking-wide">
+          Compêndio de Equipamentos: 12 Itens &amp; 2 Sets
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          Quatro compartimentos por personagem (Arma, Elmo, Peitoral, Botas). Itens de slot ocupado substituem automaticamente se a raridade for superior.
+        </p>
+</div>
+<!-- Inventory Slot Rules -->
+<div class="flex items-center gap-space-xs bg-surface-container p-space-sm rounded-xl">
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-surface-container-lowest shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">swords</span>
+<span class="font-label-numeric-sm text-[10px] text-on-surface-variant uppercase mt-1">Arma</span>
+</div>
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-surface-container-lowest shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">sports_martial_arts</span>
+<span class="font-label-numeric-sm text-[10px] text-on-surface-variant uppercase mt-1">Elmo</span>
+</div>
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-surface-container-lowest shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">shield</span>
+<span class="font-label-numeric-sm text-[10px] text-on-surface-variant uppercase mt-1">Peitoral</span>
+</div>
+<div class="flex flex-col items-center justify-center w-14 h-14 rounded-lg bg-surface-container-lowest shadow-inner">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">footprint</span>
+<span class="font-label-numeric-sm text-[10px] text-on-surface-variant uppercase mt-1">Botas</span>
+</div>
+</div>
+</div>
+<!-- Set Bonuses Highlight Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- CONJUNTO GUARDA -->
+<div class="bg-gradient-to-br from-surface-container via-surface-container to-surface-container-high p-space-lg rounded-xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary shadow-md">
+<span class="material-symbols-outlined text-[28px]">shield_lock</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase font-bold tracking-wider">Conjunto de Armadura</span>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Conjunto Guarda</h3>
+</div>
+</div>
+<span class="px-space-sm py-0.5 rounded bg-surface-container-lowest text-secondary font-label-numeric-sm text-label-numeric-sm uppercase">Defensivo</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant my-space-md">
+          Projetado primordialmente para o Cavaleiro (Tanque). Cada peça adiciona Defesa robusta, reduzindo percentualmente o dano recebido pelo herói.
+        </p>
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-inner flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">workspace_premium</span>
+<div>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">Bônus de Conjunto (3/3 Peças)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Elmo da Guarda + Peitoral da Guarda + Botas da Guarda</p>
+</div>
+</div>
+<span class="font-label-numeric-lg text-label-numeric-lg text-secondary font-bold">+15% HP Máx</span>
+</div>
+</div>
+<!-- CONJUNTO CAÇADOR -->
+<div class="bg-gradient-to-br from-surface-container via-surface-container to-surface-container-high p-space-lg rounded-xl shadow-lg relative overflow-hidden flex flex-col justify-between">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary shadow-md">
+<span class="material-symbols-outlined text-[28px]">speed</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase font-bold tracking-wider">Conjunto de Armadura</span>
+<h3 class="font-headline-md text-headline-md text-on-surface uppercase">Conjunto Caçador</h3>
+</div>
+</div>
+<span class="px-space-sm py-0.5 rounded bg-surface-container-lowest text-primary font-label-numeric-sm text-label-numeric-sm uppercase">Agilidade</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant my-space-md">
+          Equipamento chave para a Arqueira (Ranger). Prioriza Agilidade para reposicionamento e disparo contínuo sem perda de cadência.
+        </p>
+<div class="p-space-md rounded-lg bg-surface-container-lowest shadow-inner flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[22px]">workspace_premium</span>
+<div>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">Bônus de Conjunto (3/3 Peças)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Elmo do Caçador + Peitoral do Caçador + Botas do Caçador</p>
+</div>
+</div>
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary font-bold">+10% Vel. Ataque</span>
+</div>
+</div>
+</div>
+<!-- Complete 12-Item Database Table -->
+<div class="bg-surface-container rounded-xl overflow-hidden shadow-xl">
+<div class="px-space-lg py-space-md bg-surface-container-high flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">view_list</span>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface">Matriz dos 12 Equipamentos Implementados</span>
+</div>
+<div class="flex items-center gap-space-md font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-outline-variant"></span> Comum</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span> Raro</span>
+<span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-primary-container"></span> Épico (Boss)</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body-sm text-body-sm">
+<thead class="bg-surface-container-lowest text-on-surface-variant font-label-numeric-sm uppercase tracking-wider">
+<tr>
+<th class="py-space-sm px-space-lg">Equipamento</th>
+<th class="py-space-sm px-space-md">Slot</th>
+<th class="py-space-sm px-space-md">Conjunto</th>
+<th class="py-space-sm px-space-md">Raridade</th>
+<th class="py-space-sm px-space-md">Atributos Concedidos</th>
+<th class="py-space-sm px-space-md">Origem do Saque</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-variant/20">
+<!-- ARMAS (3) -->
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined text-[18px]">swords</span>
+</div>
+<span>Espada / Arco de Aço</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Arma</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Neutro</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-surface-container-highest text-on-surface font-label-numeric-sm uppercase">Comum</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-primary">+15 Ataque</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Comum (Base)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">swords</span>
+</div>
+<span>Lâmina / Arco da Vigília</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Arma</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Neutro</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-secondary-container/30 text-secondary font-label-numeric-sm uppercase font-bold">Raro</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-primary">+32 Ataque, +5 Agilidade</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Raro (Centro)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-primary flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">swords</span>
+</div>
+<span>Destruidora do Rei Esqueleto</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Arma</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Neutro</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-primary-container text-on-primary-container font-label-numeric-sm uppercase font-bold">Épico</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-primary">+60 Ataque, +10 Inteligência</td>
+<td class="py-space-md px-space-md text-primary">Drop do Boss (03:30)</td>
+</tr>
+<!-- CONJUNTO GUARDA (4) -->
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined text-[18px]">sports_martial_arts</span>
+</div>
+<span>Elmo do Guarda Recruta</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Elmo</td>
+<td class="py-space-md px-space-md text-secondary font-medium">Guarda</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-surface-container-highest text-on-surface font-label-numeric-sm uppercase">Comum</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-secondary">+10 Defesa</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Comum (Base)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</div>
+<span>Cota do Guarda Veterano</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Peitoral</td>
+<td class="py-space-md px-space-md text-secondary font-medium">Guarda</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-surface-container-highest text-on-surface font-label-numeric-sm uppercase">Comum</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-secondary">+18 Defesa</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Comum (Base)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">footprint</span>
+</div>
+<span>Grevas Blindadas da Guarda Real</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Botas</td>
+<td class="py-space-md px-space-md text-secondary font-medium">Guarda</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-secondary-container/30 text-secondary font-label-numeric-sm uppercase font-bold">Raro</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-secondary">+15 Defesa, +6 Agilidade</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Raro (Centro)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-primary flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</div>
+<span>Armadura Sagrada do Bastião</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Peitoral</td>
+<td class="py-space-md px-space-md text-secondary font-medium">Guarda</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-primary-container text-on-primary-container font-label-numeric-sm uppercase font-bold">Épico</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-secondary">+35 Defesa, +120 HP</td>
+<td class="py-space-md px-space-md text-primary">Drop do Boss (03:30)</td>
+</tr>
+<!-- CONJUNTO CAÇADOR (5) -->
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined text-[18px]">sports_martial_arts</span>
+</div>
+<span>Capuz de Couro do Rastreador</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Elmo</td>
+<td class="py-space-md px-space-md text-primary-fixed-dim font-medium">Caçador</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-surface-container-highest text-on-surface font-label-numeric-sm uppercase">Comum</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-primary">+8 Agilidade</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Comum (Base)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-lowest flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+</div>
+<span>Gibão Leve das Matas</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Peitoral</td>
+<td class="py-space-md px-space-md text-primary-fixed-dim font-medium">Caçador</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-surface-container-highest text-on-surface font-label-numeric-sm uppercase">Comum</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-primary">+8 Defesa, +6 Agilidade</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Comum (Base)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">footprint</span>
+</div>
+<span>Passadas Rápidas do Falcão</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Botas</td>
+<td class="py-space-md px-space-md text-primary-fixed-dim font-medium">Caçador</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-secondary-container/30 text-secondary font-label-numeric-sm uppercase font-bold">Raro</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-primary">+16 Agilidade, +5 Ataque</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Raro (Centro)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-primary flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">sports_martial_arts</span>
+</div>
+<span>Coroa Selvagem do Senhor da Caça</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Elmo</td>
+<td class="py-space-md px-space-md text-primary-fixed-dim font-medium">Caçador</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-primary-container text-on-primary-container font-label-numeric-sm uppercase font-bold">Épico</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-primary">+25 Agilidade, +15 Ataque</td>
+<td class="py-space-md px-space-md text-primary">Drop do Boss (03:30)</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="py-space-md px-space-lg font-headline-sm text-headline-sm uppercase text-on-surface flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-secondary-container/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">sports_martial_arts</span>
+</div>
+<span>Mascara Cerimonial Rúnica</span>
+</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Elmo</td>
+<td class="py-space-md px-space-md text-secondary font-medium">Guarda</td>
+<td class="py-space-md px-space-md">
+<span class="px-space-sm py-0.5 rounded bg-secondary-container/30 text-secondary font-label-numeric-sm uppercase font-bold">Raro</span>
+</td>
+<td class="py-space-md px-space-md font-label-numeric-md text-secondary">+14 Defesa, +8 Inteligência</td>
+<td class="py-space-md px-space-md text-on-surface-variant">Baú Raro (Centro)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- TAB 3: MECÂNICAS DA ARENA HEXAGONAL (PRD §3) -->
+<section class="hidden w-full max-w-7xl mx-auto px-margin py-space-xl flex flex-col gap-space-xl" id="view-mecanicas">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md">
+<div>
+<div class="flex items-center gap-space-xs text-primary font-label-numeric-sm text-label-numeric-sm uppercase">
+<span class="material-symbols-outlined text-primary text-[16px]">map</span>
+<span>Arquitetura da Partida (PRD §3)</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase mt-space-xs tracking-wide">
+          A Arena de 2 Tempos: Do Farm ao Confronto
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          Partidas de no máximo 10 minutos com garantia de encerramento. Divisão estrita em dois tempos de 5:00 com regras dinâmicas de fechamento de mapa.
+        </p>
+</div>
+<div class="flex items-center gap-space-xs bg-surface-container px-space-md py-space-sm rounded-xl">
+<span class="material-symbols-outlined text-secondary text-[24px]">view_in_ar</span>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm uppercase text-on-surface-variant">Estilo de Cenário</span>
+<span class="font-headline-sm text-headline-sm uppercase text-secondary">KayKit Medieval Hexagon</span>
+</div>
+</div>
+</div>
+<!-- 2-Phase Timeline Visualization (Custom Inline Graphic) -->
+<div class="bg-surface-container p-space-lg rounded-xl shadow-xl flex flex-col gap-space-lg">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wide">Linha do Tempo Tática Oficial</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Total: ≤ 10:00 Minutos</span>
+</div>
+<!-- Linear visual track -->
+<div class="relative w-full py-space-md">
+<div class="h-4 w-full bg-surface-container-lowest rounded-full overflow-hidden flex shadow-inner">
+<div class="h-full bg-secondary-container/80 w-1/2 flex items-center justify-center text-[10px] font-bold text-on-secondary font-label-numeric-sm">
+            FASE 1: PREPARAÇÃO (0:00 - 5:00)
+          </div>
+<div class="h-full bg-error/80 w-1/2 flex items-center justify-center text-[10px] font-bold text-on-error font-label-numeric-sm">
+            FASE 2: CONFRONTO (5:00 - 10:00)
+          </div>
+</div>
+<!-- Key Milestones -->
+<div class="grid grid-cols-4 gap-space-sm mt-space-md text-center">
+<div class="flex flex-col items-center">
+<span class="w-3 h-3 rounded-full bg-secondary shadow-md mb-1"></span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">00:00</span>
+<span class="font-headline-sm text-[12px] uppercase text-on-surface mt-1">Início da Rota</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Bases seguras ativas (portões fechados)</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-3 h-3 rounded-full bg-primary shadow-md mb-1 animate-ping"></span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">03:30</span>
+<span class="font-headline-sm text-[12px] uppercase text-primary mt-1">Spawn do Boss</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Rei Esqueleto no pedestal central</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-3 h-3 rounded-full bg-error shadow-md mb-1"></span>
+<span class="font-label-numeric-md text-label-numeric-md text-error">05:00</span>
+<span class="font-headline-sm text-[12px] uppercase text-error mt-1">Transição</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Portões caem, anel de fogo surge</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="w-3 h-3 rounded-full bg-error-container shadow-md mb-1"></span>
+<span class="font-label-numeric-md text-label-numeric-md text-error-container">09:00 - 10:00</span>
+<span class="font-headline-sm text-[12px] uppercase text-on-surface mt-1">Morte Súbita</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Raio zero, dano dobra a cada 10s</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed 3-Column Arena Rules Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<div class="bg-surface-container rounded-xl p-space-lg shadow-lg flex flex-col justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">door_front</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wide">Zoneamento das Bases</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Base A e Base B contam com portões intransponíveis para o adversário durante os primeiros 5 minutos.
+          </p>
+<ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+<li class="flex items-center gap-space-xs"><span class="text-primary font-bold">✓</span> 6 Baús Comuns por base</li>
+<li class="flex items-center gap-space-xs"><span class="text-primary font-bold">✓</span> Esqueletos T1 e T2 exclusivos</li>
+<li class="flex items-center gap-space-xs"><span class="text-primary font-bold">✓</span> ~8s de caminhada até o centro</li>
+</ul>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-space-lg shadow-lg flex flex-col justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[24px]">swords</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wide">PvP no Centro (Fase 1)</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            O combate entre duelistas é autorizado no centro desde o segundo zero, porém com mitigação de penalidade:
+          </p>
+<ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+<li class="flex items-center gap-space-xs"><span class="text-secondary font-bold">✓</span> Morte = Respawn fixo de 8s</li>
+<li class="flex items-center gap-space-xs"><span class="text-secondary font-bold">✓</span> NÃO conta kill para a meta final</li>
+<li class="flex items-center gap-space-xs"><span class="text-secondary font-bold">✓</span> Sem perda de itens no inventário</li>
+</ul>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-space-lg shadow-lg flex flex-col justify-between">
+<div class="flex flex-col gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[24px]">crisis_alert</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wide">A Zona de Radiação</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Círculo encolhe do raio máximo até o raio mínimo durante 4:00 minutos centralizado no boss:
+          </p>
+<ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant pt-space-xs">
+<li class="flex items-center gap-space-xs"><span class="text-error font-bold">✓</span> Dano base: 1% HP/s (+1% a cada 30s)</li>
+<li class="flex items-center gap-space-xs"><span class="text-error font-bold">✓</span> Meta: 5 Kills (1v1) ou Último Vivo</li>
+<li class="flex items-center gap-space-xs"><span class="text-error font-bold">✓</span> Desativa respawn no raio mínimo</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- STRATEGIC CALLOUT / INFOGRÁFICO DE BALANCEAMENTO -->
+<section class="w-full bg-surface-container-lowest/80 px-margin py-space-xl border-t border-surface-variant/20">
+<div class="max-w-7xl mx-auto flex flex-col gap-space-lg">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">military_tech</span>
+<h2 class="font-headline-md text-headline-md text-on-surface uppercase tracking-wide">
+          Diretrizes de Equilíbrio &amp; Anti-Snowball (PRD §3.2 &amp; §9.2)
+        </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Catch-Up Card -->
+<div class="bg-surface-container p-space-lg rounded-xl shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm uppercase text-primary">Regra de Catch-Up</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase bg-primary-container/20 px-space-xs py-0.5 rounded">+25% XP</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-sm leading-relaxed">
+              Caso um duelista fique <strong>2 ou mais níveis atrás</strong> do adversário durante a fase de preparação, o ganho de experiência por abate de monstros ou baús recebe um bônus passivo automático de +25%.
+            </p>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-variant/30 flex items-center justify-between text-label-numeric-sm text-on-surface-variant">
+<span>Objetivo do Design:</span>
+<span class="text-on-surface font-bold">Prevenir derrota em 3 min</span>
+</div>
+</div>
+<!-- Metric Success Criteria (M4) -->
+<div class="bg-surface-container p-space-lg rounded-xl shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm uppercase text-secondary">Critério M4 (Snowball)</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase bg-secondary-container/20 px-space-xs py-0.5 rounded">&lt; 75% Winrate</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-sm leading-relaxed">
+              O jogador com maior nível ao fim da Fase 1 deve vencer em <strong>menos de 75%</strong> das partidas de playtest. Valores acima disso acionam nerfs na durabilidade do Boss e ampliação do dano da Zona.
+            </p>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-variant/30 flex items-center justify-between text-label-numeric-sm text-on-surface-variant">
+<span>Métrica de Validação:</span>
+<span class="text-on-surface font-bold">Playtest 10+ Jogadores</span>
+</div>
+</div>
+<!-- 3:30 Boss Pivot Point -->
+<div class="bg-surface-container p-space-lg rounded-xl shadow-md flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm uppercase text-tertiary">Pivô Central 03:30</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-tertiary uppercase bg-tertiary-container/20 px-space-xs py-0.5 rounded">Timing Vital</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-sm leading-relaxed">
+              O surgimento do Rei Esqueleto aos 03:30 força a tomada de risco. Ignorar o chefe permite que o adversário conquiste uma arma ou armadura épica garantida antes do fechamento das barreiras de proteção.
+            </p>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-surface-variant/30 flex items-center justify-between text-label-numeric-sm text-on-surface-variant">
+<span>Estratégia Recomendada:</span>
+<span class="text-on-surface font-bold">Contestar ou Roubar o Last Hit</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Client-side Interactive Behaviors -->
+<script>
+    function switchMainTab(tabKey) {
+      // Hide all tabs
+      document.getElementById('view-bestiario').classList.add('hidden');
+      document.getElementById('view-itens').classList.add('hidden');
+      document.getElementById('view-mecanicas').classList.add('hidden');
+
+      // Remove active classes on buttons
+      const buttons = document.querySelectorAll('.tab-trigger');
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+        btn.classList.add('text-on-surface-variant');
+      });
+
+      // Show selected tab & highlight button
+      const targetView = document.getElementById('view-' + tabKey);
+      const targetBtn = document.getElementById('tab-btn-' + tabKey);
+
+      if (targetView && targetBtn) {
+        targetView.classList.remove('hidden');
+        targetBtn.classList.add('bg-primary-container', 'text-on-primary-container', 'shadow-sm');
+        targetBtn.classList.remove('text-on-surface-variant');
+      }
+    }
+
+    function filterTier(tierKey) {
+      const pills = document.querySelectorAll('.filter-pill');
+      pills.forEach(p => {
+        p.classList.remove('bg-primary', 'text-on-primary', 'active');
+        p.classList.add('text-on-surface-variant');
+      });
+
+      // Set active pill
+      event.target.classList.add('bg-primary', 'text-on-primary', 'active');
+      event.target.classList.remove('text-on-surface-variant');
+
+      // Make sure Bestiário tab is active if filtering monsters
+      switchMainTab('bestiario');
+
+      const cards = document.querySelectorAll('.monster-card');
+      cards.forEach(card => {
+        if (tierKey === 'all' || card.getAttribute('data-tier') === tierKey) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function searchCompendium(query) {
+      const clean = query.toLowerCase().trim();
+      const cards = document.querySelectorAll('.monster-card');
+      
+      cards.forEach(card => {
+        const text = (card.getAttribute('data-name') || '') + ' ' + card.innerText.toLowerCase();
+        if (clean === '' || text.includes(clean)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Filter table rows in Tab 2 as well
+      const rows = document.querySelectorAll('#view-itens tbody tr');
+      rows.forEach(row => {
+        const rowText = row.innerText.toLowerCase();
+        if (clean === '' || rowText.includes(clean)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest py-space-md"><div class="w-full px-margin flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm"><div class="flex items-center gap-space-md"><span class="text-primary font-headline-sm text-headline-sm uppercase tracking-wide">Arena 1v1</span><span>Compêndio Tático • Versão 1.4.2</span></div><div class="flex items-center gap-space-lg"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Servidor: SA-East (São Paulo)</span><span>© 2025 Arena 1v1 Studios. Todos os direitos reservados.</span></div></div></footer></body></html>

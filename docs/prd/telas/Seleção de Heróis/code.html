@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#ffb3ad", "on-background": "#dae2fd", "on-secondary-fixed": "#001d31", "inverse-on-surface": "#283044", "error-container": "#93000a", "surface": "#0b1326", "surface-tint": "#ffb95f", "tertiary-fixed": "#ffdad7", "surface-container": "#171f33", "tertiary-container": "#ff938c", "secondary-fixed": "#cce5ff", "on-secondary": "#003351", "inverse-primary": "#855300", "on-surface-variant": "#d8c3ad", "on-error": "#690005", "surface-container-high": "#222a3d", "secondary-fixed-dim": "#93ccff", "secondary-container": "#3198dc", "on-primary-fixed-variant": "#653e00", "outline-variant": "#534434", "on-primary-fixed": "#2a1700", "on-tertiary-container": "#8d0012", "primary-fixed": "#ffddb8", "surface-container-low": "#131b2e", "on-primary": "#472a00", "tertiary": "#ffbcb7", "on-tertiary-fixed-variant": "#930013", "secondary": "#93ccff", "error": "#ffb4ab", "primary-fixed-dim": "#ffb95f", "inverse-surface": "#dae2fd", "on-surface": "#dae2fd", "surface-variant": "#2d3449", "on-tertiary-fixed": "#410004", "on-primary-container": "#613b00", "on-secondary-fixed-variant": "#004b73", "on-secondary-container": "#002c47", "outline": "#a08e7a", "surface-bright": "#31394d", "surface-dim": "#0b1326", "surface-container-lowest": "#060e20", "on-tertiary": "#68000a", "surface-container-highest": "#2d3449", "primary": "#ffc174", "background": "#0b1326", "on-error-container": "#ffdad6", "primary-container": "#f59e0b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2rem", "space-sm": "0.5rem", "margin": "1rem", "space-md": "0.75rem", "gutter": "0.75rem", "space-lg": "1.25rem", "space-xs": "0.25rem" }, "fontFamily": { "label-numeric-md": [ "JetBrains Mono" ], "headline-lg": [ "Space Grotesk" ], "headline-lg-mobile": [ "Space Grotesk" ], "display-hero-mobile": [ "Space Grotesk" ], "headline-sm": [ "Space Grotesk" ], "body-sm": [ "Outfit" ], "headline-md": [ "Space Grotesk" ], "body-lg": [ "Outfit" ], "label-numeric-lg": [ "JetBrains Mono" ], "label-numeric-sm": [ "JetBrains Mono" ], "body-md": [ "Outfit" ], "display-hero": [ "Space Grotesk" ], "hotkey-cap": [ "Space Grotesk" ] }, "fontSize": { "label-numeric-md": [ "14px", { "lineHeight": "18px", "fontWeight": "700" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-lg-mobile": [ "24px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "700" } ], "display-hero-mobile": [ "36px", { "lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-sm": [ "18px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ], "headline-md": [ "22px", { "lineHeight": "28px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "22px", "fontWeight": "500" } ], "label-numeric-lg": [ "20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-numeric-sm": [ "11px", { "lineHeight": "14px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "hotkey-cap": [ "11px", { "lineHeight": "12px", "letterSpacing": "0.05em", "fontWeight": "700" } ] } } } }</script></head><body class="bg-background text-on-surface font-body-md text-body-md select-none"><header class="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]"><div class="h-20 w-full px-gutter flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[28px]">swords</span><div class="flex flex-col leading-none"><span class="font-headline-sm text-headline-sm tracking-wider uppercase text-primary">ARENA 1V1</span><span class="font-label-numeric-sm text-label-numeric-sm tracking-widest uppercase text-on-surface-variant">KAYKIT EDITION</span></div></div><div class="h-8 w-px bg-surface-variant/40"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm text-headline-sm shadow-[0_0_12px_rgba(245,158,11,0.4)]"><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="lobby" href="#">LOBBY</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="herois" href="#">HERÓIS</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="guia-e-bestiario" href="#">GUIA &amp; BESTIÁRIO</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="historico" href="#">HISTÓRICO</a><a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="ajustes" href="#">AJUSTES</a></nav></div><div class="flex items-center gap-space-lg"><div class="hidden xl:flex items-center gap-space-md px-space-md py-space-xs rounded bg-surface-container-low"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">NETFOX</span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary">30Hz</span></div><div class="h-3 w-px bg-surface-variant"></div><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-[14px] text-primary">wifi_tethering</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">PING</span><span class="font-label-numeric-sm text-label-numeric-sm text-primary">24ms</span></div></div><div class="flex items-center gap-space-md pl-space-xs"><div class="text-right leading-tight"><div class="font-headline-sm text-headline-sm text-on-surface">Duelista_01</div><div class="flex items-center justify-end gap-space-xs"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">ELO</span><span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">1480</span></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></div></header><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full">
+<!-- SUB-HEADER & SECONDARY MOBA NAV (CLASSIC BROWSER TOP BAR) -->
+<section class="w-full bg-surface-container-lowest px-gutter py-space-sm border-b border-surface-variant/20 shadow-md">
+<div class="max-w-[1720px] mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-sm">
+<!-- BREADCRUMB & METADATA TRACKER -->
+<div class="flex flex-wrap items-center gap-space-xs text-on-surface-variant">
+<span class="font-label-numeric-sm text-label-numeric-sm tracking-wider uppercase hover:text-primary transition-colors cursor-pointer">HOME</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline select-none">▸</span>
+<span class="font-label-numeric-sm text-label-numeric-sm tracking-wider uppercase text-on-surface-variant">DUELISTA_01'S PROFILE</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline select-none">▸</span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-wide uppercase font-bold">HERÓIS &amp; CAMPEÕES</span>
+<span class="hidden sm:inline-block h-4 w-px bg-surface-variant mx-space-xs"></span>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-high/80 border border-outline-variant/30">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary tracking-tight">10 HERÓIS DISPONÍVEIS • M0-M4 VERTICAL SLICE &amp; ROADMAP</span>
+</div>
+</div>
+<!-- HORIZONTAL SUBNATION TABS (CLASSIC LAUNCHER STYLE) -->
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg">
+<button class="px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-primary bg-primary shadow-[0_2px_10px_rgba(255,193,116,0.35)] transition-all">HERÓIS</button>
+<button class="px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all">RUNAS</button>
+<button class="px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all">TALENTOS</button>
+<button class="px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all">MAESTRIAS</button>
+<button class="px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all">FEITIÇOS</button>
+</div>
+</div>
+</section>
+<!-- MAIN ROSTER WORKSPACE: 3-COLUMN TACTICAL BROWSER -->
+<main class="w-full px-gutter py-space-md max-w-[1720px] mx-auto grid grid-cols-1 xl:grid-cols-12 gap-space-md">
+<!-- ========================================== -->
+<!-- LEFT PANEL: FILTERS, ATTRIBUTES, SEARCH    -->
+<!-- ========================================== -->
+<aside class="xl:col-span-3 2xl:col-span-2 flex flex-col gap-space-md bg-surface-container-low p-space-md rounded-xl shadow-xl">
+<!-- FIND INPUT -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="font-headline-sm text-headline-sm text-primary tracking-wider uppercase font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">manage_search</span>
+            BUSCAR / FIND
+          </label>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">[ESC]</span>
+</div>
+<div class="relative flex items-center">
+<input class="w-full bg-surface-container-lowest text-on-surface placeholder:text-outline text-body-sm px-space-sm py-2 pl-9 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:bg-surface-container-high transition-all" id="hero-search-input" placeholder="Buscar por nome ou arma..." type="text"/>
+<span class="material-symbols-outlined text-outline absolute left-2.5 text-[18px]">search</span>
+</div>
+</div>
+<!-- OWNED / AVAILABILITY DROPDOWN -->
+<div class="flex flex-col gap-1.5">
+<label class="font-headline-sm text-headline-sm text-primary tracking-wider uppercase font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">token</span>
+          ADQUIRIDOS / OWNED
+        </label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-lowest text-on-surface font-body-md text-body-md px-space-sm py-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer pr-8">
+<option value="all">TODOS OS CAMPEÕES (10)</option>
+<option selected="" value="owned">DESBLOQUEADOS (6)</option>
+<option value="unlocked">A ADQUIRIR (4)</option>
+<option value="free">ROTAÇÃO SEMANAL (2)</option>
+</select>
+<span class="material-symbols-outlined text-primary absolute right-2.5 top-2.5 pointer-events-none text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- DISPLAY TOGGLE (COMPACT VS DETAILED) -->
+<div class="bg-surface-container-lowest/70 p-space-sm rounded-lg flex items-center justify-between">
+<span class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-[18px]">grid_view</span>
+          Grade Compacta
+        </span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" id="compact-toggle" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-on-primary-container after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<!-- CLASSES / ROLES ATTRIBUTE SELECTOR -->
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<label class="font-headline-sm text-headline-sm text-primary tracking-wider uppercase font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">category</span>
+            CLASSES &amp; FUNÇÕES
+          </label>
+<button class="font-label-numeric-sm text-label-numeric-sm text-outline hover:text-primary uppercase">Reset</button>
+</div>
+<div class="flex flex-col gap-1.5 bg-surface-container-lowest p-2 rounded-lg font-body-sm text-body-sm">
+<label class="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-high/60 cursor-pointer transition-colors group">
+<div class="flex items-center gap-2 text-primary font-semibold">
+<span class="material-symbols-outlined text-[16px]">all_inclusive</span>
+<span>Todos os Papéis</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container font-bold">10</span>
+</label>
+<label class="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-high/60 cursor-pointer transition-colors group">
+<div class="flex items-center gap-2 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary">shield</span>
+<span>Tanque / Vanguard</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">2</span>
+</label>
+<label class="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-high/60 cursor-pointer transition-colors group">
+<div class="flex items-center gap-2 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-primary">target</span>
+<span>Atirador / Ranger</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">2</span>
+</label>
+<label class="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-high/60 cursor-pointer transition-colors group">
+<div class="flex items-center gap-2 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-secondary-fixed">auto_fix_high</span>
+<span>Mago / Arcano</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">2</span>
+</label>
+<label class="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-high/60 cursor-pointer transition-colors group">
+<div class="flex items-center gap-2 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-error">visibility_off</span>
+<span>Algoz / Assassino</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">2</span>
+</label>
+<label class="flex items-center justify-between p-1.5 rounded hover:bg-surface-container-high/60 cursor-pointer transition-colors group">
+<div class="flex items-center gap-2 text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px] text-tertiary">swords</span>
+<span>Lutador / Bárbaro</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">2</span>
+</label>
+</div>
+</div>
+<!-- SORTING MATRIX -->
+<div class="flex flex-col gap-1.5">
+<label class="font-headline-sm text-headline-sm text-primary tracking-wider uppercase font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">sort</span>
+          ORDENAR POR
+        </label>
+<div class="grid grid-cols-2 gap-1 text-label-numeric-sm font-label-numeric-sm">
+<button class="bg-surface-container-highest text-primary py-1.5 px-2 rounded text-left flex items-center justify-between">
+<span>Maestria</span>
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+</button>
+<button class="bg-surface-container-lowest text-on-surface-variant hover:text-on-surface py-1.5 px-2 rounded text-left">
+            Dificuldade
+          </button>
+<button class="bg-surface-container-lowest text-on-surface-variant hover:text-on-surface py-1.5 px-2 rounded text-left">
+            Dano DPS
+          </button>
+<button class="bg-surface-container-lowest text-on-surface-variant hover:text-on-surface py-1.5 px-2 rounded text-left">
+            Mobilidade
+          </button>
+</div>
+</div>
+<!-- RECENT PATCH SPOTLIGHT CHIP -->
+<div class="mt-auto bg-surface-container p-space-sm rounded-lg flex items-center gap-space-sm border-l-2 border-primary">
+<span class="material-symbols-outlined text-primary text-[24px]">verified</span>
+<div class="flex flex-col leading-tight">
+<span class="font-headline-sm text-[13px] text-on-surface font-bold">TEMPORADA 1 (ALPHA)</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">Balanceamento KayKit V0.9.4 ativo</span>
+</div>
+</div>
+</aside>
+<!-- ========================================== -->
+<!-- CENTER PANEL: 10-HERO TACTILE GALLERY GRID -->
+<!-- ========================================== -->
+<section class="xl:col-span-6 2xl:col-span-7 flex flex-col gap-space-md">
+<!-- GALLERY STATUS BAR -->
+<div class="bg-surface-container-low px-space-md py-2.5 rounded-xl flex items-center justify-between shadow-md">
+<div class="flex items-center gap-space-md">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold">ESCOLHA SEU DUELISTA</span>
+<span class="font-label-numeric-sm text-label-numeric-sm px-2 py-0.5 rounded bg-surface-variant text-secondary font-bold">10/10 CARREGADOS</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">LOBBY TICK:</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary font-bold">30 FPS SYNCHRONIZED</span>
+</div>
+</div>
+<!-- HERO TILES GRID (2 COLUMNS COMPACT / RESPONSIVE) -->
+<div class="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-space-sm" id="roster-grid">
+<!-- 1. CAVALEIRO DA AURORA -->
+<article class="hero-card group relative bg-surface-container-low hover:bg-surface-container rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Low poly 3D cute stylized medieval knight with full iron helmet, visor open, silver plate armor, tiny shield and sword, studio dark background, rim lighting from KayKit game asset style" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAmuliWQcX94Gdfh3mQC4yAXD9tdAuY-Z9xOGTdm0RkVXD-mwSQYGO1oyHVEcPlbEBzNO2RYEh02pU1CYdemVwIIQqx8L4-kaD9qEwrVIoxzVatH6rMmBBwy6UTTNNe2dfmTkKOrr3w-HItxt6DLCT9Hcvj3JKCrVj_7Z3afTcECIaqR39Kt5wGwet1n-5yc7XkeWRo3bH-kXlNb0ISoZ1UEQQNuL2HvQoHmb1khFzZWbgrWjiHn5FT')"></div>
+<!-- STATUS BADGE -->
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-numeric-sm text-[10px] text-secondary font-bold">M5</span>
+</div>
+<!-- CLASS ICON -->
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-secondary">shield</span>
+</div>
+<!-- BOTTOM GRADIENT OVERLAY -->
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Cavaleiro Aurora</span>
+</div>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-secondary font-medium">Tanque / Vanguard</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 2. ARQUEIRA DOS VENTOS (ACTIVE SELECTED STATE) -->
+<article class="hero-card group relative bg-surface-container-high rounded-xl p-2 cursor-pointer transition-all duration-200 -translate-y-1 shadow-[0_0_20px_rgba(245,158,11,0.35)] ring-2 ring-primary flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Low poly 3D cute stylized fantasy female elven archer with green woodland tunic, red hair, leather quiver and arrows on back, isometric mobile game character art" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD154erQTpX7dSApjeqn_DzvMUOwAotmsHIEoVjlsTlNKQgnn4gpJT1rc4YMlDR_rNmNaMj1gdi8vK3S_14tYV0YF8ttlvMVq9A3cQqmyFOXUvDMtMNzS1Bj5JW8RnWLPFkzeop6meLnl8UZQ--RUSrhKwiDWQbEbS2S2a45E3FUIaDEIrjAgWOBa3qGVYKcACO5P5BKVAX3vchvcHYt0Lhy5ngvF7xBKkoyoZW4lSTcRRVbS4gA0tU')"></div>
+<!-- STATUS BADGE -->
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container flex items-center gap-1 font-bold shadow-sm">
+<span class="material-symbols-outlined text-[12px]">workspace_premium</span>
+<span class="font-label-numeric-sm text-[10px]">M6</span>
+</div>
+<!-- CLASS ICON -->
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-primary-container text-on-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">target</span>
+</div>
+<!-- BOTTOM GRADIENT OVERLAY -->
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<div class="flex items-center justify-between">
+<span class="font-headline-sm text-[14px] leading-tight text-primary font-bold truncate">Arqueira Ventos</span>
+</div>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-primary font-medium">Ranger • Selecionada</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 3. BÁRBARO DA FERA -->
+<article class="hero-card group relative bg-surface-container-low hover:bg-surface-container rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Low poly 3D cute berserker barbarian wearing bear head hood and brown fur pelt, grey bearded warrior with leather straps and twin hand axes, game render style" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCMoq8suQ6nvxQS8UB4XZg8SpIcv0can0zlhpwDhX38kMe7UVp0zfecvngph69WwSkikeLjbKXLv64gjJTW7AmV7xC9hHphhEk8e7RBiaXQgzdDL3v3YnCbTJP4Lf1ZBTMNShyj1zNCS2upb90lpqqY5HflVNNBzFESxoPfnB-teM6kwbcAkrR5i8B_jccvaQZ2ce-eoLmTuAuu3IOiSNO5U5RUUgxXPW01KhIqCX5aeAUeSwFmi7WM')"></div>
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-numeric-sm text-[10px] text-secondary font-bold">M3</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-tertiary">swords</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Bárbaro da Fera</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-on-surface-variant">Lutador / Brawler</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 4. LADINO DAS SOMBRAS -->
+<article class="hero-card group relative bg-surface-container-low hover:bg-surface-container rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Low poly 3D cute rogue assassin wearing deep green hooded cowl and face mask with dagger daggers, stylized fantasy RPG asset isometric preview" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCBGEBtoM9OKZ_te99wW64ENIVonk-XayxCQSD0jIG0rrF1nHGYNDwQkXsi1aBz-72jXyHsutgFjppH3-m5U3b_x11kcv34P79PYzQHcu3wK6FDUNJ988PGfoCOL89mdsJ5NLKaFzc_JD4flMahIhWPoGdJce9pzuWydaCUadrAaohGzNRPuydqGrkM-fKS8uJ5c_9636r3o28s6t0vkZ7qFU8PDX0yOAKp5oHUN2ySkq19Hn6UVQxg')"></div>
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-numeric-sm text-[10px] text-secondary font-bold">M4</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-error">visibility_off</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Ladino Sombrio</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-on-surface-variant">Algoz / Furtivo</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 5. MAGO DO CREPÚSCULO -->
+<article class="hero-card group relative bg-surface-container-low hover:bg-surface-container rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Low poly 3D cute wizard character with purple pointed floppy hat, dark mage robe, glowing crystal wooden staff, arcane spellbook, stylized 3D game asset" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAt8itqyPrdG5noqeH4_lydrwngq0QKYBSCOsDYyCkMKdxuayup3ZIUuZPGU6Ulb4N6v8AdE_EV3vP8L98GxesTWrwXv18B0ImTJ-tXSAadsrjgYt7cAX3sGi3qJ1PAh6Xb_wRHhjXt177l00cVCSfs1FZp0IT1AxvvcWVwlvzHLU0VnFpRhRSxo_E_eDoUAaygR45zyVMPlDS_QUKqLwseo2czQVrhBXaE7XIsvy0B8Jskhedr-bj3')"></div>
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-numeric-sm text-[10px] text-secondary font-bold">M2</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">auto_fix_high</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Mago Crepúsculo</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-on-surface-variant">Mago / Burst</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 6. PALADINO ERRANTE -->
+<article class="hero-card group relative bg-surface-container-low hover:bg-surface-container rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Low poly 3D cute adventurer male hero with blue cape, brown beard, leather tunic, sword sheath and steel buckler shield, stylized fantasy warrior" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDUGW_yMEMj_oGLRn-9TLH9VblF2r9svmyf5Tp2GBWS80UVv80YJac_xBmOFZrS78ONBOwxuHktzns6pJsK40jBA8WzMEoexFuqKgXGzEAuJm_ALPYanTd9sTRXPuJJD79AJLYRy_1tjfG1mKgQ2bXqogc12a-jK7cHd-UZD3jx6GfZIFW5izWG9jmTwmfGMk1Dm476_I_xaIg6_hq0tCTnZISwdsXRkmQHUoT-K-xyBzLNtoUz5wVI')"></div>
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-numeric-sm text-[10px] text-secondary font-bold">M1</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-secondary">healing</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Paladino Errante</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-on-surface-variant">Suporte / Duelo</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 7. GUERREIRO ESQUELETO (UNLOCKED ROADMAP) -->
+<article class="hero-card group relative bg-surface-container-lowest/90 rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col opacity-90 hover:opacity-100">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300 saturate-75 group-hover:saturate-100" data-alt="Low poly 3D cute cartoon skeleton warrior with horned iron helmet, glowing yellow eyes, broken breastplate, spiked skull shield and axe, KayKit skeleton character pack" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD4U1w8rleeZCQm15TxJWNpg3KSQnKEPr_1B4EnIoSQq892HoW0XlyOUTnbzQMBmoBIQ_wUL5N3VPo3iZgi3mXOMe4ofewQdm1peOVsga1DsWIAOnGDnjh3cqTXphjLOIE3R9zIlXpeIawrzFn4bOxT05E3M9HqWd5fKOa5mUenEHL4pK7fY1HvoETuFFbQsC4ezzODOhR0tQJwxDTXFNgmDGuOAwsQ6U7bcz0-hPVzcT98gomL2Uey')"></div>
+<!-- LOCKED BANNER -->
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-high/90 text-on-surface-variant flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[11px] text-primary">lock</span>
+<span class="font-label-numeric-sm text-[10px]">1.200 V</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-secondary">shield</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Guardião Ósseo</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-outline">Tanque Morto-Vivo</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 8. FEITICEIRO CADAVÉRICO -->
+<article class="hero-card group relative bg-surface-container-lowest/90 rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col opacity-90 hover:opacity-100">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300 saturate-75 group-hover:saturate-100" data-alt="Low poly 3D cute cartoon skeleton necromancer mage wearing ragged maroon wizard hat, tattered red robe, glowing yellow eye sockets, bone staff with horn skull tip" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB6GHtXsJg5KyTwsW2v0gm1cVojAQH12xV1LbQWahGAEOkY4wnAFP5gBzpsMr6-HJARZCjnngxXE7nvlUrwE505BL11om50RNDOPq7PQA9xienKmYubOOqARMlA7NzNMJTWaPS2Wpgiv5QRgCvzo7bOh8PvzGoH1-3VK7jh5gW62slkKvPhYIo7jiMlrlhtPBC5E7dAS40EvC7Heh1nZrz5qWilTH7QxnHgyaZY__Wi9qR7tg1z2X4E')"></div>
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-high/90 text-on-surface-variant flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[11px] text-primary">lock</span>
+<span class="font-label-numeric-sm text-[10px]">1.200 V</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">auto_fix_high</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Mago Cadavérico</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-outline">Necromante Arcano</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 9. ESQUELETO BONE SLAYER -->
+<article class="hero-card group relative bg-surface-container-lowest/90 rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col opacity-90 hover:opacity-100">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300 saturate-75 group-hover:saturate-100" data-alt="Low poly 3D cute cartoon bare skull skeleton fighter with orange scarf, leather belt with metal buckle, dual scimitar blades, stylized arcade video game skeleton" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjaKQ6eDdngdKBPcXzDAYAF60tvC4w8Sf50N4P_Yg14VUYibNKp38NOSUjSiSuHRh1J9UsG28aGQkcKFIgLw_EqpdWNFLWX5ABKnF_6_xHfNfK3plxCQ84mHt0QUvcfTJIc7M1lyOFywTjYb6Jzt-yWWK4zKVQbKtm0Gh2DJRPRaZXnto286k3n57y8i_tpsK6_HJpg2a8rkLpRt4ZLfKjoM_v7imQvl83NLXWfM-MLMVy4AaMj5Ua')"></div>
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-high/90 text-on-surface-variant flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[11px] text-primary">lock</span>
+<span class="font-label-numeric-sm text-[10px]">1.200 V</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-tertiary">swords</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Bone Slayer</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-outline">Lutador / DPS Rápido</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+<span class="material-symbols-outlined text-[12px] text-outline-variant">grade</span>
+</div>
+</div>
+</div>
+</article>
+<!-- 10. CEIFADOR RENEGADO -->
+<article class="hero-card group relative bg-surface-container-lowest/90 rounded-xl p-2 cursor-pointer transition-all duration-200 hover:-translate-y-1 shadow-lg hover:shadow-2xl flex flex-col opacity-90 hover:opacity-100">
+<div class="relative w-full aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300 saturate-75 group-hover:saturate-100" data-alt="Low poly 3D cute cartoon skeleton assassin in dark crimson hooded cowl, leather chest harness, glowing yellow eyes, dual curved daggers and bone crossbow, isometric preview" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqKieub74tjO_BNi3IJsEpoJPMXkk089CFJlDRwWrsRqHvOCPnuvEcLUCuNnKLAUz0GhyynJiOmLElqwzk_bGyQLe8RMHomnwM1RbUNTAHDTqZOlbBmHci0Y6fvzelt5FHN_kxg-4V-B1VyyzN1UIV1wmeuWUnnpelEWL-BkrUWe3sdxw0hhUgW87oqvQG9QfahhAVCXRzq0NVxXQncfxdSFT9Hr3JhgkFbTJXyQf6UlZ2KpM7CHYo')"></div>
+<div class="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-surface-container-high/90 text-on-surface-variant flex items-center gap-1 font-bold">
+<span class="material-symbols-outlined text-[11px] text-primary">lock</span>
+<span class="font-label-numeric-sm text-[10px]">1.500 V</span>
+</div>
+<div class="absolute top-1.5 right-1.5 w-6 h-6 rounded bg-surface-container-lowest/90 backdrop-blur-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-error">visibility_off</span>
+</div>
+<div class="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/60 to-transparent"></div>
+</div>
+<div class="pt-2 px-1 flex flex-col">
+<span class="font-headline-sm text-[14px] leading-tight text-on-surface font-bold truncate">Ceifador Sombrio</span>
+<div class="flex items-center justify-between mt-1">
+<span class="font-body-sm text-[11px] text-outline">Algoz / Execução</span>
+<div class="flex items-center text-primary text-[10px]">
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+<span class="material-symbols-outlined text-[12px]">grade</span>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- BOTTOM SUMMARY BAR / QUICK SHORTCUTS -->
+<div class="mt-auto bg-surface-container-low p-space-md rounded-xl flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">stars</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">COLEÇÃO TOTAL: 6/10</span>
+</div>
+<div class="w-36 h-2 rounded-full bg-surface-container-highest overflow-hidden">
+<div class="h-full bg-primary" style="width: 60%"></div>
+</div>
+</div>
+<div class="flex items-center gap-space-xs font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">
+<span class="px-2 py-1 rounded bg-surface-container-lowest">CLIQUE DUPLO: INICIAR TREINO</span>
+<span class="px-2 py-1 rounded bg-surface-container-lowest">BOTÃO DIREITO: EXAMINAR RUNAS</span>
+</div>
+</div>
+</section>
+<!-- ========================================== -->
+<!-- RIGHT PANEL: LATERAL HERO INSPECT DRAWER  -->
+<!-- ========================================== -->
+<aside class="xl:col-span-3 2xl:col-span-3 flex flex-col gap-space-md bg-surface-container-low p-space-md rounded-xl shadow-2xl relative overflow-hidden">
+<!-- HERO ARTWORK HERO BANNER -->
+<div class="relative w-full h-56 rounded-xl overflow-hidden bg-surface-container-lowest">
+<div class="w-full h-full bg-cover bg-center" data-alt="High quality studio low-poly character showcase render of a cheerful fantasy elven female archer with green cloak, quiver on back, leather boots, standing in heroic combat stance against dark slate rune background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCtTlrvrrxj17uc0bZVXhykUxoDhDrO1Oz2r-5nVBVzQsHnsY-3uXdqArvlrYsixpJ_I9eGzN8knZ0X6ulRnjo6nbhYTPY9uMsrEow1T6ELXl-Me_Z0LW7qSDYdyB5rFyhmdqoU2nzkPSgAoQgYi5nc07GreQ3kvMKe3NZjq_GAuxWIPXj9L4GFuWt9CcLpQfASY6IB8sCy6L7BNGJeXB-NEDrzexqMbkJP5_6Zgj2rFqCMtUgzodvS')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/30 to-transparent"></div>
+<!-- TOP CONTROLS ON CARD -->
+<div class="absolute top-2.5 left-2.5 flex items-center gap-2">
+<span class="px-2 py-1 rounded-full bg-primary-container text-on-primary-container font-label-numeric-sm text-label-numeric-sm font-bold shadow-md">
+            TIER S • META
+          </span>
+<span class="px-2 py-1 rounded bg-surface-container-lowest/80 backdrop-blur-md text-on-surface font-label-numeric-sm text-label-numeric-sm">
+            1/3 SKINS
+          </span>
+</div>
+<button class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-surface-container-lowest/80 text-on-surface hover:text-primary flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+<!-- HERO TITLE FOOTER -->
+<div class="absolute bottom-2.5 left-2.5 right-2.5 flex items-end justify-between">
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary tracking-widest uppercase">KAYKIT ADVENTURERS</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface font-bold leading-none">ARQUEIRA DOS VENTOS</h2>
+</div>
+<span class="font-headline-md text-headline-md text-primary font-bold">NÍVEL 12</span>
+</div>
+</div>
+<!-- ROLES, RANGE & STATISTICAL METRICS -->
+<div class="grid grid-cols-2 gap-2 text-body-sm">
+<div class="bg-surface-container-lowest p-2 rounded-lg flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">ALCANCE / RANGE</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-bold">Longo (650u)</span>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-lg flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">DANO PRIMÁRIO</span>
+<span class="font-headline-sm text-headline-sm text-primary font-bold">88 Físico (AD)</span>
+</div>
+</div>
+<!-- ATTRIBUTE GAUGE BARS (TACTICAL GRAPHS) -->
+<div class="flex flex-col gap-2 bg-surface-container-lowest p-space-sm rounded-lg">
+<!-- ATTACK -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-numeric-sm text-label-numeric-sm">
+<span class="text-on-surface-variant">DANO &amp; BURST</span>
+<span class="text-primary font-bold">92 / 100</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-primary" style="width: 92%"></div>
+</div>
+</div>
+<!-- DEFENSE -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-numeric-sm text-label-numeric-sm">
+<span class="text-on-surface-variant">DEFESA / VITALIDADE</span>
+<span class="text-secondary font-bold">34 / 100</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-secondary" style="width: 34%"></div>
+</div>
+</div>
+<!-- MOBILITY -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between font-label-numeric-sm text-label-numeric-sm">
+<span class="text-on-surface-variant">MOBILIDADE &amp; KITING</span>
+<span class="text-secondary-fixed font-bold">88 / 100</span>
+</div>
+<div class="w-full h-1.5 rounded-full bg-surface-container-high overflow-hidden">
+<div class="h-full bg-secondary-fixed" style="width: 88%"></div>
+</div>
+</div>
+</div>
+<!-- SPELLS & ABILITIES RACK (PASSIVE + Q, W, E, R) -->
+<div class="flex flex-col gap-2">
+<label class="font-headline-sm text-headline-sm text-primary tracking-wider uppercase font-bold flex items-center justify-between">
+<span>HABILIDADES DE COMBATE</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline">FATIA M0-M4</span>
+</label>
+<div class="grid grid-cols-4 gap-2">
+<!-- PASSIVE -->
+<div class="group/spell relative flex flex-col items-center bg-surface-container-lowest p-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded bg-surface-variant flex items-center justify-center text-primary group-hover/spell:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">adjust</span>
+</div>
+<span class="font-label-numeric-sm text-[10px] mt-1 text-on-surface-variant font-bold">PASSIVA</span>
+<span class="font-body-sm text-[9px] text-outline truncate w-full text-center">Foco</span>
+</div>
+<!-- Q SKILL -->
+<div class="group/spell relative flex flex-col items-center bg-surface-container-lowest p-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer ring-1 ring-primary/40">
+<div class="w-10 h-10 rounded bg-primary-container text-on-primary-container flex items-center justify-center group-hover/spell:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">near_me</span>
+</div>
+<span class="font-label-numeric-sm text-[10px] mt-1 text-primary font-bold">[ Q ]</span>
+<span class="font-body-sm text-[9px] text-outline truncate w-full text-center">Tiro Rápido</span>
+</div>
+<!-- E SKILL -->
+<div class="group/spell relative flex flex-col items-center bg-surface-container-lowest p-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded bg-surface-variant flex items-center justify-center text-secondary group-hover/spell:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">sprint</span>
+</div>
+<span class="font-label-numeric-sm text-[10px] mt-1 text-on-surface-variant font-bold">[ E ]</span>
+<span class="font-body-sm text-[9px] text-outline truncate w-full text-center">Salto</span>
+</div>
+<!-- R SKILL (ULTIMATE) -->
+<div class="group/spell relative flex flex-col items-center bg-surface-container-lowest p-2 rounded-lg hover:bg-surface-container-high transition-colors cursor-pointer ring-1 ring-tertiary-container/50">
+<div class="w-10 h-10 rounded bg-tertiary-container text-on-tertiary-container flex items-center justify-center group-hover/spell:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[20px]">cyclone</span>
+</div>
+<span class="font-label-numeric-sm text-[10px] mt-1 text-tertiary font-bold">[ R ]</span>
+<span class="font-body-sm text-[9px] text-outline truncate w-full text-center">Chuva Rúnica</span>
+</div>
+</div>
+</div>
+<!-- ACTION BUTTONS: LAUNCH TO TRAINING OR BUILDS -->
+<div class="flex flex-col gap-2 mt-auto pt-2">
+<button class="w-full py-2.5 px-space-md rounded-lg bg-primary hover:bg-primary-container text-on-primary hover:text-on-primary-container font-headline-sm text-headline-sm font-bold tracking-wider uppercase transition-all shadow-[0_4px_14px_rgba(245,158,11,0.3)] flex items-center justify-center gap-2 active:translate-y-0.5">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+          TESTAR NO TREINO [M1 BOT]
+        </button>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-[13px] tracking-wide uppercase transition-colors flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">menu_book</span>
+            BUILDS &amp; GUIA
+          </button>
+<button class="py-2 px-space-sm rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-headline-sm text-[13px] tracking-wide uppercase transition-colors flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-primary">strikethrough_s</span>
+            SKINS (1/3)
+          </button>
+</div>
+</div>
+</aside>
+</main>
+<!-- INTERACTIVE CLIENT SCRIPT FOR CARD SELECTION & FILTER -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.hero-card');
+      const searchInput = document.getElementById('hero-search-input');
+      const compactToggle = document.getElementById('compact-toggle');
+      const rosterGrid = document.getElementById('roster-grid');
+
+      // Selection state logic
+      cards.forEach(card => {
+        card.addEventListener('click', () => {
+          cards.forEach(c => {
+            c.classList.remove('ring-2', 'ring-primary', '-translate-y-1', 'bg-surface-container-high');
+            c.classList.add('bg-surface-container-low');
+          });
+          card.classList.remove('bg-surface-container-low');
+          card.classList.add('ring-2', 'ring-primary', '-translate-y-1', 'bg-surface-container-high');
+        });
+      });
+
+      // Filter search simulation
+      if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+          const val = e.target.value.toLowerCase();
+          cards.forEach(card => {
+            const text = card.innerText.toLowerCase();
+            if (text.includes(val)) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      // Compact view toggle
+      if (compactToggle && rosterGrid) {
+        compactToggle.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            rosterGrid.className = 'grid grid-cols-2 md:grid-cols-4 2xl:grid-cols-6 gap-2';
+          } else {
+            rosterGrid.className = 'grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-space-sm';
+          }
+        });
+      }
+    });
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest/80 backdrop-blur-md py-space-md"><div class="w-full px-gutter flex flex-col md:flex-row items-center justify-between gap-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm"><span>ARENA 1V1 • PROTOCOLO RUNICO v1.0.4</span><span>SERVIDORES: SA-L1 ATIVO • TICKRATE 30Hz • NAT OPEN</span></div></footer></body></html>

@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -rf node_modules)",
+      "Bash(pnpm install *)",
+      "Bash(echo \"=== EXIT: $? ===\")",
+      "Bash(pnpm turbo *)",
+      "Bash(node -p \"require\\('next/package.json'\\).version\")",
+      "Bash(railway variables:*)",
+      "Bash(echo \"COMMIT;\")",
+      "Bash(railway variables:*)",
+      "Bash(railway run:*)",
+      "Bash(railway connect:*)",
+      "Bash(psql \"$DATABASE_URL\" -X -A -F ' | ' -c \"BEGIN READ ONLY;*)",
+      "Bash(psql:*)",
+      "Bash(docker run --rm postgres:18-alpine psql:*)",
+      "Bash(docker run --rm -v:*)",
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(docker *)",
+      "PowerShell(git *)",
+      "PowerShell(gh *)",
+      "PowerShell(docker *)",
+      "PowerShell(.\\tools\\*)",
+      "PowerShell(& $env:GODOT_PATH *)",
+      "PowerShell(& $cli *)",
+      "PowerShell(Start-Process *)",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Get-NetUDPEndpoint *)",
+      "PowerShell(Start-Sleep *)",
+      "Edit(game/**)",
+      "Edit(tools/**)",
+      "Edit(infra/**)",
+      "Edit(docs/**)",
+      "Edit(.github/**)"
+    ]
+  }
+}

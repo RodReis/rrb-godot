@@ -1,0 +1,31 @@
+tela de Ajustes & Diagnóstico de Rede — PC / Netfox Godot 4.7, completando a 3ª prioridade técnica recomendada e trazendo total transparência aos pilares de engine e multiplayer do seu PRD (§3.6, §8.2, §8.3, §9.1 e §10)!
+
+⚙️ Destaques da Tela de Ajustes & Diagnóstico (Ajustes & Diagnóstico de Rede)
+Mapeamento de Teclas & Câmera (PRD §3.6 — PC First):
+
+Atalhos Oficiais Godot InputMap:
+Movimentação 360° em WASD.
+Mira e Ataque Básico no Mouse M1 e Trava em M2.
+Habilidades [Q] (Investida / Disparo), [E] (Muralha / Esquiva com I-Frame 0.3s) e [R] (Ultimate Terremoto / Chuva).
+Interação tática em [F] (Toque rápido para saquear baú / Segurar 0.5s para forçar substituição de slot).
+Rolamento e esquiva no [Espaço].
+Alternador de Modo de Câmera:
+3ª Pessoa Alta (Padrão M0): 45° inclinação orbital atrás do herói com alcance visual estendido.
+Isométrica Fixa (Plano B / M4 Mobile): Visão superior angular com mira assistida e Smart-Cast travado.
+Ajustes refinados de sensibilidade do mouse, interpolação de mira (Rotational Slerp) e deadzone analógica para gamepad.
+Gráficos & Renderizador (Godot 4.7 Forward+ — PRD §8.2):
+
+Backend gráfico: Godot 4.7 Forward+ / Vulkan Desktop Clustered.
+Modos de taxa de quadros (60 / 120 / 144 FPS / Ilimitado) com sincronização vertical (V-Sync) desativada para mínimo input lag.
+Ajustes de qualidade de sombras direcionais (2048px 4-PCF), oclusão de ambiente (SSAO) e bloom/glow rúnico para telegrafia de golpes pesados.
+Tag de conformidade de assets low-poly CC0 (KayKit & Quaternius).
+Telemetria ao Vivo Netfox & Servidor Autoritativo (PRD §8.3 & Marcos M0/M2):
+
+Servidor Dedicado: SA-East (São Paulo, Brasil) conectado via ENet UDP (Porta 7012) a 30 Hz de tick rate.
+Métricas em Tempo Real: Ping de 24 ms (aprovado no critério de sucesso do PRD: ≤ 80 ms), Jitter de 1.2 ms e 0.0% de pacotes perdidos.
+Predição & Rollback: Buffer Netfox de 2 frames client-side, 0 snaps/dessincronizações e compensação de lag para hitboxes ativa até 150 ms.
+Simulador de Estresse de Rede (Spike M0): Ferramenta interativa de teste injetando +100 ms de latência e 2% de perda de pacotes para validar a ausência de "efeito borracha".
+Rodapé Técnico & Ações:
+
+Informações do host Godot Engine (Target Steam/Standalone, driver Mesa/Nvidia, budget de renderização 6.9 ms / 16.6 ms).
+Botões de ação rápida: "Restaurar Padrões", "Testar Rota do Servidor" e botão primário com glow dourado rúnico "Salvar & Aplicar Alterações".

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"primary":"#ffc174","on-surface":"#dae2fd","on-primary":"#472a00","on-tertiary-container":"#8d0012","secondary-container":"#3198dc","outline":"#a08e7a","on-primary-container":"#613b00","on-secondary":"#003351","secondary-fixed-dim":"#93ccff","surface-container-highest":"#2d3449","on-background":"#dae2fd","inverse-surface":"#dae2fd","background":"#0b1326","primary-fixed":"#ffddb8","surface-container-lowest":"#060e20","surface-container-low":"#131b2e","on-secondary-fixed":"#001d31","error-container":"#93000a","tertiary-container":"#ff938c","surface":"#0b1326","error":"#ffb4ab","surface-bright":"#31394d","on-error":"#690005","tertiary":"#ffbcb7","outline-variant":"#534434","on-primary-fixed-variant":"#653e00","on-tertiary":"#68000a","inverse-on-surface":"#283044","secondary":"#93ccff","primary-container":"#f59e0b","on-error-container":"#ffdad6","primary-fixed-dim":"#ffb95f","inverse-primary":"#855300","surface-tint":"#ffb95f","surface-dim":"#0b1326","on-surface-variant":"#d8c3ad","on-tertiary-fixed":"#410004","surface-variant":"#2d3449","secondary-fixed":"#cce5ff","tertiary-fixed-dim":"#ffb3ad","on-tertiary-fixed-variant":"#930013","on-primary-fixed":"#2a1700","surface-container":"#171f33","tertiary-fixed":"#ffdad7","on-secondary-container":"#002c47","on-secondary-fixed-variant":"#004b73","surface-container-high":"#222a3d"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"space-xs":"0.25rem","gutter":"0.75rem","space-md":"0.75rem","space-lg":"1.25rem","space-xl":"2rem","margin":"1rem","space-sm":"0.5rem"},"fontFamily":{"label-numeric-lg":["JetBrains Mono"],"headline-sm":["Space Grotesk"],"body-md":["Outfit"],"label-numeric-md":["JetBrains Mono"],"display-hero-mobile":["Space Grotesk"],"hotkey-cap":["Space Grotesk"],"headline-md":["Space Grotesk"],"display-hero":["Space Grotesk"],"body-lg":["Outfit"],"body-sm":["Outfit"],"headline-lg-mobile":["Space Grotesk"],"label-numeric-sm":["JetBrains Mono"],"headline-lg":["Space Grotesk"]},"fontSize":{"label-numeric-lg":["20px",{"lineHeight":"24px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-numeric-md":["14px",{"lineHeight":"18px","fontWeight":"700"}],"display-hero-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"hotkey-cap":["11px",{"lineHeight":"12px","letterSpacing":"0.05em","fontWeight":"700"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}],"display-hero":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-lg":["16px",{"lineHeight":"22px","fontWeight":"500"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"700"}],"label-numeric-sm":["11px",{"lineHeight":"14px","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface-container-lowest/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-16 w-full px-margin flex items-center justify-between"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary text-[28px]">shield</span><div class="flex flex-col"><span class="font-headline-sm text-headline-sm text-primary tracking-tight uppercase leading-none">Arena 1v1</span><span class="font-label-numeric-sm text-label-numeric-sm text-outline tracking-wider">KAYKIT EDITION</span></div></div><nav class="hidden md:flex items-center gap-space-sm bg-surface-container-low px-space-xs py-space-xs rounded-xl" data-active-classes="bg-surface-container-highest text-primary font-headline-sm rounded-lg"><a aria-current="page" class="px-space-md py-space-xs transition-all bg-surface-container-highest text-primary font-headline-sm rounded-lg" data-path="menu-principal" href="#">Lobby</a><a class="px-space-md py-space-xs font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all rounded" data-path="selecao-herois" href="#">Heróis</a><a class="px-space-md py-space-xs font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all rounded" data-path="perfil-jogador" href="#">Histórico</a><a class="px-space-md py-space-xs font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all rounded" data-path="configuracoes-jogo" href="#">Ajustes</a></nav></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-space-sm px-space-md py-space-xs bg-surface-container-low rounded-xl"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase">NETFOX 30HZ</span></div><div class="h-3 w-px bg-outline-variant"></div><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">24ms</span></div><div class="flex items-center gap-space-sm pl-space-xs bg-surface-container rounded-xl py-space-xs pr-space-sm"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-inner"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div><div class="hidden lg:flex flex-col text-left"><span class="font-headline-sm text-body-sm text-on-surface font-bold leading-tight">Duelista_01</span><span class="font-label-numeric-sm text-label-numeric-sm text-primary leading-tight">ELO 1480</span></div></div><button aria-label="Configurações" class="p-space-xs rounded-xl text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">settings</span></button><button aria-label="Sair do Jogo" class="p-space-xs rounded-xl text-error hover:text-on-error hover:bg-error-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">power_settings_new</span></button></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full relative overflow-hidden select-none">
+<!-- Dynamic Arena Low-Poly 3D Backdrop with Lighting Rays & Runes -->
+<div class="relative w-full h-[88vh] min-h-[760px] overflow-hidden flex flex-col justify-between p-space-md lg:p-space-xl">
+<!-- Background Scene Container -->
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center filter brightness-75 contrast-125 scale-105 transition-transform duration-1000 ease-out" data-alt="Stylized 3D low poly medieval fantasy battle arena at twilight dusk, hexagonal stone floor tiles glowing with amber golden magic runes, stone pillars, floating mystical blue braziers with crackling torches, KayKit game aesthetic, volumetric god rays, dark navy sky with distant mystical citadel ruins, high contrast isometric vista" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC9qGTu07mFDLGiXACzQe-c6jsf3_EcVN2zkFdbsb4p9OkGt4n5FUdmvEU8W2W7f7aDLu6ncJfyfjjMXreEsZVzyD67w-iHFNTGlgfjLsdOjtuoMMWYQD9M8SUw5oyY6Dzh9D8Ami5Z97xo9Cxrh__9RJfplKnvniYCjMFd5y4BqkgxrKck7S6PwBF5AKiYdVi5roKn0Ukws3Jhl0dHT_wS405CQoxbrBOFHLCYeS4ixVSwdsvoLyCM')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-surface-container-lowest/70 backdrop-blur-[1px]"></div>
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-background/60 to-background/95"></div>
+<!-- Ambient Animated Canvas overlay -->
+<svg class="absolute inset-0 w-full h-full opacity-35 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<radialgradient cx="50%" cy="50%" id="runeGlow" r="50%">
+<stop offset="0%" stop-color="#ffc174" stop-opacity="0.8"></stop>
+<stop offset="100%" stop-color="#ffc174" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+<circle class="animate-pulse" cx="20%" cy="65%" fill="url(#runeGlow)" r="180" style="animation-duration: 4s;"></circle>
+<circle class="animate-pulse" cx="80%" cy="30%" fill="url(#runeGlow)" r="220" style="animation-duration: 6s;"></circle>
+</svg>
+</div>
+<!-- Top Overlay: Context Bar & Quick Game Mode Breadcrumb -->
+<div class="relative z-10 w-full flex flex-wrap items-center justify-between gap-space-md">
+<!-- Left Mode Status Chip -->
+<div class="flex items-center gap-space-sm bg-surface-container-low/90 backdrop-blur-md px-space-md py-space-xs rounded-xl shadow-lg">
+<div class="w-3 h-3 rotate-45 bg-primary-container shadow-[0_0_8px_#f59e0b]"></div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-sm text-primary uppercase tracking-wider">Temporada de Calibração 1v1</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">FATIA VERTICAL M0-M4 • GODOT 4.3 + NETFOX 30Hz</span>
+</div>
+<span class="ml-space-sm px-space-xs py-0.5 rounded bg-surface-container-highest font-label-numeric-sm text-label-numeric-sm text-secondary">
+          PATCH 0.2.4
+        </span>
+</div>
+<!-- Center Sub-Nav Navigation HUD -->
+<div class="flex items-center gap-space-xs bg-surface-container-lowest/80 backdrop-blur-xl p-space-xs rounded-xl shadow-xl">
+<button class="px-space-lg py-space-xs rounded-lg font-headline-sm text-headline-sm text-on-primary bg-primary-container shadow-[0_3px_0_#935600] flex items-center gap-space-xs cursor-pointer active:translate-y-0.5 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">swords</span>
+<span>JOGAR</span>
+</button>
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">shield_person</span>
+<span>HERÓIS</span>
+</button>
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">smart_toy</span>
+<span>TREINO BOT IA</span>
+</button>
+<button class="px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all flex items-center gap-space-xs" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>CONFIGURAÇÕES</span>
+</button>
+</div>
+<!-- Right Region & Latency Badge -->
+<div class="flex items-center gap-space-sm bg-surface-container-low/90 backdrop-blur-md px-space-md py-space-xs rounded-xl shadow-lg">
+<span class="material-symbols-outlined text-secondary text-[20px]">dns</span>
+<div class="flex flex-col text-right">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface">SA-EAST (SP)</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">24ms TICK 30</span>
+</div>
+</div>
+</div>
+<!-- Main Workspace: Asymmetrical Split (3D Hero Podium Showcase + Matchfinder Hub) -->
+<div class="relative z-10 w-full grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-center my-auto">
+<!-- LEFT / CENTER-LEFT: 3D HERO PEDESTAL DISPLAY -->
+<div class="lg:col-span-6 xl:col-span-7 flex flex-col justify-end relative h-[500px] lg:h-[580px]">
+<!-- Background Pedestal Visual Projection -->
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 w-80 h-32 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+<!-- Hexagonal 3D Base Plate Shadow SVG -->
+<div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-72 h-20 opacity-80 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 200 60">
+<polygon fill="#171f33" points="100,5 185,25 145,55 55,55 15,25" stroke="#f59e0b" stroke-width="2"></polygon>
+<polygon fill="#0b1326" opacity="0.6" points="100,12 170,28 135,50 65,50 30,28" stroke="#93ccff" stroke-width="1"></polygon>
+<circle class="animate-ping" cx="100" cy="30" fill="#f59e0b" opacity="0.4" r="12"></circle>
+</svg>
+</div>
+<!-- Hero 3D Model Artwork Frame -->
+<div class="relative z-10 mx-auto w-full max-w-md h-[460px] flex items-center justify-center">
+<img class="max-h-full object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.85)] hover:scale-105 transition-transform duration-500 ease-out" data-alt="KayKit low-poly stylized medieval fantasy Knight champion standing firmly in idle battle-ready stance with runic broadsword and golden kite shield, glowing amber visor eyes, low poly chamfered armor plates with dark iron and bright brass highlights, hexagonal podium base below, vibrant isometric game art style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpqFwOzEJyNTO0slLIxqmCwIdg6vwGE9FHtLNq1Mue0i_ZcM0zPtxNJWtggr-nBX1lhGzniHW97E2RoJyM8KvnRykOoc8bvl1pCONl3nf2Y8e4TJ1JK6NjDEK8Ui00io-IjqSkpcryuYHP7juWjRP5KP0jBJQ4dg1is5fEGnJMcRsiZIBU8et__wxtAuHXp-xVRCVxQH7UFFVs4stph2cmL41zOst-lk5NqvUToSEFIBeMNGOY5o-i"/>
+</div>
+<!-- Hero Floating Data Banner Overlay -->
+<div class="absolute bottom-0 left-0 right-0 flex items-center justify-between bg-surface-container-low/95 backdrop-blur-xl p-space-md rounded-xl shadow-2xl max-w-xl mx-auto">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 bg-primary-container rounded-lg flex items-center justify-center text-on-primary shadow-[inset_0_2px_4px_rgba(0,0,0,0.4)]">
+<span class="material-symbols-outlined text-[28px]">shield</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-primary tracking-tight">CAVALEIRO DA AURORA</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest font-label-numeric-sm text-label-numeric-sm text-primary">TIER S</span>
+</div>
+<span class="font-body-md text-body-sm text-on-surface-variant">Combatente Corpo-a-Corpo • Especialista em Quebra de Armadura e Controle</span>
+</div>
+</div>
+<button class="px-space-md py-space-sm bg-surface-container-highest hover:bg-surface-container text-primary font-headline-sm text-headline-sm rounded-lg shadow transition-colors flex items-center gap-space-xs" id="btn-hero-swap" type="button">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+<span class="hidden sm:inline">MUDAR</span>
+</button>
+</div>
+</div>
+<!-- RIGHT / MATCHMAKING & MODES CONTROL CONSOLE -->
+<div class="lg:col-span-6 xl:col-span-5 flex flex-col gap-space-md">
+<!-- Hero Queue Action Box (The Core CTA) -->
+<div class="bg-surface-container-lowest/90 backdrop-blur-2xl p-space-lg rounded-xl shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-36 h-36 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Mode Header Detail -->
+<div class="flex items-start justify-between mb-space-md">
+<div>
+<div class="flex items-center gap-space-xs text-primary font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+<span>Modo Principal Ativo</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-0.5">Duelo Rápido 1v1</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Arena Hexagonal de 2 Tempos (Tempo Limite: 10 Minutos)</p>
+</div>
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined text-[24px]">timer</span>
+</div>
+</div>
+<!-- Queue Telemetry / Parameters Grid -->
+<div class="grid grid-cols-3 gap-space-xs bg-surface-container-low p-space-sm rounded-lg mb-space-lg">
+<div class="flex flex-col items-center justify-center p-space-xs text-center bg-surface-container-lowest/60 rounded">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Algoritmo</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">FIFO NET</span>
+</div>
+<div class="flex flex-col items-center justify-center p-space-xs text-center bg-surface-container-lowest/60 rounded">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Fila Média</span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">~15s</span>
+</div>
+<div class="flex flex-col items-center justify-center p-space-xs text-center bg-surface-container-lowest/60 rounded">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Na Fila</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface">34 Duelistas</span>
+</div>
+</div>
+<!-- PRIMARY BIG CTA BUTTON -->
+<button class="group relative w-full py-space-lg px-space-xl bg-gradient-to-r from-primary-container via-primary to-primary-container hover:brightness-110 text-on-primary font-headline-lg text-headline-lg rounded-xl shadow-[0_6px_0_#935600] active:translate-y-1 active:shadow-[0_2px_0_#935600] transition-all flex items-center justify-center gap-space-md overflow-hidden cursor-pointer" id="btn-matchmaking" type="button">
+<!-- Highlight Sweep Shine Effect -->
+<div class="absolute inset-0 w-1/2 h-full bg-white/20 skew-x-12 -translate-x-full group-hover:translate-x-[300%] transition-transform duration-1000"></div>
+<span class="material-symbols-outlined text-[32px] group-hover:rotate-12 transition-transform">swords</span>
+<span class="tracking-wider uppercase font-bold drop-shadow-sm" id="queue-btn-label">BUSCAR PARTIDA 1v1</span>
+<span class="material-symbols-outlined text-[28px] opacity-75">chevron_right</span>
+</button>
+<!-- Queue Timer status dynamic row (hidden by default, activates on click) -->
+<div class="hidden mt-space-sm p-space-sm bg-surface-container-high rounded-lg flex items-center justify-between" id="queue-active-banner">
+<div class="flex items-center gap-space-sm">
+<span class="w-3 h-3 rounded-full bg-primary animate-ping"></span>
+<span class="font-headline-sm text-body-sm text-on-surface">Procurando oponente compatível...</span>
+</div>
+<span class="font-label-numeric-md text-label-numeric-md text-primary" id="queue-timer-clock">00:04</span>
+</div>
+</div>
+<!-- Mode Selector Hub Cards (Active + Roadmaps) -->
+<div class="flex flex-col gap-space-xs bg-surface-container-lowest/80 backdrop-blur-xl p-space-md rounded-xl shadow-xl">
+<span class="font-label-numeric-sm text-label-numeric-sm text-outline uppercase tracking-wider mb-space-xs">
+            Seleção de Modos de Batalha
+          </span>
+<!-- Active Selection Item -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container rounded-lg shadow cursor-pointer">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-primary font-bold">Duelo 1v1 (Fatia Vertical M0-M4)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Conquista de Orbes e Neutralização do Duelista</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-primary-container text-on-primary font-label-numeric-sm text-label-numeric-sm font-bold uppercase">
+              ATIVO
+            </span>
+</div>
+<!-- Locked Roadmap Mode: 2v2 Duplas -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low/60 rounded-lg opacity-75 hover:opacity-90 transition-opacity">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[20px]">group</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-surface-variant">2v2 Duplas Estratégicas</span>
+<span class="font-body-sm text-body-sm text-outline">Sinergia de Magias em Dupla &amp; Co-op Local/Online</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest text-secondary font-label-numeric-sm text-label-numeric-sm font-bold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+              ROADMAP M5
+            </span>
+</div>
+<!-- Locked Roadmap Mode: 3v3 Trio Real -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low/60 rounded-lg opacity-75 hover:opacity-90 transition-opacity">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-surface-variant">3v3 Trio Real com Chefes Neutros</span>
+<span class="font-body-sm text-body-sm text-outline">Guerra de Macro em 3 Vias Hexagonais</span>
+</div>
+</div>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-highest text-secondary font-label-numeric-sm text-label-numeric-sm font-bold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+              ROADMAP M6
+            </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Action Bento Footer Row -->
+<div class="relative z-10 w-full grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-sm">
+<!-- Bento 1: Hero Roster Quick Card -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl p-space-md rounded-xl shadow-xl flex items-center justify-between hover:bg-surface-container-low transition-all">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[22px]">diversity_3</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-surface">Heróis (2/2 Liberados)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Cavaleiro da Aurora &amp; Arqueira Élfica</span>
+</div>
+</div>
+<button class="px-space-sm py-space-xs bg-surface-container-highest hover:bg-primary-container hover:text-on-primary text-on-surface font-headline-sm text-body-sm rounded-lg transition-colors" type="button">
+          Galeria
+        </button>
+</div>
+<!-- Bento 2: Bot AI Training Arena -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl p-space-md rounded-xl shadow-xl flex items-center justify-between hover:bg-surface-container-low transition-all">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[22px]">psychology</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-surface">Treino Solo / Bot IA</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">FSM: Farmar • Saquear • Contestar • Lutar</span>
+</div>
+</div>
+<button class="px-space-sm py-space-xs bg-secondary-container hover:bg-secondary hover:text-on-secondary text-white font-headline-sm text-body-sm rounded-lg transition-colors" type="button">
+          Iniciar
+        </button>
+</div>
+<!-- Bento 3: Quick Career Stats -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-xl p-space-md rounded-xl shadow-xl flex items-center justify-between hover:bg-surface-container-low transition-all">
+<div class="flex items-center gap-space-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[22px]">monitoring</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-body-lg text-on-surface">Histórico de Batalhas</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary">64% WR</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">28 Vitorias • 16 Derrotas • KDA 3.8</span>
+</div>
+</div>
+<button class="px-space-sm py-space-xs bg-surface-container-highest hover:bg-surface-container text-on-surface font-headline-sm text-body-sm rounded-lg transition-colors" type="button">
+          Ver Log
+        </button>
+</div>
+</div>
+</div>
+<!-- Bottom Technical Telemetry Bar -->
+<div class="w-full bg-surface-container-lowest py-space-xs px-margin flex flex-wrap items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-space-md font-label-numeric-sm text-label-numeric-sm">
+<div class="flex items-center gap-space-xs text-primary">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>BUILD v0.1 - VERTICAL SLICE M2</span>
+</div>
+<span class="text-outline-variant">|</span>
+<span>MOTOR: GODOT 4.3</span>
+<span class="text-outline-variant">|</span>
+<span class="text-secondary">REDE: NETFOX DETERMINISTIC TICK 30 HZ</span>
+</div>
+<div class="flex items-center gap-space-md font-label-numeric-sm text-label-numeric-sm">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-on-surface">SERVIDOR ONLINE</span>
+<span class="text-outline">(BR-SÃO PAULO)</span>
+</div>
+<span class="text-outline-variant">|</span>
+<span class="text-primary">PING: 24ms (JITTER 1ms)</span>
+</div>
+</div>
+<!-- Hero Select Modal Drawer (Simulated Interaction) -->
+<div class="hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-space-lg" id="hero-modal">
+<div class="bg-surface-container-low max-w-2xl w-full p-space-xl rounded-xl shadow-2xl relative">
+<div class="flex items-center justify-between mb-space-lg">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[28px]">shield_person</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">Selecione seu Duelista</h3>
+</div>
+<button class="text-on-surface-variant hover:text-on-surface p-space-xs" id="btn-close-modal" type="button">
+<span class="material-symbols-outlined text-[24px]">close</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md mb-space-lg">
+<!-- Hero Option 1: Knight -->
+<div class="p-space-md rounded-xl bg-surface-container-highest cursor-pointer flex flex-col gap-space-sm shadow-lg">
+<div class="w-full h-40 rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of KayKit stylized fantasy knight with glowing amber eyes inside iron helmet, dark low poly steel armor, cinematic dusk lighting, blue rune magic in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANDV0g6yzQYLAMkzpPYN7mjqBTL9E9-K0-j1Q2hzTzM0euekhMOtBEQlUdwqF65cLsnJlhaF1u6wwR0gj6g0ONno-OmdIY-arWaQG7R9n_m06oymSWCjtBjsISEJ8j0408ayWbnYsGyOPER4umfZ_9BEd-SE1AF-a-zVr-b-V4CcVpS82U3Qq4NGKjxLt-0DmRMtyxGu6l8XFcVL5Ru-DhuV89u9mMDRnrV1kftmOI3mLt6aN2C1xJ"/>
+<span class="absolute top-2 right-2 px-space-xs py-0.5 rounded bg-primary-container text-on-primary font-label-numeric-sm text-label-numeric-sm font-bold">SELECIONADO</span>
+</div>
+<span class="font-headline-md text-headline-md text-primary">Cavaleiro da Aurora</span>
+<span class="font-body-md text-body-sm text-on-surface-variant">Linha de frente robusto com investida e estonteamento em área.</span>
+</div>
+<!-- Hero Option 2: Archer -->
+<div class="p-space-md rounded-xl bg-surface-container hover:bg-surface-container-high transition-all cursor-pointer flex flex-col gap-space-sm shadow-md">
+<div class="w-full h-40 rounded-lg overflow-hidden relative">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of KayKit stylized elf female archer with leather armor, runic green cloak, holding composite recurve bow with glowing cyan arrow, twilight forest low poly background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfqg2w9pz-7aPaeQ7Ht-yiPMxoninNQjw_BgOmFzaGLg2yMnbf9NjkQz2baHAs1ne2Et1nb7hAao-F6gLsJirGseivgPKRL09oislU7mO6qJRimfEuOZeBr2pEPD6DIyii892A2PTIgfL4dEhkJFctsPnAEvco2Imh9d1qWNXJ4EpiMxljGg8S_KBx0nnUAMLlhm_bUSJqNhX2UoX6EvzUTboYp8jk1tdqugEtgovr13LXfkO70vwn"/>
+<span class="absolute top-2 right-2 px-space-xs py-0.5 rounded bg-surface-container-lowest text-secondary font-label-numeric-sm text-label-numeric-sm font-bold">PRONTO</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">Arqueira Silvestre</span>
+<span class="font-body-md text-body-sm text-on-surface-variant">Atiradora ágil de longa distância com flechas perfurantes e armadilhas.</span>
+</div>
+</div>
+<div class="flex justify-end gap-space-sm">
+<button class="px-space-lg py-space-sm rounded-lg bg-surface-container-highest text-on-surface font-headline-sm text-headline-sm" id="btn-cancel-modal" type="button">
+          Cancelar
+        </button>
+<button class="px-space-lg py-space-sm rounded-lg bg-primary text-on-primary font-headline-sm text-headline-sm shadow-[0_3px_0_#935600]" id="btn-confirm-modal" type="button">
+          Confirmar Escolha
+        </button>
+</div>
+</div>
+</div>
+<!-- Inline Micro-interactions Controller Script -->
+<script>
+    (function() {
+      const matchBtn = document.getElementById('btn-matchmaking');
+      const queueBanner = document.getElementById('queue-active-banner');
+      const queueLabel = document.getElementById('queue-btn-label');
+      const timerClock = document.getElementById('queue-timer-clock');
+      
+      let isQueuing = false;
+      let timerInterval = null;
+      let seconds = 0;
+
+      if (matchBtn) {
+        matchBtn.addEventListener('click', () => {
+          isQueuing = !isQueuing;
+          if (isQueuing) {
+            queueBanner.classList.remove('hidden');
+            queueLabel.textContent = 'CANCELAR FILA';
+            matchBtn.classList.remove('from-primary-container', 'via-primary', 'to-primary-container');
+            matchBtn.classList.add('from-error-container', 'to-error');
+            seconds = 0;
+            timerClock.textContent = '00:00';
+            timerInterval = setInterval(() => {
+              seconds++;
+              const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+              const secs = String(seconds % 60).padStart(2, '0');
+              timerClock.textContent = mins + ':' + secs;
+            }, 1000);
+          } else {
+            queueBanner.classList.add('hidden');
+            queueLabel.textContent = 'BUSCAR PARTIDA 1v1';
+            matchBtn.classList.add('from-primary-container', 'via-primary', 'to-primary-container');
+            matchBtn.classList.remove('from-error-container', 'to-error');
+            clearInterval(timerInterval);
+          }
+        });
+      }
+
+      // Hero Modal Toggle
+      const heroModal = document.getElementById('hero-modal');
+      const heroSwapBtn = document.getElementById('btn-hero-swap');
+      const heroCloseBtn = document.getElementById('btn-close-modal');
+      const heroCancelBtn = document.getElementById('btn-cancel-modal');
+      const heroConfirmBtn = document.getElementById('btn-confirm-modal');
+
+      const closeModal = () => heroModal && heroModal.classList.add('hidden');
+      const openModal = () => heroModal && heroModal.classList.remove('hidden');
+
+      if (heroSwapBtn) heroSwapBtn.addEventListener('click', openModal);
+      if (heroCloseBtn) heroCloseBtn.addEventListener('click', closeModal);
+      if (heroCancelBtn) heroCancelBtn.addEventListener('click', closeModal);
+      if (heroConfirmBtn) heroConfirmBtn.addEventListener('click', closeModal);
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest/90 backdrop-blur-md py-space-md"><div class="w-full px-margin flex flex-col sm:flex-row items-center justify-between gap-space-sm"><div class="flex items-center gap-space-md text-on-surface-variant"><span class="font-label-numeric-sm text-label-numeric-sm">GODOT 4.3 ENGINE</span><span class="font-label-numeric-sm text-label-numeric-sm">SYNC PROTOCOL: NETFOX TICK 30</span><span class="font-label-numeric-sm text-label-numeric-sm hidden md:inline">PACKET LOSS: 0%</span></div><div class="font-body-sm text-body-sm text-outline">© 2025 Arcade Arena 1v1. Stylized Tactical Battle.</div></div></footer></body></html>

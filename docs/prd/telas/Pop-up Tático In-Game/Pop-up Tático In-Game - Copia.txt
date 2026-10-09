@@ -1,0 +1,15 @@
+As duas telas solicitadas, cobrindo tanto o fluxo inicial de entrada no jogo quanto a mecânica tática de progressão in-game prevista no seu PRD (§3.2, §4.3 e §8.4):
+
+1. ⚔️ Pop-up Tático In-Game — Subida de Nível 6 & Desbloqueio do Ultimate (In-Game HUD — Subida de Nível 6 & Desbloqueio do Ultimate)
+Projetado como um overlay modal tático sobre a viewport da partida (com vinheta escurecida e HUD de topo visível marcando 03:25, momento crítico antes do spawn do boss central):
+
+Banner de Conquista Rúnica:
+Destaque celebratório: ★ NÍVEL 6 ATINGIDO! ★ com badge dourado em destaque ULTIMATE [R] DESBLOQUEADO.
+Atualização dos atributos base do herói (ex: Cavaleiro da Aurora: HP 980 (+120), DEF 45 (+5), ATQ 58 (+4)).
+Painel de Alocação de Habilidades (PRD §3.2 & §4.3):
+Habilidade [Q] Investida (Nv. 2/5): Exibe status atual e prévia de melhoria para o nível 3 com botão [+] Melhorar.
+Habilidade [E] Muralha (Nv. 2/5): Exibe absorção de escudo e redução de recarga com botão [+] Melhorar.
+Ultimate [R] Terremoto (NOVA SUPREMA — Nv. 1/2): Card com destaque visual máximo em dourado âmbar pulsante e botão prioritário [ APRENDER ULTIMATE (R) ] (Golpeia em raio de 5u causando 220 de dano mágico e atordoamento de 1.5s).
+Dica Tática Contextual:
+"Dica do Mestre: O Ultimate [R] Terremoto é ideal para contestar o Rei Esqueleto no centro ou interromper o rolamento evasivo da Arqueira!"
+Controles Rápidos de Teclado: Atalhos mapeados em tela para confirmação instantânea durante o combate ([ENTER] para confirmar, [A] para auto-alocar e [ESC] para fechar).

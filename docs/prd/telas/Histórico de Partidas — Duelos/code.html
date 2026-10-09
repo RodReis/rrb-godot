@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"outline":"#a08e7a","on-secondary":"#003351","on-primary":"#472a00","primary-container":"#f59e0b","surface-container-low":"#131b2e","on-surface":"#dae2fd","tertiary":"#ffbcb7","on-surface-variant":"#d8c3ad","primary-fixed-dim":"#ffb95f","inverse-surface":"#dae2fd","tertiary-fixed-dim":"#ffb3ad","secondary":"#93ccff","surface-container":"#171f33","surface-bright":"#31394d","surface-tint":"#ffb95f","surface-container-highest":"#2d3449","secondary-fixed":"#cce5ff","on-tertiary-container":"#8d0012","background":"#0b1326","on-secondary-fixed-variant":"#004b73","surface-container-high":"#222a3d","on-error-container":"#ffdad6","on-tertiary-fixed-variant":"#930013","on-primary-fixed":"#2a1700","on-background":"#dae2fd","inverse-on-surface":"#283044","surface-container-lowest":"#060e20","on-tertiary":"#68000a","tertiary-fixed":"#ffdad7","secondary-container":"#3198dc","secondary-fixed-dim":"#93ccff","outline-variant":"#534434","primary":"#ffc174","on-primary-container":"#613b00","primary-fixed":"#ffddb8","surface-dim":"#0b1326","tertiary-container":"#ff938c","error":"#ffb4ab","inverse-primary":"#855300","surface-variant":"#2d3449","error-container":"#93000a","on-secondary-fixed":"#001d31","on-primary-fixed-variant":"#653e00","on-secondary-container":"#002c47","on-error":"#690005","surface":"#0b1326","on-tertiary-fixed":"#410004"},borderRadius:{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},spacing:{"space-md":"0.75rem","space-xl":"2rem","space-sm":"0.5rem","gutter":"0.75rem","space-lg":"1.25rem","margin":"1rem","space-xs":"0.25rem"},fontFamily:{"display-hero-mobile":["Space Grotesk"],"label-numeric-md":["JetBrains Mono"],"label-numeric-sm":["JetBrains Mono"],"display-hero":["Space Grotesk"],"body-sm":["Outfit"],"headline-sm":["Space Grotesk"],"body-lg":["Outfit"],"hotkey-cap":["Space Grotesk"],"headline-lg":["Space Grotesk"],"headline-lg-mobile":["Space Grotesk"],"body-md":["Outfit"],"headline-md":["Space Grotesk"],"label-numeric-lg":["JetBrains Mono"]},fontSize:{"display-hero-mobile":["36px",{"lineHeight":"44px","letterSpacing":"-0.01em","fontWeight":"700"}],"label-numeric-md":["14px",{"lineHeight":"18px","fontWeight":"700"}],"label-numeric-sm":["11px",{"lineHeight":"14px","fontWeight":"700"}],"display-hero":["56px",{"lineHeight":"64px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"headline-sm":["18px",{"lineHeight":"24px","fontWeight":"600"}],"body-lg":["16px",{"lineHeight":"22px","fontWeight":"500"}],"hotkey-cap":["11px",{"lineHeight":"12px","letterSpacing":"0.05em","fontWeight":"700"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"700"}],"headline-lg-mobile":["24px",{"lineHeight":"32px","letterSpacing":"0em","fontWeight":"700"}],"body-md":["14px",{"lineHeight":"20px","fontWeight":"400"}],"headline-md":["22px",{"lineHeight":"28px","fontWeight":"600"}],"label-numeric-lg":["20px",{"lineHeight":"24px","letterSpacing":"-0.02em","fontWeight":"700"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface antialiased select-none"><header class="fixed top-0 left-0 w-full z-50 bg-surface-container-low/95 backdrop-blur-md shadow-[0_4px_20px_rgba(6,14,32,0.8)]"><div class="h-16 w-full px-margin flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><div class="w-9 h-9 bg-surface-container-highest rounded-lg flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><span class="material-symbols-outlined text-primary text-[22px]">swords</span></div><div class="flex flex-col"><span class="font-headline-sm text-headline-sm uppercase tracking-wider text-primary leading-none">Arena 1v1</span><span class="font-label-numeric-sm text-label-numeric-sm uppercase tracking-widest text-on-surface-variant leading-none mt-space-xs">Kaykit Edition</span></div></div><div class="h-6 w-px bg-surface-variant mx-space-xs"></div><nav class="flex items-center gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-headline-sm text-headline-sm uppercase rounded-lg shadow-[0_0_12px_rgba(245,158,11,0.35)]"><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="lobby" href="#">Lobby</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="herois" href="#">Heróis</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="guia-e-bestiario" href="#">Guia &amp; Bestiário</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="historico" href="#">Histórico</a><a class="px-space-md py-space-xs text-on-surface-variant font-headline-sm text-headline-sm uppercase tracking-wide hover:bg-surface-container-high hover:text-on-surface rounded-lg transition-all duration-150" data-path="ajustes" href="#">Ajustes</a></nav></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-sm bg-surface-container-lowest px-space-md py-space-xs rounded-lg shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#93ccff]"></span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary uppercase">Netfox 30Hz</span></div><span class="text-outline-variant font-label-numeric-sm text-label-numeric-sm">|</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">24ms</span></div><div class="flex items-center gap-space-sm bg-surface-container px-space-md py-space-xs rounded-lg"><div class="flex flex-col text-right"><span class="font-headline-sm text-headline-sm text-on-surface leading-none">Duelista_01</span><div class="flex items-center justify-end gap-space-xs mt-space-xs"><span class="font-label-numeric-sm text-label-numeric-sm text-primary uppercase">ELO</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">1480</span></div></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-[0_0_10px_rgba(255,193,116,0.3)]"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div><div class="flex items-center gap-space-xs"><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest transition-colors" title="Configurações" type="button"><span class="material-symbols-outlined text-[20px]">settings</span></button><button class="w-9 h-9 flex items-center justify-center rounded-lg bg-surface-container-high text-error hover:text-on-error hover:bg-error-container transition-colors" title="Sair do Combate" type="button"><span class="material-symbols-outlined text-[20px]">power_settings_new</span></button></div></div></div></header><main class="w-full pt-16 bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="w-full px-margin py-space-lg flex flex-col gap-space-lg">
+<!-- SUB-HEADER & COMPETITIVE BANNER -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-lg shadow-xl relative overflow-hidden flex flex-col gap-space-md">
+<div class="absolute -right-12 -top-12 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute right-48 -bottom-16 w-56 h-56 bg-secondary/5 rounded-full blur-2xl pointer-events-none"></div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md relative z-10">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm mb-space-xs">
+<span class="px-space-sm py-0.5 rounded bg-primary-container text-on-primary-container font-hotkey-cap text-hotkey-cap uppercase">M4 Vertical Slice</span>
+<span class="text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">Netfox 30Hz Telemetry Validated</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="text-secondary font-label-numeric-sm text-label-numeric-sm">Tick Rate: 33.3ms</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight uppercase">Histórico de Duelos &amp; Auditoria de Partidas</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl mt-space-xs">
+            Registro competitivo 1v1 Arena Solo • Auditoria de balanceamento PRD §9.2, dinâmica de 2 tempos, mecânica de Catch-Up (+25% XP) e integridade de rede.
+          </p>
+</div>
+<!-- Season Status Badge -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest/80 px-space-md py-space-sm rounded-lg shadow-md shrink-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[24px]">military_tech</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Ladder Oficial Ativa</span>
+<span class="font-headline-sm text-headline-sm text-primary">Fatia M4 — SA-East</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">ELO Atual: 1504 pts (#14 Regional)</span>
+</div>
+</div>
+</div>
+<!-- Quick Filter Bar & Match Search -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs relative z-10">
+<div class="flex flex-wrap items-center gap-space-xs" id="filter-buttons">
+<button class="filter-btn active px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-primary-container text-on-primary-container shadow-md transition-all flex items-center gap-space-xs" data-filter="all">
+<span>Todas as Partidas</span>
+<span class="font-label-numeric-sm text-label-numeric-sm bg-on-primary-container/20 px-1.5 rounded">50</span>
+</button>
+<button class="filter-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all flex items-center gap-space-xs" data-filter="win">
+<span class="material-symbols-outlined text-[16px] text-primary">verified</span>
+<span>Vitórias</span>
+<span class="font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-1.5 rounded">34</span>
+</button>
+<button class="filter-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all flex items-center gap-space-xs" data-filter="loss">
+<span class="material-symbols-outlined text-[16px] text-error">close</span>
+<span>Derrotas</span>
+<span class="font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-1.5 rounded">16</span>
+</button>
+<div class="h-6 w-px bg-surface-variant mx-space-xs hidden sm:block"></div>
+<button class="filter-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all flex items-center gap-space-xs" data-filter="arqueira">
+<span class="material-symbols-outlined text-[16px] text-secondary">explore</span>
+<span>Arqueira</span>
+<span class="font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-1.5 rounded">28</span>
+</button>
+<button class="filter-btn px-space-md py-space-xs rounded-lg font-headline-sm text-headline-sm uppercase bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all flex items-center gap-space-xs" data-filter="cavaleiro">
+<span class="material-symbols-outlined text-[16px] text-primary">shield</span>
+<span>Cavaleiro</span>
+<span class="font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-1.5 rounded">22</span>
+</button>
+</div>
+<!-- Search Bar -->
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-surface-container-lowest pl-9 pr-space-md py-space-xs rounded-lg text-on-surface placeholder:text-on-surface-variant font-body-md text-body-md focus:outline-none focus:ring-1 focus:ring-primary shadow-inner" id="match-search" placeholder="Buscar por ID (#8941) ou Rival..." type="text"/>
+</div>
+</div>
+</div>
+<!-- KPI CARDS / METRICS OVERVIEW (4-column Bento) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Card 1: Winrate & PRD §9.2 Compliance -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-lg flex flex-col justify-between relative overflow-hidden group hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface-variant tracking-wider">Taxa de Vitória Global</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+</span>
+</div>
+<div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-display-hero text-display-hero text-primary leading-none">68.0%</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">34V - 16D</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-2 rounded-full overflow-hidden mt-space-sm flex">
+<div class="bg-primary h-full" style="width: 68%;"></div>
+<div class="bg-surface-container-highest h-full" style="width: 32%;"></div>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span>PRD §9.2 (&lt; 75% Limite)</span>
+<span class="text-secondary font-bold">EM CONFORMIDADE</span>
+</div>
+</div>
+<!-- Card 2: Average Match Duration (< 10 min Target) -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-lg flex flex-col justify-between relative overflow-hidden group hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface-variant tracking-wider">Tempo Médio de Duelo</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">timer</span>
+</span>
+</div>
+<div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-display-hero text-display-hero text-secondary leading-none">08:34</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface-variant">min</span>
+</div>
+<div class="flex items-center gap-space-xs mt-space-xs">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-body-sm text-body-sm text-on-surface">100% dos duelos ≤ 10:00 min</span>
+</div>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span>Partida mais longa: 09:55</span>
+<span class="text-primary font-bold">100% ALCANÇADO</span>
+</div>
+</div>
+<!-- Card 3: Catch-up & Snowball Metric -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-lg flex flex-col justify-between relative overflow-hidden group hover:bg-surface-container transition-colors">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface-variant tracking-wider">Catch-Up &amp; Viradas</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-fixed">
+<span class="material-symbols-outlined text-[18px]">trending_up</span>
+</span>
+</div>
+<div>
+<div class="flex items-baseline gap-space-xs">
+<span class="font-display-hero text-display-hero text-on-surface leading-none">31%</span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">+25% XP</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs">
+            Percentual de duelos revertidos na Fase 2 após desvantagem de abates.
+          </p>
+</div>
+<div class="mt-space-md pt-space-xs flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span>Anti-Snowball Ativo</span>
+<span class="text-secondary font-bold">EQUILIBRADO</span>
+</div>
+</div>
+<!-- Card 4: Hero Specific Win Rates -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-lg flex flex-col justify-between">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface-variant tracking-wider">Desempenho por Herói</span>
+<span class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">group</span>
+</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between bg-surface-container-lowest/60 p-space-xs rounded-lg">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-secondary">explore</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Arqueira</span>
+</div>
+<div class="flex items-center gap-space-sm font-label-numeric-sm text-label-numeric-sm">
+<span class="text-secondary">67.8% (19-9)</span>
+<span class="text-on-surface-variant">KDA 3.8</span>
+</div>
+</div>
+<div class="flex items-center justify-between bg-surface-container-lowest/60 p-space-xs rounded-lg">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[18px] text-primary">shield</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Cavaleiro</span>
+</div>
+<div class="flex items-center gap-space-sm font-label-numeric-sm text-label-numeric-sm">
+<span class="text-primary">68.1% (15-7)</span>
+<span class="text-on-surface-variant">KDA 2.9</span>
+</div>
+</div>
+</div>
+<div class="mt-space-xs flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span>Meta: Sinergia de Itens 3/3</span>
+<span class="text-on-surface font-mono">100% Validado</span>
+</div>
+</div>
+</div>
+<!-- MAIN TWO-COLUMN WORKSPACE: MATCH LIST (LEFT) + AUDIT BENCHMARK WIDGET (RIGHT) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- MATCH LIST COLUMN (8 cols) -->
+<div class="xl:col-span-8 flex flex-col gap-space-md" id="matches-container">
+<!-- MATCH 1: EXPANDED HERO RECENT DUEL (#8941) -->
+<div class="match-card bg-surface-container-low rounded-xl p-space-lg shadow-xl relative overflow-hidden transition-all duration-200" data-hero="arqueira" data-id="8941" data-outcome="win" data-rival="duelista_cavaleiro02">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+<!-- Card Header & Metadata -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-sm">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-1 rounded bg-primary-container text-on-primary-container font-headline-sm text-headline-sm uppercase flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">trophy</span>
+                VITÓRIA
+              </span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Duelo Ranqueado #8941</span>
+<span class="text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">• Há 15 minutos</span>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-numeric-sm text-label-numeric-sm bg-surface-container-lowest px-space-sm py-1 rounded-lg">
+<span class="material-symbols-outlined text-[16px] text-secondary">timer</span>
+<span>08:42 min</span>
+</div>
+<div class="flex items-center gap-space-xs font-label-numeric-sm text-label-numeric-sm bg-primary/10 text-primary px-space-sm py-1 rounded-lg">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+24 ELO (1480 → 1504)</span>
+</div>
+</div>
+</div>
+<!-- Duel Scoreboard Combat Arena (KayKit Stylized Clash) -->
+<div class="grid grid-cols-1 md:grid-cols-11 gap-space-sm items-center py-space-md bg-surface-container-lowest/50 rounded-xl px-space-md">
+<!-- Player Side (Left) -->
+<div class="md:col-span-5 flex items-center gap-space-md">
+<div class="relative w-16 h-16 rounded-xl bg-surface-container-high overflow-hidden shadow-inner shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chibi stylized KayKit 3D low-poly ranger hero portrait with green hood and glowing eyes looking forward in tactical arena" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxsUK_6j9u589pyI6TFZi3tz9ThdT3yzmD3l0QLa74tqn7I7aruQdn5lemvB5AixHd-I43rPi5zvDNSRyCPs51eqtMl3lrkNicpPoYW-D132VhNXMDMjXx6pDyXO-M3O3C_xfk9TKWBMhXS9PfzwLVwVF0bZmFKbCHzqvC6MJVmEChFV1r6x2JL1jReHeeUYib_uBb0_btXVgomVVtWossqDpwL57YDmdc9Yd9AZByVdddWMgNivsE"/>
+<div class="absolute bottom-0 right-0 bg-primary text-on-primary font-label-numeric-sm text-label-numeric-sm px-1 rounded-tl">Nv 10</div>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-primary truncate">Arqueira (Você)</span>
+<span class="font-hotkey-cap text-hotkey-cap bg-primary/20 text-primary px-1 rounded">Ranged</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Duelista_01 • M4 Competidor</span>
+<div class="flex items-center gap-space-xs mt-space-xs font-label-numeric-sm text-label-numeric-sm">
+<span class="text-on-surface font-bold">5 Kills</span>
+<span class="text-outline-variant">/</span>
+<span class="text-error">3 Mortes</span>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface-variant">0 Assist</span>
+</div>
+</div>
+</div>
+<!-- VS Center Badge -->
+<div class="md:col-span-1 flex flex-col items-center justify-center my-space-xs md:my-0">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-headline-sm text-headline-sm shadow-md">
+                5 : 3
+              </div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase mt-1">Final</span>
+</div>
+<!-- Rival Side (Right) -->
+<div class="md:col-span-5 flex items-center justify-start md:justify-end gap-space-md flex-row-reverse md:flex-row">
+<div class="flex flex-col text-left md:text-right min-w-0">
+<div class="flex items-center md:justify-end gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Cavaleiro</span>
+<span class="font-hotkey-cap text-hotkey-cap bg-surface-container-highest text-on-surface-variant px-1 rounded">Melee</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Duelista_Cavaleiro02</span>
+<div class="flex items-center md:justify-end gap-space-xs mt-space-xs font-label-numeric-sm text-label-numeric-sm">
+<span class="text-on-surface">3 Kills</span>
+<span class="text-outline-variant">/</span>
+<span class="text-error">5 Mortes</span>
+</div>
+</div>
+<div class="relative w-16 h-16 rounded-xl bg-surface-container-high overflow-hidden shadow-inner shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chibi stylized KayKit 3D low-poly armored knight champion with silver helmet and red cape in isometric pose" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjtvIfjmoPa4Wxm4NzYtsp8r-7zTR6YA9Ipe7lVv6Zcx1Uqzmgj8uqr2cEIxTNPkK3N9tNh3znxjnc2AJgdEKMdIfmODLKP4z1jvWnxlIFZl_uE1gxPTmT2uWGA_dM8cXA_q5-TJXVcp9wgL8YexLpgLA7mMs_0NS8McBwLxlxmx_47hEXgvjFbjCGH1gJBhmdBi5HDZbw7KX4ysskO-wPidmMkAN7OkaEjFL5R1tAe79mTkf5-Ktn"/>
+<div class="absolute bottom-0 right-0 bg-surface-container-highest text-on-surface font-label-numeric-sm text-label-numeric-sm px-1 rounded-tl">Nv 9</div>
+</div>
+</div>
+</div>
+<!-- Combat Stats & Inventory Sockets (Detailed Breakdown) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md mt-space-md items-center">
+<!-- Final Item Build (4 Slots with Rarity & Synergies) -->
+<div class="lg:col-span-5 flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase tracking-wider">Build Final • Set do Caçador 3/3</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary">+15% Vel. Ataque</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<!-- Slot 1: Epic Bow (Boss Steal) -->
+<div class="w-12 h-12 rounded-lg bg-surface-container-lowest shadow-inner p-1 flex items-center justify-center relative group shadow-[0_0_8px_rgba(245,158,11,0.3)]">
+<span class="material-symbols-outlined text-[24px] text-primary">change_history</span>
+<span class="absolute -bottom-1 -right-1 font-hotkey-cap text-[9px] bg-primary-container text-on-primary-container px-1 rounded font-bold">ÉPICO</span>
+</div>
+<!-- Slot 2: Hood -->
+<div class="w-12 h-12 rounded-lg bg-surface-container-lowest shadow-inner p-1 flex items-center justify-center relative group">
+<span class="material-symbols-outlined text-[24px] text-secondary">masks</span>
+<span class="absolute -bottom-1 -right-1 font-hotkey-cap text-[9px] bg-surface-container-highest text-on-surface px-1 rounded">SET</span>
+</div>
+<!-- Slot 3: Jerkin / Armor -->
+<div class="w-12 h-12 rounded-lg bg-surface-container-lowest shadow-inner p-1 flex items-center justify-center relative group">
+<span class="material-symbols-outlined text-[24px] text-secondary">shield</span>
+<span class="absolute -bottom-1 -right-1 font-hotkey-cap text-[9px] bg-surface-container-highest text-on-surface px-1 rounded">SET</span>
+</div>
+<!-- Slot 4: Boots -->
+<div class="w-12 h-12 rounded-lg bg-surface-container-lowest shadow-inner p-1 flex items-center justify-center relative group">
+<span class="material-symbols-outlined text-[24px] text-secondary">hiking</span>
+<span class="absolute -bottom-1 -right-1 font-hotkey-cap text-[9px] bg-surface-container-highest text-on-surface px-1 rounded">SET</span>
+</div>
+<div class="ml-space-xs flex flex-col">
+<span class="font-body-sm text-body-sm text-on-surface leading-tight">Arco Espectral Épico</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary">Roubado do Rei Esqueleto (03:30)</span>
+</div>
+</div>
+</div>
+<!-- In-game Stats (Damage, Gold, Objectives) -->
+<div class="lg:col-span-4 grid grid-cols-3 gap-space-xs bg-surface-container-lowest/80 p-space-xs rounded-lg text-center">
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant block uppercase">Dano Total</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface">14.850</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant block uppercase">Ouro Acumulado</span>
+<span class="font-label-numeric-md text-label-numeric-md text-primary">2.840g</span>
+</div>
+<div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant block uppercase">Boss Neutro</span>
+<span class="font-label-numeric-md text-label-numeric-md text-secondary">1/1 (Slain)</span>
+</div>
+</div>
+<!-- Action Buttons for Match 1 -->
+<div class="lg:col-span-3 flex items-center justify-end gap-space-xs">
+<button class="px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-lg font-headline-sm text-headline-sm uppercase transition-colors flex items-center gap-space-xs" onclick="alert('Visualização do Grafo de Replay M4 carregada em cache.')">
+<span class="material-symbols-outlined text-[18px] text-secondary">smart_display</span>
+<span>Replay</span>
+</button>
+<button class="px-space-md py-space-xs bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container rounded-lg font-headline-sm text-headline-sm uppercase shadow-md transition-all flex items-center gap-space-xs" onclick="alert('Relatório de Auditoria Tática da Partida #8941 copiado para clipboard.')">
+<span class="material-symbols-outlined text-[18px]">summarize</span>
+<span>Auditoria</span>
+</button>
+</div>
+</div>
+<!-- Tactical Key Events Log Strip -->
+<div class="mt-space-md pt-space-xs border-t-0 flex flex-wrap items-center gap-space-sm text-on-surface-variant font-label-numeric-sm text-label-numeric-sm bg-surface-container/50 px-space-md py-space-xs rounded-lg">
+<span class="text-primary font-bold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">flag</span> Eventos Críticos:
+            </span>
+<span class="bg-surface-container-lowest px-2 py-0.5 rounded text-on-surface">03:30 - Boss Rei Esqueleto Roubado (Drop Arco Épico)</span>
+<span class="bg-surface-container-lowest px-2 py-0.5 rounded text-on-surface">05:10 - Colapso da Zona 1 (Arena Central Ativa)</span>
+<span class="bg-surface-container-lowest px-2 py-0.5 rounded text-on-surface">08:42 - 5º Abate &amp; Vitória Decisiva (Zona Nv 2)</span>
+</div>
+</div>
+<!-- MATCH 2: HONORABLE DEFEAT (#8938) -->
+<div class="match-card bg-surface-container-low rounded-xl p-space-md shadow-md relative overflow-hidden transition-all duration-200" data-hero="cavaleiro" data-id="8938" data-outcome="loss" data-rival="valkyrie_bow">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-error"></div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-0.5 rounded bg-error-container text-on-error-container font-headline-sm text-headline-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">close</span>
+                DERROTA
+              </span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Duelo #8938</span>
+<span class="text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">• Há 2 horas</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">09:15 min</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-error bg-error/10 px-space-sm py-0.5 rounded">-18 ELO</span>
+</div>
+</div>
+<!-- Duel Layout Line -->
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md py-space-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chibi stylized 3D knight low poly character with steel helmet from Kaykit pack" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfI5am9byWjauXH0FLl9OUYG8WnyzLT0CObrIM21tiCe9Y6KB5LONCBLccls950rW5x7Ymq3HIXUDfd4uVOe8oKg7YHl7oVRGEj7BxwtoC2wSx-O8Fu45RpcxWiCag_ewpYyrAHlaabdnfjYhT7icIrVMvnfpsKxIO0p4RiQIZs_oI9CzxZ6UGtiFEJkig7sN6PyDAVOCrt26BZpNxEXTY4aCfHuCXw3keRYJW9745kJAWzSql9DRi"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">Cavaleiro (Você - Nv 9)</span>
+<span class="text-primary font-label-numeric-sm text-label-numeric-sm">3 Kills / 5 Mortes</span>
+</div>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Build: Set Guarda 3/3 + Espada de Aço Rara • Dano: 16.200</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="flex flex-col text-right">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Rival: Valkyrie_Bow (Arqueira Nv 10)</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Catch-Up Ativado às 06:10 • Zona 3 Central</span>
+</div>
+<button class="px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-lg font-headline-sm text-headline-sm uppercase transition-colors" onclick="alert('Duelo #8938: Derrota com ativação de Catch-up.')">
+                Detalhes
+              </button>
+</div>
+</div>
+</div>
+<!-- MATCH 3: FAST CONTROLLED SNOWBALL WIN (#8929) -->
+<div class="match-card bg-surface-container-low rounded-xl p-space-md shadow-md relative overflow-hidden transition-all duration-200" data-hero="arqueira" data-id="8929" data-outcome="win" data-rival="ironshield">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-0.5 rounded bg-primary-container text-on-primary-container font-headline-sm text-headline-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+                VITÓRIA (FAST 6m)
+              </span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Duelo #8929</span>
+<span class="text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">• Há 5 horas</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">06:50 min (Snowball Seguro)</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary bg-primary/10 px-space-sm py-0.5 rounded">+22 ELO</span>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md py-space-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chibi stylized 3D archer hunter character wearing green cowl with crossbow from Kaykit pack" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByfecCa1KGgdmxaCrqiSFvWC1eSKldToXss4S_gfJIsj-an_QyRcDHoSU78owqKLzw5dslMNfujCxNKkvxR-VzLqjNmjRP6Td7LrWPZ9NGWNwYowjOl_cDKUu0miiTcsCfmmsRjLDWOZww7lwLcBMT9Sbic6g53DCufVTe5BlWHT6dh3TF8oVG1AQyl9pyvbBCminnZ-bm3z2T0tEA9IDm-2351OASzYfepf2fAfC-MNXYUSL9d9DF"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-primary">Arqueira (Você - Nv 10)</span>
+<span class="text-on-surface font-label-numeric-sm text-label-numeric-sm">5 Kills / 1 Morte</span>
+</div>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Build: Set Caçador 3/3 + Arco Raro • Dano: 11.400</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="flex flex-col text-right">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Rival: IronShield (Cavaleiro Nv 7)</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary">Controle Total da Selva &amp; Neutros</span>
+</div>
+<button class="px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-lg font-headline-sm text-headline-sm uppercase transition-colors" onclick="alert('Duelo #8929: Vitória rápida em 06:50.')">
+                Detalhes
+              </button>
+</div>
+</div>
+</div>
+<!-- MATCH 4: COMEBACK / CATCH-UP EPIC WIN (#8915) -->
+<div class="match-card bg-surface-container-low rounded-xl p-space-md shadow-md relative overflow-hidden transition-all duration-200" data-hero="cavaleiro" data-id="8915" data-outcome="win" data-rival="swiftshot">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-secondary"></div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pb-space-xs">
+<div class="flex items-center gap-space-sm">
+<span class="px-space-sm py-0.5 rounded bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">sync_alt</span>
+                VIRADA CATCH-UP
+              </span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Duelo #8915</span>
+<span class="text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">• Ontem</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">09:55 min (Limite dos 10 min)</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary bg-secondary/10 px-space-sm py-0.5 rounded">+26 ELO</span>
+</div>
+</div>
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-md py-space-sm">
+<div class="flex items-center gap-space-md">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="Chibi stylized 3D low poly knight character with battle axe and heavy round shield from Kaykit pack" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGiRjp2pndJ5GSVeUEe7_YWC1ct9iKJW5Tka_hSVIVL5maQH-FDIvA4QHO4f7d1Zhoq805BxBlMsswHj6iA1EIxut59wPvUnKNmLQNSNlde7Io5Byb-KZNe256iLq8vf2Y0oi7YzuUGJosKcHt06Cm_uPc0LQo3XGYBsC7IYrqmijNFPeRNWbzvpAxkD58wAZzZXLwtH5ctJl3ZOElwLSvxfp6GjxZyfu4uZeW6GYsyuYTLzYgKfyN"/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">Cavaleiro (Você - Nv 10)</span>
+<span class="text-primary font-label-numeric-sm text-label-numeric-sm">5 Kills / 4 Mortes</span>
+</div>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Virada aos 08:30 via bônus +25% XP da Fase 2 • Dano: 18.900</span>
+</div>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="flex flex-col text-right">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Rival: SwiftShot (Arqueira Nv 10)</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Liderou até 07:00 (4 x 2)</span>
+</div>
+<button class="px-space-md py-space-xs bg-surface-container-high hover:bg-surface-container-highest text-on-surface rounded-lg font-headline-sm text-headline-sm uppercase transition-colors" onclick="alert('Duelo #8915: Virada Épica via Catch-Up comprovada no log.')">
+                Detalhes
+              </button>
+</div>
+</div>
+</div>
+<!-- Pagination Bar -->
+<div class="flex items-center justify-between bg-surface-container-low px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">
+<span>Mostrando 4 de 50 partidas arquivadas</span>
+<div class="flex items-center gap-space-xs">
+<button class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface disabled:opacity-40" disabled="">
+<span class="material-symbols-outlined text-[16px]">chevron_left</span>
+</button>
+<span class="px-space-sm py-1 rounded bg-primary-container text-on-primary-container font-bold">1</span>
+<button class="w-8 h-8 rounded bg-surface-container flex items-center justify-center hover:bg-surface-container-high text-on-surface">2</button>
+<button class="w-8 h-8 rounded bg-surface-container flex items-center justify-center hover:bg-surface-container-high text-on-surface">3</button>
+<button class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: AUDIT WIDGET PRD §9.2 BENCHMARKS (4 cols) -->
+<div class="xl:col-span-4 flex flex-col gap-space-md">
+<!-- PRD §9.2 Compliance Verification Panel -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">policy</span>
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider">Critérios de Aceite M4</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary bg-primary/10 px-2 py-0.5 rounded uppercase">PRD §9.2</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Criterion 1 -->
+<div class="bg-surface-container-lowest/80 p-space-sm rounded-lg flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Duração Máxima ≤ 10 min</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  100% dos duelos finalizados dentro do teto. Máximo registrado: 09:55 min (sem prorrogações infinitas).
+                </span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary mt-1">Status: Conforme (100%)</span>
+</div>
+</div>
+<!-- Criterion 2 -->
+<div class="bg-surface-container-lowest/80 p-space-sm rounded-lg flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Latência Netfox ≤ 80ms</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Média de 24ms no SA-East (São Paulo). Zero borracha e reconciliação client-side suave a 30Hz.
+                </span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary mt-1">Status: Excelente (24ms)</span>
+</div>
+</div>
+<!-- Criterion 3 -->
+<div class="bg-surface-container-lowest/80 p-space-sm rounded-lg flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Snowball sob Controle (&lt; 75%)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  Líder da Fase 1 tem 71.4% de vitórias, permitindo 28.6% de viradas com o bônus de XP da Fase 2.
+                </span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary mt-1">Status: Equilibrado (71.4%)</span>
+</div>
+</div>
+<!-- Criterion 4 -->
+<div class="bg-surface-container-lowest/80 p-space-sm rounded-lg flex items-start gap-space-sm">
+<div class="w-6 h-6 rounded bg-primary text-on-primary flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[16px] font-bold">check</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Estabilidade Soak Test (50 Partidas)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                  50 partidas automatizadas bot/bot consecutivas sem crashes de engine ou perda de pacotes.
+                </span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary mt-1">Status: Validado (PRD §8.7)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Telemetry & Map Objectives Balance (Visual SVG Chart) -->
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-xl flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<span class="font-headline-sm text-headline-sm uppercase text-on-surface tracking-wider">Telemetria de Combate</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">Amostra: 50 Duelos</span>
+</div>
+<!-- Circular Metric Distribution (SVG Donut) -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest/80 p-space-md rounded-lg">
+<div class="relative w-28 h-28 shrink-0 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90" viewbox="0 0 36 36">
+<!-- Background circle -->
+<circle cx="18" cy="18" fill="none" r="14" stroke="#2d3449" stroke-width="3.5"></circle>
+<!-- Arqueira segment: 56% -->
+<circle cx="18" cy="18" fill="none" r="14" stroke="#93ccff" stroke-dasharray="88" stroke-dashoffset="38.7" stroke-width="3.5"></circle>
+<!-- Cavaleiro segment: 44% -->
+<circle cx="18" cy="18" fill="none" r="14" stroke="#ffc174" stroke-dasharray="88" stroke-dashoffset="0" stroke-width="3.5"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HERÓIS</span>
+<span class="font-label-numeric-md text-label-numeric-md text-on-surface">50 Part</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-xs flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Arqueira</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">28 (56%)</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="font-body-sm text-body-sm text-on-surface">Cavaleiro</span>
+</div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary">22 (44%)</span>
+</div>
+<div class="h-px bg-surface-variant my-1"></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Taxa de Pick balanceada entre estilos Melee vs Ranged.</span>
+</div>
+</div>
+<!-- Arena Hexagonal Mini-Map Highlight Card -->
+<div class="bg-surface-container-lowest/80 p-space-sm rounded-lg flex flex-col gap-space-xs">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">Mapa de Duelo Oficial</span>
+<div class="relative w-full h-28 rounded-lg overflow-hidden bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Chibi isometric hexagonal battle arena low-poly KayKit style terrain with fortress wall, central dirt paths, river and bridge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFhDGkjXh3hXtSVJyTUtxmz1uURnuE1q1XEs_RR6V6KpDlihydAFSLhaXEy-mKxZdKcFdORRERvGVe3Hf0z5lwmk2gt9oB8x5TQu9zIig7EIK73DHSFBAVRnICviBaFL-5tExXpAsv4RPZRM41kLT3XbPcmNH9CRKk3vb2Dd09h7lT0v4DyVLpSWELrEkDABfxz_mQI04iLsjpItBuNIyjZieGRf0R93Jyhwp4-RRc665sE_-9MSVx"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent flex items-end p-space-xs">
+<span class="font-headline-sm text-headline-sm text-primary">Arena Hexagonal KayKit</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-numeric-sm text-label-numeric-sm pt-1">
+<span>Spawn do Boss: Centro (03:00)</span>
+<span class="text-secondary font-bold">Colapso: 3 Zonas</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Quick Filter and Search Interactive Micro-interactions
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const searchInput = document.getElementById('match-search');
+    const matchCards = document.querySelectorAll('.match-card');
+
+    function applyFilters() {
+      const activeBtn = document.querySelector('.filter-btn.active');
+      const filterValue = activeBtn ? activeBtn.getAttribute('data-filter') : 'all';
+      const searchTerm = searchInput.value.toLowerCase().trim();
+
+      matchCards.forEach(card => {
+        const hero = card.getAttribute('data-hero');
+        const outcome = card.getAttribute('data-outcome');
+        const id = card.getAttribute('data-id');
+        const rival = card.getAttribute('data-rival');
+
+        let matchesFilter = true;
+        if (filterValue === 'win') matchesFilter = outcome === 'win';
+        else if (filterValue === 'loss') matchesFilter = outcome === 'loss';
+        else if (filterValue === 'arqueira') matchesFilter = hero === 'arqueira';
+        else if (filterValue === 'cavaleiro') matchesFilter = hero === 'cavaleiro';
+
+        let matchesSearch = true;
+        if (searchTerm) {
+          matchesSearch = id.includes(searchTerm) || rival.includes(searchTerm);
+        }
+
+        if (matchesFilter && matchesSearch) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => {
+          b.classList.remove('active', 'bg-primary-container', 'text-on-primary-container');
+          b.classList.add('bg-surface-container', 'text-on-surface-variant');
+        });
+        btn.classList.add('active', 'bg-primary-container', 'text-on-primary-container');
+        btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+        applyFilters();
+      });
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', applyFilters);
+    }
+  });
+</script></main><footer class="w-full bg-surface-container-lowest py-space-md"><div class="w-full px-margin flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm"><div class="flex items-center gap-space-md"><span class="text-primary font-headline-sm text-headline-sm uppercase tracking-wide">Arena 1v1</span><span>Compêndio Tático • Versão 1.4.2</span></div><div class="flex items-center gap-space-lg"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">Servidor: SA-East (São Paulo)</span><span>© 2025 Arena 1v1 Studios. Todos os direitos reservados.</span></div></div></footer></body></html>

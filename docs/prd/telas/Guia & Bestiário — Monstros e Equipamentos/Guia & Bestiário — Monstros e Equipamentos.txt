@@ -1,0 +1,20 @@
+a tela de Guia & Bestiário — Monstros e Equipamentos (Compêndio Tático) com total alinhamento às especificações do PRD (§5 e §6) e aos pacotes visuais de referência (KayKit Skeletons, Adventurers e Medieval Hexagon):
+
+📖 Destaques do Guia & Bestiário (Compêndio Tático)
+Bestiário Completo das 5 Criaturas (PRD §5):
+
+Esqueleto (Tier 1 - Base Segura): Inimigo de farm inicial nas bases (HP 220, Def 5, Atq 15 | +65 XP).
+Guerreiro Esqueleto (Tier 2 - Base & Centro): Infantaria blindada com escudo que reduz dano frontal (HP 450, Def 15, Atq 28 | +130 XP).
+Esqueleto Mago (Tier 2 - Centro Contestado): Conjurador com projéteis arcanos lentos que penetram armadura física (HP 320, Def 8, Atq 42 | +150 XP).
+Golem de Pedra (Tier 3 - Elite do Centro): Guardião colosso com pisada sísmica de atordoamento (HP 750, Def 25, Atq 50 | +260 XP).
+Rei Esqueleto (Chefe Supremo — Surge às 03:30): Ponto de inflexão decisivo da Fase 1, com ataque circular Ira Espectral e drop 100% garantido de item Épico (HP 1.800, Def 35, Atq 75 | +500 XP).
+Categorias & Navegação Rápida:
+
+Abas alternáveis: Bestiário (5 Monstros), Equipamentos & Sets (12 Itens) e Arena & Mecânicas.
+Filtros rápidos por Tier (Tier 1 Base, Tier 2 Médio, Tier 3 Elite e Boss 3:30).
+Contadores no topo: 05 Criaturas, 12 Equipamentos, e aviso do Boss Spawn 03:30 (Fase 1).
+Métricas de Balanceamento & Regras Anti-Snowball (PRD §3.2 e §9.2):
+
+Regra de Catch-up: Jogador 2 ou mais níveis atrás recebe +25% XP adicional.
+Critério de Validação M4: Taxa de vitória de quem lidera a Fase 1 restrita a < 75% para evitar snowball irrecuperável.
+Pivô Central às 03:30: Guia tático sobre o valor de contestar ou roubar o last-hit do Rei Esqueleto antes do fechamento dos portões.
