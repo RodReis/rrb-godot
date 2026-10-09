@@ -109,8 +109,22 @@ func test_golpe_em_area_fere_e_empurra_pelo_ledger() -> void:
 	_hero._rollback_tick(DT, _tick + 1, true)
 	var expected := CombatRules.mitigated(75, _hero.attributes.defense)
 	assert_eq(_hero.hp, hp - expected)
+	# Empurrao e movimento no estado de rollback (o cliente ressimula), nao salto de 2,5 u.
+	var first_step := (_hero.global_position - boss.global_position).length() - 2.0
+	assert_gt(first_step, 0.0)
+	assert_lt(first_step, boss.data.knockback / 2.0)
+	assert_gt(_hero.knockback_ticks, 0)
+	_run_hero(_hero.knockback_ticks + 1)
+	# Nesta direcao a geometria da cratera para o heroi a ~4,47 u (move_and_slide).
 	var dist := (_hero.global_position - boss.global_position).length()
-	assert_almost_eq(dist, 2.0 + boss.data.knockback, 0.05)
+	assert_between(dist, 2.0 + boss.data.knockback * 0.9, 2.0 + boss.data.knockback + 0.01)
+	assert_eq(_hero.knockback_ticks, 0)
+
+
+func _run_hero(ticks: int) -> void:
+	for i: int in ticks:
+		_tick += 1
+		_hero._rollback_tick(DT, _tick + 1, true)
 
 
 func test_morte_da_550_xp_e_avisa_quem_matou() -> void:
