@@ -10,5 +10,12 @@ $cli = $env:GODOT_PATH -replace '\.exe$', '_console.exe'
 if (-not (Test-Path $cli)) { $cli = $env:GODOT_PATH }
 
 & $cli --headless --path $game --import 2>&1 | Out-Null
-& $cli --headless --path $game -s addons/gut/gut_cmdln.gd -gdir=res://test/unit -ginclude_subdirs -gexit 2>&1 | ForEach-Object { "$_" }
-exit $LASTEXITCODE
+$output = & $cli --headless --path $game -s addons/gut/gut_cmdln.gd -gdir=res://test/unit -ginclude_subdirs -gexit 2>&1 | ForEach-Object { "$_" }
+$code = $LASTEXITCODE
+$output
+# GUT ignora script de teste que nao compila e sai 0; tratamos como falha.
+if ($code -eq 0 -and ($output -match 'SCRIPT ERROR|Ignoring script')) {
+    Write-Host 'FALHA: script com erro (acima) foi ignorado pelo GUT.' -ForegroundColor Red
+    exit 1
+}
+exit $code
