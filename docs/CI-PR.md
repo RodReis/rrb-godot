@@ -27,7 +27,15 @@ Jobs paralelos por módulo, **um gate agregado**, duração medida, limites expl
 
 Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker própria em `infra/ci/` se a action não oferecer a versão — decidir em F1, registrar aqui). Cache: `~/.cache/pnpm`, `.godot/imported` por módulo (chave = hash dos `.import`).
 
-**Decisão F1 (#2):** binário oficial `Godot_v4.7.2-stable_linux.x86_64.zip` baixado por `curl` e guardado em `actions/cache` (sem action de terceiro); os testes rodam pelo mesmo `tools/test.ps1` local, via `pwsh`. Implementado hoje: só `test-game` (sem path filter) + `gate`. `changes`, `lint-gd`, `lint-docs` e os demais jobs entram por card `[INFRA]`.
+**Implementado (F1 #2, INFRA #17):**
+
+- **Godot:** binário oficial `Godot_v4.7.2-stable_linux.x86_64.zip` por `curl` em `actions/cache`, na action local `.github/actions/godot` (exporta `GODOT_PATH` e liga `shared/` em `game/` e `launcher/` por symlink quando a pasta existe — junction no Windows, ADR-0003). Sem action de terceiro.
+- **`changes`:** `dorny/paths-filter@v3` com os filtros de §3; também lista os `*.gd` adicionados/modificados (`gd_files`).
+- **`lint-gd`:** nos `*.gd` tocados fora de `addons/`: `gdlint` e `gdformat --check` (gdtoolkit 4.x, regras padrão — sem `gdlintrc`); **tipagem** por `godot --check-only` no projeto do arquivo (gdlint não checa tipo; o parser aplica `untyped_declaration` = erro do `project.godot`). Em todo `core/`: `tools/ci/no-magic-numbers.ps1` (I4 — ignora `const`/`enum`, strings e comentários; permite 0 e 1). Em `launcher/`: grep de `netfox`/`ENetMultiplayerPeer`/`res://scenes/arena` (I9, inerte até `launcher/` existir). Os passos rodam todos mesmo após uma falha, para o log mostrar tudo.
+- **`test-game`:** `tools/test.ps1 -Module game` — GUT em `res://test/unit` e, se existir, `res://shared/test`.
+- **`gate`:** `needs: [changes, lint-gd, test-game]`, `if: always()`; pulado por path filter = sucesso; `changes` falho ou pulado = falha.
+- Base reformatada uma vez com `gdformat` (#17) para o check por arquivo tocado não herdar dívida.
+- Ainda não implementados: `test-launcher`, `test-backend`, `build-server`, `export-check`, `lint-docs`, `soak`, medição (§5) — entram por card `[INFRA]`. Até `lint-docs` existir, PR só de `docs/**` roda `changes` + `gate`.
 
 ## 3. Path filter
 
@@ -36,7 +44,7 @@ game:     ['game/**', 'tools/test.ps1', 'tools/link-shared.ps1']
 launcher: ['launcher/**', 'tools/test.ps1', 'tools/link-shared.ps1']
 shared:   ['shared/**']
 backend:  ['backend/**']
-infra:    ['infra/**', '.github/workflows/**']
+infra:    ['infra/**', '.github/**', 'tools/ci/**']
 docs:     ['docs/**', '*.md']
 ```
 

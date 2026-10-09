@@ -13,41 +13,133 @@ env:
   GODOT_VERSION: 4.7.2
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      game: ${{ steps.filter.outputs.game }}
+      launcher: ${{ steps.filter.outputs.launcher }}
+      shared: ${{ steps.filter.outputs.shared }}
+      backend: ${{ steps.filter.outputs.backend }}
+      infra: ${{ steps.filter.outputs.infra }}
+      docs: ${{ steps.filter.outputs.docs }}
+      gd_files: ${{ steps.filter.outputs.gd_files }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          list-files: shell
+          # Fonte: docs/CI-PR.md §3. infra (workflow, scripts de CI, config de lint) prova tudo.
+          filters: |
+            game: ['game/**', 'tools/test.ps1', 'tools/link-shared.ps1']
+            launcher: ['launcher/**', 'tools/test.ps1', 'tools/link-shared.ps1']
+            shared: ['shared/**']
+            backend: ['backend/**']
+            infra: ['infra/**', '.github/**', 'tools/ci/**']
+            docs: ['docs/**', '*.md']
+            gd:
+              - added|modified: '**/*.gd'
+
+  lint-gd:
+    needs: changes
+    if: >-
+      needs.changes.outputs.game == 'true' || needs.changes.outputs.launcher == 'true' ||
+      needs.changes.outputs.shared == 'true' || needs.changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GD_FILES: ${{ needs.changes.outputs.gd_files }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Instalar gdtoolkit
+        run: pip install --quiet 'gdtoolkit==4.*'
+
+      - name: .gd tocados (fora de addons/)
+        run: |
+          files=$(printf '%s\n' $GD_FILES | grep '\.gd$' | grep -v '/addons/' || true)
+          echo "$files"
+          echo "LINT_FILES=$(echo $files)" >> "$GITHUB_ENV"
+
+      - name: gdlint
+        if: env.LINT_FILES != ''
+        run: gdlint $LINT_FILES
+
+      - name: gdformat --check
+        if: ${{ !cancelled() && env.LINT_FILES != '' }}
+        run: gdformat --check --diff $LINT_FILES
+
+      - name: Literal numérico fora de constante em core/ (I4)
+        if: ${{ !cancelled() }}
+        shell: pwsh
+        run: ./tools/ci/no-magic-numbers.ps1
+
+      - name: Launcher sem netfox/ENet/arena (I9)
+        if: ${{ !cancelled() }}
+        run: |
+          if [ ! -d launcher ]; then echo "launcher/ ainda não existe"; exit 0; fi
+          if grep -rnE 'netfox|ENetMultiplayerPeer|res://scenes/arena' launcher \
+              --exclude-dir=shared --exclude-dir=.godot; then
+            echo "FALHA: launcher/ referencia o Game (I9)"; exit 1
+          fi
+
+      - uses: ./.github/actions/godot
+        if: ${{ !cancelled() && env.LINT_FILES != '' }}
+        with:
+          version: ${{ env.GODOT_VERSION }}
+
+      # untyped_declaration = erro no project.godot: o parser do Godot é a prova de tipagem.
+      - name: Tipagem estática (godot --check-only)
+        if: ${{ !cancelled() && env.LINT_FILES != '' }}
+        run: |
+          failed=0
+          for project in game launcher; do
+            [ -d "$project" ] || continue
+            mine=$(printf '%s\n' $LINT_FILES | grep -E "^($project|shared)/" || true)
+            [ -n "$mine" ] || continue
+            "$GODOT_PATH" --headless --path "$project" --import > /dev/null 2>&1 || true
+            for f in $mine; do
+              # game/x.gd -> res://x.gd; shared/x.gd -> res://shared/x.gd (link).
+              if ! "$GODOT_PATH" --headless --path "$project" --check-only -s "res://${f#$project/}" \
+                  > /tmp/check.log 2>&1; then
+                cat /tmp/check.log; failed=1
+              fi
+            done
+          done
+          exit $failed
+
   test-game:
+    needs: changes
+    if: >-
+      needs.changes.outputs.game == 'true' || needs.changes.outputs.shared == 'true' ||
+      needs.changes.outputs.infra == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache do Godot
-        id: godot-cache
-        uses: actions/cache@v4
+      - uses: ./.github/actions/godot
         with:
-          path: ~/godot
-          key: godot-${{ env.GODOT_VERSION }}-linux
+          version: ${{ env.GODOT_VERSION }}
 
-      - name: Baixar Godot
-        if: steps.godot-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ~/godot
-          curl -fsSL -o /tmp/godot.zip \
-            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d ~/godot
-          mv ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 ~/godot/godot
-          chmod +x ~/godot/godot
-
-      - name: Testes GUT
+      - name: Testes GUT (game/test + shared/test)
         shell: pwsh
-        run: |
-          $env:GODOT_PATH = "$HOME/godot/godot"
-          ./tools/test.ps1
+        run: ./tools/test.ps1 -Module game
 
   gate:
     runs-on: ubuntu-latest
-    needs: [test-game]
+    needs: [changes, lint-gd, test-game]
     if: always()
     steps:
+      # Job pulado por path filter conta como sucesso; changes pulado ou falho, não.
       - name: Falha se algum job necessário falhou ou foi cancelado
-        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        if: >-
+          needs.changes.result != 'success' ||
+          contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
         run: exit 1
       - run: echo "gate verde"
