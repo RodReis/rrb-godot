@@ -1,0 +1,183 @@
+{
+  "_leia": "Conteúdo autoral do roadmap público. O estado das fatias NÃO é escrito aqui: vem de .proplan/STATUS.md (Issues) e docs/STATUS.md §3. Ver docs/roadmap/README.md.",
+  "projeto": {
+    "nome": "MOBA de 2 Tempos",
+    "nome_nota": "nome provisório",
+    "tagline": "Arena 3D 1x1 com partidas de até 10 minutos: cinco minutos para crescer, cinco para decidir.",
+    "pitch": [
+      "Cada partida tem dois tempos. Na preparação, você explora a sua metade do mapa, mata monstros para subir de nível, abre baús e equipa itens. Aos 5:00 os portões caem, uma zona começa a fechar e o confronto obriga os dois lados a lutar.",
+      "É um projeto solo de aprendizado e portfólio, feito em Godot 4 com servidor autoritativo desde o primeiro dia. Esta página conta o que já foi construído, mostra como está ficando e diz o que ainda falta."
+    ],
+    "imagem_capa": {
+      "arquivo": "conceito-arena-panorama.webp",
+      "legenda": "Arte conceitual do Vale Rúnico. O mapa da primeira versão é mais simples: sem torres e sem ouro.",
+      "tipo": "conceito"
+    },
+    "stack": ["Godot 4.7", "GDScript", "netfox (rollback)", "GUT (testes)", "Docker", "Blender 5.2", "NestJS + Postgres (a partir do MVP3)"]
+  },
+
+  "partida": {
+    "titulo": "Como é uma partida",
+    "duracao_total_s": 600,
+    "faixas": [
+      { "de": 0,   "ate": 300, "rotulo": "Preparação", "detalhe": "farmar, subir de nível, abrir baús", "cor": "gold" },
+      { "de": 300, "ate": 540, "rotulo": "Zona fechando", "detalhe": "portões caem, círculo encolhe por 4:00", "cor": "red" },
+      { "de": 540, "ate": 600, "rotulo": "Morte súbita", "curto": "Súbita", "detalhe": "sem respawn: o último vivo vence", "cor": "purple" }
+    ],
+    "marcos": [
+      { "t": 180, "rotulo": "aviso do boss" },
+      { "t": 210, "rotulo": "Rei Esqueleto surge" },
+      { "t": 300, "rotulo": "portões caem" },
+      { "t": 600, "rotulo": "fim garantido" }
+    ],
+    "regras": [
+      "Vence quem fizer 5 abates na fase 2 ou quem sobrar vivo no fim. Nunca há empate: a zona resolve.",
+      "Morrer na preparação não conta abate. Você volta em 8 s na própria base, sem perder itens.",
+      "Quem ficar 2 níveis atrás recebe +25% de XP para ter chance de virar."
+    ]
+  },
+
+  "pilares": [
+    {
+      "titulo": "Dois heróis",
+      "itens": [
+        { "nome": "Cavaleiro", "papel": "Tanque", "texto": "Investida que empurra, muralha que absorve dano e bloqueia projéteis, e um terremoto que atordoa." },
+        { "nome": "Arqueira", "papel": "Ranger", "texto": "Flecha que atravessa inimigos, rolamento para escapar e uma chuva de flechas em área." }
+      ]
+    },
+    {
+      "titulo": "Bestiário",
+      "itens": [
+        { "nome": "Esqueleto", "papel": "Tier 1 · bases", "texto": "Alvo de quem está começando." },
+        { "nome": "Esqueleto Guerreiro e Esqueleto Mago", "papel": "Tier 2 · bases e centro", "texto": "O mago ataca à distância." },
+        { "nome": "Golem de Pedra", "papel": "Tier 3 · centro", "texto": "Golpe em área. Garante um item raro." },
+        { "nome": "Rei Esqueleto", "papel": "Chefe · surge às 3:30", "texto": "Derrubá-lo garante um item épico. É a grande decisão da preparação." }
+      ]
+    },
+    {
+      "titulo": "Itens e conjuntos",
+      "itens": [
+        { "nome": "4 espaços", "papel": "arma, elmo, peitoral, botas", "texto": "12 itens em três raridades: comum, raro e épico." },
+        { "nome": "Conjunto Guarda", "papel": "3 peças", "texto": "+15% de vida máxima e +10 de defesa." },
+        { "nome": "Conjunto Caçador", "papel": "3 peças", "texto": "+10% de velocidade de ataque e +8% de movimento." }
+      ]
+    }
+  ],
+
+  "capitulos": {
+    "MVP0": {
+      "titulo": "O teste da rede",
+      "pergunta": "O Godot aguenta um jogo de ação online?",
+      "periodo": "out/2026",
+      "narrativa": [
+        "Antes de desenhar um único monstro, precisávamos saber se a engine aguentava. O plano tinha um portão: se o jogo não fosse jogável com 100 ms de latência, o projeto migraria para a Unity antes de qualquer conteúdo.",
+        "Construímos o mínimo para responder a isso: um servidor sem tela rodando em Docker, que decide tudo; dois clientes com predição e rollback; um ataque corpo a corpo resolvido só no servidor; e um bot de piloto automático para testar sozinho.",
+        "Na primeira rodada do cenário-alvo, o adversário travava cada vez mais. Medimos quadro a quadro e achamos a causa no simulador de rede, que aplicava os 100 ms em uma direção só. Com o atraso dividido entre ida e volta, como numa conexão real, o cenário passou em todos os critérios. A decisão foi seguir com o Godot."
+      ],
+      "numeros": [
+        { "valor": "7/7", "rotulo": "critérios aprovados no cenário-alvo" },
+        { "valor": "100 ms", "rotulo": "de latência com 2% de perda de pacotes" },
+        { "valor": "30 Hz", "rotulo": "de simulação no servidor" },
+        { "valor": "3 × 10 min", "rotulo": "de teste por cenário" }
+      ],
+      "aprendizado": "Um efeito sobre outro jogador (dano, empurrão) é registrado pelo atacante e aplicado pelo alvo na própria simulação. Do contrário, o rollback apaga o golpe.",
+      "imagens": [
+        { "arquivo": "mvp0-arquitetura.svg", "legenda": "Como o teste foi montado: o servidor decide, os clientes só enviam comandos.", "tipo": "diagrama" }
+      ]
+    },
+    "MVP1": {
+      "titulo": "A arena ganha vida",
+      "pergunta": "Dá para jogar uma preparação inteira contra um bot?",
+      "periodo": "out/2026 →",
+      "narrativa": [
+        "Com a rede aprovada, começa o conteúdo. A meta deste capítulo é uma partida de 5:00 contra o bot, do início ao fim, em que o Cavaleiro farma, sobe de nível, abre baús, equipa itens e encara o Rei Esqueleto.",
+        "Já estão prontos os dados do jogo, com todos os números de balanceamento em arquivos de dados e nenhum espalhado no código. Também está pronta a arena Vale Rúnico, com rio, duas pontes, cratera central com oito pilares e moitas para se esconder. A câmera em terceira pessoa foi testada na arena e mantida.",
+        "Agora vêm o Cavaleiro com as quatro habilidades, os monstros, os baús, o chefe, o bot e a interface da partida. Os primeiros modelos próprios, os pilares da cratera e o mato alto, estão saindo do Blender."
+      ],
+      "numeros": [
+        { "valor": "35 u", "rotulo": "de raio da arena" },
+        { "valor": "~6 s", "rotulo": "da base ao centro caminhando" },
+        { "valor": "45°", "rotulo": "de inclinação da câmera" }
+      ],
+      "imagens": [
+        { "arquivo": "mvp1-f34-pilar-e-mato-blender.webp", "legenda": "Pilar da cratera e moitas modelados no Blender, antes de entrar no jogo.", "tipo": "em-construcao" }
+      ]
+    },
+    "MVP2": {
+      "titulo": "Partida em rede",
+      "pergunta": "Duas pessoas em máquinas diferentes terminam sempre uma partida?",
+      "narrativa": [
+        "Entram a Arqueira, a seleção de heróis, o confronto com a zona, o placar de abates e a tela de fim de partida. O teste de aceite são 50 partidas seguidas de bot contra bot, sem travar e todas com no máximo 10 minutos."
+      ]
+    },
+    "MVP3": {
+      "titulo": "Jogar com os amigos",
+      "pergunta": "Dois amigos conseguem jogar pela internet sem o desenvolvedor ajudar?",
+      "narrativa": [
+        "Chega o launcher: conta, fila, histórico de partidas, bestiário e forja. Um servidor na nuvem sobe uma partida para cada par da fila. O teste é feito por duas pessoas de fora, do zero, usando só o pacote de instalação."
+      ]
+    },
+    "MVP4": {
+      "titulo": "Playtest",
+      "pergunta": "O jogo é divertido para quem não o fez?",
+      "narrativa": [
+        "Dez pessoas ou mais jogam, e a telemetria mede ping, duração e quem vence. Daqui saem as decisões grandes: câmera, duração da preparação e se o jogo vai para 3x3."
+      ]
+    }
+  },
+
+  "rotulos_fatias": {
+    "F1": "Estrutura do projeto e testes automatizados",
+    "F2": "Regras de combate e mira, cobertas por testes",
+    "F3": "Conexão servidor–cliente e movimento com rollback",
+    "F4": "Ataque validado no servidor e painel de rede",
+    "F5": "Servidor em Docker com latência simulada",
+    "F6": "Dados do jogo: heróis, itens, monstros e fórmulas",
+    "F7": "Arena Vale Rúnico: rio, pontes, cratera e moitas",
+    "F31": "Câmera em terceira pessoa e controles (teclado, mouse, gamepad)",
+    "F8": "Cavaleiro com as quatro habilidades",
+    "F9": "Monstros, XP e níveis",
+    "F10": "Baús, inventário e conjuntos",
+    "F11": "Rei Esqueleto e relógio da partida",
+    "F12": "Bot da preparação e modo offline",
+    "F13": "Interface da partida e bestiário em jogo",
+    "F34": "Pilares e mato alto modelados no Blender",
+    "F14": "Arqueira",
+    "F15": "Ciclo da partida e seleção de heróis",
+    "F16": "Zona, abates e condições de vitória",
+    "F17": "Transição aos 5:00 e interface do confronto",
+    "F18": "Tela de fim de partida",
+    "F19": "Bot do confronto e teste de 50 partidas",
+    "F20": "Monstros, baús e chefe sincronizados em rede",
+    "F32": "Moita esconde o herói do adversário",
+    "F21": "Contas e login",
+    "F22": "Fila e orquestração de servidores",
+    "F23": "Servidor de partida integrado ao backend",
+    "F24": "Launcher: base, tema e configurações",
+    "F25": "Login, lobby, fila e treino contra bot",
+    "F26": "Histórico de partidas",
+    "F27": "Bestiário e forja no launcher",
+    "F33": "Tela Arena & Mapa",
+    "F28": "Deploy na nuvem e instalador",
+    "F29": "Telemetria e indicadores",
+    "F30": "Ajustes de balanceamento pós-playtest",
+    "GATE": "Homologação do marco"
+  },
+
+  "galeria_conceito": {
+    "titulo": "Como imaginamos",
+    "aviso": "Imagens geradas para guiar a direção de arte. Não são capturas do jogo e mostram mais coisa do que a primeira versão vai ter.",
+    "imagens": [
+      { "arquivo": "conceito-lobby.webp", "legenda": "Lobby do launcher", "tipo": "conceito" },
+      { "arquivo": "conceito-hud.webp", "legenda": "Interface durante a partida", "tipo": "conceito" },
+      { "arquivo": "conceito-herois.webp", "legenda": "Seleção de heróis", "tipo": "conceito" },
+      { "arquivo": "conceito-fim-de-partida.webp", "legenda": "Fim de partida", "tipo": "conceito" }
+    ]
+  },
+
+  "creditos": [
+    "Modelos e texturas KayKit (Kay Lousberg), licença CC0.",
+    "Rede com netfox (Fox's Sake Studio), licença MIT.",
+    "Feito em Godot Engine, licença MIT."
+  ]
+}
