@@ -1,0 +1,41 @@
+name: godot
+description: Godot oficial em cache (GODOT_PATH) e shared/ ligado nos projetos (ADR-0003).
+
+inputs:
+  version:
+    description: Versão do Godot
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Cache do Godot
+      id: godot-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/godot
+        key: godot-${{ inputs.version }}-linux
+
+    - name: Baixar Godot
+      if: steps.godot-cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        GODOT_VERSION: ${{ inputs.version }}
+      run: |
+        mkdir -p ~/godot
+        curl -fsSL -o /tmp/godot.zip \
+          "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+        unzip -q /tmp/godot.zip -d ~/godot
+        mv ~/godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64 ~/godot/godot
+        chmod +x ~/godot/godot
+
+    - name: GODOT_PATH e link de shared/
+      shell: bash
+      run: |
+        echo "GODOT_PATH=$HOME/godot/godot" >> "$GITHUB_ENV"
+        # Junction no Windows (tools/link-shared.ps1); symlink na CI.
+        if [ -d shared ]; then
+          for project in game launcher; do
+            if [ -d "$project" ]; then ln -sfn ../shared "$project/shared"; fi
+          done
+        fi

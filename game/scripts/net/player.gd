@@ -20,6 +20,7 @@ var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de roll
 @onready var input: PlayerInput = $Input
 @onready var hp_label: Label3D = $HpLabel
 
+
 func _ready() -> void:
 	peer_id = name.to_int()
 	add_to_group("players")
@@ -42,6 +43,7 @@ func _ready() -> void:
 
 	_rollback.process_settings()
 
+
 func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	if multiplayer.is_server() and not _hits.is_empty():
 		_apply_hits(tick)
@@ -62,16 +64,20 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 		attack_cooldown = ATTACK_COOLDOWN_TICKS
 		_melee(tick)
 
+
 func _process(_delta: float) -> void:
 	hp_label.text = "%d / %d" % [hp, MAX_HP]
+
 
 ## Registra o golpe de [param attacker_id] para [param tick]. Servidor apenas.
 func receive_hit(tick: int, attacker_id: int, damage: int) -> void:
 	_hits.set_hit(tick, attacker_id, damage)
 
+
 ## Desfaz o golpe de [param attacker_id] em [param tick] (ressimulacao sem acerto).
 func cancel_hit(tick: int, attacker_id: int) -> void:
 	_hits.clear_hit(tick, attacker_id)
+
 
 func _melee(tick: int) -> void:
 	# Dano so no servidor: o cliente nunca altera HP (card #5); o HP chega pelo estado.
@@ -85,12 +91,15 @@ func _melee(tick: int) -> void:
 		var other := node as Player
 		if other == self:
 			continue
-		if CombatRules.is_in_melee_arc(global_position, forward, other.global_position, ATTACK_RANGE, ATTACK_HALF_ANGLE_DEG):
+		if CombatRules.is_in_melee_arc(
+			global_position, forward, other.global_position, ATTACK_RANGE, ATTACK_HALF_ANGLE_DEG
+		):
 			other.receive_hit(hit_tick, peer_id, ATTACK_DAMAGE)
 			# Forca ressimular o alvo a partir de hit_tick se ele ja foi simulado.
 			NetworkRollback.mutate(other, hit_tick)
 		else:
 			other.cancel_hit(hit_tick, peer_id)
+
 
 func _apply_hits(tick: int) -> void:
 	for damage: int in _hits.damages_at(tick):

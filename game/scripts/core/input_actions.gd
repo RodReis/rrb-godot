@@ -9,6 +9,7 @@ const KEYS: Dictionary = {
 	"move_back": KEY_S,
 }
 
+
 static func ensure() -> void:
 	for action: String in KEYS:
 		if not InputMap.has_action(action):

@@ -1,16 +1,19 @@
 <#
 .SYNOPSIS
-  Roda os testes unitarios (GUT) em headless.
+  Roda os testes unitarios (GUT) em headless: <modulo>/test/unit e, se ligado, shared/test (ADR-0003).
 #>
+param([ValidateSet('game', 'launcher')][string]$Module = 'game')
 $ErrorActionPreference = 'Continue'   # Godot escreve avisos em stderr
 $repo = Split-Path -Parent $PSScriptRoot
-$game = Join-Path $repo 'game'
+$project = Join-Path $repo $Module
 if (-not $env:GODOT_PATH) { Write-Host 'GODOT_PATH nao definido. Rode tools\setup-godot-mcp.ps1.' -ForegroundColor Red; exit 1 }
 $cli = $env:GODOT_PATH -replace '\.exe$', '_console.exe'
 if (-not (Test-Path $cli)) { $cli = $env:GODOT_PATH }
+$dirs = 'res://test/unit'
+if (Test-Path (Join-Path $project 'shared/test')) { $dirs += ',res://shared/test' }
 
-& $cli --headless --path $game --import 2>&1 | Out-Null
-$output = & $cli --headless --path $game -s addons/gut/gut_cmdln.gd -gdir=res://test/unit -ginclude_subdirs -gexit 2>&1 | ForEach-Object { "$_" }
+& $cli --headless --path $project --import 2>&1 | Out-Null
+$output = & $cli --headless --path $project -s addons/gut/gut_cmdln.gd "-gdir=$dirs" -ginclude_subdirs -gexit 2>&1 | ForEach-Object { "$_" }
 $code = $LASTEXITCODE
 $output
 # GUT ignora script de teste que nao compila e sai 0; tratamos como falha.

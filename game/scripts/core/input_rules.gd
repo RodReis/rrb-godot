@@ -5,6 +5,7 @@ extends RefCounted
 ## Direcoes de input (movimento, mira) nunca passam disto.
 const MAX_DIRECTION_LENGTH: float = 1.0
 
+
 ## Direcao horizontal com comprimento <= MAX_DIRECTION_LENGTH; valor nao finito vira ZERO.
 static func sanitize_direction(v: Vector3) -> Vector3:
 	if not v.is_finite():

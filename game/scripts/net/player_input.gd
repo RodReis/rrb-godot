@@ -8,6 +8,7 @@ var movement: Vector3 = Vector3.ZERO
 var aim: Vector3 = Vector3.ZERO
 var attack: bool = false
 
+
 func _gather() -> void:
 	if autopilot:
 		_gather_autopilot()
@@ -17,13 +18,17 @@ func _gather() -> void:
 	attack = Input.is_action_pressed("attack")
 	aim = _mouse_aim()
 
+
 func _mouse_aim() -> Vector3:
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
 		return Vector3.ZERO
 	var mouse := get_viewport().get_mouse_position()
 	var player := get_parent() as Node3D
-	return AimMath.aim_on_ground(camera.project_ray_origin(mouse), camera.project_ray_normal(mouse), player.global_position)
+	return AimMath.aim_on_ground(
+		camera.project_ray_origin(mouse), camera.project_ray_normal(mouse), player.global_position
+	)
+
 
 func _gather_autopilot() -> void:
 	var t := NetworkTime.tick * 0.05
