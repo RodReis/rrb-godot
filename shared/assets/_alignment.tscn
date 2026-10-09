@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers/Knight.glb" id="1_knight"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Minion.glb" id="2_skeleton"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/hex_grass.gltf" id="3_hex"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/wall_straight.gltf" id="4_wall"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/wall_straight_gate.gltf" id="5_gate"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/building_bridge_A.gltf" id="6_bridge"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/mountain_A.gltf" id="7_mountain"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/medieval_hexagon/hex_water.gltf" id="8_water"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ref"]
+radius = 0.4
+height = 1.8
+
+[node name="Alignment" type="Node3D"]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-1, 0.6, 0)
+shadow_enabled = true
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 6, 5, 11)
+
+[node name="ReferenceCapsule" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.9, 0)
+mesh = SubResource("CapsuleMesh_ref")
+
+[node name="HexUnderKnight" parent="." instance=ExtResource("3_hex")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="Knight" parent="." instance=ExtResource("1_knight")]
+transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, 0, 0, 0)
+
+[node name="SkeletonMinion" parent="." instance=ExtResource("2_skeleton")]
+transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, 2, 0, 0)
+
+[node name="HexWater" parent="." instance=ExtResource("8_water")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 4.5, 0, 0)
+
+[node name="Wall" parent="." instance=ExtResource("4_wall")]
+transform = Transform3D(1.5, 0, 0, 0, 2.27, 0, 0, 0, 1, 7, 0, 0)
+
+[node name="Gate" parent="." instance=ExtResource("5_gate")]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 11, 0, 0)
+
+[node name="Bridge" parent="." instance=ExtResource("6_bridge")]
+transform = Transform3D(4.1, 0, 0, 0, 1, 0, 0, 0, 3.9, 15, 0, 0)
+
+[node name="Rock" parent="." instance=ExtResource("7_mountain")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 19, 0, 0)
+
+[node name="BorderMountain" parent="." instance=ExtResource("7_mountain")]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 2.2, 23, 0, 0)

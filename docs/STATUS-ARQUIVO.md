@@ -2,6 +2,13 @@
 
 Complementa `STATUS.md`: prosa longa, decisões de rota, fatias canceladas, resultados de gate. Ordem cronológica inversa.
 
+## 2026-10-09 — B-02: câmera em 3ª pessoa mantida (F31, #20)
+
+- Avaliação do PI com a cápsula do M0 na arena do F7, servidor + 2 clientes: **mantém a 3ª pessoa**; plano B isométrico (PRD §3.6) segue em `FORA-DE-ESCOPO.md` para o M4.
+- Câmera avaliada: atrás e acima do herói a 45°, 14 u, yaw fixo do time (trava olhando o centro a partir do spawn; decisão do PI na mesma data), sem colisão de câmera. Movimento relativo à câmera; mira no mouse ou no analógico direito.
+- Observação (sem ação): sem colisão de câmera, os pilares da cratera tapam o herói quando ele está atrás deles — esperado pela PRD §3.6 nesta fatia.
+- Escala conferida em `shared/assets/_alignment.tscn`: Cavaleiro 1,92 u com elmo (1,80 sem), esqueleto 1,69 u, cápsula 1,8 u (personagens KayKit a 0,78).
+
 ## 2026-10-08 — Governança criada; projeto dividido em dois módulos
 
 - Documentos recebidos do PI: `PRD.md` (v0.1), `GDB.md` (v1.0), `REFER.md` (benchmark), `DESIGN-VISUAL-LAUNCHER.md` (9 telas).
