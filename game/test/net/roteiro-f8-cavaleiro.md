@@ -11,9 +11,19 @@ Valores esperados no nível 6 (GDB §2.2, §4.1; ranks típicos Q3 E2 R1): HP 82
 | 3 | **Q** mirando o autopilot a até 6 u | O Cavaleiro avança em linha reta e **para no alvo**; o autopilot é **empurrado ~1,5 u** e perde **106** (153 bruto) |
 | 4 | **E** com o autopilot à frente | Rótulo mostra `+294` por 3 s; golpes do autopilot **pela frente** gastam o escudo (`+254`…) e o HP não cai; golpe pelas costas tira HP |
 | 5 | **R** com o autopilot a até 5 u | Autopilot perde **122** (177 bruto) e fica `(atordoado)` ~1,2 s, parado |
-| 6 | Recargas | Q ~7,6 s · E ~10,5 s · R ~47,9 s (CDR 7,5 % da INT 15) |
+| 6 | Recargas | Q ~7,4 s · E ~10,2 s · R ~46,3 s (CDR 7,5 % da INT 15) |
 | 7 | Fechar | Servidor sem `ERROR` |
 
-## Execução
+## Execução — 2026-10-09 (PI, servidor `-Level 6` e clientes locais, autopilot)
 
-(preencher)
+| Passo | Resultado |
+|---|---|
+| 1 | OK. Modelo com espada e escudo, `825 / 825`, animações |
+| 2 | Não informado pelo PI |
+| 3 | OK |
+| 4 | OK (`+294` no rótulo) |
+| 5 | OK |
+| 6 | Não verificável a olho: sem HUD de recarga até o F13; recargas cobertas por GUT (`test_skill_rules.gd`) |
+| 7 | OK. Log do servidor com 0 `ERROR` |
+
+PI: "todas as skill funcionando … está tudo ok".
