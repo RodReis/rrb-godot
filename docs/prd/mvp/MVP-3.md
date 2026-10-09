@@ -16,6 +16,7 @@
 | 3.6 | F26 / SPEC-026 | histórico | DV tela 9 |
 | 3.7 | F27 / SPEC-027 | bestiário e forja | DV telas 5, 6 |
 | 3.8 | F28 / SPEC-028 | deploy VPS, exports, pacote de instalação | PRD §8.5 |
+| 3.9 | F33 / SPEC-033 | tela Arena & Mapa: render da arena real, marcadores, regras das 2 fases (números do GDB) | DV tela 10; SPEC-007; decisão PI 2026-10-09 |
 | gate | `[GATE]` | dois amigos jogam pela internet | PRD §9.1 |
 
 ## Pendências do PI

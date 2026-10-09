@@ -1,45 +1,47 @@
 # TOKENS.md — Tokens de design
 
-Fonte: DV §1.2–1.4. Nome do token = nome da constante em `UiTokens` (`shared/ui/theme/tokens.gd`) e nome da cor no `Theme` (`theme_moba.tres`, tipo `Global`).
+Fonte: DV §1.2–1.4 (valores de `docs/prd/telas/`, R-PEND-11 decidida em 2026-10-09). Nome do token = nome da constante em `UiTokens` (`shared/ui/theme/tokens.gd`) e nome da cor no `Theme` (`theme_moba.tres`, tipo `Global`).
 
 ## 1. Cores
 
+Valores de `docs/prd/telas/*/DESIGN.md` (decisão do PI em 2026-10-09, R-PEND-11). Nomes dos tokens mantidos.
+
 | Token | Hex | `Color` | Uso | Contraste sobre `BG_PANEL` |
 |---|---|---|---|---|
-| `BG_SURFACE` | `#0D1117` | `Color(0.051, 0.071, 0.090, 0.95)` | fundo de tela, overlays | — |
-| `BG_PANEL` | `#161F2E` | `Color(0.086, 0.122, 0.180, 0.90)` | cards, menus | — |
-| `BG_CARD` | `#1E293B` | `Color(0.118, 0.161, 0.231, 0.85)` | slots, células | — |
-| `GOLD` | `#F59E0B` | `Color(0.961, 0.620, 0.043)` | título, moldura ativa, botão primário | 7,7:1 ✔ |
-| `GOLD_BRIGHT` | `#FDE047` | `Color(0.992, 0.878, 0.278)` | destaque, XP/ouro | 12,5:1 ✔ |
-| `BLUE` | `#2563EB` | `Color(0.145, 0.388, 0.922)` | ação secundária, INT, set Guarda, raridade rara | 3,2:1 ✘ — **nunca como texto**; só fundo/borda/ícone |
-| `CYAN` | `#38BDF8` | `Color(0.220, 0.741, 0.973)` | CDR, rede boa | 7,7:1 ✔ |
-| `RED` | `#DC2626` | `Color(0.863, 0.149, 0.149)` | HP inimigo, zona, derrota | 3,4:1 ✘ — texto só ≥ 24 px bold (AA large); senão fundo/borda |
-| `GREEN` | `#10B981` | `Color(0.063, 0.725, 0.506)` | HP próprio, vitória, ok | 6,5:1 ✔ |
-| `PURPLE` | `#9333EA` | `Color(0.576, 0.200, 0.918)` | épico, boss, ultimate | 3,1:1 ✘ — texto só ≥ 24 px bold; senão fundo/borda |
-| `TEXT` | `#F8FAFC` | `Color(0.973, 0.980, 0.988)` | texto principal | 15,8:1 ✔ |
-| `TEXT_MUTED` | `#94A3B8` | `Color(0.580, 0.639, 0.722)` | secundário, atalhos | 6,5:1 ✔ |
-| `BORDER` | `#475569` | `Color(0.278, 0.333, 0.408)` | bordas, divisores | — |
-| `RARITY_COMMON` | `#F8FAFC` | = `TEXT` | borda de item comum | — |
-| `RARITY_RARE` | = `BLUE` | | borda de item raro | — |
+| `BG_SURFACE` | `#0B1326` | `Color(0.043, 0.075, 0.149, 0.95)` | fundo de tela, overlays | — |
+| `BG_PANEL` | `#171F33` | `Color(0.090, 0.122, 0.200, 0.90)` | cards, menus | — |
+| `BG_CARD` | `#222A3D` | `Color(0.133, 0.165, 0.239, 0.85)` | slots, células | — |
+| `GOLD` | `#F59E0B` | `Color(0.961, 0.620, 0.043)` | título, moldura ativa, botão primário | 7,6:1 ✔ |
+| `GOLD_BRIGHT` | `#FFC174` | `Color(1.000, 0.757, 0.455)` | destaque, XP | 10,3:1 ✔ |
+| `BLUE` | `#3198DC` | `Color(0.192, 0.596, 0.863)` | ação secundária, INT, set Guarda | 5,2:1 ✔ |
+| `CYAN` | `#93CCFF` | `Color(0.576, 0.800, 1.000)` | CDR, rede boa | 9,6:1 ✔ |
+| `RED` | `#EF4444` | `Color(0.937, 0.267, 0.267)` | HP inimigo, zona, derrota | 4,4:1 ✘ — texto só ≥ 24 px bold (AA large); senão fundo/borda |
+| `GREEN` | `#22C55E` | `Color(0.133, 0.773, 0.369)` | HP próprio, vitória, ok | 7,2:1 ✔ |
+| `PURPLE` | `#A855F7` | `Color(0.659, 0.333, 0.969)` | épico, boss, ultimate | 4,1:1 ✘ — texto só ≥ 24 px bold; senão fundo/borda |
+| `TEXT` | `#DAE2FD` | `Color(0.855, 0.886, 0.992)` | texto principal | 12,7:1 ✔ |
+| `TEXT_MUTED` | `#D8C3AD` | `Color(0.847, 0.765, 0.678)` | secundário, atalhos | 9,6:1 ✔ |
+| `BORDER` | `#534434` | `Color(0.325, 0.267, 0.204)` | bordas, divisores | — |
+| `RARITY_COMMON` | `#94A3B8` | `Color(0.580, 0.639, 0.722)` | borda de item comum | 6,4:1 ✔ |
+| `RARITY_RARE` | `#3B82F6` | `Color(0.231, 0.510, 0.965)` | borda de item raro | 4,5:1 ✔ (limite) |
 | `RARITY_EPIC` | = `PURPLE` | | borda de item épico | — |
 
-Contraste WCAG calculado sobre `#161F2E` (fórmula de luminância relativa; o teste `shared/test/test_theme_tokens.gd` recalcula). Consequência prática: nome do oponente, "DERROTA", nome do boss e "Épico" em `RED`/`PURPLE` só em `TYPE_VICTORY`/`TYPE_H1`/`TYPE_COUNTER`; em `TYPE_BODY` usar `TEXT` com borda/fundo colorido. Ver `DEBITO.md` DS-04.
+Contraste WCAG calculado sobre `#171F33` (fórmula de luminância relativa; o teste `shared/test/test_theme_tokens.gd` recalcula). Consequência prática: nome do oponente, "DERROTA", nome do boss e "Épico" em `RED`/`PURPLE` só em `TYPE_VICTORY`/`TYPE_H1`/`TYPE_COUNTER`; em `TYPE_BODY` usar `TEXT` com borda/fundo colorido. Ver `DEBITO.md` DS-04. Texto sobre botão `GOLD` usa `BG_SURFACE` (8,6:1).
 
 ## 2. Tipografia
 
 | Token | Família | Tamanho @1080p | Peso | Uso |
 |---|---|---|---|---|
-| `FONT_DISPLAY` | `font_display.ttf` (Cinzel Decorative **ou** Kenney Bold — PI escolhe; licença CC0/OFL obrigatória; registrar em `DEBITO.md` até escolher) | — | Bold | base dos tipos abaixo |
-| `FONT_DATA` | `font_data.ttf` (Inter ou Montserrat, OFL) | — | Medium/SemiBold | corpo, HUD |
-| `FONT_MONO` | `font_mono.ttf` (JetBrains Mono ou similar OFL) | — | Bold | contadores |
+| `FONT_DISPLAY` | `font_display.ttf` = **Space Grotesk** (OFL) | — | Bold | títulos, anúncios, atalhos |
+| `FONT_DATA` | `font_data.ttf` = **Outfit** (OFL) | — | Regular/Medium | corpo, descrições, HUD |
+| `FONT_MONO` | `font_mono.ttf` = **JetBrains Mono** (OFL) | — | Bold | contadores, timers, HP |
 | `TYPE_VICTORY` | display | 56 | Bold, caps | VITÓRIA / DERROTA / MORTE SÚBITA |
 | `TYPE_H1` | display | 32 | Bold | título de tela |
-| `TYPE_H2` | data | 22 | SemiBold | nome de habilidade/monstro |
+| `TYPE_H2` | display | 22 | SemiBold | nome de habilidade/monstro |
 | `TYPE_BODY` | data | 15 | Medium | descrições |
 | `TYPE_COUNTER` | mono | 28 | Bold | relógio, placar |
-| `TYPE_BADGE` | data | 12 | Bold | `[Q]`, `[F]` |
+| `TYPE_BADGE` | display | 12 | Bold | `[Q]`, `[F]` |
 
-No Theme: `TYPE_*` viram `theme_type_variation` de `Label` (`LabelH1`, `LabelH2`, `LabelBody`, `LabelCounter`, `LabelBadge`, `LabelVictory`).
+Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resolução 1080p). No Theme: `TYPE_*` viram `theme_type_variation` de `Label` (`LabelH1`, `LabelH2`, `LabelBody`, `LabelCounter`, `LabelBadge`, `LabelVictory`).
 
 ## 3. Espaçamento e tamanhos (px @1080p)
 

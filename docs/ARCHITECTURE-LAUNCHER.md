@@ -37,7 +37,7 @@ launcher/
   addons/gut/                NUNCA editar
   scenes/
     app.tscn                 raiz: ScreenStack + overlays (toast, modal, loading)
-    screens/                 login.tscn, lobby.tscn, bestiary.tscn, forge.tscn, history.tscn, settings.tscn
+    screens/                 login.tscn, lobby.tscn, bestiary.tscn, forge.tscn, history.tscn, settings.tscn, arena_map.tscn
     components/              instâncias dos componentes do design system (shared/ui/components)
     diorama/                 lobby_diorama.tscn (SubViewport, arena hex, herói idle, tochas)
   scripts/
@@ -75,11 +75,12 @@ launcher/
 | Tela | Rota | Entra por | Sai para |
 |---|---|---|---|
 | Login | `login` | boot sem sessão; 401 | `lobby` |
-| Lobby | `lobby` | login; volta de qualquer tela; fim do processo do Game | fila (overlay no próprio lobby), `bestiary`, `forge`, `history`, `settings`, sair |
+| Lobby | `lobby` | login; volta de qualquer tela; fim do processo do Game | fila (overlay no próprio lobby), `bestiary`, `forge`, `arena_map`, `history`, `settings`, sair |
 | Bestiário | `bestiary` | lobby | lobby |
 | Forja | `forge` | lobby | lobby |
 | Histórico | `history` | lobby; automático após `GameProcess.exited(0)` | lobby |
 | Configurações | `settings` | lobby | lobby |
+| Arena & Mapa | `arena_map` | lobby | lobby ("Praticar vs Bot" = mesma ação do lobby) — DV tela 10; mapa é imagem estática (`shared/assets/ui/arena_map.png`), nunca cena de arena |
 
 Pilha simples: lobby é a raiz; as demais são `push`; `Esc` = `pop`. Fila é um estado do lobby (card direito), não tela. Enquanto o Game roda, o Launcher mostra overlay "Partida em andamento" com botão "Encerrar jogo" (mata o processo) e bloqueia navegação.
 

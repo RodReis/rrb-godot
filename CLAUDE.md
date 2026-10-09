@@ -33,7 +33,7 @@ Você atua como **engenheiro sênior de Godot 4 / GDScript** neste repositório.
 - Stack: **Godot 4.7.2** (Forward+), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, a partir do MVP3), **Blender 5.2 LTS + Blender MCP** (assets 3D, ADR-0005). Windows + PowerShell.
 - **Dois módulos independentes** (ADR-0002), mesmo monorepo, sem importar nada um do outro:
   - **Game** (`game/`): partida — cliente + servidor dedicado. Seleção de heróis, HUDs, fim de partida. `docs/ARCHITECTURE-GAME.md`.
-  - **Launcher** (`launcher/` + `backend/`): fora da partida — login, lobby, fila, histórico, bestiário, forja, configurações; backend de auth/fila/orquestração. `docs/ARCHITECTURE-LAUNCHER.md`.
+  - **Launcher** (`launcher/` + `backend/`): fora da partida — login, lobby, fila, histórico, bestiário, forja, arena & mapa, configurações; backend de auth/fila/orquestração. `docs/ARCHITECTURE-LAUNCHER.md`.
   - Comum: `shared/` (Resources `.tres`, regras puras, Theme, assets), montado nos dois por junction (`tools/link-shared.ps1`, ADR-0003). Contrato Launcher ↔ Game: processo + argumentos + `settings.cfg` (`ARCHITECTURE-LAUNCHER.md` §5). Mudar o contrato exige ADR.
 - Estrutura alvo (`game/` vale depois da Tarefa 1 do M0; `shared/` a partir de F6; `launcher/` e `backend/` a partir do MVP3):
 
@@ -87,6 +87,9 @@ docs/                 ver "Documentação do projeto"
 - Fonte `.blend` em `art/`. Em `shared/assets/` só entra glTF: pack CC0 como vem; o que passou pelo Blender, exportado em `.glb`. Nunca coloque `.blend` em `game/`, `launcher/` ou `shared/` (importação de `.blend` desligada no `project.godot`).
 - Colisão, navegação e occluder pelos sufixos de nome do importador: `-col`, `-convcol`, `-colonly`, `-convcolonly`, `-navmesh`, `-occ`, `-occonly`; `-noimp` remove nó auxiliar; `-loop` em animação de laço.
 - Asset novo ou alterado passa pela cena de alinhamento (PRD §11).
+- Estilo: sem subdivisão nem bevel, faces planas, cor por UV no atlas do KayKit (`shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png`, degradê por altura) para manter a paleta. Referência de orçamento: prop/cenário 50–800 triângulos, personagem 500–3.000. Conferir a silhueta na distância da câmera do jogo.
+- Quando a colisão vem do código (medidas da SPEC), a malha visual cobre a colisão — nunca menor, senão vira parede invisível. Não use convenções `COL_`/`UCX_` (Unreal/Unity): no Godot valem os sufixos acima.
+- Arte própria exportada em `shared/assets/rrb/<área>/`; fonte em `art/<área>/`.
 - MCP: modo interativo exige o Blender aberto com o servidor do addon ligado (porta 9876); modo em segundo plano (`*_for_cli`) usa `BLENDER_PATH`. O MCP executa código sem proteção (risco aceito pelo PI): trabalhe só sobre arquivos versionados.
 
 ## Regras de código GDScript (obrigatórias)

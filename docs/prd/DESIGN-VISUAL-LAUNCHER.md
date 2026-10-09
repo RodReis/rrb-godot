@@ -6,7 +6,7 @@
 
 **Caminho Local no Repositório:** `C:\Desenv\Projetos\rrb-godot\docs\prd\telas\design_visual_telas_launch.md`
 
-**Versão:** 1.0 — 2026-10-08
+**Versão:** 1.1 — 2026-10-09 (paleta e fontes de `docs/prd/telas/` — R-PEND-11 decidida pelo PI; TELA 10 Arena & Mapa)
 
 **Engine:** Godot 4.7 (Forward+ Desktop / Netfox 30Hz Autoritative Server)
 
@@ -34,27 +34,31 @@ O design visual de interface do MOBA de 2 Tempos busca sintetizar **clareza comp
 
 ### 1.2 Paleta de Cores Oficial (Semântica de UI)
 
-| Token Semântico | Hexadecimal | Godot `Color(r, g, b, a)` | Aplicação Principal | 
-| ----- | ----- | ----- | ----- | 
-| `BG_SURFACE_DARK` | `#0D1117` | `Color(0.05, 0.07, 0.09, 0.95)` | Fundos de tela inteira, overlays escuros | 
-| `BG_PANEL_SLATE` | `#161F2E` | `Color(0.09, 0.12, 0.18, 0.90)` | Containers de cartões, fundos de menu | 
-| `BG_CARD_INNER` | `#1E293B` | `Color(0.12, 0.16, 0.23, 0.85)` | Slots de inventário, células de tabelas | 
-| `GOLD_NOBLE` | `#F59E0B` | `Color(0.96, 0.62, 0.04, 1.00)` | Títulos principais, molduras ativas, botões primários | 
-| `GOLD_BRIGHT` | `#FDE047` | `Color(0.99, 0.88, 0.28, 1.00)` | Textos de destaque, números de ouro/XP | 
-| `BLUE_MAGIC` | `#2563EB` | `Color(0.15, 0.39, 0.92, 1.00)` | Botões de ação, buffs de inteligência, Set Guarda | 
-| `BLUE_CYAN` | `#38BDF8` | `Color(0.22, 0.74, 0.97, 1.00)` | Manômetro de CDR, conexões de rede boas | 
-| `RED_CRIMSON` | `#DC2626` | `Color(0.86, 0.15, 0.15, 1.00)` | HP do oponente, avisos de zona mortal, derrota | 
-| `GREEN_EMERALD` | `#10B981` | `Color(0.06, 0.73, 0.51, 1.00)` | Barra de HP do jogador, vitória, confirmações | 
-| `PURPLE_EPIC` | `#9333EA` | `Color(0.58, 0.20, 0.92, 1.00)` | Rarity Épica, Rei Esqueleto, ultimate (R) | 
-| `TEXT_PRIMARY` | `#F8FAFC` | `Color(0.97, 0.98, 0.99, 1.00)` | Títulos, nomes de heróis, contadores | 
-| `TEXT_MUTED` | `#94A3B8` | `Color(0.58, 0.64, 0.72, 1.00)` | Descrições secundárias, teclas de atalho | 
-| `BORDER_METALLIC` | `#475569` | `Color(0.28, 0.33, 0.41, 1.00)` | Bordas neutras e divisores de container | 
+**Fonte (decisão do PI em 2026-10-09, R-PEND-11):** paleta e fontes de `docs/prd/telas/` (`DESIGN.md` "Runic Arcade MOBA HUD", igual em todas as pastas). Os nomes semânticos abaixo continuam; os valores mudaram. Tokens, `Color` e contraste: `docs/design-system/TOKENS.md` §1 (fonte para o código).
+
+| Token Semântico | Hexadecimal | Origem em `telas/DESIGN.md` | Aplicação Principal |
+| ----- | ----- | ----- | ----- |
+| `BG_SURFACE_DARK` | `#0B1326` | `surface` / `background` | Fundos de tela inteira, overlays escuros |
+| `BG_PANEL_SLATE` | `#171F33` | `surface-container` | Containers de cartões, fundos de menu |
+| `BG_CARD_INNER` | `#222A3D` | `surface-container-high` | Slots de inventário, células de tabelas |
+| `GOLD_NOBLE` | `#F59E0B` | `primary-container` (Runic Gold) | Títulos principais, molduras ativas, botões primários |
+| `GOLD_BRIGHT` | `#FFC174` | `primary` | Textos de destaque, números de XP |
+| `BLUE_MAGIC` | `#3198DC` | `secondary-container` | Botões de ação, buffs de inteligência, Set Guarda |
+| `BLUE_CYAN` | `#93CCFF` | `secondary` | Manômetro de CDR, conexões de rede boas |
+| `RED_CRIMSON` | `#EF4444` | Crimson Core | HP do oponente, avisos de zona mortal, derrota |
+| `GREEN_EMERALD` | `#22C55E` | Health Vitality | Barra de HP do jogador, vitória, confirmações |
+| `PURPLE_EPIC` | `#A855F7` | Epic Tier | Raridade Épica, Rei Esqueleto, ultimate (R) |
+| `TEXT_PRIMARY` | `#DAE2FD` | `on-surface` | Títulos, nomes de heróis, contadores |
+| `TEXT_MUTED` | `#D8C3AD` | `on-surface-variant` | Descrições secundárias, teclas de atalho |
+| `BORDER_METALLIC` | `#534434` | `outline-variant` | Bordas neutras e divisores de container |
 
 ### 1.3 Tipografia & Escala de Textos (Godot Font System)
 
-* **Fonte Principal (Headings/Display):** `Kenney Bold` ou `Cinzel Decorative` (TTF, estilizada medieval/arcade, sem serifa pesada).
+* **Fonte Principal (Headings/Display):** `Space Grotesk` Bold (OFL) — `docs/prd/telas/` (R-PEND-11, 2026-10-09).
 
-* **Fonte Secundária (Corpo de Texto/Dados/HUD):** `Inter-SemiBold` ou `Montserrat-Medium` (alta legibilidade numérica para timers e valores de dano).
+* **Fonte Secundária (Corpo de Texto/Dados/HUD):** `Outfit` (OFL).
+
+* **Fonte Numérica (contadores, timers, HP, atalhos numéricos):** `JetBrains Mono` Bold (OFL) — números tabulares, sem tremer ao mudar de valor.
 
 | Nível Hierárquico | Tamanho (px @ 1080p) | Peso / Estilo | Uso no Jogo | 
 | ----- | ----- | ----- | ----- | 
@@ -81,7 +85,7 @@ O design visual de interface do MOBA de 2 Tempos busca sintetizar **clareza comp
 
 * Permite ancoragem elástica sem distorcer caixas de texto ou proporções 1:1 de slots.
 
-## 2. Especificação Detalhada das 9 Telas do Launch
+## 2. Especificação Detalhada das 10 Telas do Launch
 
 ### TELA 1: Lobby / Menu Principal (Menu Principal — Lobby 1v1)
 
@@ -893,6 +897,77 @@ CanvasLayer (MatchHistoryUI)
 
 * Se a taxa ultrapassar $75\%$, a caixa de KPI muda automaticamente a cor para Laranja de Alerta, sinalizando a necessidade de rebalancear monstros ou aumentar o bônus de catch-up ($+25\%$).
 
+### TELA 10: Arena & Mapa (Guia da Arena — Vale Rúnico)
+
+> Incluída por decisão do PI em 2026-10-09 (tela informativa do Launcher, MVP3 — F33 / SPEC-033). Conceito visual: `docs/prd/telas/Arena & Mapa — O Vale Rúnico Apocalíptico/`. **Conteúdo e números vêm da SPEC-007 e do GDB**, não do conceito.
+
+#### 1. Objetivo & UX
+
+Tela **somente leitura** que apresenta ao jogador a arena "Vale Rúnico" e as regras dos dois tempos antes da primeira partida: onde fica cada base, o rio e as pontes, a cratera do Rei Esqueleto, os campos de monstros, o mato alto e os baús, e o que muda aos 5:00. Não altera nada no jogo nem no backend.
+
+* **Imagem do mapa:** render da **arena real** (vista de cima/isométrica da arena da SPEC-007), arquivo estático em `shared/assets/ui/arena_map.png`, regerado sempre que a arena mudar. O Launcher **não** carrega cena de arena (regra I9; `ARCHITECTURE-LAUNCHER.md` §1). A arte conceito da pasta acima é a **meta visual** para a evolução de gráficos e texturas da arena (ADR-0005); quando a arena evoluir, o render acompanha.
+* **Marcadores (POIs)** sobre a imagem, clicáveis, abrem o card de detalhe: Base A "Ordem", Base B "Ruína", Rio e 2 pontes, Cratera (Rei Esqueleto), Campos Noroeste/Sudeste (monstros T2–T3), Mato alto, Baús.
+
+#### 2. Layout Wireframe (ASCII)
+
+```
++--------------------------------------------------------------------------------------------------+
+| [VOLTAR]                         ARENA & MAPA — VALE RÚNICO (1v1)                                |
++--------------------------------------------------------------------------------------------------+
+|  Raio 35 u • Base→centro ~6 s • Ponta a ponta ~13 s • 16 baús • 17 monstros                      |
++-----------------------------------------------------------+--------------------------------------+
+|  +-----------------------------------------------------+  | FASE 1 • 00:00 – 05:00               |
+|  | [RENDER DA ARENA REAL]                              |  | Preparação & Farm                    |
+|  |   (A) Base Ordem          (B) Base Ruína            |  | - Portões fechados: base segura      |
+|  |        [Rio + Ponte A]   [Cratera: Boss 3:30]       |  | - 6 baús comuns por base, 4 raros    |
+|  |   (NO) Campo T2–T3        (SE) Campo T2–T3          |  |   no centro                          |
+|  |        [Mato]            [Ponte B]                  |  | - PvP no centro: respawn 8 s,        |
+|  +-----------------------------------------------------+  |   não conta kill                     |
+|  +-----------------------------------------------------+  | - Aviso do boss 3:00, surge 3:30     |
+|  | DETALHE DO MARCADOR SELECIONADO                     |  +--------------------------------------+
+|  | Cratera Central — Rei Esqueleto                     |  | FASE 2 • 05:00 – 10:00               |
+|  | Surge aos 3:30 • HP 2400 • 1 item épico garantido   |  | Confronto & Zona                     |
+|  | 8 pilares, 4 entradas de 4 u; flecha não passa      |  | - Portões caem                       |
+|  | entre pilares.                                      |  | - Zona: raio 35 u → 3,5 u em 4:00    |
+|  +-----------------------------------------------------+  | - Dano fora: 1% → 5% HP máx/s        |
+|                                                           | - Respawn 6 s até 9:00, depois não   |
+|                                                           | - Vitória: 5 kills → sobrevivência   |
+|                                                           |   → maior % de vida aos 10:00        |
++-----------------------------------------------------------+--------------------------------------+
+|                                                                    [ PRATICAR VS BOT ]           |
++--------------------------------------------------------------------------------------------------+
+```
+
+#### 3. Hierarquia de Nós Godot 4.7 (`launcher/scenes/screens/arena_map.tscn`)
+
+```
+Control (ArenaMapScreen - Full Rect)  # script arena_map_screen.gd
+├── PanelContainer (Backdrop - PanelCardSurface)
+└── VBoxContainer (MainLayout - Margins: SPACE_XL)
+    ├── HBoxContainer (HeaderBar)
+    │   ├── Button (BtnBack: "Voltar")
+    │   └── Label (Title - LabelH1: "ARENA & MAPA")
+    ├── HBoxContainer (FactsBar)                 # números da SPEC-007 / GDB via CatalogService
+    ├── HBoxContainer (Body)
+    │   ├── VBoxContainer (MapColumn - Expand)
+    │   │   ├── AspectRatioContainer (MapFrame)
+    │   │   │   ├── TextureRect (MapRender: shared/assets/ui/arena_map.png)
+    │   │   │   └── Control (PoiLayer)           # um Button por POI, posição normalizada (0–1)
+    │   │   └── PanelContainer (PoiDetail - PanelCardInner)
+    │   └── VBoxContainer (RulesColumn - SIZE_SIDE_COL)
+    │       ├── PanelContainer (Phase1Card)
+    │       └── PanelContainer (Phase2Card)
+    └── HBoxContainer (FooterActions)
+        └── Button (BtnPractice - ButtonPrimary: "Praticar vs Bot")  # mesma ação do lobby (F25)
+```
+
+#### 4. Regras de Conteúdo & Comportamento
+
+* **Fonte dos números:** SPEC-007 (layout, escala, POIs) e GDB §5.1 (monstros), §6.2 (baús), §7.1–7.2 (zona e vitória). Textos e valores lidos de `shared/data` pelo `CatalogService` sempre que existirem lá; nada de número digitado na tela que divirja do GDB (ADR-0004).
+* **Navegação:** entrada "ARENA & MAPA" no menu do lobby; `push` a partir do lobby, `Esc`/Voltar = `pop`. "Praticar vs Bot" dispara exatamente a mesma ação do lobby.
+* **Estados:** carregando (catálogo) → pronto; imagem ausente → placeholder neutro com o texto "Mapa indisponível" e o resto da tela funcional.
+* **Fora desta tela (estava no conceito e não está no PRD/GDB — `FORA-DE-ESCOPO.md`):** torres rúnicas, "Aura do Flagelo", ouro e progressão de ouro, lama −15 %, relevo/depressão da cratera, fog of war/linha de visão, item lendário, alternador de câmera isométrica/FOV, botões "Rotas de Farm" e "Simular Tempestade", grade "24 × 18 / 432 células", travessia "20 s / 8 s" e zona "1,5 % → 6 %" (valem os números do GDB).
+
 ## 3. Arquitetura Técnica de UI no Godot 4.7
 
 ### 3.1 Estrutura de Diretórios Recomendada
@@ -982,6 +1057,8 @@ func _ready() -> void:
 * \[x\] **Fim de Partida:** Comparativo estatístico lado a lado, razão de vitória e retorno ao loop.
 
 * \[x\] **Configurações & Rede:** Abas completas com telemetria Netfox em tempo real e gráfico RTT.
+
+* \[ \] **Arena & Mapa:** Render da arena real com marcadores, regras das duas fases pelos números do GDB (F33).
 
 * \[x\] **Histórico & Auditoria M4:** Monitoramento das 4 metas críticas de sucesso (Snowball < 75%, Ping <= 80ms, Tempo <= 10m).
 

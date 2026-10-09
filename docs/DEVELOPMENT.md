@@ -53,7 +53,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [ ] **F10** — `chest.tscn`, `Inventory`, `ItemRules` (auto/`F` 0,4 s), bônus de conjunto; teste I5 (servidor = Forja) com fixture.
 - [ ] **F11** — Rei Esqueleto aos 3:30, drop épico, `MatchClock` com eventos de tempo.
 - [ ] **F12** — `BotInput` + FSM fase 1; `--offline --bot` com servidor embutido (`ARCHITECTURE-GAME.md` §4).
-- [ ] **F13** — `hud_phase1.tscn`; aviso do boss aos 3:00 (banner `PanelCard accent=PURPLE` + som + pista no portal); modal de bestiário por `B` (`CatalogList` + `DetailCard` + `MonsterPreview3D`, pausa **não** — a partida continua); componentes `PanelCard`, `StatBar`, `SlotItem`, `SkillButton`, `TimerLabel`, `HotkeyBadge`, `Toast`, `Minimap` em `shared/ui/components` + `_gallery.tscn`; Theme inicial (`TOKENS.md` §6). **Bloqueado por R-PEND-11** até o PI decidir a paleta.
+- [ ] **F13** — `hud_phase1.tscn`; aviso do boss aos 3:00 (banner `PanelCard accent=PURPLE` + som + pista no portal); modal de bestiário por `B` (`CatalogList` + `DetailCard` + `MonsterPreview3D`, pausa **não** — a partida continua); componentes `PanelCard`, `StatBar`, `SlotItem`, `SkillButton`, `TimerLabel`, `HotkeyBadge`, `Toast`, `Minimap` em `shared/ui/components` + `_gallery.tscn`; Theme inicial (`TOKENS.md` §6). Paleta e fontes de `docs/prd/telas/` (R-PEND-11 decidida em 2026-10-09).
 - [ ] **[GATE] MVP1** — partida de 5:00 contra bot do início ao fim; PI avalia.
 
 ### MVP2 — Partida em rede (`game`)

@@ -37,7 +37,7 @@
 
 ## Pendência ainda aberta que afeta este MVP
 
-R-PEND-11 (paleta: DV × `docs/prd/telas/`) — precisa de decisão **antes de F13** entrar em `todo`, porque F13 cria o Theme inicial.
+Nenhuma. R-PEND-11 foi decidida em 2026-10-09: paleta e fontes de `docs/prd/telas/` (`design-system/TOKENS.md` atualizado) — F13 pode criar o Theme inicial.
 
 ## Fora deste MVP
 
