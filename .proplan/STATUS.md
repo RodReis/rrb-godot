@@ -24,9 +24,7 @@ updated: 2026-10-09
 
 ## Em Andamento
 
-### [MVP1] Arena single-player (#16)
-
-- [MVP1][SPEC-008][F8] Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha e R Terremoto lendo shared/data (#21)
+_(vazio)_
 
 ## Feito
 
@@ -36,6 +34,7 @@ _(vazio)_
 
 ### [MVP1] Arena single-player (#16)
 
+- [MVP1][SPEC-008][F8] Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha e R Terremoto lendo shared/data (#21, finalizado em: 2026-10-09)
 - [INFRA] CI: lint-gd, path filter por módulo e shared/test no test-game (#17, finalizado em: 2026-10-09)
 - [MVP1][SPEC-006][F6] shared/ por junction, classes Resource, .tres do GDB e fórmulas compartilhadas (#18, finalizado em: 2026-10-09)
 - [MVP1][SPEC-007][F7] Arena "Vale Rúnico": layout da SPEC-007, rio com pontes, cratera, portões, mato e marcadores (#19, finalizado em: 2026-10-09)
