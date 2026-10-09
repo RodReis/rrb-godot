@@ -5,7 +5,9 @@ extends Combatant
 ## Efeito sobre outro heroi (dano, empurrao, atordoamento, XP de abate) vai para o ledger do
 ## alvo, que o aplica no proprio _rollback_tick (ARCHITECTURE-GAME §3.2); monstro aplica o
 ## golpe na hora (Monster). Nivel = XP pela curva (GDB §3.2); pontos gastos por input (F9).
-## Habilidades do Cavaleiro (F8): Q Investida, E Muralha, R Terremoto.
+## Habilidades do Cavaleiro (F8): Q Investida, E Muralha, R Terremoto. Equipamento (F10) e
+## estado de rollback: atributos saem dele pelo Inventory; F abre e troca no Chest, e o saque
+## chega pelo ledger.
 
 const GROUP: StringName = &"heroes"
 ## Contato da Investida = soma dos raios das capsulas (geometria, nao balanceamento).
@@ -13,6 +15,7 @@ const CHARGE_REACH: float = 0.8
 
 @export var hero_data: HeroData
 @export var xp_curve: XpCurve
+@export var item_catalog: ItemCatalog
 
 ## Definido por quem spawna, antes de entrar na arvore (MultiplayerSpawner). Nivel inicial
 ## (--level de dev); depois o nivel sai do XP.
@@ -34,8 +37,13 @@ var basic_cooldown: int = 0
 var q_cooldown: int = 0
 var e_cooldown: int = 0
 var r_cooldown: int = 0
+## Numero de Ids por ItemData.Slot (Inventory).
+var equipment: Vector4i = Inventory.NONE
+## Ticks seguidos com F (0 = solto).
+var interact_ticks: int = 0
 
 var _rollback: RollbackSynchronizer
+var _attributes_equipment: Vector4i = Inventory.NONE
 var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de rollback
 
 @onready var input: PlayerInput = $Input
@@ -48,7 +56,8 @@ func _ready() -> void:
 	add_to_group(GROUP)
 	level = clampi(level, LaunchArgs.DEFAULT_LEVEL, XpTable.max_level(xp_curve))
 	xp = XpTable.xp_for_level(xp_curve, level)
-	attributes = Stats.attributes(hero_data, level, [], [])
+	attributes = Inventory.attributes(hero_data, level, equipment, item_catalog)
+	_attributes_equipment = equipment
 	ranks = XpTable.typical_ranks(xp_curve, level)
 	hp = attributes.max_hp
 	set_multiplayer_authority(1)
@@ -77,6 +86,8 @@ func _ready() -> void:
 		":q_cooldown",
 		":e_cooldown",
 		":r_cooldown",
+		":equipment",
+		":interact_ticks",
 	]
 	_rollback.input_properties = [
 		"Input:movement",
@@ -86,6 +97,7 @@ func _ready() -> void:
 		"Input:skill_e",
 		"Input:skill_r",
 		"Input:learn",
+		"Input:interact_hold",
 	]
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
@@ -102,8 +114,10 @@ func _ready() -> void:
 func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	if multiplayer.is_server() and not _hits.is_empty():
 		_apply_hits(tick)
-	_refresh_level()
+	_refresh_attributes()
+	hp = mini(hp, attributes.max_hp)  # troca para item com menos HP
 	_learn()
+	_interact(tick)
 	_tick_timers()
 
 	# Input vem do cliente: nunca confiar no valor recebido.
@@ -131,7 +145,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 
 
 func _process(_delta: float) -> void:
-	_refresh_level()
+	_refresh_attributes()
 	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
 	if stun_ticks > 0:
 		status += " (atordoado)"
@@ -152,12 +166,14 @@ func forward() -> Vector3:
 	return -global_transform.basis.z
 
 
-## Nivel e atributos seguem o XP do estado (inclusive quando o rollback volta o XP).
-func _refresh_level() -> void:
+## Nivel e atributos seguem o XP e o equipamento do estado (inclusive quando o rollback volta).
+func _refresh_attributes() -> void:
 	var new_level := XpTable.level_for_xp(xp_curve, xp)
-	if new_level != level:
-		level = new_level
-		attributes = Stats.attributes(hero_data, level, [], [])
+	if new_level == level and equipment == _attributes_equipment:
+		return
+	level = new_level
+	_attributes_equipment = equipment
+	attributes = Inventory.attributes(hero_data, level, equipment, item_catalog)
 
 
 ## Gasta um ponto no slot pedido pelo input (Ctrl+Q/E/R). Valor do cliente: validado aqui.
@@ -167,6 +183,19 @@ func _learn() -> void:
 		return
 	var skills: Array[SkillData] = [hero_data.skill_q, hero_data.skill_e, hero_data.skill_r]
 	ranks = SkillRules.learn(ranks, slot, skills[slot], level)
+
+
+## F: o bau ao alcance decide pelo tempo segurado (toque abre, segurar troca). Servidor apenas;
+## o saque volta pelo ledger. Baus ficam a >= 3 u um do outro (SPEC-007): no maximo um ao alcance.
+func _interact(tick: int) -> void:
+	interact_ticks = interact_ticks + 1 if input.interact_hold else 0
+	if interact_ticks == 0 or not multiplayer.is_server():
+		return
+	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+		var chest := node as Chest
+		if chest.in_reach(global_position):
+			chest.interact(self, tick, interact_ticks)
+			return
 
 
 func _tick_timers() -> void:
@@ -274,10 +303,15 @@ func _earthquake(tick: int) -> void:
 
 
 ## DEF reduz primeiro; a Muralha absorve o que sobrou se o golpe veio pela frente
-## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7).
+## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7). Saque: cura ate o HP max e item
+## equipado no slot dele (a decisao de trocar ja foi do Chest).
 func _apply_hits(tick: int) -> void:
 	for effect: HitEffect in _hits.effects_at(tick):
 		xp += maxi(effect.xp, 0)
+		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
+		var item := item_catalog.find(effect.item)
+		if item != null:
+			equipment = Inventory.equip(equipment, item)
 		var damage := CombatRules.mitigated(effect.damage, attributes.defense)
 		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
 			var split := CombatRules.absorb(damage, shield_hp)

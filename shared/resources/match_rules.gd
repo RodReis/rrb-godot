@@ -31,3 +31,5 @@ extends Resource
 @export var heal_amount: float
 ## Tempo segurando F para confirmar troca de item.
 @export var swap_hold_time: float
+## Distancia maxima (u) do heroi ao bau para abrir com F ou trocar o item.
+@export var chest_interact_range: float

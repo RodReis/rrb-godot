@@ -32,7 +32,8 @@ func _spawn_hero(id: int, team: int, level: int) -> Hero:
 func _monsters() -> Array[Monster]:
 	var result: Array[Monster] = []
 	for node: Node in _director.get_children():
-		result.append(node as Monster)
+		if node is Monster:
+			result.append(node as Monster)
 	return result
 
 
@@ -106,7 +107,7 @@ func test_ressimular_o_mesmo_golpe_nao_duplica_dano() -> void:
 
 func test_catch_up_mais_25_por_cento_dois_niveis_atras() -> void:
 	_rival.xp = 225
-	_rival._refresh_level()
+	_rival._refresh_attributes()
 	assert_eq(_rival.level, 3)
 	var t1: Monster = null
 	for monster: Monster in _base_monsters(GateRules.TEAM_A):

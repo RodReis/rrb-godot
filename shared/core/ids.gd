@@ -3,6 +3,9 @@ extends RefCounted
 ## IDs estaveis de herois, itens e monstros: StringName no codigo, int na rede
 ## (ARCHITECTURE-GAME.md §5). So acrescente no fim; reordenar quebra a compatibilidade.
 
+## Numero de "nenhum id" (slot vazio, id inexistente).
+const NONE: int = -1
+
 const ALL: Array[StringName] = [
 	&"knight",
 	&"ranger",
@@ -35,7 +38,7 @@ const ALL: Array[StringName] = [
 ]
 
 
-## -1 se o id nao existe.
+## NONE se o id nao existe.
 static func to_int(id: StringName) -> int:
 	return ALL.find(id)
 

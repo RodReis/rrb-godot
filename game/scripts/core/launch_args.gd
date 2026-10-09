@@ -6,6 +6,8 @@ const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
 ## --level=N e argumento de dev ate a progressao do F9 (PI 2026-10-09).
 const DEFAULT_LEVEL: int = 1
+## --seed=N: seed dos drops dos baus no servidor; 0 = sorteia (SpawnDirector).
+const NO_SEED: int = 0
 
 
 static func parse(args: PackedStringArray) -> Dictionary:
@@ -14,7 +16,8 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"host": "",
 		"port": DEFAULT_PORT,
 		"autopilot": false,
-		"level": DEFAULT_LEVEL
+		"level": DEFAULT_LEVEL,
+		"seed": NO_SEED,
 	}
 	for arg: String in args:
 		if arg == "--server":
@@ -23,6 +26,9 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["autopilot"] = true
 		elif arg.begins_with("--level="):
 			result["level"] = _level_or_default(arg.trim_prefix("--level="))
+		elif arg.begins_with("--seed="):
+			var text := arg.trim_prefix("--seed=")
+			result["seed"] = text.to_int() if text.is_valid_int() else NO_SEED
 		elif arg.begins_with("--port="):
 			result["port"] = _port_or_default(arg.trim_prefix("--port="))
 		elif arg.begins_with("--connect="):

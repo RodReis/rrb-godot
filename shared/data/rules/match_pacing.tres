@@ -28,3 +28,4 @@ rare_chest_common_chance = 0.25
 rare_chest_epic_chance = 0.1
 heal_amount = 120.0
 swap_hold_time = 0.4
+chest_interact_range = 1.5

@@ -4,7 +4,8 @@ extends RefCounted
 ## Ressimular o alvo reaplica os golpes (leitura nao consome); ressimular o
 ## atacante nao duplica (um efeito por fonte = atacante + habilidade, por tick).
 
-## REWARD: XP dado pelo monstro ao matador (nao colide com o golpe do monstro no mesmo tick).
+## REWARD: XP dado pelo monstro ao matador (nao colide com o golpe do monstro no mesmo tick) e
+## saque do bau (cura, item).
 enum Slot { BASIC, Q, E, R, REWARD }
 
 const SLOT_COUNT: int = 5

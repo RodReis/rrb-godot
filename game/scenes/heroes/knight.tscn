@@ -6,6 +6,7 @@
 [ext_resource type="Resource" path="res://shared/data/heroes/knight.tres" id="4_data"]
 [ext_resource type="Resource" path="res://shared/data/rules/xp_table.tres" id="5_xp"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers/Knight.glb" id="6_model"]
+[ext_resource type="Resource" path="res://shared/data/items/catalog.tres" id="7_catalog"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
 radius = 0.4
@@ -18,6 +19,7 @@ size = Vector3(2, 2, 0.4)
 script = ExtResource("1_hero")
 hero_data = ExtResource("4_data")
 xp_curve = ExtResource("5_xp")
+item_catalog = ExtResource("7_catalog")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 position = Vector3(0, 0.9, 0)
