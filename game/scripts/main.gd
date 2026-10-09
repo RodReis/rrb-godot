@@ -15,6 +15,8 @@ var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 @onready var address_edit: LineEdit = $UI/ConnectPanel/Address
 @onready var connect_button: Button = $UI/ConnectPanel/ConnectButton
 @onready var status_label: Label = $UI/Status
+## Equipamento do heroi local; provisorio ate a HUD do F13.
+@onready var inventory_label: Label = $UI/Inventory
 
 
 func _ready() -> void:
@@ -48,6 +50,9 @@ func _process(_delta: float) -> void:
 			" | AUTOPILOT" if PlayerInput.autopilot else ""
 		]
 	)
+	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
+	if hero != null:
+		inventory_label.text = _inventory_text(hero)
 
 
 func start_server(port: int) -> void:
@@ -94,6 +99,8 @@ func _on_peer_connected(id: int) -> void:
 		GateRules.TEAM_A if players.get_child_count() % MAX_PLAYERS == 0 else GateRules.TEAM_B
 	)
 	spawner.spawn({"id": id, "team": team, "level": _hero_level})
+	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+		(node as Chest).send_state(id)
 
 
 ## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao, time, nivel e mascara.
@@ -115,6 +122,18 @@ func _hero_spawn(team: int) -> Transform3D:
 			return marker.global_transform
 	push_error("[arena] sem marcador HERO do time %d" % team)
 	return Transform3D.IDENTITY
+
+
+func _inventory_text(hero: Hero) -> String:
+	var items := Inventory.items(hero.equipment, hero.item_catalog)
+	var lines := PackedStringArray()
+	for item: ItemData in items:
+		lines.append("%s (%s)" % [item.display_name, Chest.RARITY_NAMES[item.rarity]])
+	for bonus: SetBonusData in hero.item_catalog.set_bonuses:
+		var pieces := SetBonus.count_pieces(items, bonus.set_id)
+		if pieces > 0:
+			lines.append("conjunto %s %d/%d" % [bonus.set_id, pieces, bonus.pieces_required])
+	return "\n".join(lines)
 
 
 func _on_peer_disconnected(id: int) -> void:

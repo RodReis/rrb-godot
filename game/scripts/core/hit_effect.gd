@@ -3,7 +3,8 @@ extends RefCounted
 ## Efeito de um golpe sobre um heroi, aplicado pelo proprio alvo no _rollback_tick
 ## (ARCHITECTURE-GAME §3.2): dano bruto (antes da DEF), origem (para o escudo frontal),
 ## empurrao, atordoamento e XP (recompensa de abate, GDB §3.3/§5.1). attacker_id = peer_id do
-## heroi que golpeou (o monstro morto da o XP a ele).
+## heroi que golpeou (o monstro morto da o XP a ele). Saque de bau (GDB §6.2): cura e item a
+## equipar (numero de Ids).
 
 var damage: int = 0
 var source: Vector3 = Vector3.ZERO
@@ -11,6 +12,8 @@ var push: Vector3 = Vector3.ZERO
 var stun_ticks: int = 0
 var xp: int = 0
 var attacker_id: int = 0
+var heal: int = 0
+var item: int = Ids.NONE
 
 
 func _init(

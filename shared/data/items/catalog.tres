@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="ItemCatalog" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/item_catalog.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/item_data.gd" id="2_item"]
+[ext_resource type="Script" path="res://shared/resources/set_bonus_data.gd" id="3_bonus"]
+[ext_resource type="Resource" path="res://shared/data/items/weapons/sword_t1.tres" id="w1"]
+[ext_resource type="Resource" path="res://shared/data/items/weapons/sword_t2.tres" id="w2"]
+[ext_resource type="Resource" path="res://shared/data/items/weapons/sword_t3_epic.tres" id="w3"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_helm_t1.tres" id="gh1"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_helm_t2.tres" id="gh2"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_helm_t3.tres" id="gh3"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_chest_t1.tres" id="gc1"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_chest_t2.tres" id="gc2"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_chest_t3.tres" id="gc3"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_boots_t1.tres" id="gb1"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_boots_t2.tres" id="gb2"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_boots_t3.tres" id="gb3"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_helm_t1.tres" id="hh1"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_helm_t2.tres" id="hh2"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_helm_t3.tres" id="hh3"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_chest_t1.tres" id="hc1"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_chest_t2.tres" id="hc2"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_chest_t3.tres" id="hc3"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_boots_t1.tres" id="hb1"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_boots_t2.tres" id="hb2"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_boots_t3.tres" id="hb3"]
+[ext_resource type="Resource" path="res://shared/data/items/guard_set/guard_bonus.tres" id="gbonus"]
+[ext_resource type="Resource" path="res://shared/data/items/hunter_set/hunter_bonus.tres" id="hbonus"]
+
+[resource]
+script = ExtResource("1_script")
+items = Array[ExtResource("2_item")]([ExtResource("w1"), ExtResource("w2"), ExtResource("w3"), ExtResource("gh1"), ExtResource("gh2"), ExtResource("gh3"), ExtResource("gc1"), ExtResource("gc2"), ExtResource("gc3"), ExtResource("gb1"), ExtResource("gb2"), ExtResource("gb3"), ExtResource("hh1"), ExtResource("hh2"), ExtResource("hh3"), ExtResource("hc1"), ExtResource("hc2"), ExtResource("hc3"), ExtResource("hb1"), ExtResource("hb2"), ExtResource("hb3")])
+set_bonuses = Array[ExtResource("3_bonus")]([ExtResource("gbonus"), ExtResource("hbonus")])

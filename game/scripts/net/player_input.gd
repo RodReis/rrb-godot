@@ -18,6 +18,8 @@ var skill_r: bool = false
 ## Slot (SkillRules.SLOT_*) em que gastar um ponto neste tick, ou LEARN_NONE. So no tick em que
 ## o Ctrl+tecla foi apertado: segurar nao gasta varios pontos.
 var learn: int = LEARN_NONE
+## F pressionado neste tick; o Hero conta quanto tempo (toque abre bau, segurar troca item).
+var interact_hold: bool = false
 
 var _learn_held: int = LEARN_NONE
 
@@ -45,6 +47,7 @@ func _gather() -> void:
 	skill_q = Input.is_action_pressed(InputActions.SKILL_Q)
 	skill_e = Input.is_action_pressed(InputActions.SKILL_E)
 	skill_r = Input.is_action_pressed(InputActions.SKILL_R)
+	interact_hold = Input.is_action_pressed(InputActions.INTERACT)
 	_gather_learn()
 	aim = _stick_aim(yaw) if _gamepad else _mouse_aim()
 

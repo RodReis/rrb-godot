@@ -207,3 +207,23 @@ func test_ritmo_da_partida() -> void:
 		[0.65, 0.25, 0.1]
 	)
 	assert_eq([rules.heal_amount, rules.swap_hold_time], [120.0, 0.4])
+	# Abrir bau: toque em F a ate 1,5 u (PI 2026-10-09, F10).
+	assert_eq(rules.chest_interact_range, 1.5)
+
+
+func test_catalogo_tem_cada_item_e_bonus_uma_vez() -> void:
+	var catalog := _by_id[&"catalog"] as ItemCatalog
+	var expected: Array[StringName] = []
+	for file_id: StringName in _by_id:
+		if _by_id[file_id] is ItemData:
+			expected.append(file_id)
+	var got: Array[StringName] = []
+	for item: ItemData in catalog.items:
+		got.append(item.id)
+	expected.sort()
+	got.sort()
+	assert_eq(got, expected)
+	assert_eq(catalog.set_bonuses.size(), 2)
+	assert_eq(catalog.find(Ids.to_int(&"guard_helm_t2")).id, &"guard_helm_t2")
+	assert_null(catalog.find(Ids.to_int(&"knight")))
+	assert_null(catalog.find(-1))
