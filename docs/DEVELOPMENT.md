@@ -45,7 +45,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 
 - [ ] **[INFRA] CI** — `lint-gd` (gdlint/gdformat, literais em `core/`, I9), `changes` com path filter, `shared/test` no `test-game` (`CI-PR.md` §2–§4). Antes de F6.
 - [ ] **F6** — `shared/` + junction + `tools/link-shared.ps1`; `shared/resources/*.gd` (`HeroData`, `SkillData`, `ItemData`, `MonsterData`, `MatchRules`); `.tres` de GDB §8; `shared/core/{stats,xp_table,set_bonus,item_rules,ids,input_actions}.gd` com GUT; `shared/assets/_alignment.tscn`; CI `gate-game` passa a incluir `shared/test`.
-- [ ] **F7** — `arena.tscn` (KayKit Medieval Hexagon), 3 zonas, portões com filtro por time, marcadores (`SpawnMarker` com tipo/tier/time), critério de escala (~8 s / ~20 s medidos com o Cavaleiro).
+- [ ] **F7** — `arena.tscn` conforme `docs/prd/mvp/spec/SPEC-007.md`: tiles KayKit a 3 u, raio 35 u, rio (colisão) + 2 pontes, cratera com 8 pilares/4 entradas, muros, moitas (`Area3D` `tall_grass`, só geometria), portões por time, `SpawnMarker`; testes de simetria, contagem, raycast e tempos (6,3 s / 12,7 s).
 - [ ] **F31** — `follow_camera` 3ª pessoa 45° distância fixa; `InputActions` completo (teclado/mouse/gamepad, nomes de `CONVENTION.md` §6); `shared/assets/_alignment.tscn` com Knight ≈ 1,8 u; **PI avalia a câmera com a cápsula** (B-02) — resultado no comentário de encerramento.
 - [ ] **F8** — `knight.tscn` (KayKit Knight + animações); ataque básico, Q (empurrão via ledger), E (escudo absorve + bloqueia projétil — hitbox de bloqueio), R (stun via ledger) lendo `knight.tres`; remove as constantes de spike de `player.gd`.
 - [ ] **F9** — `monster_ai.gd`, 4 monstros não-boss com `.tres`; XP, nível, pontos de skill, catch-up (`XpTable` GUT); `SpawnDirector`.

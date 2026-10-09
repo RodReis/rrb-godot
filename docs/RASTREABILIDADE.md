@@ -9,7 +9,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | ID | Requisito | Fonte | Destino | Módulo | MVP | Status |
 |---|---|---|---|---|---|---|
 | P-01 | Arena hexagonal com Base A, Base B, Centro; portões por time | PRD §3.1 | F7 | game | MVP1 | mantido |
-| P-02 | Escala: base→centro ~8 s, arena ~20 s | PRD §3.1 | F7 (critério) | game | MVP1 | mantido |
+| P-02 | Escala: base→centro ~8 s, arena ~20 s | PRD §3.1 | SPEC-007 §1 | game | MVP1 | **substituído** pelo PI em 2026-10-09: raio 35 u (GDB §7.1) → ~6,3 s / ~12,7 s |
 | P-03 | XP/nível 1–10, 1 ponto por nível, Q/E 5 níveis, R nível 6 | PRD §3.2, GDB §3 | F9 | game | MVP1 | mantido |
 | P-04 | Baús: 6 por base (comum), 4 no centro (raro), não reabrem | PRD §3.2, GDB §6.2 | F10 | game | MVP1 | mantido |
 | P-05 | 4 slots, 12 itens, 2 conjuntos, bônus 3/3 | PRD §6, GDB §6 | F10, F6 | game, shared | MVP1 | mantido (números GDB, ADR-0004) |
@@ -86,7 +86,12 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-09 | Tela 9 Histórico | F26 | launcher | mantido |
 | V-09a | Painel de KPIs do M4 (snowball rate, ping médio, duração) | F29 | launcher + backend | mantido (é o critério PRD §9.2) |
 | V-09b | Exportar CSV, SQLite local, `/telemetry/matches` do cliente | — | — | adiado — o backend é a fonte; exportação é ferramenta do dev (script em `tools/`), não tela |
-| V-10 | Design system (paleta, tipografia, viewport) | `docs/design-system/` | shared | mantido |
+| V-10 | Design system (paleta, tipografia, viewport) | `docs/design-system/` | shared | mantido (conflito de paleta com `docs/prd/telas/` — R-PEND-11) |
+| V-13 | Tela de Login (só em `docs/prd/telas/`, ausente no DV) | F25 | launcher | mantido como função (PRD §8.4); design pendente — R-PEND-11 |
+| V-14 | "Pop-up Tático In-Game" (só em `docs/prd/telas/`) | — | — | **sem requisito** no PRD — R-PEND-11 |
+| V-15 | Conceito "Arena & Mapa — Vale Rúnico": topologia da imagem tática (bases opostas, rio, pontes, cratera) | SPEC-007 | game | mantido como layout |
+| V-16 | Idem: torres rúnicas, ouro 18 g/s, upgrade de skill por ouro, aura do boss, tier lendário, Elo, fog of war, lama −15 %, relevo −1,8 m, zona 1,5→6 %, câmera isométrica padrão | `FORA-DE-ESCOPO.md` | — | **excluídos/adiados** pelo PI em 2026-10-09 |
+| V-17 | Mato alto que esconde (Astro Arena / Brawl Stars) | F7 (geometria), F32 (regra) | game | mantido — requisito novo aprovado pelo PI em 2026-10-09 |
 | V-11 | Mapa de controles §3.3 | `shared/core/input_actions.gd` | shared | mantido |
 | V-12 | `scripts/ui/m4_audit_tracker.gd` no cliente | backend `telemetry/` | — | transferido |
 
@@ -115,4 +120,6 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | R-PEND-07 | Recuperação de senha / verificação de e-mail | fatia / roadmap | F21 sem ambos |
 | ~~R-PEND-08~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
 | ~~R-PEND-09~~ | **Decidido 2026-10-09:** Golem de Pedra | — | — |
+| R-PEND-11 | `docs/prd/telas/` (10 pastas com `DESIGN.md`, `code.html`, `screen.png`) tem **duas telas que não estão no DV** ("Tela de Login & Autenticação" e "Pop-up Tático In-Game") e uma **paleta diferente** da do DV §1.2 (surface `#0b1326`, primary `#ffc174`, tokens Material; fontes Space Grotesk/Outfit/JetBrains Mono). Qual é a fonte visual: DV ou `telas/`? | DV / telas / DV com paleta de telas | **Bloqueia F13** (Theme inicial) |
+| R-PEND-12 | Mato alto: duração da revelação ao atacar/usar skill de dentro da moita; raio de visão dentro da moita | números no GDB | F32 bloqueia (MVP2) |
 | R-PEND-10 | Renomear `docs/prd/PRD.md` → `2026-10-08-prd-moba-2-tempos.md` (nome citado no plano M0 e nos agentes) | renomear / manter | links quebrados em `docs/superpowers/plans/` e `.claude/agents/` — `CLAUDE.md` já aponta para `PRD.md` |
