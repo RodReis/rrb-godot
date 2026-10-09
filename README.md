@@ -17,7 +17,8 @@ docs/      PRD, planos, ADRs
 | O quê | Comando |
 |---|---|
 | Setup Godot + godot-mcp | `powershell -ExecutionPolicy Bypass -File tools\setup-godot-mcp.ps1` |
-| Testes unitários (GUT) | `.\tools\test.ps1` |
+| Junctions de `shared/` (uma vez por clone, ADR-0003) | `.\tools\link-shared.ps1` |
+| Testes unitários (GUT, game + shared) | `.\tools\test.ps1 -Module game` |
 | Servidor local (sem Docker) | `.\tools\run-server.ps1` |
 | Servidor Docker | `docker compose -f infra/docker-compose.yml up --build` |
 | Servidor Docker com 100 ms + 2% perda | `$env:NETEM_DELAY_MS=100; $env:NETEM_LOSS_PCT=2; docker compose -f infra/docker-compose.yml up --build` |
