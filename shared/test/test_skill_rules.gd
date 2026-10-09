@@ -70,6 +70,45 @@ func test_muralha_so_a_partir_do_nivel_2() -> void:
 	assert_true(SkillRules.can_use(_knight.skill_e, 1, 2))
 
 
+func test_pontos_livres_um_por_nivel_a_partir_do_2() -> void:
+	# Q1 vem de graca no nivel 1; nivel 10 com Q5 E3 R2 gastou os 9 pontos (GDB §3.1).
+	assert_eq(SkillRules.free_points(1, Vector3i(1, 0, 0)), 0)
+	assert_eq(SkillRules.free_points(3, Vector3i(1, 0, 0)), 2)
+	assert_eq(SkillRules.free_points(10, Vector3i(5, 3, 2)), 0)
+
+
+func test_aprender_sobe_o_rank_e_gasta_ponto() -> void:
+	var ranks := SkillRules.learn(Vector3i(1, 0, 0), SkillRules.SLOT_E, _knight.skill_e, 2)
+	assert_eq(ranks, Vector3i(1, 1, 0))
+	assert_eq(SkillRules.free_points(2, ranks), 0)
+
+
+func test_aprender_sem_ponto_nao_muda() -> void:
+	var ranks := Vector3i(1, 1, 0)
+	assert_eq(SkillRules.learn(ranks, SkillRules.SLOT_Q, _knight.skill_q, 2), ranks)
+
+
+func test_ultimate_so_aprende_no_6_e_rank_2_no_10() -> void:
+	var lv5 := Vector3i(2, 2, 0)
+	assert_eq(SkillRules.learn(lv5, SkillRules.SLOT_R, _knight.skill_r, 5), lv5)
+	var lv6 := SkillRules.learn(lv5, SkillRules.SLOT_R, _knight.skill_r, 6)
+	assert_eq(lv6, Vector3i(2, 2, 1))
+	var lv9 := Vector3i(4, 3, 1)
+	assert_eq(SkillRules.learn(lv9, SkillRules.SLOT_R, _knight.skill_r, 9), lv9)
+	assert_eq(SkillRules.learn(lv9, SkillRules.SLOT_R, _knight.skill_r, 10), Vector3i(4, 3, 2))
+
+
+func test_q_e_e_param_no_rank_5() -> void:
+	var ranks := Vector3i(5, 0, 0)
+	assert_eq(SkillRules.learn(ranks, SkillRules.SLOT_Q, _knight.skill_q, 10), ranks)
+
+
+func test_slot_invalido_nao_muda() -> void:
+	var ranks := Vector3i(1, 0, 0)
+	assert_eq(SkillRules.learn(ranks, 7, _knight.skill_q, 5), ranks)
+	assert_eq(SkillRules.learn(ranks, -1, _knight.skill_q, 5), ranks)
+
+
 func test_ranks_tipicos_do_gdb() -> void:
 	var curve := load(XP) as XpCurve
 	assert_eq(XpTable.typical_ranks(curve, 1), Vector3i(1, 0, 0))

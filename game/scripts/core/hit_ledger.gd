@@ -4,9 +4,10 @@ extends RefCounted
 ## Ressimular o alvo reaplica os golpes (leitura nao consome); ressimular o
 ## atacante nao duplica (um efeito por fonte = atacante + habilidade, por tick).
 
-enum Slot { BASIC, Q, E, R }
+## REWARD: XP dado pelo monstro ao matador (nao colide com o golpe do monstro no mesmo tick).
+enum Slot { BASIC, Q, E, R, REWARD }
 
-const SLOT_COUNT: int = 4
+const SLOT_COUNT: int = 5
 
 var _hits: Dictionary = {}  # tick (int) -> { source_key (int) -> HitEffect }
 
@@ -25,6 +26,10 @@ func set_hit(tick: int, source: int, effect: HitEffect) -> void:
 		_hits[tick] = {}
 	var by_source: Dictionary = _hits[tick]
 	by_source[source] = effect
+
+
+func has_hit(tick: int, source: int) -> bool:
+	return _hits.has(tick) and (_hits[tick] as Dictionary).has(source)
 
 
 func clear_hit(tick: int, source: int) -> void:

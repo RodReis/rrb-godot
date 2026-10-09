@@ -101,7 +101,8 @@
       ],
       "imagens": [
         { "arquivo": "mvp1-f34-pilar-e-mato-blender.webp", "legenda": "Pilar da cratera e moitas modelados no Blender, antes de entrar no jogo.", "tipo": "em-construcao" },
-        { "arquivo": "mvp1-f34-cratera-e-mato-no-jogo.webp", "legenda": "Os pilares da cratera e as moitas de grama, modelados no Blender, já dentro da arena: o Cavaleiro cruza a ponte rumo ao centro.", "tipo": "entregue" }
+        { "arquivo": "mvp1-f34-cratera-e-mato-no-jogo.webp", "legenda": "Os pilares da cratera e as moitas de grama, modelados no Blender, já dentro da arena: o Cavaleiro cruza a ponte rumo ao centro.", "tipo": "entregue" },
+        { "arquivo": "mvp1-f9-centro-golem.webp", "legenda": "Com a base limpa, o Cavaleiro sobe de nível e chega ao centro, guardado pelo Golem de Pedra, pelo Esqueleto Guerreiro e pelo Esqueleto Mago. Golem baseado em \"Lava Golem\" de vladimirmejia (CC-BY).", "tipo": "entregue" }
       ]
     },
     "MVP2": {
@@ -178,6 +179,7 @@
 
   "creditos": [
     "Modelos e texturas KayKit (Kay Lousberg), licença CC0.",
+    "Golem de Pedra baseado em \"Lava Golem\" de vladimirmejia (Blend Swap), licença CC-BY 3.0, modificado.",
     "Rede com netfox (Fox's Sake Studio), licença MIT.",
     "Feito em Godot Engine, licença MIT."
   ]

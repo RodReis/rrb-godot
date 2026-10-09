@@ -11,6 +11,9 @@
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/crater_pillar.glb" id="9_pillar"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/tall_grass_4x4.glb" id="10_grass44"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/tall_grass_4x3.glb" id="11_grass43"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Warrior.glb" id="12_warrior"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Mage.glb" id="13_mage"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/golem.glb" id="14_golem"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ref"]
 radius = 0.4
@@ -64,3 +67,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32, 0, 0)
 
 [node name="TallGrass4x3" parent="." instance=ExtResource("11_grass43")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37, 0, 0)
+
+[node name="SkeletonWarrior" parent="." instance=ExtResource("12_warrior")]
+transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, -4, 0, 0)
+
+[node name="SkeletonMage" parent="." instance=ExtResource("13_mage")]
+transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, -6, 0, 0)
+
+[node name="Golem" parent="." instance=ExtResource("14_golem")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)

@@ -3,11 +3,15 @@
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="PackedScene" path="res://scenes/arena/arena.tscn" id="2_arena"]
 [ext_resource type="Script" path="res://scripts/follow_camera.gd" id="3_cam"]
+[ext_resource type="Script" path="res://scripts/match/spawn_director.gd" id="4_spawn"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
 
 [node name="Arena" parent="." instance=ExtResource("2_arena")]
+
+[node name="Monsters" type="Node3D" parent="."]
+script = ExtResource("4_spawn")
 
 [node name="Players" type="Node3D" parent="."]
 

@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ai/monster.gd" id="1_monster"]
+[ext_resource type="Script" path="res://scripts/ai/monster_visual.gd" id="2_visual"]
+[ext_resource type="Resource" path="res://shared/data/monsters/skeleton_mage_t2.tres" id="3_data"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Mage.glb" id="4_model"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.4
+height = 1.8
+
+[node name="SkeletonMageT2" type="CharacterBody3D"]
+collision_layer = 0
+collision_mask = 15
+script = ExtResource("1_monster")
+data = ExtResource("3_data")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Model" parent="." instance=ExtResource("4_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0)
+
+[node name="Visual" type="Node" parent="." node_paths=PackedStringArray("model")]
+script = ExtResource("2_visual")
+model = NodePath("../Model")
+attack = &"Spellcast_Shoot"
+
+[node name="HpLabel" type="Label3D" parent="."]
+position = Vector3(0, 2.3, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0 / 0"
+font_size = 64
+outline_size = 18

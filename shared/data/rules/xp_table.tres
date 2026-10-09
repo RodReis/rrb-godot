@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_script")
-cumulative_xp = PackedInt32Array(0, 90, 230, 440, 740, 1160, 1720, 2440, 3340, 4440)
+cumulative_xp = PackedInt32Array(0, 90, 225, 440, 740, 1160, 1720, 2440, 3340, 4440)
 catch_up_level_gap = 2
 catch_up_bonus = 0.25
 typical_q_rank = PackedInt32Array(1, 1, 2, 2, 3, 3, 4, 4, 5, 5)

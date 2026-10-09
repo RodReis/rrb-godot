@@ -4,6 +4,9 @@ extends BaseNetInput
 ## Movimento relativo a camera; mira pelo mouse ou pelo analogico direito, conforme o
 ## ultimo dispositivo usado (troca em tempo real).
 
+## learn sem pedido.
+const LEARN_NONE: int = -1
+
 static var autopilot: bool = false
 
 var movement: Vector3 = Vector3.ZERO
@@ -12,6 +15,11 @@ var attack: bool = false
 var skill_q: bool = false
 var skill_e: bool = false
 var skill_r: bool = false
+## Slot (SkillRules.SLOT_*) em que gastar um ponto neste tick, ou LEARN_NONE. So no tick em que
+## o Ctrl+tecla foi apertado: segurar nao gasta varios pontos.
+var learn: int = LEARN_NONE
+
+var _learn_held: int = LEARN_NONE
 
 var _gamepad: bool = false
 var _last_stick_aim: Vector3 = Vector3.ZERO
@@ -37,7 +45,22 @@ func _gather() -> void:
 	skill_q = Input.is_action_pressed(InputActions.SKILL_Q)
 	skill_e = Input.is_action_pressed(InputActions.SKILL_E)
 	skill_r = Input.is_action_pressed(InputActions.SKILL_R)
+	_gather_learn()
 	aim = _stick_aim(yaw) if _gamepad else _mouse_aim()
+
+
+## Ctrl+Q tambem casa com skill_q (Godot ignora modificador extra): aprender nao lanca a skill.
+func _gather_learn() -> void:
+	var held := LEARN_NONE
+	for slot: int in InputActions.LEARN.size():
+		if Input.is_action_pressed(InputActions.LEARN[slot]):
+			held = slot
+	learn = held if held != _learn_held else LEARN_NONE
+	_learn_held = held
+	if held != LEARN_NONE:
+		skill_q = false
+		skill_e = false
+		skill_r = false
 
 
 func _camera_yaw() -> float:

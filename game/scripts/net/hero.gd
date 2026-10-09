@@ -1,9 +1,10 @@
 class_name Hero
-extends CharacterBody3D
+extends Combatant
 ## Heroi autoritativo no servidor, generico: atributos e habilidades vem de HeroData
 ## (GDB §4) e do nivel; nenhum numero de balanceamento aqui. O node se chama str(peer_id).
-## Efeito sobre outro heroi (dano, empurrao, atordoamento) vai para o ledger do alvo, que
-## o aplica no proprio _rollback_tick (ARCHITECTURE-GAME §3.2).
+## Efeito sobre outro heroi (dano, empurrao, atordoamento, XP de abate) vai para o ledger do
+## alvo, que o aplica no proprio _rollback_tick (ARCHITECTURE-GAME §3.2); monstro aplica o
+## golpe na hora (Monster). Nivel = XP pela curva (GDB §3.2); pontos gastos por input (F9).
 ## Habilidades do Cavaleiro (F8): Q Investida, E Muralha, R Terremoto.
 
 const GROUP: StringName = &"heroes"
@@ -13,15 +14,16 @@ const CHARGE_REACH: float = 0.8
 @export var hero_data: HeroData
 @export var xp_curve: XpCurve
 
-## Definidos por quem spawna, antes de entrar na arvore (MultiplayerSpawner).
-var team: int = GateRules.TEAM_NEUTRAL
+## Definido por quem spawna, antes de entrar na arvore (MultiplayerSpawner). Nivel inicial
+## (--level de dev); depois o nivel sai do XP.
 var level: int = LaunchArgs.DEFAULT_LEVEL
 var peer_id: int = 0
 var attributes: HeroAttributes
-## Ranks de Q, E e R.
-var ranks: Vector3i = Vector3i.ZERO
 
 # Estado de rollback.
+var xp: int = 0
+## Ranks de Q, E e R (indice SkillRules.SLOT_*).
+var ranks: Vector3i = Vector3i.ZERO
 var hp: int = 0
 var shield_hp: int = 0
 var shield_ticks: int = 0
@@ -45,6 +47,7 @@ func _ready() -> void:
 	peer_id = name.to_int()
 	add_to_group(GROUP)
 	level = clampi(level, LaunchArgs.DEFAULT_LEVEL, XpTable.max_level(xp_curve))
+	xp = XpTable.xp_for_level(xp_curve, level)
 	attributes = Stats.attributes(hero_data, level, [], [])
 	ranks = XpTable.typical_ranks(xp_curve, level)
 	hp = attributes.max_hp
@@ -61,6 +64,8 @@ func _ready() -> void:
 	_rollback.root = self
 	_rollback.state_properties = [
 		":transform",
+		":xp",
+		":ranks",
 		":velocity",
 		":hp",
 		":shield_hp",
@@ -80,6 +85,7 @@ func _ready() -> void:
 		"Input:skill_q",
 		"Input:skill_e",
 		"Input:skill_r",
+		"Input:learn",
 	]
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
@@ -96,6 +102,8 @@ func _ready() -> void:
 func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	if multiplayer.is_server() and not _hits.is_empty():
 		_apply_hits(tick)
+	_refresh_level()
+	_learn()
 	_tick_timers()
 
 	# Input vem do cliente: nunca confiar no valor recebido.
@@ -123,24 +131,42 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 
 
 func _process(_delta: float) -> void:
+	_refresh_level()
 	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
 	if stun_ticks > 0:
 		status += " (atordoado)"
-	hp_label.text = "%d / %d%s" % [hp, attributes.max_hp, status]
+	var points := SkillRules.free_points(level, ranks)
+	var learn := "  +%d (Ctrl+Q/E/R)" % points if points > 0 else ""
+	hp_label.text = "Nv %d  %d XP%s\n%d / %d%s" % [level, xp, learn, hp, attributes.max_hp, status]
 
 
-## Registra o efeito da [param source] para [param tick]. Servidor apenas.
 func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
 	_hits.set_hit(tick, source, effect)
 
 
-## Desfaz o efeito da [param source] em [param tick] (ressimulacao sem acerto).
 func cancel_hit(tick: int, source: int) -> void:
 	_hits.clear_hit(tick, source)
 
 
 func forward() -> Vector3:
 	return -global_transform.basis.z
+
+
+## Nivel e atributos seguem o XP do estado (inclusive quando o rollback volta o XP).
+func _refresh_level() -> void:
+	var new_level := XpTable.level_for_xp(xp_curve, xp)
+	if new_level != level:
+		level = new_level
+		attributes = Stats.attributes(hero_data, level, [], [])
+
+
+## Gasta um ponto no slot pedido pelo input (Ctrl+Q/E/R). Valor do cliente: validado aqui.
+func _learn() -> void:
+	var slot := input.learn
+	if slot < SkillRules.SLOT_Q or slot > SkillRules.SLOT_R:
+		return
+	var skills: Array[SkillData] = [hero_data.skill_q, hero_data.skill_e, hero_data.skill_r]
+	ranks = SkillRules.learn(ranks, slot, skills[slot], level)
 
 
 func _tick_timers() -> void:
@@ -177,24 +203,26 @@ func _use_skills(tick: int) -> void:
 		_melee(tick)
 
 
-func _enemies() -> Array[Hero]:
-	var result: Array[Hero] = []
-	for node: Node in get_tree().get_nodes_in_group(GROUP):
-		var other := node as Hero
-		if other != self and other.team != team:
+## Heroi do outro time e monstro vivo.
+func _enemies() -> Array[Combatant]:
+	var result: Array[Combatant] = []
+	for node: Node in get_tree().get_nodes_in_group(TARGETS_GROUP):
+		var other := node as Combatant
+		if other != self and other.team != team and other.is_alive():
 			result.append(other)
 	return result
 
 
 ## O alvo aplica no proprio _rollback_tick de tick+1, lendo o ledger; ressimular o alvo
 ## (input dele atrasado) nao apaga o efeito. Servidor apenas: o cliente nunca altera HP.
-func _hit(other: Hero, tick: int, slot: HitLedger.Slot, effect: HitEffect) -> void:
+func _hit(other: Combatant, tick: int, slot: HitLedger.Slot, effect: HitEffect) -> void:
+	effect.attacker_id = peer_id
 	other.receive_hit(tick + 1, HitLedger.source_key(peer_id, slot), effect)
 	# Forca ressimular o alvo a partir de tick+1 se ele ja foi simulado.
 	NetworkRollback.mutate(other, tick + 1)
 
 
-func _miss(other: Hero, tick: int, slot: HitLedger.Slot) -> void:
+func _miss(other: Combatant, tick: int, slot: HitLedger.Slot) -> void:
 	other.cancel_hit(tick + 1, HitLedger.source_key(peer_id, slot))
 
 
@@ -203,7 +231,7 @@ func _melee(tick: int) -> void:
 		return
 	var basic := hero_data.basic_attack
 	var damage := roundi(SkillRules.amount(basic, 1, attributes))
-	for other: Hero in _enemies():
+	for other: Combatant in _enemies():
 		var half_arc := basic.arc_degrees / 2.0
 		if CombatRules.is_in_melee_arc(
 			global_position, forward(), other.global_position, basic.attack_range, half_arc
@@ -216,7 +244,7 @@ func _melee(tick: int) -> void:
 ## Investida: para no primeiro inimigo tocado, empurra e fere (PI 2026-10-09).
 func _charge_contact(tick: int) -> void:
 	var q := hero_data.skill_q
-	for other: Hero in _enemies():
+	for other: Combatant in _enemies():
 		if not CombatRules.in_radius(global_position, other.global_position, CHARGE_REACH):
 			if multiplayer.is_server():
 				_miss(other, tick, HitLedger.Slot.Q)
@@ -237,7 +265,7 @@ func _earthquake(tick: int) -> void:
 	var stun := SkillRules.seconds_to_ticks(
 		SkillData.at_rank(r.stun_duration, ranks.z), NetworkTime.tickrate
 	)
-	for other: Hero in _enemies():
+	for other: Combatant in _enemies():
 		if CombatRules.in_radius(global_position, other.global_position, r.radius):
 			var effect := HitEffect.new(damage, global_position, Vector3.ZERO, stun)
 			_hit(other, tick, HitLedger.Slot.R, effect)
@@ -246,9 +274,10 @@ func _earthquake(tick: int) -> void:
 
 
 ## DEF reduz primeiro; a Muralha absorve o que sobrou se o golpe veio pela frente
-## (PI 2026-10-09); o resto vai ao HP.
+## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7).
 func _apply_hits(tick: int) -> void:
 	for effect: HitEffect in _hits.effects_at(tick):
+		xp += maxi(effect.xp, 0)
 		var damage := CombatRules.mitigated(effect.damage, attributes.defense)
 		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
 			var split := CombatRules.absorb(damage, shield_hp)
@@ -256,7 +285,7 @@ func _apply_hits(tick: int) -> void:
 			shield_hp = split.y
 		hp = maxi(hp - damage, 0)
 		if hp == 0:
-			hp = attributes.max_hp  # sem morte ate o F9: so reinicia o HP
+			hp = attributes.max_hp  # sem morte ate o respawn (F15): so reinicia o HP
 		if not effect.push.is_zero_approx():
 			move_and_collide(effect.push)
 		stun_ticks = maxi(stun_ticks, effect.stun_ticks)

@@ -13,3 +13,7 @@ damage = 14.0
 attack_interval = 1.2
 xp = 35
 drop_common_chance = 0.2
+melee_range = 1.8
+aggro_range = 6.0
+leash_range = 10.0
+move_speed = 4.0
