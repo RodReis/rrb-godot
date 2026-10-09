@@ -76,6 +76,7 @@ docs/                 ver "Documentação do projeto"
 | 2 clientes (2º em autopilot) | `.\tools\run-clients.ps1 -Autopilot` |
 | Servidor Docker (+100 ms, 2% perda) | `$env:NETEM_DELAY_MS=100; $env:NETEM_LOSS_PCT=2; docker compose -f infra/docker-compose.yml up --build` |
 | Editor | `& $env:GODOT_PATH -e --path game` ou `--path launcher` |
+| Roadmap público | `.\tools\build-roadmap.ps1` (gera `docs/roadmap/index.html`) |
 
 - Para linha de comando use o `*_console.exe` (`$env:GODOT_PATH -replace '\.exe$','_console.exe'`); o `.exe` principal não imprime no terminal.
 - No PowerShell 5.1, stderr de executável nativo vira exceção com `$ErrorActionPreference='Stop'` — use `'Continue'` ao chamar o Godot.
@@ -120,6 +121,7 @@ Ordem dentro do arquivo: `class_name` → `extends` → doc `##` → constantes/
 - Regra de dependência entre camadas e entre módulos está em `docs/ARCHITECTURE-GAME.md` §2 e `docs/ARCHITECTURE-LAUNCHER.md` §3.2. Launcher nunca referencia netfox/ENet/cenas de arena; Game nunca referencia telas do launcher.
 - Mostre a **saída real** de testes e comandos antes de dizer que algo funciona. Verificação visual (janelas do jogo) é do usuário: pare e peça.
 - **O Code executa todos os comandos, em background**: servidor (`run-server.ps1`), Docker (`docker compose ... up`), clientes (`run-clients.ps1`), editor e afins. Isso inclui abrir o Docker Desktop e fechar processos de jogo ou servidor deixados por testes anteriores. O PI não digita comando; na verificação visual, o Code sobe tudo, deixa as janelas abertas e pede ao PI só o que olhar. Depois coleta os logs e encerra os processos.
+- **Captura para o roadmap público** (aprovado pelo PI em 2026-10-09): ao subir servidor e clientes para a verificação visual de uma fatia e no `[GATE]` de cada MVP, o Code tira screenshot (e vídeo curto quando o que importa é movimento), registra em `docs/roadmap/` e roda `.\tools\build-roadmap.ps1`, conforme `docs/roadmap/README.md`. Vai na mesma PR.
 - Commits em pt-BR, no formato `tipo(escopo): descrição` (`feat`, `fix`, `refactor`, `test`, `docs`, `chore`).
 - Não adicione nada fora do PRD/plano. Achou problema no plano → pare e pergunte.
 - **Não crie regras de negócio, consentimento, LGPD, aceites ou requisitos que o usuário não tenha passado.**
@@ -161,4 +163,5 @@ São adaptados do Claude-Code-Game-Studios (ver `.claude/THIRD_PARTY_NOTICES.md`
 - `docs/APRENDIZADOS.md` — Consolidação da seção **Aprendizado** dos comentários de encerramento, mantida pelo Cowork. Curto, com teto e regra de promoção: leitura obrigatória do Code no passo 1 de todo card.
 - `docs/FORA-DE-ESCOPO.md` — Fonte única dos itens adiados ou excluídos por MVP, com motivo, destino e gatilho de retorno.
 - `docs/RASTREABILIDADE.md` — Matriz normativa que prova para onde cada requisito aprovado foi: mantido, transferido, adiado ou excluído. Ausência na matriz bloqueia aprovação documental.
+- `docs/roadmap/` — Roadmap público (sócios, playtesters, público): `historia.json` autoral + `index.html` gerado. Estado vem das Issues e do `STATUS.md`, nunca escrito à mão. Ver `docs/roadmap/README.md`.
 - `docs/PRIVACIDADE.md` — Registro não normativo de achados sobre privacidade, proteção de dados, LGPD e consentimentos, com contexto de origem. Não é citado por SPEC e não produz requisito ou aceite antes da revisão do PI.
