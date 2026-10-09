@@ -34,3 +34,9 @@ static func pvp_kill_xp(rules: MatchRules, is_phase2: bool, target_level: int) -
 	if not is_phase2:
 		return rules.phase1_kill_xp
 	return rules.phase2_kill_xp_base + rules.phase2_kill_xp_per_level * target_level
+
+
+## Ranks tipicos (Q, E, R) no [param level] (GDB §3.2).
+static func typical_ranks(curve: XpCurve, level: int) -> Vector3i:
+	var i := clampi(level, 1, max_level(curve)) - 1
+	return Vector3i(curve.typical_q_rank[i], curve.typical_e_rank[i], curve.typical_r_rank[i])
