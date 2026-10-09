@@ -20,11 +20,12 @@ updated: 2026-10-09
 - [MVP1][SPEC-011][F11] Rei Esqueleto aos 3:30, drop épico e relógio de partida (#24)
 - [MVP1][SPEC-010][F10] Baús, itens, inventário de 4 slots, substituição e bônus de conjunto (#23)
 - [MVP1][SPEC-009][F9] Monstros tier 1–3 com IA, XP, níveis, pontos de skill e catch-up (#22)
-- [MVP1][FIX] Herói é puxado de volta (rollback) ao passar pelo portão/muro da base (#41)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP1] Arena single-player (#16)
+
+- [MVP1][FIX] Herói é puxado de volta (rollback) ao passar pelo portão/muro da base (#41)
 
 ## Feito
 
@@ -34,6 +35,7 @@ _(vazio)_
 
 ### [MVP1] Arena single-player (#16)
 
+- [MVP1][SPEC-005][FIX] Servidor Docker sobe sem shared/ e o herói não compila (#42, finalizado em: 2026-10-09)
 - [MVP1][SPEC-034][F34] Arena: pilares da cratera e mato alto com assets do Blender (#38, finalizado em: 2026-10-09)
 - [MVP1][SPEC-008][F8] Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha e R Terremoto lendo shared/data (#21, finalizado em: 2026-10-09)
 - [INFRA] CI: lint-gd, path filter por módulo e shared/test no test-game (#17, finalizado em: 2026-10-09)
