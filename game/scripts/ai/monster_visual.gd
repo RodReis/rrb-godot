@@ -1,6 +1,6 @@
 extends Node
 ## Visual do monstro: animacao pelo estado replicado (velocidade, golpe, HP). So le estado.
-## Modelo sem AnimationPlayer (Golem) so some ao morrer.
+## Modelo sem AnimationPlayer (Golem): pisao no golpe e some ao morrer.
 
 @export var model: Node3D
 @export var idle: StringName = &"Idle"
@@ -9,6 +9,9 @@ extends Node
 @export var death: StringName = &"Death_A"
 ## Velocidade abaixo da qual o monstro esta parado (u/s).
 @export var moving_speed: float = 0.1
+## Pisao do modelo sem animacao (u, s).
+@export var stomp_height: float = 0.3
+@export var stomp_time: float = 0.25
 
 var _monster: Monster
 var _player: AnimationPlayer
@@ -37,6 +40,8 @@ func _process(_delta: float) -> void:
 	var started_attack := _monster.attack_cooldown > _last_cooldown
 	_last_cooldown = _monster.attack_cooldown
 	if _player == null:
+		if started_attack:
+			_stomp()
 		return
 	if started_attack:
 		_one_shot = true
@@ -55,6 +60,13 @@ func _die() -> void:
 		model.hide()
 		return
 	_player.play(death)
+
+
+## Golpe de modelo sem animacao (Golem): sobe e bate no chao.
+func _stomp() -> void:
+	var tween := create_tween()
+	tween.tween_property(model, "position:y", stomp_height, stomp_time / 2.0)
+	tween.tween_property(model, "position:y", 0.0, stomp_time / 2.0)
 
 
 func _loop(animation: StringName) -> void:
