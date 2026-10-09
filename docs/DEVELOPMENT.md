@@ -37,7 +37,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [x] **F1** — Tarefas 0, 1, 2, 3 (snapshot, `game/`, netfox + GUT, runner `tools/test.ps1`) + CI mínimo (`test-game` + `gate`, `CI-PR.md` §2)
 - [x] **F2** — Tarefas 3 (`LaunchArgs`), 4, 5, 6
 - [x] **F3** — Tarefas 7, 8 (roteiro: `game/test/net/roteiro-f3-conexao-movimento.md`)
-- [ ] **F4** — Tarefas 9, 10
+- [x] **F4** — Tarefas 9, 10 (roteiro: `game/test/net/roteiro-f4-ataque-hud-autopilot.md`)
 - [ ] **F5** — Tarefa 11
 - [ ] **[GATE] M0** — Tarefa 12 → ADR-0001 → decisão do PI
 
