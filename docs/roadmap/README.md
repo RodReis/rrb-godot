@@ -35,6 +35,8 @@ O Code tira as capturas quando sobe servidor e clientes para a verificação vis
 
 - **Screenshot** da janela do jogo mostrando o que a fatia entregou.
 - **Vídeo curto** (`.webm`/`.mp4`, até 10 s) quando o que importa é movimento: combate, zona fechando, bot jogando.
+  - `ffmpeg -f gdigrab -i title="rrb-godot (DEBUG)"` grava **preto**: a janela é Vulkan (8648 quadros pretos no gate do MVP1, 2026-10-10).
+  - `ffmpeg -f lavfi -i "ddagrab=...,hwdownload,format=bgra"` captura a janela Vulkan, mas pega **o monitor inteiro**. Recorte só a janela do jogo antes de salvar qualquer coisa em `docs/`: o resto da tela mostra conversas e arquivos do PI. O recorte por `--position`/`offset_x` ainda não foi validado; até lá, screenshot da janela pelo PI vale.
 - Nome: `img/mvp<n>-f<k>-<assunto>.webp` (ex.: `mvp1-f8-cavaleiro-investida.webp`); no gate, `img/mvp<n>-gate-<assunto>.webp`.
 - Tamanho: imagem `.webp` com até 1400 px de largura e cerca de 400 KB; vídeo até 3 MB. Tudo vai embutido na página, que tem teto de 15 MB.
 - Registrar a imagem em `historia.json` → `capitulos.MVPn.imagens` com `tipo`:
@@ -50,7 +52,7 @@ Mockup de `docs/prd/telas/` só entra como `conceito`, na galeria "Como imaginam
 
 Cada capítulo em `historia.json` tem `titulo`, `pergunta`, `periodo`, `narrativa` (parágrafos), `numeros`, `aprendizado` e `imagens`. O texto é público: sem número de issue, sem pendência do PI, sem jargão interno (ledger, junction, SPEC). Escrever para alguém que joga, não para quem lê o código.
 
-Quem escreve a narrativa ao fechar cada MVP: **ainda não definido pelo PI**.
+Quem escreve a narrativa ao fechar cada MVP: **ainda não definido pelo PI** como regra. O capítulo MVP1 foi reescrito pelo Code a pedido do PI (2026-10-10), depois do gate.
 
 ## Publicação
 

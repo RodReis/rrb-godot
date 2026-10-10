@@ -88,24 +88,28 @@
     "MVP1": {
       "titulo": "A arena ganha vida",
       "pergunta": "Dá para jogar uma preparação inteira contra um bot?",
-      "periodo": "out/2026 →",
+      "periodo": "out/2026",
       "narrativa": [
-        "Com a rede aprovada, começa o conteúdo. A meta deste capítulo é uma partida de 5:00 contra o bot, do início ao fim, em que o Cavaleiro farma, sobe de nível, abre baús, equipa itens e encara o Rei Esqueleto.",
-        "Já estão prontos os dados do jogo, com todos os números de balanceamento em arquivos de dados e nenhum espalhado no código. Também está pronta a arena Vale Rúnico, com rio, duas pontes, cratera central com oito pilares e moitas para se esconder. A câmera em terceira pessoa foi testada na arena e mantida.",
-        "Agora vêm o Cavaleiro com as quatro habilidades, os monstros, os baús, o chefe, o bot e a interface da partida. Os primeiros modelos próprios, os pilares da cratera e o mato alto, estão saindo do Blender."
+        "Com a rede aprovada, veio o conteúdo. A pergunta do capítulo era se dava para jogar uma preparação inteira de 5:00 contra o bot. A resposta é sim: a homologação foi uma partida completa, do primeiro monstro aos portões caindo, sem nenhum erro.",
+        "O Cavaleiro chegou com ataque básico e três habilidades: investida, muralha e terremoto. A arena Vale Rúnico ganhou monstros em três níveis de força, experiência e níveis, baús com itens de três raridades e dois conjuntos. Ganhou também o Rei Esqueleto, que desperta aos 3:30 depois de um aviso aos 3:00 e deixa um baú dourado com um item épico. Todos os números de balanceamento ficam em arquivos de dados, nenhum espalhado no código.",
+        "O bot limpa a própria base primeiro, abre os baús, recua quando está com pouca vida, disputa o centro e o chefe, e parte para cima quando está mais forte. Dá para treinar contra ele sem internet. A interface mostra o relógio, a contagem do chefe, o minimapa, a vida, a experiência, o equipamento e as habilidades com recarga, e o bestiário abre durante a partida com a tecla B. Os pilares da cratera, o mato alto e a coroa do chefe foram modelados no Blender."
       ],
       "numeros": [
-        { "valor": "35 u", "rotulo": "de raio da arena" },
-        { "valor": "~6 s", "rotulo": "da base ao centro caminhando" },
-        { "valor": "45°", "rotulo": "de inclinação da câmera" }
+        { "valor": "5:00", "rotulo": "de preparação contra o bot, sem nenhum erro" },
+        { "valor": "17", "rotulo": "baús, contando o do chefe" },
+        { "valor": "323", "rotulo": "testes automáticos" },
+        { "valor": "35 u", "rotulo": "de raio da arena" }
       ],
+      "aprendizado": "Um bot que segue um ponto precisa saber parar. Ao chegar, o pedacinho de caminho que sobrava mudava de direção a cada instante, e ele ficava girando no lugar.",
       "imagens": [
         { "arquivo": "mvp1-f34-pilar-e-mato-blender.webp", "legenda": "Pilar da cratera e moitas modelados no Blender, antes de entrar no jogo.", "tipo": "em-construcao" },
         { "arquivo": "mvp1-f34-cratera-e-mato-no-jogo.webp", "legenda": "Os pilares da cratera e as moitas de grama, modelados no Blender, já dentro da arena: o Cavaleiro cruza a ponte rumo ao centro.", "tipo": "entregue" },
         { "arquivo": "mvp1-f9-centro-golem.webp", "legenda": "Com a base limpa, o Cavaleiro sobe de nível e chega ao centro, guardado pelo Golem de Pedra, pelo Esqueleto Guerreiro e pelo Esqueleto Mago. Golem baseado em \"Lava Golem\" de vladimirmejia (CC-BY).", "tipo": "entregue" },
         { "arquivo": "mvp1-f10-bau-guarda-completa.webp", "legenda": "Baús da base abertos: com elmo, peitoral e botas da Guarda, o conjunto fecha e a vida máxima do Cavaleiro sobe 15 %.", "tipo": "entregue" },
         { "arquivo": "mvp1-f11-rei-esqueleto.webp", "legenda": "Aos 3:30 o Rei Esqueleto desperta no centro da cratera. Seu golpe empurra quem chega perto; derrotado, deixa um baú dourado com um item épico.", "tipo": "entregue" },
+        { "arquivo": "mvp1-f12-bot-no-centro.webp", "legenda": "O bot limpou a base mais rápido e já está no centro, dois níveis acima. Atrasado, o Cavaleiro ganha 25 % a mais de experiência para tentar virar.", "tipo": "entregue" },
         { "arquivo": "mvp1-f13-hud-fase1.webp", "legenda": "A HUD da fase 1: relógio da preparação, portões, contagem do Rei Esqueleto, minimapa, vida e experiência, equipamento e habilidades com recarga. Quem fica dois níveis atrás ganha 25 % a mais de experiência.", "tipo": "entregue" },
+        { "arquivo": "mvp1-f13-aviso-do-boss.webp", "legenda": "Faltando 22 s, o portal roxo marca onde o Rei Esqueleto vai surgir e a contagem fica amarela.", "tipo": "entregue" },
         { "arquivo": "mvp1-gate-rei-esqueleto-contestado.webp", "legenda": "Homologação: aos 3:44 o Rei Esqueleto está no centro e o bot, dois níveis acima, já foi contestá-lo.", "tipo": "entregue" },
         { "arquivo": "mvp1-gate-portoes-abertos.webp", "legenda": "Fim da preparação: 5:00 jogados contra o bot, Rei Esqueleto derrotado, peitoral épico do baú dourado no equipamento e portões abertos para a fase seguinte.", "tipo": "entregue" }
       ]
@@ -165,6 +169,7 @@
     "F26": "Histórico de partidas",
     "F27": "Bestiário e forja no launcher",
     "F33": "Tela Arena & Mapa",
+    "F35": "Perfil de conta: apelido e avatar",
     "F28": "Deploy na nuvem e instalador",
     "F29": "Telemetria e indicadores",
     "F30": "Ajustes de balanceamento pós-playtest",
@@ -185,6 +190,8 @@
   "creditos": [
     "Modelos e texturas KayKit (Kay Lousberg), licença CC0.",
     "Golem de Pedra baseado em \"Lava Golem\" de vladimirmejia (Blend Swap), licença CC-BY 3.0, modificado.",
+    "Som do aviso do Rei Esqueleto: Music Jingles de Kenney, licença CC0.",
+    "Fontes Outfit, Space Grotesk e JetBrains Mono, licença SIL Open Font License 1.1.",
     "Rede com netfox (Fox's Sake Studio), licença MIT.",
     "Feito em Godot Engine, licença MIT."
   ]
