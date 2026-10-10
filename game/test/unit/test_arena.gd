@@ -159,6 +159,20 @@ func test_spawn_dos_herois() -> void:
 			assert_almost_eq(m.position, expected, Vector3.ONE * 0.01)
 
 
+## Fonte da base (PI 2026-10-10, #74): uma por base, do time dono, espelhada, dentro da base
+## (ate 12,7 u do spawn) e dentro da arena.
+func test_uma_fonte_por_base_espelhada() -> void:
+	var by_team: Dictionary = {}
+	for node: Node in _arena.find_children("*", "Node3D", true, false):
+		if node is Fountain:
+			by_team[(node as Fountain).team] = (node as Fountain).position
+	assert_eq(by_team.size(), 2)
+	var a: Vector3 = by_team[GateRules.TEAM_A]
+	assert_almost_eq(by_team[GateRules.TEAM_B], -a, Vector3.ONE * 0.01)
+	assert_lt(a.distance_to(Vector3(-24, 0, 24)), 12.7)
+	assert_lt(a.length(), 35.0 - 1.0)
+
+
 func test_baus_de_base_a_3u_um_do_outro() -> void:
 	var chests: Array[SpawnMarker] = []
 	for m: SpawnMarker in _markers():

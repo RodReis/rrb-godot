@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/tall_grass_4x4.glb" id="9_8kk48"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/tall_grass_4x3.glb" id="10_wqbss"]
 [ext_resource type="Script" path="res://scripts/world/spawn_marker.gd" id="11_fir7s"]
+[ext_resource type="PackedScene" path="res://scenes/world/fountain.tscn" id="20_fountain"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gy0qm"]
 size = Vector3(80.3, 1, 80.3)
@@ -3098,6 +3099,16 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 shape = SubResource("BoxShape3D_2v46x")
 
 [node name="Visual" type="Node3D" parent="TallGrass/GrassCenter1" unique_id=221851679 instance=ExtResource("10_wqbss")]
+
+[node name="Fountains" type="Node3D" parent="."]
+
+[node name="FountainA" parent="Fountains" instance=ExtResource("20_fountain")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.4, 0, 14.8)
+team = 1
+
+[node name="FountainB" parent="Fountains" instance=ExtResource("20_fountain")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.4, 0, -14.8)
+team = 2
 
 [node name="Markers" type="Node3D" parent="." unique_id=1862854223]
 

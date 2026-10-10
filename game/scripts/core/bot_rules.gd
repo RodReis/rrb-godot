@@ -10,6 +10,8 @@ enum State { FARM, LOOT, CONTEST, FIGHT, RETREAT }
 static func next_state(state: State, view: BotView, profile: BotProfile) -> State:
 	if state == State.RETREAT and view.safe_seconds < profile.safe_seconds:
 		return State.RETREAT
+	if state == State.RETREAT and view.can_heal and view.hp_pct < profile.contest_hp_pct:
+		return State.RETREAT  # na fonte ate poder contestar o boss (PI 2026-10-10, #74)
 	if wants_retreat(view, profile):
 		return State.RETREAT
 	if view.enemy_distance <= profile.fight_range and has_advantage(view):

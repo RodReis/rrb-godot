@@ -196,12 +196,14 @@ func _start_phase1(tick: int) -> void:
 
 
 ## Servidor: muda o estado em todos (quem ouve phase_changed no servidor spawna os herois) e
-## ajusta o respawn dos herois a fase nova.
+## ajusta o respawn e a fonte da base (so na fase 1) dos herois a fase nova.
 func _enter(to: MatchState.State, tick: int, p_deadline_tick: int = 0) -> void:
 	print("[match] %s -> %s, tick %d" % [_name(state), _name(to), tick])
 	_changed.rpc(state, to, p_deadline_tick, tick)
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
-		(node as Hero).respawn_seconds = KillRules.respawn_seconds(rules, state)
+		var hero := node as Hero
+		hero.respawn_seconds = KillRules.respawn_seconds(rules, state)
+		hero.fountain_open = state == MatchState.State.PHASE1
 
 
 func _name(value: MatchState.State) -> String:

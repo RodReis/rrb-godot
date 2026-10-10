@@ -48,7 +48,7 @@ func think(tick: int) -> void:
 	_learn_points()
 	match state:
 		BotRules.State.RETREAT:
-			_go(tick, _home())
+			_go(tick, _fountain().global_position if view.can_heal else _home())
 		BotRules.State.FIGHT:
 			_attack(tick, enemy, true)
 		BotRules.State.CONTEST:
@@ -91,6 +91,7 @@ func _view(tick: int, enemy: Hero) -> BotView:
 		v.contest_time = INF
 	v.base_monsters_left = _alive_monsters(_hero.team).size()
 	v.base_chests_left = 0 if _nearest_chest(_hero.team) == null else 1
+	v.can_heal = _fountain() != null and clock != null and v.elapsed < clock.rules.phase1_duration
 	return v
 
 
@@ -276,6 +277,14 @@ func _nearest(candidates: Array[Combatant]) -> Combatant:
 		if best == null or _flat(c.global_position).length() < _flat(best.global_position).length():
 			best = c
 	return best
+
+
+## Fonte da base do bot (#74): recua ate ela enquanto cura (fase 1).
+func _fountain() -> Fountain:
+	for node: Node in get_tree().get_nodes_in_group(Fountain.GROUP):
+		if (node as Fountain).team == _hero.team:
+			return node as Fountain
+	return null
 
 
 func _home() -> Vector3:

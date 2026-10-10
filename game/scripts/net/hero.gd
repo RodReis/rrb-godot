@@ -11,6 +11,8 @@ extends Combatant
 ## respawn_seconds (o MatchController ajusta pela fase, KillRules) e ele renasce em home com HP
 ## cheio, sem perder itens (GDB §3.3). Jogador que cai: o servidor passa a dar input vazio ao
 ## heroi (mark_disconnected), senao o netfox para de simula-lo (ARCHITECTURE-GAME §6).
+## Fonte da base (#74): no servidor, perto da fonte do proprio time e com fountain_open (fase 1),
+## cura a cada segundo; tomar dano pausa a cura (heal_pause_ticks, estado de rollback).
 
 const GROUP: StringName = &"heroes"
 ## Cena de cada heroi pelo id do HeroData.
@@ -21,6 +23,7 @@ const CHARGE_REACH: float = 0.8
 @export var hero_data: HeroData
 @export var xp_curve: XpCurve
 @export var item_catalog: ItemCatalog
+@export var match_rules: MatchRules
 
 ## Definido por quem spawna, antes de entrar na arvore (MultiplayerSpawner). Nivel inicial
 ## (--level de dev); depois o nivel sai do XP.
@@ -34,6 +37,8 @@ var home: Transform3D = Transform3D.IDENTITY
 var respawn_seconds: float = 0.0
 ## Servidor: peer_id de quem deu o golpe final na ultima morte (0 = monstro).
 var killer_id: int = 0
+## Servidor: a fonte da base cura (so na fase 1), definido pelo MatchController.
+var fountain_open: bool = false
 var attributes: HeroAttributes
 
 # Estado de rollback.
@@ -59,6 +64,8 @@ var equipment: Vector4i = Inventory.NONE
 var interact_ticks: int = 0
 ## Ticks ate renascer; so vale com hp 0 (morto).
 var respawn_ticks: int = 0
+## Ticks em que a fonte nao cura depois de um dano.
+var heal_pause_ticks: int = 0
 
 var _rollback: RollbackSynchronizer
 var _attributes_equipment: Vector4i = Inventory.NONE
@@ -114,6 +121,7 @@ func _ready() -> void:
 		":equipment",
 		":interact_ticks",
 		":respawn_ticks",
+		":heal_pause_ticks",
 	]
 	_rollback.input_properties = [
 		"Input:movement",
@@ -147,6 +155,8 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	_refresh_attributes()
 	hp = mini(hp, attributes.max_hp)  # troca para item com menos HP
 	_tick_timers()  # recarga corre tambem morto
+	if multiplayer.is_server():
+		_drink(tick)
 	_refresh_body()
 	if not is_alive():
 		velocity = Vector3.ZERO
@@ -235,6 +245,18 @@ func _refresh_body() -> void:
 	_shield_blocker.collision_layer = PhysicsLayers.SHIELD if shield_ticks > 0 else 0
 
 
+## Servidor: um pulso de cura por segundo na fonte do proprio time (#74).
+func _drink(tick: int) -> void:
+	if tick % NetworkTime.tickrate != 0:
+		return
+	var in_area := false
+	for node: Node in get_tree().get_nodes_in_group(Fountain.GROUP):
+		in_area = in_area or (node as Fountain).heals(global_position, team)
+	if FountainRules.can_heal(fountain_open, is_alive(), heal_pause_ticks, in_area):
+		var amount := FountainRules.heal_amount(attributes.max_hp, match_rules.fountain_heal_pct)
+		hp = mini(hp + amount, attributes.max_hp)
+
+
 ## Morto: conta o respawn; no fim renasce em home com HP cheio (itens ficam, GDB §3.3).
 func _count_respawn() -> void:
 	respawn_ticks = maxi(respawn_ticks - 1, 0)
@@ -286,6 +308,7 @@ func _tick_timers() -> void:
 	e_cooldown = maxi(e_cooldown - 1, 0)
 	r_cooldown = maxi(r_cooldown - 1, 0)
 	stun_ticks = maxi(stun_ticks - 1, 0)
+	heal_pause_ticks = maxi(heal_pause_ticks - 1, 0)
 	dash_ticks = maxi(dash_ticks - 1, 0)
 	shield_ticks = maxi(shield_ticks - 1, 0)
 	if shield_ticks == 0:
@@ -402,6 +425,9 @@ func _apply_hits(tick: int) -> void:
 			damage = split.x
 			shield_hp = split.y
 		hp = maxi(hp - damage, 0)
+		if damage > 0:
+			var pause := match_rules.fountain_damage_pause
+			heal_pause_ticks = SkillRules.seconds_to_ticks(pause, NetworkTime.tickrate)
 		if hp == 0:
 			_die(effect)
 			continue
