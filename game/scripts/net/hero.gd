@@ -53,6 +53,7 @@ var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de roll
 
 @onready var input: PlayerInput = $Input
 @onready var hp_label: Label3D = $HpLabel
+@onready var hp_bar: WorldHealthBar = $HpBar
 @onready var _shield_blocker: Area3D = $ShieldBlocker
 
 
@@ -67,6 +68,7 @@ func _ready() -> void:
 	hp = attributes.max_hp
 	set_multiplayer_authority(1)
 	input.set_multiplayer_authority(1 if is_bot else peer_id)
+	hp_bar.set_friendly(peer_id == multiplayer.get_unique_id())
 
 	# Heroi planar (#41): perto de muro a despenetracao mexia no y e o encaixe no chao do
 	# move_and_slide() passava a depender de is_on_floor() do tick anterior, que fica fora do
@@ -161,9 +163,8 @@ func _process(_delta: float) -> void:
 	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
 	if stun_ticks > 0:
 		status += " (atordoado)"
-	var points := SkillRules.free_points(level, ranks)
-	var learn := "  +%d (Ctrl+Q/E/R)" % points if points > 0 else ""
-	hp_label.text = "Nv %d  %d XP%s\n%d / %d%s" % [level, xp, learn, hp, attributes.max_hp, status]
+	hp_label.text = "Nv %d%s" % [level, status]
+	hp_bar.set_ratio(float(hp) / attributes.max_hp)
 
 
 func receive_hit(tick: int, source: int, effect: HitEffect) -> void:

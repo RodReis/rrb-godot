@@ -11,7 +11,7 @@ O que está fora do contrato **de propósito**, com dono e gatilho. Débito sem 
 | DS-04 | `RED` (4,4:1) e `PURPLE` (4,1:1) da paleta de `telas/` **não passam** 4,5:1 como texto sobre `BG_PANEL` (`BLUE` passou a 5,2:1 com a paleta nova) | paleta é do PI (R-PEND-11); regra: só fundo/borda/ícone ou texto ≥ 24 px bold | PI | se precisar de texto pequeno nessas cores → tokens `*_TEXT` mais claros (ex.: `#F87171`, `#C084FC`) — decisão do PI |
 | DS-05 | Sem tema claro / alto contraste | PC, público casual, fatia | — | fase B |
 | DS-06 | Ícones de skills/itens/HUD inexistentes (DV §3.1 lista nomes, não arquivos) | arte CC0 até M4; placeholders geométricos com letra | Code (placeholder) / PI (arte) | antes do playtest M4 |
-| DS-07 | `Minimap` da fase 1 por `SubViewport` (câmera ortográfica) pode custar FPS | mais simples que desenhar; medir | Code | `TIME_FPS` < 60 em partida → trocar por `_draw` como o `ZoneRadar` |
+| DS-07 | `Minimap` da fase 1 por `SubViewport` (câmera ortográfica) pode custar FPS | mais simples que desenhar; medir | Code | `TIME_FPS` < 60 em partida → trocar por `_draw` como o `ZoneRadar`. Medido 2026-10-09 (F13, offline + bot, sem vsync): ~600–670 fps com o minimapa, ~570–620 sem — custo não mensurável nesta máquina |
 | DS-08 | `ScoreBanner`, `ZoneRadar`, `Minimap`, `LatencyPlot` só existem a partir do MVP2/M0 — galeria incompleta até lá | ordem de implementação | Code | fechar com as fatias F13/F17 |
 | DS-09 | Textos em `tr()` sem arquivo de tradução | só pt-BR na fatia (PRD §12) | — | localização entrar no roadmap |
 | DS-10 | Sem som de UI definido (DV cita "lâmina/madeira") | assets de áudio não escolhidos | PI | antes de F24 |

@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://scripts/ai/monster_visual.gd" id="2_visual"]
 [ext_resource type="Resource" path="res://shared/data/monsters/skeleton_warrior_t2.tres" id="3_data"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Warrior.glb" id="4_model"]
+[ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.4
@@ -28,9 +29,14 @@ model = NodePath("../Model")
 attack = &"Unarmed_Melee_Attack_Punch_B"
 
 [node name="HpLabel" type="Label3D" parent="."]
-position = Vector3(0, 2.3, 0)
+layers = 2
+position = Vector3(0, 2.75, 0)
 pixel_size = 0.01
 billboard = 1
 text = "0 / 0"
-font_size = 64
-outline_size = 18
+font_size = 44
+outline_size = 12
+
+[node name="HpBar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.3, 0)
+script = ExtResource("hpbar_script")

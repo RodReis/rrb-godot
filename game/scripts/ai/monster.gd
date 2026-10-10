@@ -29,6 +29,7 @@ var _target: Hero
 var _seen: HitLedger = HitLedger.new()  # golpes ja aplicados: ressimular o heroi nao duplica
 
 @onready var hp_label: Label3D = $HpLabel
+@onready var hp_bar: WorldHealthBar = $HpBar
 
 
 func _ready() -> void:
@@ -54,7 +55,9 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	hp_label.visible = is_alive()
-	hp_label.text = "%s %d / %d" % [data.display_name, hp, roundi(data.hp)]
+	hp_bar.visible = is_alive()
+	hp_label.text = data.display_name
+	hp_bar.set_ratio(hp / data.hp)
 
 
 func is_alive() -> bool:

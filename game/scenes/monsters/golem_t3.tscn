@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://scripts/ai/monster_visual.gd" id="2_visual"]
 [ext_resource type="Resource" path="res://shared/data/monsters/golem_t3.tres" id="3_data"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/golem.glb" id="4_model"]
+[ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.7
@@ -27,9 +28,14 @@ script = ExtResource("2_visual")
 model = NodePath("../Model")
 
 [node name="HpLabel" type="Label3D" parent="."]
-position = Vector3(0, 3.0, 0)
+layers = 2
+position = Vector3(0, 3.45, 0)
 pixel_size = 0.01
 billboard = 1
 text = "0 / 0"
-font_size = 64
-outline_size = 18
+font_size = 44
+outline_size = 12
+
+[node name="HpBar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 3, 0)
+script = ExtResource("hpbar_script")
