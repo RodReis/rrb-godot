@@ -7,6 +7,26 @@ updated: 2026-10-10
 
 ## Backlog
 
+### [MVP2.5] Bloco visual — toon/PBR, arte da ilha, VFX e HUD v2 (#99)
+
+- [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103)
+- [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100)
+- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98)
+- [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97)
+- [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96)
+- [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95)
+- [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94)
+- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93)
+
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
+- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
+- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
+- [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67)
+- [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66)
+- [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65)
+
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
@@ -21,25 +41,16 @@ updated: 2026-10-10
 - [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78)
 - [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
-- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
-- [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67)
-- [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66)
-- [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65)
-
 ### Sem épico
 
 - Câmera: pilares e muros tapam o herói (oclusão) (#70)
-- Câmera: girar em volta do herói com o botão direito segurado (#47)
 
 ## A Fazer
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92)
 - [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64)
-- [MVP2][SPEC-016][F16] Fase 2: zona, dano da zona, respawn, kills, morte súbita, colapso e regras de vitória (#63)
 
 ## Em Andamento
 
@@ -53,6 +64,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-016][F16] Fase 2: zona, dano da zona, respawn, kills, morte súbita, colapso e regras de vitória (#63, finalizado em: 2026-10-10)
 - [MVP2][SPEC-014][F14] Arqueira: modelo KayKit, flecha validada no servidor, Q Flecha Perfurante, E Rolamento e R Chuva de Flechas (#62, finalizado em: 2026-10-10)
 - [MVP2][SPEC-020][F20] Monstros, baús e boss replicados para 2 clientes reais sob latência e perda (#60, finalizado em: 2026-10-10)
 - [MVP2][SPEC-036][F36] Economia de campo: 4 campos laterais de monstros e baús e respawn de 90 s na fase 1 (#59, finalizado em: 2026-10-10)
@@ -89,6 +101,7 @@ _(vazio)_
 
 ### Sem épico
 
+- Câmera: girar em volta do herói com o botão direito segurado (#47, finalizado em: 2026-10-10)
 - [MVP1][FIX] Bot gira no lugar no centro depois que o boss morre e não há mais alvo (#52, finalizado em: 2026-10-10)
 - [INFRA] Pipeline Blender: art/, .gitattributes/.gitignore e import de .blend desligado (ADR-0005) (#34, finalizado em: 2026-10-09)
 
