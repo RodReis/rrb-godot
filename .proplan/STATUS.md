@@ -7,6 +7,20 @@ updated: 2026-10-10
 
 ## Backlog
 
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
+- [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
+- [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85)
+- [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84)
+- [MVP3][SPEC-026][F26] Histórico de partidas: GET /matches e tela com herói do oponente (#83)
+- [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
+- [MVP3][SPEC-025][F25] Login e cadastro, lobby com diorama, fila por polling, lançar o Game e treino vs bot (#81)
+- [MVP3][SPEC-024][F24] Shell do launcher: App, pilha de telas, Theme completo, galeria, Configurações com aba Créditos e settings.cfg (#80)
+- [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79)
+- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78)
+- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
+
 ### [MVP2] Partida em rede (#57)
 
 - [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
@@ -14,7 +28,6 @@ updated: 2026-10-10
 - [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67)
 - [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66)
 - [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65)
-- [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64)
 
 ### Sem épico
 
@@ -25,6 +38,7 @@ updated: 2026-10-10
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64)
 - [MVP2][SPEC-016][F16] Fase 2: zona, dano da zona, respawn, kills, morte súbita, colapso e regras de vitória (#63)
 - [MVP2][SPEC-014][F14] Arqueira: modelo KayKit, flecha validada no servidor, Q Flecha Perfurante, E Rolamento e R Chuva de Flechas (#62)
 - [MVP2][SPEC-020][F20] Monstros, baús e boss replicados para 2 clientes reais sob latência e perda (#60)
@@ -32,15 +46,18 @@ updated: 2026-10-10
 
 ## Em Andamento
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58)
+_(vazio)_
 
 ## Feito
 
 _(vazio)_
 
 ## Finalizado
+
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58, finalizado em: 2026-10-10)
+- [MVP2][SPEC-012][FIX] Bot contesta o Rei Esqueleto em loop e morre sem parar (#74, finalizado em: 2026-10-10)
 
 ### #16 (#16)
 
