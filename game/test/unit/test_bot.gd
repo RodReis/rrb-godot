@@ -221,3 +221,14 @@ func test_portoes_caidos_sem_monstro_vai_ate_o_jogador() -> void:
 	for i: int in 150:
 		_step()
 	assert_lt(_bot.global_position.distance_to(_player.global_position), start - 5.0)
+
+
+func test_portoes_caidos_com_o_jogador_morto_nao_vai_ate_ele() -> void:
+	_clear()
+	await _fall_gates()
+	_bot.global_position = _center()
+	_player.hp = 0
+	var start := _bot.global_position.distance_to(_player.global_position)
+	for i: int in 150:
+		_step()
+	assert_gt(_bot.global_position.distance_to(_player.global_position), start - 1.0)

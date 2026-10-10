@@ -1,7 +1,14 @@
 class_name MatchRules
 extends Resource
-## Ritmo da partida 1v1: tempos, respawn, XP de abate, zona e baus (GDB §3.3, §5, §6.2, §7).
-## Tempos em segundos; percentuais em fracao.
+## Ritmo da partida 1v1: espera, selecao, tempos, respawn, XP de abate, zona e baus (GDB §3.3,
+## §5, §6.2, §7; CONVENTION §3). Tempos em segundos; percentuais em fracao.
+
+## Espera do 2o jogador (LOBBY_WAIT); expirou = partida abandoned (ARCHITECTURE-GAME §3.7).
+@export var lobby_wait_timeout: float
+## Duracao da selecao de herois (HERO_PICK).
+@export var hero_pick_duration: float
+## Heroi de quem nao confirma a tempo, por slot (P1, P2) — R-PEND-04.
+@export var default_heroes: Array[StringName]
 
 @export var phase1_duration: float
 @export var max_match_duration: float

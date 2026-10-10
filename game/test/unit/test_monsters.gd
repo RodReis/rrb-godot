@@ -128,6 +128,14 @@ func test_monstro_golpeia_heroi_pelo_ledger() -> void:
 	assert_eq(_hero.hp, hp - expected)
 
 
+func test_heroi_morto_nao_e_alvo() -> void:
+	var monster := _base_monsters(GateRules.TEAM_A)[0]
+	_hero.global_position = monster.global_position + Vector3(1.0, 0.0, 0.0)
+	_hero.hp = 0
+	monster._on_network_tick(DT, _tick)
+	assert_eq(monster.state, MonsterRules.State.IDLE)
+
+
 func test_leash_volta_com_hp_cheio() -> void:
 	var monster := _base_monsters(GateRules.TEAM_A)[0]
 	_hero.global_position = monster.global_position + Vector3(3.0, 0.0, 0.0)

@@ -4,6 +4,9 @@
 
 [resource]
 script = ExtResource("1_script")
+lobby_wait_timeout = 120.0
+hero_pick_duration = 24.0
+default_heroes = Array[StringName]([&"knight", &"ranger"])
 phase1_duration = 300.0
 max_match_duration = 600.0
 boss_warning_time = 180.0

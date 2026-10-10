@@ -23,6 +23,9 @@ var learn: int = LEARN_NONE
 ## F pressionado neste tick; o Hero conta quanto tempo (toque abre bau, segurar troca item).
 var interact_hold: bool = false
 
+## Servidor: o jogador deste heroi caiu; o input fica vazio (Hero.mark_disconnected).
+var disconnected: bool = false
+
 var _learn_held: int = LEARN_NONE
 
 var _gamepad: bool = false
@@ -34,7 +37,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _gather() -> void:
-	if suspended:
+	if suspended or disconnected:
 		_gather_idle()
 		return
 	if autopilot:
