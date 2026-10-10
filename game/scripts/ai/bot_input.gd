@@ -61,6 +61,7 @@ func think(tick: int) -> void:
 
 func _reset() -> void:
 	movement = Vector3.ZERO
+	aim = Vector3.ZERO
 	attack = false
 	skill_q = false
 	skill_e = false
@@ -146,14 +147,23 @@ func _go(tick: int, goal: Vector3) -> void:
 	)
 	# Antes da 1a sincronizacao do mapa a consulta da erro: anda reto ate o mapa ficar pronto.
 	var map_ready := NavigationServer3D.map_get_iteration_id(map) > 0
-	if map_ready and (due or not goal.is_equal_approx(_path_goal)):
+	# Alvo andando so recalcula quando se afastou do ultimo pedido (sem consulta por frame).
+	var moved := goal.distance_to(_path_goal) > WAYPOINT_REACHED
+	if map_ready and (due or moved):
 		_path = NavigationServer3D.map_get_path(map, _hero.global_position, goal, true)
 		_path_index = 0
 		_path_goal = goal
 		_path_tick = tick
 	while _path_index < _path.size() and _flat(_path[_path_index]).length() < WAYPOINT_REACHED:
 		_path_index += 1
-	var next := goal if _path_index >= _path.size() else _path[_path_index]
+	var next := goal
+	if _path_index < _path.size():
+		next = _path[_path_index]
+	elif not _path.is_empty():
+		var gap := _path[_path.size() - 1] - goal
+		gap.y = 0.0
+		if gap.length() > WAYPOINT_REACHED * 2:
+			next = _hero.global_position  # alvo fora do navmesh (atras do portao): para no mais perto
 	movement = _flat(next).normalized()
 	if aim.is_zero_approx():
 		aim = movement

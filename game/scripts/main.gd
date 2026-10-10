@@ -18,6 +18,8 @@ var _hero_scene: PackedScene = preload(HERO_SCENE)
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 ## Segundos em que o relogio da partida comeca (--time de dev).
 var _start_time: float = LaunchArgs.DEFAULT_TIME
+## --bot: o bot entra com o 1o jogador (junto com o relogio) e ocupa o time B.
+var _wants_bot: bool = false
 
 @onready var players: Node3D = $Players
 @onready var spawns: SpawnDirector = $Spawns
@@ -45,13 +47,12 @@ func _ready() -> void:
 	PlayerInput.autopilot = args["autopilot"]
 	_hero_level = args["level"]
 	_start_time = args["time"]
+	_wants_bot = args["bot"]
 	if args["offline"]:
 		if start_server(EPHEMERAL_PORT, HOST_BIND_IP):
-			_spawn_bot()
 			_join(multiplayer.get_unique_id())
 	elif args["mode"] == "server" or OS.has_feature("dedicated_server"):
-		if start_server(args["port"]) and args["bot"]:
-			_spawn_bot()
+		start_server(args["port"])
 	elif args["host"] != "":
 		start_client(args["host"], args["port"])
 
@@ -120,12 +121,19 @@ func _on_peer_connected(id: int) -> void:
 
 ## Servidor: heroi do jogador [param id] (o proprio host no --offline), relogio e estado do mundo.
 func _join(id: int) -> void:
-	spawner.spawn({"id": id, "team": _free_team(), "level": _hero_level, "bot": false})
+	var team := _free_team()
+	if team == GateRules.TEAM_NEUTRAL:
+		print("[server] peer %d recusado: partida cheia" % id)
+		(multiplayer.multiplayer_peer as ENetMultiplayerPeer).disconnect_peer(id)
+		return
+	spawner.spawn({"id": id, "team": team, "level": _hero_level, "bot": false})
 	# ponytail: relogio comeca no 1o jogador; LOBBY_WAIT/HERO_PICK do MatchController sao do F15.
 	if clock.is_started():
 		clock.send_state(id)
 	else:
 		clock.start(NetworkTime.tick, NetworkTime.tickrate, _start_time)
+		if _wants_bot:
+			_spawn_bot()
 	spawns.send_state(id)  # antes dos baus: cria o BossChest no cliente
 	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
 		(node as Chest).send_state(id)
@@ -135,17 +143,22 @@ func _join(id: int) -> void:
 func _spawn_bot() -> void:
 	var nav := ArenaNav.new()
 	add_child(nav)
-	nav.bake($Arena as Node3D)
+	nav.bake($Arena as Node3D, GateRules.gate_layer(GateRules.TEAM_A))
 	spawner.spawn({"id": BOT_ID, "team": GateRules.TEAM_B, "level": _hero_level, "bot": true})
 	print("[bot] heroi bot %d no time B" % BOT_ID)
 
 
-## Time A se ninguem o ocupa ainda; senao B.
+## Time livre: A, depois B (o bot ja reserva o B); NEUTRAL = partida cheia.
 func _free_team() -> int:
+	var taken: Array[int] = []
 	for node: Node in players.get_children():
-		if (node as Hero).team == GateRules.TEAM_A:
-			return GateRules.TEAM_B
-	return GateRules.TEAM_A
+		taken.append((node as Hero).team)
+	if _wants_bot:
+		taken.append(GateRules.TEAM_B)
+	for team: int in [GateRules.TEAM_A, GateRules.TEAM_B]:
+		if not taken.has(team):
+			return team
+	return GateRules.TEAM_NEUTRAL
 
 
 ## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao, time, nivel e mascara.
@@ -176,6 +189,8 @@ func _net_text() -> String:
 	if multiplayer.is_server():
 		return "offline (host)"
 	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
+	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
+		return "desconectado"
 	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
 	return "peer %d | RTT %d ms" % [multiplayer.get_unique_id(), rtt]
 

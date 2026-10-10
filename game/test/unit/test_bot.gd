@@ -27,7 +27,7 @@ func before_each() -> void:
 	add_child_autofree(_director)
 	var nav := ArenaNav.new()
 	add_child_autofree(nav)
-	nav.bake(_arena)
+	nav.bake(_arena, GateRules.gate_layer(GateRules.TEAM_A))
 	_player = _spawn(1, GateRules.TEAM_A, false)
 	_bot = _spawn(2, GateRules.TEAM_B, true)
 	# O mapa de navegacao fica pronto depois de algumas iteracoes assincronas.
@@ -89,6 +89,31 @@ func test_navmesh_tem_caminho_da_base_ao_centro() -> void:
 	var path := NavigationServer3D.map_get_path(map, _bot.global_position, Vector3.ZERO, true)
 	assert_gt(path.size(), 1)
 	assert_lt(path[path.size() - 1].length(), 1.0)
+
+
+func test_jogador_atras_do_portao_inimigo_nao_faz_o_bot_empurrar_o_portao() -> void:
+	# Jogador no patio da base A, bot do lado de fora do portao A: o navmesh do bot tem o
+	# portao A como parede, entao ele para no ponto alcancavel em vez de andar reto.
+	var gate_a: Gate = null
+	for node: Node in get_tree().get_nodes_in_group(Gate.GROUP):
+		if (node as Gate).team == GateRules.TEAM_A:
+			gate_a = node as Gate
+	var inward := (_home_a() - gate_a.global_position).normalized()
+	_player.global_position = gate_a.global_position + inward * 3.0
+	_bot.global_position = gate_a.global_position - inward * 1.5
+	_bot.level = 5
+	_bot.xp = 740
+	_brain().think(1)
+	assert_eq(_brain().state, BotRules.State.FIGHT)
+	assert_true(_bot.input.movement.is_zero_approx())
+
+
+func _home_a() -> Vector3:
+	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
+		var marker := node as SpawnMarker
+		if marker.kind == SpawnMarker.Kind.HERO and marker.team == GateRules.TEAM_A:
+			return marker.global_position
+	return Vector3.ZERO
 
 
 func test_comeca_farmando_e_anda_ate_o_monstro_da_base() -> void:
