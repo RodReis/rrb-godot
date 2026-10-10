@@ -22,6 +22,10 @@ var _hidden_here: bool = false
 var _shown_tick: int = -1
 ## Cliente: ultimo valor de is_shown (log so na troca).
 var _was_shown: bool = true
+## Cliente: ultimo estado recebido quando o heroi sumiu (log do buraco de estado).
+var _state_at_hide: int = 0
+## Cliente: maior tick de estado recebido enquanto o servidor dizia "escondido".
+var _last_while_hidden: int = 0
 
 
 ## Cria o no filho de [param hero], que ja tem o RollbackSynchronizer e o SpawnAck.
@@ -43,14 +47,26 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	var last := _rollback.get_last_known_state()
+	if _hidden_here:
+		_last_while_hidden = maxi(_last_while_hidden, last)
 	var shown := is_shown()
 	if shown == _was_shown:
 		return
 	_was_shown = shown
+	if not shown:
+		_state_at_hide = last
+		_last_while_hidden = last
+		print("[mato] heroi %d sumiu (ultimo estado recebido: tick %d)" % [_hero.peer_id, last])
+		return
+	# Medida, nao afirmacao: se nenhum estado chegou escondido, os dois ticks sao iguais.
 	print(
 		(
-			"[mato] heroi %d %s (ultimo estado recebido: tick %d)"
-			% [_hero.peer_id, "reapareceu" if shown else "sumiu", _rollback.get_last_known_state()]
+			(
+				"[mato] heroi %d reapareceu com estado do tick %d; escondido, o ultimo estado "
+				+ "ficou no tick %d (era %d ao sumir)"
+			)
+			% [_hero.peer_id, last, _last_while_hidden, _state_at_hide]
 		)
 	)
 
@@ -99,6 +115,8 @@ func _set_hidden(hidden: bool, tick: int) -> void:
 	_shown_tick = tick
 
 
+# ponytail: get_peers() e str(peer) alocam por heroi e por tick (1x1: 2 x 2); cachear peer -> heroi
+# se o profiler apontar.
 func _on_network_time_before_tick(_delta: float, tick: int) -> void:
 	for peer: int in refresh(multiplayer.get_peers()):
 		var hidden: bool = _hidden[peer]

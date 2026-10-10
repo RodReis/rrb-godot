@@ -82,6 +82,12 @@ func test_mesma_moita_se_ve() -> void:
 	assert_false(_hider.hidden_from(_seeker))
 
 
+func test_so_some_do_adversario() -> void:
+	var ally := _spawn(9, GateRules.TEAM_A, false)
+	ally.global_position = _outside()
+	assert_false(_hider.hidden_from(ally))
+
+
 func test_sem_observador_conta_como_fora() -> void:
 	assert_true(_hider.hidden_from(null))
 	assert_false(_hider.hidden_from(_hider), "o dono sempre se ve")

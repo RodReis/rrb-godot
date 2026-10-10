@@ -94,6 +94,8 @@ func test_recarga_correndo_nao_e_acao() -> void:
 
 func test_cliente_mostra_so_com_estado_novo_depois_da_revelacao() -> void:
 	assert_false(VisibilityRules.shown_on_client(true, 0, 500), "escondido")
-	assert_false(VisibilityRules.shown_on_client(false, 600, 590), "estado velho, de antes da moita")
+	assert_false(
+		VisibilityRules.shown_on_client(false, 600, 590), "estado velho, de antes da moita"
+	)
 	assert_true(VisibilityRules.shown_on_client(false, 600, 600))
 	assert_true(VisibilityRules.shown_on_client(false, 0, 0), "nunca escondido")

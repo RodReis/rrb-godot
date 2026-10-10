@@ -310,9 +310,9 @@ func damage_taken() -> int:
 
 
 ## Escondido no mato de [param observer] (heroi, monstro ou bot; null = sem observador, conta
-## como fora de toda moita). O proprio heroi sempre se ve.
+## como fora de toda moita). O proprio heroi e o time dele sempre o veem: so some do adversario.
 func hidden_from(observer: Node3D) -> bool:
-	if observer == self:
+	if observer == self or (observer is Hero and (observer as Hero).team == team):
 		return false
 	var seen_from := VisibilityRules.NO_GRASS
 	if observer != null:
