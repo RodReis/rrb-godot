@@ -4,6 +4,7 @@ extends GutTest
 const HUD: PackedScene = preload("res://scenes/ui/hud_phase1.tscn")
 const KNIGHT: PackedScene = preload("res://scenes/heroes/knight.tscn")
 const CHEST: PackedScene = preload("res://scenes/world/chest.tscn")
+const ARENA: PackedScene = preload("res://scenes/arena/arena.tscn")
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 const GUARD_HELM: ItemData = preload("res://shared/data/items/guard_set/guard_helm_t1.tres")
 const TICKRATE: int = 30
@@ -45,7 +46,7 @@ func _node(path: String) -> Node:
 ## Contador da fase 1 com a arena real (F36): 24 baus, 28 monstros (sem o boss); morto sai da
 ## conta e o renascido volta.
 func test_loot_counter_counts_lateral_fields_and_respawned_monsters() -> void:
-	add_child_autofree((load("res://scenes/arena/arena.tscn") as PackedScene).instantiate())
+	add_child_autofree(ARENA.instantiate())
 	var spawns := add_child_autofree(SpawnDirector.new()) as SpawnDirector
 	_hud.bind(_hero, _clock, spawns, _players)
 	await wait_process_frames(1)
@@ -53,7 +54,7 @@ func test_loot_counter_counts_lateral_fields_and_respawned_monsters() -> void:
 	assert_eq(loot.text, "Baús abertos 0/24 · Monstros 28")
 	var monster: Monster = null
 	for node: Node in spawns.get_children():
-		if node is Monster:
+		if node is Monster and node.name != SpawnDirector.BOSS_NAME:
 			monster = node as Monster
 	monster.hp = 0
 	await wait_process_frames(1)
@@ -141,3 +142,19 @@ func test_late_join_after_boss_spawn_gets_no_banner() -> void:
 	_clock._begin(0, TICKRATE)
 	_clock.boss_warning.emit(roundi((RULES.boss_spawn_time + 10.0) * TICKRATE))
 	assert_false((_node("%BossBanner") as Control).visible)
+
+
+## Rei Esqueleto vivo aos 5:00 sai do mapa sem drop (R-PEND-06, F20): o painel nao diz mais
+## "NO CENTRO".
+func test_boss_status_follows_the_boss_after_5_00() -> void:
+	add_child_autofree(ARENA.instantiate())
+	var spawns := add_child_autofree(SpawnDirector.new()) as SpawnDirector
+	_hud.bind(_hero, _clock, spawns, _players)
+	await wait_process_frames(1)
+	var status := _node("%BossStatus") as Label
+	spawns.spawn_boss()
+	_hud._update_clock(RULES.boss_spawn_time + 1.0)
+	assert_eq(status.text, "NO CENTRO")
+	spawns.dismiss_boss()
+	_hud._update_clock(RULES.phase1_duration)
+	assert_eq(status.text, "SAIU DO MAPA")

@@ -3,7 +3,9 @@ extends Node3D
 ## NetworkTime e iniciado pelo NetworkEvents do netfox (netfox/events/enabled).
 ## --offline = modo host (ARCHITECTURE-GAME §4, PI 2026-10-09): este processo e o servidor e o
 ## jogador local (peer 1), pelo mesmo caminho do online; o netfox tem um papel so por processo.
-## --bot poe o heroi bot no 2o slot (time B), com input do servidor.
+## --bot poe o heroi bot no 2o slot (time B), com input do servidor. --autopilot=bot: o BotInput
+## joga pelo heroi local deste processo (medicao de rede com 2 clientes reais, F20). --probe: sonda
+## de rede (NetProbe).
 ## Ciclo da partida no MatchController (F15): o servidor abre a espera, cada peer (e o bot) ocupa
 ## uma vaga, a selecao acontece na HeroSelect e os herois nascem na PHASE1, cada um com o heroi
 ## escolhido. Quem decide e o MatchController; aqui so se liga sinal e se spawna.
@@ -26,6 +28,8 @@ const DISCONNECTED_LOG_SECONDS: float = 5.0
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 ## --bot: o bot ocupa a vaga do time B assim que o servidor abre.
 var _wants_bot: bool = false
+## --autopilot=bot: o heroi local e jogado pelo BotInput.
+var _bot_pilot: bool = false
 ## Servidor dedicado: encerra o processo no fim da partida.
 var _dedicated: bool = false
 ## Navmesh do bot (so no servidor com --bot).
@@ -58,6 +62,7 @@ func _ready() -> void:
 	clock.boss_spawned.connect(spawns.spawn_boss)
 	clock.phase1_ended.connect(_on_clock_phase1_ended)
 	clock.phase1_ended.connect(spawns.stop_respawns)  # 5:00 = TRANSITION: ninguem mais renasce
+	clock.phase1_ended.connect(spawns.dismiss_boss)  # boss vivo sai sem drop (R-PEND-06)
 	spawns.boss_killed.connect(_on_spawns_boss_killed)
 	spawns.chest_opened.connect(match_controller.report_chest_opened)
 	match_controller.phase_changed.connect(_on_match_phase_changed)
@@ -69,6 +74,12 @@ func _ready() -> void:
 	_hero_level = args["level"]
 	match_controller.start_seconds = args["time"]
 	_wants_bot = args["bot"]
+	_bot_pilot = args["bot_pilot"]
+	if args["probe"]:
+		var probe := NetProbe.new()
+		probe.players = players
+		probe.spawns = spawns
+		add_child(probe)
 	if args["offline"]:
 		if start_server(EPHEMERAL_PORT, HOST_BIND_IP):
 			_join(multiplayer.get_unique_id())
@@ -178,7 +189,7 @@ func _available_heroes() -> Array[StringName]:
 func _spawn_heroes() -> void:
 	for seat: MatchController.Seat in match_controller.seats():
 		if seat.is_bot:
-			_bake_bot_nav()
+			_bake_bot_nav(seat.team)
 		var data := {
 			"id": seat.peer,
 			"team": seat.team,
@@ -192,11 +203,14 @@ func _spawn_heroes() -> void:
 		print("[match] %s para o peer %d (time %d)" % [seat.hero, seat.peer, seat.team])
 
 
-## Navmesh do bot, antes dele nascer: o portao do time A conta como parede.
-func _bake_bot_nav() -> void:
+## Navmesh do bot, antes dele nascer: o portao do outro time conta como parede. Um por processo.
+func _bake_bot_nav(team: int) -> void:
+	if _nav != null:
+		return
+	var enemy := GateRules.TEAM_B if team == GateRules.TEAM_A else GateRules.TEAM_A
 	_nav = ArenaNav.new()
 	add_child(_nav)
-	_nav.bake($Arena as Node3D, GateRules.gate_layer(GateRules.TEAM_A))
+	_nav.bake($Arena as Node3D, GateRules.gate_layer(enemy))
 
 
 ## Roda no servidor e nos clientes (MultiplayerSpawner): mesmo heroi, posicao, time, nivel e
@@ -209,8 +223,11 @@ func _spawn_player(data: Dictionary) -> Node:
 	hero.team = team
 	hero.level = data["level"]
 	hero.is_bot = data["bot"]
-	if hero.is_bot:
+	var piloted: bool = _bot_pilot and data["id"] == multiplayer.get_unique_id()
+	if hero.is_bot or piloted:
 		hero.get_node("Input").set_script(BotInput)
+	if piloted:
+		_bake_bot_nav(team)
 	hero.collision_mask = GateRules.hero_mask(team)
 	hero.transform = _hero_spawn(team)
 	return hero

@@ -12,3 +12,4 @@ services:
       NETEM_DELAY_MS: "${NETEM_DELAY_MS:-}"
       NETEM_JITTER_MS: "${NETEM_JITTER_MS:-}"
       NETEM_LOSS_PCT: "${NETEM_LOSS_PCT:-}"
+      GAME_ARGS: "${GAME_ARGS:-}"

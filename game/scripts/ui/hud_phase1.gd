@@ -134,10 +134,13 @@ func _update_clock(elapsed: float) -> void:
 	_boss_timer.set_state(
 		TimerLabel.State.WARNING if HudMath.is_warning(boss_left) else TimerLabel.State.NORMAL
 	)
+	var boss := _spawns.get_node_or_null(SpawnDirector.BOSS_NAME) as Monster
 	if _spawns.has_node(SpawnDirector.BOSS_CHEST_NAME):
 		_boss_status.text = tr("DERROTADO")
 	elif boss_left > 0.0:
 		_boss_status.text = tr("surge no centro")
+	elif gates_open and boss != null and not boss.present:
+		_boss_status.text = tr("SAIU DO MAPA")  # vivo aos 5:00 (R-PEND-06)
 	else:
 		_boss_status.text = tr("NO CENTRO")
 

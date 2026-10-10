@@ -80,3 +80,15 @@ func test_seed_dos_baus() -> void:
 	assert_eq(LaunchArgs.parse(PackedStringArray([]))["seed"], 0)
 	assert_eq(LaunchArgs.parse(PackedStringArray(["--server", "--seed=1234"]))["seed"], 1234)
 	assert_eq(LaunchArgs.parse(PackedStringArray(["--seed=xyz"]))["seed"], 0)
+
+
+func test_piloto_bot_no_cliente() -> void:
+	var none := LaunchArgs.parse(PackedStringArray([]))
+	assert_false(none["bot_pilot"])
+	var r := LaunchArgs.parse(PackedStringArray(["--connect=127.0.0.1", "--autopilot=bot"]))
+	assert_eq([r["autopilot"], r["bot_pilot"]], [false, true])
+
+
+func test_sonda_de_rede() -> void:
+	assert_false(LaunchArgs.parse(PackedStringArray([]))["probe"])
+	assert_true(LaunchArgs.parse(PackedStringArray(["--server", "--probe"]))["probe"])

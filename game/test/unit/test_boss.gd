@@ -69,14 +69,18 @@ func test_rei_maior_que_o_heroi_com_a_coroa_na_cabeca() -> void:
 	assert_gt(crown.y, head.y)
 
 
-func test_nao_existe_antes_de_3_30() -> void:
-	assert_null(_boss())
+func test_fora_do_mapa_antes_de_3_30() -> void:
+	var boss := _boss()
+	assert_not_null(boss, "existe desde o inicio: nenhum spawn no meio da partida (F20)")
+	assert_false(boss.present)
+	assert_false(boss.is_alive())
+	assert_eq(boss.collision_mask, 0)
 
 
 func test_surge_no_marcador_com_hp_cheio() -> void:
 	_director.spawn_boss()
 	var boss := _boss()
-	assert_not_null(boss)
+	assert_true(boss.present)
 	assert_eq(boss.data.id, &"skeleton_king_boss")
 	assert_eq(boss.hp, 2400)
 	assert_true(boss.global_position.is_equal_approx(_boss_marker().global_position))
@@ -96,7 +100,7 @@ func test_surgir_de_novo_nao_duplica() -> void:
 func test_cliente_que_entra_depois_da_morte_nao_cria_boss_vivo() -> void:
 	_director._boss_defeated(0, 1, -99, Vector3.ZERO)
 	_director.spawn_boss()
-	assert_null(_boss())
+	assert_false(_boss().is_alive())
 	assert_eq((_director.get_node(SpawnDirector.BOSS_CHEST_NAME) as Chest).uid, -99)
 
 
@@ -157,10 +161,32 @@ func test_aviso_poe_o_portal_no_marcador_e_o_boss_tira() -> void:
 	assert_almost_eq(portal.global_position, _boss_marker().global_position, Vector3.ONE * 0.01)
 	_director.spawn_boss()
 	assert_null(_director.get_node_or_null(SpawnDirector.BOSS_PORTAL_NAME))
-	assert_not_null(_boss())
+	assert_true(_boss().is_alive())
 
 
 func test_aviso_depois_do_boss_nao_poe_portal() -> void:
 	_director.spawn_boss()
 	_director.warn_boss()
 	assert_null(_director.get_node_or_null(SpawnDirector.BOSS_PORTAL_NAME))
+
+
+func test_vivo_aos_5_00_sai_sem_bau_sem_xp_e_sem_morte() -> void:
+	_director.spawn_boss()
+	var xp := _hero.xp
+	_director.dismiss_boss(_tick)
+	_hero._rollback_tick(DT, _tick + 1, true)
+	var boss := _boss()
+	assert_false(boss.present)
+	assert_false(boss.is_alive())
+	assert_eq(boss.collision_mask, 0)
+	assert_null(_director.get_node_or_null(SpawnDirector.BOSS_CHEST_NAME))
+	assert_eq(_killed_by, [])
+	assert_eq(_hero.xp, xp)
+
+
+func test_morto_antes_das_5_00_deixa_o_bau() -> void:
+	_director.spawn_boss()
+	_kill_boss()
+	_director.dismiss_boss(_tick)
+	assert_true(_boss().present, "morto nao sai: segue o visual de morte")
+	assert_not_null(_director.get_node_or_null(SpawnDirector.BOSS_CHEST_NAME))

@@ -1,0 +1,186 @@
+gameserver-1  | [netem] rtt=100ms (50ms por direcao) jitter=0ms loss=2% por direcao
+gameserver-1  | libfontconfig.so.1: cannot open shared object file: No such file or directory
+gameserver-1  | Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+gameserver-1  | 
+gameserver-1  | [DBG][netfox.extras::NetworkSimulator] Feature disabled
+gameserver-1  | [DBG][@0][#1][_][netfox::NetworkPerformance] Network performance enabled, registering performance monitors
+gameserver-1  | [spawn] seed dos baus 20
+gameserver-1  | [server] escutando em *:7000
+gameserver-1  | [server] peer 1541845396 conectou
+gameserver-1  | [server] peer 1691177595 conectou
+gameserver-1  | [match] LOBBY_WAIT -> HERO_PICK, tick 88
+gameserver-1  | [DBG][@88][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791646532.6362s raw time
+gameserver-1  | [DBG][@88][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791646532.6429s raw time
+gameserver-1  | [DBG][@92][#1][_][netfox::NetworkTime] Peer #1541845396 is now on time!
+gameserver-1  | [DBG][@92][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1541845396
+gameserver-1  | [DBG][@93][#1][_][netfox::NetworkTime] Peer #1691177595 is now on time!
+gameserver-1  | [DBG][@93][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1691177595
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 270 vivos=28 baus=0 160,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 570 vivos=28 baus=0 160,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [match] HERO_PICK -> PHASE1, tick 808
+gameserver-1  | [match] knight para o peer 1541845396 (time 1)
+gameserver-1  | [match] knight para o peer 1691177595 (time 2)
+gameserver-1  | [probe] throttle minimo { 1541845396: 26, 1691177595: 26 }
+gameserver-1  | [probe] check 870 vivos=28 baus=0 80,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A0 morto por 1541845396 no tick 914, renasce no 3614
+gameserver-1  | [spawn] T1A2 morto por 1541845396 no tick 1026, renasce no 3726
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 1170 vivos=26 baus=0 0,160,0,160,200,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T2A morto por 1541845396 no tick 1281, renasce no 3981
+gameserver-1  | [spawn] T1A3 morto por 1541845396 no tick 1393, renasce no 4093
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 1470 vivos=24 baus=0 0,72,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A1 morto por 1541845396 no tick 1505, renasce no 4205
+gameserver-1  | [spawn] T1ANO1 morto por 1541845396 no tick 1736, renasce no 4436
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 1770 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,313,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 2070 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 2370 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 2670 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 2970 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 3270 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1ANO0 morto por 1541845396 no tick 3478, renasce no 6178
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 3570 vivos=21 baus=0 0,0,0,0,0,160,160,360,0,0,219,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T2ANO morto por 1541845396 no tick 3702, renasce no 6402
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 3870 vivos=22 baus=0 160,0,113,0,0,160,160,360,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A2 morto por 1541845396 no tick 3932, renasce no 6632
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 4170 vivos=23 baus=0 160,0,0,160,360,160,160,360,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A1 morto por 1541845396 no tick 4308, renasce no 7008
+gameserver-1  | [probe] throttle minimo { 1541845396: 30, 1691177595: 32 }
+gameserver-1  | [probe] check 4470 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 4770 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 5070 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 30, 1691177595: 32 }
+gameserver-1  | [probe] check 5370 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 5670 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A3 morto por 1541845396 no tick 5870, renasce no 8570
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 5970 vivos=23 baus=0 109,0,0,0,258,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A0 morto por 1541845396 no tick 6030, renasce no 8730
+gameserver-1  | [spawn] T2A morto por 1541845396 no tick 6114, renasce no 8814
+gameserver-1  | [match] aviso do boss (3:00), tick 6208
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 6270 vivos=22 baus=0 0,0,0,0,0,160,109,360,160,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1ASE1 morto por 1541845396 no tick 6338, renasce no 9038
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 6570 vivos=22 baus=0 0,0,0,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 6870 vivos=23 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A1 morto por 1541845396 no tick 7111, renasce no 9811
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 7170 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 7470 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [probe] throttle minimo { 1541845396: 26, 1691177595: 28 }
+gameserver-1  | [probe] check 7770 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [probe] throttle minimo { 1541845396: 30, 1691177595: 30 }
+gameserver-1  | [probe] check 8070 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [match] heroi 1691177595 morto por 0, tick 8113
+gameserver-1  | [probe] throttle minimo { 1541845396: 30, 1691177595: 30 }
+gameserver-1  | [probe] check 8370 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 8670 vivos=25 baus=0 0,0,58,160,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [spawn] T1A2 morto por 1541845396 no tick 8716, renasce no 11416
+gameserver-1  | [spawn] T1A3 morto por 1541845396 no tick 8830, renasce no 11530
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 8970 vivos=25 baus=0 160,0,0,0,144,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [spawn] T2A morto por 1541845396 no tick 9026, renasce no 11726
+gameserver-1  | [spawn] T1A0 morto por 1541845396 no tick 9120, renasce no 11820
+gameserver-1  | [probe] check 9270 vivos=24 baus=0 0,0,0,0,0,160,106,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 9570 vivos=24 baus=0 0,0,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [match] PHASE1 -> TRANSITION, tick 9808
+gameserver-1  | [match] fim da fase 1 (5:00), portoes caem, tick 9808
+gameserver-1  | [match] jogador 1541845396: Nv 5, 865 XP
+gameserver-1  | [match] jogador 1691177595: Nv 1, 0 XP
+gameserver-1  | [spawn] Rei Esqueleto vivo aos 5:00 sai do mapa sem drop, tick 9808
+gameserver-1  | [probe] check 9870 vivos=23 baus=0 0,0,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] T1ANO1 morto por 1541845396 no tick 10030, sem respawn
+gameserver-1  | [probe] check 10170 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,198,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] T1ASE1 morto por 1541845396 no tick 10487, sem respawn
+gameserver-1  | [probe] check 10470 vivos=22 baus=0 0,0,0,0,0,160,52,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] T2ASE morto por 1541845396 no tick 10683, sem respawn
+gameserver-1  | [spawn] T1ASE0 morto por 1541845396 no tick 10767, sem respawn
+gameserver-1  | [probe] check 10770 vivos=19 baus=0 0,0,0,0,0,0,0,0,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [match] heroi 1541845396 morto por 0, tick 11026
+gameserver-1  | [probe] check 11070 vivos=19 baus=0 0,0,0,0,0,0,0,0,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 11370 vivos=19 baus=0 0,0,0,0,0,0,0,0,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] T1ANO0 morto por 1541845396 no tick 11437, sem respawn
+gameserver-1  | [spawn] T2ANO morto por 1541845396 no tick 11633, sem respawn
+gameserver-1  | [probe] check 11670 vivos=17 baus=0 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 11970 vivos=17 baus=1 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest11
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 12270 vivos=17 baus=2 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest10,Chest11
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 12570 vivos=17 baus=3 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,50,x|Chest6,Chest10,Chest11
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 12870 vivos=17 baus=6 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 13170 vivos=17 baus=8 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 13470 vivos=17 baus=9 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest21
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 13770 vivos=17 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] Warrior0 morto por 1541845396 no tick 14030, sem respawn
+gameserver-1  | [probe] check 14070 vivos=16 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,285,0,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] Golem0 morto por 1541845396 no tick 14165, sem respawn
+gameserver-1  | [spawn] Mage0 morto por 1541845396 no tick 14285, sem respawn
+gameserver-1  | [probe] check 14370 vivos=14 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 30 }
+gameserver-1  | [probe] check 14670 vivos=14 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] Mage1 morto por 1541845396 no tick 14853, sem respawn
+gameserver-1  | [match] heroi 1541845396 morto por 0, tick 14932
+gameserver-1  | [probe] check 14970 vivos=13 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 15270 vivos=13 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [spawn] Warrior1 morto por 1541845396 no tick 15413, sem respawn
+gameserver-1  | [spawn] Golem1 morto por 1541845396 no tick 15494, sem respawn
+gameserver-1  | [probe] check 15570 vivos=11 baus=12 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest50,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 30, 1691177595: 32 }
+gameserver-1  | [spawn] T1B0 morto por 1541845396 no tick 15893, sem respawn
+gameserver-1  | [spawn] T1B1 morto por 1541845396 no tick 15893, sem respawn
+gameserver-1  | [spawn] T1B2 morto por 1541845396 no tick 15893, sem respawn
+gameserver-1  | [spawn] T1B3 morto por 1541845396 no tick 15893, sem respawn
+gameserver-1  | [probe] check 15870 vivos=11 baus=14 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [match] heroi 1691177595 morto por 1541845396, tick 15949
+gameserver-1  | [probe] check 16170 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 16470 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 26 }
+gameserver-1  | [probe] check 16770 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 17070 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [match] heroi 1691177595 morto por 1541845396, tick 17380
+gameserver-1  | [probe] check 17370 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,182,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 17670 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
+gameserver-1  | [probe] check 17970 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+gameserver-1  | [probe] throttle minimo { 1541845396: 32, 1691177595: 32 }
