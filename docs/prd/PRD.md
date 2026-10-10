@@ -161,7 +161,7 @@ Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não nest
 | Golem *ou* Aranha | Quaternius (confirmar pack) | 3 | centro | monstro "forte", visual distinto |
 | **Rei Esqueleto** (boss) | KayKit Skeletons | boss | centro, 3:30 | drop épico garantido |
 
-Monstros não respawnam dentro da partida (quantidade fixa, calibrada para que um jogador sozinho chegue ao nível ~7–8 farmando só a base e ao 10 disputando o centro).
+Monstros não-boss renascem 90 s após morrer durante a fase 1 e não renascem na fase 2; há campos de monstros e baús também nas laterais do mapa (decisão do PI em 2026-10-10 — números no GDB §5 e §6.2, que vencem este documento).
 
 ---
 
@@ -335,6 +335,8 @@ Fontes: [UGS Pricing](https://unity.com/products/gaming-services/pricing) · [Un
 ---
 
 ## 12. Fora de escopo (explícito)
+
+Neblina de guerra **saiu** desta lista de exclusões em 2026-10-10: entra no MVP2 (visão + explorado, raio 12 u — `CONVENTION.md` §4.9, F37).
 
 Chat de voz/texto, replays, espectador, ranked, clãs, eventos sazonais, cross-play, web export, anti-cheat dedicado, múltiplas regiões, localização além de pt-BR.
 

@@ -37,7 +37,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Torres rúnicas (2 por lado) | conceito Vale Rúnico | PRD não tem torre; portão já protege a base na fase 1 | pós-MVP4 | playtest M4 mostrar invasão de base trivial na fase 2 |
 | Buff ao matar o boss ("Aura do Flagelo") | conceito Vale Rúnico | reforça snowball (métrica PRD §9.2 < 75 %) | pós-MVP4 | boss pouco disputado no playtest |
 | Orbes de XP soltos no mapa | Astro Arena | muda a curva GDB §5.2 | pós-MVP4 | fase 1 "chata" (R2) no playtest |
-| Relevo/depressão da cratera, lama −15 %, fog of war, tier lendário, ouro/economia in-match, câmera isométrica padrão | conceito Vale Rúnico | não estão no PRD; custo de navmesh/câmera/replicação | fase B ou nunca | decisão do PI |
+| Relevo/depressão da cratera, lama −15 %, tier lendário, ouro/economia in-match, câmera isométrica padrão | conceito Vale Rúnico | não estão no PRD; custo de navmesh/câmera/replicação | fase B ou nunca | decisão do PI |
 | Merge queue no GitHub | `GITHUB.md` §5 | um autor, fila curta | — | mais de um autor concorrente |
 
 ## Excluídos (sem gatilho)

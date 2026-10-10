@@ -167,13 +167,13 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 
 ## 5. Bestiário e Economia de Campo (Fase 1)
 
-Os monstros não respawnam. A quantidade é limitada para forçar a disputa do centro e garantir que um jogador sozinho na base atinja no máximo nível 7–8.
+**Respawn na fase 1 (decisão do PI em 2026-10-10, F36):** todo monstro não-boss renasce no próprio ponto de spawn **90 s** depois de morrer, enquanto durar a fase 1. Na fase 2 ninguém renasce; os vivos aos 5:00 ficam (o Rei Esqueleto vivo aos 5:00 sai sem drop — §7.1). A quantidade continua limitada para que o centro seja a melhor fonte de XP.
 
 ### 5.1 Distribuição e Tabela de Monstros
 | Monstro | Tier | Qtd por Partida | Onde Fica | HP | Dano/Golpe | Intervalo Atq | XP Concedido | Drop Típico |
 |---|---|---|---|---|---|---|---|---|
-| **Esqueleto** | 1 | 8 (4 em cada base) | Base Segura | 160 | 14 | 1.2 s | 35 | Ouro / Chance 20% Item Comum |
-| **Esqueleto Guerreiro** | 2 | 4 (1 em cada base, 2 no centro) | Base / Centro | 360 | 28 | 1.1 s | 85 | Item Comum Garantido |
+| **Esqueleto** | 1 | 16 (4 em cada base + 2 em cada um dos 4 campos laterais) | Base Segura / Lateral | 160 | 14 | 1.2 s | 35 | Ouro / Chance 20% Item Comum |
+| **Esqueleto Guerreiro** | 2 | 8 (1 em cada base, 2 no centro, 1 em cada campo lateral) | Base / Centro / Lateral | 360 | 28 | 1.1 s | 85 | Item Comum Garantido |
 | **Esqueleto Mago** | 2 | 2 (ambos no centro) | Centro Contestado | 260 | 38 (Ranged 7u) | 1.5 s | 80 | Item Comum ou Raro |
 | **Golem de Pedra** | 3 | 2 (ambos no centro) | Centro Contestado | 680 | 50 (Melee AoE) | 1.6 s | 190 | Item Raro Garantido |
 | **Rei Esqueleto (Boss)** | Boss | 1 (surge em 3:30) | Centro Absoluto | 2400 | 75 (AoE + Knockback)| 1.4 s | 550 | 1 Item Épico Garantido |
@@ -194,7 +194,13 @@ Valores em `shared/data/monsters/*.tres` (`aggro_range`, `leash_range`, `move_sp
 - Farm Completo de uma Base: $(4 \times 35) + (1 \times 85) = 225\text{ XP} \rightarrow$ Nível 3 garantido no primeiro 1:30 min.
 - Disputa Total do Centro (sem Boss): $(2 \times 85) + (2 \times 80) + (2 \times 190) = 710\text{ XP}$.
 - Rei Esqueleto: $550\text{ XP}$.
-- **Conclusão:** Farmar apenas a base leva ao nível ~5. Para alcançar o nível 8–9 antes da Fase 2, é mandatório disputar o centro.
+- **Conclusão (texto original, inválido):** "Farmar apenas a base leva ao nível ~5". Revisão de 2026-10-10: sem respawn, o mapa inteiro somava 1.710 XP (nível 6) e a base sozinha 225 XP (nível 3) — a meta 8–9 era inalcançável.
+
+#### Revisão de 2026-10-10 (F36): campos laterais + respawn de 90 s
+- **Campos laterais:** 4 campos (NO e SE, um de cada lado do rio — 2 por metade), cada um com 2 Esqueletos T1 + 1 Esqueleto Guerreiro T2 = $155\text{ XP}$; os 2 da própria metade somam $310\text{ XP}$.
+- **Uma limpeza da própria metade** (base + 2 laterais): $535\text{ XP}$ → nível 4.
+- **Estimativa com respawn de 90 s** (≈ 3 limpezas até 5:00): ≈ 1.600 XP → nível ~6 farmando só a própria metade; disputando centro + boss → nível 8–9.
+- **Meta (mantida):** só a própria metade → nível ~5–6; centro + boss → 8–9. As estimativas acima dependem do tempo real de limpeza e são conferidas no soak (F19) e no playtest (F29/F30).
 
 ---
 
@@ -230,6 +236,8 @@ O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
 ### 6.2 Baús de Loot no Mapa
 - **Baús Comuns (6 por base segura):**
   - Drop: 70% Item Comum, 30% Ouro/Consumível temporário de cura ($+120\text{ HP}$).
+- **Baús Comuns Laterais (2 por campo lateral, 8 no total — decisão do PI em 2026-10-10, F36):**
+  - Mesmo drop do baú comum. Total do mapa: **24 baús** (12 de base + 8 laterais + 4 raros). Baús não reabrem.
 - **Baús Raros (4 no centro contestado):**
   - Drop: 65% Item Raro, 25% Item Comum, 10% Item Épico.
 - **Regra de Substituição:** O servidor substitui automaticamente o equipamento se a raridade do item coletado for maior. Em caso de empate ou escolha lateral, a tecla `F` (segurada por $0.4\text{ s}$) valida a troca.
@@ -246,7 +254,9 @@ O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
 | **7:00** | 2:00 | $50\%$ (Raio $17.5\text{ u}$) | $3.0\%\text{ HP Máx/s}$ | Ativo (6.0 s) |
 | **8:00** | 3:00 | $25\%$ (Raio $8.75\text{ u}$) | $4.0\%\text{ HP Máx/s}$ | Ativo (6.0 s) |
 | **9:00** | 4:00 | **Mínimo** (Raio $3.5\text{ u}$) | $5.0\%\text{ HP Máx/s}$ | **DESATIVADO (Morte Súbita)** |
-| **10:00** | 5:00 | Raio $0\text{ u}$ (Colapso total) | Dano dobra a cada 10 s | Desativado (Fim forçado) |
+| **10:00** | 5:00 | Raio $0\text{ u}$ (Colapso total) | — (resolução imediata, §7.2 item 3) | Desativado (Fim forçado) |
+
+A transição de 5 s (portões caem, aviso) **já conta como fase 2**: o relógio da fase 2 começa às 5:00 (decisão do PI em 2026-10-10). Monstros comuns vivos continuam na fase 2, sem respawn; o Rei Esqueleto vivo aos 5:00 sai do mapa sem drop (decisão do PI em 2026-10-10).
 
 ### 7.2 Regras de Vitória (Ordem de Avaliação pelo Servidor)
 1. **Meta de Kills Atingida:**
@@ -254,7 +264,12 @@ O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
    - 2v2: **7 kills** (Roadmap).
    - 3v3: **10 kills** (Roadmap).
 2. **Eliminação por Sobrevivência (após 9:00):** O primeiro jogador a ficar sem vidas após o desligamento do respawn é derrotado.
-3. **Morte Súbita Matemática (10:00):** O colapso final da zona impossibilita cura sustentada; o herói com maior vida percentual sobrevivente vence. Jamais há empate.
+3. **Morte Súbita Matemática (10:00):** O colapso final da zona impossibilita cura sustentada; aos 10:00 a partida termina **na hora** e o herói com maior vida percentual sobrevivente vence. Desempate, nesta ordem (decisão do PI em 2026-10-10): (a) mais kills na fase 2; (b) mais dano causado em heróis na partida; (c) sorteio determinístico com a seed da partida. Se nenhum jogador estiver conectado, a partida termina como `abandoned`. Jamais há empate.
+
+### 7.3 Visão: Mato Alto (F32) e Neblina de Guerra (F37) — valem nas duas fases
+- **Raio de visão do herói:** $12.0\text{ u}$ (decisão do PI em 2026-10-10). Fora dele, herói adversário e monstros não são replicados para aquele jogador; área nunca vista fica escura, área já vista fica cinza. O círculo da zona é sempre visível.
+- **Revelação ao agir:** atacar ou usar skill de dentro da moita revela o herói ao adversário por $1.5\text{ s}$ (decisão do PI em 2026-10-10).
+- **Proximidade:** sem revelação por proximidade — quem está fora da moita não vê quem está dentro, a qualquer distância; só vê quem está na mesma moita.
 
 ---
 

@@ -20,8 +20,8 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-10 | Zona encolhe em 4:00; dano fora crescente | PRD §3.4 | F16 | game | MVP2 | mantido (curva GDB §7.1, ADR-0004 N4) |
 | P-11 | Meta de kills 1x1 = 5 | PRD §3.4 | F16 | game | MVP2 | mantido |
 | P-12 | Respawn 6 s na fase 2 até raio mínimo; depois desliga | PRD §3.4 | F16 | game | MVP2 | mantido |
-| P-13 | Fim garantido: aos 5:00 da fase 2 dano dobra a cada 10 s | PRD §3.4 | F16 | game | MVP2 | mantido |
-| P-14 | XP por kill na fase 2; monstros não respawnam | PRD §3.4 | F16 | game | MVP2 | mantido (R-PEND-06) |
+| P-13 | Fim garantido: aos 5:00 da fase 2 dano dobra a cada 10 s | PRD §3.4 | F16 | game | MVP2 | mantido com mudança — PI 2026-10-10: aos 10:00 resolução imediata por HP% com desempate (GDB §7.2 item 3); o "dobra a cada 10 s" do PRD não se aplica (GDB vence, ADR-0004) |
+| P-14 | XP por kill na fase 2; monstros não respawnam | PRD §3.4 | F16 | game | MVP2 | mantido — R-PEND-06 decidida: monstros comuns ficam; Rei Esqueleto vivo aos 5:00 sai sem drop |
 | P-15 | Ordem de vitória; nunca empate | PRD §3.5 | F16 | game | MVP2 | mantido |
 | P-16 | Câmera 3ª pessoa ~45°, distância fixa | PRD §3.6 | F31 | game | MVP1 | mantido |
 | P-17 | Teclado/mouse: WASD, mira, LMB, Q/E/R, F, Espaço | PRD §3.6 | F31, F6 | game, shared | MVP1 | mantido |
@@ -65,6 +65,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | G-09 | Regras de vitória | GDB §7.2 | F16 | mantido |
 | G-10 | Estrutura `data/` | GDB §8 | `shared/data/` (muda de `game/data` para `shared/data` — ADR-0003) | transferido |
 | G-11 | TTK e teto de snowball < 75% | GDB §1.1 | F29 (medição), GATE MVP4 | mantido |
+| G-12 | Economia de campo: 4 campos laterais (2 T1 + 1 T2 e 2 baús comuns cada), respawn de monstros não-boss 90 s só na fase 1 | GDB §5, §6.2 | F36 | mantido — requisito novo aprovado pelo PI em 2026-10-10 (corrige economia: mapa somava 1.710 XP, meta nível 8–9 inalcançável) |
 
 ## 3. Design visual (DV)
 
@@ -91,8 +92,10 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-13 | Tela de Login (só em `docs/prd/telas/`, ausente no DV) | F25 | launcher | mantido como função (PRD §8.4); visual de `docs/prd/telas/Tela de Login & Autenticação/` com os tokens de `TOKENS.md` |
 | V-14 | "Pop-up Tático In-Game" (só em `docs/prd/telas/`) | — | — | **sem requisito** no PRD (R-PEND-11 decidiu só a fonte visual) |
 | V-15 | Conceito "Arena & Mapa — Vale Rúnico": topologia da imagem tática (bases opostas, rio, pontes, cratera) | SPEC-007 | game | mantido como layout |
-| V-16 | Idem: torres rúnicas, ouro 18 g/s, upgrade de skill por ouro, aura do boss, tier lendário, Elo, fog of war, lama −15 %, relevo −1,8 m, zona 1,5→6 %, câmera isométrica padrão | `FORA-DE-ESCOPO.md` | — | **excluídos/adiados** pelo PI em 2026-10-09 |
+| V-16 | Idem: torres rúnicas, ouro 18 g/s, upgrade de skill por ouro, aura do boss, tier lendário, Elo, lama −15 %, relevo −1,8 m, zona 1,5→6 %, câmera isométrica padrão | `FORA-DE-ESCOPO.md` | — | **excluídos/adiados** pelo PI em 2026-10-09 |
 | V-17 | Mato alto que esconde (Astro Arena / Brawl Stars) | F7 (geometria), F32 (regra) | game | mantido — requisito novo aprovado pelo PI em 2026-10-09 |
+| V-19 | Neblina de guerra: visão (raio 12 u) + explorado; servidor não replica o que está fora da visão; continua na fase 2 com a zona sempre visível | F37 (reusa o filtro do F32) | game | mantido — **revertido** de V-16 pelo PI em 2026-10-10 |
+| V-20 | Câmera: pilares e muros tapam o herói (oclusão) | card `planejado` sem MVP | game | solução a decidir pelo PI (achado do PI em 2026-10-10) |
 | V-18 | Tela "Arena & Mapa" no Launcher (DV tela 10): render da arena real + POIs + regras das 2 fases com números do GDB; arte conceito como meta visual da arena (decisão PI 2026-10-09) | F33 | launcher, shared | mantido (MVP3) |
 | V-11 | Mapa de controles §3.3 | `shared/core/input_actions.gd` | shared | mantido |
 | V-12 | `scripts/ui/m4_audit_tracker.gd` no cliente | backend `telemetry/` | — | transferido |
@@ -116,12 +119,13 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ~~R-PEND-01~~ | **Decidido 2026-10-09:** GDB — baú raro 10 % | — | — |
 | ~~R-PEND-02~~ | **Decidido 2026-10-09:** sem nível/XP de conta (só V–D do histórico). Perfil no Launcher (fatia F35): nickname **único**, prefixo `#` **automático** (ex.: `#RodReis`); avatar por imagem predefinida ou upload, **guardado só local no Launcher** (não vai ao backend, não aparece para outros jogadores). **Sem data de nascimento.** Falta o PI definir: caracteres e tamanho do nickname; formato e tamanho máximos do upload. PRD ainda não editado | — | — |
 | ~~R-PEND-03~~ | **Decidido 2026-10-09:** não — sem "lembrar-me"; JWT só em memória, login a cada abertura | — | — |
-| R-PEND-04 | Timeout de pick sem escolha → herói padrão por slot? | padrão / aleatório / abandono | F15 bloqueia |
+| ~~R-PEND-04~~ | **Decidido 2026-10-10:** herói padrão do slot (P1 Cavaleiro, P2 Arqueira). Espelho permitido no pick | — | — |
 | ~~R-PEND-05~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
-| R-PEND-06 | Monstros vivos ao entrar na fase 2: ficam ou somem? | ficam / somem | F16 bloqueia |
+| ~~R-PEND-06~~ | **Decidido 2026-10-10:** monstros comuns ficam na fase 2 (sem respawn); o Rei Esqueleto existe até morrer ou até 5:00 — vivo na transição, sai do mapa sem drop | — | — |
 | ~~R-PEND-07~~ | **Decidido 2026-10-09:** roadmap — F21 sem recuperação de senha nem verificação de e-mail (fica em `FORA-DE-ESCOPO.md`) | — | — |
 | ~~R-PEND-08~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
 | ~~R-PEND-09~~ | **Decidido 2026-10-09:** Golem de Pedra | — | — |
 | ~~R-PEND-11~~ | **Decidido 2026-10-09:** `telas/` — paleta e fontes de `docs/prd/telas/` (Space Grotesk / Outfit / JetBrains Mono) substituem as do DV §1.2–1.3; `TOKENS.md` atualizado. A estrutura das telas continua a do DV; o Pop-up Tático segue sem requisito | — | — |
-| R-PEND-12 | Mato alto: duração da revelação ao atacar/usar skill de dentro da moita; raio de visão dentro da moita | números no GDB | F32 bloqueia (MVP2) |
+| ~~R-PEND-12~~ | **Decidido 2026-10-10:** revelação de 1,5 s; sem revelação por proximidade (GDB §7.3) | — | — |
+| ~~R-PEND-13~~ | **Decidido 2026-10-10:** relógio da fase 2 começa às 5:00 (a transição de 5 s conta dentro dela); colapso aos 10:00 com resolução imediata — maior HP%, desempate kills F2 → dano em heróis → sorteio pela seed; os dois desconectados → `abandoned` (GDB §7.1–7.2, `CONVENTION.md` §3) | — | — |
 | R-PEND-10 | Renomear `docs/prd/PRD.md` → `2026-10-08-prd-moba-2-tempos.md` (nome citado no plano M0 e nos agentes) | renomear / manter | links quebrados em `docs/superpowers/plans/` e `.claude/agents/` — `CLAUDE.md` já aponta para `PRD.md` |

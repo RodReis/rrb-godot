@@ -4,6 +4,7 @@
 **Fontes:** PRD §3.1, §3.2, §5, §11 · GDB §5.1, §6.2, §7.1 · conceito `docs/prd/telas/Arena & Mapa — O Vale Rúnico Apocalíptico/` (imagem tática) · referências Astro Arena / Brawl Stars (análise em `STATUS-ARQUIVO.md` 2026-10-09)
 **Decisões do PI (2026-10-09):** escala pelo GDB (raio 35 u); rio bloqueia e só se cruza por 2 pontes; bloqueios = muros/rochas + pilares da cratera + mato alto; cratera plana; **sem** torres, ouro, aura do boss, orbes de XP, fog of war, lama, relevo.
 **Decisões do PI na F7 (2026-10-09):** spawn em `(∓24, ±24)` — o `(∓26, ±26)` original ficava a 36,8 u, fora da arena de 35 u; campos de monstros do centro em **45°/225°** — em 0°/180° não eram equidistantes das pontes.
+**Revisão do PI (2026-10-10):** neblina de guerra deixa de ser excluída (F37, `CONVENTION.md` §4.9); 4 campos laterais de monstros e baús nos cantos NO e SE, um de cada lado do rio (F36, GDB §5.1/§6.2). As contagens da §3 abaixo valem até o F36, que as atualiza.
 **Implementação:** `game/scenes/arena/arena.tscn` é gerada por `tools/arena/build_arena.gd` (as medidas desta spec vivem nas constantes do builder); edite o builder, não a cena.
 
 ## 1. Sistema de coordenadas e escala
