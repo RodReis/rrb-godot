@@ -1,7 +1,9 @@
 class_name MatchController
 extends Node
 ## Ciclo da partida (CONVENTION §3, ARCHITECTURE-GAME §3.3): LOBBY_WAIT -> HERO_PICK -> PHASE1
-## -> TRANSITION, sobre o MatchClock em ticks; PHASE2, morte subita e vitoria sao do F16. A FSM,
+## -> TRANSITION -> PHASE2 -> SUDDEN_DEATH -> ENDED, sobre o MatchClock em ticks. Fase 2 (F16):
+## zona ligada (ZoneController), kills e dano no KillTracker, respawn desligado na morte subita e
+## fim por VictoryRules a cada morte, na morte subita e no colapso (10:00). A FSM,
 ## as vagas e a selecao rodam so no servidor (open()); nos clientes este no so recebe os eventos
 ## discretos por RPC confiavel com tick e os repassa como sinais para a UI. Mortes e niveis saem
 ## do estado replicado dos herois, uma vez por mudanca (ressimulacao nao duplica evento); o XP do
@@ -12,10 +14,11 @@ signal hero_picked(peer: int, hero_id: int, tick: int)
 signal player_died(peer: int, killer: int, tick: int)
 signal player_leveled(peer: int, level: int, tick: int)
 signal chest_opened(peer: int, chest_uid: int, tick: int)
-signal match_ended(winner: int, reason: StringName, tick: int)
+## stats: peer -> {"kills": kills na fase 2, "hero_damage": dano causado em herois}.
+signal match_ended(winner: int, reason: StringName, stats: Dictionary, tick: int)
 
-const NO_WINNER: int = 0
-const REASON_ABANDONED: StringName = &"abandoned"
+const NO_WINNER: int = VictoryRules.NO_WINNER
+const REASON_ABANDONED: StringName = VictoryRules.ABANDONED
 ## Times na ordem dos slots: P1, P2.
 const SLOT_TEAMS: Array[int] = [GateRules.TEAM_A, GateRules.TEAM_B]
 
@@ -33,11 +36,15 @@ class Seat:
 
 @export var rules: MatchRules
 @export var clock: MatchClock
+## Opcional (testes sem zona).
+@export var zone: ZoneController
 
 ## Servidor: herois com cena (a Arqueira entra no F14).
 var available_heroes: Array[StringName] = []
 ## Servidor: segundos em que o relogio da fase 1 comeca (dev, --time).
 var start_seconds: float = 0.0
+## Servidor: seed da partida (a dos baus) para o sorteio do colapso.
+var match_seed: int = 0
 ## Espelhado nos clientes pelo RPC de fase.
 var state: MatchState.State = MatchState.State.LOBBY_WAIT
 ## Fim da espera ou da selecao em ticks; o cliente conta o tempo a partir do tick do evento.
@@ -46,7 +53,7 @@ var deadline_tick: int = 0
 var _open: bool = false
 var _tickrate: int = 0
 var _seats: Array[Seat] = []
-var _kills: Dictionary = {}  # peer -> kills na fase 2
+var _tracker: KillTracker = KillTracker.new()
 var _dead: Dictionary = {}  # peer -> morto no ultimo tick visto
 var _levels: Dictionary = {}  # peer -> maior nivel ja avisado
 var _refusals_logged: Dictionary = {}  # peer -> true: log de lock-in recusado uma vez por peer
@@ -56,6 +63,9 @@ func _ready() -> void:
 	NetworkTime.on_tick.connect(_on_network_tick)
 	if clock != null:
 		clock.phase1_ended.connect(_on_clock_phase1_ended)
+		clock.transition_ended.connect(_on_clock_transition_ended)
+		clock.sudden_death_started.connect(_on_clock_sudden_death_started)
+		clock.collapsed.connect(_on_clock_collapsed)
 
 
 ## Servidor: comeca a esperar os jogadores.
@@ -70,7 +80,7 @@ func seats() -> Array[Seat]:
 
 
 func kills(peer: int) -> int:
-	return _kills.get(peer, 0)
+	return _tracker.kills(peer)
 
 
 ## Servidor: [param peer] ocupa a vaga do [param team]. Falso se a partida ja nao aceita ninguem.
@@ -122,8 +132,7 @@ func update(tick: int) -> void:
 	if not _open:
 		return
 	if state == MatchState.State.LOBBY_WAIT and tick >= deadline_tick:
-		_enter(MatchState.State.ENDED, tick)
-		_ended.rpc(tick, NO_WINNER, REASON_ABANDONED)
+		_finish(tick, NO_WINNER, REASON_ABANDONED)
 	elif state == MatchState.State.HERO_PICK and tick >= deadline_tick:
 		_start_phase1(tick)
 
@@ -133,6 +142,8 @@ func update(tick: int) -> void:
 # desfizer o golpe (input atrasado), o efeito fica. Raro e servidor segue autoritativo, como no
 # Chest e no Monster; esperar o history_limit antes de anunciar se isso aparecer em jogo.
 func watch_heroes(tick: int) -> void:
+	if state == MatchState.State.ENDED:
+		return
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
 		var dead := not hero.is_alive()
@@ -196,21 +207,80 @@ func _start_phase1(tick: int) -> void:
 
 
 ## Servidor: muda o estado em todos (quem ouve phase_changed no servidor spawna os herois) e
-## ajusta o respawn e a fonte da base (so na fase 1) dos herois a fase nova.
+## ajusta a fase nova: respawn (tempo; desligado na morte subita), fonte da base (so na fase 1)
+## e zona (fase 2).
 func _enter(to: MatchState.State, tick: int, p_deadline_tick: int = 0) -> void:
 	print("[match] %s -> %s, tick %d" % [_name(state), _name(to), tick])
 	_changed.rpc(state, to, p_deadline_tick, tick)
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
 		hero.respawn_seconds = KillRules.respawn_seconds(rules, state)
+		if not KillRules.respawns(state):
+			hero.respawn_off_tick = mini(hero.respawn_off_tick, tick)
 		hero.fountain_open = state == MatchState.State.PHASE1
+	if zone != null:
+		zone.active = MatchState.is_phase2(state)
 
 
 func _name(value: MatchState.State) -> String:
 	return MatchState.State.keys()[value]
 
 
-## XP ao heroi que deu o golpe final (monstro nao ganha); kill so na fase 2.
+## Fim: avisa todos com o placar; o processo do servidor dedicado encerra (main).
+func _finish(tick: int, winner: int, reason: StringName) -> void:
+	_enter(MatchState.State.ENDED, tick)
+	_ended.rpc(tick, winner, reason, _stats())
+
+
+## Fase 2: VictoryRules na ordem do GDB §7.2; acabou, encerra.
+func _judge(tick: int, collapsed: bool) -> void:
+	var sudden_death := state == MatchState.State.SUDDEN_DEATH
+	var verdict := VictoryRules.evaluate(
+		_contenders(), rules.kill_goal, sudden_death, collapsed, match_seed
+	)
+	if verdict.is_over():
+		_finish(tick, verdict.winner, verdict.reason)
+
+
+func _heroes() -> Array[Hero]:
+	var result: Array[Hero] = []
+	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
+		result.append(node as Hero)
+	return result
+
+
+## Uma vaga, um jogador; vaga sem heroi conta como morta.
+func _contenders() -> Array[VictoryRules.Contender]:
+	var heroes := _heroes()
+	var result: Array[VictoryRules.Contender] = []
+	for seat: Seat in _seats:
+		var contender := VictoryRules.Contender.new()
+		contender.peer = seat.peer
+		contender.connected = seat.connected
+		contender.alive = false
+		contender.kills = kills(seat.peer)
+		contender.damage = _tracker.damage_dealt(seat.peer, heroes)
+		for hero: Hero in heroes:
+			if hero.peer_id == seat.peer:
+				contender.alive = hero.is_alive()
+				contender.hp_pct = float(hero.hp) / hero.attributes.max_hp
+		result.append(contender)
+	return result
+
+
+func _stats() -> Dictionary:
+	var heroes := _heroes()
+	var result := {}
+	for seat: Seat in _seats:
+		result[seat.peer] = {
+			"kills": kills(seat.peer),
+			"hero_damage": _tracker.damage_dealt(seat.peer, heroes),
+		}
+	return result
+
+
+## XP ao heroi que deu o golpe final (monstro e zona nao ganham); kill so na fase 2. Na fase 2
+## toda morte pode encerrar a partida (meta de kills, eliminacao na morte subita).
 func _on_hero_died(victim: Hero, tick: int) -> void:
 	var killer: Hero = null
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
@@ -220,14 +290,15 @@ func _on_hero_died(victim: Hero, tick: int) -> void:
 	var killer_id := 0 if killer == null else killer.peer_id
 	if killer != null:
 		var reward := HitEffect.new()
-		reward.xp = XpTable.pvp_kill_xp(rules, MatchState.is_phase2(state), victim.level)
+		reward.xp = KillTracker.reward_xp(rules, state, victim.level)
 		var source := HitLedger.source_key(victim.peer_id, HitLedger.Slot.REWARD)
 		killer.receive_hit(tick + 1, source, reward)
 		NetworkRollback.mutate(killer, tick + 1)
-		if KillRules.counts_kill(state):
-			_kills[killer_id] = kills(killer_id) + 1
+	_tracker.score(killer_id, state)
 	print("[match] heroi %d morto por %d, tick %d" % [victim.peer_id, killer_id, tick])
 	_died.rpc(tick, victim.peer_id, killer_id)
+	if MatchState.is_phase2(state):
+		_judge(tick, false)
 
 
 @rpc("authority", "call_local", "reliable")
@@ -258,8 +329,8 @@ func _chest_opened(tick: int, peer: int, chest_uid: int) -> void:
 
 
 @rpc("authority", "call_local", "reliable")
-func _ended(tick: int, winner: int, reason: StringName) -> void:
-	match_ended.emit(winner, reason, tick)
+func _ended(tick: int, winner: int, reason: StringName, stats: Dictionary) -> void:
+	match_ended.emit(winner, reason, stats, tick)
 
 
 func _on_network_tick(_delta: float, tick: int) -> void:
@@ -272,3 +343,26 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 func _on_clock_phase1_ended(tick: int) -> void:
 	if _open and state == MatchState.State.PHASE1:
 		_enter(MatchState.State.TRANSITION, tick)
+
+
+func _on_clock_transition_ended(tick: int) -> void:
+	if _open and state == MatchState.State.TRANSITION:
+		_enter(MatchState.State.PHASE2, tick)
+
+
+## 9:00: respawn desliga; quem ja esta morto fica morto e pode encerrar na hora. O relogio roda
+## antes deste no no tick: as mortes do tick entram antes do julgamento.
+func _on_clock_sudden_death_started(tick: int) -> void:
+	if _open and state == MatchState.State.PHASE2:
+		watch_heroes(tick)
+		if state == MatchState.State.PHASE2:
+			_enter(MatchState.State.SUDDEN_DEATH, tick)
+			_judge(tick, false)
+
+
+## 10:00: resolucao imediata (I1).
+func _on_clock_collapsed(tick: int) -> void:
+	if _open and state == MatchState.State.SUDDEN_DEATH:
+		watch_heroes(tick)
+		if state == MatchState.State.SUDDEN_DEATH:
+			_judge(tick, true)

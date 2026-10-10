@@ -11,6 +11,8 @@ extends Resource
 @export var default_heroes: Array[StringName]
 
 @export var phase1_duration: float
+## TRANSITION (aviso, portoes caem) antes da PHASE2; ja conta como fase 2 (CONVENTION §3).
+@export var transition_duration: float
 @export var max_match_duration: float
 @export var boss_warning_time: float
 @export var boss_spawn_time: float
@@ -25,12 +27,12 @@ extends Resource
 @export var kill_goal: int
 ## Tempo na fase 2 em que o respawn desliga (morte subita).
 @export var respawn_off_at: float
-## Degraus da zona, alinhados: tempo na fase 2, raio (u) e dano fora (fracao do HP max/s).
+## Pontos da zona, alinhados: tempo na fase 2, raio (u, interpolado entre pontos) e dano fora
+## (fracao do HP max/s, degrau ate o proximo ponto) — ZoneRules. Aos 10:00 a resolucao e
+## imediata (GDB §7.2), sem colapso progressivo.
 @export var zone_times: PackedFloat64Array
 @export var zone_radius: PackedFloat64Array
 @export var zone_damage_pct: PackedFloat64Array
-## No colapso final o dano dobra a cada este intervalo.
-@export var zone_collapse_doubling: float
 @export var common_chests_per_base: int
 @export var rare_chests: int
 @export var common_chest_item_chance: float

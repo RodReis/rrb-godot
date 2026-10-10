@@ -15,8 +15,13 @@ extends Combatant
 ## heroi (mark_disconnected), senao o netfox para de simula-lo (ARCHITECTURE-GAME §6).
 ## Fonte da base (#74): no servidor, perto da fonte do proprio time e com fountain_open (fase 1),
 ## cura a cada segundo; tomar dano pausa a cura (heal_pause_ticks, estado de rollback).
+## Fase 2 (F16): a zona chega pelo ledger como true_damage; da morte subita (respawn_off_tick)
+## em diante o morto fica morto; o dano tomado de cada heroi fica registrado por tick para o
+## desempate (KillTracker).
 
 const GROUP: StringName = &"heroes"
+## respawn_off_tick enquanto o respawn vale.
+const RESPAWN_ALWAYS: int = 9223372036854775807
 ## Cena de cada heroi pelo id do HeroData.
 const SCENE_PATH: String = "res://scenes/heroes/%s.tscn"
 
@@ -39,6 +44,9 @@ var respawn_seconds: float = 0.0
 var killer_id: int = 0
 ## Servidor: a fonte da base cura (so na fase 1), definido pelo MatchController.
 var fountain_open: bool = false
+## Servidor: tick da morte subita (KillRules.respawns), definido pelo MatchController. Por tick,
+## nao flag: ressimular um tick de antes dele ainda renasce.
+var respawn_off_tick: int = RESPAWN_ALWAYS
 var attributes: HeroAttributes
 
 # Estado de rollback.
@@ -76,6 +84,9 @@ var heal_pause_ticks: int = 0
 var _rollback: RollbackSynchronizer
 var _attributes_equipment: Vector4i = Inventory.NONE
 var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de rollback
+## Servidor: dano tomado de herois, tick -> {peer_id do atacante -> dano}. Refeito a cada
+## simulacao do tick, entao ressimular nao conta duas vezes.
+var _hero_damage: Dictionary = {}
 var _alive_layer: int = 0
 
 @onready var input: PlayerInput = $Input
@@ -163,9 +174,11 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	# Ressimulacao restaura xp/equipment mas nao attributes: recalcula antes de usar DEF/HP max.
 	_refresh_attributes()
 	if not is_alive():
-		_count_respawn()
-	if multiplayer.is_server() and not _hits.is_empty():
-		_apply_hits(tick)
+		_count_respawn(tick)
+	if multiplayer.is_server():
+		_hero_damage.erase(tick)
+		if not _hits.is_empty():
+			_apply_hits(tick)
 	_refresh_attributes()
 	hp = mini(hp, attributes.max_hp)  # troca para item com menos HP
 	_tick_timers()  # recarga corre tambem morto
@@ -244,6 +257,14 @@ func cancel_hit(tick: int, source: int) -> void:
 	_hits.clear_hit(tick, source)
 
 
+## Servidor: dano que o heroi [param attacker_id] causou neste heroi na partida.
+func hero_damage_from(attacker_id: int) -> int:
+	var total := 0
+	for by_attacker: Dictionary in _hero_damage.values():
+		total += by_attacker.get(attacker_id, 0)
+	return total
+
+
 func forward() -> Vector3:
 	return -global_transform.basis.z
 
@@ -297,8 +318,11 @@ func _drink(tick: int) -> void:
 		hp = mini(hp + amount, attributes.max_hp)
 
 
-## Morto: conta o respawn; no fim renasce em home com HP cheio (itens ficam, GDB §3.3).
-func _count_respawn() -> void:
+## Morto: conta o respawn; no fim renasce em home com HP cheio (itens ficam, GDB §3.3). Da morte
+## subita em diante fica morto.
+func _count_respawn(tick: int) -> void:
+	if tick >= respawn_off_tick:
+		return
 	respawn_ticks = maxi(respawn_ticks - 1, 0)
 	if respawn_ticks > 0:
 		return
@@ -410,8 +434,10 @@ func _miss(other: Combatant, tick: int, slot: HitLedger.Slot) -> void:
 
 ## DEF reduz primeiro; a Muralha absorve o que sobrou se o golpe veio pela frente
 ## (PI 2026-10-09); o resto vai ao HP. Invulneravel (Rolamento) nao toma dano mas sofre o resto
-## (GDB §4.2: invulnerabilidade a dano). XP so soma (I7). Saque: cura ate o HP max e item equipado
-## no slot dele (a decisao de trocar ja foi do Chest). Morto recebe XP e item, nada mais.
+## (GDB §4.2: invulnerabilidade a dano). A zona (true_damage) ignora DEF e Muralha, nao a
+## invulnerabilidade. Dano de heroi fica registrado por atacante (_hero_damage). XP so soma
+## (I7). Saque: cura ate o HP max e item equipado no slot dele (a decisao de trocar ja foi do
+## Chest). Morto recebe XP e item, nada mais.
 func _apply_hits(tick: int) -> void:
 	for effect: HitEffect in _hits.effects_at(tick):
 		xp += maxi(effect.xp, 0)
@@ -428,6 +454,10 @@ func _apply_hits(tick: int) -> void:
 			var split := CombatRules.absorb(damage, shield_hp)
 			damage = split.x
 			shield_hp = split.y
+		if invuln_ticks == 0:
+			damage += maxi(effect.true_damage, 0)
+		if effect.attacker_id != 0 and damage > 0:
+			_record_hero_damage(tick, effect.attacker_id, mini(damage, hp))
 		hp = maxi(hp - damage, 0)
 		if damage > 0:
 			var pause := match_rules.fountain_damage_pause
@@ -443,3 +473,10 @@ func _apply_hits(tick: int) -> void:
 			slow_pct = maxf(slow_pct, effect.slow) if slow_ticks > 0 else effect.slow
 			slow_ticks = maxi(slow_ticks, effect.slow_ticks)
 	_hits.trim_before(tick - NetworkRollback.history_limit)
+
+
+func _record_hero_damage(tick: int, attacker_id: int, amount: int) -> void:
+	if not _hero_damage.has(tick):
+		_hero_damage[tick] = {}
+	var by_attacker: Dictionary = _hero_damage[tick]
+	by_attacker[attacker_id] = by_attacker.get(attacker_id, 0) + amount

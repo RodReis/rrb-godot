@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/bestiary.tscn" id="8_bestiary"]
 [ext_resource type="Script" path="res://scripts/match/match_controller.gd" id="9_match"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hero_select.tscn" id="10_pick"]
+[ext_resource type="Script" path="res://scripts/match/zone_controller.gd" id="11_zone"]
+[ext_resource type="Script" path="res://scripts/world/zone_ring.gd" id="12_ring"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
@@ -23,10 +25,21 @@ script = ExtResource("4_spawn")
 script = ExtResource("5_clock")
 rules = ExtResource("6_rules")
 
-[node name="MatchController" type="Node" parent="." node_paths=PackedStringArray("clock")]
+[node name="ZoneController" type="Node" parent="." node_paths=PackedStringArray("clock")]
+script = ExtResource("11_zone")
+rules = ExtResource("6_rules")
+clock = NodePath("../MatchClock")
+
+[node name="ZoneRing" type="Node3D" parent="." node_paths=PackedStringArray("clock")]
+script = ExtResource("12_ring")
+clock = NodePath("../MatchClock")
+rules = ExtResource("6_rules")
+
+[node name="MatchController" type="Node" parent="." node_paths=PackedStringArray("clock", "zone")]
 script = ExtResource("9_match")
 rules = ExtResource("6_rules")
 clock = NodePath("../MatchClock")
+zone = NodePath("../ZoneController")
 
 [node name="Players" type="Node3D" parent="."]
 

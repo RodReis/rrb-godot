@@ -21,6 +21,9 @@ const HOST_BIND_IP: String = "127.0.0.1"
 const EPHEMERAL_PORT: int = 0
 ## ponytail: id fixo do bot; peer real do ENet e aleatorio de 32 bits, colisao desprezivel.
 const BOT_ID: int = 2
+## Servidor dedicado: espera antes de sair no fim, para os RPCs confiaveis do fim (estado ENDED,
+## ultima morte, match_ended com o placar) chegarem mesmo com perda; sair na hora descarta a fila.
+const EXIT_DELAY_SECONDS: float = 2.0
 ## Intervalo do log de heroi desconectado (s): prova que ele segue simulado, sem inundar o log.
 const DISCONNECTED_LOG_SECONDS: float = 5.0
 
@@ -41,6 +44,7 @@ var _disconnected_log: Timer
 @onready var players: Node3D = $Players
 @onready var spawns: SpawnDirector = $Spawns
 @onready var clock: MatchClock = $MatchClock
+@onready var zone: ZoneController = $ZoneController
 @onready var match_controller: MatchController = $MatchController
 @onready var spawner: MultiplayerSpawner = $MultiplayerSpawner
 @onready var connect_panel: Control = $UI/ConnectPanel
@@ -73,6 +77,7 @@ func _ready() -> void:
 	PlayerInput.autopilot = args["autopilot"]
 	_hero_level = args["level"]
 	match_controller.start_seconds = args["time"]
+	match_controller.match_seed = spawns.loot_seed
 	_wants_bot = args["bot"]
 	_bot_pilot = args["bot_pilot"]
 	if args["probe"]:
@@ -316,11 +321,13 @@ func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 		_spawn_heroes()
 
 
-## Servidor dedicado: partida encerrada encerra o processo (ARCHITECTURE-GAME §3.7).
-func _on_match_ended(winner: int, reason: StringName, tick: int) -> void:
-	print("[match] fim: %s, vencedor %d, tick %d" % [reason, winner, tick])
+## Servidor dedicado: partida encerrada encerra o processo com codigo 0 (ARCHITECTURE-GAME §3.7,
+## §6).
+func _on_match_ended(winner: int, reason: StringName, stats: Dictionary, tick: int) -> void:
+	print("[match] fim: %s, vencedor %d, placar %s, tick %d" % [reason, winner, stats, tick])
 	if _dedicated:
-		get_tree().quit()
+		await get_tree().create_timer(EXIT_DELAY_SECONDS).timeout
+		get_tree().quit(0)
 
 
 func _on_clock_boss_warning(tick: int) -> void:

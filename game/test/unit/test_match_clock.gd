@@ -1,6 +1,7 @@
 extends GutTest
-## MatchClock com tick falso a 30 Hz: aviso do boss 3:00, boss 3:30, fim da fase 1 5:00
-## (GDB §5.1, §7.1; CONVENTION §4.1), cada evento uma vez, no tick certo.
+## MatchClock com tick falso a 30 Hz: aviso do boss 3:00, boss 3:30, fim da fase 1 5:00, fim da
+## transicao 5:05, morte subita 9:00 e colapso 10:00 (GDB §5.1, §7.1; CONVENTION §3, §4.1), cada
+## evento uma vez, no tick certo.
 
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
 const RATE: int = 30
@@ -15,7 +16,14 @@ func before_each() -> void:
 	_clock = MatchClock.new()
 	_clock.rules = load(RULES) as MatchRules
 	add_child_autofree(_clock)
-	for event: StringName in [&"boss_warning", &"boss_spawned", &"phase1_ended"]:
+	for event: StringName in [
+		&"boss_warning",
+		&"boss_spawned",
+		&"phase1_ended",
+		&"transition_ended",
+		&"sudden_death_started",
+		&"collapsed",
+	]:
 		_fired[event] = []
 		Signal(_clock, event).connect(
 			func(tick: int) -> void: (_fired[event] as Array).append(tick)
@@ -41,6 +49,21 @@ func test_dispara_3_00_3_30_e_5_00_nos_ticks_certos() -> void:
 	assert_eq(_fired[&"boss_warning"], [START + 180 * RATE])
 	assert_eq(_fired[&"boss_spawned"], [START + 210 * RATE])
 	assert_eq(_fired[&"phase1_ended"], [START + 300 * RATE])
+
+
+func test_dispara_5_05_9_00_e_10_00_nos_ticks_certos() -> void:
+	_clock.start(START, RATE)
+	_run(START, START + 11 * 60 * RATE)
+	assert_eq(_fired[&"transition_ended"], [START + 305 * RATE])
+	assert_eq(_fired[&"sudden_death_started"], [START + 540 * RATE])
+	assert_eq(_fired[&"collapsed"], [START + 600 * RATE])
+
+
+func test_tempo_da_fase_2_conta_dos_5_00() -> void:
+	_clock.start(START, RATE)
+	assert_almost_eq(_clock.phase2_elapsed(START + 300 * RATE), 0.0, 0.0001)
+	assert_almost_eq(_clock.phase2_elapsed(START + 390 * RATE), 90.0, 0.0001)
+	assert_lt(_clock.phase2_elapsed(START + 299 * RATE), 0.0)
 
 
 func test_um_tick_antes_nao_dispara() -> void:

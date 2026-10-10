@@ -1,0 +1,41 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+[spawn] seed dos baus 16
+[server] escutando em *:7000
+[server] peer 1453828230 conectou
+[server] peer 2018575930 conectou
+[match] LOBBY_WAIT -> HERO_PICK, tick 148
+[match] HERO_PICK -> PHASE1, tick 868
+[match] knight para o peer 1453828230 (time 1)
+[match] knight para o peer 2018575930 (time 2)
+[match] aviso do boss (3:00), tick 869
+[match] PHASE1 -> TRANSITION, tick 869
+[match] fim da fase 1 (5:00), portoes caem, tick 869
+[match] jogador 1453828230: Nv 1, 0 XP
+[match] jogador 2018575930: Nv 1, 0 XP
+[spawn] Rei Esqueleto vivo aos 5:00 sai do mapa sem drop, tick 869
+[match] TRANSITION -> PHASE2, tick 869
+[server] peer 2018575930 saiu
+[match] heroi 2018575930 segue simulado com input vazio do servidor
+WARNING: [WRN][@1131][#1][B@1129|1129>1130][netfox::NetworkRollback] Trying to run rollback for ticks 893 to 1131, past the history limit of 64
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] warning (res://addons/netfox.internals/logger.gd:159)
+       [1] _rollback (res://addons/netfox/rollback/network-rollback.gd:328)
+       [2] _loop (res://addons/netfox/network-time.gd:570)
+       [3] _process (res://addons/netfox/network-time.gd:576)
+[WRN][@1131][#1][B@1129|1129>1130][netfox::NetworkRollback] Trying to run rollback for ticks 893 to 1131, past the history limit of 64
+[net] heroi 2018575930 desconectado: tick 1279, HP 436/600, pos (26.6, -22.2)
+[net] heroi 2018575930 desconectado: tick 1430, HP 272/600, pos (26.6, -22.2)
+[net] heroi 2018575930 desconectado: tick 1579, HP 108/600, pos (26.6, -22.2)
+[match] heroi 1453828230 morto por 0, tick 1621
+[match] heroi 2018575930 morto por 0, tick 1680
+[net] heroi 2018575930 desconectado: tick 1730, HP 0/600, pos (26.6, -22.2)
+[net] heroi 2018575930 desconectado: tick 1880, HP 600/600, pos (24.0, -24.0)
+[net] heroi 2018575930 desconectado: tick 2030, HP 480/600, pos (24.0, -24.0)
+[match] PHASE2 -> SUDDEN_DEATH, tick 2068
+[net] heroi 2018575930 desconectado: tick 2180, HP 336/600, pos (24.0, -24.0)
+[net] heroi 2018575930 desconectado: tick 2330, HP 186/600, pos (24.0, -24.0)
+[match] heroi 1453828230 morto por 0, tick 2462
+[match] SUDDEN_DEATH -> ENDED, tick 2462
+[match] fim: elimination, vencedor 2018575930, placar { 1453828230: { "kills": 0, "hero_damage": 0 }, 2018575930: { "kills": 0, "hero_damage": 0 } }, tick 2462
