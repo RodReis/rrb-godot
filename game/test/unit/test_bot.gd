@@ -1,7 +1,8 @@
 extends GutTest
 ## Integracao headless: arena + SpawnDirector + ArenaNav + bot (time B) + heroi parado (time A).
 ## O bot so recebe think(tick); os monstros e o heroi rodam o proprio tick. Base primeiro
-## (PI 2026-10-09): limpa a base B (225 XP -> nivel 3, GDB §5.2) e passa a saquear.
+## (PI 2026-10-09): limpa a propria metade, base B + 2 campos laterais (535 XP -> nivel 4,
+## GDB §5.2, F36), e passa a saquear.
 
 const ARENA: String = "res://scenes/arena/arena.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
