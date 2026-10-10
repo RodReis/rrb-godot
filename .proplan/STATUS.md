@@ -57,14 +57,13 @@ _(vazio)_
 
 ## Feito
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64)
+_(vazio)_
 
 ## Finalizado
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64, finalizado em: 2026-10-10)
 - [MVP2][SPEC-016][F16] Fase 2: zona, dano da zona, respawn, kills, morte súbita, colapso e regras de vitória (#63, finalizado em: 2026-10-10)
 - [MVP2][SPEC-014][F14] Arqueira: modelo KayKit, flecha validada no servidor, Q Flecha Perfurante, E Rolamento e R Chuva de Flechas (#62, finalizado em: 2026-10-10)
 - [MVP2][SPEC-020][F20] Monstros, baús e boss replicados para 2 clientes reais sob latência e perda (#60, finalizado em: 2026-10-10)
