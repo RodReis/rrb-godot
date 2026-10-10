@@ -7,6 +7,7 @@
 [ext_resource type="Resource" path="res://shared/data/rules/xp_table.tres" id="5_xp"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers/Knight.glb" id="6_model"]
 [ext_resource type="Resource" path="res://shared/data/items/catalog.tres" id="7_catalog"]
+[ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
 radius = 0.4
@@ -34,12 +35,17 @@ model = NodePath("../Model")
 hidden_parts = Array[StringName]([&"1H_Sword_Offhand", &"2H_Sword", &"Rectangle_Shield", &"Round_Shield", &"Spike_Shield"])
 
 [node name="HpLabel" type="Label3D" parent="."]
-position = Vector3(0, 2.4, 0)
+layers = 2
+position = Vector3(0, 2.85, 0)
 pixel_size = 0.01
 billboard = 1
 text = "0 / 0"
-font_size = 96
-outline_size = 24
+font_size = 56
+outline_size = 12
+
+[node name="HpBar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.4, 0)
+script = ExtResource("hpbar_script")
 
 [node name="Input" type="Node" parent="."]
 script = ExtResource("2_input")

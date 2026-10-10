@@ -39,11 +39,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.32)
 [node name="Mesh" type="MeshInstance3D" parent="Lid"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0.32)
 mesh = SubResource("Box_lid")
-
-[node name="Label" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
-visible = false
-pixel_size = 0.01
-billboard = 1
-font_size = 64
-outline_size = 16

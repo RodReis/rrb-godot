@@ -28,9 +28,9 @@ var _wants_bot: bool = false
 @onready var connect_panel: Control = $UI/ConnectPanel
 @onready var address_edit: LineEdit = $UI/ConnectPanel/Address
 @onready var connect_button: Button = $UI/ConnectPanel/ConnectButton
+## Rede e tick no rodape (DV tela 3); o relogio da partida esta na HUD.
 @onready var status_label: Label = $UI/Status
-## Equipamento do heroi local; provisorio ate a HUD do F13.
-@onready var inventory_label: Label = $UI/Inventory
+@onready var hud: HudPhase1 = $HudPhase1
 
 
 func _ready() -> void:
@@ -61,16 +61,12 @@ func _process(_delta: float) -> void:
 	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
 	if hero == null:
 		return  # servidor dedicado, ou cliente ainda sem heroi
+	if not hud.visible:
+		hud.bind(hero, clock, spawns, players)
 	status_label.text = (
-		"%s | tick %d | %s%s"
-		% [
-			_net_text(),
-			NetworkTime.tick,
-			_clock_text(),
-			" | AUTOPILOT" if PlayerInput.autopilot else ""
-		]
+		"%s | tick %d%s"
+		% [_net_text(), NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]
 	)
-	inventory_label.text = _inventory_text(hero)
 
 
 ## Falso se a porta nao abriu (o processo sai com codigo 1).
@@ -193,23 +189,6 @@ func _net_text() -> String:
 		return "desconectado"
 	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
 	return "peer %d | RTT %d ms" % [multiplayer.get_unique_id(), rtt]
-
-
-func _clock_text() -> String:
-	var seconds := maxi(floori(clock.elapsed(NetworkTime.tick)), 0)  # cliente ainda sincronizando
-	return "%d:%02d" % [floori(seconds / 60.0), seconds % 60]
-
-
-func _inventory_text(hero: Hero) -> String:
-	var items := Inventory.items(hero.equipment, hero.item_catalog)
-	var lines := PackedStringArray()
-	for item: ItemData in items:
-		lines.append("%s (%s)" % [item.display_name, ItemData.RARITY_NAMES[item.rarity]])
-	for bonus: SetBonusData in hero.item_catalog.set_bonuses:
-		var pieces := SetBonus.count_pieces(items, bonus.set_id)
-		if pieces > 0:
-			lines.append("conjunto %s %d/%d" % [bonus.set_id, pieces, bonus.pieces_required])
-	return "\n".join(lines)
 
 
 func _on_peer_disconnected(id: int) -> void:

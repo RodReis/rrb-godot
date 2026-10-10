@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 set_id = &"hunter"
+display_name = "Caçador"
 pieces_required = 3
 attack_speed_pct = 0.1
 move_speed_pct = 0.08

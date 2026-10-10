@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_script")
 set_id = &"guard"
+display_name = "Guarda"
 pieces_required = 3
 max_hp_pct = 0.15
 defense = 10.0

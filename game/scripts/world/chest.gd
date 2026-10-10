@@ -4,7 +4,7 @@ extends Node3D
 ## servidor vale. Abre uma vez com toque em F; o item vai ao heroi pelo ledger dele se a troca
 ## for automatica (ItemRules), senao fica no bau ate alguem segurar F swap_hold_time, e o item
 ## antigo some (PI 2026-10-09). Cura vai pelo ledger. Clientes recebem aberto + item (numero de
-## Ids) por RPC confiavel.
+## Ids) por RPC confiavel. A oferta de troca aparece na HUD (F13), nao no bau.
 
 const GROUP: StringName = &"chests"
 const LID_OPEN_DEGREES: float = -110.0
@@ -36,7 +36,6 @@ var _opened_tick: int = 0
 @onready var _body: MeshInstance3D = $Body
 @onready var _lid: Node3D = $Lid
 @onready var _lid_mesh: MeshInstance3D = $Lid/Mesh
-@onready var _label: Label3D = $Label
 
 
 func _ready() -> void:
@@ -107,16 +106,9 @@ func _reward(hero: Hero, tick: int, effect: HitEffect) -> void:
 
 func _refresh_visual() -> void:
 	_lid.rotation_degrees.x = LID_OPEN_DEGREES if opened else 0.0
-	var offer := catalog.find(item)
-	_label.visible = offer != null
-	if offer != null:
-		_label.text = (
-			"%s (%s)\nsegure F para trocar"
-			% [offer.display_name, ItemData.RARITY_NAMES[offer.rarity]]
-		)
 
 
-## [param _tick] do evento (ARCHITECTURE-GAME §3.2); a UI do F13 usa.
+## [param _tick] do evento (ARCHITECTURE-GAME §3.2).
 @rpc("authority", "call_local", "reliable")
 func _show(_tick: int, p_opened: bool, p_item: int) -> void:
 	opened = p_opened

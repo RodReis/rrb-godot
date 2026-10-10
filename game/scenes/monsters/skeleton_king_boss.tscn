@@ -5,6 +5,7 @@
 [ext_resource type="Resource" path="res://shared/data/monsters/skeleton_king_boss.tres" id="3_data"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Minion.glb" id="4_model"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/crown.glb" id="5_crown"]
+[ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
 radius = 0.6
@@ -35,9 +36,15 @@ model = NodePath("../Model")
 attack = &"Unarmed_Melee_Attack_Punch_B"
 
 [node name="HpLabel" type="Label3D" parent="."]
-position = Vector3(0, 3.8, 0)
+layers = 2
+position = Vector3(0, 4.25, 0)
 pixel_size = 0.01
 billboard = 1
 text = "0 / 0"
-font_size = 80
-outline_size = 20
+font_size = 44
+outline_size = 12
+
+[node name="HpBar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 3.8, 0)
+script = ExtResource("hpbar_script")
+bar_size = Vector2(2.2, 0.26)
