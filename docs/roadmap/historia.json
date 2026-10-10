@@ -105,7 +105,9 @@
         { "arquivo": "mvp1-f9-centro-golem.webp", "legenda": "Com a base limpa, o Cavaleiro sobe de nível e chega ao centro, guardado pelo Golem de Pedra, pelo Esqueleto Guerreiro e pelo Esqueleto Mago. Golem baseado em \"Lava Golem\" de vladimirmejia (CC-BY).", "tipo": "entregue" },
         { "arquivo": "mvp1-f10-bau-guarda-completa.webp", "legenda": "Baús da base abertos: com elmo, peitoral e botas da Guarda, o conjunto fecha e a vida máxima do Cavaleiro sobe 15 %.", "tipo": "entregue" },
         { "arquivo": "mvp1-f11-rei-esqueleto.webp", "legenda": "Aos 3:30 o Rei Esqueleto desperta no centro da cratera. Seu golpe empurra quem chega perto; derrotado, deixa um baú dourado com um item épico.", "tipo": "entregue" },
-        { "arquivo": "mvp1-f13-hud-fase1.webp", "legenda": "A HUD da fase 1: relógio da preparação, portões, contagem do Rei Esqueleto, minimapa, vida e experiência, equipamento e habilidades com recarga. Quem fica dois níveis atrás ganha 25 % a mais de experiência.", "tipo": "entregue" }
+        { "arquivo": "mvp1-f13-hud-fase1.webp", "legenda": "A HUD da fase 1: relógio da preparação, portões, contagem do Rei Esqueleto, minimapa, vida e experiência, equipamento e habilidades com recarga. Quem fica dois níveis atrás ganha 25 % a mais de experiência.", "tipo": "entregue" },
+        { "arquivo": "mvp1-gate-rei-esqueleto-contestado.webp", "legenda": "Homologação: aos 3:44 o Rei Esqueleto está no centro e o bot, dois níveis acima, já foi contestá-lo.", "tipo": "entregue" },
+        { "arquivo": "mvp1-gate-portoes-abertos.webp", "legenda": "Fim da preparação: 5:00 jogados contra o bot, Rei Esqueleto derrotado, peitoral épico do baú dourado no equipamento e portões abertos para a fase seguinte.", "tipo": "entregue" }
       ]
     },
     "MVP2": {
