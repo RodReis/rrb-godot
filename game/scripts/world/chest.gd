@@ -15,6 +15,8 @@ signal first_opened(peer: int, chest_uid: int, tick: int)
 const GROUP: StringName = &"chests"
 const LID_OPEN_DEGREES: float = -110.0
 const NOT_OPENED: int = -1
+## Superficie das cintas de ferro no .glb (art/arena/build_island.py): recebe a cor da raridade.
+const TRIM_MATERIAL: String = "chest_trim"
 
 @export var rules: MatchRules
 @export var catalog: ItemCatalog
@@ -44,9 +46,6 @@ var shown_opened: bool = false
 ## So no servidor: tick em que abriu. A troca so conta de um F apertado depois (confirmacao).
 var _opened_tick: int = 0
 var _concealment: Concealment
-
-## Superficie das cintas de ferro no .glb (art/arena/build_island.py): recebe a cor da raridade.
-const TRIM_MATERIAL: String = "chest_trim"
 
 @onready var _body: Node3D = $Body
 @onready var _lid: Node3D = $Lid
