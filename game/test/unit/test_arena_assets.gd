@@ -1,8 +1,8 @@
 extends GutTest
-## SPEC-034: pilares e mato da arena usam os assets do Blender, so como visual; a
-## colisao continua a da SPEC-007 e a malha cobre o cilindro do pilar.
+## F40 sobre o F44: pilares, moitas e pontes da Ilha usam os assets do Blender so como visual;
+## a colisao continua a do builder e a malha cobre o cilindro do pilar (nada de parede invisivel).
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 
 var _arena: Node3D
 
@@ -27,15 +27,19 @@ func _visual_aabb(root: Node3D) -> AABB:
 	return box
 
 
-func test_pilares_usam_o_asset_do_blender_e_cobrem_a_colisao() -> void:
+func _instances_of(file: String) -> Array[Node3D]:
+	var result: Array[Node3D] = []
+	for node: Node in _arena.find_children("*", "Node3D", true, false):
+		if node.scene_file_path.ends_with(file):
+			result.append(node as Node3D)
+	return result
+
+
+func test_pilares_de_obsidiana_cobrem_a_colisao() -> void:
 	await wait_physics_frames(1)
-	var crater := _arena.get_node("Crater")
-	var pillars: Array[Node3D] = []
-	for child: Node in crater.get_children():
-		if child.scene_file_path.ends_with("crater_pillar.glb"):
-			pillars.append(child as Node3D)
+	var pillars := _instances_of("obsidian_pillar.glb")
 	assert_eq(pillars.size(), 8)
-	for node: Node in crater.get_children():
+	for node: Node in _arena.get_node("Crater").get_children():
 		var shape_node := node as CollisionShape3D
 		if shape_node == null:
 			continue
@@ -62,7 +66,13 @@ func test_moitas_usam_o_asset_do_tamanho_certo() -> void:
 	assert_eq(counts, {"tall_grass_4x4.glb": 4, "tall_grass_4x3.glb": 2})
 
 
-func test_cena_nao_tem_mais_placeholder_de_pilar_nem_de_mato() -> void:
+func test_quatro_pontes_de_pedra_e_um_piso_unico() -> void:
+	assert_eq(_instances_of("bridge_stone.glb").size(), 4)
+	assert_eq(_instances_of("island_chassis.glb").size(), 1)
+	assert_eq(_instances_of("hex_grass.gltf").size(), 0, "piso proprio, sem hexes (ADR-0006)")
+
+
+func test_cena_nao_tem_placeholder_geometrico() -> void:
 	for node: Node in _arena.find_children("*", "MeshInstance3D", true, false):
 		var mesh := (node as MeshInstance3D).mesh
 		assert_false(mesh is CylinderMesh or mesh is BoxMesh, "placeholder em %s" % node.name)

@@ -1,19 +1,24 @@
 extends GutTest
-## Criterio de aceite do F7 (SPEC-007 §6) sobre a cena gerada. Spawn em (-24, +24) e campos
-## do centro em 45/225 graus: decisoes do PI de 2026-10-09.
+## Criterio de aceite do F44 (SPEC-044 §6) sobre a cena gerada da Ilha Flutuante Arcana:
+## espelho em x, bases nos cantos norte, rio N-S + anel, 4 pontes, campos do centro em 0/180.
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const HERO_SPEED: float = 5.8
 const TOLERANCE: float = 0.1
 const SPAWN_TO_CENTER_S: float = 6.3
-const SPAWN_TO_SPAWN_S: float = 12.7
+## Previsao da SPEC-044 §6 (≈ 10,5 s); o valor medido vira a referencia (DEVELOPMENT.md).
+const SPAWN_TO_SPAWN_S: float = 11.1
 const CAPSULE_RADIUS: float = 0.4
 const CAPSULE_HEIGHT: float = 1.8
 const ARROW_RADIUS: float = 0.3
 const LIFT: float = 0.05
-## Eixo da base A (centro -> base A) e lateral (ao longo do rio, x = z).
-const AXIS_A: Vector3 = Vector3(-0.70710678, 0, 0.70710678)
-const LATERAL: Vector3 = Vector3(0.70710678, 0, 0.70710678)
+## Eixo da base A (centro -> spawn A em (-24, -24)) e lateral (esquerda de quem olha o centro).
+const AXIS_A: Vector3 = Vector3(-0.70710678, 0, -0.70710678)
+const LATERAL: Vector3 = Vector3(0.70710678, 0, -0.70710678)
+const SPAWN_A: Vector3 = Vector3(-24, 0, -24)
+const BASE_RADIUS: float = 12.7
+const ARENA_RADIUS: float = 35.0
+const BRIDGE_AZIMUTHS: Array[float] = [45.0, 135.0, 225.0, 315.0]
 
 var _arena: Node3D
 
@@ -29,6 +34,10 @@ func after_all() -> void:
 
 func _local(s: float, l: float) -> Vector3:
 	return AXIS_A * s + LATERAL * l
+
+
+func _mirror(v: Vector3) -> Vector3:
+	return Vector3(-v.x, v.y, v.z)
 
 
 func _polar(azimuth_deg: float, r: float) -> Vector3:
@@ -77,18 +86,33 @@ func _capsule() -> CapsuleShape3D:
 	return capsule
 
 
+func _lift() -> Vector3:
+	return Vector3.UP * (CAPSULE_HEIGHT / 2 + LIFT)
+
+
 func _walk(points: Array[Vector3], mask: int) -> float:
-	var lift := Vector3.UP * (CAPSULE_HEIGHT / 2 + LIFT)
 	var length := 0.0
 	for i: int in range(points.size() - 1):
-		var blocked := _hits(_capsule(), points[i] + lift, points[i + 1] + lift, mask)
+		var blocked := _hits(_capsule(), points[i] + _lift(), points[i + 1] + _lift(), mask)
 		assert_false(blocked, "trecho bloqueado: %s -> %s" % [points[i], points[i + 1]])
 		length += points[i].distance_to(points[i + 1])
 	return length / HERO_SPEED
 
 
+## Spawn A -> contorna o muro da base -> portao A -> ponte NO (45 graus) -> entrada da cratera.
 func _path_a_to_center() -> Array[Vector3]:
 	return [_local(33.94, 0), _local(29, 2.9), _local(21.21, 0), Vector3.ZERO]
+
+
+## Spawn A -> portao A -> ponte NO -> contorna o campo Norte pelo anel -> ponte NE -> espelho.
+func _path_a_to_b() -> Array[Vector3]:
+	var half: Array[Vector3] = [
+		_local(33.94, 0), _local(29, 2.9), _local(21.21, 0), _polar(45.0, 13.0), Vector3(-6, 0, -11.5)
+	]
+	var path := half.duplicate()
+	for i: int in range(half.size() - 1, -1, -1):
+		path.append(_mirror(half[i]))
+	return path
 
 
 func test_contagem_de_herois() -> void:
@@ -106,7 +130,7 @@ func test_contagem_de_monstros_por_zona() -> void:
 	assert_eq(_count(SpawnMarker.Kind.BOSS, GateRules.TEAM_NEUTRAL), 1)
 
 
-## F36: 16 T1 + 8 T2 + 2 Magos + 2 Golems + boss; 12 de base + 8 laterais + 4 raros.
+## 16 T1 + 8 T2 + 2 Magos + 2 Golems + boss; 12 de base + 8 laterais + 4 raros (GDB §6.2).
 func test_total_de_29_monstros_e_24_baus() -> void:
 	var monsters := 0
 	var chests := 0
@@ -135,34 +159,46 @@ func test_monstros_tem_id_do_catalogo() -> void:
 			assert_ne(Ids.to_int(m.monster_id), -1, str(m.monster_id))
 
 
-func test_simetria_por_rotacao_de_180_graus() -> void:
+## SPEC-044 §6 item 6: para cada marcador em (x, z) existe (-x, z) com mesmo kind/tier (nos
+## campos do centro, sobre o eixo, guerreiro e mago T2 sao o espelho um do outro).
+func test_simetria_por_espelho_em_x() -> void:
 	var markers := _markers()
 	for m: SpawnMarker in markers:
-		var mirror := Vector3(-m.position.x, m.position.y, -m.position.z)
+		var mirror := _mirror(m.position)
 		var found := false
 		for other: SpawnMarker in markers:
 			if (
 				other.position.distance_to(mirror) < 0.01
 				and other.kind == m.kind
 				and other.tier == m.tier
-				and other.monster_id == m.monster_id
 				and other.chest_kind == m.chest_kind
 			):
 				found = true
 		assert_true(found, "sem espelho: %s em %s" % [m.name, m.position])
 
 
-func test_spawn_dos_herois() -> void:
+## Moitas e portoes tambem espelhados: a regra do mato (F32) e geometria de jogo.
+func test_moitas_espelhadas() -> void:
+	var areas: Array[Area3D] = []
+	for node: Node in _arena.find_children("*", "Area3D", true, false):
+		if node.is_in_group(&"tall_grass"):
+			areas.append(node as Area3D)
+	assert_eq(areas.size(), 6)
+	for a: Area3D in areas:
+		var found := false
+		for b: Area3D in areas:
+			found = found or b.position.distance_to(_mirror(a.position)) < 0.01
+		assert_true(found, "moita sem espelho: %s" % a.position)
+
+
+func test_spawn_dos_herois_nos_cantos_norte() -> void:
 	for m: SpawnMarker in _markers():
 		if m.kind == SpawnMarker.Kind.HERO:
-			var expected := (
-				Vector3(-24, 0, 24) if m.team == GateRules.TEAM_A else Vector3(24, 0, -24)
-			)
+			var expected := SPAWN_A if m.team == GateRules.TEAM_A else _mirror(SPAWN_A)
 			assert_almost_eq(m.position, expected, Vector3.ONE * 0.01)
 
 
-## Fonte da base (PI 2026-10-10, #74): uma por base, do time dono, espelhada, dentro da base
-## (ate 12,7 u do spawn) e dentro da arena.
+## Uma fonte por base, do time dono, espelhada, dentro da base e da arena (#74).
 func test_uma_fonte_por_base_espelhada() -> void:
 	var by_team: Dictionary = {}
 	for node: Node in _arena.find_children("*", "Node3D", true, false):
@@ -170,9 +206,9 @@ func test_uma_fonte_por_base_espelhada() -> void:
 			by_team[(node as Fountain).team] = (node as Fountain).position
 	assert_eq(by_team.size(), 2)
 	var a: Vector3 = by_team[GateRules.TEAM_A]
-	assert_almost_eq(by_team[GateRules.TEAM_B], -a, Vector3.ONE * 0.01)
-	assert_lt(a.distance_to(Vector3(-24, 0, 24)), 12.7)
-	assert_lt(a.length(), 35.0 - 1.0)
+	assert_almost_eq(by_team[GateRules.TEAM_B], _mirror(a), Vector3.ONE * 0.01)
+	assert_lt(a.distance_to(SPAWN_A), BASE_RADIUS)
+	assert_lt(a.length(), ARENA_RADIUS - 1.0)
 
 
 func test_baus_de_base_a_3u_um_do_outro() -> void:
@@ -186,35 +222,35 @@ func test_baus_de_base_a_3u_um_do_outro() -> void:
 				assert_true(a.position.distance_to(b.position) >= 3.0, "%s/%s" % [a.name, b.name])
 
 
-func test_toda_agua_desenhada_tem_colisao_de_rio() -> void:
-	var river_at: Array[Vector3] = []
-	for node: Node in _arena.get_node("River").get_children():
-		river_at.append((node as Node3D).position)
-	var water := 0
-	for tile: Node in _arena.get_node("Tiles").get_children():
-		if not tile.scene_file_path.ends_with("hex_water.gltf"):
-			continue
-		water += 1
-		var at := (tile as Node3D).position
-		var covered := false
-		for p: Vector3 in river_at:
-			covered = covered or Vector2(p.x, p.z).distance_to(Vector2(at.x, at.z)) < 0.01
-		assert_true(covered, "agua sem colisao em %s" % at)
-	assert_eq(water, river_at.size())
+## Campos do centro sobre o eixo de espelho (0 e 180 graus, r ≈ 10) e raros em 90/270.
+func test_campos_do_centro_no_eixo_norte_sul() -> void:
+	var golems: Array[Vector3] = []
+	var rares: Array[Vector3] = []
+	for m: SpawnMarker in _markers():
+		if m.monster_id == &"golem_t3":
+			golems.append(m.position)
+		elif m.kind == SpawnMarker.Kind.CHEST and m.team == GateRules.TEAM_NEUTRAL:
+			rares.append(m.position)
+	assert_eq(golems.size(), 2)
+	for g: Vector3 in golems:
+		assert_almost_eq(g.x, 0.0, 0.01)
+		assert_almost_eq(absf(g.z), 10.0, 0.5)
+	assert_eq(rares.size(), 4)
+	var on_axis := 0
+	for r: Vector3 in rares:
+		if absf(r.z) < 0.01:
+			on_axis += 1
+			assert_almost_eq(absf(r.x), 8.0, 0.5)
+	assert_eq(on_axis, 2)
 
 
-func test_dois_portoes_e_seis_moitas() -> void:
+func test_dois_portoes_um_por_time() -> void:
 	var teams: Array[int] = []
 	for node: Node in _arena.find_children("*", "StaticBody3D", true, false):
 		if node is Gate:
 			teams.append((node as Gate).team)
 	teams.sort()
 	assert_eq(teams, [GateRules.TEAM_A, GateRules.TEAM_B])
-	var grass := 0
-	for node: Node in _arena.find_children("*", "Area3D", true, false):
-		if node.is_in_group(&"tall_grass"):
-			grass += 1
-	assert_eq(grass, 6)
 
 
 func test_spawn_ao_centro_em_6_3s() -> void:
@@ -224,51 +260,57 @@ func test_spawn_ao_centro_em_6_3s() -> void:
 	assert_almost_eq(t, SPAWN_TO_CENTER_S, SPAWN_TO_CENTER_S * TOLERANCE)
 
 
-func test_spawn_a_spawn_em_12_7s_com_portoes_caidos() -> void:
+func test_spawn_a_spawn_pela_ilha_com_portoes_caidos() -> void:
 	await wait_physics_frames(2)
-	var path := _path_a_to_center()
-	var back := _path_a_to_center()
-	back.reverse()
-	for i: int in range(1, back.size()):
-		path.append(-back[i])
-	var t := _walk(path, GateRules.LAYER_WORLD | GateRules.LAYER_RIVER)
-	gut.p("spawn A -> spawn B: %.2f s" % t)
+	var t := _walk(_path_a_to_b(), GateRules.LAYER_WORLD | GateRules.LAYER_RIVER)
+	gut.p("spawn A -> spawn B pela ilha: %.2f s" % t)
 	assert_almost_eq(t, SPAWN_TO_SPAWN_S, SPAWN_TO_SPAWN_S * TOLERANCE)
 
 
-func test_rio_bloqueia_em_8_pontos() -> void:
+## 8 travessias do anel fora das pontes + 4 do canal N-S: nenhuma passa (SPEC-044 §6 item 2).
+func test_rio_bloqueia_em_12_pontos() -> void:
 	await wait_physics_frames(2)
-	var lift := Vector3.UP * (CAPSULE_HEIGHT / 2 + LIFT)
 	var crossings: Array[Array] = []
-	for r: float in [24.0, 30.0]:
-		for side: float in [-1.0, 1.0]:
-			var on_river := LATERAL * r * side
-			crossings.append([on_river - AXIS_A * 6, on_river + AXIS_A * 6])
-	for azimuth: float in [0.0, 90.0, 180.0, 270.0]:
+	# 0 e 180 graus cairiam no canal N-S (tambem rio): usa 10 e 190.
+	for azimuth: float in [10.0, 22.5, 67.5, 90.0, 112.5, 157.5, 190.0, 270.0]:
 		crossings.append([_polar(azimuth, 11.0), _polar(azimuth, 21.0)])
+	for z: float in [-24.0, -30.0, 24.0, 30.0]:
+		crossings.append([Vector3(-6, 0, z), Vector3(6, 0, z)])
+	assert_eq(crossings.size(), 12)
 	for c: Array in crossings:
-		var a: Vector3 = c[0] + lift
-		var b: Vector3 = c[1] + lift
+		var a: Vector3 = c[0] + _lift()
+		var b: Vector3 = c[1] + _lift()
 		assert_false(_overlaps(_capsule(), a, GateRules.LAYER_RIVER), "comeca no rio: %s" % a)
 		assert_false(_overlaps(_capsule(), b, GateRules.LAYER_RIVER), "termina no rio: %s" % b)
 		assert_true(_hits(_capsule(), a, b, GateRules.LAYER_RIVER), "rio vazou: %s -> %s" % [a, b])
 
 
-func test_pontes_atravessam_o_rio() -> void:
+func test_quatro_pontes_atravessam_o_rio() -> void:
 	await wait_physics_frames(2)
-	var lift := Vector3.UP * (CAPSULE_HEIGHT / 2 + LIFT)
 	var mask := GateRules.LAYER_WORLD | GateRules.LAYER_RIVER
-	for azimuth: float in [135.0, 315.0]:
-		var a := _polar(azimuth, 12.0) + lift
-		var b := _polar(azimuth, 20.5) + lift
+	for azimuth: float in BRIDGE_AZIMUTHS:
+		var a := _polar(azimuth, 12.0) + _lift()
+		var b := _polar(azimuth, 20.5) + _lift()
 		assert_false(_hits(_capsule(), a, b, mask), "ponte bloqueada em %s" % azimuth)
+
+
+## Largura util da ponte: a capsula passa a 2 u do eixo (largura efetiva ≈ 5 u).
+func test_ponte_tem_5u_de_largura_util() -> void:
+	await wait_physics_frames(2)
+	var mask := GateRules.LAYER_WORLD | GateRules.LAYER_RIVER
+	for azimuth: float in BRIDGE_AZIMUTHS:
+		var axis := _polar(azimuth, 1.0)
+		var side := Vector3(-axis.z, 0, axis.x)
+		for offset: float in [-2.0, 2.0]:
+			var a := axis * 12.0 + side * offset + _lift()
+			var b := axis * 20.5 + side * offset + _lift()
+			assert_false(_hits(_capsule(), a, b, mask), "ponte %s estreita em %s" % [azimuth, offset])
 
 
 func test_portao_barra_so_o_adversario_ate_cair() -> void:
 	await wait_physics_frames(2)
-	var lift := Vector3.UP * (CAPSULE_HEIGHT / 2 + LIFT)
-	var outside := _local(18.5, 0) + lift
-	var inside := _local(24, 0) + lift
+	var outside := _local(18.5, 0) + _lift()
+	var inside := _local(24, 0) + _lift()
 	assert_false(_hits(_capsule(), outside, inside, GateRules.hero_mask(GateRules.TEAM_A)))
 	assert_true(_hits(_capsule(), outside, inside, GateRules.hero_mask(GateRules.TEAM_B)))
 	var gate_a: Gate = null
@@ -293,7 +335,7 @@ func test_flecha_bate_nos_pilares_e_passa_nas_entradas() -> void:
 			GateRules.LAYER_WORLD
 		)
 		assert_true(blocked, "flecha passou entre pilares em %s" % azimuth)
-	for azimuth: float in [45.0, 135.0, 225.0, 315.0]:
+	for azimuth: float in BRIDGE_AZIMUTHS:
 		var blocked := _hits(
 			arrow,
 			_polar(azimuth, 9.0) + height,
@@ -301,3 +343,30 @@ func test_flecha_bate_nos_pilares_e_passa_nas_entradas() -> void:
 			GateRules.LAYER_WORLD
 		)
 		assert_false(blocked, "entrada %s bloqueada" % azimuth)
+
+
+## ADR-0008: o Vale Runico congelado nao e referenciado por producao nem por teste.
+func test_nada_referencia_a_cena_legacy() -> void:
+	assert_true(FileAccess.file_exists("res://scenes/arena/legacy/vale_runico.tscn"))
+	var offenders: Array[String] = []
+	for dir: String in ["res://scripts", "res://scenes", "res://test"]:
+		_scan_for_legacy(dir, offenders)
+	assert_eq(offenders, [] as Array[String])
+
+
+func _scan_for_legacy(dir_path: String, offenders: Array[String]) -> void:
+	if dir_path.ends_with("/legacy"):
+		return
+	var dir := DirAccess.open(dir_path)
+	if dir == null:
+		return
+	for sub: String in dir.get_directories():
+		_scan_for_legacy(dir_path.path_join(sub), offenders)
+	for file: String in dir.get_files():
+		if not (file.ends_with(".gd") or file.ends_with(".tscn")):
+			continue
+		var path := dir_path.path_join(file)
+		if path == get_script().resource_path:
+			continue
+		if FileAccess.get_file_as_string(path).contains("arena/legacy"):
+			offenders.append(path)

@@ -3,7 +3,7 @@ extends GutTest
 ## abre uma vez com toque em F a ate chest_interact_range; troca de raridade igual/menor com F
 ## segurado swap_hold_time, item fica no bau e o antigo some; cura pelo ledger (PI 2026-10-09).
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const DT: float = 1.0 / 30.0
 const SEED: int = 4242

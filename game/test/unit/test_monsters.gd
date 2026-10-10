@@ -2,7 +2,7 @@ extends GutTest
 ## Integracao headless: arena + SpawnDirector + Cavaleiro (time A) + heroi parado do time B
 ## (no lugar do bot, F12). Monstros, XP, nivel, pontos e catch-up (GDB §3, §5).
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const DT: float = 1.0 / 30.0
 ## Spawn -> portao (SPEC-007 §2).
@@ -42,7 +42,7 @@ func _monsters() -> Array[Monster]:
 
 ## Monstros dos marcadores da base do [param team] (sem os campos laterais da metade, F36).
 func _base_monsters(team: int) -> Array[Monster]:
-	var spawn := Vector3(-24, 0, 24) if team == GateRules.TEAM_A else Vector3(24, 0, -24)
+	var spawn := Vector3(-24, 0, -24) if team == GateRules.TEAM_A else Vector3(24, 0, -24)
 	var result: Array[Monster] = []
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker

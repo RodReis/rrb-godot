@@ -4,7 +4,7 @@ extends GutTest
 ## (PI 2026-10-09): limpa a propria metade, base B + 2 campos laterais (535 XP -> nivel 4,
 ## GDB §5.2, F36), e passa a saquear.
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const DT: float = 1.0 / 30.0
 ## Teto de ticks para limpar a base (~3 min de jogo).
@@ -198,7 +198,7 @@ func test_navmesh_alcanca_os_campos_laterais() -> void:
 	var checked := 0
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker
-		var spawn := Vector3(-24, 0, 24) if marker.team == GateRules.TEAM_A else Vector3(24, 0, -24)
+		var spawn := Vector3(-24, 0, -24) if marker.team == GateRules.TEAM_A else Vector3(24, 0, -24)
 		var content := marker.kind != SpawnMarker.Kind.HERO and marker.kind != SpawnMarker.Kind.BOSS
 		if marker.team == GateRules.TEAM_NEUTRAL or not content:
 			continue

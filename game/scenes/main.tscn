@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="PackedScene" path="res://scenes/arena/arena.tscn" id="2_arena"]
+[ext_resource type="PackedScene" path="res://scenes/arena/ilha_arcana.tscn" id="2_arena"]
 [ext_resource type="Script" path="res://scripts/follow_camera.gd" id="3_cam"]
 [ext_resource type="Script" path="res://scripts/match/spawn_director.gd" id="4_spawn"]
 [ext_resource type="Script" path="res://scripts/match/match_clock.gd" id="5_clock"]
