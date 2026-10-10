@@ -119,6 +119,10 @@
       "pergunta": "Duas pessoas em máquinas diferentes terminam sempre uma partida?",
       "narrativa": [
         "Entram a Arqueira, a seleção de heróis, o confronto com a zona, o placar de abates e a tela de fim de partida. O teste de aceite são 50 partidas seguidas de bot contra bot, sem travar e todas com no máximo 10 minutos."
+      ],
+      "imagens": [
+        { "arquivo": "mvp2-f15-selecao-de-herois.webp", "legenda": "A partida começa pela seleção de heróis: 24 segundos para escolher e confirmar. Quem não confirma entra com o herói padrão; os dois podem jogar com o mesmo herói. A Arqueira chega na próxima etapa.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f15-abatido-respawn.webp", "legenda": "Morrer na preparação não conta abate: o herói renasce na própria base em 8 segundos, com a vida cheia e os mesmos itens.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
