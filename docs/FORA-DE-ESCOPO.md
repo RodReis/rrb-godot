@@ -16,6 +16,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Modos 2x2 e 3x3 | PRD §1.3 | classes e times são conteúdo, não risco | pós-MVP4 | decisão do PI no gate M4 ("ir para 3x3") |
 | Heróis Algoz, Suporte, Controle (+ mais) | PRD §1.3, §4.1 | sem sentido no 1x1 | pós-MVP4 | 3x3 aprovado |
 | Mais arenas | PRD §1.3 | uma arena valida o loop | fase B | playtest pedir variedade |
+| Vale Rúnico (SPEC-007) como arena 1x1 alternativa | ADR-0008 | uma arena oficial na fatia; o PI quer preservá-lo sem gastar recurso agora. Congelado em `game/scenes/arena/legacy/` + tag `arena-vale-runico` | fase B (junto com "Mais arenas") | "Mais arenas" aprovado ou seleção de mapa entrar no escopo |
 | Bestiário maior, tabela de loot completa | PRD §1.3 | 5 monstros/12 itens bastam | fase B | snowball e TTK calibrados |
 | IA de time | PRD §1.3 | só com times | pós-MVP4 | 3x3 |
 | Steam, ranked, amigos | PRD §1.3 | fatia usa e-mail/senha e fila FIFO | fase B | decisão comercial |

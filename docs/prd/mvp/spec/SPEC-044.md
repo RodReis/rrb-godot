@@ -1,8 +1,8 @@
 # SPEC-044 — Arena "Ilha Flutuante Arcana": novo layout (espelho N–S, rio N–S + anel, 4 pontes)
 
-**Fatia:** F44 / SPEC-044 (MVP2, Slice 2.11 — entra **depois do F16 e antes do F17**; F36 e F20 já estavam mergeados) · **Issue:** #92 · **Status:** aprovada pelo PI em 2026-10-10 (topologia proposta pelo Cowork sobre o doc `docs/prd/especificacao_reforma_arena_godot_blender.md` e a imagem `docs/prd/telas/Arena & Mapa…/full_high_resolution_panoramic…png`)
-**Supera:** SPEC-007 §2 (topologia), §3 (posições), §6 itens 1, 2 e 6. Mantém SPEC-007 §1 (escala, coordenadas, velocidade de referência), §4 (marcadores) e a regra "edite o builder, não a cena".
-**Fontes:** PRD §3.1, §3.2 · GDB §5.1, §6.2, §7.1 · ADR-0007 (decisão de layout) · `CONVENTION.md` §4.1, §4.7
+**Fatia:** F44 / SPEC-044 (MVP2, Slice 2.11 — entra **depois do F37 e antes do F19** (ADR-0008); F16, F17, F18, F32, F36 e F20 já mergeados no layout antigo) · **Issue:** #92 · **Status:** aprovada pelo PI em 2026-10-10 (topologia proposta pelo Cowork sobre o doc `docs/prd/especificacao_reforma_arena_godot_blender.md` e a imagem `docs/prd/telas/Arena & Mapa…/full_high_resolution_panoramic…png`); entrega revisada pelo ADR-0008 no mesmo dia
+**Supera:** SPEC-007 §2 (topologia), §3 (posições), §6 itens 1, 2 e 6. Mantém SPEC-007 §1 (escala, coordenadas, velocidade de referência), §4 (marcadores) e a regra "edite o builder, não a cena". O Vale Rúnico (SPEC-007) não é apagado: fica congelado (ADR-0008).
+**Fontes:** PRD §3.1, §3.2 · GDB §5.1, §6.2, §7.1 · ADR-0007 (decisão de layout) · ADR-0008 (cena nova, Vale Rúnico preservado, ordem) · `CONVENTION.md` §4.1, §4.7
 **Escopo desta fatia:** **greybox jogável** — builder, colisão, marcadores, portões, mato (geometria), navmesh, aceite por medidas. **Sem arte nova**: continua com hexes KayKit, rio e pontes do pack. A arte da ilha (castelos, abismo, magma, cristais, skybox, cachoeiras) é o **F40** (MVP2.5, bloco visual).
 
 ## 1. Sistema de coordenadas e escala — inalterado (SPEC-007 §1)
@@ -64,7 +64,9 @@ As contagens de base e centro seguem o GDB §5.1/§6.2 como na SPEC-007 §3; as 
 
 ## 5. Implementação
 
-- `tools/arena/build_arena.gd`: trocar a simetria (função de espelho em vez de rotação), `AXIS_A`/`LATERAL` pelos eixos das 4 pontes, canal do rio N–S (`|x| ≤ 2`, `r > 18`), `SPAWN`/`GATE` nos cantos norte, mato e campos do centro em 0°/180°. Medidas da spec = constantes do builder. Regerar `arena.tscn`.
+- **Antes de tudo (ADR-0008):** criar a tag `arena-vale-runico` no último commit da `main` em que o Vale Rúnico é a arena jogável (inclui o builder da época).
+- `tools/arena/build_arena.gd`: trocar a simetria (função de espelho em vez de rotação), `AXIS_A`/`LATERAL` pelos eixos das 4 pontes, canal do rio N–S (`|x| ≤ 2`, `r > 18`), `SPAWN`/`GATE` nos cantos norte, mato e campos do centro em 0°/180°. Medidas da spec = constantes do builder. O builder passa a gerar **`game/scenes/arena/ilha_arcana.tscn`** (cena nova), que vira a arena carregada pela partida (servidor, cliente e `--offline`).
+- **Vale Rúnico congelado (ADR-0008):** mover a `arena.tscn` atual para `game/scenes/arena/legacy/vale_runico.tscn`, sem editar o conteúdo. Nada de produção nem de teste referencia `legacy/`; testes que carregavam `arena.tscn` passam a carregar `ilha_arcana.tscn`. Sem flag de execução, sem CI, sem garantia de abrir.
 - `ArenaNav`: nada a mudar (assa em runtime dos colisores); conferir que o bot cruza as 4 pontes.
 - `bot_rules.gd` / `bot_input.gd`: se houver referência a "a ponte" do time, passa a escolher a ponte mais próxima; sem mudança de FSM.
 - Roadmap: screenshot da vista de cima (greybox) na mesma PR.
@@ -80,7 +82,9 @@ As contagens de base e centro seguem o GDB §5.1/§6.2 como na SPEC-007 §3; as 
 7. Arena idêntica em servidor e cliente.
 8. Bot (F12) completa a fase 1 offline no novo layout: farma a base, atravessa uma ponte e contesta o centro, sem travar (3 partidas offline `--bot`).
 9. Testes existentes de F7/F9–F13 continuam verdes (a cena muda, as regras não).
+10. **Vale Rúnico preservado (ADR-0008):** tag `arena-vale-runico` criada; `legacy/vale_runico.tscn` presente; `grep` sem referência a `legacy/` em `game/scripts`, `game/scenes` (fora de `legacy/`) e `game/test`.
+11. **F32 e F37 no layout novo:** moitas nas posições do §2 com a regra do F32 (testes do F32 verdes); neblina e minimapa do F37 lendo a Ilha (testes do F37 verdes + verificação visual do PI).
 
 ## 7. Fora desta spec
 
-Toda a arte (F40: ilha, abismo, castelos, magma, cristais, skybox, cachoeiras, ilhotas, torres/balistas como enfeite sem colisão). Regra do mato (F32), neblina (F37), economia de campo (F36). Relevo e degraus (continuam excluídos). Torres/balistas com função (excluídas — decisão do PI 2026-10-10: só enfeite).
+Toda a arte (F40: ilha, abismo, castelos, magma, cristais, skybox, cachoeiras, ilhotas, torres/balistas como enfeite sem colisão). Regra do mato (F32), neblina (F37), economia de campo (F36). Relevo e degraus (continuam excluídos). Torres/balistas com função (excluídas — decisão do PI 2026-10-10: só enfeite). Reviver o Vale Rúnico como segunda arena (roadmap, `FORA-DE-ESCOPO.md`).

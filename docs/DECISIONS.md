@@ -33,7 +33,8 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0004](adr/0004-gdb-vence-numeros.md) | Em divergência numérica, o GDB vence o PRD | aceito | 2026-10-08 |
 | [0005](adr/0005-blender-pipeline-de-assets.md) | Blender no pipeline de assets 3D (criação, acabamento, ajustes, rascunhos); fonte `.blend` em `art/`, só glTF em `shared/assets/` | aceito | 2026-10-09 |
 | [0006](adr/0006-direcao-visual-toon-pbr.md) | Direção visual toon + stylized PBR; Game só Forward+; LightmapGI (SDFGI rejeitado); bevel/bake no cenário próprio; design system v2; critério de netcode para fatias visuais; bloco F38–F43 = marco MVP2.5 (antes do MVP3) | aceito | 2026-10-10 |
-| [0007](adr/0007-arena-ilha-flutuante-layout.md) | Arena "Ilha Flutuante Arcana": imagem panorâmica vira layout; espelho N–S, rio N–S + anel, 4 pontes (2 por metade); F44 (greybox, MVP2) + F40 (arte, MVP2.5); supera SPEC-007 §2–3 | aceito | 2026-10-10 |
+| [0007](adr/0007-arena-ilha-flutuante-layout.md) | Arena "Ilha Flutuante Arcana": imagem panorâmica vira layout; espelho N–S, rio N–S + anel, 4 pontes (2 por metade); F44 (greybox, MVP2) + F40 (arte, MVP2.5); supera SPEC-007 §2–3 | aceito (entrega do F44 e ordem supersedidas pelo ADR-0008) | 2026-10-10 |
+| [0008](adr/0008-vale-runico-preservado.md) | Vale Rúnico preservado congelado (`legacy/` + tag `arena-vale-runico`); F44 gera a Ilha em cena nova; F44 depois do F37, antes do F19 | aceito | 2026-10-10 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 
