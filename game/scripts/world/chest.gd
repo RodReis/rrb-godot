@@ -6,6 +6,9 @@ extends Node3D
 ## antigo some (PI 2026-10-09). Cura vai pelo ledger. Clientes recebem aberto + item (numero de
 ## Ids) por RPC confiavel. A oferta de troca aparece na HUD (F13), nao no bau.
 
+## Servidor apenas: aberto pela primeira vez por [param peer] (evento chest_opened, F15).
+signal first_opened(peer: int, chest_uid: int, tick: int)
+
 const GROUP: StringName = &"chests"
 const LID_OPEN_DEGREES: float = -110.0
 
@@ -68,12 +71,6 @@ func interact(hero: Hero, tick: int, held_ticks: int) -> void:
 	_show.rpc(tick, opened, item)
 
 
-## Servidor apenas: estado atual ao peer que acabou de conectar (baus abertos antes dele).
-func send_state(peer: int) -> void:
-	if opened:
-		_show.rpc_id(peer, NetworkTime.tick, opened, item)
-
-
 func _hold_ticks() -> int:
 	return SkillRules.seconds_to_ticks(rules.swap_hold_time, NetworkTime.tickrate)
 
@@ -81,6 +78,7 @@ func _hold_ticks() -> int:
 func _open(hero: Hero, tick: int) -> void:
 	opened = true
 	_opened_tick = tick
+	first_opened.emit(hero.peer_id, uid, tick)
 	if drop == ChestRules.HEAL:
 		var effect := HitEffect.new()
 		effect.heal = roundi(rules.heal_amount)

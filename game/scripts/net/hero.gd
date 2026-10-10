@@ -7,9 +7,14 @@ extends Combatant
 ## golpe na hora (Monster). Nivel = XP pela curva (GDB §3.2); pontos gastos por input (F9).
 ## Habilidades do Cavaleiro (F8): Q Investida, E Muralha, R Terremoto. Equipamento (F10) e
 ## estado de rollback: atributos saem dele pelo Inventory; F abre e troca no Chest, e o saque
-## chega pelo ledger.
+## chega pelo ledger. Morte (F15): HP 0 deixa o heroi inerte e fora de alcance por
+## respawn_seconds (o MatchController ajusta pela fase, KillRules) e ele renasce em home com HP
+## cheio, sem perder itens (GDB §3.3). Jogador que cai: o servidor passa a dar input vazio ao
+## heroi (mark_disconnected), senao o netfox para de simula-lo (ARCHITECTURE-GAME §6).
 
 const GROUP: StringName = &"heroes"
+## Cena de cada heroi pelo id do HeroData.
+const SCENE_PATH: String = "res://scenes/heroes/%s.tscn"
 ## Contato da Investida = soma dos raios das capsulas (geometria, nao balanceamento).
 const CHARGE_REACH: float = 0.8
 
@@ -23,6 +28,12 @@ var level: int = LaunchArgs.DEFAULT_LEVEL
 var peer_id: int = 0
 ## Heroi do bot (F12): o Input e um BotInput e o dono dele e o servidor (peer 1).
 var is_bot: bool = false
+## Onde renasce: o transform com que entrou na arvore (marcador HERO do time).
+var home: Transform3D = Transform3D.IDENTITY
+## Servidor: tempo de respawn da fase atual (KillRules), definido pelo MatchController.
+var respawn_seconds: float = 0.0
+## Servidor: peer_id de quem deu o golpe final na ultima morte (0 = monstro).
+var killer_id: int = 0
 var attributes: HeroAttributes
 
 # Estado de rollback.
@@ -46,10 +57,13 @@ var r_cooldown: int = 0
 var equipment: Vector4i = Inventory.NONE
 ## Ticks seguidos com F (0 = solto).
 var interact_ticks: int = 0
+## Ticks ate renascer; so vale com hp 0 (morto).
+var respawn_ticks: int = 0
 
 var _rollback: RollbackSynchronizer
 var _attributes_equipment: Vector4i = Inventory.NONE
 var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de rollback
+var _alive_layer: int = 0
 
 @onready var input: PlayerInput = $Input
 @onready var hp_label: Label3D = $HpLabel
@@ -59,6 +73,8 @@ var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de roll
 
 func _ready() -> void:
 	peer_id = name.to_int()
+	home = transform
+	_alive_layer = collision_layer
 	add_to_group(GROUP)
 	level = clampi(level, LaunchArgs.DEFAULT_LEVEL, XpTable.max_level(xp_curve))
 	xp = XpTable.xp_for_level(xp_curve, level)
@@ -97,6 +113,7 @@ func _ready() -> void:
 		":r_cooldown",
 		":equipment",
 		":interact_ticks",
+		":respawn_ticks",
 	]
 	_rollback.input_properties = [
 		"Input:movement",
@@ -123,13 +140,19 @@ func _ready() -> void:
 func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	# Ressimulacao restaura xp/equipment mas nao attributes: recalcula antes de usar DEF/HP max.
 	_refresh_attributes()
+	if not is_alive():
+		_count_respawn()
 	if multiplayer.is_server() and not _hits.is_empty():
 		_apply_hits(tick)
 	_refresh_attributes()
 	hp = mini(hp, attributes.max_hp)  # troca para item com menos HP
+	_tick_timers()  # recarga corre tambem morto
+	_refresh_body()
+	if not is_alive():
+		velocity = Vector3.ZERO
+		return
 	_learn()
 	_interact(tick)
-	_tick_timers()
 
 	# Input vem do cliente: nunca confiar no valor recebido.
 	var movement := InputRules.sanitize_direction(input.movement)
@@ -148,7 +171,6 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
-	_shield_blocker.collision_layer = PhysicsLayers.SHIELD if shield_ticks > 0 else 0
 
 	if stun_ticks > 0:
 		return
@@ -160,11 +182,26 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 
 func _process(_delta: float) -> void:
 	_refresh_attributes()
+	_refresh_body()
+	hp_label.visible = is_alive()
+	hp_bar.visible = is_alive()
 	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
 	if stun_ticks > 0:
 		status += " (atordoado)"
 	hp_label.text = "Nv %d%s" % [level, status]
 	hp_bar.set_ratio(float(hp) / attributes.max_hp)
+
+
+func is_alive() -> bool:
+	return hp > 0
+
+
+## Servidor: o jogador caiu. O input passa ao servidor e fica vazio (PlayerInput.disconnected);
+## process_authority faz o RollbackSynchronizer gravar esse input e seguir simulando o heroi.
+func mark_disconnected() -> void:
+	input.disconnected = true
+	input.set_multiplayer_authority(1)
+	_rollback.process_authority()
 
 
 func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
@@ -187,6 +224,38 @@ func _refresh_attributes() -> void:
 	level = new_level
 	_attributes_equipment = equipment
 	attributes = Inventory.attributes(hero_data, level, equipment, item_catalog)
+
+
+## Colisao que sai do estado (vale tambem para o heroi remoto no cliente): morto nao bloqueia
+## ninguem; a Muralha bloqueia so enquanto dura.
+func _refresh_body() -> void:
+	var layer := _alive_layer if is_alive() else 0
+	if collision_layer != layer:
+		collision_layer = layer
+	_shield_blocker.collision_layer = PhysicsLayers.SHIELD if shield_ticks > 0 else 0
+
+
+## Morto: conta o respawn; no fim renasce em home com HP cheio (itens ficam, GDB §3.3).
+func _count_respawn() -> void:
+	respawn_ticks = maxi(respawn_ticks - 1, 0)
+	if respawn_ticks > 0:
+		return
+	hp = attributes.max_hp
+	transform = home
+	velocity = Vector3.ZERO
+
+
+## Golpe final: zera o que estava em curso e marca o tempo de respawn.
+func _die(effect: HitEffect) -> void:
+	hp = 0
+	killer_id = effect.attacker_id
+	respawn_ticks = SkillRules.seconds_to_ticks(respawn_seconds, NetworkTime.tickrate)
+	knockback_ticks = 0
+	stun_ticks = 0
+	dash_ticks = 0
+	shield_ticks = 0
+	shield_hp = 0
+	interact_ticks = 0
 
 
 ## Gasta um ponto no slot pedido pelo input (Ctrl+Q/E/R). Valor do cliente: validado aqui.
@@ -316,15 +385,17 @@ func _earthquake(tick: int) -> void:
 
 
 ## DEF reduz primeiro; a Muralha absorve o que sobrou se o golpe veio pela frente
-## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7). Saque: cura ate o HP max e item
-## equipado no slot dele (a decisao de trocar ja foi do Chest).
+## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7). Saque: cura ate o HP max e item equipado
+## no slot dele (a decisao de trocar ja foi do Chest). Morto recebe XP e item, nada mais.
 func _apply_hits(tick: int) -> void:
 	for effect: HitEffect in _hits.effects_at(tick):
 		xp += maxi(effect.xp, 0)
-		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
 		var item := item_catalog.find(effect.item)
 		if item != null:
 			equipment = Inventory.equip(equipment, item)
+		if not is_alive():
+			continue
+		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
 		var damage := CombatRules.mitigated(effect.damage, attributes.defense)
 		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
 			var split := CombatRules.absorb(damage, shield_hp)
@@ -332,7 +403,8 @@ func _apply_hits(tick: int) -> void:
 			shield_hp = split.y
 		hp = maxi(hp - damage, 0)
 		if hp == 0:
-			hp = attributes.max_hp  # sem morte ate o respawn (F15): so reinicia o HP
+			_die(effect)
+			continue
 		if not effect.push.is_zero_approx():
 			knockback_ticks = CombatRules.knockback_ticks(NetworkTime.tickrate)
 			knockback_velocity = effect.push * NetworkTime.tickrate / knockback_ticks

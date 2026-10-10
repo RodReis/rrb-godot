@@ -39,12 +39,6 @@ func start(tick: int, tickrate: int, elapsed_seconds: float = 0.0) -> void:
 	_begin.rpc(tick - SkillRules.seconds_to_ticks(elapsed_seconds, tickrate), tickrate)
 
 
-## Servidor apenas: relogio ao peer que acabou de conectar.
-func send_state(peer: int) -> void:
-	if is_started():
-		_begin.rpc_id(peer, start_tick, _tickrate)
-
-
 ## Segundos desde o inicio; 0 antes de comecar.
 func elapsed(tick: int) -> float:
 	if not is_started():

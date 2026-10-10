@@ -8,6 +8,8 @@
 [ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="6_rules"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud_phase1.tscn" id="7_hud"]
 [ext_resource type="PackedScene" path="res://scenes/ui/bestiary.tscn" id="8_bestiary"]
+[ext_resource type="Script" path="res://scripts/match/match_controller.gd" id="9_match"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hero_select.tscn" id="10_pick"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
@@ -20,6 +22,11 @@ script = ExtResource("4_spawn")
 [node name="MatchClock" type="Node" parent="."]
 script = ExtResource("5_clock")
 rules = ExtResource("6_rules")
+
+[node name="MatchController" type="Node" parent="." node_paths=PackedStringArray("clock")]
+script = ExtResource("9_match")
+rules = ExtResource("6_rules")
+clock = NodePath("../MatchClock")
 
 [node name="Players" type="Node3D" parent="."]
 
@@ -64,3 +71,5 @@ text = "Conectar"
 [node name="HudPhase1" parent="." instance=ExtResource("7_hud")]
 
 [node name="Bestiary" parent="." instance=ExtResource("8_bestiary")]
+
+[node name="HeroSelect" parent="." instance=ExtResource("10_pick")]

@@ -225,6 +225,42 @@ theme_type_variation = &"LabelH1"
 text = "REI ESQUELETO"
 horizontal_alignment = 1
 
+[node name="Respawn" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -60.0
+offset_right = 400.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("card")
+variant = 1
+accent = 2
+
+[node name="RespawnColumn" type="VBoxContainer" parent="Root/Respawn"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="RespawnTitle" type="Label" parent="Root/Respawn/RespawnColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "VOCÊ FOI ABATIDO!"
+horizontal_alignment = 1
+
+[node name="RespawnText" type="Label" parent="Root/Respawn/RespawnColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Renascendo na base em 8 s"
+horizontal_alignment = 1
+
 [node name="BossSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("boss_sound")

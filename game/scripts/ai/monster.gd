@@ -1,6 +1,7 @@
 class_name Monster
 extends Combatant
 ## Monstro da fase 1 (GDB §5.1), inclusive o Rei Esqueleto (F11: so dados e cena mudam).
+## Heroi morto (F15) nao e alvo.
 ## IA so no servidor, a cada tick (MonsterRules); posicao, HP e golpe replicados por
 ## StateSynchronizer + TickInterpolator, fora do rollback. Golpe no heroi vai para o ledger
 ## dele; golpe de heroi entra aqui na hora, uma vez por tick + fonte. Ao morrer da o XP ao
@@ -93,7 +94,7 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 	if _stun_ticks > 0:
 		velocity = Vector3.ZERO
 		return
-	if state == MonsterRules.State.IDLE or not is_instance_valid(_target):
+	if state == MonsterRules.State.IDLE or not is_instance_valid(_target) or not _target.is_alive():
 		_target = _nearest_hero()
 	var target_dist := INF if _target == null else _flat_distance(_target.global_position)
 	var next := MonsterRules.next_state(state, data, target_dist, _flat_distance(_home))
@@ -133,7 +134,10 @@ func _attack(tick: int) -> void:
 		return
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
-		if CombatRules.in_radius(global_position, hero.global_position, data.area_radius):
+		if (
+			hero.is_alive()
+			and CombatRules.in_radius(global_position, hero.global_position, data.area_radius)
+		):
 			hero.receive_hit(tick + 1, source, _effect_on(hero))
 
 
@@ -173,7 +177,7 @@ func _nearest_hero() -> Hero:
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
 		var dist := _flat_distance(hero.global_position)
-		if dist <= best_dist:
+		if hero.is_alive() and dist <= best_dist:
 			best = hero
 			best_dist = dist
 	return best

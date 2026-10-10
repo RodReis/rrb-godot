@@ -1,0 +1,215 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/hero_select.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/ui/components/panel_card.gd" id="2_card"]
+[ext_resource type="Script" path="res://shared/ui/components/timer_label.gd" id="3_timer"]
+[ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="4_badge"]
+[ext_resource type="PackedScene" path="res://shared/ui/components/stat_bar.tscn" id="5_stat"]
+[ext_resource type="PackedScene" path="res://shared/ui/components/monster_preview_3d.tscn" id="6_preview"]
+
+[node name="HeroSelect" type="CanvasLayer"]
+layer = 3
+script = ExtResource("1_script")
+
+[node name="Backdrop" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelCardSurface"
+script = ExtResource("2_card")
+variant = 0
+
+[node name="Margin" type="MarginContainer" parent="Backdrop"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="Column" type="VBoxContainer" parent="Backdrop/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="Backdrop/Margin/Column/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelH1"
+text = "SELEÇÃO DE HERÓIS — DUELO 1v1"
+
+[node name="TimerTitle" type="Label" parent="Backdrop/Margin/Column/Header"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"LabelMuted"
+text = "TEMPO RESTANTE"
+
+[node name="Timer" type="Label" parent="Backdrop/Margin/Column/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"LabelCounter"
+text = "24s"
+script = ExtResource("3_timer")
+format = 1
+
+[node name="Body" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="PlayerCard" type="PanelContainer" parent="Backdrop/Margin/Column/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+script = ExtResource("2_card")
+accent = 3
+
+[node name="PlayerColumn" type="VBoxContainer" parent="Backdrop/Margin/Column/Body/PlayerCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PlayerTitle" type="Label" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "VOCÊ"
+
+[node name="PlayerPreview" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("6_preview")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+
+[node name="PlayerName" type="Label" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "CAVALEIRO"
+
+[node name="Hp" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Def" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Atk" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Int" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Agi" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Center" type="VBoxContainer" parent="Backdrop/Margin/Column/Body"]
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Instruction" type="Label" parent="Backdrop/Margin/Column/Body/Center"]
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "ESCOLHA SEU CAMPEÃO"
+horizontal_alignment = 1
+
+[node name="Choices" type="HBoxContainer" parent="Backdrop/Margin/Column/Body/Center"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SkillsCard" type="PanelContainer" parent="Backdrop/Margin/Column/Body/Center"]
+layout_mode = 2
+theme_type_variation = &"PanelCardInner"
+script = ExtResource("2_card")
+variant = 2
+
+[node name="SkillsColumn" type="VBoxContainer" parent="Backdrop/Margin/Column/Body/Center/SkillsCard"]
+layout_mode = 2
+
+[node name="SkillsTitle" type="Label" parent="Backdrop/Margin/Column/Body/Center/SkillsCard/SkillsColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "HABILIDADES DO HERÓI"
+
+[node name="Skills" type="Label" parent="Backdrop/Margin/Column/Body/Center/SkillsCard/SkillsColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="LockIn" type="Button" parent="Backdrop/Margin/Column/Body/Center"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_type_variation = &"ButtonPrimary"
+text = "CONFIRMAR ESCOLHA (LOCK IN)"
+
+[node name="Status" type="Label" parent="Backdrop/Margin/Column/Body/Center"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="EnemyCard" type="PanelContainer" parent="Backdrop/Margin/Column/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+script = ExtResource("2_card")
+accent = 2
+
+[node name="EnemyColumn" type="VBoxContainer" parent="Backdrop/Margin/Column/Body/EnemyCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="EnemyTitle" type="Label" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "OPONENTE"
+
+[node name="EnemyPreview" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn" instance=ExtResource("6_preview")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 320)
+layout_mode = 2
+
+[node name="EnemyName" type="Label" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "ADVERSÁRIO"
+
+[node name="EnemyStatus" type="Label" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Escolhendo..."
+
+[node name="Footer" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Pick" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+script = ExtResource("4_badge")
+key = "1 / 2"
+
+[node name="PickText" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Escolher herói"
+
+[node name="Confirm" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+script = ExtResource("4_badge")
+key = "Espaço"
+
+[node name="ConfirmText" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Confirmar escolha"
