@@ -11,7 +11,7 @@ extends Node3D
 ## escolhido. Quem decide e o MatchController; aqui so se liga sinal e se spawna.
 
 const MAX_PLAYERS: int = 2
-## Herois da selecao; sem cena (Hero.SCENE_PATH) aparece indisponivel (Arqueira ate o F14).
+## Herois da selecao; sem cena (Hero.SCENE_PATH) aparece indisponivel.
 const ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/knight.tres"),
 	preload("res://shared/data/heroes/ranger.tres"),

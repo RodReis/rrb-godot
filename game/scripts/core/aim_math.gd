@@ -15,14 +15,21 @@ static func aim_on_ground(
 	player_pos: Vector3,
 	deadzone: float = DEFAULT_AIM_DEADZONE
 ) -> Vector3:
+	var flat := offset_on_ground(ray_origin, ray_dir, player_pos)
+	if flat.length() < deadzone:
+		return Vector3.ZERO
+	return flat.normalized()
+
+
+## Vetor no chao do player ate onde o raio (mouse) toca o chao; ZERO se nao toca. O comprimento
+## e a distancia da mira (centro da Chuva de Flechas, F14).
+static func offset_on_ground(ray_origin: Vector3, ray_dir: Vector3, player_pos: Vector3) -> Vector3:
 	var hit: Variant = GROUND.intersects_ray(ray_origin, ray_dir)
 	if hit == null:
 		return Vector3.ZERO
 	var flat: Vector3 = hit - player_pos
 	flat.y = 0.0
-	if flat.length() < deadzone:
-		return Vector3.ZERO
-	return flat.normalized()
+	return flat
 
 
 ## Mira pelo analogico direito, relativa a camera ([param yaw]); zero dentro da zona morta.

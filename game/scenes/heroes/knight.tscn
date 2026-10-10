@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scripts/net/hero.gd" id="1_hero"]
+[ext_resource type="Script" path="res://scripts/net/knight.gd" id="1_hero"]
 [ext_resource type="Script" path="res://scripts/net/player_input.gd" id="2_input"]
 [ext_resource type="Script" path="res://scripts/net/hero_visual.gd" id="3_visual"]
 [ext_resource type="Resource" path="res://shared/data/heroes/knight.tres" id="4_data"]

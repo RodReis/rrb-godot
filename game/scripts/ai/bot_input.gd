@@ -63,6 +63,7 @@ func think(tick: int) -> void:
 func _reset() -> void:
 	movement = Vector3.ZERO
 	aim = Vector3.ZERO
+	aim_distance = 0.0
 	attack = false
 	skill_q = false
 	skill_e = false
@@ -137,15 +138,21 @@ func _contest(tick: int) -> void:
 	_farm(tick)
 
 
-## Chega no alcance do basico e golpeia; [param skills] usa E e R (o Hero confere recarga).
+## Chega no alcance do basico e golpeia; [param skills] usa as habilidades (o Hero confere
+## recarga): Q de projetil (Arqueira) ja no alcance dele, em linha com a mira; E que nao e avanco
+## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele).
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var to := _flat(target.global_position)
+	var data := _hero.hero_data
 	aim = to.normalized()
-	if to.length() > _hero.hero_data.basic_attack.attack_range - REACH_MARGIN:
+	aim_distance = to.length()
+	var q_range := data.skill_q.attack_range
+	skill_q = skills and q_range > 0.0 and to.length() <= q_range
+	if to.length() > data.basic_attack.attack_range - REACH_MARGIN:
 		_go(tick, target.global_position)
 		return
 	attack = true
-	skill_e = skills
+	skill_e = skills and is_zero_approx(data.skill_e.distance)
 	skill_r = skills
 
 

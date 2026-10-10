@@ -9,6 +9,7 @@ extends Combatant
 ## manda (fase 1, F36): HP e posicao ja replicam, sem spawn novo. Fora do mapa (present falso):
 ## o Rei Esqueleto existe desde o inicio, dormente ate 3:30, e sai aos 5:00 se vivo (F20) — nenhum
 ## monstro nasce nem some da arvore no meio da partida, entao nenhum estado chega antes do node.
+## Lentidao (R da Arqueira, PI 2026-10-10): anda mais devagar enquanto dura.
 
 ## Servidor apenas. [param killer_id] = peer_id do golpe final; [param tick] = tick da morte.
 signal died(killer_id: int, tick: int)
@@ -34,6 +35,8 @@ var _home: Vector3 = Vector3.ZERO
 var _home_basis: Basis = Basis.IDENTITY
 var _alive_mask: int = 0
 var _stun_ticks: int = 0
+var _slow_ticks: int = 0
+var _slow_pct: float = 0.0
 var _target: Hero
 var _seen: HitLedger = HitLedger.new()  # golpes ja aplicados: ressimular o heroi nao duplica
 
@@ -77,6 +80,10 @@ func is_alive() -> bool:
 	return hp > 0
 
 
+func combat_id() -> int:
+	return uid
+
+
 ## Servidor apenas (SpawnDirector, F36): volta ao marcador, parado, com HP cheio e colisao.
 func revive() -> void:
 	present = true
@@ -86,6 +93,7 @@ func revive() -> void:
 	state = MonsterRules.State.IDLE
 	attack_cooldown = 0
 	_stun_ticks = 0
+	_slow_ticks = 0
 	_target = null
 	collision_mask = _alive_mask
 
@@ -110,6 +118,9 @@ func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
 	if not effect.push.is_zero_approx():
 		move_and_collide(effect.push)
 	_stun_ticks = maxi(_stun_ticks, effect.stun_ticks)
+	if effect.slow_ticks > 0:
+		_slow_pct = maxf(_slow_pct, effect.slow) if _slow_ticks > 0 else effect.slow
+		_slow_ticks = maxi(_slow_ticks, effect.slow_ticks)
 	if not is_alive():
 		_die(tick, effect.attacker_id)
 
@@ -126,6 +137,7 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 		return
 	attack_cooldown = maxi(attack_cooldown - 1, 0)
 	_stun_ticks = maxi(_stun_ticks - 1, 0)
+	_slow_ticks = maxi(_slow_ticks - 1, 0)
 	if _stun_ticks > 0:
 		velocity = Vector3.ZERO
 		return
@@ -221,7 +233,8 @@ func _nearest_hero() -> Hero:
 func _walk_to(point: Vector3) -> void:
 	var to := point - global_position
 	to.y = 0.0
-	velocity = to.normalized() * data.move_speed if not to.is_zero_approx() else Vector3.ZERO
+	var speed := CombatRules.slowed(data.move_speed, _slow_pct if _slow_ticks > 0 else 0.0)
+	velocity = to.normalized() * speed if not to.is_zero_approx() else Vector3.ZERO
 	_face(point)
 
 
