@@ -48,7 +48,6 @@ updated: 2026-10-10
 - [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
 - [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67)
 - [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66)
-- [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65)
 - [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92)
 
 ## Em Andamento
@@ -63,6 +62,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65, finalizado em: 2026-10-10)
 - [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64, finalizado em: 2026-10-10)
 - [MVP2][SPEC-016][F16] Fase 2: zona, dano da zona, respawn, kills, morte súbita, colapso e regras de vitória (#63, finalizado em: 2026-10-10)
 - [MVP2][SPEC-014][F14] Arqueira: modelo KayKit, flecha validada no servidor, Q Flecha Perfurante, E Rolamento e R Chuva de Flechas (#62, finalizado em: 2026-10-10)
