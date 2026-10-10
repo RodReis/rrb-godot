@@ -12,7 +12,6 @@ updated: 2026-10-10
 - [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95)
 - [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103)
 - [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100)
-- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98)
 
 ### [MVP2] Partida em rede (#57)
 
@@ -43,6 +42,7 @@ updated: 2026-10-10
 
 ### [MVP2.5] Bloco visual — toon/PBR, arte da ilha, VFX e HUD v2 (#99)
 
+- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98)
 - [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97)
 - [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96)
 - [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94)
