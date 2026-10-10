@@ -81,7 +81,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	var shown := _concealment.is_shown()
 	visible = shown
-	if not multiplayer.is_server():
+	if _concealment.on_client():
 		collision_layer = _layer if shown else 0
 	hp_label.visible = is_alive()
 	hp_bar.visible = is_alive()

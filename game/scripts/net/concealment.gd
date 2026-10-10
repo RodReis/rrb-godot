@@ -107,6 +107,8 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if not _online():
+		return
 	# No _ready o peer ainda e offline e is_server() mente; aqui ja vale.
 	if multiplayer.is_server():
 		set_process(false)
@@ -141,11 +143,18 @@ func shown_to(peer: int) -> bool:
 ## O jogador deste processo ve o alvo? No servidor (host), pela regra; no cliente, pelo aviso do
 ## servidor e pela chegada de estado novo. Bau no cliente: sempre (mostra o ultimo estado visto).
 func is_shown() -> bool:
+	if not _online():
+		return _was_shown
 	if multiplayer.is_server():
 		return shown_to(multiplayer.get_unique_id())
 	if _sync == null:
 		return true
 	return VisibilityRules.shown_on_client(_hidden_here, _shown_tick, _last_state())
+
+
+## Cliente conectado (nem servidor nem host); falso tambem depois que o servidor sai.
+func on_client() -> bool:
+	return _online() and not multiplayer.is_server()
 
 
 ## Servidor: recalcula, para cada heroi de [param observers], se o peer dele ve o alvo; os peers
@@ -190,6 +199,13 @@ func _visible_to(peer: int) -> bool:
 	if not NetworkRollback.is_rollback():
 		return true
 	return NetworkRollback.tick + 1 >= _shown_since.get(peer, 0)
+
+
+## O peer de rede ainda responde: depois que o servidor dedicado sai (fim da partida), o ENet
+## inativo loga ERROR a cada consulta, e ha um Concealment por heroi e monstro.
+func _online() -> bool:
+	var peer := multiplayer.multiplayer_peer
+	return peer != null and peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
 
 
 # ponytail: le campos internos do netfox 1.35.3 (o ultimo tick de estado do StateSynchronizer e o

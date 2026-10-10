@@ -41,12 +41,16 @@ try {
     Start-Sleep -Seconds ([int]($Minutes * 60))
     $after = docker compose -f $compose exec -T gameserver cat @counters
     docker compose -f $compose logs --no-color gameserver 2>&1 | Out-File -Encoding utf8 (Join-Path $OutDir 'server.log')
-    # Banda do servidor so na janela medida (2 clientes), em kbit/s.
+    # Banda do servidor so na janela medida (2 clientes), em kbit/s. O servidor dedicado sai no fim
+    # da partida (F16): se ela acabou antes da janela, nao ha contador para ler.
     $seconds = $Minutes * 60
-    $tx = ([double]$after[0] - [double]$before[0]) * 8 / 1000 / $seconds
-    $rx = ([double]$after[1] - [double]$before[1]) * 8 / 1000 / $seconds
-    "servidor: envio {0:N0} kbit/s, recepcao {1:N0} kbit/s (media de $Minutes min, 2 clientes)" -f $tx, $rx |
-        Tee-Object -FilePath (Join-Path $OutDir 'bandwidth.txt')
+    $line = 'servidor ja saiu (partida acabou antes da janela): banda nao medida'
+    if ($after) {
+        $tx = ([double]$after[0] - [double]$before[0]) * 8 / 1000 / $seconds
+        $rx = ([double]$after[1] - [double]$before[1]) * 8 / 1000 / $seconds
+        $line = "servidor: envio {0:N0} kbit/s, recepcao {1:N0} kbit/s (media de $Minutes min, 2 clientes)" -f $tx, $rx
+    }
+    $line | Tee-Object -FilePath (Join-Path $OutDir 'bandwidth.txt')
 }
 finally {
     $clients | Stop-Process -Force -ErrorAction SilentlyContinue
