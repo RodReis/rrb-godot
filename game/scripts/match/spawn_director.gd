@@ -15,6 +15,7 @@ const SCENE_PATH: String = "res://scenes/monsters/%s.tscn"
 const CHEST_SCENE: String = "res://scenes/world/chest.tscn"
 const BOSS_NAME: String = "Boss"
 const BOSS_CHEST_NAME: String = "BossChest"
+const BOSS_PORTAL_NAME: String = "BossPortal"
 
 ## Seed dos drops; NO_SEED = --seed da linha de comando ou sorteada. Definida antes de entrar
 ## na arvore; depois guarda a usada (log do servidor, auditoria).
@@ -49,25 +50,39 @@ func _ready() -> void:
 		add_child(spawned)
 
 
+## Servidor e clientes (boss_warning do MatchClock, 3:00): pista visual no marcador BOSS ate o
+## boss surgir. Repetir, ou boss ja vivo/morto, e ignorado.
+func warn_boss(_tick: int = 0) -> void:
+	if has_node(BOSS_PORTAL_NAME) or has_node(BOSS_NAME) or has_node(BOSS_CHEST_NAME):
+		return
+	var marker := _boss_marker()
+	if marker == null:
+		return
+	var portal := BossPortal.new()
+	portal.name = BOSS_PORTAL_NAME
+	portal.transform = global_transform.affine_inverse() * marker.global_transform
+	add_child(portal)
+
+
 ## Servidor e clientes (boss_spawned do MatchClock). Repetir, ou boss ja morto (cliente que
 ## entrou depois), e ignorado.
 func spawn_boss(_tick: int = 0) -> void:
+	var portal := get_node_or_null(BOSS_PORTAL_NAME)
+	if portal != null:
+		portal.free()
 	if has_node(BOSS_NAME) or has_node(BOSS_CHEST_NAME):
 		return
-	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
-		var marker := node as SpawnMarker
-		if marker.kind != SpawnMarker.Kind.BOSS:
-			continue
-		var boss := _monster(marker, _last_number + 1)
-		if boss == null:
-			return
-		_last_number += 1
-		boss.name = BOSS_NAME
-		boss.transform = global_transform.affine_inverse() * marker.global_transform
-		boss.died.connect(_on_boss_died)
-		add_child(boss)
+	var marker := _boss_marker()
+	if marker == null:
 		return
-	push_error("[spawn] sem marcador BOSS")
+	var boss := _monster(marker, _last_number + 1)
+	if boss == null:
+		return
+	_last_number += 1
+	boss.name = BOSS_NAME
+	boss.transform = global_transform.affine_inverse() * marker.global_transform
+	boss.died.connect(_on_boss_died)
+	add_child(boss)
 
 
 ## Servidor apenas: cria o bau do boss no peer que acabou de conectar (o estado do bau vai
@@ -76,6 +91,15 @@ func send_state(peer: int) -> void:
 	var chest := get_node_or_null(BOSS_CHEST_NAME) as Chest
 	if chest != null:
 		_boss_defeated.rpc_id(peer, NetworkTime.tick, _boss_killer, chest.uid, chest.position)
+
+
+func _boss_marker() -> SpawnMarker:
+	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
+		var marker := node as SpawnMarker
+		if marker.kind == SpawnMarker.Kind.BOSS:
+			return marker
+	push_error("[spawn] sem marcador BOSS")
+	return null
 
 
 func _monster(marker: SpawnMarker, number: int) -> Monster:

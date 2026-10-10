@@ -1,0 +1,106 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/bestiary.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/ui/components/panel_card.gd" id="2_card"]
+[ext_resource type="Script" path="res://shared/ui/components/catalog_list.gd" id="3_list"]
+[ext_resource type="Script" path="res://shared/ui/components/detail_card.gd" id="4_detail"]
+[ext_resource type="PackedScene" path="res://shared/ui/components/monster_preview_3d.tscn" id="5_preview"]
+[ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="6_badge"]
+[ext_resource type="Resource" path="res://shared/data/monsters/skeleton_t1.tres" id="7_t1"]
+[ext_resource type="Resource" path="res://shared/data/monsters/skeleton_warrior_t2.tres" id="8_warrior"]
+[ext_resource type="Resource" path="res://shared/data/monsters/skeleton_mage_t2.tres" id="9_mage"]
+[ext_resource type="Resource" path="res://shared/data/monsters/golem_t3.tres" id="10_golem"]
+[ext_resource type="Resource" path="res://shared/data/monsters/skeleton_king_boss.tres" id="11_boss"]
+
+[node name="Bestiary" type="CanvasLayer"]
+layer = 2
+script = ExtResource("1_script")
+monsters = Array[Resource]([ExtResource("7_t1"), ExtResource("8_warrior"), ExtResource("9_mage"), ExtResource("10_golem"), ExtResource("11_boss")])
+
+[node name="Backdrop" type="PanelContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"PanelCardSurface"
+script = ExtResource("2_card")
+variant = 0
+
+[node name="Margin" type="MarginContainer" parent="Backdrop"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="Column" type="VBoxContainer" parent="Backdrop/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Header" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Backdrop/Margin/Column/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelH1"
+text = "BESTIÁRIO DA ARENA"
+
+[node name="Live" type="Label" parent="Backdrop/Margin/Column/Header"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"LabelMuted"
+text = "A partida continua"
+
+[node name="Body" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="ListCard" type="PanelContainer" parent="Backdrop/Margin/Column/Body"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_vertical = 0
+script = ExtResource("2_card")
+
+[node name="List" type="VBoxContainer" parent="Backdrop/Margin/Column/Body/ListCard"]
+unique_name_in_owner = true
+layout_mode = 2
+script = ExtResource("3_list")
+
+[node name="Preview" parent="Backdrop/Margin/Column/Body" instance=ExtResource("5_preview")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(480, 480)
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Detail" type="PanelContainer" parent="Backdrop/Margin/Column/Body"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+script = ExtResource("4_detail")
+
+[node name="Footer" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+layout_mode = 2
+
+[node name="Nav" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+script = ExtResource("6_badge")
+key = "↑ ↓"
+
+[node name="NavText" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Navegar"
+
+[node name="Close" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+script = ExtResource("6_badge")
+key = "Esc / B"
+
+[node name="CloseText" type="Label" parent="Backdrop/Margin/Column/Footer"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Fechar"
