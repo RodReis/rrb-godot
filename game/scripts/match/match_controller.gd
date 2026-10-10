@@ -14,6 +14,8 @@ signal hero_picked(peer: int, hero_id: int, tick: int)
 signal player_died(peer: int, killer: int, tick: int)
 signal player_leveled(peer: int, level: int, tick: int)
 signal chest_opened(peer: int, chest_uid: int, tick: int)
+## Kill da fase 2: [param total] = kills de [param peer] na partida (HUD da fase 2, F17).
+signal kill_scored(peer: int, total: int, tick: int)
 ## stats: peer -> {"kills": kills na fase 2, "hero_damage": dano causado em herois}.
 signal match_ended(winner: int, reason: StringName, stats: Dictionary, tick: int)
 
@@ -294,9 +296,11 @@ func _on_hero_died(victim: Hero, tick: int) -> void:
 		var source := HitLedger.source_key(victim.peer_id, HitLedger.Slot.REWARD)
 		killer.receive_hit(tick + 1, source, reward)
 		NetworkRollback.mutate(killer, tick + 1)
-	_tracker.score(killer_id, state)
+	var scored := _tracker.score(killer_id, state)
 	print("[match] heroi %d morto por %d, tick %d" % [victim.peer_id, killer_id, tick])
 	_died.rpc(tick, victim.peer_id, killer_id)
+	if scored:
+		_scored.rpc(tick, killer_id, kills(killer_id))
 	if MatchState.is_phase2(state):
 		_judge(tick, false)
 
@@ -316,6 +320,11 @@ func _picked(tick: int, peer: int, hero_id: int) -> void:
 @rpc("authority", "call_local", "reliable")
 func _died(tick: int, peer: int, killer: int) -> void:
 	player_died.emit(peer, killer, tick)
+
+
+@rpc("authority", "call_local", "reliable")
+func _scored(tick: int, peer: int, total: int) -> void:
+	kill_scored.emit(peer, total, tick)
 
 
 @rpc("authority", "call_local", "reliable")

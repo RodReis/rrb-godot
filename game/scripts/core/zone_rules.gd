@@ -33,3 +33,26 @@ static func is_outside(position: Vector3, center: Vector3, radius: float) -> boo
 ## Dano de um pulso (1 por segundo): fracao do HP max, ao menos 1.
 static func damage(max_hp: int, pct: float) -> int:
 	return maxi(roundi(max_hp * pct), 1)
+
+
+## Indice do proximo ponto da tabela estritamente depois de [param t_phase2]; -1 depois do
+## ultimo (colapso). E o "proximo fechamento" da HUD (F17).
+static func next_point(rules: MatchRules, t_phase2: float) -> int:
+	var times := rules.zone_times
+	for i: int in times.size():
+		if t_phase2 < times[i]:
+			return i
+	return -1
+
+
+## Segundos ate o proximo ponto (0 depois do ultimo).
+static func until_next(rules: MatchRules, t_phase2: float) -> float:
+	var next := next_point(rules, t_phase2)
+	return 0.0 if next < 0 else rules.zone_times[next] - t_phase2
+
+
+## Raio no proximo ponto (o ultimo depois dele).
+static func next_radius(rules: MatchRules, t_phase2: float) -> float:
+	var next := next_point(rules, t_phase2)
+	var radii := rules.zone_radius
+	return radii[radii.size() - 1] if next < 0 else radii[next]
