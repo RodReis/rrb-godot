@@ -20,6 +20,9 @@ extends Combatant
 ## desempate (KillTracker), assim como o dano sofrido de toda fonte, para a tela de fim (F18).
 ## Cada pulso da zona liga zone_ticks, o flag de "fora da zona" que a vinheta da HUD le (F17,
 ## PATTERNS P8).
+## Mato alto (F32): dentro de uma moita o heroi some para quem esta fora (hidden_from,
+## VisibilityRules); atacar ou usar skill liga reveal_ticks. Quem filtra a replicacao e o
+## Concealment; no cliente o heroi escondido fica invisivel e sem colisao.
 
 const GROUP: StringName = &"heroes"
 ## respawn_off_tick enquanto o respawn vale.
@@ -88,8 +91,13 @@ var respawn_ticks: int = 0
 var heal_pause_ticks: int = 0
 ## Ticks ate deixar de contar como fora da zona (> 0 = o ultimo pulso da zona pegou o heroi).
 var zone_ticks: int = 0
+## Ticks em que o heroi fica visivel mesmo na moita (> 0 = atacou ou usou skill ha pouco).
+var reveal_ticks: int = 0
 
 var _rollback: RollbackSynchronizer
+var _concealment: Concealment
+## Moitas da arena (VisibilityRules.grass_box), lidas no _ready: a arena nao muda na partida.
+var _grass: Array[Transform3D] = []
 var _attributes_equipment: Vector4i = Inventory.NONE
 var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de rollback
 ## Servidor: dano tomado de herois, tick -> {peer_id do atacante -> dano}. Refeito a cada
@@ -120,6 +128,7 @@ func _ready() -> void:
 	set_multiplayer_authority(1)
 	input.set_multiplayer_authority(1 if is_bot else peer_id)
 	hp_bar.set_friendly(peer_id == multiplayer.get_unique_id())
+	_grass = _collect_grass()
 
 	# Heroi planar (#41): perto de muro a despenetracao mexia no y e o encaixe no chao do
 	# move_and_slide() passava a depender de is_on_floor() do tick anterior, que fica fora do
@@ -155,6 +164,7 @@ func _ready() -> void:
 		":respawn_ticks",
 		":heal_pause_ticks",
 		":zone_ticks",
+		":reveal_ticks",
 	]
 	_rollback.state_properties.append_array(_extra_state_properties())
 	_rollback.input_properties = [
@@ -170,7 +180,8 @@ func _ready() -> void:
 	]
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
-	SpawnAck.guard(self, [_rollback.visibility_filter])
+	var ack := SpawnAck.guard(self, [_rollback.visibility_filter])
+	_concealment = Concealment.guard(self, _rollback, ack)
 
 	var interpolator := TickInterpolator.new()
 	interpolator.name = "TickInterpolator"
@@ -232,12 +243,16 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 		dash_ticks -= 1
 		_while_dashing(tick)
 		return
+	var cooldowns := _cooldowns()
 	_use_skills(tick)
+	if VisibilityRules.acted(cooldowns, _cooldowns()):
+		reveal_ticks = VisibilityRules.reveal_ticks(match_rules, NetworkTime.tickrate)
 
 
 func _process(_delta: float) -> void:
 	_refresh_attributes()
 	_refresh_body()
+	visible = _concealment.is_shown()
 	hp_label.visible = is_alive()
 	hp_bar.visible = is_alive()
 	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
@@ -294,6 +309,18 @@ func damage_taken() -> int:
 	return total
 
 
+## Escondido no mato de [param observer] (heroi, monstro ou bot; null = sem observador, conta
+## como fora de toda moita). O proprio heroi e o time dele sempre o veem: so some do adversario.
+func hidden_from(observer: Node3D) -> bool:
+	if observer == self or (observer is Hero and (observer as Hero).team == team):
+		return false
+	var seen_from := VisibilityRules.NO_GRASS
+	if observer != null:
+		seen_from = VisibilityRules.grass_at(observer.global_position, _grass)
+	var grass := VisibilityRules.grass_at(global_position, _grass)
+	return VisibilityRules.is_hidden(grass, seen_from, reveal_ticks)
+
+
 func forward() -> Vector3:
 	return -global_transform.basis.z
 
@@ -326,9 +353,11 @@ func _refresh_attributes() -> void:
 
 
 ## Colisao que sai do estado (vale tambem para o heroi remoto no cliente): morto nao bloqueia
-## ninguem; a Muralha bloqueia so enquanto dura.
+## ninguem; a Muralha bloqueia so enquanto dura. No cliente, heroi escondido no mato nao bloqueia:
+## o node dele parou onde sumiu, e o servidor segue autoritativo.
 func _refresh_body() -> void:
-	var layer := _alive_layer if is_alive() else 0
+	var solid := is_alive() and (multiplayer.is_server() or _concealment.is_shown())
+	var layer := _alive_layer if solid else 0
 	if collision_layer != layer:
 		collision_layer = layer
 	if _shield_blocker != null:
@@ -407,10 +436,27 @@ func _tick_timers() -> void:
 	heal_pause_ticks = maxi(heal_pause_ticks - 1, 0)
 	zone_ticks = maxi(zone_ticks - 1, 0)
 	slow_ticks = maxi(slow_ticks - 1, 0)
+	reveal_ticks = maxi(reveal_ticks - 1, 0)
 	invuln_ticks = maxi(invuln_ticks - 1, 0)
 	shield_ticks = maxi(shield_ticks - 1, 0)
 	if shield_ticks == 0:
 		shield_hp = 0
+
+
+func _cooldowns() -> Vector4i:
+	return Vector4i(basic_cooldown, q_cooldown, e_cooldown, r_cooldown)
+
+
+## Moitas da arena na arvore (VisibilityRules.GROUP): Area3D com um CollisionShape3D de caixa.
+func _collect_grass() -> Array[Transform3D]:
+	var boxes: Array[Transform3D] = []
+	for node: Node in get_tree().get_nodes_in_group(VisibilityRules.GROUP):
+		for child: Node in node.get_children():
+			var shape := child as CollisionShape3D
+			if shape != null and shape.shape is BoxShape3D:
+				var size := (shape.shape as BoxShape3D).size
+				boxes.append(VisibilityRules.grass_box(shape.global_transform, size))
+	return boxes
 
 
 ## Habilidades neste tick (subclasse): vivo, sem atordoamento e fora do avanco.

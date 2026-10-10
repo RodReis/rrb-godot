@@ -10,6 +10,8 @@ extends Combatant
 ## o Rei Esqueleto existe desde o inicio, dormente ate 3:30, e sai aos 5:00 se vivo (F20) — nenhum
 ## monstro nasce nem some da arvore no meio da partida, entao nenhum estado chega antes do node.
 ## Lentidao (R da Arqueira, PI 2026-10-10): anda mais devagar enquanto dura.
+## Mato alto (F32): heroi escondido nao entra no aggro e, se era o alvo, deixa de ser (volta ao
+## marcador como quando o alvo morre).
 
 ## Servidor apenas. [param killer_id] = peer_id do golpe final; [param tick] = tick da morte.
 signal died(killer_id: int, tick: int)
@@ -141,7 +143,12 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 	if _stun_ticks > 0:
 		velocity = Vector3.ZERO
 		return
-	if state == MonsterRules.State.IDLE or not is_instance_valid(_target) or not _target.is_alive():
+	if (
+		state == MonsterRules.State.IDLE
+		or not is_instance_valid(_target)
+		or not _target.is_alive()
+		or _target.hidden_from(self)
+	):
 		_target = _nearest_hero()
 	var target_dist := INF if _target == null else _flat_distance(_target.global_position)
 	var next := MonsterRules.next_state(state, data, target_dist, _flat_distance(_home))
@@ -224,7 +231,7 @@ func _nearest_hero() -> Hero:
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
 		var dist := _flat_distance(hero.global_position)
-		if hero.is_alive() and dist <= best_dist:
+		if hero.is_alive() and dist <= best_dist and not hero.hidden_from(self):
 			best = hero
 			best_dist = dist
 	return best
