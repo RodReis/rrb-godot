@@ -1,8 +1,8 @@
-# Bloco visual (MVP3) — Design
+# Bloco visual (MVP2.5) — Design
 
 **Data:** 2026-10-10 · **Autor:** Cowork (planejamento) · **Aprovação:** PI (Rodrigo Reis), decisões registradas abaixo
 **Fonte de entrada:** `docs/prd/guia_melhorias_graficas_godot4.md` (guia Rodrigo/Gemini, 2026-10-10) — usado como *inspiração*, não como spec. A errata do guia está no §7.
-**Status:** aprovada pelo PI em 2026-10-10 11:13; revisada às 14:30 (ADR-0007: layout da arena). Plano: `docs/superpowers/plans/2026-10-10-bloco-visual-governanca.md`.
+**Status:** aprovada pelo PI em 2026-10-10 11:13; revisada às 14:30 (ADR-0007: layout da arena) e às 14:40 (**posição: marco MVP2.5, antes do MVP3** — D-V1 revisada abaixo). Plano: `docs/superpowers/plans/2026-10-10-bloco-visual-governanca.md`.
 
 ---
 
@@ -10,13 +10,13 @@
 
 Elevar a qualidade visual do módulo Game (arena, heróis, combate, HUD) de "KayKit cru" para um visual estilizado com identidade própria, **sem quebrar o netcode** (MVP2) e **sem mexer em regra de jogo**. Resultado esperado: a arena renderizada pela tela Arena & Mapa (F33) e as capturas do roadmap público passam a ter a cara do concept art de `docs/prd/telas/Arena & Mapa — O Vale Rúnico Apocalíptico`.
 
-Não é um MVP. É um **bloco de 6 fatias dentro do MVP3**, entre F23 e F24 (decisão do PI, §2).
+É o **marco MVP2.5**: 6 fatias (F38–F43), depois do `[GATE]` do MVP2 e antes do MVP3 (decisão do PI, §2).
 
 ## 2. Decisões do PI (2026-10-10)
 
 | # | Decisão | Consequência |
 |---|---|---|
-| D-V1 | "MVP2.5" **não existe**; o bloco entra no MVP3 entre F23 (game server) e F24 (shell do launcher) | `MVP-3.md` e `STATUS.md` ganham F38–F43; MVP-n = M-n continua valendo |
+| D-V1 | **Revisada:** o bloco é o marco **MVP2.5**, antes do MVP3 (o PI pediu "MVP2.5" desde o início; a versão anterior desta decisão o colocava dentro do MVP3 e foi um erro de leitura do pedido) | `MVP-2.5.md` novo; `MVP-3.md` perde as fatias 3.11–3.16; `STATUS.md` ganha o marco; PRD §9.1 ganha o M2.5 (2 sem) e o M3 volta a 3 sem; issue-pai #99; [INFRA] #100 |
 | D-V2 | Direção artística = **toon/outline + stylized PBR** (opções B+C do brainstorm) | heróis, monstros e cenário com cel-shading e contorno; superfícies com variação procedural; luz física com sombras suaves |
 | D-V3 | **Bevel e bake de AO/curvatura liberados no Blender para props de cenário** (portões, muralhas, rochas) | revoga parcialmente a regra "sem bevel, faces planas, cor por atlas" do `CLAUDE.md` — vale só para cenário próprio (`shared/assets/rrb/`); personagens KayKit ficam como vêm |
 | D-V4 | **Fontes e molduras novas** no design system | revoga R-PEND-11 (Space Grotesk / Outfit / JetBrains Mono). Fontes finais: pendência R-PEND-14 (trava só o F43) |
@@ -85,7 +85,7 @@ Não é um MVP. É um **bloco de 6 fatias dentro do MVP3**, entre F23 e F24 (dec
 
 ## 5. Ordem e dependências
 
-MVP2: … F14 → **F44 (layout, SPEC-044)** → F16 → … MVP3: F21 → F22 → F23 → **F38 → F39 → F40 → F41 → F42 → F43** → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE] (ordem das issues #77–#87).
+MVP2: … F14 → **F44 (layout, SPEC-044)** → F16 → … → [GATE] MVP2. **MVP2.5:** **F38 → F39 → F40 → F41 → F42 → F43** (issue-pai #99; #93–#98). MVP3: F21 → F22 → F23 → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE] (issues #77–#87).
 Dependências internas: F39←F38; F40←F39 e F44; F41←F38 (e F14); F42←F40; F43←design system v2.
 
 ## 6. Documentos a atualizar (Cowork, direto na `main`)
@@ -96,7 +96,7 @@ Dependências internas: F39←F38; F40←F39 e F44; F41←F38 (e F14); F42←F40
 - `CLAUDE.md` §Assets 3D — regra de estilo passa a: "personagens dos packs como vêm; cenário próprio pode ter bevel 1–2 seg. e bake AO/curvatura; cor-base pelo atlas".
 - `docs/prd/PRD.md` §1.2 (mobile → perfil gráfico próprio, fora de escopo) e §11 (Forward+ only; toon/outline).
 - `docs/design-system/TOKENS.md` + `DESIGN-SYSTEM-LAUNCHER.md` v2 (fontes/molduras; R-PEND-14 aberta).
-- `docs/prd/mvp/MVP-3.md` (fatias 3.11–3.16), `docs/STATUS.md` (índice F38–F43; próximo livre F44), `docs/DEVELOPMENT.md`.
+- `docs/prd/mvp/MVP-2.5.md` (fatias 2.5.1–2.5.6), `docs/prd/mvp/MVP-3.md` (sem o bloco), `docs/STATUS.md` (índice F38–F43; próximo livre F45), `docs/DEVELOPMENT.md`.
 - `docs/FORA-DE-ESCOPO.md` — SDFGI, SSIL dinâmico como GI principal, renderer Mobile: rejeitados, motivo e gatilho de retorno (porte mobile).
 - `docs/RASTREABILIDADE.md` — V-10 revisado; R-PEND-14 (fontes).
 - `docs/APRENDIZADOS.md` — #4 vira critério de aceite do bloco.
@@ -122,4 +122,4 @@ Dependências internas: F39←F38; F40←F39 e F44; F41←F38 (e F14); F42←F40
 | Toon + PBR brigam (banding feio em superfícies com normal map) | água e chão ficam fora do toon (shaders próprios); só o cel na luz direta de malhas opacas |
 | Bake de lightmap invalida a cada mudança de arena | bake é passo do `tools/` (script PowerShell), não manual; F40 rebakeia |
 | Frame time estoura em GPU integrada | orçamento +4 ms no PC do PI e teste com perfil baixo; itens caros (fog, SSIL) têm toggle em `settings.cfg` — mudança do contrato Launcher ↔ Game, coberta pelo ADR-0006 |
-| Bloco atrasa o MVP3 (6 cards antes do launcher) | cada card é independente após F38/F40; o PI pode mover F42/F43 para depois do F33 sem quebrar o resto |
+| Bloco atrasa o MVP3 (marco de 2 sem entre o M2 e o M3) | cada card é independente após F38/F40; o PI pode mover F42/F43 para depois do MVP3 sem quebrar o resto (F24 herdaria as fontes provisórias — DS-08) |

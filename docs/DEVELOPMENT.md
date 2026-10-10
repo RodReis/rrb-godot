@@ -75,6 +75,17 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [x] **F20** — Spawn confiável antes do estado: `SpawnAck` (`scripts/net/`) deixa o `RollbackSynchronizer` do herói sem destinatário no servidor até o cliente confirmar por RPC confiável que já tem o node (fim do `Node not found` do F5). Nenhum monstro nasce/some no meio da partida: o Rei Esqueleto existe desde o load fora do mapa (`Monster.present`, replicado), entra às 3:30 e, vivo às 5:00, sai sem drop nem XP (`SpawnDirector.dismiss_boss`, R-PEND-06); painel da HUD mostra "SAIU DO MAPA" (texto aprovado pelo PI). Baús: `opened_tick` do servidor nos dois lados. Medição: `NetProbe` (`--probe`: remoto parado, checkpoints de monstros/baús pelo histórico do `StateSynchronizer`, throttle do ENet), `--autopilot=bot` (o `BotInput` joga pelo herói local do cliente), `tools/net-measure.ps1` (Docker + netem + 2 clientes + banda) e `tools/net-probe-report.ps1`. B (10 min): remoto parado 6,2 % / 2,7 %, checkpoints 60/60 nos dois clientes, 0 `Node not found`, servidor envia 1,3 Mbit/s para 2 clientes. C fora da meta (decisão do PI, 2026-10-10) — investigação em `game/test/net/roteiro-f20-replicacao.md`. (#60)
 - [ ] **[GATE] MVP2** — 1x1 online termina sempre; soak 50/50.
 
+### MVP2.5 — Bloco visual (`game`, `shared`) — depois do [GATE] MVP2, antes do MVP3 (ADR-0006)
+
+- [ ] **F38** — `arena.tscn`: `WorldEnvironment` (ACES, SSAO, SSIL, glow 1.05, fog 0.008) + `Sun` (4 splits, blur 1.8) + `LightmapGI` bakeado (`tools/bake-lightmap.ps1`); `scripts/client/shader_warmup.gd` antes do `connect`; baseline do profiler em `docs/roadmap/`; chaves `graphics.*` em `settings.cfg`. Critério 3/3 sync a 100 ms (ADR-0006 item 7).
+- [ ] **F39** — `shared/assets/post_import_toon.gd` (`EditorScenePostImport`), `shared/resources/materials/toon_base.tres` + `outline_pass.tres`; sem editar glTF. Critério 3/3; delta de frame time.
+- [ ] **F40** — Blender: `art/arena/{ilha,castelo,cratera,pontes,props}.blend` → `shared/assets/rrb/arena/*.glb` (UV 0..1, UV2 com AO/curvatura) sobre o layout da SPEC-044; `game/shaders/{arcane_river,volcanic_lava,arcane_crystal,abyss_sky}.gdshader` (rio: `water_depth = linear_depth + VERTEX.z`, `NORMAL_MAP`, `NoiseTexture2D`); cachoeiras e brasas (`GPUParticles3D`, cliente); colisão do F44 intacta; cena de alinhamento. Critério 3/3; delta; roadmap.
+- [ ] **F41** — `game/scenes/vfx/`, `scripts/vfx/vfx_pool.gd`, `vfx_spawner.gd` (cliente, `is_fresh`, sinal do `HitLedger`), teste GUT de spawn único; VFX de básico/Q/E/R do Cavaleiro e da Arqueira; trail da flecha com interpolação visual separada do estado. Servidor headless sem nós de VFX. Vídeo no roadmap.
+- [ ] **F42** — `game/scenes/arena/vegetation.tscn` (`MultiMeshInstance3D`), `game/shaders/grass_wind.gdshader` (fase por instância), máscara de distribuição longe do mato alto. Aceite visual do PI: grama ≠ mato.
+- [ ] **F43** — `stat_bar.gd` ghost bar (tipado), ícones Q/E/R + badge, `StyleBoxTexture`, fontes (R-PEND-14) com outline, 3 pontos em `hero_select.tscn` e `monster_preview_3d.tscn`; `_gallery.tscn` atualizada.
+
+(Sem `[GATE]` próprio: aceite visual do PI por fatia + critério transversal do ADR-0006 item 7. `[INFRA]` #100: roadmap público reconhece o marco.)
+
 ### MVP3 — Meta + deploy (`backend`, `launcher`, `infra`, `game`)
 
 - [ ] **F21** — `backend/`: NestJS 11, Drizzle + Postgres, `auth`, `users`, zod, Pino; e2e com Postgres em container; `openapi.json`.
@@ -85,12 +96,6 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [ ] **F26** — `HistoryService`, tela Histórico, `GET /matches`.
 - [ ] **F27** — `CatalogService`, Bestiário, Forja com simulador (`shared/core`).
 - [ ] **F28** — `infra/` para VPS (Coolify, compose com `backend`, `postgres`, `gameserver`), export presets, pacote `launcher/ + game/`, UDP 7000–7020.
-- [ ] **F38** — `arena.tscn`: `WorldEnvironment` (ACES, SSAO, SSIL, glow 1.05, fog 0.008) + `Sun` (4 splits, blur 1.8) + `LightmapGI` bakeado (`tools/bake-lightmap.ps1`); `scripts/client/shader_warmup.gd` antes do `connect`; baseline do profiler em `docs/roadmap/`; chaves `graphics.*` em `settings.cfg`. Critério 3/3 sync a 100 ms (ADR-0006 item 7).
-- [ ] **F39** — `shared/assets/post_import_toon.gd` (`EditorScenePostImport`), `shared/resources/materials/toon_base.tres` + `outline_pass.tres`; sem editar glTF. Critério 3/3; delta de frame time.
-- [ ] **F40** — Blender: `art/arena/{ilha,castelo,cratera,pontes,props}.blend` → `shared/assets/rrb/arena/*.glb` (UV 0..1, UV2 com AO/curvatura) sobre o layout da SPEC-044; `game/shaders/{arcane_river,volcanic_lava,arcane_crystal,abyss_sky}.gdshader` (rio: `water_depth = linear_depth + VERTEX.z`, `NORMAL_MAP`, `NoiseTexture2D`); cachoeiras e brasas (`GPUParticles3D`, cliente); colisão do F44 intacta; cena de alinhamento. Critério 3/3; delta; roadmap.
-- [ ] **F41** — `game/scenes/vfx/`, `scripts/vfx/vfx_pool.gd`, `vfx_spawner.gd` (cliente, `is_fresh`, sinal do `HitLedger`), teste GUT de spawn único; VFX de básico/Q/E/R do Cavaleiro e da Arqueira; trail da flecha com interpolação visual separada do estado. Servidor headless sem nós de VFX. Vídeo no roadmap.
-- [ ] **F42** — `game/scenes/arena/vegetation.tscn` (`MultiMeshInstance3D`), `game/shaders/grass_wind.gdshader` (fase por instância), máscara de distribuição longe do mato alto. Aceite visual do PI: grama ≠ mato.
-- [ ] **F43** — `stat_bar.gd` ghost bar (tipado), ícones Q/E/R + badge, `StyleBoxTexture`, fontes (R-PEND-14) com outline, 3 pontos em `hero_select.tscn` e `monster_preview_3d.tscn`; `_gallery.tscn` atualizada.
 - [ ] **[GATE] MVP3** — dois amigos jogam pela internet sem o dev.
 
 ### MVP4 — Playtest

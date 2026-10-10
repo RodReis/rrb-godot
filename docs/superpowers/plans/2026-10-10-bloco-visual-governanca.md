@@ -1,4 +1,6 @@
-# Bloco visual (MVP3) + layout da arena (F44) — Plano de governança (Cowork)
+# Bloco visual + layout da arena (F44) — Plano de governança (Cowork)
+
+> **Revisão 2026-10-10 14:40 (posição do bloco):** este plano foi executado com o bloco **dentro do MVP3** (F38–F43 entre F23 e F24, "MVP2.5 não existe"). O PI esclareceu que pediu o marco **MVP2.5, antes do MVP3**. Corrigido em seguida: `MVP-2.5.md`, issue-pai #99, títulos `[MVP2.5]` em #93–#98, `[INFRA]` #100, PRD §9.1, ADR-0006 item 9, STATUS e DEVELOPMENT. Onde este plano diz "MVP3", "3.11–3.16" ou "entre F23 e F24" para o bloco visual, vale o MVP2.5. O restante (decisões, ADRs, F44) segue válido.
 
 > **Para agentes:** SUB-SKILL OBRIGATÓRIA: use superpowers:executing-plans (inline). Este plano **não escreve código**: é o plano do Cowork (documentação direto na `main` + issues). O código é do Code, a partir das issues.
 

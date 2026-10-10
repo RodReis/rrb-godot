@@ -265,10 +265,11 @@ O projeto atual (plataforma 2D) é descartado; `tools/setup-godot-mcp.ps1` e `.m
 | **Gate** | decisão Godot × Unity | — | — |
 | **M1 — Arena single-player** | mapa 3 zonas, Cavaleiro, monstros, XP/níveis, baús/itens, boss, bot | fase 1 completa contra bot, offline | 4 sem |
 | **M2 — Partida em rede** | Arqueira, fase 2 (zona, kills, fim garantido), HUD, transição | 1x1 online termina sempre; 50 partidas bot×bot sem travar | 4 sem |
-| **M3 — Meta + deploy** | backend, pool no VPS, build PC; bloco visual (toon/PBR, arte da ilha, VFX, HUD v2 — ADR-0006) | dois amigos jogam pela internet sem intervenção do dev | 5 sem |
+| **M2.5 — Bloco visual** | iluminação e pós, toon/outline, arte da ilha, VFX do Cavaleiro e da Arqueira, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
+| **M3 — Meta + deploy** | backend, pool no VPS, build PC | dois amigos jogam pela internet sem intervenção do dev | 3 sem |
 | **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números | decisão sobre câmera, duração e ir para 3x3 | 2 sem |
 
-Total ≈ 17 semanas (M3 passou de 3 para 5 semanas com o bloco visual, ADR-0006).
+Total ≈ 17 semanas (inclui o M2.5, bloco visual de 2 semanas entre o M2 e o M3 — ADR-0006).
 
 ### 9.2 Critérios de sucesso (M4)
 

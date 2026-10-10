@@ -25,6 +25,8 @@
 
 **F15 → F36 → F20 → F14 → F16 → F44 (#92) → F17 → F18 → F32 → F37 → F19 → [GATE].**
 
+**Depois do [GATE] deste MVP vem o MVP2.5 (bloco visual F38–F43, `MVP-2.5.md`), antes do MVP3.**
+
 **Revisão do PI em 2026-10-10 (ADR-0007):** F44 (layout da arena, #92) entra logo após o F16 (que já estava em `doing` quando a decisão foi tomada) e antes do F17, para F16/F17/F32/F37 (minimapa) e o soak do F19 já nascerem na ilha. F36 e F20 já estavam mergeados; o F44 reposiciona os marcadores dos campos laterais.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.

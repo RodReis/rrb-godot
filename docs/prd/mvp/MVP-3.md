@@ -1,7 +1,7 @@
 # MVP3 — Meta + deploy (= marco M3)
 
 **Objetivo:** dois amigos jogam pela internet sem intervenção do dev: criam conta, entram na fila, o launcher abre o jogo, a partida roda num servidor do pool no VPS, o resultado aparece no histórico.
-**Módulos:** `backend`, `launcher`, `game`, `infra`, `shared`. **Prazo PRD:** 5 semanas (3 + bloco visual, ADR-0006).
+**Módulos:** `backend`, `launcher`, `game`, `infra`, `shared`. **Prazo PRD:** 3 semanas. O bloco visual (F38–F43) saiu daqui para o **MVP2.5** (`MVP-2.5.md`), que vem antes.
 **Critério de pronto:** o cenário acima executado por duas pessoas externas, do zero, só com o pacote de instalação.
 
 ## Fatias
@@ -18,17 +18,13 @@
 | 3.8 | F28 / SPEC-028 | deploy VPS, exports, pacote ZIP portátil em GitHub Release | PRD §8.5; decisão PI 2026-10-10 |
 | 3.9 | F33 / SPEC-033 | tela Arena & Mapa: render da arena real, marcadores, regras das 2 fases (números do GDB) | DV tela 10; SPEC-007; decisão PI 2026-10-09 |
 | 3.10 | F35 / SPEC-035 | perfil de conta (`launcher`, `backend`): nickname obrigatório no 1º login, 3–16 `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas, prefixo `#` só de exibição; avatar predefinido ou upload PNG/JPG ≤ 1 MB recortado 256×256, só local; sem XP de conta, sem data de nascimento | R-PEND-02 (`RASTREABILIDADE.md` §5) |
-| 3.11 | F38 / SPEC-038 | iluminação e pós (`WorldEnvironment`, `Sun`, `LightmapGI`), warm-up de shaders, baseline do profiler, toggles em `settings.cfg` | ADR-0006; spec bloco visual §4 |
-| 3.12 | F39 / SPEC-039 | toon + outline por pós-import (heróis, monstros, cenário) | ADR-0006; spec §4 |
-| 3.13 | F40 / SPEC-040 | arte da ilha sobre o layout da SPEC-044: ilha + abismo, castelos modulares, rio de mana (malha única) e cachoeiras, cratera de magma, cristais, skybox cósmico, ilhotas de fundo, torres/balistas como enfeite; bevel/bake nos props; shaders de água, magma, cristal e sky | ADR-0005/0006/0007; SPEC-044; spec §4 |
-| 3.14 | F41 / SPEC-041 | arquitetura VFX (pool, `is_fresh`, sinal do `HitLedger`) + VFX do Cavaleiro e da Arqueira | ADR-0006; GDB §3–4; spec §4 |
-| 3.15 | F42 / SPEC-042 | vegetação: grama `MultiMesh` com vento, distinta do mato alto | ADR-0006; CONVENTION §4.7; spec §4 |
-| 3.16 | F43 / SPEC-043 | HUD v2: ghost bar, ícones Q/E/R + badge, molduras, fontes (R-PEND-14), 3 pontos na seleção | ADR-0006; TOKENS v2; spec §4 |
 | gate | `[GATE]` | dois amigos jogam pela internet | PRD §9.1 |
 
 ## Ordem e issues
 
-Issue-pai **#76**. Ordem (decisão do PI em 2026-10-10): F21 #77 → F22 #78 → F23 #79 → **bloco visual F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98** (ADR-0006) → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → [GATE] #87. O bloco visual entra antes do launcher para o Theme do F24 nascer no design system v2 e o F33 renderizar a ilha pronta; se o prazo apertar, F42 e F43 podem ir para depois do F33 sem quebrar dependências. Critério transversal do bloco: ADR-0006 item 7. O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
+Issue-pai **#76**. Ordem: F21 #77 → F22 #78 → F23 #79 → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → [GATE] #87. O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
+
+**Herança do MVP2.5 (ADR-0006, revisão de 2026-10-10):** o MVP3 começa com o bloco visual já entregue. O F24 nasce no design system v2 (fontes e molduras do F43) e consome as chaves gráficas do `settings.cfg` definidas no F38; o F33 renderiza a ilha pronta (F40). Se o MVP2.5 não estiver fechado, F24 e F33 ficam bloqueados nesses pontos.
 
 ## Decisões do PI em 2026-10-10
 
@@ -41,7 +37,7 @@ Issue-pai **#76**. Ordem (decisão do PI em 2026-10-10): F21 #77 → F22 #78 →
 
 ## Pendências do PI
 
-Decididas em 2026-10-09: R-PEND-03 não (sem persistência de sessão); R-PEND-07 roadmap (F21 sem recuperação nem verificação de e-mail). R-PEND-02: sem XP de conta; perfil com nickname único e avatar vira a fatia F35 (fora do F25). Sem data de nascimento. Fechada em 2026-10-10 (regras acima). R-PEND-14 (fontes do design system v2, ADR-0006) — trava só o F43.
+Decididas em 2026-10-09: R-PEND-03 não (sem persistência de sessão); R-PEND-07 roadmap (F21 sem recuperação nem verificação de e-mail). R-PEND-02: sem XP de conta; perfil com nickname único e avatar vira a fatia F35 (fora do F25). Sem data de nascimento. Fechada em 2026-10-10 (regras acima). R-PEND-14 (fontes do design system v2, ADR-0006) — trava o F43 (MVP2.5); o F24 herda.
 
 ## Fora deste MVP
 
