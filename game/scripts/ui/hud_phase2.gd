@@ -6,8 +6,8 @@ extends CanvasLayer
 ## depois), aviso dos portoes na transicao, aviso da morte subita e vinheta vermelha quando o
 ## heroi local esta fora da zona. So consome sinais (phase_changed, kill_scored, zone_updated) e
 ## estado replicado (heroi, relogio); tempos e numeros vem de MatchRules. A base de combate e a
-## mesma da fase 1 (HeroPlate). Escondida ate o HudController ativar. No match_ended congela e
-## mostra o resultado para quem joga (a tela de fim completa e do F18).
+## mesma da fase 1 (HeroPlate). Escondida ate o HudController ativar. No match_ended para e sai
+## da tela: a tela de fim (MatchEnd, F18) assume.
 
 ## Aviso de fase some sozinho (PATTERNS P7); a transicao fica os 5 s dela.
 const BANNER_SECONDS: float = 3.0
@@ -60,8 +60,6 @@ var _ended: bool = false
 @onready var _respawn_title: Label = %RespawnTitle
 @onready var _respawn_text: Label = %RespawnText
 @onready var _plate: HeroPlate = %HeroPlate
-@onready var _end: PanelCard = %EndBanner
-@onready var _end_result: Label = %EndResult
 
 
 func _ready() -> void:
@@ -105,8 +103,8 @@ func set_active(active: bool) -> void:
 		_plate.bind(_hero)
 		_plate.set_chests(_chests())
 		_refresh_score()
-	visible = active
-	set_process(active and not _ended)
+	visible = active and not _ended
+	set_process(visible)
 
 
 func _process(_delta: float) -> void:
@@ -280,21 +278,14 @@ func _on_match_phase_changed(_from: int, to: int, _tick: int) -> void:
 		_show_sudden_death()
 
 
-## Fim (meta, eliminacao, colapso): para tudo, tira respawn e avisos e mostra o resultado.
-func _on_match_ended(winner: int, _reason: StringName, _stats: Dictionary, _tick: int) -> void:
+## Fim (meta, eliminacao, colapso): para tudo, tira respawn e avisos e sai da tela.
+func _on_match_ended(_winner: int, _reason: StringName, _stats: MatchStats, _tick: int) -> void:
 	_ended = true
 	set_process(false)
 	for node: Control in [_respawn, _transition, _sudden]:
 		node.hide()
 	_vignette.hide()
-	if winner == MatchController.NO_WINNER or not is_instance_valid(_hero):
-		_end.accent = PanelCard.Accent.NONE
-		_end_result.text = tr("SEM VENCEDOR")
-	else:
-		var won := winner == _hero.peer_id
-		_end.accent = PanelCard.Accent.GOLD if won else PanelCard.Accent.RED
-		_end_result.text = tr("VITÓRIA") if won else tr("DERROTA")
-	_end.visible = true
+	visible = false
 
 
 func _on_match_kill_scored(peer: int, total: int, _tick: int) -> void:

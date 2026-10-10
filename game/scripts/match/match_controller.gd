@@ -8,6 +8,8 @@ extends Node
 ## discretos por RPC confiavel com tick e os repassa como sinais para a UI. Mortes e niveis saem
 ## do estado replicado dos herois, uma vez por mudanca (ressimulacao nao duplica evento); o XP do
 ## abate vai pelo ledger do matador (§3.2). Sem nenhum caso de modo offline: o bot e uma vaga.
+## Estatisticas da tela de fim (F18): somadas aqui no servidor (MatchStats) e enviadas no
+## match_ended; so contam para quem tem vaga.
 
 signal phase_changed(from: int, to: int, tick: int)
 signal hero_picked(peer: int, hero_id: int, tick: int)
@@ -16,8 +18,7 @@ signal player_leveled(peer: int, level: int, tick: int)
 signal chest_opened(peer: int, chest_uid: int, tick: int)
 ## Kill da fase 2: [param total] = kills de [param peer] na partida (HUD da fase 2, F17).
 signal kill_scored(peer: int, total: int, tick: int)
-## stats: peer -> {"kills": kills na fase 2, "hero_damage": dano causado em herois}.
-signal match_ended(winner: int, reason: StringName, stats: Dictionary, tick: int)
+signal match_ended(winner: int, reason: StringName, stats: MatchStats, tick: int)
 
 const NO_WINNER: int = VictoryRules.NO_WINNER
 const REASON_ABANDONED: StringName = VictoryRules.ABANDONED
@@ -56,6 +57,7 @@ var _open: bool = false
 var _tickrate: int = 0
 var _seats: Array[Seat] = []
 var _tracker: KillTracker = KillTracker.new()
+var _stats: MatchStats = MatchStats.new()
 var _dead: Dictionary = {}  # peer -> morto no ultimo tick visto
 var _levels: Dictionary = {}  # peer -> maior nivel ja avisado
 var _refusals_logged: Dictionary = {}  # peer -> true: log de lock-in recusado uma vez por peer
@@ -160,7 +162,20 @@ func watch_heroes(tick: int) -> void:
 
 ## Servidor: bau aberto por [param peer] (SpawnDirector.chest_opened).
 func report_chest_opened(peer: int, chest_uid: int, tick: int) -> void:
+	_counted(peer).chests += 1
 	_chest_opened.rpc(tick, peer, chest_uid)
+
+
+## Servidor: monstro nao-boss abatido por [param peer] (SpawnDirector.monster_killed).
+func report_monster_killed(peer: int, _tick: int) -> void:
+	_counted(peer).monsters += 1
+
+
+## Rei Esqueleto abatido por [param peer] (SpawnDirector.boss_killed, que chega a todos os peers):
+## so o servidor conta.
+func report_boss_killed(peer: int) -> void:
+	if _open:
+		_counted(peer).boss_killed = true
 
 
 ## Cliente -> servidor: lock-in do heroi (numero de Ids). Valor do cliente: validado aqui.
@@ -182,6 +197,11 @@ func _seat(peer: int) -> Seat:
 		if seat.peer == peer:
 			return seat
 	return null
+
+
+## Estatisticas de [param peer] se ele tem vaga; senao, um registro descartavel.
+func _counted(peer: int) -> MatchStats.Player:
+	return _stats.player(peer) if _seat(peer) != null else MatchStats.Player.new()
 
 
 func _ticks(seconds: float) -> int:
@@ -231,7 +251,7 @@ func _name(value: MatchState.State) -> String:
 ## Fim: avisa todos com o placar; o processo do servidor dedicado encerra (main).
 func _finish(tick: int, winner: int, reason: StringName) -> void:
 	_enter(MatchState.State.ENDED, tick)
-	_ended.rpc(tick, winner, reason, _stats())
+	_ended.rpc(tick, winner, reason, _final_stats(tick).to_dict())
 
 
 ## Fase 2: VictoryRules na ordem do GDB §7.2; acabou, encerra.
@@ -270,15 +290,22 @@ func _contenders() -> Array[VictoryRules.Contender]:
 	return result
 
 
-func _stats() -> Dictionary:
+## O que so existe no estado vai para as estatisticas no fim; um registro por vaga. O nivel conta
+## a recompensa do abate deste tick, que o heroi so aplica no seguinte (_on_hero_died).
+func _final_stats(tick: int) -> MatchStats:
 	var heroes := _heroes()
-	var result := {}
+	_stats.duration = clock.elapsed(tick) if clock != null else 0.0
 	for seat: Seat in _seats:
-		result[seat.peer] = {
-			"kills": kills(seat.peer),
-			"hero_damage": _tracker.damage_dealt(seat.peer, heroes),
-		}
-	return result
+		var one := _stats.player(seat.peer)
+		one.hero = Ids.to_int(seat.hero)
+		one.kills = kills(seat.peer)
+		one.hero_damage = _tracker.damage_dealt(seat.peer, heroes)
+		for hero: Hero in heroes:
+			if hero.peer_id == seat.peer:
+				one.level = XpTable.level_for_xp(hero.xp_curve, hero.xp_with_pending(tick + 1))
+				one.damage_taken = hero.damage_taken()
+				one.equipment = hero.equipment
+	return _stats
 
 
 ## XP ao heroi que deu o golpe final (monstro e zona nao ganham); kill so na fase 2. Na fase 2
@@ -297,6 +324,7 @@ func _on_hero_died(victim: Hero, tick: int) -> void:
 		killer.receive_hit(tick + 1, source, reward)
 		NetworkRollback.mutate(killer, tick + 1)
 	var scored := _tracker.score(killer_id, state)
+	_counted(victim.peer_id).deaths += 1
 	print("[match] heroi %d morto por %d, tick %d" % [victim.peer_id, killer_id, tick])
 	_died.rpc(tick, victim.peer_id, killer_id)
 	if scored:
@@ -339,7 +367,7 @@ func _chest_opened(tick: int, peer: int, chest_uid: int) -> void:
 
 @rpc("authority", "call_local", "reliable")
 func _ended(tick: int, winner: int, reason: StringName, stats: Dictionary) -> void:
-	match_ended.emit(winner, reason, stats, tick)
+	match_ended.emit(winner, reason, MatchStats.from_dict(stats), tick)
 
 
 func _on_network_tick(_delta: float, tick: int) -> void:

@@ -77,3 +77,26 @@ func test_zona_nao_conta_como_dano_de_heroi() -> void:
 	assert_eq(a.hp, hp_before - BLOW, "zona ignora DEF")
 	var heroes: Array[Hero] = [a]
 	assert_eq(_tracker.damage_dealt(0, heroes), 0)
+
+
+## F18: dano sofrido soma toda fonte (heroi, monstro, zona), uma vez por tick ressimulado.
+func test_dano_sofrido_conta_toda_fonte_uma_vez_com_ressimulacao() -> void:
+	var a := _spawn(P1, GateRules.TEAM_A)
+	var b := _spawn(P2, GateRules.TEAM_B)
+	var blow := HitEffect.new(BLOW, a.global_position)
+	blow.attacker_id = P1
+	b.receive_hit(START, HitLedger.source_key(P1, HitLedger.Slot.BASIC), blow)
+	var monster := HitEffect.new(BLOW, a.global_position)  # monstro: attacker_id 0
+	b.receive_hit(START, HitLedger.source_key(-3, HitLedger.Slot.BASIC), monster)
+	var zone := HitEffect.new()
+	zone.true_damage = BLOW
+	b.receive_hit(START + 1, HitLedger.source_key(0, HitLedger.Slot.ZONE), zone)
+	var hp_before := b.hp
+	b._rollback_tick(TICK, START, true)
+	b._rollback_tick(TICK, START + 1, true)
+	var taken := hp_before - b.hp
+	b.hp = hp_before  # o rollback restaura o estado e ressimula os mesmos ticks
+	b._rollback_tick(TICK, START, false)
+	b._rollback_tick(TICK, START + 1, false)
+	assert_eq(b.damage_taken(), taken)
+	assert_eq(a.damage_taken(), 0)

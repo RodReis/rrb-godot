@@ -17,8 +17,9 @@ extends Combatant
 ## cura a cada segundo; tomar dano pausa a cura (heal_pause_ticks, estado de rollback).
 ## Fase 2 (F16): a zona chega pelo ledger como true_damage; da morte subita (respawn_off_tick)
 ## em diante o morto fica morto; o dano tomado de cada heroi fica registrado por tick para o
-## desempate (KillTracker). Cada pulso da zona liga zone_ticks, o flag de "fora da zona" que a
-## vinheta da HUD le (F17, PATTERNS P8).
+## desempate (KillTracker), assim como o dano sofrido de toda fonte, para a tela de fim (F18).
+## Cada pulso da zona liga zone_ticks, o flag de "fora da zona" que a vinheta da HUD le (F17,
+## PATTERNS P8).
 
 const GROUP: StringName = &"heroes"
 ## respawn_off_tick enquanto o respawn vale.
@@ -94,6 +95,8 @@ var _hits: HitLedger = HitLedger.new()  # so no servidor; fora do estado de roll
 ## Servidor: dano tomado de herois, tick -> {peer_id do atacante -> dano}. Refeito a cada
 ## simulacao do tick, entao ressimular nao conta duas vezes.
 var _hero_damage: Dictionary = {}
+## Servidor: dano sofrido de toda fonte (heroi, monstro, zona), tick -> dano; refeito como acima.
+var _damage_taken: Dictionary = {}
 var _alive_layer: int = 0
 
 @onready var input: PlayerInput = $Input
@@ -185,6 +188,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 		_count_respawn(tick)
 	if multiplayer.is_server():
 		_hero_damage.erase(tick)
+		_damage_taken.erase(tick)
 		if not _hits.is_empty():
 			_apply_hits(tick)
 	_refresh_attributes()
@@ -270,6 +274,23 @@ func hero_damage_from(attacker_id: int) -> int:
 	var total := 0
 	for by_attacker: Dictionary in _hero_damage.values():
 		total += by_attacker.get(attacker_id, 0)
+	return total
+
+
+## Servidor: XP somado ao que ja esta no ledger para [param tick] e ainda nao foi aplicado
+## (recompensa do abate que encerrou a partida, F18).
+func xp_with_pending(tick: int) -> int:
+	var total := xp
+	for effect: HitEffect in _hits.effects_at(tick):
+		total += maxi(effect.xp, 0)
+	return total
+
+
+## Servidor: dano sofrido na partida, de toda fonte.
+func damage_taken() -> int:
+	var total := 0
+	for amount: int in _damage_taken.values():
+		total += amount
 	return total
 
 
@@ -468,6 +489,8 @@ func _apply_hits(tick: int) -> void:
 			shield_hp = split.y
 		if invuln_ticks == 0:
 			damage += maxi(effect.true_damage, 0)
+		if damage > 0:
+			_damage_taken[tick] = _damage_taken.get(tick, 0) + mini(damage, hp)
 		if effect.attacker_id != 0 and damage > 0:
 			_record_hero_damage(tick, effect.attacker_id, mini(damage, hp))
 		hp = maxi(hp - damage, 0)

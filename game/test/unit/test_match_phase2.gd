@@ -48,7 +48,7 @@ func before_each() -> void:
 		func(from: int, to: int, tick: int) -> void: _phases.append([from, to, tick])
 	)
 	_match.match_ended.connect(
-		func(winner: int, reason: StringName, stats: Dictionary, tick: int) -> void:
+		func(winner: int, reason: StringName, stats: MatchStats, tick: int) -> void:
 			_ended.append([winner, reason, stats, tick])
 	)
 	_a = _spawn(P1, GateRules.TEAM_A, NEAR)
@@ -143,10 +143,10 @@ func test_meta_de_5_kills_encerra_com_o_placar() -> void:
 	assert_eq(_ended.size(), 1)
 	assert_eq(_ended[0][0], P1)
 	assert_eq(_ended[0][1], VictoryRules.KILL_GOAL)
-	var stats: Dictionary = _ended[0][2]
-	assert_eq(stats[P1]["kills"], 5)
-	assert_eq(stats[P2]["kills"], 0)
-	assert_gt(stats[P1]["hero_damage"], 0)
+	var stats: MatchStats = _ended[0][2]
+	assert_eq(stats.player(P1).kills, 5)
+	assert_eq(stats.player(P2).kills, 0)
+	assert_gt(stats.player(P1).hero_damage, 0)
 
 
 func test_kills_da_fase_1_nao_contam_para_a_meta() -> void:
@@ -238,8 +238,8 @@ func test_morte_no_tick_das_9_00_conta_o_kill_antes_de_julgar() -> void:
 	_run(sd, sd)
 	assert_eq(_ended.size(), 1)
 	assert_eq(_ended[0][0], P1)
-	var stats: Dictionary = _ended[0][2]
-	assert_eq(stats[P1]["kills"], 1, "kill registrado antes do fim")
+	var stats: MatchStats = _ended[0][2]
+	assert_eq(stats.player(P1).kills, 1, "kill registrado antes do fim")
 
 
 ## HUD da fase 2 (F17): kill da fase 2 vira kill_scored com o total, antes do fim da partida.
@@ -264,7 +264,7 @@ func test_kill_scored_da_meta_chega_antes_do_fim() -> void:
 	var order: Array[String] = []
 	_match.kill_scored.connect(func(_p: int, _t: int, _k: int) -> void: order.append("kill"))
 	_match.match_ended.connect(
-		func(_w: int, _r: StringName, _s: Dictionary, _k: int) -> void: order.append("fim")
+		func(_w: int, _r: StringName, _s: MatchStats, _k: int) -> void: order.append("fim")
 	)
 	_run(START, _at(310))
 	for i: int in _rules.kill_goal:
@@ -321,3 +321,47 @@ func test_pulso_da_zona_liga_o_flag_fora_da_zona() -> void:
 	for tick: int in range(_at(360) + 2, _at(360) + 2 + _a.zone_ticks):
 		_a._rollback_tick(TICK, tick, true)
 	assert_eq(_a.zone_ticks, 0, "sem pulso novo, apaga")
+
+
+## F18: o servidor soma as estatisticas da partida e as manda no match_ended. Morte conta nas
+## duas fases (kill so na fase 2); monstro, bau e boss so de quem tem vaga; nivel, dano,
+## equipamento e heroi saem do estado no fim; duracao pelo relogio.
+func test_estatisticas_somadas_no_servidor_chegam_no_fim() -> void:
+	_run(START, _at(60))
+	_match.report_monster_killed(P1, _at(60))
+	_match.report_monster_killed(P1, _at(61))
+	_match.report_monster_killed(0, _at(61))  # sem vaga: ignorado
+	_match.report_chest_opened(P2, -5, _at(62))
+	_match.report_chest_opened(P2, -6, _at(63))
+	_match.report_chest_opened(P1, -7, _at(64))
+	_kill(_a, _b, _at(100))
+	_a.hp = _a.attributes.max_hp  # renasce
+	_match.watch_heroes(_at(100) + 1)
+	_run(_at(100) + 2, _at(215))
+	_match.report_boss_killed(P1)
+	_run(_at(215) + 1, _at(310))
+	var sword := Ids.to_int(&"sword_t2")
+	_a.equipment = Vector4i(sword, Ids.NONE, Ids.NONE, Ids.NONE)
+	var tick := _at(310) + 1
+	for i: int in _rules.kill_goal:
+		_kill(_b, _a, tick + i * 2)
+		_a._rollback_tick(TICK, tick + i * 2 + 1, true)  # XP do abate chega no tick seguinte
+		_b.hp = _b.attributes.max_hp
+		_match.watch_heroes(tick + i * 2 + 1)
+	var end_tick: int = _ended[0][3]
+	var stats: MatchStats = _ended[0][2]
+	var a := stats.player(P1)
+	var b := stats.player(P2)
+	assert_eq(stats.players().size(), 2)
+	assert_almost_eq(stats.duration, float(end_tick - START) / RATE, 0.001)
+	assert_eq([a.kills, b.kills], [_rules.kill_goal, 0], "kill da fase 1 nao conta")
+	assert_eq([a.deaths, b.deaths], [1, _rules.kill_goal], "morte conta nas duas fases")
+	assert_eq([a.monsters, b.monsters], [2, 0])
+	assert_eq([a.chests, b.chests], [1, 2])
+	assert_eq([a.boss_killed, b.boss_killed], [true, false])
+	assert_eq(a.hero, Ids.to_int(&"knight"))
+	assert_eq(a.level, _a.level, "com o XP do abate que encerrou")
+	assert_eq(a.equipment, _a.equipment)
+	assert_gt(a.hero_damage, 0)
+	assert_eq(b.damage_taken, a.hero_damage, "o unico dano de B veio de A")
+	assert_eq(a.damage_taken, b.hero_damage)

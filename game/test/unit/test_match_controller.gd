@@ -40,7 +40,7 @@ func before_each() -> void:
 		func(peer: int, hero_id: int, tick: int) -> void: _picks.append([peer, hero_id, tick])
 	)
 	_match.match_ended.connect(
-		func(winner: int, reason: StringName, _stats: Dictionary, tick: int) -> void:
+		func(winner: int, reason: StringName, _stats: MatchStats, tick: int) -> void:
 			_ended.append([winner, reason, tick])
 	)
 	_match.open(START, RATE)

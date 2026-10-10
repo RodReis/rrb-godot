@@ -132,7 +132,8 @@
         { "arquivo": "mvp2-f16-abatido-pela-zona.webp", "legenda": "A zona já apertada no centro e a Arqueira abatida por ficar fora dela. No confronto, quem chega a 5 abates vence; aos 9:00 ninguém mais renasce, e aos 10:00 a partida termina na hora com quem tiver mais vida. Nunca há empate.", "tipo": "entregue" },
         { "arquivo": "mvp2-f17-portoes-cairam.webp", "legenda": "Aos 5:00 o aviso desce no centro da tela, a câmera treme e os portões caem: são 5 segundos para se preparar. A zona surge na borda da arena e, a partir daí, a tela mostra o placar de abates, o tamanho da zona e quanto falta para ela fechar de novo.", "tipo": "entregue" },
         { "arquivo": "mvp2-f17-hud-do-confronto.webp", "legenda": "A interface do confronto: placar até 5 abates no topo, a zona à esquerda (raio, dano de quem fica fora e o próximo fechamento), o minimapa com o círculo seguro e o vermelho de fora, e quanto falta para a morte súbita.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f17-morte-subita.webp", "legenda": "Aos 9:00 ninguém mais renasce. Fora da zona, as bordas da tela pulsam em vermelho, mais forte quanto maior o dano, e o relógio conta até o colapso total aos 10:00.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f17-morte-subita.webp", "legenda": "Aos 9:00 ninguém mais renasce. Fora da zona, as bordas da tela pulsam em vermelho, mais forte quanto maior o dano, e o relógio conta até o colapso total aos 10:00.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f18-fim-de-partida.webp", "legenda": "No fim, a tela mostra quem venceu e por quê (aqui, o adversário foi eliminado na morte súbita), quanto durou a partida e a comparação lado a lado: abates, mortes, nível, dano causado e sofrido, monstros, baús, Rei Esqueleto e conjunto. Verde é onde você foi melhor.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
