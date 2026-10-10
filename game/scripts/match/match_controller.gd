@@ -7,10 +7,11 @@ extends Node
 ## as vagas e a selecao rodam so no servidor (open()); nos clientes este no so recebe os eventos
 ## discretos por RPC confiavel com tick e os repassa como sinais para a UI. Mortes e niveis saem
 ## do estado replicado dos herois, uma vez por mudanca (ressimulacao nao duplica evento); o XP do
-## abate vai pelo ledger do matador (§3.2). Neblina (F37): nivel e bau aberto sao estado do heroi e
-## do bau, entao so o proprio jogador recebe; fase, morte e kill seguem para todos. Sem nenhum caso de modo offline: o bot e uma vaga.
+## abate vai pelo ledger do matador (§3.2). Sem nenhum caso de modo offline: o bot e uma vaga.
 ## Estatisticas da tela de fim (F18): somadas aqui no servidor (MatchStats) e enviadas no
-## match_ended; so contam para quem tem vaga.
+## match_ended; so contam para quem tem vaga. Neblina (F37): nivel, bau aberto e morte fora da
+## fase 2 sao estado do heroi e do bau, entao so o proprio jogador recebe; fase e kill (morte na
+## fase 2) seguem para todos.
 
 signal phase_changed(from: int, to: int, tick: int)
 signal hero_picked(peer: int, hero_id: int, tick: int)
@@ -336,7 +337,12 @@ func _on_hero_died(victim: Hero, tick: int) -> void:
 	var scored := _tracker.score(killer_id, state)
 	_counted(victim.peer_id).deaths += 1
 	print("[match] heroi %d morto por %d, tick %d" % [victim.peer_id, killer_id, tick])
-	_died.rpc(tick, victim.peer_id, killer_id)
+	if MatchState.is_phase2(state):
+		_died.rpc(tick, victim.peer_id, killer_id)
+	else:
+		_died(tick, victim.peer_id, killer_id)
+		if _connected(victim.peer_id):
+			_died.rpc_id(victim.peer_id, tick, victim.peer_id, killer_id)
 	if scored:
 		_scored.rpc(tick, killer_id, kills(killer_id))
 	if MatchState.is_phase2(state):

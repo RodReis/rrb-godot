@@ -67,9 +67,7 @@ func _ready() -> void:
 	sync.root = self
 	sync.properties = [":transform", ":velocity", ":hp", ":attack_cooldown", ":present"]
 	add_child(sync)
-	_concealment = Concealment.guard(
-		self, seen_by, sync.visibility_filter, null, _last_state.bind(sync), true, 0
-	)
+	_concealment = Concealment.guard(self, seen_by, sync)
 
 	var interpolator := TickInterpolator.new()
 	interpolator.name = "TickInterpolator"
@@ -278,13 +276,6 @@ func _face(point: Vector3) -> void:
 	to.y = 0.0
 	if not to.is_zero_approx():
 		look_at(global_position + to, Vector3.UP)
-
-
-# ponytail: le _state_history (interno do netfox 1.35.3; o StateSynchronizer nao expoe o ultimo
-# tick recebido, o NetProbe ja le o mesmo campo); trocar se o addon expuser.
-## Cliente: tick do ultimo estado recebido do monstro (-1 = nenhum na janela do historico).
-func _last_state(sync: StateSynchronizer) -> int:
-	return -1 if sync._state_history.is_empty() else sync._state_history.get_latest_tick()
 
 
 func _flat_distance(point: Vector3) -> float:

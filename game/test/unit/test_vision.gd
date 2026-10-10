@@ -111,6 +111,27 @@ func test_heroi_fora_da_visao_nao_vai_ao_adversario_e_volta_ao_entrar() -> void:
 	assert_false(filter.get_visibility_for(REMOTE))
 
 
+## Input atrasado faz o servidor ressimular ticks passados e retransmitir cada um: o que foi
+## gravado antes da revelacao nao sai para quem acabou de passar a ver.
+func test_ressimulacao_nao_retransmite_o_periodo_escondido() -> void:
+	var ack := _me.get_node(NodePath(SpawnAck.NODE_NAME)) as SpawnAck
+	ack.confirm(REMOTE)
+	var concealment := _concealment(_me)
+	_me.global_position = FAR_SPOT
+	_other.global_position = _beside(FAR_SPOT, 10.0)
+	var changed := concealment.refresh(_observers(), _remote())
+	concealment.announce(changed, PackedInt32Array(), 100)
+	NetworkRollback._is_rollback = true
+	NetworkRollback._tick = 98  # grava o tick 99, de quando estava escondido
+	var before: bool = concealment._visible_to(REMOTE)
+	NetworkRollback._tick = 100  # grava o 101, depois da revelacao
+	var after: bool = concealment._visible_to(REMOTE)
+	NetworkRollback._is_rollback = false
+	assert_false(before)
+	assert_true(after)
+	assert_true(concealment._visible_to(REMOTE), "fora do rollback vale a decisao do tick")
+
+
 func test_monstro_so_vai_a_quem_o_tem_no_raio() -> void:
 	var monster := _monster()
 	var filter := (monster.get_node("StateSynchronizer") as StateSynchronizer).visibility_filter

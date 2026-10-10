@@ -3,7 +3,8 @@ extends Node
 ## Neblina de guerra no servidor (F37, CONVENTION §4.9): uma vez por tick, antes da simulacao,
 ## decide quem ve cada alvo (todo Concealment na arvore: herois, monstros, baus) entre os herois
 ## da partida — inclusive o bot e o jogador do host, que nao recebem RPC — e avisa quem mudou.
-## Mede o proprio custo por tick (ARCHITECTURE-GAME §9) e loga a cada LOG_SECONDS.
+## Mede o proprio custo por tick (ARCHITECTURE-GAME §9) e loga a cada LOG_SECONDS. Decide em
+## before_tick com a posicao do tick: na borda do raio, entrar e sair atrasam 1 tick.
 
 const NODE_NAME: StringName = &"VisionDirector"
 const LOG_SECONDS: float = 10.0
@@ -21,8 +22,8 @@ var _window_changes: int = 0
 func _ready() -> void:
 	# No _ready o peer ainda e offline e is_server() mente: decide no tick.
 	NetworkTime.before_tick.connect(_on_network_time_before_tick)
-	multiplayer.peer_connected.connect(_on_multiplayer_peers_changed)
-	multiplayer.peer_disconnected.connect(_on_multiplayer_peers_changed)
+	multiplayer.peer_connected.connect(_on_multiplayer_peer_connected)
+	multiplayer.peer_disconnected.connect(_on_multiplayer_peer_disconnected)
 
 
 ## Servidor: um passe da visao no [param tick]; devolve quantos (alvo, peer) mudaram.
@@ -78,5 +79,14 @@ func _on_network_time_before_tick(_delta: float, tick: int) -> void:
 		_report(tick)
 
 
-func _on_multiplayer_peers_changed(_id: int) -> void:
+func _on_multiplayer_peer_connected(_id: int) -> void:
 	_remote = multiplayer.get_peers()
+
+
+## O heroi de quem caiu segue observador (mark_disconnected), mas sem RPC: tira o id na mao, sem
+## depender de get_peers() ja sem ele dentro do sinal.
+func _on_multiplayer_peer_disconnected(id: int) -> void:
+	_remote = multiplayer.get_peers()
+	var at := _remote.find(id)
+	if at >= 0:
+		_remote.remove_at(at)

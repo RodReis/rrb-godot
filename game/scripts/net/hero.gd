@@ -183,9 +183,7 @@ func _ready() -> void:
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
 	var ack := SpawnAck.guard(self, [_rollback.visibility_filter])
-	_concealment = Concealment.guard(
-		self, seen_by, _rollback.visibility_filter, ack, _rollback.get_last_known_state, true, peer_id
-	)
+	_concealment = Concealment.guard(self, seen_by, _rollback, ack, peer_id)
 
 	var interpolator := TickInterpolator.new()
 	interpolator.name = "TickInterpolator"

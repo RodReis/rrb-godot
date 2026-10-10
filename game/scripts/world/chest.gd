@@ -59,7 +59,7 @@ func _ready() -> void:
 		material = rare_material
 	_body.material_override = material
 	_lid_mesh.material_override = material
-	_concealment = Concealment.guard(self, seen_by, null, null, Callable(), false, 0)
+	_concealment = Concealment.guard(self, seen_by)
 	_concealment.sight_changed.connect(_on_concealment_sight_changed)
 	_refresh_visual()
 
