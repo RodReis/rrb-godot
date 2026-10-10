@@ -1,7 +1,8 @@
 extends GutTest
 ## Integracao headless: arena + SpawnDirector + ArenaNav + bot (time B) + heroi parado (time A).
 ## O bot so recebe think(tick); os monstros e o heroi rodam o proprio tick. Base primeiro
-## (PI 2026-10-09): limpa a base B (225 XP -> nivel 3, GDB §5.2) e passa a saquear.
+## (PI 2026-10-09): limpa a propria metade, base B + 2 campos laterais (535 XP -> nivel 4,
+## GDB §5.2, F36), e passa a saquear.
 
 const ARENA: String = "res://scenes/arena/arena.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
@@ -121,6 +122,46 @@ func _home_a() -> Vector3:
 	return Vector3.ZERO
 
 
+## F36: o T1 da base renasce a ~5 u da fonte (aggro 6 u). Recuando ate ela, o bot revida o
+## monstro colado nele em vez de apanhar parado ate morrer (rodada offline de 5:00).
+func test_recuando_revida_o_monstro_no_alcance() -> void:
+	var monster: Monster = null
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		if (node as Monster).home_team == GateRules.TEAM_B:
+			monster = node as Monster
+	_bot.global_position = monster.global_position + Vector3(1.0, 0.0, 0.0)
+	_bot.hp = roundi(_bot.attributes.max_hp * 0.2)
+	_brain().state = BotRules.State.RETREAT
+	_brain().think(1)
+	assert_eq(_brain().state, BotRules.State.RETREAT)
+	assert_true(_bot.input.attack)
+	var to := monster.global_position - _bot.global_position
+	assert_almost_eq(_bot.input.aim, to.normalized(), Vector3.ONE * 0.01)
+
+
+## F36: monstro parado (sem aggro) a ate 8 u da fonte nao e perigo; contava como perigo e o
+## bot ficava em RETREAT ate 5:00 com HP 92 % (rodada offline).
+func test_monstro_parado_perto_nao_prende_o_recuo() -> void:
+	var monster: Monster = null
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		if (node as Monster).home_team == GateRules.TEAM_B:
+			monster = node as Monster
+	_bot.global_position = monster.global_position + Vector3(7.0, 0.0, 0.0)
+	_bot.hp = roundi(_bot.attributes.max_hp * 0.5)
+	_brain().state = BotRules.State.RETREAT
+	_brain().think(1)
+	var safe := SkillRules.seconds_to_ticks(BotInput.PROFILE.safe_seconds, NetworkTime.tickrate)
+	_brain().think(2 + safe)
+	assert_ne(_brain().state, BotRules.State.RETREAT)
+
+
+func test_recuando_sem_monstro_perto_nao_ataca() -> void:
+	_bot.hp = roundi(_bot.attributes.max_hp * 0.2)
+	_brain().state = BotRules.State.RETREAT
+	_brain().think(1)
+	assert_false(_bot.input.attack)
+
+
 func test_comeca_farmando_e_anda_ate_o_monstro_da_base() -> void:
 	var start := _bot.global_position
 	for i: int in 30:
@@ -129,23 +170,49 @@ func test_comeca_farmando_e_anda_ate_o_monstro_da_base() -> void:
 	assert_gt(_bot.global_position.distance_to(start), 1.0)
 
 
-func test_limpa_a_base_chega_ao_nivel_3_e_saqueia() -> void:
+## Propria metade = base + 2 campos laterais (F36): 535 XP -> nivel 4 (GDB §5.2), 10 baus.
+func test_limpa_a_propria_metade_chega_ao_nivel_4_e_saqueia() -> void:
 	while _tick < MAX_TICKS and _base_monsters_alive() > 0:
 		_step()
 	for i: int in SETTLE_TICKS:
 		_step()
-	gut.p("base limpa no tick %d (%.0f s): Nv %d, %d XP" % [_tick, _tick * DT, _bot.level, _bot.xp])
+	gut.p(
+		"metade limpa no tick %d (%.0f s): Nv %d, %d XP" % [_tick, _tick * DT, _bot.level, _bot.xp]
+	)
 	assert_eq(_base_monsters_alive(), 0)
-	assert_gte(_bot.xp, 225)
-	assert_gte(_bot.level, 3)
+	assert_gte(_bot.xp, 535)
+	assert_gte(_bot.level, 4)
 	assert_eq(_brain().state, BotRules.State.LOOT)
 	var limit := _tick + MAX_TICKS
-	while _tick < limit and _opened_base_chests() < 6:
+	while _tick < limit and _opened_base_chests() < 10:
 		_step()
-	gut.p("baus da base abertos no tick %d" % _tick)
-	assert_eq(_opened_base_chests(), 6)
+	gut.p("baus da metade abertos no tick %d" % _tick)
+	assert_eq(_opened_base_chests(), 10)
 	_step()
 	assert_ne(_brain().state, BotRules.State.LOOT)
+
+
+## Campos laterais das duas metades alcancaveis pelo navmesh do bot (portao A como parede).
+func test_navmesh_alcanca_os_campos_laterais() -> void:
+	var map := _bot.get_world_3d().navigation_map
+	var checked := 0
+	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
+		var marker := node as SpawnMarker
+		var spawn := Vector3(-24, 0, 24) if marker.team == GateRules.TEAM_A else Vector3(24, 0, -24)
+		var content := marker.kind != SpawnMarker.Kind.HERO and marker.kind != SpawnMarker.Kind.BOSS
+		if marker.team == GateRules.TEAM_NEUTRAL or not content:
+			continue
+		if marker.global_position.distance_to(spawn) <= 12.7:
+			continue
+		var path := NavigationServer3D.map_get_path(
+			map, _bot.global_position, marker.global_position, true
+		)
+		assert_false(path.is_empty(), marker.name)
+		if not path.is_empty():
+			var gap := path[path.size() - 1].distance_to(marker.global_position)
+			assert_lt(gap, 1.0, "%s fora do navmesh (%.1f u)" % [marker.name, gap])
+		checked += 1
+	assert_eq(checked, 20)
 
 
 func _opened_base_chests() -> int:

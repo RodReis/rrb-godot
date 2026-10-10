@@ -96,16 +96,18 @@ func test_contagem_de_herois() -> void:
 	assert_eq(_count(SpawnMarker.Kind.HERO, GateRules.TEAM_B), 1)
 
 
+## Metade de cada time: base (4 T1 + 1 T2) + 2 campos laterais (2 T1 + 1 T2 cada), GDB §5.1.
 func test_contagem_de_monstros_por_zona() -> void:
 	for team: int in [GateRules.TEAM_A, GateRules.TEAM_B]:
-		assert_eq(_count(SpawnMarker.Kind.MONSTER, team, 1), 4)
-		assert_eq(_count(SpawnMarker.Kind.MONSTER, team, 2), 1)
+		assert_eq(_count(SpawnMarker.Kind.MONSTER, team, 1), 8)
+		assert_eq(_count(SpawnMarker.Kind.MONSTER, team, 2), 3)
 	assert_eq(_count(SpawnMarker.Kind.MONSTER, GateRules.TEAM_NEUTRAL, 2), 4)
 	assert_eq(_count(SpawnMarker.Kind.MONSTER, GateRules.TEAM_NEUTRAL, 3), 2)
 	assert_eq(_count(SpawnMarker.Kind.BOSS, GateRules.TEAM_NEUTRAL), 1)
 
 
-func test_total_de_17_monstros_e_16_baus() -> void:
+## F36: 16 T1 + 8 T2 + 2 Magos + 2 Golems + boss; 12 de base + 8 laterais + 4 raros.
+func test_total_de_29_monstros_e_24_baus() -> void:
 	var monsters := 0
 	var chests := 0
 	for m: SpawnMarker in _markers():
@@ -113,8 +115,8 @@ func test_total_de_17_monstros_e_16_baus() -> void:
 			monsters += 1
 		elif m.kind == SpawnMarker.Kind.CHEST:
 			chests += 1
-	assert_eq(monsters, 17)
-	assert_eq(chests, 16)
+	assert_eq(monsters, 29)
+	assert_eq(chests, 24)
 
 
 func test_baus_comuns_nas_bases_e_raros_no_centro() -> void:

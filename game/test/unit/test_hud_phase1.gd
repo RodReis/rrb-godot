@@ -42,6 +42,27 @@ func _node(path: String) -> Node:
 	return _hud.get_node(path)
 
 
+## Contador da fase 1 com a arena real (F36): 24 baus, 28 monstros (sem o boss); morto sai da
+## conta e o renascido volta.
+func test_loot_counter_counts_lateral_fields_and_respawned_monsters() -> void:
+	add_child_autofree((load("res://scenes/arena/arena.tscn") as PackedScene).instantiate())
+	var spawns := add_child_autofree(SpawnDirector.new()) as SpawnDirector
+	_hud.bind(_hero, _clock, spawns, _players)
+	await wait_process_frames(1)
+	var loot := _node("%LootText") as Label
+	assert_eq(loot.text, "Baús abertos 0/24 · Monstros 28")
+	var monster: Monster = null
+	for node: Node in spawns.get_children():
+		if node is Monster:
+			monster = node as Monster
+	monster.hp = 0
+	await wait_process_frames(1)
+	assert_eq(loot.text, "Baús abertos 0/24 · Monstros 27")
+	monster.revive()
+	await wait_process_frames(1)
+	assert_eq(loot.text, "Baús abertos 0/24 · Monstros 28")
+
+
 func test_hidden_until_bound() -> void:
 	assert_false(_hud.visible)
 	await _bind_and_wait()

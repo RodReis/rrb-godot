@@ -57,6 +57,7 @@ func _ready() -> void:
 	clock.boss_warning.connect(spawns.warn_boss)
 	clock.boss_spawned.connect(spawns.spawn_boss)
 	clock.phase1_ended.connect(_on_clock_phase1_ended)
+	clock.phase1_ended.connect(spawns.stop_respawns)  # 5:00 = TRANSITION: ninguem mais renasce
 	spawns.boss_killed.connect(_on_spawns_boss_killed)
 	spawns.chest_opened.connect(match_controller.report_chest_opened)
 	match_controller.phase_changed.connect(_on_match_phase_changed)
