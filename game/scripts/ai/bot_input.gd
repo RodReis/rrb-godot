@@ -222,9 +222,12 @@ func _in_danger(enemy: Hero) -> bool:
 	var reach := PROFILE.danger_range
 	if enemy != null and _flat(enemy.global_position).length() <= reach:
 		return true
+	# Monstro parado (sem aggro) nao e perigo: o T1 da base renasce perto da fonte (F36) e
+	# prendia o bot em RETREAT. Engajado = andando ou com golpe em recarga (estado replicado).
 	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
 		var monster := node as Monster
-		if monster.is_alive() and _flat(monster.global_position).length() <= reach:
+		var engaged := not monster.velocity.is_zero_approx() or monster.attack_cooldown > 0
+		if monster.is_alive() and engaged and _flat(monster.global_position).length() <= reach:
 			return true
 	return false
 

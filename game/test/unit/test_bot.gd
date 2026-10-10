@@ -138,6 +138,22 @@ func test_recuando_revida_o_monstro_no_alcance() -> void:
 	assert_almost_eq(_bot.input.aim, to.normalized(), Vector3.ONE * 0.01)
 
 
+## F36: monstro parado (sem aggro) a ate 8 u da fonte nao e perigo; contava como perigo e o
+## bot ficava em RETREAT ate 5:00 com HP 92 % (rodada offline).
+func test_monstro_parado_perto_nao_prende_o_recuo() -> void:
+	var monster: Monster = null
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		if (node as Monster).home_team == GateRules.TEAM_B:
+			monster = node as Monster
+	_bot.global_position = monster.global_position + Vector3(7.0, 0.0, 0.0)
+	_bot.hp = roundi(_bot.attributes.max_hp * 0.5)
+	_brain().state = BotRules.State.RETREAT
+	_brain().think(1)
+	var safe := SkillRules.seconds_to_ticks(BotInput.PROFILE.safe_seconds, NetworkTime.tickrate)
+	_brain().think(2 + safe)
+	assert_ne(_brain().state, BotRules.State.RETREAT)
+
+
 func test_recuando_sem_monstro_perto_nao_ataca() -> void:
 	_bot.hp = roundi(_bot.attributes.max_hp * 0.2)
 	_brain().state = BotRules.State.RETREAT
