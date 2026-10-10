@@ -42,7 +42,7 @@ func _monsters() -> Array[Monster]:
 
 ## Monstros dos marcadores da base do [param team] (sem os campos laterais da metade, F36).
 func _base_monsters(team: int) -> Array[Monster]:
-	var spawn := Vector3(-24, 0, -24) if team == GateRules.TEAM_A else Vector3(24, 0, -24)
+	var spawn := Vector3(-24, 0, 24) if team == GateRules.TEAM_A else Vector3(24, 0, -24)
 	var result: Array[Monster] = []
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker

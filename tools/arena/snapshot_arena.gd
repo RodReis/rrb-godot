@@ -7,12 +7,12 @@ extends SceneTree
 ## Gera <saida>_topo.png e <saida>_perspectiva.png.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
-const TOP_HEIGHT: float = 90.0
-const TOP_SIZE: float = 84.0
+const TOP_HEIGHT: float = 110.0
+const TOP_SIZE: float = 104.0
 ## Camera do jogo: inclinacao 45 graus, distancia 14 u (follow_camera.gd), olhando o centro da
-## ponte NO a partir do portao A.
-const VIEW_FROM: Vector3 = Vector3(-24.0, 11.0, -24.0)
-const VIEW_AT: Vector3 = Vector3(-8.0, 0.0, -8.0)
+## ponte SO a partir do portao A (base no canto SO, SPEC-046).
+const VIEW_FROM: Vector3 = Vector3(-24.0, 11.0, 24.0)
+const VIEW_AT: Vector3 = Vector3(-8.0, 0.0, 8.0)
 ## Frames de espera: shaders compilam e as particulas pre-processam.
 const WARMUP_FRAMES: int = 40
 

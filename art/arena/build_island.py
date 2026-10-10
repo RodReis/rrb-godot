@@ -1,4 +1,5 @@
-"""Monta os kits da Ilha Flutuante Arcana (F40 sobre a SPEC-044) e exporta os .glb (ADR-0005).
+"""Monta os kits da Ilha Flutuante Arcana, layout "Rift Medieval adaptado" (F40/F44 sobre a
+SPEC-046), e exporta os .glb (ADR-0005).
 
 Geometria escrita em coordenadas do Godot (x leste, y para cima, z sul; origem no centro da
 cratera) e convertida para o Blender na hora de criar a malha, para o .glb cair no lugar certo
@@ -43,24 +44,37 @@ GREEN = (3, 3)
 RED = (1, 3)
 CREAM = (5, 2)
 
-# Medidas da SPEC-044 (mesmas constantes do tools/arena/build_arena.gd).
-ARENA_RADIUS = 35.0
-ISLAND_RADIUS = 37.0
-LIP_RADIUS = 37.6
+# Medidas da SPEC-046 (mesmas constantes do tools/arena/build_arena.gd).
+ARENA_HALF = 40.0
+ISLAND_HALF = 42.0
+LIP = 0.6
+# Bastioes nos cantos: SO/NE (castelo, torreao) e NO/SE (poca da cascata de enfeite).
+BASTION_IN = 40.0
+BASTION_CASTLE = 49.5
+BASTION_POOL = 45.0
 RING_IN = 14.0
 RING_OUT = 18.0
 RING_MID = 16.0
 WATER_HALF = 1.7
-CHANNEL_HALF = 2.0
+RIVER_HALF = 2.0
 BANK = 0.8
 GROOVE_DEPTH = -1.0
 WATER_Y = -0.45
 CRATER_RADIUS = 6.0
-BRIDGE_AZIMUTHS = (45.0, 135.0, 225.0, 315.0)
-SPAWN_A = (-24.0, -24.0)
-GATE_A = (-15.0, -15.0)
-FIELD_O = (-26.0, 0.0)
-FIELD_SO = (-16.0, 24.0)
+ARM_CENTER_A = (-22.5, -6.2)
+ARM_RADIUS = 12.35
+ARM_JOIN_AZIMUTH = 45.0
+ARM_OVERLAP_DEG = 12.0
+LAGOON_A = (-26.0, -18.0)
+LAGOON_RADIUS = 5.0
+LAGOON_WATER = 4.7
+BRIDGE_AZIMUTHS = (135.0, 315.0)
+SPAWN_A = (-24.0, 24.0)
+GATE_A = (-15.0, 15.0)
+FIELD_TOP_A = (-26.0, -4.0)
+FIELD_BOT_A = (4.0, 26.0)
+FALLS_A = (-43.0, -43.0)
+POOL_RADIUS = 1.8
 # Cor das runas por time (SPEC-007 §5): ciano na base A, dourado na B; magma na cratera.
 RUNE_A = (0.1, 0.9, 1.0)
 RUNE_B = (1.0, 0.75, 0.2)
@@ -71,6 +85,10 @@ TRIS = {}
 
 
 # --- utilidades ----------------------------------------------------------------------------
+
+
+def rot180(p):
+    return (-p[0], -p[1])
 
 
 def polar(azimuth_deg, r):
@@ -367,18 +385,88 @@ def save(name):
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(ART, name + ".blend"))
 
 
-# --- kit 1: ilha (piso + penhascos + leito do rio), rio de mana, lago de magma --------------
+# --- kit 1: ilha (piso + penhascos + leito do rio em S), rio de mana, lago de magma ----------
+
+
+def sd_square(x, z, cx, cz, half):
+    """Distancia com sinal ao quadrado de centro (cx, cz) e meio-lado half (negativa dentro)."""
+    return max(abs(x - cx), abs(z - cz)) - half
+
+
+def island_sd(x, z):
+    """Distancia com sinal a ilha (quadrado + 4 bastioes de canto): negativa dentro."""
+    d = sd_square(x, z, 0.0, 0.0, ISLAND_HALF)
+    for sx, sz, outer in ((-1, 1, BASTION_CASTLE), (1, -1, BASTION_CASTLE), (-1, -1, BASTION_POOL), (1, 1, BASTION_POOL)):
+        half = (outer - BASTION_IN) / 2.0
+        d = min(d, sd_square(x, z, sx * (BASTION_IN + half), sz * (BASTION_IN + half), half))
+    return d
+
+
+def outline(offset):
+    """Contorno da ilha deslocado para fora em offset, como lista de (x, z) em ordem."""
+    s = ISLAND_HALF + offset
+    bi = BASTION_IN - offset
+    bc = BASTION_CASTLE + offset
+    bp = BASTION_POOL + offset
+    return [
+        (-bi, -s), (-bi, -bp), (-bp, -bp), (-bp, -bi), (-s, -bi),   # bastiao NO (poca)
+        (-s, bi), (-bc, bi), (-bc, bc), (-bi, bc), (-bi, s),         # bastiao SO (castelo A)
+        (bi, s), (bi, bp), (bp, bp), (bp, bi), (s, bi),              # bastiao SE (poca)
+        (s, -bi), (bc, -bi), (bc, -bc), (bi, -bc), (bi, -s),         # bastiao NE (castelo B)
+    ]
+
+
+def densify(poly, step):
+    out = []
+    n = len(poly)
+    for i in range(n):
+        a, b = poly[i], poly[(i + 1) % n]
+        length = math.hypot(b[0] - a[0], b[1] - a[1])
+        k = max(1, int(length / step))
+        for j in range(k):
+            t = j / k
+            out.append((a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t))
+    return out
+
+
+def arm_angles():
+    """Angulos (rad) do arco do braco NO em volta de ARM_CENTER_A: (no anel com sobra, na lagoa)."""
+    jx, jz = polar(ARM_JOIN_AZIMUTH, RING_MID)
+    start = math.atan2(jz - ARM_CENTER_A[1], jx - ARM_CENTER_A[0])
+    end = math.atan2(LAGOON_A[1] - ARM_CENTER_A[1], LAGOON_A[0] - ARM_CENTER_A[0])
+    sweep = (end - start + math.pi) % (2 * math.pi) - math.pi
+    sign = 1.0 if sweep >= 0 else -1.0
+    return start - sign * math.radians(ARM_OVERLAP_DEG), start + sweep
+
+
+ARM_START, ARM_END = arm_angles()
+
+
+def arm_distance(x, z):
+    """Distancia do ponto ao eixo do braco NO (so dentro do leque do arco; fora, infinito)."""
+    vx, vz = x - ARM_CENTER_A[0], z - ARM_CENTER_A[1]
+    a = math.atan2(vz, vx)
+    sweep = ARM_END - ARM_START
+    t = (a - ARM_START + math.pi) % (2 * math.pi) - math.pi
+    if t * (1.0 if sweep >= 0 else -1.0) < 0.0 or abs(t) > abs(sweep):
+        return float("inf")
+    return abs(math.hypot(vx, vz) - ARM_RADIUS)
 
 
 def groove_distance(x, z):
+    """Distancia a borda da agua (negativa = agua): anel, 2 bracos, 2 lagoas, 2 pocas de canto."""
     r = math.hypot(x, z)
-    d_ring = abs(r - RING_MID) - WATER_HALF
-    d_channel = max(abs(x) - WATER_HALF, RING_OUT - r)
-    return min(d_ring, d_channel)
+    d = abs(r - RING_MID) - WATER_HALF
+    for sx in (1.0, -1.0):
+        px, pz = x * sx, z * sx
+        if r > RING_IN:
+            d = min(d, arm_distance(px, pz) - WATER_HALF)
+        d = min(d, math.hypot(px - LAGOON_A[0], pz - LAGOON_A[1]) - LAGOON_WATER)
+        d = min(d, math.hypot(px - FALLS_A[0], pz - FALLS_A[1]) - POOL_RADIUS)
+    return d
 
 
 def island_height(x, z):
-    r = math.hypot(x, z)
     d = groove_distance(x, z)
     if d <= 0.0:
         y = GROOVE_DEPTH
@@ -386,8 +474,9 @@ def island_height(x, z):
         y = GROOVE_DEPTH * (1.0 - d / BANK)
     else:
         y = 0.0
-    if r > ISLAND_RADIUS:
-        y -= 0.35 * (r - ISLAND_RADIUS) / (LIP_RADIUS - ISLAND_RADIUS)
+    edge = island_sd(x, z)
+    if edge > 0.0:
+        y -= 0.35 * edge / LIP
     return y
 
 
@@ -399,33 +488,55 @@ def segment_distance(px, pz, ax, az, bx, bz):
 
 
 def road_segments():
-    """Estradas de terra da metade A (x < 0); a metade B e o espelho em x."""
-    segs = [(SPAWN_A, GATE_A, 1.8), (GATE_A, polar(45.0, 18.6), 1.8), (GATE_A, FIELD_O, 1.4)]
-    arc = [polar(a, 20.5) for a in range(45, 136, 8)]
-    for i in range(len(arc) - 1):
-        segs.append((arc[i], arc[i + 1], 1.6))
-    for az in (45.0, 135.0):
-        segs.append((polar(az, 7.3), polar(az, 14.2), 1.8))
-    mirrored = [((-a[0], a[1]), (-b[0], b[1]), hw) for a, b, hw in segs]
-    return segs + mirrored
+    """Estradas de terra da metade A; a metade B e a rotacao de 180 graus."""
+    segs = [
+        (SPAWN_A, GATE_A, 1.8),
+        (GATE_A, polar(135.0, 18.6), 1.8),
+        (polar(135.0, 7.3), polar(135.0, 14.2), 1.8),
+        # TOP: contorna o arco, corredor O (x -36), corredor N (z -36), desce ate a ponte NE.
+        (GATE_A, (-18.0, 8.0), 1.6), ((-18.0, 8.0), (-30.0, 4.0), 1.6), ((-30.0, 4.0), (-36.0, -2.0), 1.6),
+        ((-36.0, -2.0), (-36.0, -36.0), 2.0), ((-36.0, -36.0), (0.0, -36.0), 2.0),
+        ((0.0, -36.0), (4.0, -28.0), 1.6), ((4.0, -28.0), polar(315.0, 18.6), 1.6),
+        # Ramais da selva.
+        ((-36.0, -4.0), FIELD_TOP_A, 1.3), (FIELD_TOP_A, (-16.0, 7.0), 1.3),
+        ((4.0, 36.0), FIELD_BOT_A, 1.3), (FIELD_BOT_A, (-11.5, 14.5), 1.3),
+    ]
+    return segs + [(rot180(a), rot180(b), hw) for a, b, hw in segs]
 
 
 ROADS = road_segments()
-PATCHES = [(FIELD_O, 4.0), (FIELD_SO, 4.0), ((-FIELD_O[0], FIELD_O[1]), 4.0), ((-FIELD_SO[0], FIELD_SO[1]), 4.0),
-           ((0.0, -10.0), 3.5), ((0.0, 10.0), 3.5)]
+PATCHES = [(FIELD_TOP_A, 4.0), (FIELD_BOT_A, 4.0), (rot180(FIELD_TOP_A), 4.0), (rot180(FIELD_BOT_A), 4.0),
+           (polar(45.0, 10.0), 3.5), (polar(225.0, 10.0), 3.5)]
+
+
+def in_base(x, z):
+    """Dentro da base A ou B: atras do arco de 12,7 u (SPEC-046 §2.4) ate os muros de fechamento."""
+    for sx in (1.0, -1.0):
+        px, pz = x * sx, z * sx
+        if px > -15.0 or pz < 15.0:
+            continue
+        s = (px * -0.70710678) + (pz * 0.70710678)
+        if math.hypot(px - SPAWN_A[0], pz - SPAWN_A[1]) <= 12.7 or s >= 33.94:
+            return True
+    return False
+
+
+def in_castle_bastion(x, z):
+    """Bastiao SO/NE (fora da area jogavel): piso de pedra do castelo."""
+    return x * z < 0.0 and max(abs(x), abs(z)) > ARENA_HALF + 0.3 and island_sd(x, z) < 0.0
 
 
 def ground_cell(cx, cz):
     r = math.hypot(cx, cz)
-    if island_height(cx, cz) < -0.05 and r < LIP_RADIUS - 0.2:
+    if island_height(cx, cz) < -0.05 and island_sd(cx, cz) < -0.2:
         return STONE_BLUE, (0.15, 0.35)
     if r < CRATER_RADIUS + 0.3:
         return STONE_DARK, (0.2, 0.45)
     if r < CRATER_RADIUS + 1.4:
         return CHARCOAL, (0.25, 0.5)
-    for spawn in (SPAWN_A, (-SPAWN_A[0], SPAWN_A[1])):
-        if math.hypot(cx - spawn[0], cz - spawn[1]) < 12.0 and r < ARENA_RADIUS:
-            return SAND, (0.4, 0.6)
+    if in_base(cx, cz) or in_castle_bastion(cx, cz):
+        light = n3(cx * 0.5, 2.0, cz * 0.5)
+        return STONE, (0.4 + light * 0.08, 0.6 + light * 0.08)
     for a, b, hw in ROADS:
         if segment_distance(cx, cz, a[0], a[1], b[0], b[1]) < hw:
             return DIRT, (0.45, 0.65)
@@ -439,65 +550,94 @@ def ground_cell(cx, cz):
 
 def build_island():
     points = [Vector((0.0, 0.0))]
-    radii = [2, 4, 5.8, 6.6, 7.5, 9, 10.5, 12, 13.2, 14.3, 16, 17.7, 18.8, 20, 22, 24, 26, 28, 30, 32, 34, 35.6, ISLAND_RADIUS]
-    for r in radii:
+    seen = set()
+
+    def add(x, z):
+        key = (round(x, 2), round(z, 2))
+        if key in seen:
+            return
+        seen.add(key)
+        points.append(Vector((x, z)))
+
+    # Aneis em volta da cratera e do anel do rio (linhas crispas no leito).
+    for r in (2, 4, 5.8, 6.6, 7.5, 9, 10.5, 12, 13.2, 14.3, 16, 17.7, 18.8, 20):
         n = 24 if r < 6 else 72
         for i in range(n):
             a = 2 * math.pi * i / n + (0.03 if int(r) % 2 else 0.0)
-            points.append(Vector((math.cos(a) * r, math.sin(a) * r)))
-    # Canal N-S: linhas crispas nas bordas da agua e do barranco.
-    for sign in (-1.0, 1.0):
-        for x in (-2.5, -1.7, 0.0, 1.7, 2.5):
-            z = 18.8 * sign
-            while abs(z) < LIP_RADIUS - 0.6:
-                points.append(Vector((x, z)))
-                z += 1.0 * sign
-    # Labio da ilha, ordenado por angulo, com o entalhe do canal.
-    lip = []
-    for i in range(72):
-        a = 2 * math.pi * i / 72
-        lip.append(a)
-    for sign in (1.0, -1.0):
-        for x in (-2.5, -1.7, 1.7, 2.5):
-            lip.append(math.atan2(sign * math.sqrt(LIP_RADIUS**2 - x * x), x) % (2 * math.pi))
-    lip = sorted(set(lip))
+            add(math.cos(a) * r, math.sin(a) * r)
+    # Bracos: arcos nas bordas da agua e do barranco; lagoas e pocas: circulos.
+    for sx in (1.0, -1.0):
+        steps = 40
+        for k in range(steps + 1):
+            a = ARM_START + (ARM_END - ARM_START) * k / steps
+            for rr in (ARM_RADIUS - WATER_HALF - BANK, ARM_RADIUS - WATER_HALF, ARM_RADIUS, ARM_RADIUS + WATER_HALF, ARM_RADIUS + WATER_HALF + BANK):
+                x = ARM_CENTER_A[0] + math.cos(a) * rr
+                z = ARM_CENTER_A[1] + math.sin(a) * rr
+                if math.hypot(x, z) > RING_IN + 0.3:
+                    add(x * sx, z * sx)
+        for center, radii, n in ((LAGOON_A, (LAGOON_WATER - 1.5, LAGOON_WATER, LAGOON_WATER + BANK), 36),
+                                 (FALLS_A, (POOL_RADIUS, POOL_RADIUS + BANK), 16)):
+            for rr in radii:
+                for i in range(n):
+                    a = 2 * math.pi * i / n
+                    add((center[0] + math.cos(a) * rr) * sx, (center[1] + math.sin(a) * rr) * sx)
+    # Arco da base (r 12,7 em volta do spawn) e muros de fechamento: borda crispa do patio.
+    for sx in (1.0, -1.0):
+        for k in range(37):
+            a = math.radians(-135.0 + 180.0 * k / 36)
+            x = SPAWN_A[0] + math.cos(a) * 12.7
+            z = SPAWN_A[1] + math.sin(a) * 12.7
+            if x <= -15.0 and z >= 15.0:
+                add(x * sx, z * sx)
+        for p in ((-33.0, 15.0), (-36.5, 15.0), (-40.0, 15.0), (-15.0, 33.0), (-15.0, 36.5), (-15.0, 40.0)):
+            add(p[0] * sx, p[1] * sx)
+    # Grade do piso (2 u) ate a beira; bastioes incluidos.
+    step = 2.0
+    limit = int(BASTION_CASTLE / step) + 1
+    for i in range(-limit, limit + 1):
+        for j in range(-limit, limit + 1):
+            x, z = i * step + 0.37 * n3(i * 0.7, 3.0, j * 0.7), j * step + 0.37 * n3(j * 0.7, 5.0, i * 0.7)
+            if island_sd(x, z) < -0.9:
+                add(x, z)
+    # Contorno da beira (d = 0) e o labio (d = LIP), que fecha o piso.
+    for p in densify(outline(0.0), 1.5):
+        add(p[0], p[1])
+    lip = densify(outline(LIP), 1.5)
     lip_start = len(points)
-    for a in lip:
-        points.append(Vector((math.cos(a) * LIP_RADIUS, math.sin(a) * LIP_RADIUS)))
-    coords, _edges, faces, orig_verts, _oe, _of = delaunay_2d_cdt(points, [], [], 0, 1e-5)
-    # delaunay_2d_cdt pode reordenar: mapeia indice original -> novo.
+    for p in lip:
+        points.append(Vector((p[0], p[1])))
+    face = list(range(lip_start, lip_start + len(lip)))
+    coords, _edges, faces, orig_verts, _oe, _of = delaunay_2d_cdt(points, [], [face], 1, 1e-5)
     new_index = {}
     for new_i, originals in enumerate(orig_verts):
         for o in originals:
             new_index[o] = new_i
     kit = Kit("island_chassis")
     verts = [(c.x, island_height(c.x, c.y), c.y) for c in coords]
-    top_faces = []
-    for face in faces:
-        cx = sum(coords[i].x for i in face) / len(face)
-        cz = sum(coords[i].y for i in face) / len(face)
-        top_faces.append((tuple(face), ground_cell(cx, cz)))
     base = len(kit.verts)
     kit.verts.extend(verts)
-    for face, (cell, t) in top_faces:
-        kit.faces.append(tuple(base + i for i in face))
-        kit.cells.append((cell, t))
-    # Saia rochosa: aneis abaixo do labio com ruido, fechando num ponto no fundo.
+    for f in faces:
+        cx = sum(coords[i].x for i in f) / len(f)
+        cz = sum(coords[i].y for i in f) / len(f)
+        kit.faces.append(tuple(base + i for i in f))
+        kit.cells.append(ground_cell(cx, cz))
+    # Saia rochosa: contornos abaixo do labio, encolhidos para o centro com ruido, ate um ponto.
     lip_idx = [base + new_index[lip_start + k] for k in range(len(lip))]
     rings = [lip_idx]
-    skirt = [(38.4, -2.6, BROWN, (0.5, 0.75)), (37.0, -6.8, BROWN, (0.35, 0.6)), (31.5, -11.6, BROWN_DARK, (0.3, 0.6)),
-             (23.0, -15.8, BROWN_DARK, (0.2, 0.45))]
-    for k, (rk, yk, _cell, _t) in enumerate(skirt):
+    skirt = [(0.985, -2.6, BROWN, (0.5, 0.75)), (0.95, -6.8, BROWN, (0.35, 0.6)), (0.8, -11.6, BROWN_DARK, (0.3, 0.6)),
+             (0.58, -15.8, BROWN_DARK, (0.2, 0.45))]
+    for k, (factor, yk, _cell, _t) in enumerate(skirt):
         ring = []
-        for a in lip:
+        for (x, z) in lip:
+            a = math.atan2(z, x)
             nz = n3(math.cos(a) * 3.1, k * 1.7, math.sin(a) * 3.1)
-            rr = rk + nz * 1.6
+            f = factor + nz * 0.035
             yy = yk + 0.8 * n3(math.cos(a) * 5.0, k * 2.3 + 9.0, math.sin(a) * 5.0)
             ring.append(len(kit.verts))
-            kit.verts.append((math.cos(a) * rr, yy, math.sin(a) * rr))
+            kit.verts.append((x * f, yy, z * f))
         rings.append(ring)
     bottom = len(kit.verts)
-    kit.verts.append((0.0, -18.6, 0.0))
+    kit.verts.append((0.0, -19.5, 0.0))
     for k in range(1, len(rings)):
         cell, t = skirt[k - 1][2], skirt[k - 1][3]
         above, below = rings[k - 1], rings[k]
@@ -513,9 +653,22 @@ def build_island():
     return build(kit)
 
 
+def strip_faces(kit, strip, y_offset=0.0):
+    """Fita de agua: lista de (esq, dir) em (x, y, z); u ao longo, v atravessado (uv depois)."""
+    base = len(kit.verts)
+    for left, right in strip:
+        kit.verts.append((left[0], left[1] + y_offset, left[2]))
+        kit.verts.append((right[0], right[1] + y_offset, right[2]))
+    for i in range(len(strip) - 1):
+        kit.faces.append((base + 2 * i, base + 2 * i + 1, base + 2 * i + 3, base + 2 * i + 2))
+        kit.cells.append((STONE_BLUE, (0.5, 0.5)))
+    return base, len(strip)
+
+
 def build_river():
     kit = Kit("river_mana")
-    # Anel (fluxo tangencial: u = angulo).
+    pieces = []  # (base, n, kind) para o UV por trecho
+    # Anel (fluxo tangencial).
     n = 120
     r0, r1 = RING_MID - WATER_HALF, RING_MID + WATER_HALF
     base = len(kit.verts)
@@ -527,44 +680,68 @@ def build_river():
         j = (i + 1) % n
         kit.faces.append((base + 2 * i, base + 2 * i + 1, base + 2 * j + 1, base + 2 * j))
         kit.cells.append((STONE_BLUE, (0.5, 0.5)))
-    # Canais N e S + cascata (fluxo para fora e depois para baixo).
-    for sign in (-1.0, 1.0):
+    pieces.append((base, n, "ring"))
+    for sx in (1.0, -1.0):
+        # Braco: do anel (sobra) ate o centro da lagoa, 1 cm abaixo do anel (sem z-fight).
         strip = []
-        z = (RING_MID + WATER_HALF - 0.4) * sign
-        while abs(z) < LIP_RADIUS + 0.6:
-            strip.append((WATER_Y - 0.01, z))
-            z += 1.5 * sign
-        strip.append((WATER_Y - 0.01, (LIP_RADIUS + 0.6) * sign))
-        drop = [(-2.0, 0.5), (-4.5, 1.0), (-8.0, 1.4), (-12.0, 1.6), (-16.5, 1.7)]
-        for dy, lean in drop:
-            strip.append((WATER_Y + dy, (LIP_RADIUS + 0.6 + lean) * sign))
-        base = len(kit.verts)
-        for y, zz in strip:
-            kit.verts.append((-WATER_HALF, y, zz))
-            kit.verts.append((WATER_HALF, y, zz))
-        for i in range(len(strip) - 1):
-            kit.faces.append((base + 2 * i, base + 2 * i + 1, base + 2 * i + 3, base + 2 * i + 2))
-            kit.cells.append((STONE_BLUE, (0.5, 0.5)))
+        steps = 40
+        for k in range(steps + 1):
+            a = ARM_START + (ARM_END - ARM_START) * k / steps
+            ca, sa = math.cos(a), math.sin(a)
+            left = ((ARM_CENTER_A[0] + ca * (ARM_RADIUS - WATER_HALF)) * sx, WATER_Y, (ARM_CENTER_A[1] + sa * (ARM_RADIUS - WATER_HALF)) * sx)
+            right = ((ARM_CENTER_A[0] + ca * (ARM_RADIUS + WATER_HALF)) * sx, WATER_Y, (ARM_CENTER_A[1] + sa * (ARM_RADIUS + WATER_HALF)) * sx)
+            strip.append((left, right))
+        pieces.append(strip_faces(kit, strip, -0.01) + ("arm",))
+        # Lagoa e poca: discos em leque, 2 cm abaixo.
+        for center, radius, y_off, m in ((LAGOON_A, LAGOON_WATER, -0.02, 36), (FALLS_A, POOL_RADIUS, -0.02, 16)):
+            c = len(kit.verts)
+            kit.verts.append((center[0] * sx, WATER_Y + y_off, center[1] * sx))
+            for i in range(m):
+                a = 2 * math.pi * i / m
+                kit.verts.append(((center[0] + math.cos(a) * radius) * sx, WATER_Y + y_off, (center[1] + math.sin(a) * radius) * sx))
+            for i in range(m):
+                j = (i + 1) % m
+                kit.faces.append((c, c + 1 + i, c + 1 + j))
+                kit.cells.append((STONE_BLUE, (0.5, 0.5)))
+            pieces.append((c, m, "disc"))
+        # Cascata de enfeite: da poca do canto, pela diagonal, caindo no abismo.
+        dx, dz = -0.70710678 * sx, -0.70710678 * sx
+        px, pz = 0.70710678 * sx, -0.70710678 * sx  # perpendicular
+        strip = []
+        half = 1.1
+        run = [(0.0, WATER_Y - 0.03), (1.2, WATER_Y - 0.03), (2.4, WATER_Y - 0.03), (3.2, WATER_Y - 0.05), (3.9, WATER_Y - 2.0),
+               (4.6, WATER_Y - 4.5), (5.2, WATER_Y - 8.0), (5.6, WATER_Y - 12.0), (5.8, WATER_Y - 16.5)]
+        for s, y in run:
+            cx, cz = FALLS_A[0] * sx + dx * s, FALLS_A[1] * sx + dz * s
+            strip.append(((cx - px * half, y, cz - pz * half), (cx + px * half, y, cz + pz * half)))
+        pieces.append(strip_faces(kit, strip) + ("falls",))
     obj = build(kit)
     # UV proprio do rio: u ao longo do fluxo (0..1 por trecho), v atravessado.
     mesh = obj.data
     uv = mesh.uv_layers.active
-    ring_faces = n
-    for poly in mesh.polygons:
-        if poly.index < ring_faces:
-            for l in poly.loop_indices:
-                v = mesh.vertices[mesh.loops[l].vertex_index].co
-                a = math.atan2(-v.y, v.x) % (2 * math.pi)
-                k = (mesh.loops[l].vertex_index - 0) // 2
-                u = k / n if (k / n) > 0.0 or poly.index < n - 1 else 1.0
-                uv.data[l].uv = (u, 0.0 if (mesh.loops[l].vertex_index % 2 == 0) else 1.0)
+    vert_u = {}
+    for base, count, kind in pieces:
+        if kind == "ring":
+            for i in range(count):
+                vert_u[base + 2 * i] = (i / count, 0.0)
+                vert_u[base + 2 * i + 1] = (i / count, 1.0)
+        elif kind in ("arm", "falls"):
+            for i in range(count):
+                vert_u[base + 2 * i] = (i / (count - 1), 0.0)
+                vert_u[base + 2 * i + 1] = (i / (count - 1), 1.0)
         else:
-            for l in poly.loop_indices:
-                vi = mesh.loops[l].vertex_index
-                v = mesh.vertices[vi].co
-                along = (abs(v.y) - (RING_MID + WATER_HALF - 0.4)) / 24.0 + max(0.0, -v.z) / 20.0
-                uv.data[l].uv = (along, 0.0 if vi % 2 == 0 else 1.0)
+            vert_u[base] = (0.5, 0.5)
+            for i in range(count):
+                a = 2 * math.pi * i / count
+                vert_u[base + 1 + i] = (0.5 + 0.5 * math.cos(a), 0.5 + 0.5 * math.sin(a))
     for poly in mesh.polygons:
+        for l in poly.loop_indices:
+            vi = mesh.loops[l].vertex_index
+            u, v = vert_u.get(vi, (0.0, 0.0))
+            # Fecha o anel: o ultimo quad volta ao vertice 0 com u = 1.
+            if poly.index == n - 1 and vi < 2:
+                u = 1.0
+            uv.data[l].uv = (u, v)
         poly.use_smooth = True
     return obj
 
@@ -898,6 +1075,168 @@ def build_islet(name, radius, seed):
     return build(kit)
 
 
+# --- kit 6 (F46, decisao do PI 2026-10-10): torreao do castelo e casa de pedra -------------
+
+
+def merlons(kit, p0, p1, y, line, along_x=True, size=0.5, gap=0.45, depth=0.45, height=0.45):
+    """Ameias ao longo de uma aresta: caixas espacadas de p0 a p1 sobre a linha (z se along_x,
+    senao x), centradas na espessura depth."""
+    p = p0
+    while p + size <= p1 + 0.01:
+        if along_x:
+            kit.add(box(p, y, line - depth / 2, size, height, depth), STONE, (0.5, 0.8))
+        else:
+            kit.add(box(line - depth / 2, y, p, depth, height, size), STONE, (0.5, 0.8))
+        p += size + gap
+
+
+def courses_rotated(kit, p0, p1, y0, y1, line, outward, yaw, rows, seed):
+    """Fiadas de pedra numa face paralela a z (gira as fiadas de uma face paralela a x)."""
+    tmp = Kit("tmp")
+    stone_courses(tmp, p0, p1, y0, y1, line, outward, rows=rows, seed=seed)
+    kit.add(rot_y((tmp.verts, tmp.faces), yaw), STONE, (0.4, 0.65))
+
+
+def build_keep(team):
+    """Torreao (donjon) do castelo: bloco quadrado com fiadas de pedra, 4 torretas de canto,
+    ameias, piso superior, portal em arco na face +z (voltada ao spawn), seteiras, faixa de runas
+    da cor do time, tochas e bandeira. Origem no chao, centro."""
+    rune = RUNE_A if team == "a" else RUNE_B
+    kit = Kit("castle_keep_%s" % team)
+    h = 3.2  # meio-lado do bloco
+    top = 7.0
+    kit.add(box(-h, 0.0, -h, 2 * h, top, 2 * h), STONE, (0.3, 0.7))
+    kit.add(box(-h - 0.15, 0.0, -h - 0.15, 2 * h + 0.3, 0.6, 2 * h + 0.3), STONE_DARK, (0.3, 0.55))
+    # Fiadas de pedra em relevo nas 4 faces (2 bandas; a face +z deixa o vao do portal).
+    for y0, y1, rows, seed in ((0.9, 2.6, 2, 1.0),):
+        if y0 < 3.0:
+            stone_courses(kit, -h + 0.2, -1.6, y0, y1, h, 1, rows=rows, seed=seed)
+            stone_courses(kit, 1.6, h - 0.2, y0, y1, h, 1, rows=rows, seed=seed + 0.25)
+        else:
+            stone_courses(kit, -h + 0.2, h - 0.2, y0, y1, h, 1, rows=rows, seed=seed)
+        stone_courses(kit, -h + 0.2, h - 0.2, y0, y1, -h, -1, rows=rows, seed=seed + 0.5)
+        courses_rotated(kit, -h + 0.2, h - 0.2, y0, y1, h, 1, 90.0, rows, seed + 1.0)
+        courses_rotated(kit, -h + 0.2, h - 0.2, y0, y1, h, 1, -90.0, rows, seed + 1.5)
+    # Faixa de runas e seteiras.
+    kit.add(box(-h - 0.04, 3.5, -h - 0.04, 2 * h + 0.08, 0.22, 2 * h + 0.08), STONE, (0.3, 0.3), rune=rune)
+    kit.add(box(-h - 0.04, 5.6, -h - 0.04, 2 * h + 0.08, 0.14, 2 * h + 0.08), STONE, (0.3, 0.3), rune=rune)
+    for x in (-2.0, 2.0):
+        for y in (1.4, 5.2):
+            kit.add(box(x - 0.11, y, h - 0.02, 0.22, 0.8, 0.1), CHARCOAL, (0.2, 0.3))
+            kit.add(box(x - 0.11, y, -h - 0.08, 0.22, 0.8, 0.1), CHARCOAL, (0.2, 0.3))
+            kit.add(box(h - 0.02, y, x - 0.11, 0.1, 0.8, 0.22), CHARCOAL, (0.2, 0.3))
+            kit.add(box(-h - 0.08, y, x - 0.11, 0.1, 0.8, 0.22), CHARCOAL, (0.2, 0.3))
+    # Portal em arco na face +z: ombreiras, dintel, recesso escuro e porta de madeira.
+    kit.add(box(-1.45, 0.0, h - 0.1, 0.45, 3.0, 0.7), STONE, (0.35, 0.7))
+    kit.add(box(1.0, 0.0, h - 0.1, 0.45, 3.0, 0.7), STONE, (0.35, 0.7))
+    kit.add(box(-1.55, 3.0, h - 0.1, 3.1, 0.55, 0.75), STONE, (0.4, 0.75))
+    kit.add(box(-1.2, 3.18, h + 0.3, 2.4, 0.26, 0.3), STONE, (0.3, 0.3), rune=rune)
+    kit.add(box(-1.0, 0.0, h - 0.3, 2.0, 2.95, 0.35), CHARCOAL, (0.2, 0.35))
+    kit.add(box(-0.95, 0.05, h - 0.25, 1.9, 2.8, 0.2), WOOD, (0.35, 0.7))
+    for y in (0.6, 1.6, 2.5):
+        kit.add(box(-0.98, y, h - 0.22, 1.96, 0.12, 0.2), CHARCOAL, (0.3, 0.5))
+    # Tochas ao lado do portal (magma, como no portal do F40).
+    for x in (-1.95, 1.95):
+        kit.add(box(x - 0.08, 2.1, h + 0.55, 0.16, 0.16, 0.3), WOOD_DARK, (0.3, 0.6))
+        kit.add(prism(x, h + 0.75, 2.3, 2.75, 0.14, 0.0, 6), RED, (0.5, 0.5), rune=MAGMA)
+    # Parapeito e ameias do bloco.
+    for sx in (1, -1):
+        kit.add(box(-h, top, sx * h - 0.2, 2 * h, 0.5, 0.4), STONE, (0.45, 0.75))
+        kit.add(box(sx * h - 0.2, top, -h, 0.4, 0.5, 2 * h), STONE, (0.45, 0.75))
+        merlons(kit, -h + 0.6, h - 0.6, top + 0.5, sx * h, gap=0.7)
+        merlons(kit, -h + 0.6, h - 0.6, top + 0.5, sx * h, along_x=False, gap=0.7)
+    # Piso superior (torre central) com fiadas, faixa de runa, ameias e bandeira.
+    u = 1.7
+    kit.add(box(-u, top, -u, 2 * u, 2.3, 2 * u), STONE, (0.35, 0.7))
+    stone_courses(kit, -u + 0.1, u - 0.1, top + 1.3, top + 2.0, u, 1, rows=1, seed=3.0)
+    stone_courses(kit, -u + 0.1, u - 0.1, top + 1.3, top + 2.0, -u, -1, rows=1, seed=4.0)
+    courses_rotated(kit, -u + 0.1, u - 0.1, top + 1.3, top + 2.0, u, 1, 90.0, 1, 5.0)
+    courses_rotated(kit, -u + 0.1, u - 0.1, top + 1.3, top + 2.0, u, 1, -90.0, 1, 6.0)
+    kit.add(box(-u - 0.03, top + 1.0, -u - 0.03, 2 * u + 0.06, 0.18, 2 * u + 0.06), STONE, (0.3, 0.3), rune=rune)
+    for sx in (1, -1):
+        merlons(kit, -u + 0.1, u - 0.1, top + 2.3, sx * u, size=0.45, gap=0.4, depth=0.4, height=0.4)
+        merlons(kit, -u + 0.1, u - 0.1, top + 2.3, sx * u, along_x=False, size=0.45, gap=0.4, depth=0.4, height=0.4)
+    kit.add(box(-0.06, top + 2.3, -0.06, 0.12, 2.2, 0.12), WOOD_DARK, (0.3, 0.6))
+    flag = ([(0.06, top + 4.4, 0.0), (0.06, top + 3.7, 0.0), (1.3, top + 4.05, 0.2)], [(0, 1, 2)])
+    kit.add(flag, RED, (0.5, 0.5), rune=rune)
+    # Torretas de canto (octogonais) com base, fiadas, faixa de runa, coroa e ameias.
+    tr = 1.05
+    th = 8.4
+    for sx in (-1, 1):
+        for sz in (-1, 1):
+            cx, cz = sx * h, sz * h
+            kit.add(prism(cx, cz, 0.0, th, tr, tr, 8, phase=22.5), STONE, (0.3, 0.7))
+            kit.add(prism(cx, cz, 0.0, 0.6, tr + 0.15, tr + 0.08, 8, phase=22.5), STONE_DARK, (0.3, 0.5))
+            stone_ring_courses(kit, cx, cz, 1.0, 2.8, tr - 0.02, 8, rows=2, seed=sx + 2 * sz)
+            kit.add(prism(cx, cz, 3.5, 3.72, tr + 0.02, tr + 0.02, 8, phase=22.5), STONE, (0.3, 0.3), rune=rune)
+            kit.add(prism(cx, cz, th, th + 0.3, tr + 0.2, tr + 0.2, 8, phase=22.5), STONE, (0.55, 0.8))
+            for i in range(8):
+                a = math.radians(22.5 + 45.0 * i)
+                mx, mz = cx + math.cos(a) * (tr - 0.05), cz + math.sin(a) * (tr - 0.05)
+                kit.add(rot_y(box(mx - 0.22, th + 0.3, mz - 0.18, 0.44, 0.42, 0.36), -math.degrees(a), (mx, 0, mz)), STONE, (0.5, 0.8))
+    return build(kit, bevel=0.05)
+
+
+def build_house():
+    """Casa de pedra com telhado de madeira (referencia do PI): paredes de pedra com fiadas em
+    relevo, telhado de duas aguas com ripas, porta e janela na face +z, viga de madeira, escada
+    encostada na lateral -x, caixotes e saco ao lado da porta. Origem no chao, centro."""
+    kit = Kit("stone_house")
+    hx, hz, wall_h = 1.5, 1.2, 2.2
+    kit.add(box(-hx, 0.0, -hz, 2 * hx, wall_h, 2 * hz), STONE, (0.35, 0.7))
+    kit.add(box(-hx - 0.08, 0.0, -hz - 0.08, 2 * hx + 0.16, 0.3, 2 * hz + 0.16), STONE_DARK, (0.3, 0.55))
+    stone_courses(kit, -hx + 0.1, -0.6, 0.4, 2.0, hz, 1, rows=3, seed=11.0)
+    stone_courses(kit, 0.6, hx - 0.1, 0.4, 0.95, hz, 1, rows=1, seed=11.5)
+    stone_courses(kit, -hx + 0.1, hx - 0.1, 0.4, 2.0, -hz, -1, rows=3, seed=12.0)
+    courses_rotated(kit, -hz + 0.1, hz - 0.1, 0.5, 1.9, hx, 1, 90.0, 2, 13.0)
+    courses_rotated(kit, -hz + 0.1, hz - 0.1, 0.5, 1.9, hx, 1, -90.0, 2, 14.0)
+    # Empenas (triangulos) nas faces +-x e cumeeira.
+    ridge = wall_h + 1.1
+    for sx in (1, -1):
+        x = sx * hx
+        gable = ([(x, wall_h, -hz), (x, wall_h, hz), (x, ridge, 0.0)], [(0, 1, 2) if sx > 0 else (0, 2, 1)])
+        kit.add(gable, STONE, (0.45, 0.7))
+    # Telhado de duas aguas: duas tabuas inclinadas com beiral + 3 ripas por agua.
+    over = 0.35
+    slope = math.degrees(math.atan2(ridge - wall_h, hz))
+    for sz in (1, -1):
+        plank = box(-hx - over, -0.12, 0.0, 2 * hx + 2 * over, 0.12, hz + over + 0.1)
+        plank = rot_x(plank, slope, (0.0, 0.0, 0.0))
+        if sz < 0:
+            plank = rot_y(plank, 180.0)
+        kit.add(translate(plank, 0.0, ridge + 0.02, 0.0), WOOD_DARK, (0.3, 0.6))
+        for k, d in enumerate((0.35, 0.8, 1.25)):
+            lath = box(-hx - over + 0.05, 0.0, d - 0.08, 2 * hx + 2 * over - 0.1, 0.07, 0.16)
+            lath = rot_x(lath, slope, (0.0, 0.0, 0.0))
+            if sz < 0:
+                lath = rot_y(lath, 180.0)
+            kit.add(translate(lath, 0.0, ridge + 0.03, 0.0), WOOD, (0.4 + 0.05 * k, 0.7))
+    kit.add(box(-hx - over, ridge - 0.02, -0.1, 2 * hx + 2 * over, 0.16, 0.2), WOOD_DARK, (0.3, 0.55))
+    # Porta e janela na face +z, viga sobre a porta.
+    kit.add(box(-0.45, 0.0, hz - 0.12, 0.9, 1.7, 0.2), CHARCOAL, (0.2, 0.35))
+    kit.add(box(-0.4, 0.04, hz - 0.08, 0.8, 1.6, 0.14), WOOD, (0.35, 0.7))
+    kit.add(box(-0.42, 0.55, hz + 0.04, 0.84, 0.08, 0.06), CHARCOAL, (0.3, 0.5))
+    kit.add(box(-0.42, 1.2, hz + 0.04, 0.84, 0.08, 0.06), CHARCOAL, (0.3, 0.5))
+    kit.add(box(-0.6, 1.72, hz - 0.15, 1.2, 0.2, 0.4), BROWN_DARK, (0.3, 0.6))
+    kit.add(box(0.75, 1.1, hz - 0.1, 0.45, 0.5, 0.18), CHARCOAL, (0.2, 0.35))
+    kit.add(box(0.72, 1.6, hz - 0.12, 0.51, 0.08, 0.3), BROWN_DARK, (0.3, 0.6))
+    # Escada encostada na lateral -x.
+    tmp = Kit("tmp")
+    for rail in (-0.3, 0.3):
+        tmp.add(box(rail - 0.05, 0.0, -0.05, 0.1, 3.0, 0.1), WOOD, (0.4, 0.7))
+    for k in range(6):
+        tmp.add(box(-0.3, 0.3 + k * 0.48, -0.04, 0.6, 0.08, 0.08), WOOD_DARK, (0.3, 0.6))
+    ladder = rot_x((tmp.verts, tmp.faces), -16.0)
+    ladder = rot_y(ladder, 90.0)
+    kit.add(translate(ladder, -hx - 0.1, 0.0, 0.3), WOOD, (0.4, 0.7))
+    # Caixotes e saco ao lado da porta.
+    kit.add(box(0.95, 0.0, hz + 0.1, 0.5, 0.5, 0.5), WOOD, (0.4, 0.7))
+    kit.add(box(0.5, 0.0, hz + 0.3, 0.4, 0.4, 0.4), WOOD_DARK, (0.35, 0.6))
+    kit.add(box(0.98, 0.5, hz + 0.15, 0.42, 0.42, 0.42), WOOD, (0.45, 0.75))
+    kit.add(prism(-1.0, hz + 0.35, 0.0, 0.55, 0.3, 0.22, 7, phase=10.0, jitter=0.04, seed=21), CREAM, (0.35, 0.6))
+    return build(kit, bevel=0.03)
+
+
 # --- montagem -------------------------------------------------------------------------------
 
 
@@ -926,6 +1265,13 @@ def main():
         export(obj, obj.name)
     save("castle_modular")
     preview("castle_modular", castle, spread=7.5)
+
+    reset_scene()
+    keep = [build_keep("a"), build_keep("b"), build_house()]
+    for obj in keep:
+        export(obj, obj.name)
+    save("castle_keep")
+    preview("castle_keep", keep, spread=12.0)
 
     reset_scene()
     ruins = [build_bridge(), build_boulder(), build_barricade(), build_chest_body(), build_chest_lid()]
