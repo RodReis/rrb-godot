@@ -7,6 +7,8 @@ const SLOT_ITEM: PackedScene = preload("res://shared/ui/components/slot_item.tsc
 const KNIGHT: HeroData = preload("res://shared/data/heroes/knight.tres")
 const EPIC_SWORD: ItemData = preload("res://shared/data/items/weapons/sword_t3_epic.tres")
 const GUARD_BOOTS: ItemData = preload("res://shared/data/items/guard_set/guard_boots_t2.tres")
+const BOSS: MonsterData = preload("res://shared/data/monsters/skeleton_king_boss.tres")
+const MAGE: MonsterData = preload("res://shared/data/monsters/skeleton_mage_t2.tres")
 
 
 func test_timer_formats_minutes_and_seconds() -> void:
@@ -121,3 +123,39 @@ func test_panel_card_variant_and_hotkey_badge() -> void:
 	badge.size_variant = HotkeyBadge.Size.MD
 	assert_eq(badge.text, "B")
 	badge.free()
+
+
+func test_catalog_list_selects_first_and_emits_on_change() -> void:
+	var list: CatalogList = add_child_autofree(CatalogList.new())
+	watch_signals(list)
+	var entries: Array[CatalogEntry] = [CatalogEntry.new(&"a", "A"), CatalogEntry.new(&"b", "B")]
+	list.bind(entries)
+	assert_eq(list.selected_id(), &"a")
+	list.select(&"b")
+	assert_eq(list.selected_id(), &"b")
+	assert_signal_emitted_with_parameters(list, "selected", [&"b"])
+
+
+func test_detail_rows_for_boss_from_data() -> void:
+	var rows := DetailCard.monster_rows(BOSS)
+	var text := ""
+	for row: PackedStringArray in rows:
+		text += "%s=%s;" % [row[0], row[1]]
+	assert_string_contains(text, "Vida=%d HP;" % roundi(BOSS.hp))
+	assert_string_contains(text, "em área")
+	assert_string_contains(text, "Empurrão=")
+	assert_string_contains(text, "XP=%d XP;" % BOSS.xp)
+	assert_string_contains(text, "Épico 100%")
+
+
+func test_detail_rows_for_ranged_monster() -> void:
+	var damage := DetailCard.monster_rows(MAGE)[1][1]
+	assert_string_contains(damage, "a distância")
+
+
+func test_detail_card_boss_gets_purple_accent() -> void:
+	var card: DetailCard = add_child_autofree(DetailCard.new())
+	card.bind(BOSS)
+	assert_eq(card.accent, PanelCard.Accent.PURPLE)
+	card.bind(MAGE)
+	assert_eq(card.accent, PanelCard.Accent.NONE)

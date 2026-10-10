@@ -8,6 +8,8 @@ extends BaseNetInput
 const LEARN_NONE: int = -1
 
 static var autopilot: bool = false
+## Tela por cima da partida (bestiario, F13): o heroi fica parado; a partida nao pausa.
+static var suspended: bool = false
 
 var movement: Vector3 = Vector3.ZERO
 var aim: Vector3 = Vector3.ZERO
@@ -32,6 +34,9 @@ func _input(event: InputEvent) -> void:
 
 
 func _gather() -> void:
+	if suspended:
+		_gather_idle()
+		return
 	if autopilot:
 		_gather_autopilot()
 		return
@@ -64,6 +69,16 @@ func _gather_learn() -> void:
 		skill_q = false
 		skill_e = false
 		skill_r = false
+
+
+func _gather_idle() -> void:
+	movement = Vector3.ZERO
+	attack = false
+	skill_q = false
+	skill_e = false
+	skill_r = false
+	learn = LEARN_NONE
+	interact_hold = false
 
 
 func _camera_yaw() -> float:

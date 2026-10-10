@@ -147,3 +147,19 @@ func test_morte_vira_bau_epico_no_lugar() -> void:
 	assert_true(chest.global_position.is_equal_approx(where))
 	var item := (load(CATALOG) as ItemCatalog).find(chest.drop)
 	assert_eq(item.rarity, ItemData.Rarity.EPIC)
+
+
+func test_aviso_poe_o_portal_no_marcador_e_o_boss_tira() -> void:
+	_director.warn_boss()
+	var portal := _director.get_node_or_null(SpawnDirector.BOSS_PORTAL_NAME) as BossPortal
+	assert_not_null(portal)
+	assert_almost_eq(portal.global_position, _boss_marker().global_position, Vector3.ONE * 0.01)
+	_director.spawn_boss()
+	assert_null(_director.get_node_or_null(SpawnDirector.BOSS_PORTAL_NAME))
+	assert_not_null(_boss())
+
+
+func test_aviso_depois_do_boss_nao_poe_portal() -> void:
+	_director.spawn_boss()
+	_director.warn_boss()
+	assert_null(_director.get_node_or_null(SpawnDirector.BOSS_PORTAL_NAME))

@@ -9,6 +9,8 @@ extends CanvasLayer
 const SKILL_KEYS: Array[String] = ["LMB", "Q", "E", "R"]
 const LEARN_KEYS: Array[String] = ["Ctrl+Q", "Ctrl+E", "Ctrl+R"]
 const PERCENT: float = 100.0
+## Banner de alerta de fase some sozinho (PATTERNS P7).
+const BANNER_SECONDS: float = 3.0
 
 var _hero: Hero
 var _clock: MatchClock
@@ -31,6 +33,7 @@ var _chests: Array[Chest] = []
 var _monsters: Array[Monster] = []
 var _marker_positions: PackedVector3Array = PackedVector3Array()
 var _marker_colors: PackedColorArray = PackedColorArray()
+var _banner_tween: Tween
 
 @onready var _gate_text: Label = %GateText
 @onready var _phase_title: Label = %PhaseTitle
@@ -51,6 +54,9 @@ var _marker_colors: PackedColorArray = PackedColorArray()
 @onready var _xp_bar: StatBar = %XpBar
 @onready var _set_text: Label = %SetText
 @onready var _points: HBoxContainer = %Points
+@onready var _boss_banner: PanelCard = %BossBanner
+@onready var _boss_banner_text: Label = %BossBannerText
+@onready var _boss_sound: AudioStreamPlayer = %BossSound
 
 
 func _ready() -> void:
@@ -84,6 +90,7 @@ func bind(hero: Hero, clock: MatchClock, spawns: SpawnDirector, players: Node) -
 	if not spawns.boss_killed.is_connected(_on_spawns_boss_killed):
 		spawns.boss_killed.connect(_on_spawns_boss_killed)
 		clock.boss_spawned.connect(_on_clock_boss_spawned)
+		clock.boss_warning.connect(_on_clock_boss_warning)
 	_shown_equipment = hero.equipment  # o que ja estava equipado nao vira notificacao
 	_refresh_equipment()
 	visible = true
@@ -270,6 +277,25 @@ func _collect_world() -> void:
 			_chests.append(node as Chest)
 		elif node is Monster:
 			_monsters.append(node as Monster)
+
+
+## Aviso global do boss (3:00, PI 2026-10-09): banner central, som e, no mundo, o BossPortal.
+## Quem entra depois recebe os eventos atrasados de uma vez: com o boss ja vivo, nada.
+func _on_clock_boss_warning(tick: int) -> void:
+	var left := _rules.boss_spawn_time - _clock.elapsed(tick)
+	if left <= 0.0:
+		return
+	_boss_banner_text.text = tr("O REI ESQUELETO DESPERTA EM %d s") % roundi(left)
+	_boss_banner.visible = true
+	_boss_banner.modulate.a = 0.0
+	if _banner_tween != null:
+		_banner_tween.kill()
+	_banner_tween = create_tween()
+	_banner_tween.tween_property(_boss_banner, ^"modulate:a", 1.0, UiTokens.DUR_SLOW)
+	_banner_tween.tween_interval(BANNER_SECONDS)
+	_banner_tween.tween_property(_boss_banner, ^"modulate:a", 0.0, UiTokens.DUR_SLOW)
+	_banner_tween.tween_callback(_boss_banner.hide)
+	_boss_sound.play()
 
 
 ## Depois do SpawnDirector.spawn_boss, ligado antes no main.

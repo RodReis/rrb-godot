@@ -39,6 +39,7 @@ func _ready() -> void:
 	spawner.spawn_function = _spawn_player
 	connect_button.pressed.connect(_on_connect_pressed)
 	clock.boss_warning.connect(_on_clock_boss_warning)
+	clock.boss_warning.connect(spawns.warn_boss)
 	clock.boss_spawned.connect(spawns.spawn_boss)
 	clock.phase1_ended.connect(_on_clock_phase1_ended)
 	spawns.boss_killed.connect(_on_spawns_boss_killed)

@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://shared/ui/components/timer_label.gd" id="timer"]
 [ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="badge"]
 [ext_resource type="Script" path="res://shared/ui/components/toast.gd" id="toast"]
+[ext_resource type="AudioStream" path="res://shared/assets/kenney/music_jingles/jingles_STEEL07.ogg" id="boss_sound"]
 
 [node name="HudPhase1" type="CanvasLayer"]
 script = ExtResource("hud")
@@ -200,6 +201,33 @@ size_variant = 1
 unique_name_in_owner = true
 layout_mode = 2
 text = "Segure para trocar"
+
+[node name="BossBanner" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+layout_mode = 1
+script = ExtResource("card")
+variant = 1
+accent = 4
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -360.0
+offset_top = 190.0
+offset_right = 360.0
+offset_bottom = 260.0
+grow_horizontal = 2
+
+[node name="BossBannerText" type="Label" parent="Root/BossBanner"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "REI ESQUELETO"
+horizontal_alignment = 1
+
+[node name="BossSound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("boss_sound")
 
 [node name="Bottom" type="MarginContainer" parent="Root"]
 layout_mode = 1
@@ -438,3 +466,14 @@ size_variant = 0
 layout_mode = 2
 theme_type_variation = &"LabelMuted"
 text = "Aprender habilidade"
+
+[node name="Key5" type="Label" parent="Root/Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+layout_mode = 2
+script = ExtResource("badge")
+key = "B"
+size_variant = 0
+
+[node name="Action5" type="Label" parent="Root/Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Bestiário"

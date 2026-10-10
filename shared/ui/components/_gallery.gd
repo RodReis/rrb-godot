@@ -6,6 +6,14 @@ extends Control
 const STAT_BAR: PackedScene = preload("res://shared/ui/components/stat_bar.tscn")
 const SKILL_BUTTON: PackedScene = preload("res://shared/ui/components/skill_button.tscn")
 const SLOT_ITEM: PackedScene = preload("res://shared/ui/components/slot_item.tscn")
+const PREVIEW: PackedScene = preload("res://shared/ui/components/monster_preview_3d.tscn")
+const SKELETON_MODEL: PackedScene = preload(
+	"res://shared/assets/kaykit/skeletons/Skeleton_Minion.glb"
+)
+const MONSTERS: Array[MonsterData] = [
+	preload("res://shared/data/monsters/skeleton_t1.tres"),
+	preload("res://shared/data/monsters/skeleton_king_boss.tres"),
+]
 const KNIGHT: HeroData = preload("res://shared/data/heroes/knight.tres")
 const ITEMS: Array[ItemData] = [
 	preload("res://shared/data/items/guard_set/guard_helm_t1.tres"),
@@ -35,6 +43,7 @@ func _ready() -> void:
 	_skills()
 	_slots()
 	_toasts()
+	_catalog()
 
 
 func _typography() -> void:
@@ -173,6 +182,29 @@ func _toasts() -> void:
 		toast.custom_minimum_size = CARD_SIZE
 		_add(row, toast, _name(Toast.Kind, kind))
 		toast.show_message(samples[kind], kind, TOAST_FOREVER)
+
+
+func _catalog() -> void:
+	var row := _row("CatalogList + DetailCard + MonsterPreview3D (setas)")
+	var list := CatalogList.new()
+	_add(row, list, "CatalogList")
+	var detail := DetailCard.new()
+	detail.custom_minimum_size = CARD_SIZE * 2.0
+	_add(row, detail, "DetailCard")
+	var preview := PREVIEW.instantiate() as MonsterPreview3D
+	preview.custom_minimum_size = CARD_SIZE * 1.5
+	_add(row, preview, "MonsterPreview3D")
+	preview.show_model(SKELETON_MODEL.instantiate() as Node3D)
+	list.selected.connect(
+		func(id: StringName) -> void:
+			for monster: MonsterData in MONSTERS:
+				if monster.id == id:
+					detail.bind(monster)
+	)
+	var entries: Array[CatalogEntry] = []
+	for monster: MonsterData in MONSTERS:
+		entries.append(CatalogEntry.new(monster.id, monster.display_name))
+	list.bind(entries)
 
 
 func _card(variant: PanelCard.Surface, accent: PanelCard.Accent) -> PanelCard:

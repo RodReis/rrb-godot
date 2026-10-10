@@ -6,6 +6,7 @@ const KNIGHT: PackedScene = preload("res://scenes/heroes/knight.tscn")
 const CHEST: PackedScene = preload("res://scenes/world/chest.tscn")
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 const GUARD_HELM: ItemData = preload("res://shared/data/items/guard_set/guard_helm_t1.tres")
+const TICKRATE: int = 30
 
 var _players: Node3D
 var _hero: Hero
@@ -102,3 +103,20 @@ func test_offer_when_chest_in_reach_holds_an_item() -> void:
 	_hero.global_position = Vector3(50.0, 0.0, 0.0)
 	await wait_process_frames(1)
 	assert_false(offer.visible)
+
+
+func test_boss_warning_shows_banner_with_time_from_rules() -> void:
+	await _bind_and_wait()
+	_clock._begin(0, TICKRATE)
+	_clock.boss_warning.emit(roundi(RULES.boss_warning_time * TICKRATE))
+	var banner := _node("%BossBanner") as Control
+	assert_true(banner.visible)
+	var seconds := roundi(RULES.boss_spawn_time - RULES.boss_warning_time)
+	assert_string_contains((_node("%BossBannerText") as Label).text, "%d s" % seconds)
+
+
+func test_late_join_after_boss_spawn_gets_no_banner() -> void:
+	await _bind_and_wait()
+	_clock._begin(0, TICKRATE)
+	_clock.boss_warning.emit(roundi((RULES.boss_spawn_time + 10.0) * TICKRATE))
+	assert_false((_node("%BossBanner") as Control).visible)

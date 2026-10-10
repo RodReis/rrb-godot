@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/match/match_clock.gd" id="5_clock"]
 [ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="6_rules"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud_phase1.tscn" id="7_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/bestiary.tscn" id="8_bestiary"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
@@ -61,3 +62,5 @@ layout_mode = 2
 text = "Conectar"
 
 [node name="HudPhase1" parent="." instance=ExtResource("7_hud")]
+
+[node name="Bestiary" parent="." instance=ExtResource("8_bestiary")]
