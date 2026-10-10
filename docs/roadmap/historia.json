@@ -140,7 +140,10 @@
         { "arquivo": "mvp2-f37-neblina-de-guerra.webp", "legenda": "O que nunca foi visto fica escuro; o que já foi visto fica em cinza, com o último estado conhecido, como um baú que pode já ter sido aberto por outro. O minimapa mostra o mesmo, e a zona do confronto aparece sempre. O bot joga sob a mesma neblina.", "tipo": "entregue" },
         { "arquivo": "mvp2-f44-ilha-vista-de-cima.webp", "legenda": "A arena virou uma ilha flutuante sobre um abismo cósmico. Cada time parte de um castelo no norte; um rio de mana corta a ilha de norte a sul e corre em anel em volta do centro, com quatro pontes de pedra, duas para cada lado. No meio, a cratera de magma onde o Rei Esqueleto aparece.", "tipo": "entregue" },
         { "arquivo": "mvp2-f44-ilha-castelo-e-cratera.webp", "legenda": "Do portão de uma base dá para ver a cratera: pilares de obsidiana com veios de magma, brasas subindo e o rio brilhando. As muralhas têm runas na cor do time; nas pontas do rio, cachoeiras de mana caem no vazio.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f44-ilha-base-a-no-jogo.webp", "legenda": "Dentro da base, durante a preparação: muralha em arco, torres, baús e os primeiros Esqueletos. O que ainda não foi visto fica no escuro, como na neblina de guerra.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f44-ilha-base-a-no-jogo.webp", "legenda": "Dentro da base, durante a preparação: muralha em arco, torres, baús e os primeiros Esqueletos. O que ainda não foi visto fica no escuro, como na neblina de guerra.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f46-rift-vista-de-cima.webp", "legenda": "A ilha ganhou o layout definitivo, inspirado nos mapas clássicos de arena: um quadrado de 80 por 80 metros com um castelo em cada canto oposto, o rio de mana desenhando um S entre as duas metades e terminando em duas lagoas, e três caminhos — um pela borda de cada lado e um pelo meio, que cruza o rio por duas pontes de pedra e passa pela cratera do Rei Esqueleto. Nos cantos entre as rotas, a selva: acampamentos de Esqueletos protegidos por rochas.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f46-rift-portao-e-centro.webp", "legenda": "Do portão do castelo dá para ver a ponte, a cratera e, do outro lado, o castelo adversário com o torreão no canto. Dentro das muralhas agora há casas de pedra; nos cantos vazios da ilha, cascatas de mana caem no abismo.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f46-rift-base-a-no-jogo.webp", "legenda": "A base vista do jogo: pátio de pedra, casas atrás do ponto de renascimento, a fonte no canto, os baús e os Esqueletos de sempre. No minimapa, o desenho em S do rio e as duas lagoas.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -186,6 +189,7 @@
     "F32": "Moita esconde o herói do adversário",
     "F37": "Neblina de guerra e minimapa",
     "F44": "Ilha Flutuante Arcana: a arena nova",
+    "F46": "Ilha Flutuante Arcana: layout definitivo, com castelos nos cantos e rio em S",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
     "F23": "Servidor de partida integrado ao backend",
