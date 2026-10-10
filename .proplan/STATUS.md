@@ -7,23 +7,23 @@ updated: 2026-10-10
 
 ## Backlog
 
+### [MVP2.5] Bloco visual — toon/PBR, arte da ilha, VFX e HUD v2 (#99)
+
+- [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95)
+- [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103)
+- [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100)
+- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98)
+- [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97)
+- [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96)
+- [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94)
+- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93)
+
 ### [MVP2] Partida em rede (#57)
 
 - [MVP2][FIX] Cliente loga ERROR a cada quadro depois que o servidor encerra a partida (#108)
 - [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
 - [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
 - [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
-
-### [MVP2.5] Bloco visual — toon/PBR, arte da ilha, VFX e HUD v2 (#99)
-
-- [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103)
-- [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100)
-- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98)
-- [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97)
-- [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96)
-- [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95)
-- [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94)
-- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93)
 
 ### [MVP3] Meta + deploy (#76)
 
@@ -45,9 +45,7 @@ updated: 2026-10-10
 
 ## A Fazer
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92)
+_(vazio)_
 
 ## Em Andamento
 
@@ -61,6 +59,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92, finalizado em: 2026-10-10)
 - [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67, finalizado em: 2026-10-10)
 - [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66, finalizado em: 2026-10-10)
 - [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65, finalizado em: 2026-10-10)
