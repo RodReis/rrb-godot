@@ -9,6 +9,8 @@ extends RefCounted
 ## Celula da mascara de explorado ainda nao vista / ja vista (valor do byte, canal R da textura).
 const UNSEEN: int = 0
 const SEEN: int = 255
+## Centro da celula, em fracao do lado.
+const CELL_CENTER: float = 0.5
 
 
 ## [param target] esta no raio de quem esta em [param observer]; a altura nao conta.
@@ -25,7 +27,7 @@ static func hero_shown(in_radius: bool, grass_hidden: bool) -> bool:
 
 ## Lado (celulas) da mascara quadrada que cobre [-extent, extent] em x e z.
 static func mask_side(extent: float, cell: float) -> int:
-	return ceili(2.0 * extent / cell)
+	return ceili((extent + extent) / cell)
 
 
 ## Mascara toda UNSEEN; linha = z, coluna = x, a partir de (-extent, -extent).
@@ -52,7 +54,9 @@ static func explore(
 	var seen := mask.duplicate()
 	for z: int in range(low.y, high.y + 1):
 		for x: int in range(low.x, high.x + 1):
-			var at := Vector3(-extent + (x + 0.5) * cell, 0.0, -extent + (z + 0.5) * cell)
+			var at := Vector3(
+				-extent + (x + CELL_CENTER) * cell, 0.0, -extent + (z + CELL_CENTER) * cell
+			)
 			if in_sight(center, at, radius):
 				seen[z * side + x] = SEEN
 	return seen

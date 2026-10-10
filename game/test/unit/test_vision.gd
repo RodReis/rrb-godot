@@ -91,7 +91,9 @@ func test_proprio_e_aliado_sempre_veem() -> void:
 func test_dono_recebe_o_proprio_estado_desde_o_spawn() -> void:
 	var ack := _other.get_node(NodePath(SpawnAck.NODE_NAME)) as SpawnAck
 	ack.confirm(REMOTE)
-	var filter := (_other.get_node("RollbackSynchronizer") as RollbackSynchronizer).visibility_filter
+	var filter := (
+		(_other.get_node("RollbackSynchronizer") as RollbackSynchronizer).visibility_filter
+	)
 	assert_true(filter.get_visibility_for(REMOTE))
 
 

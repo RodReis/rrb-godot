@@ -46,19 +46,21 @@ func _report(tick: int) -> void:
 	var targets := Concealment.all().size()
 	print(
 		(
-			"[neblina] filtro: media %.1f us/tick, pico %d us, %d trocas em %d ticks (%d alvos, %d "
-			+ "observadores, %d peers), tick %d"
+			(
+				"[neblina] filtro: media %.1f us/tick, pico %d us, %d trocas em %d ticks (%d alvos, %d "
+				+ "observadores, %d peers), tick %d"
+			)
+			% [
+				float(_window_usec) / maxi(_window_ticks, 1),
+				_window_peak,
+				_window_changes,
+				_window_ticks,
+				targets,
+				_observers.size(),
+				_remote.size(),
+				tick
+			]
 		)
-		% [
-			float(_window_usec) / maxi(_window_ticks, 1),
-			_window_peak,
-			_window_changes,
-			_window_ticks,
-			targets,
-			_observers.size(),
-			_remote.size(),
-			tick
-		]
 	)
 	_window_ticks = 0
 	_window_usec = 0

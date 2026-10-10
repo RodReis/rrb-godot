@@ -62,11 +62,7 @@ var _was_shown: bool = true
 ## alvo (heroi, monstro; null = bau, que nao some); [param ack] = SpawnAck (heroi); [param
 ## owner_peer] = dono (heroi) ou 0.
 static func guard(
-	target: Node3D,
-	seen_by: Callable,
-	sync: Node = null,
-	ack: SpawnAck = null,
-	owner_peer: int = 0
+	target: Node3D, seen_by: Callable, sync: Node = null, ack: SpawnAck = null, owner_peer: int = 0
 ) -> Concealment:
 	var concealment := Concealment.new()
 	concealment.name = NODE_NAME
@@ -244,7 +240,9 @@ func _set_hidden(hidden: bool, tick: int) -> void:
 		hidden_cycles += 1
 		if _first_after_hide >= 0 and _first_after_hide < tick:
 			state_leaks += 1
-			print("[visao] %s recebeu estado do tick %d escondido" % [_target.name, _first_after_hide])
+			print(
+				"[visao] %s recebeu estado do tick %d escondido" % [_target.name, _first_after_hide]
+			)
 	_hidden_here = hidden
 	_shown_tick = tick
 
