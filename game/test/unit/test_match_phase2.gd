@@ -240,3 +240,84 @@ func test_morte_no_tick_das_9_00_conta_o_kill_antes_de_julgar() -> void:
 	assert_eq(_ended[0][0], P1)
 	var stats: Dictionary = _ended[0][2]
 	assert_eq(stats[P1]["kills"], 1, "kill registrado antes do fim")
+
+
+## HUD da fase 2 (F17): kill da fase 2 vira kill_scored com o total, antes do fim da partida.
+func test_kill_scored_so_na_fase_2_com_o_total() -> void:
+	var scored: Array = []  # [peer, total, tick]
+	_match.kill_scored.connect(
+		func(peer: int, total: int, tick: int) -> void: scored.append([peer, total, tick])
+	)
+	_run(START, _at(60))
+	_kill(_b, _a, _at(60) + 1)
+	assert_eq(scored, [], "fase 1 nao conta")
+	_b.hp = _b.attributes.max_hp  # renasce
+	_run(_at(60) + 2, _at(310))
+	_kill(_b, _a, _at(310) + 1)
+	_b.hp = _b.attributes.max_hp
+	_match.watch_heroes(_at(310) + 2)
+	_kill(_b, _a, _at(310) + 3)
+	assert_eq(scored, [[P1, 1, _at(310) + 1], [P1, 2, _at(310) + 3]])
+
+
+func test_kill_scored_da_meta_chega_antes_do_fim() -> void:
+	var order: Array[String] = []
+	_match.kill_scored.connect(func(_p: int, _t: int, _k: int) -> void: order.append("kill"))
+	_match.match_ended.connect(
+		func(_w: int, _r: StringName, _s: Dictionary, _k: int) -> void: order.append("fim")
+	)
+	_run(START, _at(310))
+	for i: int in _rules.kill_goal:
+		_kill(_b, _a, _at(310) + 1 + i * 2)
+		_b.hp = _b.attributes.max_hp
+		_match.watch_heroes(_at(310) + 2 + i * 2)
+	assert_eq(order.back(), "fim")
+	assert_eq(order[order.size() - 2], "kill")
+
+
+## zone_updated: 1 vez por segundo desde os 5:00, em todo peer (no cliente a zona nao fere).
+func test_zone_updated_a_cada_segundo_da_fase_2() -> void:
+	var updates: Array = []  # [radius, next_radius, damage_pct, t_next, tick]
+	_zone.zone_updated.connect(
+		func(radius: float, next: float, pct: float, t_next: float, tick: int) -> void:
+			updates.append([radius, next, pct, t_next, tick])
+	)
+	_run(START, _at(300) - 1)
+	assert_eq(updates, [], "fase 1 sem zona")
+	_run(_at(300), _at(300) + RATE)
+	assert_eq(updates.size(), 2, "5:00 e 5:01")
+	assert_almost_eq(updates[0][0] as float, 35.0, 0.001)
+	assert_almost_eq(updates[0][1] as float, 26.0, 0.001)
+	assert_almost_eq(updates[0][2] as float, 0.01, 0.0001)
+	assert_almost_eq(updates[0][3] as float, 60.0, 0.001)
+	assert_eq(updates[0][4], _at(300))
+	assert_almost_eq(updates[1][3] as float, 59.0, 0.001)
+
+
+func test_zone_updated_tambem_no_cliente_sem_ferir() -> void:
+	var client := ZoneController.new()
+	client.rules = _rules
+	client.clock = _clock
+	add_child_autofree(client)
+	var count := [0]
+	client.zone_updated.connect(
+		func(_r: float, _n: float, _p: float, _t: float, _k: int) -> void: count[0] += 1
+	)
+	_clock.update(START)
+	client.update(_at(300), RATE)
+	assert_false(client.active)
+	assert_eq(count[0], 1)
+
+
+## Vinheta (PATTERNS P8): o flag de "fora da zona" e do servidor, no estado do heroi; vale
+## ate o pulso seguinte com folga e zera dentro do circulo.
+func test_pulso_da_zona_liga_o_flag_fora_da_zona() -> void:
+	_a.transform = Transform3D(Basis(), Vector3(30, 0, 0))
+	_run(START, _at(360))
+	_a._rollback_tick(TICK, _at(360) + 1, true)
+	_b._rollback_tick(TICK, _at(360) + 1, true)
+	assert_gt(_a.zone_ticks, RATE, "dura mais que o intervalo entre pulsos")
+	assert_eq(_b.zone_ticks, 0, "dentro do circulo")
+	for tick: int in range(_at(360) + 2, _at(360) + 2 + _a.zone_ticks):
+		_a._rollback_tick(TICK, tick, true)
+	assert_eq(_a.zone_ticks, 0, "sem pulso novo, apaga")

@@ -52,7 +52,7 @@ var _disconnected_log: Timer
 @onready var connect_button: Button = $UI/ConnectPanel/ConnectButton
 ## Rede e tick no rodape (DV tela 3); o relogio da partida esta na HUD.
 @onready var status_label: Label = $UI/Status
-@onready var hud: HudPhase1 = $HudPhase1
+@onready var hud: HudController = $Hud
 @onready var hero_select: HeroSelect = $HeroSelect
 
 
@@ -99,8 +99,8 @@ func _process(_delta: float) -> void:
 	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
 	if hero == null:
 		return  # servidor dedicado, ou cliente ainda sem heroi
-	if not hud.visible:
-		hud.bind(hero, clock, spawns, players)
+	if not hud.is_bound():
+		hud.bind(hero, clock, spawns, players, match_controller, zone)
 	status_label.text = (
 		"%s | tick %d%s"
 		% [_net_text(), NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]

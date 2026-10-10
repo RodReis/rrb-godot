@@ -1,0 +1,365 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/hud_phase2.gd" id="hud"]
+[ext_resource type="Shader" path="res://scenes/ui/zone_vignette.gdshader" id="vignette"]
+[ext_resource type="PackedScene" path="res://shared/ui/components/minimap.tscn" id="map"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hero_plate.tscn" id="plate"]
+[ext_resource type="Script" path="res://shared/ui/components/panel_card.gd" id="card"]
+[ext_resource type="Script" path="res://shared/ui/components/timer_label.gd" id="timer"]
+[ext_resource type="Script" path="res://shared/ui/components/score_banner.gd" id="score"]
+[ext_resource type="Script" path="res://shared/ui/components/zone_radar.gd" id="radar"]
+[ext_resource type="AudioStream" path="res://shared/assets/kenney/music_jingles/jingles_STEEL07.ogg" id="jingle"]
+
+[sub_resource type="ShaderMaterial" id="vignette_material"]
+shader = ExtResource("vignette")
+
+[node name="HudPhase2" type="CanvasLayer"]
+script = ExtResource("hud")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ZoneVignette" type="ColorRect" parent="Root"]
+unique_name_in_owner = true
+material = SubResource("vignette_material")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Top" type="VBoxContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 480.0
+offset_top = 24.0
+offset_right = -480.0
+offset_bottom = 200.0
+grow_horizontal = 2
+mouse_filter = 2
+
+[node name="Clock" type="PanelContainer" parent="Root/Top"]
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("card")
+variant = 1
+accent = 0
+
+[node name="ClockColumn" type="VBoxContainer" parent="Root/Top/Clock"]
+layout_mode = 2
+
+[node name="PhaseTitle" type="Label" parent="Root/Top/Clock/ClockColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelBadge"
+text = "FASE 2: CONFRONTO"
+horizontal_alignment = 1
+
+[node name="PhaseTimer" type="Label" parent="Root/Top/Clock/ClockColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "--:--"
+horizontal_alignment = 1
+script = ExtResource("timer")
+
+[node name="ScoreBanner" type="PanelContainer" parent="Root/Top"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+script = ExtResource("score")
+
+[node name="Zone" type="PanelContainer" parent="Root"]
+layout_mode = 1
+offset_left = 40.0
+offset_top = 24.0
+offset_right = 420.0
+offset_bottom = 180.0
+mouse_filter = 2
+script = ExtResource("card")
+variant = 1
+accent = 2
+
+[node name="ZoneColumn" type="VBoxContainer" parent="Root/Zone"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ZoneTitle" type="Label" parent="Root/Zone/ZoneColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "ZONA"
+
+[node name="ZoneRadius" type="Label" parent="Root/Zone/ZoneColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Raio 100%"
+
+[node name="ZoneDamage" type="Label" parent="Root/Zone/ZoneColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Dano fora"
+
+[node name="NextRow" type="HBoxContainer" parent="Root/Zone/ZoneColumn"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NextLabel" type="Label" parent="Root/Zone/ZoneColumn/NextRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"LabelMuted"
+text = "Próximo fechamento"
+
+[node name="ZoneTimer" type="Label" parent="Root/Zone/ZoneColumn/NextRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "--:--"
+script = ExtResource("timer")
+
+[node name="Right" type="VBoxContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -340.0
+offset_top = 24.0
+offset_right = -40.0
+offset_bottom = 500.0
+grow_horizontal = 0
+mouse_filter = 2
+
+[node name="MapCard" type="PanelContainer" parent="Root/Right"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("card")
+variant = 1
+accent = 0
+
+[node name="Minimap" parent="Root/Right/MapCard" instance=ExtResource("map")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="ZoneRadar" type="Control" parent="Root/Right/MapCard/Minimap"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("radar")
+
+[node name="RespawnCard" type="PanelContainer" parent="Root/Right"]
+layout_mode = 2
+mouse_filter = 2
+script = ExtResource("card")
+variant = 1
+accent = 0
+
+[node name="RespawnColumn" type="VBoxContainer" parent="Root/Right/RespawnCard"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="RespawnState" type="Label" parent="Root/Right/RespawnCard/RespawnColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "RESPAWN ATIVO"
+
+[node name="RespawnRow" type="HBoxContainer" parent="Root/Right/RespawnCard/RespawnColumn"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="RespawnHint" type="Label" parent="Root/Right/RespawnCard/RespawnColumn/RespawnRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_type_variation = &"LabelMuted"
+text = "Morte súbita em"
+
+[node name="RespawnTimer" type="Label" parent="Root/Right/RespawnCard/RespawnColumn/RespawnRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "--:--"
+script = ExtResource("timer")
+
+[node name="TransitionBanner" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -480.0
+offset_top = 260.0
+offset_right = 480.0
+offset_bottom = 360.0
+grow_horizontal = 2
+mouse_filter = 2
+script = ExtResource("card")
+variant = 1
+accent = 1
+
+[node name="TransitionColumn" type="VBoxContainer" parent="Root/TransitionBanner"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="TransitionTitle" type="Label" parent="Root/TransitionBanner/TransitionColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "OS PORTÕES DA ARENA CAÍRAM!"
+horizontal_alignment = 1
+
+[node name="TransitionRow" type="HBoxContainer" parent="Root/TransitionBanner/TransitionColumn"]
+layout_mode = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="TransitionHint" type="Label" parent="Root/TransitionBanner/TransitionColumn/TransitionRow"]
+layout_mode = 2
+size_flags_vertical = 4
+text = "PREPARE-SE PARA A BATALHA · a zona surge na borda da arena"
+
+[node name="TransitionTimer" type="Label" parent="Root/TransitionBanner/TransitionColumn/TransitionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "05"
+script = ExtResource("timer")
+format = 1
+
+[node name="SuddenDeathBanner" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -560.0
+offset_top = 240.0
+offset_right = 560.0
+offset_bottom = 400.0
+grow_horizontal = 2
+mouse_filter = 2
+script = ExtResource("card")
+variant = 0
+accent = 2
+
+[node name="SuddenColumn" type="VBoxContainer" parent="Root/SuddenDeathBanner"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="SuddenDeathTitle" type="Label" parent="Root/SuddenDeathBanner/SuddenColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelVictory"
+text = "MORTE SÚBITA"
+horizontal_alignment = 1
+
+[node name="SuddenDeathSubtitle" type="Label" parent="Root/SuddenDeathBanner/SuddenColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "QUEM MORRER ESTÁ FORA!"
+horizontal_alignment = 1
+
+[node name="SuddenDeathText" type="Label" parent="Root/SuddenDeathBanner/SuddenColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Respawn desligado"
+horizontal_alignment = 1
+
+[node name="Respawn" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -60.0
+offset_right = 400.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("card")
+variant = 1
+accent = 2
+
+[node name="RespawnColumn" type="VBoxContainer" parent="Root/Respawn"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="RespawnTitle" type="Label" parent="Root/Respawn/RespawnColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "VOCÊ FOI ABATIDO!"
+horizontal_alignment = 1
+
+[node name="RespawnText" type="Label" parent="Root/Respawn/RespawnColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Renascendo na base"
+horizontal_alignment = 1
+
+[node name="EndBanner" type="PanelContainer" parent="Root"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -64.0
+offset_right = 400.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("card")
+variant = 0
+accent = 1
+
+[node name="EndColumn" type="VBoxContainer" parent="Root/EndBanner"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="EndTitle" type="Label" parent="Root/EndBanner/EndColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelBadge"
+text = "PARTIDA ENCERRADA"
+horizontal_alignment = 1
+
+[node name="EndResult" type="Label" parent="Root/EndBanner/EndColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelVictory"
+text = "VITÓRIA"
+horizontal_alignment = 1
+
+[node name="HeroPlate" parent="Root" instance=ExtResource("plate")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="TransitionSound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("jingle")
+
+[node name="SuddenDeathSound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("jingle")
+pitch_scale = 0.8

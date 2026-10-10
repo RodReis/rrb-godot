@@ -58,3 +58,23 @@ func test_pulso_de_dano_e_fracao_do_hp_maximo() -> void:
 	assert_eq(ZoneRules.damage(600, 0.01), 6)
 	assert_eq(ZoneRules.damage(1005, 0.05), 50)
 	assert_eq(ZoneRules.damage(40, 0.01), 1, "ao menos 1")
+
+
+## Proximo fechamento (F17, HUD): o proximo ponto da tabela estritamente depois de agora.
+func test_proximo_ponto_e_o_seguinte_ao_tempo_atual() -> void:
+	assert_eq(ZoneRules.next_point(_rules, 0.0), 1, "5:00 -> 6:00")
+	assert_eq(ZoneRules.next_point(_rules, 135.0), 3, "7:15 -> 8:00")
+	assert_eq(ZoneRules.next_point(_rules, 299.9), 5, "9:59 -> 10:00")
+	assert_eq(ZoneRules.next_point(_rules, 300.0), -1, "colapso: nenhum")
+
+
+func test_tempo_ate_o_proximo_fechamento() -> void:
+	assert_almost_eq(ZoneRules.until_next(_rules, 0.0), 60.0, 0.001)
+	assert_almost_eq(ZoneRules.until_next(_rules, 135.0), 45.0, 0.001)
+	assert_eq(ZoneRules.until_next(_rules, 300.0), 0.0, "depois do ultimo ponto")
+
+
+func test_raio_do_proximo_fechamento() -> void:
+	assert_almost_eq(ZoneRules.next_radius(_rules, 0.0), 26.0, 0.001)
+	assert_almost_eq(ZoneRules.next_radius(_rules, 135.0), 8.75, 0.001)
+	assert_almost_eq(ZoneRules.next_radius(_rules, 300.0), 0.0, 0.001, "fica no ultimo")

@@ -15,6 +15,8 @@ const MONSTERS: Array[MonsterData] = [
 	preload("res://shared/data/monsters/skeleton_king_boss.tres"),
 ]
 const KNIGHT: HeroData = preload("res://shared/data/heroes/knight.tres")
+const RANGER: HeroData = preload("res://shared/data/heroes/ranger.tres")
+const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 const ITEMS: Array[ItemData] = [
 	preload("res://shared/data/items/guard_set/guard_helm_t1.tres"),
 	preload("res://shared/data/items/guard_set/guard_chest_t2.tres"),
@@ -23,6 +25,7 @@ const ITEMS: Array[ItemData] = [
 ## Toast da galeria fica na tela.
 const TOAST_FOREVER: float = 3600.0
 const CARD_SIZE: Vector2 = Vector2(180, 72)
+const RADAR_SIZE: Vector2 = Vector2(160, 160)
 
 ## Secoes na coluna esquerda; as seguintes vao para a direita.
 const LEFT_SECTIONS: int = 5
@@ -44,6 +47,8 @@ func _ready() -> void:
 	_slots()
 	_toasts()
 	_catalog()
+	_scores()
+	_radars()
 
 
 func _typography() -> void:
@@ -205,6 +210,41 @@ func _catalog() -> void:
 	for monster: MonsterData in MONSTERS:
 		entries.append(CatalogEntry.new(monster.id, monster.display_name))
 	list.bind(entries)
+
+
+func _scores() -> void:
+	var row := _row("ScoreBanner")
+	# kills de quem joga, do adversario, legenda
+	var samples: Array[Array] = [[3, 2, "líder: você"], [1, 4, "líder: oponente"], [2, 2, "empate"]]
+	for sample: Array in samples:
+		var banner := ScoreBanner.new()
+		_add(row, banner, sample[2])
+		banner.bind(
+			ScoreBanner.PlayerScore.new(KNIGHT.display_name.to_upper(), sample[0], true),
+			ScoreBanner.PlayerScore.new(RANGER.display_name.to_upper(), sample[1], false),
+			RULES.kill_goal
+		)
+
+
+func _radars() -> void:
+	var row := _row("ZoneRadar (por cima do Minimap na HUD F2)")
+	# fracao do raio, fracao do proximo, segundos ate ele, legenda
+	var samples: Array[Array] = [
+		[1.0, 0.75, 60.0, "5:00 (arena toda)"],
+		[0.5, 0.25, 45.0, "7:15"],
+		[0.1, 0.0, 0.0, "morte súbita"],
+	]
+	var players := PackedVector3Array([Vector3(0.2, 0.0, 0.3), Vector3(-0.6, 0.0, -0.5)])
+	var colors := PackedColorArray([UiTokens.GREEN, UiTokens.RED])
+	for sample: Array in samples:
+		var card := PanelCard.new()
+		card.variant = PanelCard.Surface.SURFACE
+		var radar := ZoneRadar.new()
+		radar.custom_minimum_size = RADAR_SIZE
+		card.add_child(radar)
+		_add(row, card, sample[3])
+		radar.set_zone(sample[0], sample[1], sample[2])
+		radar.set_players(players, colors)
 
 
 func _card(variant: PanelCard.Surface, accent: PanelCard.Accent) -> PanelCard:

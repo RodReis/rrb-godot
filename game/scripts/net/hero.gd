@@ -17,13 +17,18 @@ extends Combatant
 ## cura a cada segundo; tomar dano pausa a cura (heal_pause_ticks, estado de rollback).
 ## Fase 2 (F16): a zona chega pelo ledger como true_damage; da morte subita (respawn_off_tick)
 ## em diante o morto fica morto; o dano tomado de cada heroi fica registrado por tick para o
-## desempate (KillTracker).
+## desempate (KillTracker). Cada pulso da zona liga zone_ticks, o flag de "fora da zona" que a
+## vinheta da HUD le (F17, PATTERNS P8).
 
 const GROUP: StringName = &"heroes"
 ## respawn_off_tick enquanto o respawn vale.
 const RESPAWN_ALWAYS: int = 9223372036854775807
 ## Cena de cada heroi pelo id do HeroData.
 const SCENE_PATH: String = "res://scenes/heroes/%s.tscn"
+## Flag de fora da zona: dura um intervalo entre pulsos (1 s) mais a folga, para nao piscar entre
+## pulsos nem com estado atrasado; nos ultimos ZONE_FADE_SECONDS a vinheta some aos poucos.
+const ZONE_FLAG_SECONDS: float = 1.5
+const ZONE_FADE_SECONDS: float = 0.5
 
 @export var hero_data: HeroData
 @export var xp_curve: XpCurve
@@ -80,6 +85,8 @@ var interact_ticks: int = 0
 var respawn_ticks: int = 0
 ## Ticks em que a fonte nao cura depois de um dano.
 var heal_pause_ticks: int = 0
+## Ticks ate deixar de contar como fora da zona (> 0 = o ultimo pulso da zona pegou o heroi).
+var zone_ticks: int = 0
 
 var _rollback: RollbackSynchronizer
 var _attributes_equipment: Vector4i = Inventory.NONE
@@ -144,6 +151,7 @@ func _ready() -> void:
 		":interact_ticks",
 		":respawn_ticks",
 		":heal_pause_ticks",
+		":zone_ticks",
 	]
 	_rollback.state_properties.append_array(_extra_state_properties())
 	_rollback.input_properties = [
@@ -344,6 +352,7 @@ func _die(effect: HitEffect) -> void:
 	slow_ticks = 0
 	invuln_ticks = 0
 	interact_ticks = 0
+	zone_ticks = 0
 
 
 ## Gasta um ponto no slot pedido pelo input (Ctrl+Q/E/R). Valor do cliente: validado aqui.
@@ -375,6 +384,7 @@ func _tick_timers() -> void:
 	r_cooldown = maxi(r_cooldown - 1, 0)
 	stun_ticks = maxi(stun_ticks - 1, 0)
 	heal_pause_ticks = maxi(heal_pause_ticks - 1, 0)
+	zone_ticks = maxi(zone_ticks - 1, 0)
 	slow_ticks = maxi(slow_ticks - 1, 0)
 	invuln_ticks = maxi(invuln_ticks - 1, 0)
 	shield_ticks = maxi(shield_ticks - 1, 0)
@@ -447,6 +457,8 @@ func _apply_hits(tick: int) -> void:
 		if not is_alive():
 			continue
 		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
+		if effect.true_damage > 0:
+			zone_ticks = SkillRules.seconds_to_ticks(ZONE_FLAG_SECONDS, NetworkTime.tickrate)
 		var damage := CombatRules.mitigated(effect.damage, attributes.defense)
 		if invuln_ticks > 0:
 			damage = 0

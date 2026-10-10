@@ -60,6 +60,9 @@ func _labels(theme: Theme) -> void:
 	theme.set_color(&"font_color", &"LabelCounterWarning", UiTokens.GOLD)
 	theme.set_type_variation(&"LabelCounterDanger", &"LabelCounter")
 	theme.set_color(&"font_color", &"LabelCounterDanger", UiTokens.RED)
+	# ScoreBanner: kills de quem joga (as do adversario usam o Danger).
+	theme.set_type_variation(&"LabelCounterAlly", &"LabelCounter")
+	theme.set_color(&"font_color", &"LabelCounterAlly", UiTokens.GREEN)
 	# HotkeyBadge MD: sobre o icone da skill, precisa de fundo para ler.
 	theme.set_type_variation(&"LabelBadgeMd", &"LabelBadge")
 	theme.set_color(&"font_color", &"LabelBadgeMd", UiTokens.TEXT)

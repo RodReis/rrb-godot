@@ -1,7 +1,8 @@
 extends GutTest
-## Contas da HUD da fase 1 sobre a curva real (GDB §3.2, §3.3).
+## Contas das HUDs sobre a curva e a zona reais (GDB §3.2, §3.3, §7.1).
 
 const CURVE: XpCurve = preload("res://shared/data/rules/xp_table.tres")
+const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 
 
 func test_xp_progress_inside_level() -> void:
@@ -35,3 +36,31 @@ func test_warning_only_in_last_30_seconds() -> void:
 func test_catch_up_two_levels_behind() -> void:
 	assert_almost_eq(HudMath.catch_up_bonus(CURVE, 3, 5), CURVE.catch_up_bonus, 0.0001)
 	assert_eq(HudMath.catch_up_bonus(CURVE, 4, 5), 0.0)
+
+
+## Vinheta da zona (PATTERNS P8): dano/s / maior dano da tabela (5 %), so com o flag do
+## servidor; some aos poucos nos ultimos fade_ticks.
+func test_zone_vignette_by_damage_over_the_peak() -> void:
+	assert_almost_eq(HudMath.zone_vignette(RULES, 0.05, 45, 15), 1.0, 0.0001)
+	assert_almost_eq(HudMath.zone_vignette(RULES, 0.01, 45, 15), 0.2, 0.0001)
+
+
+func test_zone_vignette_off_without_server_flag() -> void:
+	assert_eq(HudMath.zone_vignette(RULES, 0.05, 0, 15), 0.0)
+
+
+func test_zone_vignette_fades_in_the_last_ticks() -> void:
+	assert_almost_eq(HudMath.zone_vignette(RULES, 0.05, 15, 15), 1.0, 0.0001)
+	assert_almost_eq(HudMath.zone_vignette(RULES, 0.05, 6, 15), 0.4, 0.0001)
+
+
+func test_zone_fraction_of_the_first_radius() -> void:
+	assert_almost_eq(HudMath.zone_fraction(RULES, 35.0), 1.0, 0.0001)
+	assert_almost_eq(HudMath.zone_fraction(RULES, 17.5), 0.5, 0.0001)
+	assert_eq(HudMath.zone_fraction(RULES, 0.0), 0.0)
+
+
+func test_decimal_uses_comma() -> void:
+	assert_eq(HudMath.decimal(17.5), "17,5")
+	assert_eq(HudMath.decimal(3.0), "3,0")
+	assert_eq(HudMath.decimal(0.02 * 100.0), "2,0")

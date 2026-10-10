@@ -3,10 +3,8 @@ extends GutTest
 
 const HUD: PackedScene = preload("res://scenes/ui/hud_phase1.tscn")
 const KNIGHT: PackedScene = preload("res://scenes/heroes/knight.tscn")
-const CHEST: PackedScene = preload("res://scenes/world/chest.tscn")
 const ARENA: PackedScene = preload("res://scenes/arena/arena.tscn")
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
-const GUARD_HELM: ItemData = preload("res://shared/data/items/guard_set/guard_helm_t1.tres")
 const TICKRATE: int = 30
 
 var _players: Node3D
@@ -70,38 +68,6 @@ func test_hidden_until_bound() -> void:
 	assert_true(_hud.visible)
 
 
-func test_plate_shows_name_level_and_hp() -> void:
-	await _bind_and_wait()
-	assert_eq((_node("%HeroName") as Label).text, "CAVALEIRO")
-	assert_eq((_node("%HeroLevel") as Label).text, "NÍVEL 1")
-	var hp := "%d / %d" % [_hero.hp, _hero.attributes.max_hp]
-	assert_eq((_node("%HpBar").get_node("%Numbers") as Label).text, hp)
-
-
-func test_r_locked_and_q_ready_at_level_1() -> void:
-	await _bind_and_wait()
-	assert_eq((_node("%SkillR") as SkillButton).state, SkillButton.State.LOCKED)
-	assert_eq((_node("%SkillQ") as SkillButton).state, SkillButton.State.READY)
-
-
-func test_cooldown_from_hero_state() -> void:
-	await _bind_and_wait()
-	_hero.q_cooldown = 30
-	await wait_process_frames(1)
-	assert_eq((_node("%SkillQ") as SkillButton).state, SkillButton.State.COOLING)
-
-
-func test_new_item_fills_slot_notifies_and_counts_set() -> void:
-	await _bind_and_wait()
-	_hero.equipment = Inventory.equip(_hero.equipment, GUARD_HELM)
-	await wait_process_frames(1)
-	assert_false((_node("%Helm") as SlotItem).is_empty())
-	var toast := _node("%Toast") as Toast
-	assert_true(toast.visible)
-	assert_string_contains((toast.get_child(0) as Label).text, GUARD_HELM.display_name)
-	assert_string_contains((_node("%SetText") as Label).text, "Guarda 1/3")
-
-
 func test_catch_up_when_two_levels_behind() -> void:
 	_spawn_hero("2", 5)
 	await _bind_and_wait()
@@ -111,20 +77,6 @@ func test_catch_up_when_two_levels_behind() -> void:
 func test_no_catch_up_alone() -> void:
 	await _bind_and_wait()
 	assert_false((_node("%CatchUp") as Control).visible)
-
-
-func test_offer_when_chest_in_reach_holds_an_item() -> void:
-	var chest := CHEST.instantiate() as Chest
-	_spawns.add_child(chest)
-	chest.opened = true
-	chest.item = Ids.to_int(GUARD_HELM.id)
-	await _bind_and_wait()
-	var offer := _node("%Offer") as Control
-	assert_true(offer.visible)
-	assert_string_contains((_node("%OfferText") as Label).text, GUARD_HELM.display_name)
-	_hero.global_position = Vector3(50.0, 0.0, 0.0)
-	await wait_process_frames(1)
-	assert_false(offer.visible)
 
 
 func test_boss_warning_shows_banner_with_time_from_rules() -> void:

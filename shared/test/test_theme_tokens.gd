@@ -106,6 +106,7 @@ func test_every_variation_used_by_components_exists() -> void:
 	var used: Array[StringName] = []
 	used.append_array(HotkeyBadge.SIZE_TYPES)
 	used.append_array(TimerLabel.STATE_TYPES)
+	used.append_array(ScoreBanner.SCORE_TYPES)
 	used.append_array(StatBar.VARIANT_TYPES)
 	used.append_array(PanelCard.VARIANT_TYPES)
 	used.append_array(PanelCard.ACCENT_TYPES)

@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/hud_controller.gd" id="controller"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud_phase1.tscn" id="phase1"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud_phase2.tscn" id="phase2"]
+
+[node name="Hud" type="Node"]
+script = ExtResource("controller")
+
+[node name="HudPhase1" parent="." instance=ExtResource("phase1")]
+
+[node name="HudPhase2" parent="." instance=ExtResource("phase2")]
