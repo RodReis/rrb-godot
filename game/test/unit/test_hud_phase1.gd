@@ -53,7 +53,7 @@ func test_loot_counter_counts_lateral_fields_and_respawned_monsters() -> void:
 	assert_eq(loot.text, "Baús abertos 0/24 · Monstros 28")
 	var monster: Monster = null
 	for node: Node in spawns.get_children():
-		if node is Monster:
+		if node is Monster and node.name != SpawnDirector.BOSS_NAME:
 			monster = node as Monster
 	monster.hp = 0
 	await wait_process_frames(1)

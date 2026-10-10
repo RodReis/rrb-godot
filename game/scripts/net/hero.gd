@@ -135,6 +135,7 @@ func _ready() -> void:
 	]
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
+	SpawnAck.guard(self, [_rollback.visibility_filter])
 
 	var interpolator := TickInterpolator.new()
 	interpolator.name = "TickInterpolator"

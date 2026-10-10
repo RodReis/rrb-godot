@@ -11,6 +11,7 @@ signal first_opened(peer: int, chest_uid: int, tick: int)
 
 const GROUP: StringName = &"chests"
 const LID_OPEN_DEGREES: float = -110.0
+const NOT_OPENED: int = -1
 
 @export var rules: MatchRules
 @export var catalog: ItemCatalog
@@ -30,6 +31,8 @@ var uid: int = 0
 var drop: int = Ids.NONE
 
 var opened: bool = false
+## Tick do servidor em que abriu (NOT_OPENED = fechado), igual nos dois lados (NetProbe, F20).
+var opened_tick: int = NOT_OPENED
 ## Item esperando troca no bau aberto; Ids.NONE = vazio.
 var item: int = Ids.NONE
 
@@ -106,9 +109,11 @@ func _refresh_visual() -> void:
 	_lid.rotation_degrees.x = LID_OPEN_DEGREES if opened else 0.0
 
 
-## [param _tick] do evento (ARCHITECTURE-GAME §3.2).
+## [param tick] do evento (ARCHITECTURE-GAME §3.2).
 @rpc("authority", "call_local", "reliable")
-func _show(_tick: int, p_opened: bool, p_item: int) -> void:
+func _show(tick: int, p_opened: bool, p_item: int) -> void:
+	if p_opened and opened_tick == NOT_OPENED:
+		opened_tick = tick
 	opened = p_opened
 	item = p_item
 	_refresh_visual()

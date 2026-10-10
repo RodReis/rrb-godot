@@ -17,4 +17,6 @@ if [ -n "$NETEM_DELAY_MS" ]; then
   echo "[netem] rtt=${NETEM_DELAY_MS}ms (${half_delay}ms por direcao) jitter=${NETEM_JITTER_MS:-0}ms loss=${loss}% por direcao"
 fi
 
-exec godot --headless --path /game -- --server "--port=${PORT:-7000}"
+# GAME_ARGS: argumentos extras do jogo, separados por espaco (ex.: "--probe --seed=20").
+# shellcheck disable=SC2086
+exec godot --headless --path /game -- --server "--port=${PORT:-7000}" ${GAME_ARGS:-}

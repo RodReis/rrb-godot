@@ -6,9 +6,11 @@ extends Node3D
 ## na fase 1 renasce no mesmo node apos MatchRules.monster_respawn_phase1 (GDB §5, F36); na
 ## transicao (5:00) os pendentes sao cancelados. Bau e boss nao voltam (GDB §6.2, §7.1).
 ## Drops dos baus sorteados na criacao com a seed da partida (ARCHITECTURE-GAME §3.3);
-## so os do servidor valem. Cena do monstro por id em SCENE_PATH. O Rei Esqueleto nasce no
-## marcador BOSS quando o MatchClock da boss_spawned (3:30, nos dois lados); ao morrer vira um
-## bau epico no lugar (PI 2026-10-09), avisado aos clientes por RPC confiavel.
+## so os do servidor valem. Cena do monstro por id em SCENE_PATH. O Rei Esqueleto existe desde o
+## inicio no marcador BOSS, fora do mapa (Monster.present), e o servidor o traz quando o MatchClock
+## da boss_spawned (3:30); vivo aos 5:00, sai sem drop (R-PEND-06). Assim nenhum monstro nasce
+## no meio da partida e o estado dele nunca chega antes do node (F20). Ao morrer vira um bau
+## epico no lugar (PI 2026-10-09), avisado aos clientes por RPC confiavel.
 
 ## Para a HUD (F13). [param peer] = quem deu o golpe final.
 signal boss_killed(peer: int)
@@ -37,6 +39,8 @@ var _respawn_at: Dictionary[Monster, int] = {}
 var _respawn_open: bool = true
 ## Menor tick pendente: update() so percorre o dicionario quando ele chega.
 var _next_respawn: int = NO_RESPAWN
+## O MatchClock ja deu boss_spawned (3:30).
+var _boss_spawned: bool = false
 
 
 func _ready() -> void:
@@ -62,6 +66,7 @@ func _ready() -> void:
 		_last_number += 1
 		spawned.transform = global_transform.affine_inverse() * marker.global_transform
 		add_child(spawned)
+	_add_boss()
 	NetworkTime.on_tick.connect(_on_network_tick)
 
 
@@ -89,9 +94,9 @@ func stop_respawns(_tick: int = 0) -> void:
 
 
 ## Servidor e clientes (boss_warning do MatchClock, 3:00): pista visual no marcador BOSS ate o
-## boss surgir. Repetir, ou boss ja vivo/morto, e ignorado.
+## boss surgir. Repetir, ou boss ja surgido, e ignorado.
 func warn_boss(_tick: int = 0) -> void:
-	if has_node(BOSS_PORTAL_NAME) or has_node(BOSS_NAME) or has_node(BOSS_CHEST_NAME):
+	if has_node(BOSS_PORTAL_NAME) or _boss_spawned:
 		return
 	var marker := _boss_marker()
 	if marker == null:
@@ -102,14 +107,32 @@ func warn_boss(_tick: int = 0) -> void:
 	add_child(portal)
 
 
-## Servidor e clientes (boss_spawned do MatchClock). Repetir, ou boss ja morto (cliente que
-## entrou depois), e ignorado.
+## Servidor e clientes (boss_spawned do MatchClock): tira o portal; o servidor traz o boss, que
+## chega aos clientes pelo estado replicado. Repetir, ou boss ja morto, e ignorado.
 func spawn_boss(_tick: int = 0) -> void:
 	var portal := get_node_or_null(BOSS_PORTAL_NAME)
 	if portal != null:
 		portal.free()
-	if has_node(BOSS_NAME) or has_node(BOSS_CHEST_NAME):
+	if _boss_spawned or has_node(BOSS_CHEST_NAME):
 		return
+	_boss_spawned = true
+	var boss := get_node_or_null(BOSS_NAME) as Monster
+	if boss != null and multiplayer.is_server():
+		boss.revive()
+
+
+## Servidor e clientes (MatchClock.phase1_ended, 5:00): o boss vivo sai do mapa sem drop nem XP
+## (R-PEND-06, PI 2026-10-10); morto, o bau dele fica.
+func dismiss_boss(tick: int = 0) -> void:
+	var boss := get_node_or_null(BOSS_NAME) as Monster
+	if boss == null or not boss.is_alive() or not multiplayer.is_server():
+		return
+	boss.leave()
+	print("[spawn] Rei Esqueleto vivo aos 5:00 sai do mapa sem drop, tick %d" % tick)
+
+
+## Servidor e clientes, no _ready: o boss fora do mapa, na mesma ordem de nome e uid dos dois lados.
+func _add_boss() -> void:
 	var marker := _boss_marker()
 	if marker == null:
 		return
@@ -118,6 +141,7 @@ func spawn_boss(_tick: int = 0) -> void:
 		return
 	_last_number += 1
 	boss.name = BOSS_NAME
+	boss.present = false
 	boss.transform = global_transform.affine_inverse() * marker.global_transform
 	boss.died.connect(_on_boss_died)
 	add_child(boss)

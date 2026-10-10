@@ -31,10 +31,11 @@ func _spawn_hero(id: int, team: int, level: int) -> Hero:
 	return hero
 
 
+## Monstros dos marcadores (sem o Rei Esqueleto, que fica fora do mapa ate 3:30).
 func _monsters() -> Array[Monster]:
 	var result: Array[Monster] = []
 	for node: Node in _director.get_children():
-		if node is Monster:
+		if node is Monster and node.name != SpawnDirector.BOSS_NAME:
 			result.append(node as Monster)
 	return result
 

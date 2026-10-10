@@ -6,7 +6,9 @@ extends Combatant
 ## StateSynchronizer + TickInterpolator, fora do rollback. Golpe no heroi vai para o ledger
 ## dele; golpe de heroi entra aqui na hora, uma vez por tick + fonte. Ao morrer da o XP ao
 ## matador (com catch-up, GDB §3.3). Renasce no mesmo node (revive) quando o SpawnDirector
-## manda (fase 1, F36): HP e posicao ja replicam, sem spawn novo.
+## manda (fase 1, F36): HP e posicao ja replicam, sem spawn novo. Fora do mapa (present falso):
+## o Rei Esqueleto existe desde o inicio, dormente ate 3:30, e sai aos 5:00 se vivo (F20) — nenhum
+## monstro nasce nem some da arvore no meio da partida, entao nenhum estado chega antes do node.
 
 ## Servidor apenas. [param killer_id] = peer_id do golpe final; [param tick] = tick da morte.
 signal died(killer_id: int, tick: int)
@@ -23,6 +25,9 @@ var home_team: int = GateRules.TEAM_NEUTRAL
 # Estado replicado.
 var hp: int = 0
 var attack_cooldown: int = 0
+## No mapa. Falso: invisivel e sem HP (boss antes de 3:30 e depois de sair aos 5:00). Definido
+## pelo SpawnDirector antes de entrar na arvore.
+var present: bool = true
 
 var state: MonsterRules.State = MonsterRules.State.IDLE
 var _home: Vector3 = Vector3.ZERO
@@ -38,16 +43,18 @@ var _seen: HitLedger = HitLedger.new()  # golpes ja aplicados: ressimular o hero
 
 func _ready() -> void:
 	add_to_group(GROUP)
-	hp = roundi(data.hp)
+	hp = roundi(data.hp) if present else 0
 	_home = global_position
 	_home_basis = global_basis
 	_alive_mask = collision_mask
+	if not present:
+		collision_mask = 0
 	axis_lock_linear_y = true
 
 	var sync := StateSynchronizer.new()
 	sync.name = "StateSynchronizer"
 	sync.root = self
-	sync.properties = [":transform", ":velocity", ":hp", ":attack_cooldown"]
+	sync.properties = [":transform", ":velocity", ":hp", ":attack_cooldown", ":present"]
 	add_child(sync)
 
 	var interpolator := TickInterpolator.new()
@@ -72,6 +79,7 @@ func is_alive() -> bool:
 
 ## Servidor apenas (SpawnDirector, F36): volta ao marcador, parado, com HP cheio e colisao.
 func revive() -> void:
+	present = true
 	hp = roundi(data.hp)
 	global_transform = Transform3D(_home_basis, _home)
 	velocity = Vector3.ZERO
@@ -80,6 +88,16 @@ func revive() -> void:
 	_stun_ticks = 0
 	_target = null
 	collision_mask = _alive_mask
+
+
+## Servidor apenas (SpawnDirector, F20): sai do mapa sem morrer — sem XP, sem drop, sem died.
+func leave() -> void:
+	present = false
+	hp = 0
+	velocity = Vector3.ZERO
+	state = MonsterRules.State.IDLE
+	_target = null
+	collision_mask = 0
 
 
 ## Servidor apenas. Ressimular o heroi repete o golpe com o mesmo tick + fonte: ignorado.
