@@ -59,6 +59,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-046][F46] Arena "Rift Medieval adaptado": borda quadrada 80×80, rio em S NO–SE com lagoas, 3 rotas, selva nos quadrantes (#110, finalizado em: 2026-10-10)
 - [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92, finalizado em: 2026-10-10)
 - [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67, finalizado em: 2026-10-10)
 - [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66, finalizado em: 2026-10-10)
