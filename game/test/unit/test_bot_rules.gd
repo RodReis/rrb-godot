@@ -34,9 +34,10 @@ func test_perfil_aprovado() -> void:
 			_profile.retreat_hp_pct,
 			_profile.danger_range,
 			_profile.safe_seconds,
-			_profile.fight_range
+			_profile.fight_range,
+			_profile.contest_hp_pct
 		],
-		[0.3, 8.0, 3.0, 8.0]
+		[0.3, 8.0, 3.0, 8.0, 0.7]
 	)
 
 
@@ -66,6 +67,18 @@ func test_contesta_a_partir_de_3_00_com_nivel_igual_ou_maior() -> void:
 	v.elapsed = 179.9
 	v.enemy_level = 2
 	assert_eq(_next(S.FARM, v), S.FARM)
+
+
+func test_so_contesta_o_boss_com_hp_de_70_por_cento_ou_mais() -> void:
+	# PI 2026-10-10 (#74): sem cura passiva, voltar ao boss com HP baixo era morrer em loop.
+	var v := _view()
+	v.elapsed = 180.0
+	v.hp_pct = 0.7
+	assert_eq(_next(S.FARM, v), S.CONTEST)
+	v.hp_pct = 0.69
+	assert_eq(_next(S.FARM, v), S.FARM)
+	assert_eq(_next(S.CONTEST, v), S.FARM, "larga o boss quando o HP cai")
+	assert_false(BotRules.wants_contest(v, _profile))
 
 
 func test_luta_com_nivel_maior() -> void:
