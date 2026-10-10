@@ -21,6 +21,8 @@ const CHARGE_REACH: float = 0.8
 ## (--level de dev); depois o nivel sai do XP.
 var level: int = LaunchArgs.DEFAULT_LEVEL
 var peer_id: int = 0
+## Heroi do bot (F12): o Input e um BotInput e o dono dele e o servidor (peer 1).
+var is_bot: bool = false
 var attributes: HeroAttributes
 
 # Estado de rollback.
@@ -64,7 +66,7 @@ func _ready() -> void:
 	ranks = XpTable.typical_ranks(xp_curve, level)
 	hp = attributes.max_hp
 	set_multiplayer_authority(1)
-	input.set_multiplayer_authority(peer_id)
+	input.set_multiplayer_authority(1 if is_bot else peer_id)
 
 	# Heroi planar (#41): perto de muro a despenetracao mexia no y e o encaixe no chao do
 	# move_and_slide() passava a depender de is_on_floor() do tick anterior, que fica fora do

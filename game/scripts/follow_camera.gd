@@ -18,8 +18,6 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if multiplayer.is_server():
-		return
 	var me := get_node_or_null("../Players/%d" % multiplayer.get_unique_id()) as Node3D
 	if me == null:
 		_yaw_locked = false

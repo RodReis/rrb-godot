@@ -1,6 +1,7 @@
 class_name LaunchArgs
 extends RefCounted
 ## Interpreta os argumentos de usuario (depois de `--` na linha de comando do Godot).
+## --offline: modo host (servidor + jogador local no mesmo processo); --bot: heroi bot no 2o slot.
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
@@ -21,10 +22,16 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"level": DEFAULT_LEVEL,
 		"seed": NO_SEED,
 		"time": DEFAULT_TIME,
+		"offline": false,
+		"bot": false,
 	}
 	for arg: String in args:
 		if arg == "--server":
 			result["mode"] = "server"
+		elif arg == "--offline":
+			result["offline"] = true
+		elif arg == "--bot":
+			result["bot"] = true
 		elif arg == "--autopilot":
 			result["autopilot"] = true
 		elif arg.begins_with("--level="):
