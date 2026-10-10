@@ -1033,7 +1033,8 @@ func _ready() -> void:
 | Ação de Entrada (`InputMap`) | Teclado & Mouse | Gamepad (Xbox/PlayStation) | Efeito na Interface | 
 | ----- | ----- | ----- | ----- | 
 | `move_forward/back/left/right` | `W`, `S`, `A`, `D` | Analógico Esquerdo | Movimenta o Campeão | 
-| `primary_attack` | Botão Esquerdo do Mouse | Gatilho Direito (`RT` / `R2`) | Executa Ataque Básico | 
+| `primary_attack` | Botão Direito do Mouse (F45, PI 2026-10-10) | Gatilho Direito (`RT` / `R2`) | Executa Ataque Básico | 
+| `camera_orbit` | Botão Esquerdo do Mouse segurado + arrastar (F45) | — | Gira a câmera 360° em volta do herói | 
 | `skill_q` | Tecla `Q` | Botão Superior Esquerdo (`LB` / `L1`) | Habilidade 1 | 
 | `skill_e` | Tecla `E` | Botão Superior Direito (`RB` / `R1`) | Habilidade 2 | 
 | `skill_r` | Tecla `R` | Gatilho Esquerdo (`LT` / `L2`) | Ultimate (Nível 6+) | 

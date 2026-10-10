@@ -23,8 +23,8 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-13 | Fim garantido: aos 5:00 da fase 2 dano dobra a cada 10 s | PRD §3.4 | F16 | game | MVP2 | mantido com mudança — PI 2026-10-10: aos 10:00 resolução imediata por HP% com desempate (GDB §7.2 item 3); o "dobra a cada 10 s" do PRD não se aplica (GDB vence, ADR-0004) |
 | P-14 | XP por kill na fase 2; monstros não respawnam | PRD §3.4 | F16 | game | MVP2 | mantido — R-PEND-06 decidida: monstros comuns ficam; Rei Esqueleto vivo aos 5:00 sai sem drop |
 | P-15 | Ordem de vitória; nunca empate | PRD §3.5 | F16 | game | MVP2 | mantido |
-| P-16 | Câmera 3ª pessoa ~45°, distância fixa | PRD §3.6 | F31 | game | MVP1 | mantido |
-| P-17 | Teclado/mouse: WASD, mira, LMB, Q/E/R, F, Espaço | PRD §3.6 | F31, F6 | game, shared | MVP1 | mantido |
+| P-16 | Câmera 3ª pessoa ~45°, distância fixa | PRD §3.6 | F31, F45 | game | MVP1 | mantido — yaw fixo do time (F31) passa a ser só o inicial; giro 360° com o botão esquerdo (F45, MVP2.5, PI 2026-10-10) |
+| P-17 | Teclado/mouse: WASD, mira, LMB, Q/E/R, F, Espaço | PRD §3.6 | F31, F6, F45 | game, shared | MVP1 | mantido — ataque básico passa ao botão direito (F45, PI 2026-10-10) |
 | P-18 | Gamepad | PRD §3.6 | F31 | game | MVP1 | mantido |
 | P-19 | Plano B câmera isométrica + mira assistida | PRD §3.6 | decisão M4 | game | MVP4 | adiado (gatilho: playtest) |
 | P-20 | Bot FSM fase 1 e fase 2 | PRD §3.7 | F12, F19 | game | MVP1/2 | mantido |
@@ -97,7 +97,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-16 | Idem: torres rúnicas, ouro 18 g/s, upgrade de skill por ouro, aura do boss, tier lendário, Elo, lama −15 %, relevo −1,8 m, zona 1,5→6 %, câmera isométrica padrão | `FORA-DE-ESCOPO.md` | — | **excluídos/adiados** pelo PI em 2026-10-09 |
 | V-17 | Mato alto que esconde (Astro Arena / Brawl Stars) | F7 (geometria), F32 (regra) | game | mantido — requisito novo aprovado pelo PI em 2026-10-09 |
 | V-19 | Neblina de guerra: visão (raio 12 u) + explorado; servidor não replica o que está fora da visão; continua na fase 2 com a zona sempre visível | F37 (reusa o filtro do F32) | game | mantido — **revertido** de V-16 pelo PI em 2026-10-10 |
-| V-20 | Câmera: pilares e muros tapam o herói (oclusão) | card `planejado` sem MVP | game | solução a decidir pelo PI (achado do PI em 2026-10-10) |
+| V-20 | Câmera: pilares e muros tapam o herói (oclusão) | card `planejado` sem MVP (#70); giro da câmera F45 ajuda | game | silhueta/transparência ainda a decidir pelo PI; o PI escolheu o giro 360° (F45) em 2026-10-10 |
 | V-18 | Tela "Arena & Mapa" no Launcher (DV tela 10): render da arena real + POIs + regras das 2 fases com números do GDB; arte conceito como meta visual da arena (decisão PI 2026-10-09) | F33 | launcher, shared | mantido (MVP3) |
 | V-11 | Mapa de controles §3.3 | `shared/core/input_actions.gd` | shared | mantido |
 | V-12 | `scripts/ui/m4_audit_tracker.gd` no cliente | backend `telemetry/` | — | transferido |

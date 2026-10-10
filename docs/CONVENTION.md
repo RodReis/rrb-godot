@@ -129,7 +129,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 
 ## 6. Nomes de ações de input (InputMap)
 
-Definidos uma vez em `shared/core/input_actions.gd` e usados pelo Game (jogo) e pelo Launcher (tela de controles): `move_forward`, `move_back`, `move_left`, `move_right`, `primary_attack`, `skill_q`, `skill_e`, `skill_r`, `interact`, `dodge`, `scoreboard`, `cancel`. Mapeamento padrão: design visual §3.3. `open_bestiary` (`B`) abre o bestiário em partida sem pausar (decisão do PI 2026-10-09). `learn_q`, `learn_e`, `learn_r` gastam um ponto de habilidade em Q, E, R com `Ctrl` + tecla da skill, um ponto por toque, sem lançar a skill; só teclado até os botões `+Q/+E/+R` da HUD no F13, que trazem o gamepad (decisão do PI 2026-10-09, F9).
+Definidos uma vez em `shared/core/input_actions.gd` e usados pelo Game (jogo) e pelo Launcher (tela de controles): `move_forward`, `move_back`, `move_left`, `move_right`, `primary_attack`, `camera_orbit` (F45), `skill_q`, `skill_e`, `skill_r`, `interact`, `dodge`, `scoreboard`, `cancel`. Mapeamento padrão: design visual §3.3. `open_bestiary` (`B`) abre o bestiário em partida sem pausar (decisão do PI 2026-10-09). `learn_q`, `learn_e`, `learn_r` gastam um ponto de habilidade em Q, E, R com `Ctrl` + tecla da skill, um ponto por toque, sem lançar a skill; só teclado até os botões `+Q/+E/+R` da HUD no F13, que trazem o gamepad (decisão do PI 2026-10-09, F9).
 
 ## 7. Divergências e pendências
 

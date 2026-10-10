@@ -104,8 +104,8 @@ Portões caem; aviso visual/sonoro de 5 s; a zona aparece cobrindo a arena intei
 
 ### 3.6 Câmera e controle
 
-- Terceira pessoa alta: câmera atrás do personagem, ~45° de inclinação, distância fixa.
-- Teclado/mouse: WASD move, mouse mira, botão esquerdo ataque básico, Q/E/R skills, F interage (baú), Espaço esquiva (se o herói tiver).
+- Terceira pessoa alta: câmera atrás do personagem, ~45° de inclinação, distância fixa. **Giro 360° em volta do herói com o botão esquerdo segurado** (F45, SPEC-045 — decisão do PI em 2026-10-10); começa no ângulo do time e fica onde o jogador parar.
+- Teclado/mouse: WASD move (relativo à câmera), mouse mira, **botão direito ataque básico, botão esquerdo segurado gira a câmera** (F45), Q/E/R skills, F interage (baú), Espaço esquiva (se o herói tiver).
 - Gamepad: analógico esquerdo move, direito mira, gatilhos/botões para skills.
 - **Plano B** (decidido no M4): câmera isométrica fixa com mira assistida — também a base para o mobile.
 
@@ -265,7 +265,7 @@ O projeto atual (plataforma 2D) é descartado; `tools/setup-godot-mcp.ps1` e `.m
 | **Gate** | decisão Godot × Unity | — | — |
 | **M1 — Arena single-player** | mapa 3 zonas, Cavaleiro, monstros, XP/níveis, baús/itens, boss, bot | fase 1 completa contra bot, offline | 4 sem |
 | **M2 — Partida em rede** | Arqueira, fase 2 (zona, kills, fim garantido), HUD, transição | 1x1 online termina sempre; 50 partidas bot×bot sem travar | 4 sem |
-| **M2.5 — Bloco visual** | iluminação e pós, toon/outline, arte da ilha, VFX do Cavaleiro e da Arqueira, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
+| **M2.5 — Bloco visual** | giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX do Cavaleiro e da Arqueira, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
 | **M3 — Meta + deploy** | backend, pool no VPS, build PC | dois amigos jogam pela internet sem intervenção do dev | 3 sem |
 | **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números | decisão sobre câmera, duração e ir para 3x3 | 2 sem |
 

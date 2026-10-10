@@ -77,6 +77,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 
 ### MVP2.5 — Bloco visual (`game`, `shared`) — depois do [GATE] MVP2, antes do MVP3 (ADR-0006)
 
+- [ ] **F45** (#103) — `input_actions.gd`: `camera_orbit` = botão esquerdo, `primary_attack` = botão direito; `camera_rig.gd` função pura de giro (GUT); `follow_camera.gd` giro 360° com o esquerdo segurado em `_unhandled_input`, cursor capturado e restaurado, fica onde parou; HUD `LMB` → `RMB`. Só cliente (SPEC-045).
 - [ ] **F38** — `arena.tscn`: `WorldEnvironment` (ACES, SSAO, SSIL, glow 1.05, fog 0.008) + `Sun` (4 splits, blur 1.8) + `LightmapGI` bakeado (`tools/bake-lightmap.ps1`); `scripts/client/shader_warmup.gd` antes do `connect`; baseline do profiler em `docs/roadmap/`; chaves `graphics.*` em `settings.cfg`. Critério 3/3 sync a 100 ms (ADR-0006 item 7).
 - [ ] **F39** — `shared/assets/post_import_toon.gd` (`EditorScenePostImport`), `shared/resources/materials/toon_base.tres` + `outline_pass.tres`; sem editar glTF. Critério 3/3; delta de frame time.
 - [ ] **F40** — Blender: `art/arena/{ilha,castelo,cratera,pontes,props}.blend` → `shared/assets/rrb/arena/*.glb` (UV 0..1, UV2 com AO/curvatura) sobre o layout da SPEC-044; `game/shaders/{arcane_river,volcanic_lava,arcane_crystal,abyss_sky}.gdshader` (rio: `water_depth = linear_depth + VERTEX.z`, `NORMAL_MAP`, `NoiseTexture2D`); cachoeiras e brasas (`GPUParticles3D`, cliente); colisão do F44 intacta; cena de alinhamento. Critério 3/3; delta; roadmap.
