@@ -1,5 +1,5 @@
 extends GutTest
-## F40 sobre o F44: pilares, moitas e pontes da Ilha usam os assets do Blender so como visual;
+## F40 sobre o F46: pilares, moitas e pontes da Ilha usam os assets do Blender so como visual;
 ## a colisao continua a do builder e a malha cobre o cilindro do pilar (nada de parede invisivel).
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
@@ -66,8 +66,15 @@ func test_moitas_usam_o_asset_do_tamanho_certo() -> void:
 	assert_eq(counts, {"tall_grass_4x4.glb": 4, "tall_grass_4x3.glb": 2})
 
 
-func test_quatro_pontes_de_pedra_e_um_piso_unico() -> void:
-	assert_eq(_instances_of("bridge_stone.glb").size(), 4)
+## Kit do F46 (decisao do PI 2026-10-10): torreao por time no canto e casas de pedra na base.
+func test_torreao_por_time_e_casas_na_base() -> void:
+	assert_eq(_instances_of("castle_keep_a.glb").size(), 1)
+	assert_eq(_instances_of("castle_keep_b.glb").size(), 1)
+	assert_eq(_instances_of("stone_house.glb").size(), 4)
+
+
+func test_duas_pontes_de_pedra_e_um_piso_unico() -> void:
+	assert_eq(_instances_of("bridge_stone.glb").size(), 2)
 	assert_eq(_instances_of("island_chassis.glb").size(), 1)
 	assert_eq(_instances_of("hex_grass.gltf").size(), 0, "piso proprio, sem hexes (ADR-0006)")
 

@@ -1,12 +1,14 @@
 extends GutTest
-## Criterio de aceite do F44 (SPEC-044 §6) pelos marcadores da cena gerada da Ilha Flutuante
-## Arcana: contagens do GDB, espelho em x, spawns nos cantos norte, campos do centro em 0/180,
-## fontes, moitas e portoes. Colisao e tempos: test_ilha_arcana_physics.
+## Criterio de aceite do F46 (SPEC-046 §6) pelos marcadores da cena gerada da Ilha (layout
+## "Rift Medieval adaptado"): contagens do GDB, simetria por rotacao de 180 graus, spawns nos
+## cantos SO/NE dentro da zona, campos do centro em 45/225, fontes, moitas e portoes.
+## Colisao e tempos: test_ilha_arcana_physics. Corredores: test_arena_corridors.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
-const SPAWN_A: Vector3 = Vector3(-24, 0, -24)
+const SPAWN_A: Vector3 = Vector3(-24, 0, 24)
 const BASE_RADIUS: float = 12.7
-const ARENA_RADIUS: float = 35.0
+const ARENA_HALF: float = 40.0
+const ZONE_RADIUS: float = 35.0
 
 var _arena: Node3D
 
@@ -20,8 +22,8 @@ func after_all() -> void:
 	_arena.free()
 
 
-func _mirror(v: Vector3) -> Vector3:
-	return Vector3(-v.x, v.y, v.z)
+func _rotate(v: Vector3) -> Vector3:
+	return Vector3(-v.x, v.y, -v.z)
 
 
 func _markers() -> Array[SpawnMarker]:
@@ -84,26 +86,33 @@ func test_monstros_tem_id_do_catalogo() -> void:
 			assert_ne(Ids.to_int(m.monster_id), -1, str(m.monster_id))
 
 
-## SPEC-044 §6 item 6: para cada marcador em (x, z) existe (-x, z) com mesmo kind/tier (nos
-## campos do centro, sobre o eixo, guerreiro e mago T2 sao o espelho um do outro).
-func test_simetria_por_espelho_em_x() -> void:
+## SPEC-046 §6 item 6: para cada marcador em (x, z) existe (-x, -z) com mesmo kind/tier.
+func test_simetria_por_rotacao_de_180_graus() -> void:
 	var markers := _markers()
 	for m: SpawnMarker in markers:
-		var mirror := _mirror(m.position)
+		var twin := _rotate(m.position)
 		var found := false
 		for other: SpawnMarker in markers:
 			if (
-				other.position.distance_to(mirror) < 0.01
+				other.position.distance_to(twin) < 0.01
 				and other.kind == m.kind
 				and other.tier == m.tier
 				and other.chest_kind == m.chest_kind
 			):
 				found = true
-		assert_true(found, "sem espelho: %s em %s" % [m.name, m.position])
+		assert_true(found, "sem par por rotacao: %s em %s" % [m.name, m.position])
 
 
-## Moitas tambem espelhadas: a regra do mato (F32) e geometria de jogo.
-func test_seis_moitas_espelhadas() -> void:
+## Todo marcador dentro do quadrado jogavel (SPEC-046 §1).
+func test_marcadores_dentro_do_quadrado() -> void:
+	for m: SpawnMarker in _markers():
+		var reach := maxf(absf(m.position.x), absf(m.position.z))
+		assert_lt(reach, ARENA_HALF - 1.0, "%s fora do quadrado" % m.name)
+
+
+## Moitas tambem por rotacao: a regra do mato (F32) e geometria de jogo. 6 = 2 de ponte + 2 de
+## lagoa + 2 do centro (SPEC-046 §2.7).
+func test_seis_moitas_por_rotacao() -> void:
 	var areas: Array[Area3D] = []
 	for node: Node in _arena.find_children("*", "Area3D", true, false):
 		if node.is_in_group(&"tall_grass"):
@@ -112,28 +121,30 @@ func test_seis_moitas_espelhadas() -> void:
 	for a: Area3D in areas:
 		var found := false
 		for b: Area3D in areas:
-			found = found or b.position.distance_to(_mirror(a.position)) < 0.01
-		assert_true(found, "moita sem espelho: %s" % a.position)
+			found = found or b.position.distance_to(_rotate(a.position)) < 0.01
+		assert_true(found, "moita sem par: %s" % a.position)
 
 
-func test_spawn_dos_herois_nos_cantos_norte() -> void:
+## Spawns em (-24, +24) e (+24, -24): a 33,9 u do centro, dentro da zona de 35 u (ADR-0009).
+func test_spawn_dos_herois_nos_cantos_so_e_ne_dentro_da_zona() -> void:
 	for m: SpawnMarker in _markers():
 		if m.kind == SpawnMarker.Kind.HERO:
-			var expected := SPAWN_A if m.team == GateRules.TEAM_A else _mirror(SPAWN_A)
+			var expected := SPAWN_A if m.team == GateRules.TEAM_A else _rotate(SPAWN_A)
 			assert_almost_eq(m.position, expected, Vector3.ONE * 0.01)
+			assert_lt(m.position.length(), ZONE_RADIUS)
 
 
-## Uma fonte por base, do time dono, espelhada, dentro da base e da arena (#74).
-func test_uma_fonte_por_base_espelhada() -> void:
+## Uma fonte por base, do time dono, por rotacao, dentro da base e da zona (#74).
+func test_uma_fonte_por_base_por_rotacao() -> void:
 	var by_team: Dictionary = {}
 	for node: Node in _arena.find_children("*", "Node3D", true, false):
 		if node is Fountain:
 			by_team[(node as Fountain).team] = (node as Fountain).position
 	assert_eq(by_team.size(), 2)
 	var a: Vector3 = by_team[GateRules.TEAM_A]
-	assert_almost_eq(by_team[GateRules.TEAM_B], _mirror(a), Vector3.ONE * 0.01)
+	assert_almost_eq(by_team[GateRules.TEAM_B], _rotate(a), Vector3.ONE * 0.01)
 	assert_lt(a.distance_to(SPAWN_A), BASE_RADIUS)
-	assert_lt(a.length(), ARENA_RADIUS - 1.0)
+	assert_lt(a.length(), ZONE_RADIUS)
 
 
 func test_baus_de_base_a_3u_um_do_outro() -> void:
@@ -148,8 +159,9 @@ func test_baus_de_base_a_3u_um_do_outro() -> void:
 				assert_true(a.position.distance_to(b.position) >= 3.0, label)
 
 
-## Campos do centro sobre o eixo de espelho (0 e 180 graus, r ≈ 10) e raros em 90/270.
-func test_campos_do_centro_no_eixo_norte_sul() -> void:
+## Campos do centro em 45 e 225 graus (r ≈ 10), equidistantes das pontes de 135/315; raros em
+## 45/225 (r 12,5) e 90/270 (r 8) — SPEC-046 §2.6.
+func test_campos_do_centro_em_45_e_225_graus() -> void:
 	var golems: Array[Vector3] = []
 	var rares: Array[Vector3] = []
 	for m: SpawnMarker in _markers():
@@ -159,14 +171,17 @@ func test_campos_do_centro_no_eixo_norte_sul() -> void:
 			rares.append(m.position)
 	assert_eq(golems.size(), 2)
 	for g: Vector3 in golems:
-		assert_almost_eq(g.x, 0.0, 0.01)
-		assert_almost_eq(absf(g.z), 10.0, 0.5)
+		# Azimute 45 = (-7,07, -7,07); 225 = (+7,07, +7,07): x = z e r 10.
+		assert_almost_eq(g.x, g.z, 0.01)
+		assert_almost_eq(g.length(), 10.0, 0.5)
 	assert_eq(rares.size(), 4)
 	var on_axis := 0
 	for r: Vector3 in rares:
 		if absf(r.z) < 0.01:
 			on_axis += 1
 			assert_almost_eq(absf(r.x), 8.0, 0.5)
+		else:
+			assert_almost_eq(r.length(), 12.5, 0.5)
 	assert_eq(on_axis, 2)
 
 
