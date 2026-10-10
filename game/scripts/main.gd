@@ -204,7 +204,7 @@ func _inventory_text(hero: Hero) -> String:
 	var items := Inventory.items(hero.equipment, hero.item_catalog)
 	var lines := PackedStringArray()
 	for item: ItemData in items:
-		lines.append("%s (%s)" % [item.display_name, Chest.RARITY_NAMES[item.rarity]])
+		lines.append("%s (%s)" % [item.display_name, ItemData.RARITY_NAMES[item.rarity]])
 	for bonus: SetBonusData in hero.item_catalog.set_bonuses:
 		var pieces := SetBonus.count_pieces(items, bonus.set_id)
 		if pieces > 0:

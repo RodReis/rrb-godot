@@ -8,7 +8,6 @@ extends Node3D
 
 const GROUP: StringName = &"chests"
 const LID_OPEN_DEGREES: float = -110.0
-const RARITY_NAMES: Array[String] = ["Comum", "Raro", "Épico"]
 
 @export var rules: MatchRules
 @export var catalog: ItemCatalog
@@ -112,7 +111,8 @@ func _refresh_visual() -> void:
 	_label.visible = offer != null
 	if offer != null:
 		_label.text = (
-			"%s (%s)\nsegure F para trocar" % [offer.display_name, RARITY_NAMES[offer.rarity]]
+			"%s (%s)\nsegure F para trocar"
+			% [offer.display_name, ItemData.RARITY_NAMES[offer.rarity]]
 		)
 
 
