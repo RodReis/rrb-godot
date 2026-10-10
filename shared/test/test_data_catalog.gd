@@ -196,6 +196,7 @@ func test_curva_de_xp() -> void:
 func test_ritmo_da_partida() -> void:
 	var rules := _by_id[&"match_pacing"] as MatchRules
 	assert_eq([rules.phase1_duration, rules.max_match_duration], [300.0, 600.0])
+	assert_eq(rules.transition_duration, 5.0)
 	assert_eq([rules.boss_warning_time, rules.boss_spawn_time], [180.0, 210.0])
 	assert_eq([rules.respawn_phase1, rules.respawn_phase2, rules.respawn_off_at], [8.0, 6.0, 240.0])
 	# Monstro nao-boss renasce 90 s depois de morrer, so na fase 1 (PI 2026-10-10, F36).
@@ -208,7 +209,8 @@ func test_ritmo_da_partida() -> void:
 	assert_eq(rules.zone_times, PackedFloat64Array([0, 60, 120, 180, 240, 300]))
 	assert_eq(rules.zone_radius, PackedFloat64Array([35, 26, 17.5, 8.75, 3.5, 0]))
 	assert_eq(rules.zone_damage_pct, PackedFloat64Array([0.01, 0.02, 0.03, 0.04, 0.05, 0.05]))
-	assert_eq(rules.zone_collapse_doubling, 10.0)
+	# Aos 10:00 a resolucao e imediata (PI 2026-10-10): sem colapso progressivo.
+	assert_false("zone_collapse_doubling" in rules)
 	assert_eq([rules.common_chests_per_base, rules.rare_chests], [6, 4])
 	assert_eq([rules.common_chest_item_chance, rules.common_chest_heal_chance], [0.7, 0.3])
 	assert_eq(
