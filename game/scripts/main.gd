@@ -1,9 +1,17 @@
 extends Node3D
-## Bootstrap: decide servidor ou cliente pelos argumentos e cuida da conexao.
+## Bootstrap: decide servidor, cliente ou host pelos argumentos e cuida da conexao.
 ## NetworkTime e iniciado pelo NetworkEvents do netfox (netfox/events/enabled).
+## --offline = modo host (ARCHITECTURE-GAME §4, PI 2026-10-09): este processo e o servidor e o
+## jogador local (peer 1), pelo mesmo caminho do online; o netfox tem um papel so por processo.
+## --bot poe o heroi bot no 2o slot (time B), com input do servidor.
 
 const MAX_PLAYERS: int = 2
 const HERO_SCENE: String = "res://scenes/heroes/knight.tscn"
+## Host so aceita conexao local, em porta escolhida pelo sistema.
+const HOST_BIND_IP: String = "127.0.0.1"
+const EPHEMERAL_PORT: int = 0
+## ponytail: id fixo do bot; peer real do ENet e aleatorio de 32 bits, colisao desprezivel.
+const BOT_ID: int = 2
 
 var _hero_scene: PackedScene = preload(HERO_SCENE)
 ## Nivel dos herois spawnados por este servidor (--level de dev ate o F9).
@@ -37,47 +45,49 @@ func _ready() -> void:
 	PlayerInput.autopilot = args["autopilot"]
 	_hero_level = args["level"]
 	_start_time = args["time"]
-	if args["mode"] == "server" or OS.has_feature("dedicated_server"):
-		start_server(args["port"])
+	if args["offline"]:
+		if start_server(EPHEMERAL_PORT, HOST_BIND_IP):
+			_spawn_bot()
+			_join(multiplayer.get_unique_id())
+	elif args["mode"] == "server" or OS.has_feature("dedicated_server"):
+		if start_server(args["port"]) and args["bot"]:
+			_spawn_bot()
 	elif args["host"] != "":
 		start_client(args["host"], args["port"])
 
 
 func _process(_delta: float) -> void:
-	if multiplayer.is_server():
-		return
-	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
-	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		return
-	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
+	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
+	if hero == null:
+		return  # servidor dedicado, ou cliente ainda sem heroi
 	status_label.text = (
-		"peer %d | RTT %d ms | tick %d | %s%s"
+		"%s | tick %d | %s%s"
 		% [
-			multiplayer.get_unique_id(),
-			rtt,
+			_net_text(),
 			NetworkTime.tick,
 			_clock_text(),
 			" | AUTOPILOT" if PlayerInput.autopilot else ""
 		]
 	)
-	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
-	if hero != null:
-		inventory_label.text = _inventory_text(hero)
+	inventory_label.text = _inventory_text(hero)
 
 
-func start_server(port: int) -> void:
+## Falso se a porta nao abriu (o processo sai com codigo 1).
+func start_server(port: int, bind_ip: String = "*") -> bool:
 	var peer := ENetMultiplayerPeer.new()
+	peer.set_bind_ip(bind_ip)
 	var err := peer.create_server(port, MAX_PLAYERS)
 	if err != OK:
 		push_error("[server] falha ao abrir porta %d: %s" % [port, error_string(err)])
 		get_tree().quit(1)
-		return
+		return false
 	multiplayer.multiplayer_peer = peer
 	multiplayer.peer_connected.connect(_on_peer_connected)
 	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 	connect_panel.hide()
 	status_label.text = "servidor na porta %d" % port
-	print("[server] escutando na porta %d" % port)
+	print("[server] escutando em %s:%d" % [bind_ip, peer.host.get_local_port()])
+	return true
 
 
 func start_client(host: String, port: int) -> void:
@@ -105,11 +115,13 @@ func _on_connect_pressed() -> void:
 
 func _on_peer_connected(id: int) -> void:
 	print("[server] peer %d conectou" % id)
-	var team := (
-		GateRules.TEAM_A if players.get_child_count() % MAX_PLAYERS == 0 else GateRules.TEAM_B
-	)
-	spawner.spawn({"id": id, "team": team, "level": _hero_level})
-	# ponytail: relogio comeca no 1o peer; LOBBY_WAIT/HERO_PICK do MatchController sao do F15.
+	_join(id)
+
+
+## Servidor: heroi do jogador [param id] (o proprio host no --offline), relogio e estado do mundo.
+func _join(id: int) -> void:
+	spawner.spawn({"id": id, "team": _free_team(), "level": _hero_level, "bot": false})
+	# ponytail: relogio comeca no 1o jogador; LOBBY_WAIT/HERO_PICK do MatchController sao do F15.
 	if clock.is_started():
 		clock.send_state(id)
 	else:
@@ -119,6 +131,23 @@ func _on_peer_connected(id: int) -> void:
 		(node as Chest).send_state(id)
 
 
+## Servidor: heroi bot no time B e o navmesh que ele usa.
+func _spawn_bot() -> void:
+	var nav := ArenaNav.new()
+	add_child(nav)
+	nav.bake($Arena as Node3D)
+	spawner.spawn({"id": BOT_ID, "team": GateRules.TEAM_B, "level": _hero_level, "bot": true})
+	print("[bot] heroi bot %d no time B" % BOT_ID)
+
+
+## Time A se ninguem o ocupa ainda; senao B.
+func _free_team() -> int:
+	for node: Node in players.get_children():
+		if (node as Hero).team == GateRules.TEAM_A:
+			return GateRules.TEAM_B
+	return GateRules.TEAM_A
+
+
 ## Roda no servidor e nos clientes (MultiplayerSpawner): mesma posicao, time, nivel e mascara.
 func _spawn_player(data: Dictionary) -> Node:
 	var team: int = data["team"]
@@ -126,6 +155,9 @@ func _spawn_player(data: Dictionary) -> Node:
 	hero.name = str(data["id"])
 	hero.team = team
 	hero.level = data["level"]
+	hero.is_bot = data["bot"]
+	if hero.is_bot:
+		hero.get_node("Input").set_script(BotInput)
 	hero.collision_mask = GateRules.hero_mask(team)
 	hero.transform = _hero_spawn(team)
 	return hero
@@ -138,6 +170,14 @@ func _hero_spawn(team: int) -> Transform3D:
 			return marker.global_transform
 	push_error("[arena] sem marcador HERO do time %d" % team)
 	return Transform3D.IDENTITY
+
+
+func _net_text() -> String:
+	if multiplayer.is_server():
+		return "offline (host)"
+	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
+	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
+	return "peer %d | RTT %d ms" % [multiplayer.get_unique_id(), rtt]
 
 
 func _clock_text() -> String:
@@ -172,6 +212,11 @@ func _on_clock_phase1_ended(tick: int) -> void:
 	print("[match] fim da fase 1 (5:00), portoes caem, tick %d" % tick)
 	for node: Node in get_tree().get_nodes_in_group(Gate.GROUP):
 		(node as Gate).fall()
+	if multiplayer.is_server():
+		for node: Node in players.get_children():
+			var hero := node as Hero
+			var who := "bot" if hero.is_bot else "jogador"
+			print("[match] %s %s: Nv %d, %d XP" % [who, hero.name, hero.level, hero.xp])
 
 
 func _on_spawns_boss_killed(peer: int) -> void:

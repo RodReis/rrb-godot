@@ -15,6 +15,8 @@ const GROUP: StringName = &"monsters"
 
 ## Definido pelo SpawnDirector: negativo, para a chave do ledger nao colidir com peer_id.
 var uid: int = 0
+## Base onde nasceu (GateRules.TEAM_*; NEUTRAL = centro), do marcador. Igual nos dois lados.
+var home_team: int = GateRules.TEAM_NEUTRAL
 
 # Estado replicado.
 var hp: int = 0

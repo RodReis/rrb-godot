@@ -20,6 +20,8 @@ const RARITY_NAMES: Array[String] = ["Comum", "Raro", "Épico"]
 var rare: bool = false
 ## Bau que o Rei Esqueleto deixa ao morrer (F11).
 var epic: bool = false
+## Base onde fica (GateRules.TEAM_*; NEUTRAL = centro), do marcador.
+var home_team: int = GateRules.TEAM_NEUTRAL
 ## Negativo e unico entre baus e monstros (chave do ledger).
 var uid: int = 0
 ## So no servidor: numero de Ids ou ChestRules.HEAL.

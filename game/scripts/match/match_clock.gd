@@ -9,6 +9,8 @@ signal boss_warning(tick: int)
 signal boss_spawned(tick: int)
 signal phase1_ended(tick: int)
 
+const GROUP: StringName = &"match_clock"
+
 @export var rules: MatchRules
 
 ## Valido so com is_started() (pode ser negativo com --time adiantado).
@@ -22,6 +24,7 @@ var _next_event: int = 0
 
 
 func _ready() -> void:
+	add_to_group(GROUP)
 	NetworkTime.on_tick.connect(_on_network_tick)
 
 

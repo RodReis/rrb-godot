@@ -58,6 +58,17 @@ func test_nivel_invalido_volta_ao_padrao() -> void:
 	assert_eq(LaunchArgs.parse(PackedStringArray(["--level=abc"]))["level"], 1)
 
 
+func test_offline_e_bot() -> void:
+	var none := LaunchArgs.parse(PackedStringArray([]))
+	assert_eq([none["offline"], none["bot"]], [false, false])
+	var both := LaunchArgs.parse(PackedStringArray(["--offline", "--bot"]))
+	assert_eq([both["offline"], both["bot"]], [true, true])
+	var server_bot := LaunchArgs.parse(PackedStringArray(["--server", "--bot"]))
+	assert_eq(
+		[server_bot["mode"], server_bot["offline"], server_bot["bot"]], ["server", false, true]
+	)
+
+
 func test_tempo_inicial_de_dev() -> void:
 	assert_eq(LaunchArgs.parse(PackedStringArray([]))["time"], 0.0)
 	assert_eq(LaunchArgs.parse(PackedStringArray(["--server", "--time=200"]))["time"], 200.0)

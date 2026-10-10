@@ -86,6 +86,7 @@ func _monster(marker: SpawnMarker, number: int) -> Monster:
 	var monster := (load(path) as PackedScene).instantiate() as Monster
 	monster.name = "Monster%d" % number
 	monster.uid = -number
+	monster.home_team = marker.team
 	return monster
 
 
@@ -94,6 +95,7 @@ func _chest(marker: SpawnMarker, number: int) -> Chest:
 	chest.name = "Chest%d" % number
 	chest.uid = -number
 	chest.rare = marker.chest_kind == SpawnMarker.ChestKind.RARE
+	chest.home_team = marker.team
 	chest.drop = ChestRules.roll(chest.rare, chest.rules, chest.catalog.items, _rng)
 	return chest
 
