@@ -148,7 +148,11 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	aim_distance = to.length()
 	var q_range := data.skill_q.attack_range
 	skill_q = skills and q_range > 0.0 and to.length() <= q_range
-	if to.length() > data.basic_attack.attack_range - REACH_MARGIN:
+	var ranger := _hero as Ranger
+	var blocked := ranger != null and ranger.shot_blocked(target.global_position)
+	skill_q = skill_q and not blocked
+	# Sem linha de tiro (Arqueira), segue pelo navmesh ate o obstaculo sair do caminho.
+	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, target.global_position)
 		return
 	attack = true

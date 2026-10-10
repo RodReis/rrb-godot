@@ -381,11 +381,18 @@ func _extra_state_properties() -> Array[String]:
 ## Heroi do outro time e monstro vivo.
 func _enemies() -> Array[Combatant]:
 	var result: Array[Combatant] = []
+	_enemies_into(result)
+	return result
+
+
+## Como _enemies, reusando [param out] (efeito que roda todo tick: flechas, Chuva).
+# ponytail: get_nodes_in_group ainda aloca a lista do grupo; cachear se o profiler apontar.
+func _enemies_into(out: Array[Combatant]) -> void:
+	out.clear()
 	for node: Node in get_tree().get_nodes_in_group(TARGETS_GROUP):
 		var other := node as Combatant
 		if other != self and other.team != team and other.is_alive():
-			result.append(other)
-	return result
+			out.append(other)
 
 
 ## O alvo aplica no proprio _rollback_tick de tick+1, lendo o ledger; ressimular o alvo

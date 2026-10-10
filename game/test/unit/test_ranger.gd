@@ -238,3 +238,47 @@ func test_pool_cheio_reaproveita_a_flecha_mais_antiga() -> void:
 		_run(START + i, 1)
 	assert_eq(_active_arrows(), 4)
 	assert_almost_eq(_first_arrow().traveled, 0.0, EPS, "a 1a flecha foi reaproveitada")
+
+
+func _wall_at(at: Vector3) -> void:
+	var wall := StaticBody3D.new()
+	var shape := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(4, 4, 0.5)
+	shape.shape = box
+	wall.add_child(shape)
+	wall.position = at + Vector3.UP
+	add_child_autofree(wall)
+
+
+func _bot_brain() -> BotInput:
+	_ranger = (load(RANGER) as PackedScene).instantiate() as Ranger
+	_ranger.name = str(SHOOTER)
+	_ranger.team = GateRules.TEAM_B
+	_ranger.is_bot = true
+	_ranger.get_node("Input").set_script(BotInput)
+	add_child_autofree(_ranger)
+	var brain := _ranger.input as BotInput
+	brain._hero = _ranger
+	return brain
+
+
+func test_bot_de_arqueira_atira_com_linha_livre() -> void:
+	var brain := _bot_brain()
+	var monster := _spawn_monster(SKELETON, -1, AHEAD * 6.0)
+	await wait_physics_frames(2)
+	brain._attack(START, monster, true)
+	assert_true(brain.attack)
+	assert_true(brain.skill_q)
+	assert_almost_eq(brain.aim_distance, 6.0, EPS)
+
+
+func test_bot_de_arqueira_nao_atira_no_muro() -> void:
+	var brain := _bot_brain()
+	_wall_at(AHEAD * 3.0)
+	var monster := _spawn_monster(SKELETON, -1, AHEAD * 6.0)
+	await wait_physics_frames(2)
+	brain._attack(START, monster, true)
+	assert_false(brain.attack)
+	assert_false(brain.skill_q)
+	assert_false(brain.movement.is_zero_approx(), "segue andando ate ter linha de tiro")

@@ -49,6 +49,13 @@ func _process(delta: float) -> void:
 		_rain_area.global_position = rain_center
 
 
+## Muro, pilar ou portao entre a Arqueira e [param target] (o bot nao atira na parede).
+func shot_blocked(target: Vector3) -> bool:
+	var from := global_position + Vector3.UP * FLIGHT_HEIGHT
+	var to := Vector3(target.x, from.y, target.z)
+	return _wall_fraction(from, to) != CombatRules.NO_HIT
+
+
 func _extra_state_properties() -> Array[String]:
 	var props: Array[String] = [":rain_ticks", ":rain_center"]
 	_arrows.clear()
@@ -86,7 +93,7 @@ func _simulate_effects(tick: int) -> void:
 		flying = flying or arrow.is_active()
 	if not flying and rain_ticks == 0:
 		return
-	_targets = _enemies()
+	_enemies_into(_targets)
 	if flying:
 		_advance_arrows(tick)
 	if rain_ticks > 0:
