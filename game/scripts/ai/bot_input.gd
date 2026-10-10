@@ -254,7 +254,8 @@ func _enemy_hero() -> Hero:
 	var best: Hero = null
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
-		if hero.team == _hero.team or not hero.is_alive():
+		# Mato alto (F32): o que o filtro nao entregaria ao peer do bot, o bot nao ve.
+		if hero.team == _hero.team or not hero.is_alive() or hero.hidden_from(_hero):
 			continue
 		if (
 			best == null

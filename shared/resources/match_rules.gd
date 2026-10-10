@@ -50,3 +50,6 @@ extends Resource
 @export var fountain_heal_pct: float
 @export var fountain_radius: float
 @export var fountain_damage_pause: float
+## Mato alto (GDB §7.3, F32): atacar ou usar skill de dentro da moita revela o heroi por este
+## tempo.
+@export var grass_reveal_time: float

@@ -36,3 +36,4 @@ chest_interact_range = 1.5
 fountain_heal_pct = 0.01
 fountain_radius = 2.5
 fountain_damage_pause = 3.0
+grass_reveal_time = 1.5

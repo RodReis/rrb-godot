@@ -9,6 +9,8 @@ extends Node
 const NODE_NAME: StringName = &"SpawnAck"
 
 var _filters: Array[PeerVisibilityFilter] = []
+## Servidor: peers que ja tem o node (podem receber RPC dele).
+var _confirmed: Dictionary = {}
 
 
 ## Cria o no filho de [param owner], que ja tem os sincronizadores na arvore.
@@ -31,9 +33,15 @@ func _ready() -> void:
 
 ## Servidor: [param peer] ja tem o node; passa a receber o estado dele.
 func confirm(peer: int) -> void:
+	_confirmed[peer] = true
 	for filter: PeerVisibilityFilter in _filters:
 		filter.set_visibility_for(peer, true)
 		filter.update_visibility()
+
+
+## Servidor: [param peer] ja confirmou o node.
+func has_confirmed(peer: int) -> bool:
+	return _confirmed.has(peer)
 
 
 ## Cliente -> servidor, sem payload; o remetente vem do transporte.
