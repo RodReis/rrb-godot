@@ -31,8 +31,8 @@ const ITEMS: Dictionary = {
 
 ## id -> [tier, qtd, hp, dano, intervalo, xp, comum, raro, epico] (GDB §5.1; mago: PI 2026-10-09).
 const MONSTERS: Dictionary = {
-	&"skeleton_t1": [MonsterData.Tier.T1, 8, 160, 14, 1.2, 35, 0.2, 0, 0],
-	&"skeleton_warrior_t2": [MonsterData.Tier.T2, 4, 360, 28, 1.1, 85, 1, 0, 0],
+	&"skeleton_t1": [MonsterData.Tier.T1, 16, 160, 14, 1.2, 35, 0.2, 0, 0],
+	&"skeleton_warrior_t2": [MonsterData.Tier.T2, 8, 360, 28, 1.1, 85, 1, 0, 0],
 	&"skeleton_mage_t2": [MonsterData.Tier.T2, 2, 260, 38, 1.5, 80, 0.35, 0.65, 0],
 	&"golem_t3": [MonsterData.Tier.T3, 2, 680, 50, 1.6, 190, 0, 1, 0],
 	&"skeleton_king_boss": [MonsterData.Tier.BOSS, 1, 2400, 75, 1.4, 550, 0, 0, 1],
@@ -198,6 +198,8 @@ func test_ritmo_da_partida() -> void:
 	assert_eq([rules.phase1_duration, rules.max_match_duration], [300.0, 600.0])
 	assert_eq([rules.boss_warning_time, rules.boss_spawn_time], [180.0, 210.0])
 	assert_eq([rules.respawn_phase1, rules.respawn_phase2, rules.respawn_off_at], [8.0, 6.0, 240.0])
+	# Monstro nao-boss renasce 90 s depois de morrer, so na fase 1 (PI 2026-10-10, F36).
+	assert_eq(rules.monster_respawn_phase1, 90.0)
 	assert_eq(
 		[rules.phase1_kill_xp, rules.phase2_kill_xp_base, rules.phase2_kill_xp_per_level],
 		[80, 150, 20]

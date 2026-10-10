@@ -1,6 +1,7 @@
 extends Node
 ## Visual do monstro: animacao pelo estado replicado (velocidade, golpe, HP). So le estado.
-## Modelo sem AnimationPlayer (Golem): pisao no golpe e some ao morrer.
+## Modelo sem AnimationPlayer (Golem): pisao no golpe e some ao morrer. HP de volta (respawn da
+## fase 1, F36) reaparece parado.
 
 @export var model: Node3D
 @export var idle: StringName = &"Idle"
@@ -33,6 +34,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if _dead:
+		if _monster.is_alive():
+			_revive()
 		return
 	if not _monster.is_alive():
 		_die()
@@ -60,6 +63,15 @@ func _die() -> void:
 		model.hide()
 		return
 	_player.play(death)
+
+
+func _revive() -> void:
+	_dead = false
+	_one_shot = false
+	_last_cooldown = _monster.attack_cooldown
+	model.show()
+	if _player != null:
+		_player.play(idle)
 
 
 ## Golpe de modelo sem animacao (Golem): sobe e bate no chao.

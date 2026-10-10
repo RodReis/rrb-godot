@@ -5,10 +5,11 @@ extends Combatant
 ## IA so no servidor, a cada tick (MonsterRules); posicao, HP e golpe replicados por
 ## StateSynchronizer + TickInterpolator, fora do rollback. Golpe no heroi vai para o ledger
 ## dele; golpe de heroi entra aqui na hora, uma vez por tick + fonte. Ao morrer da o XP ao
-## matador (com catch-up, GDB §3.3). Nao respawna (GDB §5).
+## matador (com catch-up, GDB §3.3). Renasce no mesmo node (revive) quando o SpawnDirector
+## manda (fase 1, F36): HP e posicao ja replicam, sem spawn novo.
 
-## Servidor apenas. [param killer_id] = peer_id de quem deu o golpe final.
-signal died(killer_id: int)
+## Servidor apenas. [param killer_id] = peer_id do golpe final; [param tick] = tick da morte.
+signal died(killer_id: int, tick: int)
 
 const GROUP: StringName = &"monsters"
 
@@ -25,6 +26,8 @@ var attack_cooldown: int = 0
 
 var state: MonsterRules.State = MonsterRules.State.IDLE
 var _home: Vector3 = Vector3.ZERO
+var _home_basis: Basis = Basis.IDENTITY
+var _alive_mask: int = 0
 var _stun_ticks: int = 0
 var _target: Hero
 var _seen: HitLedger = HitLedger.new()  # golpes ja aplicados: ressimular o heroi nao duplica
@@ -37,6 +40,8 @@ func _ready() -> void:
 	add_to_group(GROUP)
 	hp = roundi(data.hp)
 	_home = global_position
+	_home_basis = global_basis
+	_alive_mask = collision_mask
 	axis_lock_linear_y = true
 
 	var sync := StateSynchronizer.new()
@@ -63,6 +68,18 @@ func _process(_delta: float) -> void:
 
 func is_alive() -> bool:
 	return hp > 0
+
+
+## Servidor apenas (SpawnDirector, F36): volta ao marcador, parado, com HP cheio e colisao.
+func revive() -> void:
+	hp = roundi(data.hp)
+	global_transform = Transform3D(_home_basis, _home)
+	velocity = Vector3.ZERO
+	state = MonsterRules.State.IDLE
+	attack_cooldown = 0
+	_stun_ticks = 0
+	_target = null
+	collision_mask = _alive_mask
 
 
 ## Servidor apenas. Ressimular o heroi repete o golpe com o mesmo tick + fonte: ignorado.
@@ -153,7 +170,7 @@ func _die(tick: int, killer_id: int) -> void:
 	state = MonsterRules.State.IDLE
 	velocity = Vector3.ZERO
 	collision_mask = 0
-	died.emit(killer_id)
+	died.emit(killer_id, tick)
 	var heroes := get_tree().get_nodes_in_group(Hero.GROUP)
 	var killer: Hero = null
 	for node: Node in heroes:

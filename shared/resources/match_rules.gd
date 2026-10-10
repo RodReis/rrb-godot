@@ -16,6 +16,9 @@ extends Resource
 @export var boss_spawn_time: float
 @export var respawn_phase1: float
 @export var respawn_phase2: float
+## Monstro nao-boss renasce no proprio marcador este tempo depois de morrer, so na fase 1
+## (GDB §5, PI 2026-10-10, F36).
+@export var monster_respawn_phase1: float
 @export var phase1_kill_xp: int
 @export var phase2_kill_xp_base: int
 @export var phase2_kill_xp_per_level: int

@@ -2,8 +2,10 @@ class_name SpawnDirector
 extends Node3D
 ## Um monstro por marcador MONSTER e um bau por marcador CHEST da arena (SPEC-007 §4), no
 ## servidor e nos clientes, na mesma ordem: nome e uid batem dos dois lados sem
-## MultiplayerSpawner. Quantidades de GDB §5.1 e §6.2 vem dos marcadores. Nada respawna (GDB §5,
-## §6.2). Drops dos baus sorteados na criacao com a seed da partida (ARCHITECTURE-GAME §3.3);
+## MultiplayerSpawner. Quantidades de GDB §5.1 e §6.2 vem dos marcadores. Monstro nao-boss morto
+## na fase 1 renasce no mesmo node apos MatchRules.monster_respawn_phase1 (GDB §5, F36); na
+## transicao (5:00) os pendentes sao cancelados. Bau e boss nao voltam (GDB §6.2, §7.1).
+## Drops dos baus sorteados na criacao com a seed da partida (ARCHITECTURE-GAME §3.3);
 ## so os do servidor valem. Cena do monstro por id em SCENE_PATH. O Rei Esqueleto nasce no
 ## marcador BOSS quando o MatchClock da boss_spawned (3:30, nos dois lados); ao morrer vira um
 ## bau epico no lugar (PI 2026-10-09), avisado aos clientes por RPC confiavel.
@@ -18,6 +20,9 @@ const CHEST_SCENE: String = "res://scenes/world/chest.tscn"
 const BOSS_NAME: String = "Boss"
 const BOSS_CHEST_NAME: String = "BossChest"
 const BOSS_PORTAL_NAME: String = "BossPortal"
+const NO_RESPAWN: int = 9223372036854775807
+
+@export var rules: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 
 ## Seed dos drops; NO_SEED = --seed da linha de comando ou sorteada. Definida antes de entrar
 ## na arvore; depois guarda a usada (log do servidor, auditoria).
@@ -27,6 +32,11 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _chest_scene: PackedScene = preload(CHEST_SCENE)
 ## Ultimo numero usado em nome/uid; o boss e o bau dele continuam a contagem.
 var _last_number: int = 0
+## Servidor: monstro morto -> tick em que renasce. Fechado (e vazio) a partir da transicao.
+var _respawn_at: Dictionary[Monster, int] = {}
+var _respawn_open: bool = true
+## Menor tick pendente: update() so percorre o dicionario quando ele chega.
+var _next_respawn: int = NO_RESPAWN
 
 
 func _ready() -> void:
@@ -41,7 +51,10 @@ func _ready() -> void:
 		var spawned: Node3D
 		match marker.kind:
 			SpawnMarker.Kind.MONSTER:
-				spawned = _monster(marker, _last_number + 1)
+				var monster := _monster(marker, _last_number + 1)
+				if monster != null:
+					monster.died.connect(_on_monster_died.bind(monster, marker.name))
+				spawned = monster
 			SpawnMarker.Kind.CHEST:
 				spawned = _chest(marker, _last_number + 1)
 		if spawned == null:
@@ -49,6 +62,30 @@ func _ready() -> void:
 		_last_number += 1
 		spawned.transform = global_transform.affine_inverse() * marker.global_transform
 		add_child(spawned)
+	NetworkTime.on_tick.connect(_on_network_tick)
+
+
+## Servidor (a cada tick; o teste chama direto com o proprio relogio): renasce quem ja cumpriu
+## o tempo de respawn.
+func update(tick: int) -> void:
+	if tick < _next_respawn:
+		return
+	_next_respawn = NO_RESPAWN
+	for monster: Monster in _respawn_at.keys():
+		var due: int = _respawn_at[monster]
+		if tick >= due:
+			_respawn_at.erase(monster)
+			monster.revive()
+		else:
+			_next_respawn = mini(_next_respawn, due)
+
+
+## Servidor e clientes (MatchClock.phase1_ended: 5:00, entrada na TRANSITION): cancela os
+## respawns pendentes e ninguem mais renasce; os vivos ficam (GDB §5, §7.1).
+func stop_respawns(_tick: int = 0) -> void:
+	_respawn_open = false
+	_respawn_at.clear()
+	_next_respawn = NO_RESPAWN
 
 
 ## Servidor e clientes (boss_warning do MatchClock, 3:00): pista visual no marcador BOSS ate o
@@ -135,8 +172,26 @@ func _boss_defeated(_tick: int, killer_id: int, chest_uid: int, where: Vector3) 
 	boss_killed.emit(killer_id)
 
 
+## Servidor apenas (Monster.died), monstros nao-boss. [param marker] so para o log (ordem de
+## limpeza dos campos, F36).
+func _on_monster_died(killer_id: int, tick: int, monster: Monster, marker: StringName) -> void:
+	if not _respawn_open:
+		print("[spawn] %s morto por %d no tick %d, sem respawn" % [marker, killer_id, tick])
+		return
+	var due := (
+		tick + SkillRules.seconds_to_ticks(rules.monster_respawn_phase1, NetworkTime.tickrate)
+	)
+	_respawn_at[monster] = due
+	_next_respawn = mini(_next_respawn, due)
+	print("[spawn] %s morto por %d no tick %d, renasce no %d" % [marker, killer_id, tick, due])
+
+
+func _on_network_tick(_delta: float, tick: int) -> void:
+	update(tick)
+
+
 ## Servidor apenas (Monster.died).
-func _on_boss_died(killer_id: int) -> void:
+func _on_boss_died(killer_id: int, _tick: int) -> void:
 	_last_number += 1
 	var where := (get_node(BOSS_NAME) as Node3D).position
 	_boss_defeated.rpc(NetworkTime.tick, killer_id, -_last_number, where)

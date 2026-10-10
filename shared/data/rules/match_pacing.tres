@@ -13,6 +13,7 @@ boss_warning_time = 180.0
 boss_spawn_time = 210.0
 respawn_phase1 = 8.0
 respawn_phase2 = 6.0
+monster_respawn_phase1 = 90.0
 phase1_kill_xp = 80
 phase2_kill_xp_base = 150
 phase2_kill_xp_per_level = 20

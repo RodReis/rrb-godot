@@ -73,9 +73,10 @@ func _hold_ticks(chest: Chest) -> int:
 	return SkillRules.seconds_to_ticks(chest.rules.swap_hold_time, NetworkTime.tickrate)
 
 
-func test_um_bau_por_marcador_12_comuns_e_4_raros() -> void:
+## 12 de base + 8 dos campos laterais (F36) comuns, 4 raros.
+func test_um_bau_por_marcador_20_comuns_e_4_raros() -> void:
 	var chests := _chests()
-	assert_eq(chests.size(), 16)
+	assert_eq(chests.size(), 24)
 	assert_eq(chests.filter(func(c: Chest) -> bool: return c.rare).size(), 4)
 	for chest: Chest in chests:
 		assert_false(chest.opened)

@@ -1,6 +1,7 @@
 extends SceneTree
 ## Gera game/scenes/arena/arena.tscn (SPEC-007; decisoes do PI de 2026-10-09: spawn em
-## (-24, +24) e campos do centro em 45/225 graus). Ferramenta de autoria: as medidas da spec
+## (-24, +24) e campos do centro em 45/225 graus; F36: 4 campos laterais; #74: fontes das
+## bases). Ferramenta de autoria: as medidas da spec
 ## vivem aqui; o jogo so le a cena gerada. Uso (na raiz do repo):
 ##   godot --headless --path game -s <repo>/tools/arena/build_arena.gd
 ## Sai com 1 se o rio nao separar as metades sem as pontes, ou se as pontes nao ligarem.
@@ -64,6 +65,15 @@ const BASE_CHESTS: Array[Vector2] = [
 	Vector2(24.5, 7.5),
 	Vector2(24.5, -7.5),
 ]
+## Fonte da base A (PI 2026-10-10, #74), em (x, z) do mundo; a da B e a rotacao de 180 graus.
+const FOUNTAIN_A: Vector3 = Vector3(-30.4, 0, 14.8)
+const FOUNTAIN_SCENE: String = "res://scenes/world/fountain.tscn"
+## Campos laterais (F36, GDB §5.1/§6.2): 2 por metade, nos cantos NO e SE, um de cada lado do
+## rio, fora da coroa (r > 18 u), do patio e da base. Em (s, l) da base A, campo do lado l > 0;
+## o outro e o espelho em l (mesma distancia do spawn).
+const SIDE_T1: Array[Vector2] = [Vector2(6.5, 23), Vector2(11.5, 23)]
+const SIDE_T2: Vector2 = Vector2(9, 25.5)
+const SIDE_CHESTS: Array[Vector2] = [Vector2(7.5, 28.5), Vector2(11.5, 27.5)]
 const YARD_ROCKS: Array[Vector2] = [Vector2(20, 9), Vector2(20, -9)]
 const YARD_GRASS: Array[Vector2] = [Vector2(20, 4.5), Vector2(20, -4.5)]
 const YARD_GRASS_SIZE: Vector2 = Vector2(4, 4)
@@ -308,10 +318,29 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 		_monster(markers, "T1%s%d" % [tag, i], _local(BASE_T1[i], flip), team, 1, &"skeleton_t1")
 	_monster(markers, "T2%s" % tag, _local(BASE_T2, flip), team, 2, &"skeleton_warrior_t2")
 	for i: int in range(BASE_CHESTS.size()):
-		var chest := _marker(markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip))
-		chest.kind = SpawnMarker.Kind.CHEST
-		chest.team = team
-		chest.chest_kind = SpawnMarker.ChestKind.COMMON
+		_common_chest(markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team)
+	var fountain := _scene(FOUNTAIN_SCENE).instantiate() as Fountain
+	fountain.name = "Fountain%s" % tag
+	fountain.team = team
+	fountain.position = FOUNTAIN_A * flip
+	_add(_group("Fountains"), fountain)
+	for side: float in [1.0, -1.0]:
+		_build_side_field(markers, flip, side)
+
+
+## Campo lateral do lado [param side] (sinal de l) da metade de [param flip]. Marcadores com o
+## time da metade: o bot conta base + laterais como "a propria metade" (GDB §5.2).
+func _build_side_field(markers: Node3D, flip: float, side: float) -> void:
+	var team := GateRules.TEAM_A if flip > 0 else GateRules.TEAM_B
+	var tag := "%s%s" % [_team_tag(flip), "SE" if side * flip > 0 else "NO"]
+	var mirror := Vector2(1, side)
+	for i: int in range(SIDE_T1.size()):
+		var at := _local(SIDE_T1[i] * mirror, flip)
+		_monster(markers, "T1%s%d" % [tag, i], at, team, 1, &"skeleton_t1")
+	var warrior_at := _local(SIDE_T2 * mirror, flip)
+	_monster(markers, "T2%s" % tag, warrior_at, team, 2, &"skeleton_warrior_t2")
+	for i: int in range(SIDE_CHESTS.size()):
+		_common_chest(markers, "Chest%s%d" % [tag, i], _local(SIDE_CHESTS[i] * mirror, flip), team)
 
 
 ## Muro em arco em volta do spawn, raio = spawn -> portao, com a abertura do portao.
@@ -434,6 +463,13 @@ func _monster(
 	m.team = team
 	m.tier = tier
 	m.monster_id = id
+
+
+func _common_chest(parent: Node3D, label: String, at: Vector3, team: int) -> void:
+	var m := _marker(parent, label, at)
+	m.kind = SpawnMarker.Kind.CHEST
+	m.team = team
+	m.chest_kind = SpawnMarker.ChestKind.COMMON
 
 
 func _rare_chest(parent: Node3D, label: String, at: Vector3) -> void:

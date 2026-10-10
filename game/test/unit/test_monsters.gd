@@ -5,6 +5,8 @@ extends GutTest
 const ARENA: String = "res://scenes/arena/arena.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const DT: float = 1.0 / 30.0
+## Spawn -> portao (SPEC-007 §2).
+const BASE_RADIUS: float = 12.7
 
 var _director: SpawnDirector
 var _hero: Hero
@@ -37,12 +39,15 @@ func _monsters() -> Array[Monster]:
 	return result
 
 
-## Monstros dos marcadores da base do [param team].
+## Monstros dos marcadores da base do [param team] (sem os campos laterais da metade, F36).
 func _base_monsters(team: int) -> Array[Monster]:
+	var spawn := Vector3(-24, 0, 24) if team == GateRules.TEAM_A else Vector3(24, 0, -24)
 	var result: Array[Monster] = []
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker
 		if marker.kind != SpawnMarker.Kind.MONSTER or marker.team != team:
+			continue
+		if marker.global_position.distance_to(spawn) > BASE_RADIUS:
 			continue
 		for monster: Monster in _monsters():
 			if monster.global_position.is_equal_approx(marker.global_position):
@@ -66,7 +71,7 @@ func test_um_monstro_por_marcador_na_quantidade_do_gdb() -> void:
 		assert_eq(monster.hp, roundi(monster.data.hp), monster.name)
 	for monster: Monster in _monsters():
 		assert_eq(counts[monster.data.id], monster.data.count, monster.data.id)
-	assert_eq(_monsters().size(), 16)
+	assert_eq(_monsters().size(), 28)
 
 
 func test_uid_negativo_e_unico() -> void:
@@ -88,6 +93,7 @@ func test_farm_completo_de_uma_base_da_225_xp_e_nivel_3() -> void:
 	assert_eq(_hero.attributes.max_hp, 600 + 45 * 2)
 
 
+## Sem o SpawnDirector.update passar dos 90 s, morto continua morto (respawn: test_monster_respawn).
 func test_monstro_morto_nao_da_xp_de_novo_nem_volta() -> void:
 	var monster := _base_monsters(GateRules.TEAM_A)[0]
 	_kill(monster, _hero)
