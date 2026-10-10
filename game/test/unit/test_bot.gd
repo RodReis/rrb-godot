@@ -14,6 +14,7 @@ const SETTLE_TICKS: int = 5
 
 var _arena: Node3D
 var _director: SpawnDirector
+var _nav: ArenaNav
 var _bot: Hero
 var _player: Hero
 var _tick: int = 0
@@ -25,20 +26,24 @@ func before_each() -> void:
 	_director = SpawnDirector.new()
 	_director.loot_seed = 37
 	add_child_autofree(_director)
-	var nav := ArenaNav.new()
-	add_child_autofree(nav)
-	nav.bake(_arena, GateRules.gate_layer(GateRules.TEAM_A))
+	_nav = ArenaNav.new()
+	add_child_autofree(_nav)
+	_nav.bake(_arena, GateRules.gate_layer(GateRules.TEAM_A))
 	_player = _spawn(1, GateRules.TEAM_A, false)
 	_bot = _spawn(2, GateRules.TEAM_B, true)
-	# O mapa de navegacao fica pronto depois de algumas iteracoes assincronas.
+	await _await_path(_bot.global_position, Vector3.ZERO)
+
+
+## O mapa de navegacao fica pronto depois de algumas iteracoes assincronas.
+func _await_path(from: Vector3, to: Vector3) -> void:
 	var map := _bot.get_world_3d().navigation_map
 	for i: int in MAP_FRAMES:
 		await wait_physics_frames(1)
 		if NavigationServer3D.map_get_iteration_id(map) == 0:
 			continue
-		var path := NavigationServer3D.map_get_path(map, _bot.global_position, Vector3.ZERO, true)
-		if not path.is_empty():
-			break
+		var path := NavigationServer3D.map_get_path(map, from, to, true)
+		if not path.is_empty() and path[path.size() - 1].distance_to(to) < 1.0:
+			return
 
 
 func _spawn(id: int, team: int, bot: bool) -> Hero:
@@ -150,3 +155,69 @@ func _opened_base_chests() -> int:
 		if chest.home_team == GateRules.TEAM_B and chest.opened:
 			opened += 1
 	return opened
+
+
+## Mata os monstros (menos os da base [param keep]) e abre todos os baus.
+func _clear(keep: int = -1) -> void:
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		var monster := node as Monster
+		if monster.home_team != keep:
+			monster.hp = 0
+	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+		(node as Chest).opened = true
+
+
+## 5:00 no servidor (main.gd): portoes caem e o navmesh do bot e refeito sem eles.
+func _fall_gates() -> void:
+	for node: Node in get_tree().get_nodes_in_group(Gate.GROUP):
+		(node as Gate).fall()
+	_nav.bake(_arena)
+	await _await_path(_center(), _home_a())
+
+
+func _center() -> Vector3:
+	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
+		var marker := node as SpawnMarker
+		if marker.kind == SpawnMarker.Kind.BOSS:
+			return marker.global_position
+	return Vector3.ZERO
+
+
+func _nearest_alive_distance(team: int) -> float:
+	var best := INF
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		var monster := node as Monster
+		if monster.home_team == team and monster.is_alive():
+			best = minf(best, _bot.global_position.distance_to(monster.global_position))
+	return best
+
+
+func test_sem_alvo_no_centro_o_bot_para_e_nao_gira() -> void:
+	# #52: boss morto, sem monstro nem bau do lado do bot; ja no ponto de espera ele para.
+	_clear()
+	_bot.global_position = _center() + Vector3(0.2, 0.0, 0.1)
+	for i: int in 10:
+		_step()
+		assert_true(_bot.input.movement.is_zero_approx(), "tick %d: %s" % [i, _bot.input.movement])
+
+
+func test_portoes_caidos_sem_alvo_proprio_farma_a_base_do_jogador() -> void:
+	# PI 2026-10-09 (#52): depois dos 5:00 o bot vem farmar o que sobrou na base do jogador.
+	_clear(GateRules.TEAM_A)
+	await _fall_gates()
+	_bot.global_position = _center()
+	var start := _nearest_alive_distance(GateRules.TEAM_A)
+	for i: int in 150:
+		_step()
+	assert_eq(_brain().state, BotRules.State.FARM)
+	assert_lt(_nearest_alive_distance(GateRules.TEAM_A), start - 5.0)
+
+
+func test_portoes_caidos_sem_monstro_vai_ate_o_jogador() -> void:
+	_clear()
+	await _fall_gates()
+	_bot.global_position = _center()
+	var start := _bot.global_position.distance_to(_player.global_position)
+	for i: int in 150:
+		_step()
+	assert_lt(_bot.global_position.distance_to(_player.global_position), start - 5.0)

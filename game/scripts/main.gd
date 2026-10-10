@@ -20,6 +20,8 @@ var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 var _start_time: float = LaunchArgs.DEFAULT_TIME
 ## --bot: o bot entra com o 1o jogador (junto com o relogio) e ocupa o time B.
 var _wants_bot: bool = false
+## Navmesh do bot (so no servidor com --bot).
+var _nav: ArenaNav
 
 @onready var players: Node3D = $Players
 @onready var spawns: SpawnDirector = $Spawns
@@ -138,9 +140,9 @@ func _join(id: int) -> void:
 
 ## Servidor: heroi bot no time B e o navmesh que ele usa.
 func _spawn_bot() -> void:
-	var nav := ArenaNav.new()
-	add_child(nav)
-	nav.bake($Arena as Node3D, GateRules.gate_layer(GateRules.TEAM_A))
+	_nav = ArenaNav.new()
+	add_child(_nav)
+	_nav.bake($Arena as Node3D, GateRules.gate_layer(GateRules.TEAM_A))
 	spawner.spawn({"id": BOT_ID, "team": GateRules.TEAM_B, "level": _hero_level, "bot": true})
 	print("[bot] heroi bot %d no time B" % BOT_ID)
 
@@ -207,6 +209,8 @@ func _on_clock_phase1_ended(tick: int) -> void:
 	print("[match] fim da fase 1 (5:00), portoes caem, tick %d" % tick)
 	for node: Node in get_tree().get_nodes_in_group(Gate.GROUP):
 		(node as Gate).fall()
+	if _nav != null:
+		_nav.bake($Arena as Node3D)  # sem portoes: o bot entra na base do jogador (#52)
 	if multiplayer.is_server():
 		for node: Node in players.get_children():
 			var hero := node as Hero

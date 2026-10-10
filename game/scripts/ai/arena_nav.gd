@@ -3,8 +3,8 @@ extends NavigationRegion3D
 ## Navmesh do bot, assado em runtime dos colisores estaticos da arena (chao, muros, rio,
 ## cratera, borda). O portao do proprio bot fica de fora (ele passa); o do adversario vira
 ## parede, para o bot nao empurrar o portao atras do jogador. A colisao por time continua no
-## Hero (GateRules). So no servidor, quando ha bot. Portoes caidos (5:00) seguem como parede
-## no navmesh: perseguir dentro da base inimiga e da fase 2 (F19).
+## Hero (GateRules). So no servidor, quando ha bot. Portoes caidos (5:00): main.gd refaz o
+## navmesh sem parede e o bot entra na base do jogador (PI 2026-10-09, #52).
 
 ## Capsula do heroi (r 0,4, h 1,8 em knight.tscn) arredondada para cima nas celulas de 0,25 u
 ## do mapa (o gerador avisa se nao for multiplo); geometria, nao balanceamento.
