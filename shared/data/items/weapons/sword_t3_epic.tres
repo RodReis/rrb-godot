@@ -10,4 +10,5 @@ slot = 0
 rarity = 2
 attack = 45.0
 passive = &"fury"
+passive_name = "Fúria"
 passive_value = 0.06

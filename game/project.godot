@@ -33,8 +33,12 @@ gdscript/warnings/unsafe_method_access=1
 
 [display]
 
-window/size/viewport_width=1280
-window/size/viewport_height=720
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 
 [editor_plugins]
 
@@ -43,6 +47,10 @@ enabled=PackedStringArray("res://addons/gut/plugin.cfg", "res://addons/netfox.ex
 [filesystem]
 
 import/blender/enabled=false
+
+[gui]
+
+theme/custom="res://shared/ui/theme/theme_moba.tres"
 
 [layer_names]
 

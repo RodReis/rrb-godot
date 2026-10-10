@@ -6,6 +6,9 @@ extends Resource
 enum Slot { WEAPON, HELM, CHEST, BOOTS }
 enum Rarity { COMMON, RARE, EPIC }
 
+## Indice = Rarity; raridade sempre com cor e texto (PATTERNS P6).
+const RARITY_NAMES: Array[String] = ["Comum", "Raro", "Épico"]
+
 @export var id: StringName
 @export var display_name: String
 @export var slot: Slot
@@ -20,4 +23,6 @@ enum Rarity { COMMON, RARE, EPIC }
 @export var agility_pct: float
 ## Passiva unica (&"fury"); vazio = nenhuma. O efeito e aplicado pelo combate.
 @export var passive: StringName
+## Nome da passiva na UI (GDB §6.1).
+@export var passive_name: String
 @export var passive_value: float
