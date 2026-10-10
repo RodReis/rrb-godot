@@ -2,7 +2,8 @@ extends SceneTree
 ## Captura a arena gerada sem partida: vista de cima (ortografica) e vista em perspectiva na
 ## angulacao da camera do jogo. Ferramenta de autoria para a verificacao do Code e as capturas
 ## do roadmap (docs/roadmap/README.md). Uso (na raiz do repo, janela aberta, nao headless):
-##   godot --path game --resolution 1400x1000 -s <repo>/tools/arena/snapshot_arena.gd -- <saida_sem_ext>
+##   godot --path game --resolution 1400x1000 -s <repo>/tools/arena/snapshot_arena.gd -- <saida>
+## (<saida> sem extensao.)
 ## Gera <saida>_topo.png e <saida>_perspectiva.png.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"

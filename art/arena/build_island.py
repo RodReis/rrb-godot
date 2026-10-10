@@ -220,6 +220,21 @@ def atlas_material():
     return mat
 
 
+def trim_material():
+    """Cintas de ferro do bau: material proprio ("chest_trim") que o chest.gd troca pela raridade."""
+    if "chest_trim" in _materials:
+        return _materials["chest_trim"]
+    mat = bpy.data.materials.new("chest_trim")
+    mat.use_nodes = True
+    mat.use_backface_culling = False
+    bsdf = mat.node_tree.nodes["Principled BSDF"]
+    bsdf.inputs["Base Color"].default_value = (0.28, 0.29, 0.32, 1.0)
+    bsdf.inputs["Metallic"].default_value = 0.6
+    bsdf.inputs["Roughness"].default_value = 0.45
+    _materials["chest_trim"] = mat
+    return mat
+
+
 def rune_material(color):
     key = "rune_%02x%02x%02x" % tuple(int(c * 255) for c in color)
     if key in _materials:
@@ -257,7 +272,7 @@ def build(kit, bevel=0.0):
         rune = kit.rune.get(poly.index)
         if rune is not None:
             if rune not in rune_slots:
-                mesh.materials.append(rune_material(rune))
+                mesh.materials.append(trim_material() if rune == "trim" else rune_material(rune))
                 rune_slots[rune] = len(mesh.materials) - 1
             poly.material_index = rune_slots[rune]
         ys = [kit.verts[mesh.loops[l].vertex_index][1] for l in poly.loop_indices]
@@ -596,12 +611,50 @@ def build_pillar():
 # --- kit 3: castelo -------------------------------------------------------------------------
 
 
+def stone_courses(kit, x0, x1, y0, y1, z, outward, rows=3, seed=0.0):
+    """Fiadas de blocos de pedra em relevo numa face vertical paralela a x (referencia do PI:
+    muralha em blocos). outward = +1 face em +z, -1 face em -z. Blocos alternados por fiada."""
+    height = (y1 - y0) / rows
+    for r in range(rows):
+        offset = 0.0 if r % 2 == 0 else 0.26
+        x = x0 - offset
+        k = 0
+        while x < x1 - 0.05:
+            w = 0.46 + 0.12 * n3(x * 3.0 + seed, r * 1.7, k)
+            bx0, bx1 = max(x0, x), min(x1, x + w)
+            if bx1 - bx0 > 0.12:
+                depth = 0.035 + 0.02 * n3(bx0, r + seed, 3.0)
+                zz = z if outward > 0 else z - depth
+                t = 0.5 + 0.15 * n3(bx0 * 2.0, r * 3.0 + seed, 7.0)
+                kit.add(box(bx0, y0 + r * height + 0.03, zz, bx1 - bx0, height - 0.06, depth), STONE, (t - 0.1, t + 0.15))
+            x += w + 0.05
+            k += 1
+
+
+def stone_ring_courses(kit, cx, cz, y0, y1, r, n, rows=4, seed=0.0):
+    """Fiadas de blocos em relevo em volta de um prisma de n lados (torre)."""
+    height = (y1 - y0) / rows
+    for row in range(rows):
+        for i in range(n):
+            a = math.radians(22.5 + 360.0 * i / n + (0.0 if row % 2 == 0 else 180.0 / n))
+            w = 0.62 + 0.1 * n3(i * 2.0, row + seed, 1.0)
+            depth = 0.04 + 0.02 * n3(i, row * 2.0 + seed, 5.0)
+            t = 0.5 + 0.15 * n3(i * 3.0, row + seed, 9.0)
+            face = box(-w / 2, y0 + row * height + 0.03, r - 0.01, w, height - 0.06, depth)
+            face = rot_y(face, -math.degrees(a) + 90.0)
+            kit.add(translate(face, cx, 0.0, cz), STONE, (t - 0.1, t + 0.15))
+
+
 def build_wall(team):
     rune = RUNE_A if team == "a" else RUNE_B
     kit = Kit("castle_wall_%s" % team)
     kit.add(box(-1.0, 0.0, -0.4, 2.0, 2.1, 0.8), STONE, (0.35, 0.7))
     for x in (-0.85, -0.2, 0.45):
         kit.add(box(x, 2.1, -0.4, 0.4, 0.4, 0.8), STONE, (0.5, 0.8))
+    stone_courses(kit, -1.0, 1.0, 0.35, 1.1, 0.4, 1, rows=2, seed=1.0)
+    stone_courses(kit, -1.0, 1.0, 1.45, 2.1, 0.4, 1, rows=2, seed=2.0)
+    stone_courses(kit, -1.0, 1.0, 0.35, 1.1, -0.4, -1, rows=2, seed=3.0)
+    stone_courses(kit, -1.0, 1.0, 1.45, 2.1, -0.4, -1, rows=2, seed=4.0)
     kit.add(box(-0.98, 1.15, -0.44, 1.96, 0.22, 0.88), STONE, (0.3, 0.3), rune=rune)
     kit.add(box(-1.0, 0.0, -0.5, 2.0, 0.35, 1.0), STONE_DARK, (0.3, 0.55))
     return build(kit, bevel=0.05)
@@ -611,6 +664,9 @@ def build_tower(team):
     rune = RUNE_A if team == "a" else RUNE_B
     kit = Kit("castle_tower_%s" % team)
     kit.add(prism(0, 0, 0.0, 3.9, 1.2, 1.1, 8, phase=22.5), STONE, (0.3, 0.7))
+    # 2 + 3 fiadas (40 blocos): torre fica em ~700 tris, dentro do orcamento de cenario.
+    stone_ring_courses(kit, 0, 0, 0.5, 1.55, 1.17, 8, rows=2, seed=1.0)
+    stone_ring_courses(kit, 0, 0, 1.95, 3.85, 1.12, 8, rows=3, seed=2.0)
     kit.add(prism(0, 0, 0.0, 0.5, 1.35, 1.25, 8, phase=22.5), STONE_DARK, (0.3, 0.5))
     kit.add(prism(0, 0, 3.9, 4.15, 1.3, 1.3, 8, phase=22.5), STONE, (0.55, 0.8))
     for i in range(8):
@@ -630,6 +686,9 @@ def build_gate(team):
     for sx in (-1.0, 1.0):
         x0 = 2.5 if sx > 0 else -3.1
         kit.add(box(x0, 0.0, -0.5, 0.6, 3.3, 1.0), STONE, (0.35, 0.7))
+        for face in (1, -1):
+            stone_courses(kit, x0, x0 + 0.6, 0.1, 1.1, 0.5 * face, face, rows=3, seed=sx + face)
+            stone_courses(kit, x0, x0 + 0.6, 1.55, 2.85, 0.5 * face, face, rows=3, seed=sx * 2 + face)
         kit.add(box(x0 - 0.02, 1.2, -0.54, 0.64, 0.25, 1.08), STONE, (0.3, 0.3), rune=rune)
         bx = 3.15 if sx > 0 else -3.35
         kit.add(box(bx, 1.9, 0.5, 0.2, 0.2, 0.35), WOOD_DARK, (0.3, 0.6))
@@ -677,13 +736,64 @@ def build_boulder():
 
 
 def build_barricade():
+    """Cavalo-de-frisa (referencia do PI): estacas afiadas cruzadas em X sobre uma viga."""
     kit = Kit("barricade")
-    for x in (-0.6, 0.6):
-        kit.add(rot_z(box(x - 0.07, -0.1, -0.12, 0.14, 1.5, 0.24), 32.0, (x, 0.0, 0.0)), WOOD, (0.35, 0.7))
-        kit.add(rot_z(box(x - 0.07, -0.1, -0.12, 0.14, 1.5, 0.24), -32.0, (x, 0.0, 0.0)), WOOD, (0.35, 0.7))
-    kit.add(box(-1.1, 0.75, -0.08, 2.2, 0.16, 0.16), WOOD_DARK, (0.4, 0.7))
-    kit.add(box(-1.1, 0.35, -0.08, 2.2, 0.14, 0.16), WOOD_DARK, (0.4, 0.7))
+    for i in range(6):
+        x = -1.0 + 0.4 * i
+        for lean in (34.0, -34.0):
+            stake = prism(0, 0, -0.15, 1.35, 0.085, 0.085, 6, phase=i * 7.0)
+            tip = prism(0, 0, 1.35, 1.6, 0.085, 0.0, 6, phase=i * 7.0)
+            for geo in (stake, tip):
+                kit.add(translate(rot_x(geo, lean, (0.0, 0.75, 0.0)), x, 0.0, 0.0), WOOD, (0.35, 0.7))
+    kit.add(prism(0, 0, 0.0, 2.4, 0.07, 0.07, 6), WOOD_DARK, (0.4, 0.7))
+    beam = rot_z(prism(0, 0, -1.2, 1.2, 0.07, 0.07, 6), 90.0)
+    kit.add(translate(beam, 0.0, 0.78, 0.0), WOOD_DARK, (0.4, 0.7))
     return build(kit, bevel=0.02)
+
+
+def build_chest_body():
+    """Corpo do bau (madeira + cintas de ferro; referencia do PI). Origem no chao, centro."""
+    kit = Kit("chest_body")
+    kit.add(box(-0.45, 0.0, -0.3, 0.9, 0.5, 0.6), WOOD, (0.3, 0.65))
+    for z in (-0.31, 0.3):
+        for y in (0.08, 0.3):
+            kit.add(box(-0.44, y, z, 0.88, 0.05, 0.01), WOOD_DARK, (0.4, 0.5))
+    for x in (-0.46, -0.03, 0.4):
+        kit.add(box(x, -0.01, -0.32, 0.06, 0.53, 0.64), CHARCOAL, (0.3, 0.3), rune="trim")
+    kit.add(box(-0.47, 0.0, -0.32, 0.94, 0.07, 0.64), CHARCOAL, (0.3, 0.3), rune="trim")
+    kit.add(box(-0.06, 0.36, 0.3, 0.12, 0.12, 0.04), CHARCOAL, (0.3, 0.3), rune="trim")
+    return build(kit, bevel=0.015)
+
+
+def build_chest_lid():
+    """Tampa abaulada; origem na dobradica (aresta de tras, em cima do corpo): o chest.gd gira o
+    node pai. Geometria em z 0..0.64 e y 0..0.32."""
+    kit = Kit("chest_lid")
+    n = 7
+    verts, faces = [], []
+    for side, x in ((0, -0.47), (1, 0.47)):
+        for i in range(n):
+            a = math.pi * i / (n - 1)
+            verts.append((x, 0.02 + 0.3 * math.sin(a), 0.32 - 0.32 * math.cos(a)))
+    for i in range(n - 1):
+        faces.append((i, i + 1, n + i + 1, n + i))
+    faces.append(tuple(range(n - 1, -1, -1)))
+    faces.append(tuple(range(n, 2 * n)))
+    bottom = len(verts)
+    verts.extend([(-0.47, 0.0, 0.0), (0.47, 0.0, 0.0), (0.47, 0.0, 0.64), (-0.47, 0.0, 0.64)])
+    faces.append((bottom, bottom + 1, bottom + 2, bottom + 3))
+    kit.add((verts, faces), WOOD, (0.4, 0.75))
+    for x in (-0.48, -0.03, 0.42):
+        band_v, band_f = [], []
+        for i in range(n):
+            a = math.pi * i / (n - 1)
+            for dx in (0.0, 0.06):
+                band_v.append((x + dx, 0.03 + 0.315 * math.sin(a), 0.32 - 0.335 * math.cos(a)))
+        for i in range(n - 1):
+            band_f.append((2 * i, 2 * i + 2, 2 * i + 3, 2 * i + 1))
+        kit.add((band_v, band_f), CHARCOAL, (0.3, 0.3), rune="trim")
+    kit.add(box(-0.05, 0.02, 0.6, 0.1, 0.1, 0.06), CHARCOAL, (0.3, 0.3), rune="trim")
+    return build(kit, bevel=0.012)
 
 
 # --- kit 5: props (cristais, pinheiro, torre de vigia, balista, ilhotas) --------------------
@@ -818,7 +928,7 @@ def main():
     preview("castle_modular", castle, spread=7.5)
 
     reset_scene()
-    ruins = [build_bridge(), build_boulder(), build_barricade()]
+    ruins = [build_bridge(), build_boulder(), build_barricade(), build_chest_body(), build_chest_lid()]
     for obj in ruins:
         export(obj, obj.name)
     save("ruins_bridges")

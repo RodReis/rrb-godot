@@ -7,7 +7,8 @@
 #>
 param(
     [Parameter(Mandatory = $true)][string]$Out,
-    [string]$Title = 'rrb-godot'
+    # Titulo exato da janela do jogo (o do editor/console e diferente).
+    [string]$Title = 'rrb-godot (DEBUG)'
 )
 Add-Type -AssemblyName System.Drawing
 Add-Type @'
@@ -17,15 +18,26 @@ public static class Win32Window {
     [StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left, Top, Right, Bottom; }
     [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
     [DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr hWnd);
+    [DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int cmd);
+    [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr hWnd);
 }
 '@
-# So processo do Godot: o titulo "rrb-godot" tambem aparece em editores abertos no repo.
-$proc = Get-Process | Where-Object { $_.ProcessName -like 'Godot*' -and $_.MainWindowTitle -like "*$Title*" } | Select-Object -First 1
-if (-not $proc) { Write-Host "janela '$Title' nao encontrada" -ForegroundColor Red; exit 1 }
-[Win32Window]::SetForegroundWindow($proc.MainWindowHandle) | Out-Null
-Start-Sleep -Milliseconds 300
+# Entre os processos do Godot com esse titulo (o *_console.exe tem dois), fica a maior janela.
+$hwnd = [IntPtr]::Zero
+$best = 0
 $rect = New-Object Win32Window+RECT
-[Win32Window]::GetWindowRect($proc.MainWindowHandle, [ref]$rect) | Out-Null
+foreach ($proc in Get-Process | Where-Object { $_.ProcessName -like 'Godot*' -and $_.MainWindowTitle -like "$Title*" }) {
+    # Janela minimizada (jogo aberto por processo em segundo plano): restaura antes de medir.
+    if ([Win32Window]::IsIconic($proc.MainWindowHandle)) { [Win32Window]::ShowWindow($proc.MainWindowHandle, 9) | Out-Null; Start-Sleep -Milliseconds 500 }
+    $r = New-Object Win32Window+RECT
+    [Win32Window]::GetWindowRect($proc.MainWindowHandle, [ref]$r) | Out-Null
+    $area = ($r.Right - $r.Left) * ($r.Bottom - $r.Top)
+    if ($area -gt $best) { $best = $area; $hwnd = $proc.MainWindowHandle; $rect = $r }
+}
+if ($hwnd -eq [IntPtr]::Zero) { Write-Host "janela '$Title' nao encontrada" -ForegroundColor Red; exit 1 }
+[Win32Window]::SetForegroundWindow($hwnd) | Out-Null
+Start-Sleep -Milliseconds 300
+[Win32Window]::GetWindowRect($hwnd, [ref]$rect) | Out-Null
 $w = $rect.Right - $rect.Left
 $h = $rect.Bottom - $rect.Top
 $bmp = New-Object System.Drawing.Bitmap $w, $h

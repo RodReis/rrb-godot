@@ -198,7 +198,9 @@ func test_navmesh_alcanca_os_campos_laterais() -> void:
 	var checked := 0
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker
-		var spawn := Vector3(-24, 0, -24) if marker.team == GateRules.TEAM_A else Vector3(24, 0, -24)
+		var spawn := (
+			Vector3(-24, 0, -24) if marker.team == GateRules.TEAM_A else Vector3(24, 0, -24)
+		)
 		var content := marker.kind != SpawnMarker.Kind.HERO and marker.kind != SpawnMarker.Kind.BOSS
 		if marker.team == GateRules.TEAM_NEUTRAL or not content:
 			continue

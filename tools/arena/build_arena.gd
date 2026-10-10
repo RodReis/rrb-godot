@@ -267,8 +267,10 @@ func _build_river() -> void:
 		var a0 := deg_to_rad(RIVER_SECTOR_DEG * i)
 		var a1 := deg_to_rad(RIVER_SECTOR_DEG * (i + 1))
 		var polygon: PackedVector2Array = [
-			_ring_point(a0, RING_IN), _ring_point(a1, RING_IN),
-			_ring_point(a1, RING_OUT), _ring_point(a0, RING_OUT),
+			_ring_point(a0, RING_IN),
+			_ring_point(a1, RING_IN),
+			_ring_point(a1, RING_OUT),
+			_ring_point(a0, RING_OUT),
 		]
 		for azimuth: float in BRIDGE_AZIMUTHS:
 			polygon = _clip_bridge(polygon, azimuth)
@@ -284,7 +286,9 @@ func _build_river() -> void:
 	for azimuth: float in BRIDGE_AZIMUTHS:
 		var axis := _polar(azimuth, 1.0)
 		var bridge := _asset(bridges, RRB_ARENA + "bridge_stone.glb", "Bridge%d" % int(azimuth))
-		bridge.transform = Transform3D(_tangent_basis(Vector3(-axis.z, 0, axis.x)), axis * BRIDGE_CENTER)
+		bridge.transform = Transform3D(
+			_tangent_basis(Vector3(-axis.z, 0, axis.x)), axis * BRIDGE_CENTER
+		)
 
 
 func _ring_point(angle: float, r: float) -> Vector2:
@@ -305,7 +309,9 @@ func _clip_bridge(polygon: PackedVector2Array, azimuth: float) -> PackedVector2A
 
 
 ## Sutherland-Hodgman: mantem os pontos com p.dot(normal) >= offset.
-func _clip_half_plane(polygon: PackedVector2Array, normal: Vector2, offset: float) -> PackedVector2Array:
+func _clip_half_plane(
+	polygon: PackedVector2Array, normal: Vector2, offset: float
+) -> PackedVector2Array:
 	var out := PackedVector2Array()
 	var n := polygon.size()
 	for i: int in range(n):
@@ -384,7 +390,9 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	]
 	towers.append_array(arc_ends)
 	for i: int in range(towers.size()):
-		var tower := _asset(castle, RRB_ARENA + "castle_tower_%s.glb" % tag.to_lower(), "Tower%s%d" % [tag, i])
+		var tower := _asset(
+			castle, RRB_ARENA + "castle_tower_%s.glb" % tag.to_lower(), "Tower%s%d" % [tag, i]
+		)
 		tower.position = towers[i]
 
 	var markers := _group("Markers")
@@ -570,7 +578,9 @@ func _crystal(parent: Node3D, at: Vector3, large: bool, label: String, yaw: floa
 		for i: int in range(mi.get_surface_override_material_count()):
 			var active := mi.get_active_material(i)
 			if active != null and active.resource_path.ends_with("arcane_crystal_magenta.tres"):
-				mi.set_surface_override_material(i, load(MATERIALS + "arcane_crystal_%s.tres" % variant))
+				mi.set_surface_override_material(
+					i, load(MATERIALS + "arcane_crystal_%s.tres" % variant)
+				)
 
 
 # --- ambientacao (cliente): luzes e particulas -------------------------------------------
@@ -581,7 +591,9 @@ func _build_ambience() -> void:
 	ambience.name = "Ambience"
 	ambience.set_script(load(AMBIENCE_SCRIPT))
 	_add(_root, ambience)
-	_light(ambience, "MagmaLight", Vector3(0, 1.5, 0), Color(1.0, 0.45, 0.1), MAGMA_LIGHT_RANGE, 2.5)
+	_light(
+		ambience, "MagmaLight", Vector3(0, 1.5, 0), Color(1.0, 0.45, 0.1), MAGMA_LIGHT_RANGE, 2.5
+	)
 	for flip: float in [1.0, -1.0]:
 		var tag := _team_tag(flip)
 		var gate_at := _local(Vector2(GATE_S, 0), flip)
@@ -589,7 +601,14 @@ func _build_ambience() -> void:
 		var forward := _mirror_if(AXIS_A, flip)
 		for side: float in [1.0, -1.0]:
 			var at := gate_at + lateral * (3.25 * side) + Vector3.UP * 2.4 - forward * 0.9
-			_light(ambience, "Torch%s%d" % [tag, int(side > 0)], at, Color(1.0, 0.6, 0.25), TORCH_LIGHT_RANGE, 1.2)
+			_light(
+				ambience,
+				"Torch%s%d" % [tag, int(side > 0)],
+				at,
+				Color(1.0, 0.6, 0.25),
+				TORCH_LIGHT_RANGE,
+				1.2
+			)
 		for i: int in range(RIM_CRYSTALS_A.size()):
 			var c: Vector2 = RIM_CRYSTALS_A[i]
 			var at := _mirror_if(_polar(c.x, RIM_RADIUS - 0.6), flip) + Vector3.UP * 1.5
@@ -600,7 +619,9 @@ func _build_ambience() -> void:
 		_waterfall(ambience, sign)
 
 
-func _light(parent: Node3D, label: String, at: Vector3, color: Color, range_u: float, energy: float) -> void:
+func _light(
+	parent: Node3D, label: String, at: Vector3, color: Color, range_u: float, energy: float
+) -> void:
 	var light := OmniLight3D.new()
 	light.name = label
 	light.position = at
@@ -698,7 +719,13 @@ func _rock(walls: StaticBody3D, at: Vector3, label: String) -> void:
 	visual.transform = Transform3D(Basis(Vector3.UP, at.x * 0.7 + at.z * 0.3), at)
 	# Cristal pequeno encostado na rocha, dentro do cilindro de colisao (so visual).
 	var yaw := at.x * 0.7 + at.z * 0.3
-	_crystal(_group("RockDecor"), at + Vector3(cos(yaw), 0, sin(yaw)) * 1.0, false, label + "Crystal", yaw)
+	_crystal(
+		_group("RockDecor"),
+		at + Vector3(cos(yaw), 0, sin(yaw)) * 1.0,
+		false,
+		label + "Crystal",
+		yaw
+	)
 
 
 ## Area3D do mato (colisao da SPEC-007) + asset do Blender [param model] como visual.

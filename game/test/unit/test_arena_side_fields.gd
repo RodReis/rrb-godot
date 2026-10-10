@@ -85,7 +85,9 @@ func test_fora_da_coroa_da_base_rival_e_da_borda() -> void:
 			var r := m.position.length()
 			assert_gt(r, RIVER_RING_OUT, "%s na coroa do rio" % m.name)
 			assert_lt(r, ARENA_RADIUS - 1.0, "%s na borda" % m.name)
-			assert_gt(m.position.distance_to(_spawn_of(rival)), BASE_RADIUS, "%s na base rival" % m.name)
+			assert_gt(
+				m.position.distance_to(_spawn_of(rival)), BASE_RADIUS, "%s na base rival" % m.name
+			)
 
 
 ## Nenhum marcador (de qualquer zona) no rio (colisao) nem na coroa 14-18 u.

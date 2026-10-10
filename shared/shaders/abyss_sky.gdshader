@@ -57,9 +57,24 @@ void sky() {
 	// Brilho difuso vindo de baixo: o abismo sob a ilha nao e preto chapado.
 	color += abyss_glow * smoothstep(-0.1, -0.9, dir.y);
 
-	vec3 cell = floor(dir * star_grid);
-	float h = hash3(cell);
-	float dist = length(fract(dir * star_grid) - 0.5);
+	// Estrelas em grade por face de cubo (projecao pelo eixo dominante): celulas uniformes em
+	// toda direcao; a grade direta sobre dir vira riscos perto do horizonte.
+	vec3 a = abs(dir);
+	vec2 face_uv;
+	float face_id;
+	if (a.x >= a.y && a.x >= a.z) {
+		face_uv = dir.yz / a.x;
+		face_id = dir.x > 0.0 ? 0.0 : 1.0;
+	} else if (a.y >= a.z) {
+		face_uv = dir.xz / a.y;
+		face_id = dir.y > 0.0 ? 2.0 : 3.0;
+	} else {
+		face_uv = dir.xy / a.z;
+		face_id = dir.z > 0.0 ? 4.0 : 5.0;
+	}
+	vec2 grid_uv = face_uv * star_grid * 0.5;
+	float h = hash3(vec3(floor(grid_uv), face_id));
+	float dist = length(fract(grid_uv) - 0.5);
 	float star = step(star_density, h) * smoothstep(0.32, 0.04, dist);
 	float twinkle = 0.7 + 0.3 * sin(TIME * 2.0 + h * 50.0);
 	color += vec3(star * star_brightness * twinkle * (0.6 + 0.4 * h));
