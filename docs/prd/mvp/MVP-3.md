@@ -28,7 +28,7 @@
 
 ## Ordem e issues
 
-Issue-pai **#76**. Ordem (decisão do PI em 2026-10-10): F21 #77 → F22 #78 → F23 #79 → **bloco visual F38 → F39 → F40 → F41 → F42 → F43** (ADR-0006) → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → [GATE] #87. O bloco visual entra antes do launcher para o Theme do F24 nascer no design system v2 e o F33 renderizar a ilha pronta; se o prazo apertar, F42 e F43 podem ir para depois do F33 sem quebrar dependências. Critério transversal do bloco: ADR-0006 item 7. O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
+Issue-pai **#76**. Ordem (decisão do PI em 2026-10-10): F21 #77 → F22 #78 → F23 #79 → **bloco visual F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98** (ADR-0006) → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → [GATE] #87. O bloco visual entra antes do launcher para o Theme do F24 nascer no design system v2 e o F33 renderizar a ilha pronta; se o prazo apertar, F42 e F43 podem ir para depois do F33 sem quebrar dependências. Critério transversal do bloco: ADR-0006 item 7. O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
 
 ## Decisões do PI em 2026-10-10
 

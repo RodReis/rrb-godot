@@ -256,3 +256,10 @@ Corpo: Entrega = SPEC-044 §2–5 (builder, colisão, marcadores — reposiciona
 - [ ] `grep -rn "F38\|ADR-0006" docs/STATUS.md docs/prd/mvp/MVP-3.md docs/DECISIONS.md CLAUDE.md` retorna todas as referências.
 - [ ] Issues abertas no GitHub com título no formato de `GITHUB.md` §9 e vinculadas à issue-pai.
 - [ ] Resumo ao PI com os números das issues e a pendência R-PEND-14.
+
+
+## Resultado (2026-10-10 15:10)
+
+- Docs enviados para a `main` em `2175fb6` (Tasks 1–6) e neste commit (Task 7 Step 3).
+- Issues: **F44 #92** (MVP2, `proplan:todo`, após F16 #63 — que já estava em `doing` — e antes de F17 #64); **F38 #93, F39 #94, F40 #95, F41 #96, F42 #97, F43 #98** (MVP3, `proplan:backlog`, entre F23 #79 e F24 #80). Issues-pai #57 e #76 atualizadas.
+- Pendência do PI: R-PEND-14 (fontes do design system v2) — trava só o F43.

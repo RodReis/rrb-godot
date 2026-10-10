@@ -15,7 +15,7 @@
 
 1. **A imagem panorâmica passa a ser referência de layout** (inverte SPEC-007 §5). O layout normativo é a **SPEC-044**: simetria por espelho em `x`, bases nos cantos norte (`(∓24, −24)`), rio N–S (`|x| ≤ 2 u`, `r > 18 u`) + anel `14 < r ≤ 18 u`, **4 pontes** nos azimutes 45°/135°/225°/315° (2 por metade), campos do centro em 0°/180°, cratera, pilares, raio 35 u e escala inalterados.
 2. **Core loop preservado:** metade A = oeste, metade B = leste; entre metades só pela ilha central; portões e bases como antes.
-3. **Dois cards:** **F44** (MVP2, greybox jogável, logo após F14 e antes do F16) troca o layout no builder, colisão, marcadores, portões, mato e navmesh, **sem arte nova**; **F40** (MVP3, bloco visual) faz a arte da ilha sobre esse layout.
+3. **Dois cards:** **F44** (MVP2, greybox jogável; logo após o F16 — que já estava em andamento — e antes do F17) troca o layout no builder, colisão, marcadores, portões, mato e navmesh, **sem arte nova**; **F40** (MVP3, bloco visual) faz a arte da ilha sobre esse layout.
 4. **Torres de vigia e balistas/canhões da imagem são só enfeite**, sem colisão nem função, fora da área jogável (a decisão "sem torres" de 2026-10-09 continua).
 5. Continuam excluídos: relevo, degraus nas pontes, fosso (a cratera é plana; o magma é visual).
 6. Os campos laterais do F36 são **reposicionados** pelo F44 (marcadores são dados do builder); contagens do GDB inalteradas. Os tempos de referência da SPEC-007 §1 (6,3 s spawn→centro) valem como aceite; spawn→spawn pela ilha é medido no F44 e passa a ser o valor de referência (P-02 atualizado).

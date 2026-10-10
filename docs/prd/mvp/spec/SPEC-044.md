@@ -1,6 +1,6 @@
 # SPEC-044 — Arena "Ilha Flutuante Arcana": novo layout (espelho N–S, rio N–S + anel, 4 pontes)
 
-**Fatia:** F44 / SPEC-044 (MVP2, Slice 2.11 — entra **antes do F36**) · **Issue:** a criar · **Status:** aprovada pelo PI em 2026-10-10 (topologia proposta pelo Cowork sobre o doc `docs/prd/especificacao_reforma_arena_godot_blender.md` e a imagem `docs/prd/telas/Arena & Mapa…/full_high_resolution_panoramic…png`)
+**Fatia:** F44 / SPEC-044 (MVP2, Slice 2.11 — entra **depois do F16 e antes do F17**; F36 e F20 já estavam mergeados) · **Issue:** #92 · **Status:** aprovada pelo PI em 2026-10-10 (topologia proposta pelo Cowork sobre o doc `docs/prd/especificacao_reforma_arena_godot_blender.md` e a imagem `docs/prd/telas/Arena & Mapa…/full_high_resolution_panoramic…png`)
 **Supera:** SPEC-007 §2 (topologia), §3 (posições), §6 itens 1, 2 e 6. Mantém SPEC-007 §1 (escala, coordenadas, velocidade de referência), §4 (marcadores) e a regra "edite o builder, não a cena".
 **Fontes:** PRD §3.1, §3.2 · GDB §5.1, §6.2, §7.1 · ADR-0007 (decisão de layout) · `CONVENTION.md` §4.1, §4.7
 **Escopo desta fatia:** **greybox jogável** — builder, colisão, marcadores, portões, mato (geometria), navmesh, aceite por medidas. **Sem arte nova**: continua com hexes KayKit, rio e pontes do pack. A arte da ilha (castelos, abismo, magma, cristais, skybox, cachoeiras) é o **F40** (MVP3, bloco visual).

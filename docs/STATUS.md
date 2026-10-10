@@ -10,7 +10,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Módulo em foco | `game/` |
 | Próximo gate | [GATE] MVP2 — 1x1 online termina sempre; soak verde. MVP3: cards criados em 2026-10-10 (#76) |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos); ADR-0006 (direção visual) e ADR-0007 (layout da arena) em 2026-10-10 |
-| Board | issue-pai [MVP2] #57 — ordem F15 → F36 → F20 → F14 → **F44** → F16 → F17 → F18 → F32 → F37 → F19 → [GATE] (ADR-0007); `done`: F15 #58; `todo`: F36 #59, F20 #60, F14 #62, F16 #63, F17 #64; `backlog`: F18 #65, F32 #66, F37 #67, F19 #68, [GATE] #69. Issue-pai [MVP3] #76 — ordem F21 → F22 → F23 → **F38 → F39 → F40 → F41 → F42 → F43** (bloco visual, ADR-0006) → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE], todos `backlog` (#77–#87; bloco visual: issues a criar). Sem MVP, `planejado`: câmera #47 e oclusão #70. MVP1 (#16): `done` [FIX] #52; demais `finalizado`. MVP0 #1–#7 `finalizado` |
+| Board | issue-pai [MVP2] #57 — ordem F15 → F36 → F20 → F14 → F16 → **F44 #92** → F17 → F18 → F32 → F37 → F19 → [GATE] (ADR-0007; F16 já estava em `doing`); `done`: F15 #58; `todo`: F36 #59, F20 #60, F14 #62, F16 #63, F17 #64; `backlog`: F18 #65, F32 #66, F37 #67, F19 #68, [GATE] #69. Issue-pai [MVP3] #76 — ordem F21 → F22 → F23 → **F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98** (bloco visual, ADR-0006) → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE], todos `backlog` (#77–#87, #93–#98). Sem MVP, `planejado`: câmera #47 e oclusão #70. MVP1 (#16): `done` [FIX] #52; demais `finalizado`. MVP0 #1–#7 `finalizado` |
 | Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. R-PEND-11 decidida em 2026-10-09 (paleta e fontes de `docs/prd/telas/`). R-PEND-02 (completada), 04, 06, 12 e 13 decididas em 2026-10-10; 03 e 07 em 2026-10-09; R-PEND-11 emendada em 2026-10-10 (protótipo vence o DV na estrutura). Abertos: 10, 14 (fontes do design system v2 — trava só o F43) |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
@@ -67,18 +67,18 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F27 / SPEC-027 | MVP3 | launcher | Slice 3.7 — Bestiário e Forja (simulador com `shared/core`) | backlog (#84) |
 | F33 / SPEC-033 | MVP3 | launcher, shared | Slice 3.9 — Tela Arena & Mapa (DV tela 10): render da arena real, marcadores (POIs), regras das 2 fases pelos números do GDB | backlog (#85) |
 | F35 / SPEC-035 | MVP3 | launcher, backend | Slice 3.10 — Perfil de conta: nickname único obrigatório no 1º login (3–16 `A–Z a–z 0–9 _`, prefixo `#` de exibição); avatar predefinido ou upload ≤ 1 MB, só local; sem XP de conta, sem data de nascimento (R-PEND-02) | backlog (#86) |
-| F38 / SPEC-038 | MVP3 | game | Slice 3.11 — Iluminação e pós: `WorldEnvironment`, `Sun`, `LightmapGI`, warm-up de shaders, baseline do profiler, toggles em `settings.cfg` (ADR-0006) | planejado |
-| F39 / SPEC-039 | MVP3 | game, shared | Slice 3.12 — Toon + outline por pós-import | planejado |
-| F40 / SPEC-040 | MVP3 | game, shared | Slice 3.13 — Arte da ilha sobre a SPEC-044: ilha + abismo, castelos, rio de mana e cachoeiras, cratera de magma, cristais, skybox, ilhotas; shaders de água/magma/cristal/sky (ADR-0007) | planejado |
-| F41 / SPEC-041 | MVP3 | game | Slice 3.14 — Arquitetura VFX + VFX do Cavaleiro e da Arqueira | planejado |
-| F42 / SPEC-042 | MVP3 | game, shared | Slice 3.15 — Vegetação (grama `MultiMesh`, distinta do mato alto) | planejado |
-| F43 / SPEC-043 | MVP3 | game, shared | Slice 3.16 — HUD v2 (ghost bar, ícones, molduras, fontes R-PEND-14, 3 pontos) | planejado |
+| F38 / SPEC-038 | MVP3 | game | Slice 3.11 — Iluminação e pós: `WorldEnvironment`, `Sun`, `LightmapGI`, warm-up de shaders, baseline do profiler, toggles em `settings.cfg` (ADR-0006) | backlog (#93) |
+| F39 / SPEC-039 | MVP3 | game, shared | Slice 3.12 — Toon + outline por pós-import | backlog (#94) |
+| F40 / SPEC-040 | MVP3 | game, shared | Slice 3.13 — Arte da ilha sobre a SPEC-044: ilha + abismo, castelos, rio de mana e cachoeiras, cratera de magma, cristais, skybox, ilhotas; shaders de água/magma/cristal/sky (ADR-0007) | backlog (#95) |
+| F41 / SPEC-041 | MVP3 | game | Slice 3.14 — Arquitetura VFX + VFX do Cavaleiro e da Arqueira | backlog (#96) |
+| F42 / SPEC-042 | MVP3 | game, shared | Slice 3.15 — Vegetação (grama `MultiMesh`, distinta do mato alto) | backlog (#97) |
+| F43 / SPEC-043 | MVP3 | game, shared | Slice 3.16 — HUD v2 (ghost bar, ícones, molduras, fontes R-PEND-14, 3 pontos) | backlog (#98) |
 | F28 / SPEC-028 | MVP3 | infra | Slice 3.8 — Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets, pacote de instalação (`launcher/` + `game/`) | backlog (#82) |
 | [GATE] | MVP3 | — | Dois amigos jogam pela internet sem intervenção do dev | backlog (#87) |
 | F29 / SPEC-029 | MVP4 | backend, launcher, game | Slice 4.1 — Telemetria: ping médio, duração, líder de nível F1 × vencedor; painel de KPIs no histórico | — |
 | F30 / SPEC-030 | MVP4 | shared | Slice 4.2 — Ajustes de balanceamento pós-playtest (só `.tres`) | — |
 | F32 / SPEC-032 | MVP2 | game | Slice 2.8 — Mato alto: herói dentro da moita não é replicado para o adversário (visibilidade no servidor); regra em `CONVENTION.md` §4.7, números em GDB §7.3 (revelação 1,5 s) | backlog (#66) |
-| F44 / SPEC-044 | MVP2 | game | Slice 2.11 — Arena "Ilha Flutuante Arcana": layout novo em greybox (espelho N–S, rio N–S + anel, 4 pontes), builder, colisão, marcadores, navmesh; sem arte (ADR-0007) | planejado |
+| F44 / SPEC-044 | MVP2 | game | Slice 2.11 — Arena "Ilha Flutuante Arcana": layout novo em greybox (espelho N–S, rio N–S + anel, 4 pontes), builder, colisão, marcadores, navmesh; sem arte (ADR-0007) | todo (#92) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
 Próximo número livre: **F45 / SPEC-045**.
