@@ -12,8 +12,9 @@
 | A-04 | IP do jogador aparece nos logs do game server (ENet) | arquitetura | log de conexão; retenção não definida. |
 | A-05 | Público-alvo declarado 10+ anos; monetização com sorteios pagos na fase B | PRD §1.2, §7, R5 | o próprio PRD registra que isso eleva classificação indicativa e exige publicação de probabilidades em lojas. Nada na fatia. |
 | A-06 | Playtest com 10+ pessoas externas e questionário | PRD §9.1 (M4) | coleta fora do software (questionário); o software guarda só métricas de partida. |
-| A-07 | Design visual mostra nome de jogador ("SirRodrigo") e nome do oponente na tela de fim | DV telas 1, 7 | hoje a conta só tem e-mail; "nome de exibição" não existe no PRD (relacionado a R-PEND-02). |
+| A-07 | Design visual mostra nome de jogador ("SirRodrigo") e nome do oponente na tela de fim | DV telas 1, 7 | R-PEND-02 decidida (2026-10-10): nickname público `#nick` (F35); histórico mostra herói e nickname do oponente, nunca e-mail. |
 | A-08 | `user://settings.cfg` e, se aprovado R-PEND-03, `user://session.dat` | `ARCHITECTURE-LAUNCHER.md` §3.3, §5.3 | arquivos locais na máquina do jogador. |
+| A-09 | Avatar por upload de imagem do jogador | R-PEND-02, F35 | arquivo local em `user://` (PNG/JPG ≤ 1 MB, 256×256); não sai da máquina. |
 
 ## O que **não** está aqui, de propósito
 

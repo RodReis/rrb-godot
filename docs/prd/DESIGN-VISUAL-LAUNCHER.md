@@ -8,6 +8,8 @@
 
 **Versão:** 1.1 — 2026-10-09 (paleta e fontes de `docs/prd/telas/` — R-PEND-11 decidida pelo PI; TELA 10 Arena & Mapa)
 
+**Emenda de 2026-10-10 (PI):** nas telas do Launcher, a **composição visual vem dos protótipos de `docs/prd/telas/`**, não dos wireframes abaixo. Este documento continua valendo para comportamento, sinais e navegação. Regra completa: `docs/FRONTEND-LAUNCHER.md` §8.
+
 **Engine:** Godot 4.7 (Forward+ Desktop / Netfox 30Hz Autoritative Server)
 
 **Documentos de Referência:**

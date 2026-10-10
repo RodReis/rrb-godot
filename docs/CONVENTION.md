@@ -108,8 +108,10 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 
 ### 4.8 Conta e fila
 - Conta: e-mail + senha (PRD §8.4). Sem verificação de e-mail, sem recuperação de senha na fatia (**R-PEND-07** — não está no PRD; registrado em `FORA-DE-ESCOPO.md`).
+- Senha: mínimo 8 caracteres, com pelo menos uma letra e um número (decisão do PI 2026-10-10).
+- Nickname (F35): obrigatório no 1º login; 3–16 caracteres `A–Z a–z 0–9 _`; único sem diferenciar maiúsculas; exibido com prefixo `#`, que não é guardado. Avatar só local no Launcher (PNG/JPG ≤ 1 MB, 256×256). Sem XP de conta (R-PEND-02, decisões de 2026-10-09 e 2026-10-10).
 - Fila 1x1 FIFO, sem rating (PRD §8.4). Um ticket por conta por vez.
-- Histórico: partidas da própria conta, com os campos de `match_players` (`ARCHITECTURE-LAUNCHER.md` §4.3).
+- Histórico: partidas da própria conta, com os campos de `match_players` (`ARCHITECTURE-LAUNCHER.md` §4.3). Oponente identificado pelo herói e, a partir do F35, pelo `#nickname`; nunca pelo e-mail.
 
 ## 5. Invariantes globais (testáveis)
 

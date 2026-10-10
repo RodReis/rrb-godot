@@ -1,6 +1,6 @@
 # FRONTEND-LAUNCHER.md — Contrato de engenharia da interface do Launcher
 
-**Normativo. Toda tarefa de UI do Launcher começa por aqui.** A HUD do Game segue as seções 2, 3 e 6 deste documento (mesmo Theme e componentes); o restante é específico do Launcher. Aparência: `docs/design-system/`. Arquitetura: `ARCHITECTURE-LAUNCHER.md`.
+**Normativo. Toda tarefa de UI do Launcher começa por aqui — e toda tela do Launcher é entregue fiel ao protótipo de `docs/prd/telas/` (§8).** A HUD do Game segue as seções 2, 3 e 6 deste documento (mesmo Theme e componentes); o restante é específico do Launcher. Aparência: `docs/design-system/`. Arquitetura: `ARCHITECTURE-LAUNCHER.md`.
 
 ## 1. Stack fixada
 
@@ -9,7 +9,7 @@
 | Engine | Godot **4.7.2**, GDScript estático (`untyped_declaration` = erro) | sim |
 | UI | nós `Control` nativos + `Theme` único (`shared/ui/theme/theme_moba.tres`) | sim |
 | Resolução de design | 1920×1080, `stretch/mode=canvas_items`, `aspect=expand` (DV §1.4) | sim |
-| Fontes | 2 famílias (display + dados), arquivos em `shared/ui/theme/fonts/` — nome definido em `TOKENS.md` | sim |
+| Fontes | as 3 famílias dos protótipos (Space Grotesk, Outfit, JetBrains Mono — `TOKENS.md`) + ícones Material Symbols Outlined, arquivos em `shared/ui/theme/fonts/` (decisão do PI 2026-10-10, §8) | sim |
 | 3D no Launcher | apenas o diorama do lobby e previews em `SubViewport` | sim |
 | Animação | `Tween` criado por código (`create_tween()`); `AnimationPlayer` só para sequências com > 3 propriedades | — |
 | Rede | `HTTPRequest` via `ApiClient`; **nunca** em tela | sim |
@@ -32,10 +32,11 @@
 └── MarginContainer     margem = TOKENS.space.screen (40 px)
     └── VBoxContainer
         ├── ScreenHeader        componente: botão voltar · título H1 · slot direito (ação/filtro)
-        ├── <corpo>             HBox/Grid conforme DV
+        ├── <corpo>             HBox/Grid conforme o protótipo (§8)
         └── ScreenFooter        componente: atalhos de teclado · status
 ```
 
+- O cabeçalho e o rodapé seguem o protótipo da tela (§8); `ScreenHeader`/`ScreenFooter` são os componentes que os implementam.
 - **Estados obrigatórios** de qualquer tela ou card que carrega dado remoto: `idle`, `loading`, `ready`, `empty`, `error(message, retry)`. Implementados por um `StateBox` (componente) que troca o filho visível. Tela sem os 5 estados não passa em revisão.
 - Foco: toda tela define `focus_neighbor` e o primeiro foco (`grab_focus()` em `_ready`); navegável só por teclado/gamepad (dual-focus do 4.6: feedback visual difere por dispositivo — testar os dois).
 - `Esc` = `cancel` → `back_requested`. Nunca `get_tree().quit()` de dentro de tela.
@@ -76,9 +77,48 @@ Toda PR que toca uma tela anexa:
 3. Saída do GUT da tela/serviço afetado.
 4. `Performance.get_monitor(TIME_FPS)` no lobby se tocou no diorama.
 5. Confirmação de que nenhum valor de catálogo está hardcoded (grep por números do GDB na cena/script).
+6. **Fidelidade (§8):** captura Godot × `screen.png` do protótipo, lado a lado, por tela e estado, com a lista de desvios e o motivo de cada um.
 
 Verificação visual final é do PI (`CLAUDE.md`): o Code para e pede.
 
 ## 7. O que não é deste documento
 
 Cores, fontes, espaçamentos e componentes (→ `docs/design-system/`); fluxo de telas e serviços (→ `ARCHITECTURE-LAUNCHER.md`); textos e regras de domínio (→ `CONVENTION.md`).
+
+## 8. Fidelidade ao protótipo (obrigatória — decisão do PI em 2026-10-10)
+
+Toda tela do Launcher é entregue **pronta e com acabamento**, fiel ao protótipo da sua pasta em `docs/prd/telas/` — não uma versão básica. Cada pasta tem `screen.png` (referência visual), `code.html` (medidas: classes Tailwind → px, cores, efeitos, animações), `DESIGN.md` (tokens) e um texto descritivo.
+
+### 8.1 Tela → protótipo → card
+
+| Tela | Pasta em `docs/prd/telas/` | Card |
+|---|---|---|
+| Configurações (+ aba Créditos) | `Ajustes & Diagnóstico de Rede/` | F24 #80 |
+| Login e cadastro | `Tela de Login & Autenticação/` | F25 #81 |
+| Lobby | `Menu Principal/` (`screen1.png`, `screen2.png`) | F25 #81 |
+| Histórico | `Histórico de Partidas — Duelos/` | F26 #83 |
+| Bestiário | `Guia & Bestiário — Monstros e Equipamentos/` | F27 #84 |
+| Forja | `Equipamentos & Forja/` | F27 #84 |
+| Arena & Mapa | `Arena & Mapa — O Vale Rúnico Apocalíptico/` | F33 #85 |
+| Perfil (nickname, avatar) | sem pasta: formulário no estilo do Login; perfil = chip do cabeçalho do `Menu Principal/` com `#nickname` e avatar, sem ELO | F35 #86 |
+
+As pastas `Seleção de Heróis/`, `Destaques da Tela de Fim de Partida/` e `Pop-up Tático In-Game/` são do Game ou sem requisito e ficam fora desta regra.
+
+### 8.2 O que é fiel
+
+Composição e layout, hierarquia, cores, tipografia, espaçamentos, raios, bordas, sombras, brilhos e desfoques, ícones (mesmo glifo do `code.html`), cartões e badges, cabeçalho e rodapé, estados de hover/foco/pressionado, transições e animações (pulsos, tweens). O que o CSS faz e o `Control` não faz nativamente (ex.: `backdrop-blur`, gradiente) é feito com `StyleBox`, shader ou textura — não omitido.
+
+### 8.3 O que segue as decisões, não o protótipo
+
+1. **Elemento sem requisito ou excluído** (`FORA-DE-ESCOPO.md`, `RASTREABILIDADE.md`, `CONVENTION.md`, ADRs) é **removido** — sem placeholder, sem "em breve", sem botão desabilitado. O espaço é recomposto mantendo o equilíbrio visual do protótipo. A lista do que sai de cada tela está na issue do card.
+2. **Todo número, nome e contagem** vem de `shared/data` (GDB), do backend ou do estado real. Nenhum texto de exemplo do protótipo entra (ELO, "34 duelistas", "24ms", patch, versão do Godot, servidores, KDA de exemplo).
+3. **Imagens** do protótipo (geradas, hospedadas fora do repo, licença desconhecida) **não entram**: são substituídas por renders dos assets reais (KayKit/Blender, ADR-0005) com a mesma composição e enquadramento, em `shared/assets/ui/`.
+4. **Ícones**: Material Symbols Outlined (Apache-2.0), empacotados como fonte em `shared/ui/theme/fonts/` e listados na aba Créditos.
+
+### 8.4 Estrutura e resolução
+
+O protótipo **vence o DV na composição** (emenda da R-PEND-11 em 2026-10-10). Os protótipos são páginas web com rolagem; a tela é adaptada a 1920×1080 **sem rolagem de página** (rolagem só dentro de listas), mantendo ordem, proporções e agrupamentos. O DV continua valendo para comportamento, sinais e navegação (`ARCHITECTURE-LAUNCHER.md` §3.4): abas do cabeçalho apontam só para rotas que existem.
+
+### 8.5 Aceite
+
+Item 6 da §6: captura Godot × `screen.png`, lado a lado, por tela e estado, na PR, com a lista de desvios e o motivo de cada um (regras 1–4 de §8.3 ou limitação técnica do Godot demonstrada). **Desvio sem motivo reprova.** O card só vai para `proplan:done` após a aprovação visual do PI.

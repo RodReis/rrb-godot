@@ -35,11 +35,11 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-25 | Export cliente Windows e servidor headless | PRD §8.2 | F1, F28 | game, infra | MVP0/3 | mantido |
 | P-26 | netfox 30 Hz, predição, rollback, interpolação, lag comp | PRD §8.3 | F3–F5 | game | MVP0 | mantido |
 | P-27 | Eventos discretos por RPC confiável; estado contínuo não confiável | PRD §8.3 | F15 | game | MVP2 | mantido |
-| P-28 | Auth e-mail/senha, JWT | PRD §8.4 | F21 | launcher (backend) | MVP3 | mantido |
+| P-28 | Auth e-mail/senha, JWT | PRD §8.4 | F21 | launcher (backend) | MVP3 | mantido — senha mín. 8 com letra e número (PI 2026-10-10) |
 | P-29 | Fila 1x1 FIFO | PRD §8.4 | F22 | launcher (backend) | MVP3 | mantido |
 | P-30 | Orquestrador: pool 2–3 containers; token de partida; resultado; repor pool | PRD §8.4 | F22, F23 | launcher (backend), game | MVP3 | mantido |
 | P-31 | Dados: usuários, partidas, resultados | PRD §8.4 | F21, F22 | backend | MVP3 | mantido |
-| P-32 | VPS com Coolify; compose; UDP 7000–7020 | PRD §8.5 | F28 | infra | MVP3 | mantido |
+| P-32 | VPS com Coolify; compose; UDP 7000–7020 | PRD §8.5 | F28 | infra | MVP3 | mantido — pacote ZIP portátil em GitHub Release (PI 2026-10-10) |
 | P-33 | Observabilidade mínima: logs + ping médio por partida | PRD §8.5 | F29 | backend, game | MVP4 | mantido |
 | P-34 | Fora: regiões, autoscaling, anti-cheat, reconexão, host migration | PRD §8.5 | `FORA-DE-ESCOPO.md` | — | — | excluído |
 | P-35 | Monorepo `game/ backend/ infra/ docs/` | PRD §8.6 | ADR-0002 (+ `launcher/`, `shared/`) | — | MVP0 | mantido com extensão |
@@ -47,6 +47,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-37 | Marcos M0–M4 e critérios | PRD §9.1 | `STATUS.md`, `docs/prd/mvp/` | — | — | mantido (MVP-n = M-n) |
 | P-38 | Critérios de sucesso M4 | PRD §9.2 | F29, GATE MVP4 | — | MVP4 | mantido |
 | P-39 | Assets KayKit/Quaternius; cena de alinhamento | PRD §11 | F31 | shared | MVP1 | mantido |
+| P-39b | Crédito CC-BY 3.0 do Golem de Pedra antes de qualquer build distribuída | `shared/assets/LICENSES.md` | F24 (aba Créditos em Configurações — PI 2026-10-10) | launcher | MVP3 | mantido |
 | P-39a | Blender para criação, acabamento, ajustes e rascunhos; arte própria liberada; `.blend` em `art/`, só glTF em `shared/assets/` (decisão PI 2026-10-09) | PRD §11, ADR-0005 | fatias que tocam asset 3D; `[INFRA]` (gitattributes, import `.blend` off) | shared | MVP1+ | mantido |
 | P-40 | Fora de escopo explícito (§12) | PRD §12 | `FORA-DE-ESCOPO.md` | — | — | excluído |
 
@@ -72,7 +73,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | ID | Tela / item | Destino | Módulo | Status |
 |---|---|---|---|---|
 | V-01 | Tela 1 Lobby | F25 | launcher | mantido |
-| V-01a | Perfil com nível/XP de conta, avatar, "14V–6D" | — | — | **R-PEND-02** (não está no PRD; PRD §1.3 "sem economia", sem progressão de conta) |
+| V-01a | Perfil com nível/XP de conta, avatar, "14V–6D" | F35 | launcher, backend | mantido com mudança — R-PEND-02: sem XP de conta; `#nickname`, avatar local e V–D do histórico |
 | V-01b | Rodapé "Pool de servidores: 3 ativos", "Netfox 30 Hz" | F25 (só status do backend) | launcher | mantido parcialmente — tick do netfox é do Game |
 | V-02 | Tela 2 Seleção de Heróis (timer 24 s, oponente) | F15 | game | transferido (ADR-0002) |
 | V-03 | Tela 3 HUD fase 1 | F13 | game | mantido |
@@ -85,10 +86,11 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-08 | Tela 8 Configurações: vídeo, áudio, controles | F24 | launcher | mantido |
 | V-08a | Aba Rede & Netfox com telemetria RTT/jitter/rollback | `net_debug.tscn` (F4) | game | transferido — Launcher não tem netfox; o Launcher mostra só ping HTTP ao backend |
 | V-08b | Exportar log de rede `.txt`, "aplicar ajustes de netfox" | — | — | adiado (`FORA-DE-ESCOPO.md`) |
-| V-09 | Tela 9 Histórico | F26 | launcher | mantido |
+| V-09 | Tela 9 Histórico | F26 | launcher | mantido — "VS INIMIGO" = herói do oponente; F35 acrescenta o `#nickname` (PI 2026-10-10) |
 | V-09a | Painel de KPIs do M4 (snowball rate, ping médio, duração) | F29 | launcher + backend | mantido (é o critério PRD §9.2) |
 | V-09b | Exportar CSV, SQLite local, `/telemetry/matches` do cliente | — | — | adiado — o backend é a fonte; exportação é ferramenta do dev (script em `tools/`), não tela |
 | V-10 | Design system (paleta, tipografia, viewport) | `docs/design-system/` | shared | mantido — paleta e fontes de `docs/prd/telas/` (R-PEND-11 decidida em 2026-10-09) |
+| V-21 | Fidelidade das telas do Launcher ao protótipo de `docs/prd/telas/` (layout, acabamento, efeitos, animação); aceite lado a lado pelo PI | F24, F25, F26, F27, F33, F35 — `FRONTEND-LAUNCHER.md` §8 | launcher | mantido — requisito novo do PI em 2026-10-10 |
 | V-13 | Tela de Login (só em `docs/prd/telas/`, ausente no DV) | F25 | launcher | mantido como função (PRD §8.4); visual de `docs/prd/telas/Tela de Login & Autenticação/` com os tokens de `TOKENS.md` |
 | V-14 | "Pop-up Tático In-Game" (só em `docs/prd/telas/`) | — | — | **sem requisito** no PRD (R-PEND-11 decidiu só a fonte visual) |
 | V-15 | Conceito "Arena & Mapa — Vale Rúnico": topologia da imagem tática (bases opostas, rio, pontes, cratera) | SPEC-007 | game | mantido como layout |
@@ -117,7 +119,7 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ID | Pendência | Opções | Impacto se não decidir |
 |---|---|---|---|
 | ~~R-PEND-01~~ | **Decidido 2026-10-09:** GDB — baú raro 10 % | — | — |
-| ~~R-PEND-02~~ | **Decidido 2026-10-09:** sem nível/XP de conta (só V–D do histórico). Perfil no Launcher (fatia F35): nickname **único**, prefixo `#` **automático** (ex.: `#RodReis`); avatar por imagem predefinida ou upload, **guardado só local no Launcher** (não vai ao backend, não aparece para outros jogadores). **Sem data de nascimento.** Falta o PI definir: caracteres e tamanho do nickname; formato e tamanho máximos do upload. PRD ainda não editado | — | — |
+| ~~R-PEND-02~~ | **Decidido 2026-10-09:** sem nível/XP de conta (só V–D do histórico). Perfil no Launcher (fatia F35): nickname **único**, prefixo `#` **automático** (ex.: `#RodReis`); avatar por imagem predefinida ou upload, **guardado só local no Launcher** (não vai ao backend, não aparece para outros jogadores). **Sem data de nascimento.** **Completado em 2026-10-10:** nickname obrigatório no 1º login, 3–16 `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas; upload PNG/JPG ≤ 1 MB recortado 256×256; F35 entra no gate do MVP3. PRD ainda não editado | — | — |
 | ~~R-PEND-03~~ | **Decidido 2026-10-09:** não — sem "lembrar-me"; JWT só em memória, login a cada abertura | — | — |
 | ~~R-PEND-04~~ | **Decidido 2026-10-10:** herói padrão do slot (P1 Cavaleiro, P2 Arqueira). Espelho permitido no pick | — | — |
 | ~~R-PEND-05~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
@@ -125,7 +127,7 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ~~R-PEND-07~~ | **Decidido 2026-10-09:** roadmap — F21 sem recuperação de senha nem verificação de e-mail (fica em `FORA-DE-ESCOPO.md`) | — | — |
 | ~~R-PEND-08~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
 | ~~R-PEND-09~~ | **Decidido 2026-10-09:** Golem de Pedra | — | — |
-| ~~R-PEND-11~~ | **Decidido 2026-10-09:** `telas/` — paleta e fontes de `docs/prd/telas/` (Space Grotesk / Outfit / JetBrains Mono) substituem as do DV §1.2–1.3; `TOKENS.md` atualizado. A estrutura das telas continua a do DV; o Pop-up Tático segue sem requisito | — | — |
+| ~~R-PEND-11~~ | **Decidido 2026-10-09:** `telas/` — paleta e fontes de `docs/prd/telas/` (Space Grotesk / Outfit / JetBrains Mono) substituem as do DV §1.2–1.3; `TOKENS.md` atualizado. ~~A estrutura das telas continua a do DV~~ — **emendado em 2026-10-10:** o protótipo vence o DV na composição e toda tela do Launcher é fiel ao protótipo, com acabamento; conteúdo segue as decisões; imagens viram renders dos assets reais (`FRONTEND-LAUNCHER.md` §8). O Pop-up Tático segue sem requisito | — | — |
 | ~~R-PEND-12~~ | **Decidido 2026-10-10:** revelação de 1,5 s; sem revelação por proximidade (GDB §7.3) | — | — |
 | ~~R-PEND-13~~ | **Decidido 2026-10-10:** relógio da fase 2 começa às 5:00 (a transição de 5 s conta dentro dela); colapso aos 10:00 com resolução imediata — maior HP%, desempate kills F2 → dano em heróis → sorteio pela seed; os dois desconectados → `abandoned` (GDB §7.1–7.2, `CONVENTION.md` §3) | — | — |
 | R-PEND-10 | Renomear `docs/prd/PRD.md` → `2026-10-08-prd-moba-2-tempos.md` (nome citado no plano M0 e nos agentes) | renomear / manter | links quebrados em `docs/superpowers/plans/` e `.claude/agents/` — `CLAUDE.md` já aponta para `PRD.md` |

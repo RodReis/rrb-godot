@@ -79,7 +79,7 @@ launcher/
 | Bestiário | `bestiary` | lobby | lobby |
 | Forja | `forge` | lobby | lobby |
 | Histórico | `history` | lobby; automático após `GameProcess.exited(0)` | lobby |
-| Configurações | `settings` | lobby | lobby |
+| Configurações | `settings` | lobby | lobby — inclui a aba **Créditos** (licenças de `shared/assets/LICENSES.md`, CC-BY obrigatório; decisão do PI 2026-10-10) |
 | Arena & Mapa | `arena_map` | lobby | lobby ("Praticar vs Bot" = mesma ação do lobby) — DV tela 10; mapa é imagem estática (`shared/assets/ui/arena_map.png`), nunca cena de arena |
 
 Pilha simples: lobby é a raiz; as demais são `push`; `Esc` = `pop`. Fila é um estado do lobby (card direito), não tela. Enquanto o Game roda, o Launcher mostra overlay "Partida em andamento" com botão "Encerrar jogo" (mata o processo) e bloqueia navegação.
@@ -125,7 +125,7 @@ Heartbeat: game server `POST /internal/matches/:id/heartbeat` a cada 10 s; 3 fal
 
 ### 4.3 Dados (Postgres)
 
-`users(id, email unique, password_hash, created_at)` · `matches(id, status, server_host, server_port, token_hash, created_at, started_at, ended_at, winner_user_id, end_reason, duration_s, seed)` · `match_players(match_id, user_id, hero_id, kills, deaths, final_level, damage_dealt, damage_taken, monsters_killed, chests_opened, boss_kill bool, set_active, level_at_phase1_end, avg_ping_ms)` · `queue_tickets(id, user_id, created_at, status, match_id)`.
+`users(id, email unique, password_hash, nickname unique case-insensitive nullable até o 1º login (F35), created_at)` · `matches(id, status, server_host, server_port, token_hash, created_at, started_at, ended_at, winner_user_id, end_reason, duration_s, seed)` · `match_players(match_id, user_id, hero_id, kills, deaths, final_level, damage_dealt, damage_taken, monsters_killed, chests_opened, boss_kill bool, set_active, level_at_phase1_end, avg_ping_ms)` · `queue_tickets(id, user_id, created_at, status, match_id)`.
 
 Inventário, moedas, gemas, skins: **não existem** na fatia (PRD §7). Quando existirem, ficam aqui, nunca no cliente.
 
@@ -199,5 +199,5 @@ Resultado da partida (vai pelo backend), configuração de rede do netfox (é do
 
 - Steam, ranked, amigos, economia, skins (roadmap, PRD §1.3).
 - "Lembrar-me"/persistência de sessão (R-PEND-03).
-- Perfil de conta com nível/XP/avatar do design visual (R-PEND-02: não está no PRD).
+- Nível/XP de conta do design visual (R-PEND-02: não). Perfil decidido em 2026-10-10: nickname no backend, avatar só local (F35, `CONVENTION.md` §4.8).
 - WebSocket em vez de polling (reavaliar se o polling pesar; registrado em `DEBITO.md`).

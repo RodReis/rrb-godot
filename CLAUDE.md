@@ -118,6 +118,7 @@ Ordem dentro do arquivo: `class_name` → `extends` → doc `##` → constantes/
 
 - PRD → plano → **TDD** (teste falhando → código mínimo → teste passando → commit). Regra pura vai para `scripts/core/` (só partida) ou `shared/core/` (usada também pelo Launcher) com teste GUT; o node só orquestra.
 - Valores de balanceamento em Resources `.tres` em `shared/data/` (a partir de F6), não espalhados em código.
+- **Telas do Launcher saem prontas, fiéis ao protótipo** da pasta em `docs/prd/telas/` (layout, acabamento, efeitos, animação); conteúdo segue as decisões; aceite lado a lado pelo PI — `docs/FRONTEND-LAUNCHER.md` §8 (decisão do PI em 2026-10-10).
 - Regra de dependência entre camadas e entre módulos está em `docs/ARCHITECTURE-GAME.md` §2 e `docs/ARCHITECTURE-LAUNCHER.md` §3.2. Launcher nunca referencia netfox/ENet/cenas de arena; Game nunca referencia telas do launcher.
 - Mostre a **saída real** de testes e comandos antes de dizer que algo funciona. Verificação visual (janelas do jogo) é do usuário: pare e peça.
 - **O Code executa todos os comandos, em background**: servidor (`run-server.ps1`), Docker (`docker compose ... up`), clientes (`run-clients.ps1`), editor e afins. Isso inclui abrir o Docker Desktop e fechar processos de jogo ou servidor deixados por testes anteriores. O PI não digita comando; na verificação visual, o Code sobe tudo, deixa as janelas abertas e pede ao PI só o que olhar. Depois coleta os logs e encerra os processos.
