@@ -10,7 +10,8 @@ extends MeshInstance3D
 
 const SHADER: Shader = preload("res://scenes/world/fog_of_war.gdshader")
 const RENDER_PRIORITY: int = Material.RENDER_PRIORITY_MIN
-## Meia largura da area da mascara (u; a arena cabe em +-37) e lado da celula (u).
+## Meia largura da area da mascara (u; o quadrado jogavel vai ate +-40, SPEC-046 §1) e lado da
+## celula (u).
 const MAP_EXTENT: float = 40.0
 const CELL: float = 0.5
 ## O quad e desenhado em qualquer camera: nunca sai do frustum.

@@ -10,8 +10,9 @@ const WORLD_OVERLAY_LAYER: int = 2
 const CAMERA_HEIGHT: float = 80.0
 const MARKER_OUTLINE: float = 2.0
 
-## Meia largura do mundo mostrada (u), a partir da origem.
-@export var world_extent: float = 37.0
+## Meia largura do mundo mostrada (u), a partir da origem: o quadrado jogavel de 40 u mais a
+## beira da ilha (SPEC-046 §1).
+@export var world_extent: float = 42.0
 @export var marker_radius: float = 6.0
 
 var _positions: PackedVector3Array = PackedVector3Array()
