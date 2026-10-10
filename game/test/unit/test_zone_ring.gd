@@ -1,6 +1,6 @@
 extends GutTest
-## Borda minima da zona (PI 2026-10-10): escondida antes dos 5:00, no raio de ZoneRules depois,
-## escondida no colapso (raio 0).
+## Parede da zona (F16; visual final no F17): escondida antes dos 5:00, no raio de ZoneRules
+## depois, surgindo aos poucos nos 5 s da transicao e escondida no colapso (raio 0).
 
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
 const RATE: int = 30
@@ -42,3 +42,11 @@ func test_some_no_colapso() -> void:
 	_clock.start(START, RATE)
 	_ring.refresh(START + 600 * RATE)
 	assert_false(_ring.is_shown())
+
+
+func test_surge_aos_poucos_na_transicao() -> void:
+	_clock.start(START, RATE)
+	_ring.refresh(START + roundi(302.5 * RATE))
+	assert_almost_eq(_ring.appear(), 0.5, 0.001)
+	_ring.refresh(START + 305 * RATE)
+	assert_almost_eq(_ring.appear(), 1.0, 0.001)
