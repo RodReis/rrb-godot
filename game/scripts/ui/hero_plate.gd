@@ -72,6 +72,19 @@ func update() -> void:
 	_update_offer()
 
 
+## Pecas de cada conjunto equipado ("Guarda 2/3"); tambem na tela de fim (F18).
+static func set_text(equipment: Vector4i, catalog: ItemCatalog) -> String:
+	var items := Inventory.items(equipment, catalog)
+	var parts := PackedStringArray()
+	for bonus: SetBonusData in catalog.set_bonuses:
+		var pieces := SetBonus.count_pieces(items, bonus.set_id)
+		if pieces > 0:
+			parts.append("%s %d/%d" % [bonus.display_name, pieces, bonus.pieces_required])
+	if parts.is_empty():
+		return TranslationServer.translate("Sem conjunto")
+	return " · ".join(parts)
+
+
 func _update_plate() -> void:
 	var hp := Vector2i(_hero.hp, _hero.attributes.max_hp)
 	if hp.y != _shown_hp.y:
@@ -134,13 +147,7 @@ func _refresh_equipment() -> void:
 			_slots[slot].clear()
 		else:
 			_slots[slot].bind(item)
-	var items := Inventory.items(_shown_equipment, catalog)
-	var parts := PackedStringArray()
-	for bonus: SetBonusData in catalog.set_bonuses:
-		var pieces := SetBonus.count_pieces(items, bonus.set_id)
-		if pieces > 0:
-			parts.append("%s %d/%d" % [bonus.display_name, pieces, bonus.pieces_required])
-	_set_text.text = " · ".join(parts) if not parts.is_empty() else tr("Sem conjunto")
+	_set_text.text = set_text(_shown_equipment, catalog)
 
 
 ## Bau aberto ao alcance com item esperando troca: segurar F troca (Chest).

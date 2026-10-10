@@ -8,7 +8,8 @@ extends Node3D
 ## de rede (NetProbe).
 ## Ciclo da partida no MatchController (F15): o servidor abre a espera, cada peer (e o bot) ocupa
 ## uma vaga, a selecao acontece na HeroSelect e os herois nascem na PHASE1, cada um com o heroi
-## escolhido. Quem decide e o MatchController; aqui so se liga sinal e se spawna.
+## escolhido. Quem decide e o MatchController; aqui so se liga sinal e se spawna. No fim, quem
+## joga ve a MatchEnd (F18); os dois botoes dela encerram o processo (ARCHITECTURE-GAME §3.7).
 
 const MAX_PLAYERS: int = 2
 ## Herois da selecao; sem cena (Hero.SCENE_PATH) aparece indisponivel.
@@ -54,6 +55,7 @@ var _disconnected_log: Timer
 @onready var status_label: Label = $UI/Status
 @onready var hud: HudController = $Hud
 @onready var hero_select: HeroSelect = $HeroSelect
+@onready var match_end: MatchEnd = $MatchEnd
 
 
 func _ready() -> void:
@@ -69,6 +71,8 @@ func _ready() -> void:
 	clock.phase1_ended.connect(spawns.dismiss_boss)  # boss vivo sai sem drop (R-PEND-06)
 	spawns.boss_killed.connect(_on_spawns_boss_killed)
 	spawns.chest_opened.connect(match_controller.report_chest_opened)
+	spawns.monster_killed.connect(match_controller.report_monster_killed)
+	spawns.boss_killed.connect(match_controller.report_boss_killed)
 	match_controller.phase_changed.connect(_on_match_phase_changed)
 	match_controller.match_ended.connect(_on_match_ended)
 	hero_select.bind(match_controller, ROSTER, _available_heroes())
@@ -93,6 +97,10 @@ func _ready() -> void:
 		start_server(args["port"])
 	elif args["host"] != "":
 		start_client(args["host"], args["port"])
+	if not _dedicated:
+		match_end.bind(match_controller, ROSTER)
+		match_end.play_again_requested.connect(_on_match_end_closed)
+		match_end.back_requested.connect(_on_match_end_closed)
 
 
 func _process(_delta: float) -> void:
@@ -323,11 +331,21 @@ func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 
 ## Servidor dedicado: partida encerrada encerra o processo com codigo 0 (ARCHITECTURE-GAME §3.7,
 ## §6).
-func _on_match_ended(winner: int, reason: StringName, stats: Dictionary, tick: int) -> void:
-	print("[match] fim: %s, vencedor %d, placar %s, tick %d" % [reason, winner, stats, tick])
+func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: int) -> void:
+	print(
+		(
+			"[match] fim: %s, vencedor %d, estatisticas %s, tick %d"
+			% [reason, winner, stats.to_dict(), tick]
+		)
+	)
 	if _dedicated:
 		await get_tree().create_timer(EXIT_DELAY_SECONDS).timeout
 		get_tree().quit(0)
+
+
+## "Jogar novamente" e "Voltar": o Game nao tem fila; o processo acaba e o Launcher decide.
+func _on_match_end_closed() -> void:
+	get_tree().quit(0)
 
 
 func _on_clock_boss_warning(tick: int) -> void:

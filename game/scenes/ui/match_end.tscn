@@ -1,0 +1,226 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/match_end.gd" id="script"]
+[ext_resource type="Script" path="res://shared/ui/components/panel_card.gd" id="card"]
+[ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="badge"]
+[ext_resource type="Shader" path="res://scenes/ui/match_end_backdrop.gdshader" id="backdrop"]
+[ext_resource type="AudioStream" path="res://shared/assets/kenney/music_jingles/jingles_STEEL07.ogg" id="jingle"]
+
+[sub_resource type="ShaderMaterial" id="backdrop_material"]
+shader = ExtResource("backdrop")
+
+[node name="MatchEnd" type="CanvasLayer"]
+layer = 10
+script = ExtResource("script")
+
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Backdrop" type="ColorRect" parent="Root"]
+unique_name_in_owner = true
+material = SubResource("backdrop_material")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Particles" type="CPUParticles2D" parent="Root"]
+unique_name_in_owner = true
+position = Vector2(960, 540)
+emitting = false
+amount = 90
+lifetime = 4.0
+emission_shape = 3
+emission_rect_extents = Vector2(960, 540)
+spread = 180.0
+gravity = Vector2(0, 60)
+initial_velocity_min = 10.0
+initial_velocity_max = 40.0
+angular_velocity_min = -180.0
+angular_velocity_max = 180.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+
+[node name="Center" type="CenterContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Column" type="VBoxContainer" parent="Root/Center"]
+custom_minimum_size = Vector2(1100, 0)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="Root/Center/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelVictory"
+text = "VITÓRIA"
+horizontal_alignment = 1
+
+[node name="Reason" type="Label" parent="Root/Center/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"LabelBadgeMd"
+text = "META DE 5 KILLS ATINGIDA"
+horizontal_alignment = 1
+
+[node name="Duration" type="Label" parent="Root/Center/Column"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Duração da partida: 00:00"
+horizontal_alignment = 1
+
+[node name="Duel" type="HBoxContainer" parent="Root/Center/Column"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MeCard" type="PanelContainer" parent="Root/Center/Column/Duel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("card")
+variant = 0
+
+[node name="MeMargin" type="MarginContainer" parent="Root/Center/Column/Duel/MeCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 12
+
+[node name="MeColumn" type="VBoxContainer" parent="Root/Center/Column/Duel/MeCard/MeMargin"]
+layout_mode = 2
+
+[node name="MeHeader" type="Label" parent="Root/Center/Column/Duel/MeCard/MeMargin/MeColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "VOCÊ"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MeRows" type="HBoxContainer" parent="Root/Center/Column/Duel/MeCard/MeMargin/MeColumn"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="MeNames" type="VBoxContainer" parent="Root/Center/Column/Duel/MeCard/MeMargin/MeColumn/MeRows"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="MeStats" type="VBoxContainer" parent="Root/Center/Column/Duel/MeCard/MeMargin/MeColumn/MeRows"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="CompareCard" type="PanelContainer" parent="Root/Center/Column/Duel"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+script = ExtResource("card")
+variant = 0
+
+[node name="CompareMargin" type="MarginContainer" parent="Root/Center/Column/Duel/CompareCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 12
+
+[node name="CompareColumn" type="VBoxContainer" parent="Root/Center/Column/Duel/CompareCard/CompareMargin"]
+layout_mode = 2
+
+[node name="CompareHeader" type="Label" parent="Root/Center/Column/Duel/CompareCard/CompareMargin/CompareColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelBadge"
+text = "VS"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Compare" type="VBoxContainer" parent="Root/Center/Column/Duel/CompareCard/CompareMargin/CompareColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="ThemCard" type="PanelContainer" parent="Root/Center/Column/Duel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("card")
+variant = 0
+
+[node name="ThemMargin" type="MarginContainer" parent="Root/Center/Column/Duel/ThemCard"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 12
+
+[node name="ThemColumn" type="VBoxContainer" parent="Root/Center/Column/Duel/ThemCard/ThemMargin"]
+layout_mode = 2
+
+[node name="ThemHeader" type="Label" parent="Root/Center/Column/Duel/ThemCard/ThemMargin/ThemColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH2"
+text = "VOCÊ"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ThemRows" type="HBoxContainer" parent="Root/Center/Column/Duel/ThemCard/ThemMargin/ThemColumn"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="ThemNames" type="VBoxContainer" parent="Root/Center/Column/Duel/ThemCard/ThemMargin/ThemColumn/ThemRows"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="ThemStats" type="VBoxContainer" parent="Root/Center/Column/Duel/ThemCard/ThemMargin/ThemColumn/ThemRows"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Actions" type="HBoxContainer" parent="Root/Center/Column"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="PlayAgain" type="Button" parent="Root/Center/Column/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(300, 48)
+layout_mode = 2
+theme_type_variation = &"ButtonPrimary"
+text = "JOGAR NOVAMENTE"
+
+[node name="Back" type="Button" parent="Root/Center/Column/Actions"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 48)
+layout_mode = 2
+text = "VOLTAR"
+
+[node name="BackKey" type="Label" parent="Root/Center/Column/Actions"]
+layout_mode = 2
+script = ExtResource("badge")
+key = "Esc"
+
+[node name="Sound" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("jingle")

@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/hero_select.tscn" id="10_pick"]
 [ext_resource type="Script" path="res://scripts/match/zone_controller.gd" id="11_zone"]
 [ext_resource type="Script" path="res://scripts/world/zone_ring.gd" id="12_ring"]
+[ext_resource type="PackedScene" path="res://scenes/ui/match_end.tscn" id="13_end"]
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_main")
@@ -86,3 +87,5 @@ text = "Conectar"
 [node name="Bestiary" parent="." instance=ExtResource("8_bestiary")]
 
 [node name="HeroSelect" parent="." instance=ExtResource("10_pick")]
+
+[node name="MatchEnd" parent="." instance=ExtResource("13_end")]

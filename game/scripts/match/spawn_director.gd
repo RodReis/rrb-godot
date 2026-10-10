@@ -16,6 +16,8 @@ extends Node3D
 signal boss_killed(peer: int)
 ## Servidor apenas: bau (inclusive o do boss) aberto pela primeira vez por [param peer].
 signal chest_opened(peer: int, chest_uid: int, tick: int)
+## Servidor apenas: monstro nao-boss abatido por [param peer] (estatisticas, F18).
+signal monster_killed(peer: int, tick: int)
 
 const SCENE_PATH: String = "res://scenes/monsters/%s.tscn"
 const CHEST_SCENE: String = "res://scenes/world/chest.tscn"
@@ -198,6 +200,7 @@ func _boss_defeated(_tick: int, killer_id: int, chest_uid: int, where: Vector3) 
 ## Servidor apenas (Monster.died), monstros nao-boss. [param marker] so para o log (ordem de
 ## limpeza dos campos, F36).
 func _on_monster_died(killer_id: int, tick: int, monster: Monster, marker: StringName) -> void:
+	monster_killed.emit(killer_id, tick)
 	if not _respawn_open:
 		print("[spawn] %s morto por %d no tick %d, sem respawn" % [marker, killer_id, tick])
 		return

@@ -167,41 +167,21 @@ func test_morto_na_fase_2_mostra_o_respawn() -> void:
 	assert_eq((_node("%RespawnText") as Label).text, "Renascendo na base em 3 s")
 
 
-## Fim da partida (meta de kills, PI 2026-10-10): a HUD congela, some o respawn e aparece o
-## resultado para quem joga; a tela completa e do F18.
-func test_fim_da_partida_congela_e_mostra_o_resultado() -> void:
+## Fim da partida: a HUD para, some o respawn e ela sai da tela; a tela de fim (F18, MatchEnd)
+## assume com o resultado.
+func test_fim_da_partida_para_e_esconde_a_hud() -> void:
 	_bind()
 	_phase(MatchState.State.PHASE2)
 	_hero.hp = 0
 	_hero.respawn_ticks = 6 * TICKRATE
 	_phase2._process(0.0)
 	_phase(MatchState.State.ENDED)
-	_match.match_ended.emit(THEM, VictoryRules.KILL_GOAL, {}, 200)
+	_match.match_ended.emit(THEM, VictoryRules.KILL_GOAL, MatchStats.new(), 200)
 	assert_false(_phase2.is_processing())
 	assert_false((_node("%Respawn") as Control).visible)
-	var banner := _node("%EndBanner") as PanelCard
-	assert_true(banner.visible)
-	assert_eq(banner.accent, PanelCard.Accent.RED)
-	assert_has(_texts(banner), "DERROTA")
-	assert_true(_phase2.visible, "a HUD fica na tela, parada")
-
-
-func test_fim_com_vitoria_de_quem_joga() -> void:
-	_bind()
-	_phase(MatchState.State.PHASE2)
-	_match.match_ended.emit(ME, VictoryRules.KILL_GOAL, {}, 200)
-	var banner := _node("%EndBanner") as PanelCard
-	assert_eq(banner.accent, PanelCard.Accent.GOLD)
-	assert_has(_texts(banner), "VITÓRIA")
-
-
-func test_fim_sem_vencedor_nao_diz_derrota() -> void:
-	_bind()
-	_phase(MatchState.State.PHASE2)
-	_match.match_ended.emit(MatchController.NO_WINNER, VictoryRules.ABANDONED, {}, 200)
-	var banner := _node("%EndBanner") as PanelCard
-	assert_eq(banner.accent, PanelCard.Accent.NONE)
-	assert_has(_texts(banner), "SEM VENCEDOR")
+	assert_false(_phase2.visible)
+	_phase2.set_active(true)
+	assert_false(_phase2.is_processing(), "religar depois do fim nao volta a correr")
 
 
 func test_bind_so_com_heroi_ligado() -> void:
