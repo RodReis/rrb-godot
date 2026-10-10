@@ -105,7 +105,26 @@ func _farm(tick: int) -> void:
 	if chest != null:
 		_loot(tick, chest)
 		return
+	if _gates_fallen():
+		_invade(tick)
+		return
 	_go(tick, _center())
+
+
+## Portoes caidos (5:00) e nada do proprio lado: farma o que sobrou na base do jogador e, sem
+## monstro, vai ate ele (PI 2026-10-09, #52). Lutar continua com BotRules (FIGHT).
+func _invade(tick: int) -> void:
+	var enemy := _enemy_hero()
+	if enemy == null:
+		_go(tick, _center())
+		return
+	var monster := _nearest(_alive_monsters(enemy.team))
+	if monster != null:
+		_attack(tick, monster, false)
+		return
+	aim = _flat(enemy.global_position).normalized()
+	if _flat(enemy.global_position).length() > _hero.hero_data.basic_attack.attack_range:
+		_go(tick, enemy.global_position)
 
 
 func _contest(tick: int) -> void:
@@ -164,7 +183,9 @@ func _go(tick: int, goal: Vector3) -> void:
 		gap.y = 0.0
 		if gap.length() > WAYPOINT_REACHED * 2:
 			next = _hero.global_position  # alvo fora do navmesh (atras do portao): para no mais perto
-	movement = _flat(next).normalized()
+	var step := _flat(next)
+	# Ja no ponto: parado. Normalizar o resto minusculo inverte a direcao a cada tick (#52).
+	movement = Vector3.ZERO if step.length() < WAYPOINT_REACHED else step.normalized()
 	if aim.is_zero_approx():
 		aim = movement
 
@@ -189,6 +210,13 @@ func _in_danger(enemy: Hero) -> bool:
 	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
 		var monster := node as Monster
 		if monster.is_alive() and _flat(monster.global_position).length() <= reach:
+			return true
+	return false
+
+
+func _gates_fallen() -> bool:
+	for node: Node in get_tree().get_nodes_in_group(Gate.GROUP):
+		if (node as Gate).is_fallen():
 			return true
 	return false
 
