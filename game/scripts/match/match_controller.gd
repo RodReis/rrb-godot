@@ -88,15 +88,19 @@ func join(peer: int, team: int, is_bot: bool, tick: int) -> bool:
 	return true
 
 
-## Servidor: no lobby a vaga fica livre; depois o jogador so passa a desconectado.
-func leave(peer: int, _tick: int) -> void:
+## Servidor: no lobby a vaga fica livre; depois o jogador so passa a desconectado. Quem cai na
+## selecao sem confirmar fica com o padrao do slot na hora (o outro nao espera o prazo todo).
+func leave(peer: int, tick: int) -> void:
 	var seat := _seat(peer)
 	if seat == null:
 		return
 	if state == MatchState.State.LOBBY_WAIT:
 		_seats.erase(seat)
-	else:
-		seat.connected = false
+		return
+	seat.connected = false
+	if state == MatchState.State.HERO_PICK and seat.hero == &"":
+		_pick_default(seat, tick)
+		_start_if_all_picked(tick)
 
 
 ## Servidor: lock-in. Recusa fora da selecao, peer de fora, repetido ou heroi indisponivel;
@@ -109,8 +113,7 @@ func submit_pick(peer: int, hero: StringName, tick: int) -> bool:
 		return false
 	seat.hero = hero
 	_picked.rpc(tick, peer, Ids.to_int(hero))
-	if _seats.all(func(s: Seat) -> bool: return s.hero != &""):
-		_start_phase1(tick)
+	_start_if_all_picked(tick)
 	return true
 
 
@@ -126,6 +129,9 @@ func update(tick: int) -> void:
 
 
 ## Servidor: morte e subida de nivel de cada heroi, avisadas uma vez por mudanca.
+# ponytail: a morte vista aqui e definitiva (evento, XP, kill); se uma ressimulacao posterior
+# desfizer o golpe (input atrasado), o efeito fica. Raro e servidor segue autoritativo, como no
+# Chest e no Monster; esperar o history_limit antes de anunciar se isso aparecer em jogo.
 func watch_heroes(tick: int) -> void:
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
@@ -169,13 +175,22 @@ func _ticks(seconds: float) -> int:
 	return SkillRules.seconds_to_ticks(seconds, _tickrate)
 
 
+func _pick_default(seat: Seat, tick: int) -> void:
+	var slot := SLOT_TEAMS.find(seat.team)
+	seat.hero = PickRules.default_hero(rules.default_heroes, slot, available_heroes)
+	_picked.rpc(tick, seat.peer, Ids.to_int(seat.hero))
+
+
+func _start_if_all_picked(tick: int) -> void:
+	if _seats.all(func(s: Seat) -> bool: return s.hero != &""):
+		_start_phase1(tick)
+
+
 ## Quem nao confirmou fica com o padrao do slot; depois relogio e herois.
 func _start_phase1(tick: int) -> void:
 	for seat: Seat in _seats:
 		if seat.hero == &"":
-			var slot := SLOT_TEAMS.find(seat.team)
-			seat.hero = PickRules.default_hero(rules.default_heroes, slot, available_heroes)
-			_picked.rpc(tick, seat.peer, Ids.to_int(seat.hero))
+			_pick_default(seat, tick)
 	_enter(MatchState.State.PHASE1, tick)
 	clock.start(tick, _tickrate, start_seconds)
 

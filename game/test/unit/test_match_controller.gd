@@ -188,6 +188,15 @@ func test_quem_cai_na_selecao_fica_com_o_padrao_e_desconectado() -> void:
 		assert_eq(seat.connected, seat.peer != P2)
 
 
+func test_queda_na_selecao_nao_faz_o_outro_esperar_o_prazo() -> void:
+	_to_pick()
+	_match.submit_pick(P1, &"knight", START + 10)
+	_match.leave(P2, START + 20)
+	assert_eq(_match.state, MatchState.State.PHASE1)
+	assert_eq(_hero_of(P2), &"ranger")
+	assert_eq(_clock.start_tick, START + 20)
+
+
 func test_fase_1_vira_transicao_aos_5_00() -> void:
 	_to_pick()
 	_match.submit_pick(P1, &"knight", START)

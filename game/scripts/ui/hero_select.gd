@@ -202,8 +202,8 @@ func _hero_index(hero_id: int) -> int:
 ## (espelho permitido).
 func _on_match_hero_picked(peer: int, hero_id: int, _tick: int) -> void:
 	var index := _hero_index(hero_id)
-	if index < 0:
-		return
+	if not visible or index < 0:
+		return  # fechada (servidor dedicado nunca abre): nada a mostrar
 	if peer == multiplayer.get_unique_id():
 		_requested = false
 		_selected = -1

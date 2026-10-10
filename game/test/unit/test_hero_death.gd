@@ -144,3 +144,12 @@ func test_xp_de_abate_chega_mesmo_ao_matador_morto() -> void:
 	_match.watch_heroes(START)
 	_killer._rollback_tick(TICK, START + 1, true)
 	assert_eq(_killer.xp, xp_before + 80)
+
+
+func test_item_do_bau_chega_mesmo_morrendo_no_mesmo_tick() -> void:
+	var loot := HitEffect.new()
+	loot.item = Ids.to_int(&"sword_t1")
+	_victim.receive_hit(START, HitLedger.source_key(-7, HitLedger.Slot.REWARD), loot)
+	_kill(START)
+	assert_false(_victim.is_alive())
+	assert_eq(_victim.equipment.x, Ids.to_int(&"sword_t1"))

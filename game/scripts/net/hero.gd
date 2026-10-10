@@ -385,17 +385,17 @@ func _earthquake(tick: int) -> void:
 
 
 ## DEF reduz primeiro; a Muralha absorve o que sobrou se o golpe veio pela frente
-## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7), inclusive morto. Saque: cura ate o HP
-## max e item equipado no slot dele (a decisao de trocar ja foi do Chest).
+## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7). Saque: cura ate o HP max e item equipado
+## no slot dele (a decisao de trocar ja foi do Chest). Morto recebe XP e item, nada mais.
 func _apply_hits(tick: int) -> void:
 	for effect: HitEffect in _hits.effects_at(tick):
 		xp += maxi(effect.xp, 0)
-		if not is_alive():
-			continue
-		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
 		var item := item_catalog.find(effect.item)
 		if item != null:
 			equipment = Inventory.equip(equipment, item)
+		if not is_alive():
+			continue
+		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
 		var damage := CombatRules.mitigated(effect.damage, attributes.defense)
 		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
 			var split := CombatRules.absorb(damage, shield_hp)
