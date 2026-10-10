@@ -38,6 +38,12 @@ try {
     Write-Host "medindo $Minutes min (rtt=$DelayMs jitter=$JitterMs perda=$LossPct%)..."
     Start-Sleep -Seconds ([int]($Minutes * 60))
     docker compose -f $compose logs --no-color gameserver 2>&1 | Out-File -Encoding utf8 (Join-Path $OutDir 'server.log')
+    # Banda do servidor na medicao inteira (2 clientes), em kbit/s.
+    $bytes = docker compose -f $compose exec -T gameserver cat /sys/class/net/eth0/statistics/tx_bytes /sys/class/net/eth0/statistics/rx_bytes
+    $seconds = $Minutes * 60
+    "servidor: envio {0:N0} kbit/s, recepcao {1:N0} kbit/s (media de $Minutes min, 2 clientes)" -f `
+        ([double]$bytes[0] * 8 / 1000 / $seconds), ([double]$bytes[1] * 8 / 1000 / $seconds) |
+        Tee-Object -FilePath (Join-Path $OutDir 'bandwidth.txt')
 }
 finally {
     $clients | Stop-Process -Force -ErrorAction SilentlyContinue

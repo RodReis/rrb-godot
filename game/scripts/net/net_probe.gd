@@ -4,6 +4,9 @@ extends Node
 ## tools/net-probe-report.ps1 cruza entre servidor e clientes (roteiro em game/test/net):
 ## - "[probe] remoto": % de quadros em que um heroi remoto ficou parado no lugar enquanto a
 ##   velocidade replicada dizia que ele andava (estado atrasado ou perdido). So nos clientes.
+## - "[probe] throttle": menor throttle do ENet visto na janela, por peer (32 = nada descartado;
+##   abaixo disso o ENet descarta no envio essa fracao dos pacotes nao confiaveis, o estado do
+##   netfox).
 ## - "[probe] check": a cada CHECK_TICKS, monstros (no mapa, HP) e baus abertos como estavam no
 ##   tick X - LAG_TICKS do servidor, lidos do historico do StateSynchronizer, entao o mesmo tick
 ##   nos dois lados. Le um campo interno do netfox 1.35.3 (_state_history): so para medir.
@@ -27,6 +30,7 @@ var _window_moving: int = 0
 var _window_stopped: int = 0
 var _total_moving: int = 0
 var _total_stopped: int = 0
+var _min_throttle: Dictionary[int, int] = {}
 
 
 func _ready() -> void:
@@ -34,6 +38,10 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	_sample_throttle()
+	_window_seconds += delta
+	if _window_seconds >= WINDOW_SECONDS:
+		_report_window()
 	if multiplayer.is_server():
 		return
 	var local := str(multiplayer.get_unique_id())
@@ -49,9 +57,6 @@ func _process(delta: float) -> void:
 			_window_moving += 1
 			if moved < STILL_DISTANCE:
 				_window_stopped += 1
-	_window_seconds += delta
-	if _window_seconds >= WINDOW_SECONDS:
-		_report_window()
 
 
 ## "Monstro:HP" na ordem dos filhos (x = fora do mapa) e baus abertos ate [param tick].
@@ -82,7 +87,26 @@ func _monster_at(monster: Monster, tick: int) -> String:
 	return "x" if present == false else str(hp)
 
 
+func _sample_throttle() -> void:
+	var enet := multiplayer.multiplayer_peer as ENetMultiplayerPeer
+	if enet == null:
+		return
+	# O cliente so tem conexao ENet com o servidor; get_peers() inclui o outro cliente (relay).
+	var ids: PackedInt32Array = multiplayer.get_peers() if multiplayer.is_server() else [1]
+	for id: int in ids:
+		var peer := enet.get_peer(id)
+		if peer != null:
+			var value := roundi(peer.get_statistic(ENetPacketPeer.PEER_PACKET_THROTTLE))
+			_min_throttle[id] = mini(_min_throttle.get(id, value), value)
+
+
 func _report_window() -> void:
+	if not _min_throttle.is_empty():
+		print("[probe] throttle minimo %s" % _min_throttle)
+		_min_throttle.clear()
+	_window_seconds = 0.0
+	if multiplayer.is_server():
+		return
 	_total_moving += _window_moving
 	_total_stopped += _window_stopped
 	print(
@@ -98,7 +122,6 @@ func _report_window() -> void:
 			]
 		)
 	)
-	_window_seconds = 0.0
 	_window_moving = 0
 	_window_stopped = 0
 
