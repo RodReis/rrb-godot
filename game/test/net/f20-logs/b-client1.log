@@ -1,0 +1,247 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5060
+
+[DBG][netfox.extras::NetworkSimulator] Feature disabled
+[DBG][@0][#1][_][netfox::NetworkPerformance] Network performance enabled, registering performance monitors
+[spawn] seed dos baus 3105212612
+[client] conectado como peer 1541845396
+[DBG][@0][#1541845396][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1
+[DBG][@0][#1541845396][_][netfox::NetworkTimeSynchronizer] Received initial timestamp @ 1791646532.7180s raw time
+[INF][@0][#1541845396][_][netfox::NetworkTimeSynchronizer] Time sync loop started! Initial timestamp: 2.91745495796204s
+[DBG][@87][#1541845396][_][netfox::NetworkTime] Peer #1541845396 is now on time!
+[client] NetworkTime sincronizado, tick 87
+[DBG][@91][#1541845396][_][netfox::NetworkTime] Peer #1691177595 is now on time!
+[probe] check 270 vivos=28 baus=0 160,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 570 vivos=28 baus=0 160,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[bot] navmesh: 983 poligonos
+[probe] check 870 vivos=28 baus=0 80,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.4% (7/290 quadros), acumulado 2.4% (7/290)
+[probe] check 1170 vivos=26 baus=0 0,160,0,160,200,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.2% (7/564 quadros), acumulado 1.6% (14/854)
+[probe] check 1470 vivos=24 baus=0 0,72,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.2% (13/600 quadros), acumulado 1.9% (27/1454)
+[probe] check 1770 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,313,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[bot] FARM -> RETREAT (Nv 3, 260 XP)
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.5% (15/600 quadros), acumulado 2.0% (42/2054)
+[probe] check 2070 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.7% (16/600 quadros), acumulado 2.2% (58/2654)
+[probe] check 2370 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.0% (12/600 quadros), acumulado 2.2% (70/3254)
+[probe] check 2670 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.5% (9/600 quadros), acumulado 2.0% (79/3854)
+[probe] check 2970 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.5% (15/600 quadros), acumulado 2.1% (94/4454)
+[bot] RETREAT -> FARM (Nv 3, 260 XP)
+[probe] check 3270 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 6.2% (37/600 quadros), acumulado 2.6% (131/5054)
+[probe] check 3570 vivos=21 baus=0 0,0,0,0,0,160,160,360,0,0,219,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 14.5% (87/600 quadros), acumulado 3.9% (218/5654)
+[probe] check 3870 vivos=22 baus=0 160,0,113,0,0,160,160,360,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 12.2% (73/600 quadros), acumulado 4.7% (291/6254)
+[bot] FARM -> RETREAT (Nv 3, 415 XP)
+[probe] check 4170 vivos=23 baus=0 160,0,0,160,360,160,160,360,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 13.3% (80/600 quadros), acumulado 5.4% (371/6854)
+[probe] check 4470 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 12.2% (73/600 quadros), acumulado 6.0% (444/7454)
+[probe] check 4770 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 11.0% (66/600 quadros), acumulado 6.3% (510/8054)
+[probe] check 5070 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 11.5% (69/600 quadros), acumulado 6.7% (579/8654)
+[probe] check 5370 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 12.2% (73/600 quadros), acumulado 7.0% (652/9254)
+[probe] check 5670 vivos=24 baus=0 160,0,0,160,360,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[bot] RETREAT -> FARM (Nv 4, 450 XP)
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 9.2% (55/600 quadros), acumulado 7.2% (707/9854)
+[probe] check 5970 vivos=23 baus=0 109,0,0,0,258,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 10.3% (62/600 quadros), acumulado 7.4% (769/10454)
+[match] aviso do boss (3:00), tick 6208
+[probe] check 6270 vivos=22 baus=0 0,0,0,0,0,160,109,360,160,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 9.0% (54/600 quadros), acumulado 7.4% (823/11054)
+[bot] FARM -> RETREAT (Nv 4, 640 XP)
+[probe] check 6570 vivos=22 baus=0 0,0,0,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 6.2% (37/600 quadros), acumulado 7.4% (860/11654)
+[probe] check 6870 vivos=23 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 6.0% (36/600 quadros), acumulado 7.3% (896/12254)
+[probe] check 7170 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 3.8% (23/601 quadros), acumulado 7.1% (919/12855)
+[probe] check 7470 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 30 }
+[probe] remoto parado 4.0% (24/601 quadros), acumulado 7.0% (943/13456)
+[probe] check 7770 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 0 }
+[probe] remoto parado 63.7% (383/601 quadros), acumulado 9.4% (1326/14057)
+[probe] check 8070 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 6 }
+[probe] remoto parado 17.5% (81/464 quadros), acumulado 9.7% (1407/14521)
+[bot] RETREAT -> CONTEST (Nv 4, 675 XP)
+[probe] check 8370 vivos=24 baus=0 0,0,160,0,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 12 }
+[probe] remoto parado 3.5% (8/226 quadros), acumulado 9.6% (1415/14747)
+WARNING: [WRN][@8507][#1541845396][_][netfox::DiffHistoryEncoder] Reference tick 8442 missing for #1 applying 8505
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] warning (res://addons/netfox.internals/logger.gd:159)
+       [1] apply (res://addons/netfox/encoder/diff-history-encoder.gd:113)
+       [2] _submit_diff_state (res://addons/netfox/state-synchronizer.gd:241)
+[WRN][@8507][#1541845396][_][netfox::DiffHistoryEncoder] Reference tick 8442 missing for #1 applying 8505
+WARNING: [WRN][@8507][#1541845396][_][netfox::DiffHistoryEncoder] Reference tick 8442 missing for #1 applying 8506
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] warning (res://addons/netfox.internals/logger.gd:159)
+       [1] apply (res://addons/netfox/encoder/diff-history-encoder.gd:113)
+       [2] _submit_diff_state (res://addons/netfox/state-synchronizer.gd:241)
+[WRN][@8507][#1541845396][_][netfox::DiffHistoryEncoder] Reference tick 8442 missing for #1 applying 8506
+[bot] CONTEST -> FARM (Nv 4, 675 XP)
+[probe] check 8670 vivos=25 baus=0 0,0,58,160,0,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 3.8% (22/585 quadros), acumulado 9.4% (1437/15332)
+[probe] check 8970 vivos=25 baus=0 160,0,0,0,144,160,0,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 3.4% (20/597 quadros), acumulado 9.1% (1457/15929)
+[bot] FARM -> RETREAT (Nv 5, 865 XP)
+[probe] check 9270 vivos=24 baus=0 0,0,0,0,0,160,106,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.7% (16/601 quadros), acumulado 8.9% (1473/16530)
+[probe] check 9570 vivos=24 baus=0 0,0,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 5.0% (30/601 quadros), acumulado 8.8% (1503/17131)
+[bot] RETREAT -> FARM (Nv 5, 865 XP)
+[match] fim da fase 1 (5:00), portoes caem, tick 9808
+[bot] navmesh: 988 poligonos
+[probe] check 9870 vivos=23 baus=0 0,0,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 28 }
+[probe] remoto parado 1.3% (8/600 quadros), acumulado 8.5% (1511/17731)
+[bot] FARM -> RETREAT (Nv 5, 900 XP)
+[probe] check 10170 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,198,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.5% (9/600 quadros), acumulado 8.3% (1520/18331)
+[bot] RETREAT -> FARM (Nv 5, 900 XP)
+[probe] check 10470 vivos=22 baus=0 0,0,0,0,0,160,52,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.5% (15/600 quadros), acumulado 8.1% (1535/18931)
+[probe] check 10770 vivos=19 baus=0 0,0,0,0,0,0,0,0,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 26 }
+[probe] remoto parado 1.3% (8/600 quadros), acumulado 7.9% (1543/19531)
+[probe] check 11070 vivos=19 baus=0 0,0,0,0,0,0,0,0,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 24 }
+[probe] remoto parado 7.2% (43/600 quadros), acumulado 7.9% (1586/20131)
+[bot] FARM -> CONTEST (Nv 5, 1055 XP)
+[probe] check 11370 vivos=19 baus=0 0,0,0,0,0,0,0,0,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.0% (6/600 quadros), acumulado 7.7% (1592/20731)
+[probe] check 11670 vivos=17 baus=0 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.0% (12/600 quadros), acumulado 7.5% (1604/21331)
+[bot] CONTEST -> LOOT (Nv 6, 1175 XP)
+WARNING: [WRN][@11859][#1541845396][_][netfox::DiffHistoryEncoder] Reference tick 11794 missing for #1 applying 11858
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] warning (res://addons/netfox.internals/logger.gd:159)
+       [1] apply (res://addons/netfox/encoder/diff-history-encoder.gd:113)
+       [2] _submit_diff_state (res://addons/netfox/state-synchronizer.gd:241)
+[WRN][@11859][#1541845396][_][netfox::DiffHistoryEncoder] Reference tick 11794 missing for #1 applying 11858
+[bot] LOOT -> CONTEST (Nv 6, 1175 XP)
+[probe] check 11970 vivos=17 baus=1 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest11
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.3% (14/600 quadros), acumulado 7.4% (1618/21931)
+[bot] CONTEST -> LOOT (Nv 6, 1175 XP)
+[bot] LOOT -> CONTEST (Nv 6, 1175 XP)
+[probe] check 12270 vivos=17 baus=2 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest10,Chest11
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.5% (9/600 quadros), acumulado 7.2% (1627/22531)
+[bot] CONTEST -> LOOT (Nv 6, 1175 XP)
+[probe] check 12570 vivos=17 baus=3 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,50,x|Chest6,Chest10,Chest11
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.3% (14/600 quadros), acumulado 7.1% (1641/23131)
+[probe] check 12870 vivos=17 baus=6 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.5% (15/600 quadros), acumulado 7.0% (1656/23731)
+[probe] check 13170 vivos=17 baus=8 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.8% (11/600 quadros), acumulado 6.9% (1667/24331)
+[bot] LOOT -> CONTEST (Nv 6, 1175 XP)
+[probe] check 13470 vivos=17 baus=9 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest21
+[bot] CONTEST -> LOOT (Nv 6, 1175 XP)
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.8% (11/600 quadros), acumulado 6.7% (1678/24931)
+[bot] LOOT -> FARM (Nv 6, 1175 XP)
+[bot] FARM -> CONTEST (Nv 6, 1175 XP)
+[probe] check 13770 vivos=17 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.7% (10/600 quadros), acumulado 6.6% (1688/25531)
+[bot] CONTEST -> FARM (Nv 6, 1175 XP)
+[probe] check 14070 vivos=16 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,285,0,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.0% (6/600 quadros), acumulado 6.5% (1694/26131)
+[probe] check 14370 vivos=14 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+[bot] FARM -> RETREAT (Nv 6, 1530 XP)
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 3.3% (20/600 quadros), acumulado 6.4% (1714/26731)
+[bot] RETREAT -> FARM (Nv 6, 1530 XP)
+[probe] check 14670 vivos=14 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+[probe] throttle minimo { 1: 22 }
+[probe] remoto parado 5.1% (30/592 quadros), acumulado 6.4% (1744/27323)
+[probe] check 14970 vivos=13 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+[probe] throttle minimo { 1: 28 }
+[probe] remoto parado 4.0% (24/600 quadros), acumulado 6.3% (1768/27923)
+[bot] FARM -> CONTEST (Nv 6, 1610 XP)
+[probe] check 15270 vivos=13 baus=10 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,680,360,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+[probe] throttle minimo { 1: 24 }
+[probe] remoto parado 6.2% (37/600 quadros), acumulado 6.3% (1805/28523)
+[bot] CONTEST -> FARM (Nv 7, 1885 XP)
+[probe] check 15570 vivos=11 baus=12 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest50,Chest52
+[probe] throttle minimo { 1: 26 }
+[probe] remoto parado 2.5% (15/601 quadros), acumulado 6.2% (1820/29124)
+[bot] FARM -> FIGHT (Nv 7, 1885 XP)
+[probe] check 15870 vivos=11 baus=14 0,0,0,0,0,0,0,0,0,0,0,160,160,160,160,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+[bot] FIGHT -> FARM (Nv 7, 2025 XP)
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.1% (5/438 quadros), acumulado 6.2% (1825/29562)
+[probe] check 16170 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+[bot] FARM -> FIGHT (Nv 7, 2195 XP)
+[probe] throttle minimo { 1: 30 }
+[probe] remoto parado 2.0% (6/296 quadros), acumulado 6.1% (1831/29858)
+[probe] check 16470 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+[probe] throttle minimo { 1: 22 }
+[probe] remoto parado 23.8% (137/576 quadros), acumulado 6.5% (1968/30434)
+[probe] check 16770 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.7% (10/601 quadros), acumulado 6.4% (1978/31035)
+[probe] check 17070 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.5% (9/601 quadros), acumulado 6.3% (1987/31636)
+[bot] FIGHT -> FARM (Nv 7, 2195 XP)
+[probe] check 17370 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,182,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 3.7% (11/300 quadros), acumulado 6.3% (1998/31936)
+[bot] FARM -> FIGHT (Nv 7, 2365 XP)
+[probe] check 17670 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.4% (10/412 quadros), acumulado 6.2% (2008/32348)
+[probe] check 17970 vivos=7 baus=14 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,360,160,160,360,160,160,360,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21,Chest46,Chest50,Chest51,Chest52

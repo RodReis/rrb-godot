@@ -71,7 +71,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 - [ ] **F17** — transição 5 s, `hud_phase2.tscn`, `ZoneRadar`, `ScoreBanner`, vinheta.
 - [ ] **F18** — `match_end.tscn`, estatísticas acumuladas no servidor (`MatchStats`).
 - [ ] **F19** — bot fase 2; `tools/soak.ps1`; CI nightly `soak`.
-- [ ] **F20** — monstros/baús/boss replicados; teste com 2 clientes reais + `tc netem`.
+- [x] **F20** — Spawn confiável antes do estado: `SpawnAck` (`scripts/net/`) deixa o `RollbackSynchronizer` do herói sem destinatário no servidor até o cliente confirmar por RPC confiável que já tem o node (fim do `Node not found` do F5). Nenhum monstro nasce/some no meio da partida: o Rei Esqueleto existe desde o load fora do mapa (`Monster.present`, replicado), entra às 3:30 e, vivo às 5:00, sai sem drop nem XP (`SpawnDirector.dismiss_boss`, R-PEND-06); painel da HUD mostra "SAIU DO MAPA" (texto aprovado pelo PI). Baús: `opened_tick` do servidor nos dois lados. Medição: `NetProbe` (`--probe`: remoto parado, checkpoints de monstros/baús pelo histórico do `StateSynchronizer`, throttle do ENet), `--autopilot=bot` (o `BotInput` joga pelo herói local do cliente), `tools/net-measure.ps1` (Docker + netem + 2 clientes + banda) e `tools/net-probe-report.ps1`. B (10 min): remoto parado 6,2 % / 2,7 %, checkpoints 60/60 nos dois clientes, 0 `Node not found`, servidor envia 1,3 Mbit/s para 2 clientes. C fora da meta (decisão do PI, 2026-10-10) — investigação em `game/test/net/roteiro-f20-replicacao.md`. (#60)
 - [ ] **[GATE] MVP2** — 1x1 online termina sempre; soak 50/50.
 
 ### MVP3 — Meta + deploy (`backend`, `launcher`, `infra`, `game`)
