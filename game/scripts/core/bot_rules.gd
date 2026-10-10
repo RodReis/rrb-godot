@@ -14,7 +14,7 @@ static func next_state(state: State, view: BotView, profile: BotProfile) -> Stat
 		return State.RETREAT
 	if view.enemy_distance <= profile.fight_range and has_advantage(view):
 		return State.FIGHT
-	if view.elapsed >= view.contest_time and view.level >= view.enemy_level:
+	if wants_contest(view, profile):
 		return State.CONTEST
 	if view.base_monsters_left > 0:
 		return State.FARM
@@ -26,6 +26,15 @@ static func next_state(state: State, view: BotView, profile: BotProfile) -> Stat
 ## Sem regeneracao de HP: recua uma vez por queda abaixo do limiar, so com perigo perto.
 static func wants_retreat(view: BotView, profile: BotProfile) -> bool:
 	return not view.retreat_spent and view.in_danger and view.hp_pct < profile.retreat_hp_pct
+
+
+## A partir de 3:00, com nivel igual ou maior e HP alto: sem cura passiva, voltar ao boss com HP
+## baixo era morrer em loop (PI 2026-10-10, #74).
+static func wants_contest(view: BotView, profile: BotProfile) -> bool:
+	var time_to_contest := view.elapsed >= view.contest_time
+	return (
+		time_to_contest and view.level >= view.enemy_level and view.hp_pct >= profile.contest_hp_pct
+	)
 
 
 ## Nivel maior, ou nivel igual com HP% maior (PI 2026-10-09).

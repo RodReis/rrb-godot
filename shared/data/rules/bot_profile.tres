@@ -8,3 +8,4 @@ retreat_hp_pct = 0.3
 danger_range = 8.0
 safe_seconds = 3.0
 fight_range = 8.0
+contest_hp_pct = 0.7

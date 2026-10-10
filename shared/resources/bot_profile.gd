@@ -11,3 +11,5 @@ extends Resource
 @export var safe_seconds: float
 ## Heroi inimigo a ate esta distancia pode virar briga (se o bot tiver vantagem).
 @export var fight_range: float
+## Contesta o boss so com HP a partir disto; abaixo farma e saqueia (PI 2026-10-10, #74).
+@export var contest_hp_pct: float
