@@ -30,6 +30,12 @@ static func seconds_to_ticks(seconds: float, tickrate: int) -> int:
 	return roundi(seconds * tickrate)
 
 
+## Velocidade de um avanco que percorre [param distance] em [param ticks] (Rolamento): a distancia
+## sai exata mesmo com a duracao arredondada ao tick.
+static func dash_speed(distance: float, ticks: int, tickrate: int) -> float:
+	return distance * tickrate / maxi(ticks, 1)
+
+
 ## Pontos de habilidade livres (GDB §3.1): 1 por nivel a partir do 2; Q1 vem de graca no 1.
 static func free_points(hero_level: int, ranks: Vector3i) -> int:
 	return hero_level - (ranks.x + ranks.y + ranks.z)

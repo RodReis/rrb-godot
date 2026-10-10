@@ -8,6 +8,8 @@ const TARGETS_GROUP: StringName = &"combatants"
 ## GateRules.TEAM_*; definido por quem spawna.
 var team: int = GateRules.TEAM_NEUTRAL
 
+var _body_radius: float = -1.0
+
 
 func _enter_tree() -> void:
 	add_to_group(TARGETS_GROUP)
@@ -25,3 +27,17 @@ func cancel_hit(_tick: int, _source: int) -> void:
 
 func is_alive() -> bool:
 	return true
+
+
+## Id unico de quem e golpeado (peer_id do heroi, uid negativo do monstro).
+func combat_id() -> int:
+	return 0
+
+
+## Raio da capsula do corpo (CollisionShape3D), para o acerto de projetil (F14).
+func body_radius() -> float:
+	if _body_radius < 0.0:
+		var body := get_node_or_null("CollisionShape3D") as CollisionShape3D
+		var capsule := body.shape as CapsuleShape3D if body != null else null
+		_body_radius = capsule.radius if capsule != null else 0.0
+	return _body_radius

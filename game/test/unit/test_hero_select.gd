@@ -111,4 +111,7 @@ func test_modelo_so_do_heroi_com_cena() -> void:
 	assert_not_null(model)
 	assert_false(model.is_in_group(Hero.GROUP))
 	model.free()
-	assert_null(HeroSelect.model_of(&"ranger"))
+	var ranger := HeroSelect.model_of(&"ranger")  # cena da Arqueira desde o F14
+	assert_not_null(ranger)
+	ranger.free()
+	assert_null(HeroSelect.model_of(&"mage"))

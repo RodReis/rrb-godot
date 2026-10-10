@@ -1,0 +1,109 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/net/ranger.gd" id="1_hero"]
+[ext_resource type="Script" path="res://scripts/net/player_input.gd" id="2_input"]
+[ext_resource type="Script" path="res://scripts/net/hero_visual.gd" id="3_visual"]
+[ext_resource type="Resource" path="res://shared/data/heroes/ranger.tres" id="4_data"]
+[ext_resource type="Resource" path="res://shared/data/rules/xp_table.tres" id="5_xp"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/ranger.glb" id="6_model"]
+[ext_resource type="Resource" path="res://shared/data/items/catalog.tres" id="7_catalog"]
+[ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
+[ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="8_rules"]
+[ext_resource type="Script" path="res://scripts/net/arrow.gd" id="9_arrow"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers2/arrow_bow.gltf" id="10_arrow_model"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rain"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.36, 0.62, 1, 0.3)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rain"]
+material = SubResource("StandardMaterial3D_rain")
+top_radius = 1.0
+bottom_radius = 1.0
+height = 0.04
+radial_segments = 48
+rings = 1
+
+[node name="Ranger" type="CharacterBody3D"]
+script = ExtResource("1_hero")
+hero_data = ExtResource("4_data")
+xp_curve = ExtResource("5_xp")
+item_catalog = ExtResource("7_catalog")
+match_rules = ExtResource("8_rules")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_hero")
+
+[node name="Model" parent="." instance=ExtResource("6_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0)
+
+[node name="Visual" type="Node" parent="." node_paths=PackedStringArray("model")]
+script = ExtResource("3_visual")
+model = NodePath("../Model")
+dash = &"Dodge_Forward"
+block = &""
+basic_attack = &"2H_Ranged_Shoot"
+skill_q = &"2H_Ranged_Shoot"
+skill_r = &"Spellcast_Shoot"
+
+[node name="HpLabel" type="Label3D" parent="."]
+layers = 2
+position = Vector3(0, 2.85, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0 / 0"
+font_size = 56
+outline_size = 12
+
+[node name="HpBar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.4, 0)
+script = ExtResource("hpbar_script")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_input")
+
+[node name="RainArea" type="MeshInstance3D" parent="."]
+top_level = true
+visible = false
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_rain")
+
+[node name="Arrows" type="Node" parent="."]
+
+[node name="Arrow0" type="Node3D" parent="Arrows"]
+top_level = true
+visible = false
+script = ExtResource("9_arrow")
+
+[node name="Model" parent="Arrows/Arrow0" instance=ExtResource("10_arrow_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0.484)
+
+[node name="Arrow1" type="Node3D" parent="Arrows"]
+top_level = true
+visible = false
+script = ExtResource("9_arrow")
+
+[node name="Model" parent="Arrows/Arrow1" instance=ExtResource("10_arrow_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0.484)
+
+[node name="Arrow2" type="Node3D" parent="Arrows"]
+top_level = true
+visible = false
+script = ExtResource("9_arrow")
+
+[node name="Model" parent="Arrows/Arrow2" instance=ExtResource("10_arrow_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0.484)
+
+[node name="Arrow3" type="Node3D" parent="Arrows"]
+top_level = true
+visible = false
+script = ExtResource("9_arrow")
+
+[node name="Model" parent="Arrows/Arrow3" instance=ExtResource("10_arrow_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0.484)

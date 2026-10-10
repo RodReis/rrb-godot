@@ -13,6 +13,9 @@ static var suspended: bool = false
 
 var movement: Vector3 = Vector3.ZERO
 var aim: Vector3 = Vector3.ZERO
+## Distancia da mira no chao (u): onde cai a area do R da Arqueira. Gamepad manda INF (o servidor
+## limita ao alcance da habilidade, InputRules.sanitize_distance).
+var aim_distance: float = 0.0
 var attack: bool = false
 var skill_q: bool = false
 var skill_e: bool = false
@@ -57,7 +60,11 @@ func _gather() -> void:
 	skill_r = Input.is_action_pressed(InputActions.SKILL_R)
 	interact_hold = Input.is_action_pressed(InputActions.INTERACT)
 	_gather_learn()
-	aim = _stick_aim(yaw) if _gamepad else _mouse_aim()
+	if _gamepad:
+		aim = _stick_aim(yaw)
+		aim_distance = INF
+	else:
+		_gather_mouse_aim()
 
 
 ## Ctrl+Q tambem casa com skill_q (Godot ignora modificador extra): aprender nao lanca a skill.
@@ -76,6 +83,7 @@ func _gather_learn() -> void:
 
 func _gather_idle() -> void:
 	movement = Vector3.ZERO
+	aim_distance = 0.0
 	attack = false
 	skill_q = false
 	skill_e = false
@@ -89,15 +97,18 @@ func _camera_yaw() -> float:
 	return camera.global_rotation.y if camera else 0.0
 
 
-func _mouse_aim() -> Vector3:
+func _gather_mouse_aim() -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera == null:
-		return Vector3.ZERO
+		aim = Vector3.ZERO
+		aim_distance = 0.0
+		return
 	var mouse := get_viewport().get_mouse_position()
-	var player := get_parent() as Node3D
-	return AimMath.aim_on_ground(
-		camera.project_ray_origin(mouse), camera.project_ray_normal(mouse), player.global_position
-	)
+	var origin := camera.project_ray_origin(mouse)
+	var ray := camera.project_ray_normal(mouse)
+	var player := (get_parent() as Node3D).global_position
+	aim = AimMath.aim_on_ground(origin, ray, player)
+	aim_distance = AimMath.offset_on_ground(origin, ray, player).length()
 
 
 ## Mira do analogico direito; solto, mantem a ultima direcao.

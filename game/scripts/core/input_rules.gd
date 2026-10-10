@@ -11,3 +11,11 @@ static func sanitize_direction(v: Vector3) -> Vector3:
 	if not v.is_finite():
 		return Vector3.ZERO
 	return Vector3(v.x, 0.0, v.z).limit_length(MAX_DIRECTION_LENGTH)
+
+
+## Distancia de mira (R da Arqueira) entre 0 e [param max_distance]; nao finita vira o maximo
+## (gamepad manda INF: alcance maximo).
+static func sanitize_distance(distance: float, max_distance: float) -> float:
+	if is_nan(distance):
+		return max_distance
+	return clampf(distance, 0.0, max_distance)

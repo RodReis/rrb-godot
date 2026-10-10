@@ -1,0 +1,128 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5060
+
+[DBG][netfox.extras::NetworkSimulator] Feature disabled
+[DBG][@0][#1][_][netfox::NetworkPerformance] Network performance enabled, registering performance monitors
+[spawn] seed dos baus 3058820960
+[client] conectado como peer 1657836169
+[DBG][@0][#1657836169][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1
+[DBG][@0][#1657836169][_][netfox::NetworkTimeSynchronizer] Received initial timestamp @ 1791651092.6440s raw time
+[INF][@0][#1657836169][_][netfox::NetworkTimeSynchronizer] Time sync loop started! Initial timestamp: 4.49780297279358s
+[DBG][@134][#1657836169][_][netfox::NetworkTime] Peer #1657836169 is now on time!
+[client] NetworkTime sincronizado, tick 134
+[DBG][@151][#1657836169][_][netfox::NetworkTime] Peer #702363491 is now on time!
+[probe] check 270 vivos=28 baus=0 160,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 570 vivos=28 baus=0 160,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 870 vivos=28 baus=0 160,160,160,160,360,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 12 }
+[probe] remoto parado 44.7% (17/38 quadros), acumulado 44.7% (17/38)
+[probe] check 1170 vivos=26 baus=0 0,160,0,160,240,160,160,360,160,160,360,160,160,105,105,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 4.0% (2/50 quadros), acumulado 21.6% (19/88)
+[probe] check 1470 vivos=24 baus=0 0,160,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.3% (2/152 quadros), acumulado 8.8% (21/240)
+[probe] check 1770 vivos=23 baus=0 0,0,0,0,0,160,160,360,160,19,360,160,105,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.1% (7/337 quadros), acumulado 4.9% (28/577)
+[probe] check 2070 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.8% (2/241 quadros), acumulado 3.7% (30/818)
+[probe] check 2370 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 3.7% (30/818)
+[probe] check 2670 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 3.7% (30/818)
+[probe] check 2970 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 3.7% (30/818)
+[probe] check 3270 vivos=22 baus=0 0,0,0,0,0,160,160,360,160,0,360,160,160,160,105,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.2% (2/168 quadros), acumulado 3.2% (32/986)
+[probe] check 3570 vivos=22 baus=0 0,0,0,0,0,160,160,360,66,0,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.6% (3/186 quadros), acumulado 3.0% (35/1172)
+[probe] check 3870 vivos=22 baus=0 160,0,160,0,0,160,160,360,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.6% (7/274 quadros), acumulado 2.9% (42/1446)
+[probe] check 4170 vivos=23 baus=0 160,0,0,160,313,160,160,360,0,0,0,160,105,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/147 quadros), acumulado 2.6% (42/1593)
+[probe] check 4470 vivos=22 baus=0 160,0,0,160,0,160,160,360,0,0,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.6% (42/1593)
+[probe] check 4770 vivos=23 baus=0 160,0,0,160,0,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.6% (42/1593)
+[probe] check 5070 vivos=23 baus=0 160,0,0,160,0,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.6% (42/1593)
+[probe] check 5370 vivos=23 baus=0 160,0,0,160,0,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.6% (42/1593)
+[probe] check 5670 vivos=23 baus=0 160,0,0,160,0,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.6% (42/1593)
+[probe] check 5970 vivos=23 baus=0 160,0,0,160,0,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.6% (42/1593)
+[match] aviso do boss (3:00), tick 6255
+[probe] check 6270 vivos=23 baus=0 160,0,0,160,0,160,160,360,0,160,0,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.6% (42/1593)
+[probe] check 6570 vivos=24 baus=0 160,0,0,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.7% (4/238 quadros), acumulado 2.5% (46/1831)
+[probe] check 6870 vivos=24 baus=0 0,0,7,0,0,160,160,360,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.2% (8/368 quadros), acumulado 2.5% (54/2199)
+[probe] check 7170 vivos=25 baus=0 0,160,0,0,360,160,0,258,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.4% (2/82 quadros), acumulado 2.5% (56/2281)
+[probe] check 7470 vivos=24 baus=0 0,160,0,0,306,160,0,0,160,160,360,160,160,160,105,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.0% (4/386 quadros), acumulado 2.2% (60/2667)
+[probe] check 7770 vivos=22 baus=0 0,0,0,0,0,160,0,0,160,160,360,160,105,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.2% (60/2667)
+[probe] check 8070 vivos=22 baus=0 0,0,0,0,0,160,0,0,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.2% (60/2667)
+[probe] check 8370 vivos=22 baus=0 0,0,0,0,0,160,0,0,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.2% (60/2667)
+[probe] check 8670 vivos=22 baus=0 0,0,0,0,0,160,0,0,160,160,360,160,160,160,105,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.2% (60/2667)
+[probe] check 8970 vivos=22 baus=0 0,0,0,0,0,160,0,0,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.2% (60/2667)
+[probe] check 9270 vivos=23 baus=0 0,0,0,160,0,160,0,0,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 2.2% (60/2667)
+[probe] check 9570 vivos=24 baus=0 160,0,0,160,0,160,0,0,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,2400|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.4% (1/70 quadros), acumulado 2.2% (61/2737)
+[match] fim da fase 1 (5:00), portoes caem, tick 9855
+[probe] check 9870 vivos=23 baus=0 106,0,0,0,0,160,160,0,160,160,360,160,160,160,160,360,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 1.5% (5/339 quadros), acumulado 2.1% (66/3076)
+[probe] check 10170 vivos=21 baus=0 0,0,0,0,0,52,0,0,160,160,360,160,105,160,160,305,160,160,360,160,160,360,680,360,260,680,360,260,x|
+WARNING: [WRN][@10309][#1657836169][_][netfox::DiffHistoryEncoder] Reference tick 10244 missing for #1 applying 10308
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] warning (res://addons/netfox.internals/logger.gd:159)
+       [1] apply (res://addons/netfox/encoder/diff-history-encoder.gd:113)
+       [2] _submit_diff_state (res://addons/netfox/state-synchronizer.gd:241)
+[WRN][@10309][#1657836169][_][netfox::DiffHistoryEncoder] Reference tick 10244 missing for #1 applying 10308
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 2.3% (8/343 quadros), acumulado 2.2% (74/3419)
+[probe] check 10470 vivos=20 baus=0 0,0,0,0,0,0,0,0,160,52,360,160,105,160,160,305,160,160,360,160,160,360,680,360,260,680,360,260,x|
+[probe] throttle minimo { 1: 32 }
+[probe] remoto parado 0.9% (2/222 quadros), acumulado 2.1% (76/3641)
+[probe] check 10770 vivos=18 baus=0 0,0,0,0,0,0,0,0,160,0,0,160,105,160,160,305,160,160,360,160,160,360,680,360,260,680,360,260,x|

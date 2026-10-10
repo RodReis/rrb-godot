@@ -25,3 +25,14 @@ func test_nan_vira_zero() -> void:
 
 func test_infinito_vira_zero() -> void:
 	assert_eq(InputRules.sanitize_direction(Vector3(INF, 0, 0)), Vector3.ZERO)
+
+
+func test_distancia_de_mira_fica_entre_0_e_o_maximo() -> void:
+	assert_eq(InputRules.sanitize_distance(5.0, 8.0), 5.0)
+	assert_eq(InputRules.sanitize_distance(30.0, 8.0), 8.0)
+	assert_eq(InputRules.sanitize_distance(-2.0, 8.0), 0.0)
+
+
+func test_distancia_de_mira_invalida_vira_o_maximo() -> void:
+	assert_eq(InputRules.sanitize_distance(NAN, 8.0), 8.0)
+	assert_eq(InputRules.sanitize_distance(INF, 8.0), 8.0)

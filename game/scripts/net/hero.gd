@@ -5,7 +5,9 @@ extends Combatant
 ## Efeito sobre outro heroi (dano, empurrao, atordoamento, XP de abate) vai para o ledger do
 ## alvo, que o aplica no proprio _rollback_tick (ARCHITECTURE-GAME §3.2); monstro aplica o
 ## golpe na hora (Monster). Nivel = XP pela curva (GDB §3.2); pontos gastos por input (F9).
-## Habilidades do Cavaleiro (F8): Q Investida, E Muralha, R Terremoto. Equipamento (F10) e
+## As habilidades ficam na subclasse (Knight F8, Ranger F14: _use_skills, _while_dashing,
+## _simulate_effects); aqui fica o que vale para todos: avanco, escudo, lentidao (R da Arqueira) e
+## invulnerabilidade (Rolamento). Equipamento (F10) e
 ## estado de rollback: atributos saem dele pelo Inventory; F abre e troca no Chest, e o saque
 ## chega pelo ledger. Morte (F15): HP 0 deixa o heroi inerte e fora de alcance por
 ## respawn_seconds (o MatchController ajusta pela fase, KillRules) e ele renasce em home com HP
@@ -17,8 +19,6 @@ extends Combatant
 const GROUP: StringName = &"heroes"
 ## Cena de cada heroi pelo id do HeroData.
 const SCENE_PATH: String = "res://scenes/heroes/%s.tscn"
-## Contato da Investida = soma dos raios das capsulas (geometria, nao balanceamento).
-const CHARGE_REACH: float = 0.8
 
 @export var hero_data: HeroData
 @export var xp_curve: XpCurve
@@ -51,6 +51,12 @@ var shield_ticks: int = 0
 var stun_ticks: int = 0
 var dash_ticks: int = 0
 var dash_direction: Vector3 = Vector3.ZERO
+var dash_speed: float = 0.0
+## Lentidao recebida (R da Arqueira): fracao e ticks restantes.
+var slow_ticks: int = 0
+var slow_pct: float = 0.0
+## Ticks sem tomar dano (Rolamento da Arqueira).
+var invuln_ticks: int = 0
 ## Empurrao recebido (Investida, golpe do boss): desliza knockback_ticks a knockback_velocity.
 var knockback_ticks: int = 0
 var knockback_velocity: Vector3 = Vector3.ZERO
@@ -75,7 +81,8 @@ var _alive_layer: int = 0
 @onready var input: PlayerInput = $Input
 @onready var hp_label: Label3D = $HpLabel
 @onready var hp_bar: WorldHealthBar = $HpBar
-@onready var _shield_blocker: Area3D = $ShieldBlocker
+## Volume da Muralha (so o Cavaleiro tem).
+@onready var _shield_blocker: Area3D = get_node_or_null("ShieldBlocker") as Area3D
 
 
 func _ready() -> void:
@@ -112,6 +119,10 @@ func _ready() -> void:
 		":stun_ticks",
 		":dash_ticks",
 		":dash_direction",
+		":dash_speed",
+		":slow_ticks",
+		":slow_pct",
+		":invuln_ticks",
 		":knockback_ticks",
 		":knockback_velocity",
 		":basic_cooldown",
@@ -123,9 +134,11 @@ func _ready() -> void:
 		":respawn_ticks",
 		":heal_pause_ticks",
 	]
+	_rollback.state_properties.append_array(_extra_state_properties())
 	_rollback.input_properties = [
 		"Input:movement",
 		"Input:aim",
+		"Input:aim_distance",
 		"Input:attack",
 		"Input:skill_q",
 		"Input:skill_e",
@@ -158,6 +171,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	_tick_timers()  # recarga corre tambem morto
 	if multiplayer.is_server():
 		_drink(tick)
+	_simulate_effects(tick)  # o que ja foi lancado segue mesmo com o heroi morto
 	_refresh_body()
 	if not is_alive():
 		velocity = Vector3.ZERO
@@ -168,25 +182,30 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	# Input vem do cliente: nunca confiar no valor recebido.
 	var movement := InputRules.sanitize_direction(input.movement)
 	var aim := InputRules.sanitize_direction(input.aim)
+	if knockback_ticks > 0 or stun_ticks > 0:
+		dash_ticks = 0  # empurrao e atordoamento interrompem o avanco
 	if knockback_ticks > 0:
 		velocity = knockback_velocity
 		knockback_ticks -= 1
 	elif stun_ticks > 0:
 		velocity = Vector3.ZERO
 	elif dash_ticks > 0:
-		velocity = dash_direction * hero_data.skill_q.speed
+		velocity = dash_direction * dash_speed
 	else:
 		if not aim.is_zero_approx():
 			look_at(global_position + aim, Vector3.UP)
-		velocity = movement * attributes.move_speed
+		var slow := slow_pct if slow_ticks > 0 else 0.0
+		velocity = movement * CombatRules.slowed(attributes.move_speed, slow)
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
 
 	if stun_ticks > 0:
 		return
+	# Conta o avanco depois de andar: dash_ticks ticks de movimento, distancia cravada (Rolamento).
 	if dash_ticks > 0:
-		_charge_contact(tick)
+		dash_ticks -= 1
+		_while_dashing(tick)
 		return
 	_use_skills(tick)
 
@@ -199,6 +218,8 @@ func _process(_delta: float) -> void:
 	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
 	if stun_ticks > 0:
 		status += " (atordoado)"
+	elif slow_ticks > 0:
+		status += " (lento)"
 	hp_label.text = "Nv %d%s" % [level, status]
 	hp_bar.set_ratio(float(hp) / attributes.max_hp)
 
@@ -227,6 +248,23 @@ func forward() -> Vector3:
 	return -global_transform.basis.z
 
 
+func combat_id() -> int:
+	return peer_id
+
+
+## Fracao do segmento [param p0]-[param p1] em que a Muralha ativa bloqueia um projetil, ou
+## CombatRules.NO_HIT (sem Muralha). A largura sai da forma do ShieldBlocker na cena.
+func projectile_block_fraction(p0: Vector3, p1: Vector3) -> float:
+	if shield_ticks <= 0 or _shield_blocker == null:
+		return CombatRules.NO_HIT
+	var shape := _shield_blocker.get_child(0) as CollisionShape3D
+	var half := (shape.shape as BoxShape3D).size.x / 2.0
+	var xf := shape.global_transform
+	return CombatRules.segment_cross_fraction(
+		p0, p1, xf * Vector3(-half, 0.0, 0.0), xf * Vector3(half, 0.0, 0.0)
+	)
+
+
 ## Nivel e atributos seguem o XP e o equipamento do estado (inclusive quando o rollback volta).
 func _refresh_attributes() -> void:
 	var new_level := XpTable.level_for_xp(xp_curve, xp)
@@ -243,7 +281,8 @@ func _refresh_body() -> void:
 	var layer := _alive_layer if is_alive() else 0
 	if collision_layer != layer:
 		collision_layer = layer
-	_shield_blocker.collision_layer = PhysicsLayers.SHIELD if shield_ticks > 0 else 0
+	if _shield_blocker != null:
+		_shield_blocker.collision_layer = PhysicsLayers.SHIELD if shield_ticks > 0 else 0
 
 
 ## Servidor: um pulso de cura por segundo na fonte do proprio time (#74).
@@ -278,6 +317,8 @@ func _die(effect: HitEffect) -> void:
 	dash_ticks = 0
 	shield_ticks = 0
 	shield_hp = 0
+	slow_ticks = 0
+	invuln_ticks = 0
 	interact_ticks = 0
 
 
@@ -310,42 +351,48 @@ func _tick_timers() -> void:
 	r_cooldown = maxi(r_cooldown - 1, 0)
 	stun_ticks = maxi(stun_ticks - 1, 0)
 	heal_pause_ticks = maxi(heal_pause_ticks - 1, 0)
-	dash_ticks = maxi(dash_ticks - 1, 0)
+	slow_ticks = maxi(slow_ticks - 1, 0)
+	invuln_ticks = maxi(invuln_ticks - 1, 0)
 	shield_ticks = maxi(shield_ticks - 1, 0)
 	if shield_ticks == 0:
 		shield_hp = 0
 
 
-func _use_skills(tick: int) -> void:
-	var rate := NetworkTime.tickrate
-	var data := hero_data
-	if input.skill_q and q_cooldown == 0 and SkillRules.can_use(data.skill_q, ranks.x, level):
-		q_cooldown = SkillRules.cooldown_ticks(data.skill_q, ranks.x, attributes.intelligence, rate)
-		dash_direction = CombatRules.push_vector(forward(), 1.0)
-		var seconds := data.skill_q.distance / data.skill_q.speed
-		dash_ticks = SkillRules.seconds_to_ticks(seconds, rate)
-		return
-	if input.skill_e and e_cooldown == 0 and SkillRules.can_use(data.skill_e, ranks.y, level):
-		e_cooldown = SkillRules.cooldown_ticks(data.skill_e, ranks.y, attributes.intelligence, rate)
-		var duration := SkillData.at_rank(data.skill_e.duration, ranks.y)
-		shield_ticks = SkillRules.seconds_to_ticks(duration, rate)
-		shield_hp = roundi(SkillRules.amount(data.skill_e, ranks.y, attributes))
-	if input.skill_r and r_cooldown == 0 and SkillRules.can_use(data.skill_r, ranks.z, level):
-		r_cooldown = SkillRules.cooldown_ticks(data.skill_r, ranks.z, attributes.intelligence, rate)
-		_earthquake(tick)
-	if input.attack and basic_cooldown == 0:
-		basic_cooldown = SkillRules.seconds_to_ticks(attributes.attack_interval, rate)
-		_melee(tick)
+## Habilidades neste tick (subclasse): vivo, sem atordoamento e fora do avanco.
+func _use_skills(_tick: int) -> void:
+	pass
+
+
+## Durante o avanco (dash_ticks > 0), no lugar de _use_skills: contato da Investida (Knight).
+func _while_dashing(_tick: int) -> void:
+	pass
+
+
+## Efeitos ja lancados que seguem a cada tick, inclusive morto (flechas e Chuva da Ranger).
+func _simulate_effects(_tick: int) -> void:
+	pass
+
+
+## Propriedades de estado de rollback alem das do Hero (caminhos relativos a este node).
+func _extra_state_properties() -> Array[String]:
+	return []
 
 
 ## Heroi do outro time e monstro vivo.
 func _enemies() -> Array[Combatant]:
 	var result: Array[Combatant] = []
+	_enemies_into(result)
+	return result
+
+
+## Como _enemies, reusando [param out] (efeito que roda todo tick: flechas, Chuva).
+# ponytail: get_nodes_in_group ainda aloca a lista do grupo; cachear se o profiler apontar.
+func _enemies_into(out: Array[Combatant]) -> void:
+	out.clear()
 	for node: Node in get_tree().get_nodes_in_group(TARGETS_GROUP):
 		var other := node as Combatant
 		if other != self and other.team != team and other.is_alive():
-			result.append(other)
-	return result
+			out.append(other)
 
 
 ## O alvo aplica no proprio _rollback_tick de tick+1, lendo o ledger; ressimular o alvo
@@ -361,55 +408,9 @@ func _miss(other: Combatant, tick: int, slot: HitLedger.Slot) -> void:
 	other.cancel_hit(tick + 1, HitLedger.source_key(peer_id, slot))
 
 
-func _melee(tick: int) -> void:
-	if not multiplayer.is_server():
-		return
-	var basic := hero_data.basic_attack
-	var damage := roundi(SkillRules.amount(basic, 1, attributes))
-	for other: Combatant in _enemies():
-		var half_arc := basic.arc_degrees / 2.0
-		if CombatRules.is_in_melee_arc(
-			global_position, forward(), other.global_position, basic.attack_range, half_arc
-		):
-			_hit(other, tick, HitLedger.Slot.BASIC, HitEffect.new(damage, global_position))
-		else:
-			_miss(other, tick, HitLedger.Slot.BASIC)
-
-
-## Investida: para no primeiro inimigo tocado, empurra e fere (PI 2026-10-09).
-func _charge_contact(tick: int) -> void:
-	var q := hero_data.skill_q
-	for other: Combatant in _enemies():
-		if not CombatRules.in_radius(global_position, other.global_position, CHARGE_REACH):
-			if multiplayer.is_server():
-				_miss(other, tick, HitLedger.Slot.Q)
-			continue
-		dash_ticks = 0
-		if multiplayer.is_server():
-			var damage := roundi(SkillRules.amount(q, ranks.x, attributes))
-			var push := CombatRules.push_vector(dash_direction, q.knockback)
-			_hit(other, tick, HitLedger.Slot.Q, HitEffect.new(damage, global_position, push))
-		return
-
-
-func _earthquake(tick: int) -> void:
-	if not multiplayer.is_server():
-		return
-	var r := hero_data.skill_r
-	var damage := roundi(SkillRules.amount(r, ranks.z, attributes))
-	var stun := SkillRules.seconds_to_ticks(
-		SkillData.at_rank(r.stun_duration, ranks.z), NetworkTime.tickrate
-	)
-	for other: Combatant in _enemies():
-		if CombatRules.in_radius(global_position, other.global_position, r.radius):
-			var effect := HitEffect.new(damage, global_position, Vector3.ZERO, stun)
-			_hit(other, tick, HitLedger.Slot.R, effect)
-		else:
-			_miss(other, tick, HitLedger.Slot.R)
-
-
 ## DEF reduz primeiro; a Muralha absorve o que sobrou se o golpe veio pela frente
-## (PI 2026-10-09); o resto vai ao HP. XP so soma (I7). Saque: cura ate o HP max e item equipado
+## (PI 2026-10-09); o resto vai ao HP. Invulneravel (Rolamento) nao toma dano mas sofre o resto
+## (GDB §4.2: invulnerabilidade a dano). XP so soma (I7). Saque: cura ate o HP max e item equipado
 ## no slot dele (a decisao de trocar ja foi do Chest). Morto recebe XP e item, nada mais.
 func _apply_hits(tick: int) -> void:
 	for effect: HitEffect in _hits.effects_at(tick):
@@ -421,6 +422,8 @@ func _apply_hits(tick: int) -> void:
 			continue
 		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
 		var damage := CombatRules.mitigated(effect.damage, attributes.defense)
+		if invuln_ticks > 0:
+			damage = 0
 		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
 			var split := CombatRules.absorb(damage, shield_hp)
 			damage = split.x
@@ -436,4 +439,7 @@ func _apply_hits(tick: int) -> void:
 			knockback_ticks = CombatRules.knockback_ticks(NetworkTime.tickrate)
 			knockback_velocity = effect.push * NetworkTime.tickrate / knockback_ticks
 		stun_ticks = maxi(stun_ticks, effect.stun_ticks)
+		if effect.slow_ticks > 0:
+			slow_pct = maxf(slow_pct, effect.slow) if slow_ticks > 0 else effect.slow
+			slow_ticks = maxi(slow_ticks, effect.slow_ticks)
 	_hits.trim_before(tick - NetworkRollback.history_limit)
