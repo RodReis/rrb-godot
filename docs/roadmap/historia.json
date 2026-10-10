@@ -123,7 +123,9 @@
       "imagens": [
         { "arquivo": "mvp2-f15-selecao-de-herois.webp", "legenda": "A partida começa pela seleção de heróis: 24 segundos para escolher e confirmar. Quem não confirma entra com o herói padrão; os dois podem jogar com o mesmo herói. A Arqueira chega na próxima etapa.", "tipo": "entregue" },
         { "arquivo": "mvp2-f15-abatido-respawn.webp", "legenda": "Morrer na preparação não conta abate: o herói renasce na própria base em 8 segundos, com a vida cheia e os mesmos itens.", "tipo": "entregue" },
-        { "arquivo": "mvp2-fonte-da-base.webp", "legenda": "No canto de cada base, uma fonte devolve a vida devagar durante a preparação: 1% por segundo, e um golpe interrompe a cura por 3 segundos. O bot também volta até ela para se recuperar.", "tipo": "entregue" }
+        { "arquivo": "mvp2-fonte-da-base.webp", "legenda": "No canto de cada base, uma fonte devolve a vida devagar durante a preparação: 1% por segundo, e um golpe interrompe a cura por 3 segundos. O bot também volta até ela para se recuperar.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f36-campo-lateral.webp", "legenda": "Fora da base, cada lado do rio ganhou um campo com dois Esqueletos, um Esqueleto Guerreiro e dois baús: agora são 24 baús no mapa. Na preparação, monstro abatido renasce no mesmo lugar 90 segundos depois.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f36-canto-do-rio.webp", "legenda": "No canto oposto, outro campo lateral, na beira do rio. Do outro lado da água fica o campo do adversário: só se chega lá pelas pontes.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -160,6 +162,7 @@
     "F34": "Pilares e mato alto modelados no Blender",
     "F14": "Arqueira",
     "F15": "Ciclo da partida e seleção de heróis",
+    "F36": "Campos laterais e monstros que renascem na preparação",
     "F16": "Zona, abates e condições de vitória",
     "F17": "Transição aos 5:00 e interface do confronto",
     "F18": "Tela de fim de partida",
