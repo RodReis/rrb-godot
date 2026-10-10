@@ -19,17 +19,20 @@
 | 2.10 | F37 / SPEC-037 | neblina de guerra: visão 12 u + explorado, filtro de replicação por peer (generaliza o F32), minimapa, continua na fase 2 | `CONVENTION.md` §4.9; GDB §7.3 |
 | 2.8 | F32 / SPEC-032 | mato alto: herói dentro da moita deixa de ser replicado para o adversário (filtro de visibilidade no servidor); revela ao atacar | `CONVENTION.md` §4.7; GDB §7.3; SPEC-007 §2 |
 | 2.11 | F44 / SPEC-044 | arena "Ilha Flutuante Arcana" — **layout novo, greybox jogável**: espelho N–S, bases nos cantos norte, rio N–S + anel, 4 pontes (2 por metade), campos do centro em 0°/180°; builder, colisão, marcadores (reposiciona os campos do F36), portões, mato, navmesh; sem arte nova | ADR-0007; SPEC-044; GDB §5.1, §6.2, §7.1 |
+| 2.12 | F46 / SPEC-046 | arena "Rift Medieval adaptado" — relayout da Ilha: **borda quadrada 80×80**, rio em S NO–SE (anel + braços em arco + lagoas), bases SO/NE (rotação 180°), 2 pontes na MID, 3 corredores livres de 8 u, selva (4 campos do F36) nos quadrantes; builder, chassi Blender, colisão, marcadores, navmesh; kits do F44 reposicionados, sem kit novo | ADR-0009; SPEC-046; GDB §5.1, §6.2, §7.1 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
 
-**F15 → F36 → F20 → F14 → F16 → F17 → F18 → F32 → F37 → F44 (#92) → F19 → [GATE].**
+**F15 → F36 → F20 → F14 → F16 → F17 → F18 → F32 → F37 → F44 (#92) → F46 (#110) → F19 → [GATE].**
 
 **Depois do [GATE] deste MVP vem o MVP2.5 (bloco visual F38–F43, `MVP-2.5.md`), antes do MVP3.**
 
 **Revisão do PI em 2026-10-10 (ADR-0007):** F44 (layout da arena, #92) entra logo após o F16 (que já estava em `doing` quando a decisão foi tomada) e antes do F17, para F16/F17/F32/F37 (minimapa) e o soak do F19 já nascerem na ilha. F36 e F20 já estavam mergeados; o F44 reposiciona os marcadores dos campos laterais.
 
 **Revisão do PI em 2026-10-10 (ADR-0008, supera a ordem acima do ADR-0007):** F16, F17, F18 e F32 foram mergeados e o F37 entrou em `doing` no layout antigo antes do F44. O F37 termina; o F44 entra **depois do F37 e antes do F19** e confere no layout novo as moitas do F32 e a neblina/minimapa do F37. O F44 gera a Ilha em cena nova (`ilha_arcana.tscn`); o Vale Rúnico fica congelado em `game/scenes/arena/legacy/` + tag `arena-vale-runico` (fora do fluxo, sem teste).
+
+**Revisão do PI em 2026-10-10 (ADR-0009):** F44 mergeado (#109). O F46 (relayout "Rift Medieval adaptado", #110) entra **logo depois do F44 e antes do F19**, para o soak nascer no layout final. Regera `ilha_arcana.tscn` no lugar; Ilha v1 preservada só pela tag `arena-ilha-arcana`.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 
