@@ -121,6 +121,30 @@ func _home_a() -> Vector3:
 	return Vector3.ZERO
 
 
+## F36: o T1 da base renasce a ~5 u da fonte (aggro 6 u). Recuando ate ela, o bot revida o
+## monstro colado nele em vez de apanhar parado ate morrer (rodada offline de 5:00).
+func test_recuando_revida_o_monstro_no_alcance() -> void:
+	var monster: Monster = null
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		if (node as Monster).home_team == GateRules.TEAM_B:
+			monster = node as Monster
+	_bot.global_position = monster.global_position + Vector3(1.0, 0.0, 0.0)
+	_bot.hp = roundi(_bot.attributes.max_hp * 0.2)
+	_brain().state = BotRules.State.RETREAT
+	_brain().think(1)
+	assert_eq(_brain().state, BotRules.State.RETREAT)
+	assert_true(_bot.input.attack)
+	var to := monster.global_position - _bot.global_position
+	assert_almost_eq(_bot.input.aim, to.normalized(), Vector3.ONE * 0.01)
+
+
+func test_recuando_sem_monstro_perto_nao_ataca() -> void:
+	_bot.hp = roundi(_bot.attributes.max_hp * 0.2)
+	_brain().state = BotRules.State.RETREAT
+	_brain().think(1)
+	assert_false(_bot.input.attack)
+
+
 func test_comeca_farmando_e_anda_ate_o_monstro_da_base() -> void:
 	var start := _bot.global_position
 	for i: int in 30:

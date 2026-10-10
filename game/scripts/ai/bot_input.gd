@@ -49,6 +49,7 @@ func think(tick: int) -> void:
 	match state:
 		BotRules.State.RETREAT:
 			_go(tick, _fountain().global_position if view.can_heal else _home())
+			_fight_back()
 		BotRules.State.FIGHT:
 			_attack(tick, enemy, true)
 		BotRules.State.CONTEST:
@@ -146,6 +147,19 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	attack = true
 	skill_e = skills
 	skill_r = skills
+
+
+## Recuando: golpeia o monstro ja no alcance do basico, sem parar de andar. O T1 da base
+## renasce perto da fonte (F36); parado apanhando, o bot morria em loop.
+func _fight_back() -> void:
+	var reach := _hero.hero_data.basic_attack.attack_range
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		var monster := node as Monster
+		var to := _flat(monster.global_position)
+		if monster.is_alive() and to.length() <= reach:
+			aim = to.normalized()
+			attack = true
+			return
 
 
 ## Chega no alcance do bau e toca F (um tick apertado, o seguinte solto).
