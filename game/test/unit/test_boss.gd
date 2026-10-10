@@ -101,6 +101,7 @@ func test_cliente_que_entra_depois_da_morte_nao_cria_boss_vivo() -> void:
 
 
 func test_golpe_em_area_fere_e_empurra_pelo_ledger() -> void:
+	await wait_physics_frames(2)  # colisores da arena recem-criada entram na fisica (#71)
 	_director.spawn_boss()
 	var boss := _boss()
 	_hero.global_position = boss.global_position + Vector3(2.0, 0.0, 0.0)
