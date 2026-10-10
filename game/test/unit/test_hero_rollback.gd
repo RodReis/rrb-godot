@@ -2,7 +2,7 @@ extends GutTest
 ## Ressimular um tick do estado restaurado (transform, velocity) da o mesmo resultado, seja
 ## qual for o estado interno que o CharacterBody3D guardou do tick anterior (#41).
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const AXIS_A: Vector3 = Vector3(-0.70710678, 0, 0.70710678)
 const LATERAL: Vector3 = Vector3(0.70710678, 0, 0.70710678)

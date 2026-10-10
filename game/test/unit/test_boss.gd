@@ -3,7 +3,7 @@ extends GutTest
 ## marcador BOSS, golpe em area com empurrao pelo ledger, 550 XP, e ao morrer vira um bau
 ## epico no lugar (PI 2026-10-09).
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const CATALOG: String = "res://shared/data/items/catalog.tres"
 const DT: float = 1.0 / 30.0

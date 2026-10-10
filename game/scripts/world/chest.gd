@@ -15,6 +15,8 @@ signal first_opened(peer: int, chest_uid: int, tick: int)
 const GROUP: StringName = &"chests"
 const LID_OPEN_DEGREES: float = -110.0
 const NOT_OPENED: int = -1
+## Superficie das cintas de ferro no .glb (art/arena/build_island.py): recebe a cor da raridade.
+const TRIM_MATERIAL: String = "chest_trim"
 
 @export var rules: MatchRules
 @export var catalog: ItemCatalog
@@ -45,9 +47,9 @@ var shown_opened: bool = false
 var _opened_tick: int = 0
 var _concealment: Concealment
 
-@onready var _body: MeshInstance3D = $Body
+@onready var _body: Node3D = $Body
 @onready var _lid: Node3D = $Lid
-@onready var _lid_mesh: MeshInstance3D = $Lid/Mesh
+@onready var _lid_mesh: Node3D = $Lid/Mesh
 
 
 func _ready() -> void:
@@ -57,11 +59,21 @@ func _ready() -> void:
 		material = epic_material
 	elif rare:
 		material = rare_material
-	_body.material_override = material
-	_lid_mesh.material_override = material
+	_paint_trim(_body, material)
+	_paint_trim(_lid_mesh, material)
 	_concealment = Concealment.guard(self, seen_by)
 	_concealment.sight_changed.connect(_on_concealment_sight_changed)
 	_refresh_visual()
+
+
+## Cor da raridade so nas cintas (superficie TRIM_MATERIAL); a madeira fica no atlas.
+func _paint_trim(root: Node3D, material: Material) -> void:
+	for node: Node in root.find_children("*", "MeshInstance3D", true, false):
+		var mi := node as MeshInstance3D
+		for i: int in range(mi.get_surface_override_material_count()):
+			var active := mi.get_active_material(i)
+			if active != null and active.resource_name == TRIM_MATERIAL:
+				mi.set_surface_override_material(i, material)
 
 
 func in_reach(point: Vector3) -> bool:

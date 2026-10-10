@@ -137,7 +137,10 @@
         { "arquivo": "mvp2-f32-mato-esconde.webp", "legenda": "A Arqueira entrou no mato alto e sumiu para o Cavaleiro, que está colado na moita pelo lado de fora. Não é só visual: o servidor para de mandar a posição dela para ele. Quem entra na mesma moita se vê.", "tipo": "entregue" },
         { "arquivo": "mvp2-f32-mato-revela.webp", "legenda": "Atacar ou usar habilidade de dentro do mato revela o herói por 1,5 segundo. Monstros e o bot seguem a mesma regra: não perseguem quem está escondido.", "tipo": "entregue" },
         { "arquivo": "mvp2-f37-visao-do-heroi.webp", "legenda": "Neblina de guerra: cada herói enxerga só um círculo ao redor de si. Monstros e o adversário só aparecem dentro desse círculo, e o servidor nem manda o que está fora dele, então não há como trapacear revelando o mapa.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f37-neblina-de-guerra.webp", "legenda": "O que nunca foi visto fica escuro; o que já foi visto fica em cinza, com o último estado conhecido, como um baú que pode já ter sido aberto por outro. O minimapa mostra o mesmo, e a zona do confronto aparece sempre. O bot joga sob a mesma neblina.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f37-neblina-de-guerra.webp", "legenda": "O que nunca foi visto fica escuro; o que já foi visto fica em cinza, com o último estado conhecido, como um baú que pode já ter sido aberto por outro. O minimapa mostra o mesmo, e a zona do confronto aparece sempre. O bot joga sob a mesma neblina.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f44-ilha-vista-de-cima.webp", "legenda": "A arena virou uma ilha flutuante sobre um abismo cósmico. Cada time parte de um castelo no norte; um rio de mana corta a ilha de norte a sul e corre em anel em volta do centro, com quatro pontes de pedra, duas para cada lado. No meio, a cratera de magma onde o Rei Esqueleto aparece.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f44-ilha-castelo-e-cratera.webp", "legenda": "Do portão de uma base dá para ver a cratera: pilares de obsidiana com veios de magma, brasas subindo e o rio brilhando. As muralhas têm runas na cor do time; nas pontas do rio, cachoeiras de mana caem no vazio.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f44-ilha-base-a-no-jogo.webp", "legenda": "Dentro da base, durante a preparação: muralha em arco, torres, baús e os primeiros Esqueletos. O que ainda não foi visto fica no escuro, como na neblina de guerra.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -182,6 +185,7 @@
     "F20": "Monstros, baús e chefe sincronizados em rede",
     "F32": "Moita esconde o herói do adversário",
     "F37": "Neblina de guerra e minimapa",
+    "F44": "Ilha Flutuante Arcana: a arena nova",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
     "F23": "Servidor de partida integrado ao backend",

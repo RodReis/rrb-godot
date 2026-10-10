@@ -3,7 +3,7 @@ extends GutTest
 
 const HUD: PackedScene = preload("res://scenes/ui/hud_phase1.tscn")
 const KNIGHT: PackedScene = preload("res://scenes/heroes/knight.tscn")
-const ARENA: PackedScene = preload("res://scenes/arena/arena.tscn")
+const ARENA: PackedScene = preload("res://scenes/arena/ilha_arcana.tscn")
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 const TICKRATE: int = 30
 

@@ -4,7 +4,7 @@ extends GutTest
 ## Monstro nao-boss renasce no proprio marcador 90 s depois de morrer, so na fase 1; na
 ## transicao os pendentes sao cancelados; o boss nunca renasce.
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 const DT: float = 1.0 / 30.0

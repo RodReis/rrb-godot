@@ -3,7 +3,7 @@ extends GutTest
 ## o adversario fora dela (filtro de replicacao por peer no servidor), aparece na mesma moita e
 ## por 1,5 s depois de golpear; monstro nao da aggro e o bot nao enxerga heroi escondido.
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const DT: float = 1.0 / 30.0
 ## Peers dos herois (nome do node = peer_id).

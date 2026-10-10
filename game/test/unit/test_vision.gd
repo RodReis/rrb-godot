@@ -3,7 +3,7 @@ extends GutTest
 ## SpawnDirector + dois Cavaleiros. O estado de heroi adversario, monstro e bau so vai a quem os
 ## tem no raio de 12 u; o dono sempre recebe o proprio; o VisionDirector percorre todos os alvos.
 
-const ARENA: String = "res://scenes/arena/arena.tscn"
+const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 ## Peers dos herois (nome do node = peer_id). LOCAL = o jogador deste processo (host).
 const LOCAL: int = 1
