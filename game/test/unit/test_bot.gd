@@ -290,6 +290,83 @@ func test_portoes_caidos_sem_monstro_vai_ate_o_jogador() -> void:
 	assert_lt(_bot.global_position.distance_to(_player.global_position), start - 5.0)
 
 
+## Neblina (F37): o bot so enxerga o que o filtro entregaria ao peer dele (raio de 12 u).
+func test_nao_enxerga_o_jogador_fora_da_visao() -> void:
+	_brain()._hero = _bot
+	_bot.global_position = _center()
+	var away := _open_direction()
+	_player.global_position = _center() + away * 12.5
+	assert_null(_brain()._enemy_hero())
+	_player.global_position = _center() + away * 11.5
+	assert_eq(_brain()._enemy_hero(), _player)
+
+
+func test_nao_persegue_o_jogador_que_saiu_da_visao() -> void:
+	_bot.global_position = _center()
+	_bot.level = 6
+	_bot.xp = 1200
+	_player.global_position = _center() + _open_direction() * 6.0
+	_brain().think(1)
+	assert_eq(_brain().state, BotRules.State.FIGHT)
+	_player.global_position = _center() + _open_direction() * 20.0
+	_brain().think(2)
+	assert_ne(_brain().state, BotRules.State.FIGHT, "sem ver, nao luta")
+
+
+func test_monstro_morto_fora_da_visao_segue_vivo_ate_o_bot_ver() -> void:
+	var monster := _far_base_monster()
+	_brain().think(1)
+	monster.hp = 0  # o jogador matou longe do bot
+	_brain().think(2)
+	assert_true(_brain()._alive_monsters(GateRules.TEAM_B).has(monster), "o bot nao sabe")
+	_bot.global_position = monster.global_position + Vector3(3.0, 0.0, 0.0)
+	_brain().think(3)
+	assert_false(_brain()._alive_monsters(GateRules.TEAM_B).has(monster), "viu: morto")
+
+
+func test_bau_aberto_fora_da_visao_segue_fechado_ate_o_bot_ver() -> void:
+	var chest := _far_base_chest()
+	_brain().think(1)
+	chest.opened = true
+	_brain().think(2)
+	assert_false(_brain()._known_opened(chest), "o bot ainda conta com ele")
+	_bot.global_position = chest.global_position + Vector3(2.0, 0.0, 0.0)
+	_brain().think(3)
+	assert_true(_brain()._known_opened(chest), "viu: aberto")
+
+
+## Direcao a partir do centro sem moita entre 5 e 21 u (o mato decide sozinho no F32).
+func _open_direction() -> Vector3:
+	for i: int in 16:
+		var dir := Vector3.FORWARD.rotated(Vector3.UP, TAU * i / 16.0)
+		var clear := true
+		for d: float in [6.0, 11.5, 12.5, 20.0]:
+			_player.global_position = _center() + dir * d
+			clear = clear and not _player.hidden_from(_bot)
+		if clear:
+			return dir
+	return Vector3.FORWARD
+
+
+## Monstro da base B a mais de 12 u do bot (no spawn).
+func _far_base_monster() -> Monster:
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		var monster := node as Monster
+		var far := monster.global_position.distance_to(_bot.global_position) > 14.0
+		if monster.home_team == GateRules.TEAM_B and far:
+			return monster
+	return null
+
+
+func _far_base_chest() -> Chest:
+	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+		var chest := node as Chest
+		var far := chest.global_position.distance_to(_bot.global_position) > 14.0
+		if chest.home_team == GateRules.TEAM_B and far:
+			return chest
+	return null
+
+
 func test_portoes_caidos_com_o_jogador_morto_nao_vai_ate_ele() -> void:
 	_clear()
 	await _fall_gates()

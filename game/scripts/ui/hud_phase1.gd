@@ -134,7 +134,7 @@ func _update_respawn() -> void:
 func _update_loot_text() -> void:
 	var opened := 0
 	for chest: Chest in _chests:
-		if chest.opened:
+		if chest.shown_opened:
 			opened += 1
 	var alive := 0
 	for monster: Monster in _monsters:
@@ -143,7 +143,8 @@ func _update_loot_text() -> void:
 	_loot_text.text = tr("Baús abertos %d/%d · Monstros %d") % [opened, _chests.size(), alive]
 
 
-## Herois (verde = eu, vermelho = adversario) e o boss vivo (roxo).
+## Herois (verde = eu, vermelho = adversario) e o boss vivo (roxo); neblina (F37): so o que o
+## jogador ve agora.
 func _update_minimap() -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera != null:
@@ -152,12 +153,12 @@ func _update_minimap() -> void:
 	_marker_colors.clear()
 	for node: Node in _players.get_children():
 		var hero := node as Hero
-		if hero == null:
+		if hero == null or not hero.is_shown():
 			continue
 		_marker_positions.append(hero.global_position)
 		_marker_colors.append(UiTokens.GREEN if hero == _hero else UiTokens.RED)
 	var boss := _spawns.get_node_or_null(SpawnDirector.BOSS_NAME) as Monster
-	if boss != null and boss.is_alive():
+	if boss != null and boss.is_alive() and boss.is_shown():
 		_marker_positions.append(boss.global_position)
 		_marker_colors.append(UiTokens.PURPLE)
 	_minimap.set_markers(_marker_positions, _marker_colors)
