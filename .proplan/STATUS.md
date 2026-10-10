@@ -7,22 +7,34 @@ updated: 2026-10-10
 
 ## Backlog
 
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
+- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
+- [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67)
+- [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66)
+- [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65)
+- [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64)
+
 ### Sem épico
 
+- Câmera: pilares e muros tapam o herói (oclusão) (#70)
 - Câmera: girar em volta do herói com o botão direito segurado (#47)
 
 ## A Fazer
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-016][F16] Fase 2: zona, dano da zona, respawn, kills, morte súbita, colapso e regras de vitória (#63)
 - [MVP2][SPEC-014][F14] Arqueira: modelo KayKit, flecha validada no servidor, Q Flecha Perfurante, E Rolamento e R Chuva de Flechas (#62)
 - [MVP2][SPEC-020][F20] Monstros, baús e boss replicados para 2 clientes reais sob latência e perda (#60)
 - [MVP2][SPEC-036][F36] Economia de campo: 4 campos laterais de monstros e baús e respawn de 90 s na fase 1 (#59)
-- [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58)
 
 ## Feito
 
@@ -30,8 +42,9 @@ _(vazio)_
 
 ## Finalizado
 
-### [MVP1] Arena single-player (#16)
+### #16 (#16)
 
+- [MVP1][SPEC-011][FIX] test_boss: empurrão do boss intermitente (física sem frame após montar a arena) (#71, finalizado em: 2026-10-10)
 - [MVP1][GATE] Homologação: fase 1 completa contra bot, offline (#27, finalizado em: 2026-10-10)
 - [MVP1][SPEC-013][F13] HUD da fase 1, aviso do boss aos 3:00, bestiário por B e componentes base do design system (#26, finalizado em: 2026-10-10)
 - [MVP1][SPEC-011][F11] Rei Esqueleto aos 3:30, drop épico e relógio de partida (#24, finalizado em: 2026-10-10)
