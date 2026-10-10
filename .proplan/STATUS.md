@@ -7,6 +7,12 @@ updated: 2026-10-10
 
 ## Backlog
 
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
+- [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
+- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
+
 ### [MVP2.5] Bloco visual — toon/PBR, arte da ilha, VFX e HUD v2 (#99)
 
 - [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103)
@@ -17,11 +23,6 @@ updated: 2026-10-10
 - [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95)
 - [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94)
 - [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93)
-
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
-- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
 
 ### [MVP3] Meta + deploy (#76)
 
@@ -45,7 +46,6 @@ updated: 2026-10-10
 
 ### [MVP2] Partida em rede (#57)
 
-- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
 - [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67)
 - [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92)
 
