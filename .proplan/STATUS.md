@@ -22,7 +22,6 @@ updated: 2026-10-10
 
 - [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
 - [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
-- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
 
 ### [MVP3] Meta + deploy (#76)
 
@@ -46,11 +45,11 @@ updated: 2026-10-10
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
 - [MVP2][SPEC-037][F37] Neblina de guerra: visão de 12 u + explorado, filtro de replicação por peer e minimapa (#67)
 - [MVP2][SPEC-032][F32] Mato alto: herói na moita não é replicado para o adversário e revela 1,5 s ao atacar (#66)
 - [MVP2][SPEC-018][F18] Tela de fim de partida com estatísticas acumuladas no servidor (#65)
 - [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92)
-- [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64)
 
 ## Em Andamento
 
@@ -58,7 +57,9 @@ _(vazio)_
 
 ## Feito
 
-_(vazio)_
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-017][F17] Transição de 5 s, HUD da fase 2 e vinheta da zona (#64)
 
 ## Finalizado
 
