@@ -132,6 +132,19 @@ func test_continua_recuando_ate_3_s_sem_perigo() -> void:
 	assert_eq(_next(S.RETREAT, v), S.FARM)
 
 
+func test_com_a_fonte_fica_recuado_ate_70_por_cento() -> void:
+	# PI 2026-10-10 (#74): o bot recua ate a fonte e so sai com HP para contestar o boss.
+	var v := _view()
+	v.can_heal = true
+	v.safe_seconds = 10.0
+	v.hp_pct = 0.69
+	assert_eq(_next(S.RETREAT, v), S.RETREAT)
+	v.hp_pct = 0.7
+	assert_eq(_next(S.RETREAT, v), S.FARM)
+	v.hp_pct = 0.5
+	assert_eq(_next(S.FARM, v), S.FARM, "fonte nao puxa quem nao recuou")
+
+
 func test_recuo_gasto_nao_volta_a_recuar_com_o_mesmo_hp_baixo() -> void:
 	var v := _view()
 	v.hp_pct = 0.2

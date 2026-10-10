@@ -122,7 +122,8 @@
       ],
       "imagens": [
         { "arquivo": "mvp2-f15-selecao-de-herois.webp", "legenda": "A partida começa pela seleção de heróis: 24 segundos para escolher e confirmar. Quem não confirma entra com o herói padrão; os dois podem jogar com o mesmo herói. A Arqueira chega na próxima etapa.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f15-abatido-respawn.webp", "legenda": "Morrer na preparação não conta abate: o herói renasce na própria base em 8 segundos, com a vida cheia e os mesmos itens.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f15-abatido-respawn.webp", "legenda": "Morrer na preparação não conta abate: o herói renasce na própria base em 8 segundos, com a vida cheia e os mesmos itens.", "tipo": "entregue" },
+        { "arquivo": "mvp2-fonte-da-base.webp", "legenda": "No canto de cada base, uma fonte devolve a vida devagar durante a preparação: 1% por segundo, e um golpe interrompe a cura por 3 segundos. O bot também volta até ela para se recuperar.", "tipo": "entregue" }
       ]
     },
     "MVP3": {

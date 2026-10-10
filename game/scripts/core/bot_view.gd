@@ -20,3 +20,5 @@ var elapsed: float = 0.0
 var contest_time: float = 0.0
 var base_monsters_left: int = 0
 var base_chests_left: int = 0
+## A fonte do proprio time cura agora (fase 1, #74).
+var can_heal: bool = false

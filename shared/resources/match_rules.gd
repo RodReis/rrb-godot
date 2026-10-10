@@ -40,3 +40,8 @@ extends Resource
 @export var swap_hold_time: float
 ## Distancia maxima (u) do heroi ao bau para abrir com F ou trocar o item.
 @export var chest_interact_range: float
+## Fonte da base (PI 2026-10-10, #74): cura por segundo (fracao do HP max), so na fase 1, so o
+## time dono, dentro do raio (u); tomar dano pausa a cura por fountain_damage_pause (s).
+@export var fountain_heal_pct: float
+@export var fountain_radius: float
+@export var fountain_damage_pause: float

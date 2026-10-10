@@ -32,3 +32,6 @@ rare_chest_epic_chance = 0.1
 heal_amount = 120.0
 swap_hold_time = 0.4
 chest_interact_range = 1.5
+fountain_heal_pct = 0.01
+fountain_radius = 2.5
+fountain_damage_pause = 3.0
