@@ -37,7 +37,7 @@ O que a sonda mede:
 | B (100 ms, 2 %) | **6,2 % / 2,7 %** | **60/60 e 60/60** | **0** | 6 / 2 | 1.336 / 219 kbit/s |
 | C (200 ms, jitter 30 ms, 5 %) | 31,4 % / 42,7 % | 0/60 e 0/60 | **0** | 454 / 540 | 1.517 / 208 kbit/s |
 
-Logs do B (aceite): `f20-logs/b-*.log`. Servidor sem `ERROR`/`WARNING` nas duas rodadas.
+Banda: nestas rodadas o contador do container incluía a subida e a seleção de heróis (~1 min a mais no numerador), então os números estão alguns % acima; o `net-measure.ps1` já mede só a janela. Logs do B (aceite): `f20-logs/b-*.log`. Servidor sem `ERROR`/`WARNING` nas duas rodadas.
 
 Verificação visual do PI no B: **ok** (2026-10-10). Captura no roadmap: `docs/roadmap/img/mvp2-f20-dois-clientes-sob-latencia.webp`.
 
