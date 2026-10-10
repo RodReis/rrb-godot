@@ -2,7 +2,8 @@
 .SYNOPSIS
   Abre N clientes lado a lado conectando no servidor. -Autopilot liga o autopilot do 2o em diante.
   -BotPilot: o 1o cliente e jogado pelo BotInput (--autopilot=bot). -Probe liga a sonda de rede
-  (NetProbe, F20). -LogDir grava o log de cada cliente em <LogDir>\client<N>.log.
+  (NetProbe, F20). -LogDir grava o log de cada cliente em <LogDir>\client<N>.log. Devolve os
+  processos abertos.
 #>
 param(
     [string]$Address = '127.0.0.1:7000',
@@ -22,5 +23,5 @@ for ($i = 0; $i -lt $Count; $i++) {
     if ($BotPilot -and $i -eq 0) { $gameArgs += '--autopilot=bot' }
     elseif ($Autopilot -and $i -gt 0) { $gameArgs += '--autopilot' }
     if ($Probe) { $gameArgs += '--probe' }
-    Start-Process -FilePath $env:GODOT_PATH -ArgumentList $gameArgs
+    Start-Process -FilePath $env:GODOT_PATH -ArgumentList $gameArgs -PassThru
 }

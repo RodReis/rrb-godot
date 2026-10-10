@@ -152,8 +152,7 @@ func _boss_marker() -> SpawnMarker:
 		var marker := node as SpawnMarker
 		if marker.kind == SpawnMarker.Kind.BOSS:
 			return marker
-	push_error("[spawn] sem marcador BOSS")
-	return null
+	return null  # arena de teste sem centro
 
 
 func _monster(marker: SpawnMarker, number: int) -> Monster:
