@@ -35,7 +35,6 @@ func update(tick: int, tickrate: int) -> void:
 			var effect := HitEffect.new()
 			effect.true_damage = ZoneRules.damage(hero.attributes.max_hp, pct)
 			hero.receive_hit(tick + 1, source, effect)
-			NetworkRollback.mutate(hero, tick + 1)
 
 
 func _on_network_tick(_delta: float, tick: int) -> void:

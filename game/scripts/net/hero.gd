@@ -15,11 +15,13 @@ extends Combatant
 ## heroi (mark_disconnected), senao o netfox para de simula-lo (ARCHITECTURE-GAME §6).
 ## Fonte da base (#74): no servidor, perto da fonte do proprio time e com fountain_open (fase 1),
 ## cura a cada segundo; tomar dano pausa a cura (heal_pause_ticks, estado de rollback).
-## Fase 2 (F16): a zona chega pelo ledger como true_damage; na morte subita respawn_enabled
-## desliga e o morto fica morto; o dano tomado de cada heroi fica registrado por tick para o
+## Fase 2 (F16): a zona chega pelo ledger como true_damage; da morte subita (respawn_off_tick)
+## em diante o morto fica morto; o dano tomado de cada heroi fica registrado por tick para o
 ## desempate (KillTracker).
 
 const GROUP: StringName = &"heroes"
+## respawn_off_tick enquanto o respawn vale.
+const RESPAWN_ALWAYS: int = 9223372036854775807
 ## Cena de cada heroi pelo id do HeroData.
 const SCENE_PATH: String = "res://scenes/heroes/%s.tscn"
 
@@ -42,8 +44,9 @@ var respawn_seconds: float = 0.0
 var killer_id: int = 0
 ## Servidor: a fonte da base cura (so na fase 1), definido pelo MatchController.
 var fountain_open: bool = false
-## Servidor: falso na morte subita (KillRules.respawns), definido pelo MatchController.
-var respawn_enabled: bool = true
+## Servidor: tick da morte subita (KillRules.respawns), definido pelo MatchController. Por tick,
+## nao flag: ressimular um tick de antes dele ainda renasce.
+var respawn_off_tick: int = RESPAWN_ALWAYS
 var attributes: HeroAttributes
 
 # Estado de rollback.
@@ -171,7 +174,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	# Ressimulacao restaura xp/equipment mas nao attributes: recalcula antes de usar DEF/HP max.
 	_refresh_attributes()
 	if not is_alive():
-		_count_respawn()
+		_count_respawn(tick)
 	if multiplayer.is_server():
 		_hero_damage.erase(tick)
 		if not _hits.is_empty():
@@ -315,10 +318,10 @@ func _drink(tick: int) -> void:
 		hp = mini(hp + amount, attributes.max_hp)
 
 
-## Morto: conta o respawn; no fim renasce em home com HP cheio (itens ficam, GDB §3.3). Sem
-## respawn (morte subita) fica morto.
-func _count_respawn() -> void:
-	if not respawn_enabled:
+## Morto: conta o respawn; no fim renasce em home com HP cheio (itens ficam, GDB §3.3). Da morte
+## subita em diante fica morto.
+func _count_respawn(tick: int) -> void:
+	if tick >= respawn_off_tick:
 		return
 	respawn_ticks = maxi(respawn_ticks - 1, 0)
 	if respawn_ticks > 0:

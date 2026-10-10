@@ -142,6 +142,8 @@ func update(tick: int) -> void:
 # desfizer o golpe (input atrasado), o efeito fica. Raro e servidor segue autoritativo, como no
 # Chest e no Monster; esperar o history_limit antes de anunciar se isso aparecer em jogo.
 func watch_heroes(tick: int) -> void:
+	if state == MatchState.State.ENDED:
+		return
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
 		var dead := not hero.is_alive()
@@ -213,7 +215,8 @@ func _enter(to: MatchState.State, tick: int, p_deadline_tick: int = 0) -> void:
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
 		hero.respawn_seconds = KillRules.respawn_seconds(rules, state)
-		hero.respawn_enabled = KillRules.respawns(state)
+		if not KillRules.respawns(state):
+			hero.respawn_off_tick = mini(hero.respawn_off_tick, tick)
 		hero.fountain_open = state == MatchState.State.PHASE1
 	if zone != null:
 		zone.active = MatchState.is_phase2(state)
@@ -347,14 +350,19 @@ func _on_clock_transition_ended(tick: int) -> void:
 		_enter(MatchState.State.PHASE2, tick)
 
 
-## 9:00: respawn desliga; quem ja esta morto fica morto e pode encerrar na hora.
+## 9:00: respawn desliga; quem ja esta morto fica morto e pode encerrar na hora. O relogio roda
+## antes deste no no tick: as mortes do tick entram antes do julgamento.
 func _on_clock_sudden_death_started(tick: int) -> void:
 	if _open and state == MatchState.State.PHASE2:
-		_enter(MatchState.State.SUDDEN_DEATH, tick)
-		_judge(tick, false)
+		watch_heroes(tick)
+		if state == MatchState.State.PHASE2:
+			_enter(MatchState.State.SUDDEN_DEATH, tick)
+			_judge(tick, false)
 
 
 ## 10:00: resolucao imediata (I1).
 func _on_clock_collapsed(tick: int) -> void:
 	if _open and state == MatchState.State.SUDDEN_DEATH:
-		_judge(tick, true)
+		watch_heroes(tick)
+		if state == MatchState.State.SUDDEN_DEATH:
+			_judge(tick, true)

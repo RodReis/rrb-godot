@@ -102,12 +102,12 @@ func test_transicao_vira_fase_2_aos_5_05() -> void:
 func test_respawn_desliga_aos_9_00() -> void:
 	_run(START, _at(540) - 1)
 	assert_eq(_match.state, MatchState.State.PHASE2)
-	assert_true(_a.respawn_enabled)
+	assert_eq(_a.respawn_off_tick, Hero.RESPAWN_ALWAYS)
 	assert_eq(_a.respawn_seconds, 6.0)
 	_run(_at(540), _at(540))
 	assert_eq(_match.state, MatchState.State.SUDDEN_DEATH)
-	assert_false(_a.respawn_enabled)
-	assert_false(_b.respawn_enabled)
+	assert_eq(_a.respawn_off_tick, _at(540))
+	assert_eq(_b.respawn_off_tick, _at(540))
 
 
 func test_morto_aos_9_00_nao_renasce_e_perde_por_eliminacao() -> void:
@@ -204,3 +204,39 @@ func test_zona_so_fere_na_fase_2_e_quem_esta_fora() -> void:
 func test_zona_desliga_no_fim() -> void:
 	_run(START, _at(600))
 	assert_false(_zone.active)
+
+
+func test_respawn_feito_antes_das_9_00_sobrevive_a_ressimulacao() -> void:
+	var sd := _at(540)
+	_run(START, sd - 10)
+	_kill(_b, _a, sd - 9)
+	_b.respawn_ticks = 2  # renasce em sd - 7
+	var saved := _b.respawn_ticks
+	for tick: int in range(sd - 8, sd - 6):
+		_b._rollback_tick(TICK, tick, true)
+	assert_true(_b.is_alive(), "renasceu antes das 9:00")
+	_run(sd - 8, sd)
+	assert_eq(_match.state, MatchState.State.SUDDEN_DEATH)
+	_b.hp = 0  # o rollback restaura o estado de sd - 9 e ressimula
+	_b.respawn_ticks = saved
+	for tick: int in range(sd - 8, sd - 6):
+		_b._rollback_tick(TICK, tick, false)
+	assert_true(_b.is_alive(), "ressimular ticks de antes das 9:00 ainda renasce")
+	_b.hp = 0
+	_b.respawn_ticks = 1
+	_b._rollback_tick(TICK, sd + 1, true)
+	assert_false(_b.is_alive(), "depois das 9:00 nao renasce")
+
+
+func test_morte_no_tick_das_9_00_conta_o_kill_antes_de_julgar() -> void:
+	var sd := _at(540)
+	_run(START, sd - 1)
+	var blow := HitEffect.new(LETHAL, _a.global_position)
+	blow.attacker_id = P1
+	_b.receive_hit(sd, HitLedger.source_key(P1, HitLedger.Slot.BASIC), blow)
+	_b._rollback_tick(TICK, sd, true)
+	_run(sd, sd)
+	assert_eq(_ended.size(), 1)
+	assert_eq(_ended[0][0], P1)
+	var stats: Dictionary = _ended[0][2]
+	assert_eq(stats[P1]["kills"], 1, "kill registrado antes do fim")
