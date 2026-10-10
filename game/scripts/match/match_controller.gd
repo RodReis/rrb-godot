@@ -173,7 +173,7 @@ func report_monster_killed(peer: int, _tick: int) -> void:
 
 ## Rei Esqueleto abatido por [param peer] (SpawnDirector.boss_killed, que chega a todos os peers):
 ## so o servidor conta.
-func report_boss_killed(peer: int, _tick: int = 0) -> void:
+func report_boss_killed(peer: int) -> void:
 	if _open:
 		_counted(peer).boss_killed = true
 
@@ -290,7 +290,8 @@ func _contenders() -> Array[VictoryRules.Contender]:
 	return result
 
 
-## O que so existe no estado vai para as estatisticas no fim; um registro por vaga.
+## O que so existe no estado vai para as estatisticas no fim; um registro por vaga. O nivel conta
+## a recompensa do abate deste tick, que o heroi so aplica no seguinte (_on_hero_died).
 func _final_stats(tick: int) -> MatchStats:
 	var heroes := _heroes()
 	_stats.duration = clock.elapsed(tick) if clock != null else 0.0
@@ -301,7 +302,7 @@ func _final_stats(tick: int) -> MatchStats:
 		one.hero_damage = _tracker.damage_dealt(seat.peer, heroes)
 		for hero: Hero in heroes:
 			if hero.peer_id == seat.peer:
-				one.level = hero.level
+				one.level = XpTable.level_for_xp(hero.xp_curve, hero.xp_with_pending(tick + 1))
 				one.damage_taken = hero.damage_taken()
 				one.equipment = hero.equipment
 	return _stats

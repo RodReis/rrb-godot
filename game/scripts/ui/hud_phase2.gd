@@ -103,8 +103,8 @@ func set_active(active: bool) -> void:
 		_plate.bind(_hero)
 		_plate.set_chests(_chests())
 		_refresh_score()
-	visible = active
-	set_process(active and not _ended)
+	visible = active and not _ended
+	set_process(visible)
 
 
 func _process(_delta: float) -> void:

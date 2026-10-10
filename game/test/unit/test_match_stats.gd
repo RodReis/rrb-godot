@@ -71,7 +71,8 @@ func test_lixo_na_rede_vira_estatistica_vazia() -> void:
 
 func test_no_maximo_um_jogador_por_vaga() -> void:
 	var data := {"players": [{"peer": 1}, {"peer": 2}, {"peer": 3}]}
-	assert_eq(MatchStats.from_dict(data).players().size(), MatchController.SLOT_TEAMS.size())
+	assert_eq(MatchStats.from_dict(data).players().size(), MatchStats.MAX_PLAYERS)
+	assert_eq(MatchStats.MAX_PLAYERS, MatchController.SLOT_TEAMS.size())
 
 
 func test_oponente_de_quem_joga() -> void:

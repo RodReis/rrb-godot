@@ -1,5 +1,5 @@
 shader_type canvas_item;
-// Fundo da tela de fim (F18, DV tela 7): a arena congelada atras, escurecida para o centro
+// Fundo da tela de fim (F18, DV tela 7): a arena (frame ao vivo) atras, escurecida para o centro
 // ficar legivel e mais escura nas bordas (gradiente radial); na derrota perde a cor.
 
 uniform sampler2D screen_texture : hint_screen_texture, filter_linear_mipmap;

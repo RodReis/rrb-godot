@@ -6,6 +6,8 @@ extends RefCounted
 ## duracao pelo relogio. Vai aos clientes no match_ended como Dictionary (to_dict / from_dict);
 ## a UI so exibe. Kills sao as da fase 2, as unicas que contam (GDB §3.3).
 
+## Jogadores aceitos vindos da rede (1x1).
+const MAX_PLAYERS: int = 2
 ## Campos de Player que viajam na rede, com o tipo checado na chegada.
 const FIELDS: Array[String] = [
 	"peer",
@@ -96,7 +98,7 @@ static func from_dict(data: Dictionary) -> MatchStats:
 	if not entries is Array:
 		return stats
 	for entry: Variant in entries:
-		if stats.players().size() >= MatchController.SLOT_TEAMS.size():
+		if stats.players().size() >= MAX_PLAYERS:
 			break
 		if not entry is Dictionary or not (entry as Dictionary).get("peer") is int:
 			continue

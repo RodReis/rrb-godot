@@ -277,6 +277,15 @@ func hero_damage_from(attacker_id: int) -> int:
 	return total
 
 
+## Servidor: XP somado ao que ja esta no ledger para [param tick] e ainda nao foi aplicado
+## (recompensa do abate que encerrou a partida, F18).
+func xp_with_pending(tick: int) -> int:
+	var total := xp
+	for effect: HitEffect in _hits.effects_at(tick):
+		total += maxi(effect.xp, 0)
+	return total
+
+
 ## Servidor: dano sofrido na partida, de toda fonte.
 func damage_taken() -> int:
 	var total := 0

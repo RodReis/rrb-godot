@@ -182,6 +182,7 @@ func test_fim_da_partida_para_e_esconde_a_hud() -> void:
 	assert_false(_phase2.visible)
 	_phase2.set_active(true)
 	assert_false(_phase2.is_processing(), "religar depois do fim nao volta a correr")
+	assert_false(_phase2.visible, "nem aparece por baixo da tela de fim")
 
 
 func test_bind_so_com_heroi_ligado() -> void:

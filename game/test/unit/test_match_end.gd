@@ -90,6 +90,7 @@ func test_tabela_lado_a_lado_com_comparacao() -> void:
 	var me := _cells("%MeStats")
 	var them := _cells("%ThemStats")
 	assert_eq(me.size(), MatchEnd.ROWS.size())
+	assert_eq(MatchEnd.BETTER.size(), MatchEnd.ROWS.size(), "uma regra de comparacao por linha")
 	assert_eq(
 		Array(me),
 		["5", "3", "9", "4250", "4800", "7", "5", "Abatido", "Guarda 1/3"],

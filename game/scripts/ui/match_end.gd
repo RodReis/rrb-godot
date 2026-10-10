@@ -51,6 +51,7 @@ var _rules: MatchRules
 var _roster: Array[HeroData] = []
 var _tween: Tween
 
+@onready var _root: Control = $Root
 @onready var _backdrop: ColorRect = %Backdrop
 @onready var _particles: CPUParticles2D = %Particles
 @onready var _title: Label = %Title
@@ -82,6 +83,8 @@ func _ready() -> void:
 	for label: Label in [_me_header, _them_header, _compare_header]:
 		label.custom_minimum_size.y = HEADER_HEIGHT
 	_title.resized.connect(_on_title_resized)
+	_root.resized.connect(_on_root_resized)
+	_on_root_resized()
 	_play_again.pressed.connect(play_again_requested.emit)
 	_back.pressed.connect(back_requested.emit)
 
@@ -146,6 +149,8 @@ func _reason_text(reason: StringName) -> String:
 	if COLLAPSE_CRITERIA.has(reason):
 		var at := TimerLabel.format_seconds(_rules.max_match_duration, TimerLabel.Format.MM_SS)
 		return tr("COLAPSO DA ZONA AOS %s · %s") % [at, tr(COLLAPSE_CRITERIA[reason])]
+	if reason != VictoryRules.ABANDONED:
+		push_warning("[match_end] motivo de fim sem texto: %s" % reason)
 	return tr("PARTIDA ABANDONADA")
 
 
@@ -230,6 +235,12 @@ func _animate(outcome: int) -> void:
 		1.0,
 		UiTokens.DUR_SLOW * 2.0
 	)
+
+
+## Particulas na tela inteira, tambem em janela mais larga (stretch expand).
+func _on_root_resized() -> void:
+	_particles.position = _root.size / 2.0
+	_particles.emission_rect_extents = _root.size / 2.0
 
 
 func _on_title_resized() -> void:

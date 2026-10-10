@@ -338,13 +338,14 @@ func test_estatisticas_somadas_no_servidor_chegam_no_fim() -> void:
 	_a.hp = _a.attributes.max_hp  # renasce
 	_match.watch_heroes(_at(100) + 1)
 	_run(_at(100) + 2, _at(215))
-	_match.report_boss_killed(P1, _at(215))
+	_match.report_boss_killed(P1)
 	_run(_at(215) + 1, _at(310))
 	var sword := Ids.to_int(&"sword_t2")
 	_a.equipment = Vector4i(sword, Ids.NONE, Ids.NONE, Ids.NONE)
 	var tick := _at(310) + 1
 	for i: int in _rules.kill_goal:
 		_kill(_b, _a, tick + i * 2)
+		_a._rollback_tick(TICK, tick + i * 2 + 1, true)  # XP do abate chega no tick seguinte
 		_b.hp = _b.attributes.max_hp
 		_match.watch_heroes(tick + i * 2 + 1)
 	var end_tick: int = _ended[0][3]
@@ -359,7 +360,7 @@ func test_estatisticas_somadas_no_servidor_chegam_no_fim() -> void:
 	assert_eq([a.chests, b.chests], [1, 2])
 	assert_eq([a.boss_killed, b.boss_killed], [true, false])
 	assert_eq(a.hero, Ids.to_int(&"knight"))
-	assert_eq(a.level, _a.level)
+	assert_eq(a.level, _a.level, "com o XP do abate que encerrou")
 	assert_eq(a.equipment, _a.equipment)
 	assert_gt(a.hero_damage, 0)
 	assert_eq(b.damage_taken, a.hero_damage, "o unico dano de B veio de A")
