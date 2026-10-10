@@ -18,11 +18,14 @@
 | 2.9 | F36 / SPEC-036 | economia de campo: 4 campos laterais (2 T1 + 1 T2 e 2 baús comuns cada), respawn de monstros não-boss 90 s na fase 1 | GDB §5, §6.2; `CONVENTION.md` §4.1; SPEC-007 |
 | 2.10 | F37 / SPEC-037 | neblina de guerra: visão 12 u + explorado, filtro de replicação por peer (generaliza o F32), minimapa, continua na fase 2 | `CONVENTION.md` §4.9; GDB §7.3 |
 | 2.8 | F32 / SPEC-032 | mato alto: herói dentro da moita deixa de ser replicado para o adversário (filtro de visibilidade no servidor); revela ao atacar | `CONVENTION.md` §4.7; GDB §7.3; SPEC-007 §2 |
+| 2.11 | F44 / SPEC-044 | arena "Ilha Flutuante Arcana" — **layout novo, greybox jogável**: espelho N–S, bases nos cantos norte, rio N–S + anel, 4 pontes (2 por metade), campos do centro em 0°/180°; builder, colisão, marcadores (reposiciona os campos do F36), portões, mato, navmesh; sem arte nova | ADR-0007; SPEC-044; GDB §5.1, §6.2, §7.1 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
 
-**F15 → F36 → F20 → F14 → F16 → F17 → F18 → F32 → F37 → F19 → [GATE].**
+**F15 → F36 → F20 → F14 → F44 → F16 → F17 → F18 → F32 → F37 → F19 → [GATE].**
+
+**Revisão do PI em 2026-10-10 (ADR-0007):** F44 (layout da arena) entra logo após F14 e antes do F16, para F16/F17/F32/F37 (minimapa) e o soak do F19 já nascerem na ilha. F36 e F20 já estavam mergeados; o F44 reposiciona os marcadores dos campos laterais.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 

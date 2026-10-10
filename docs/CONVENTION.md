@@ -58,7 +58,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 ## 4. Regras por tema (fonte → seção)
 
 ### 4.1 Fase 1 — preparação
-- Mapa: layout, escala e marcadores em `docs/prd/mvp/spec/SPEC-007.md` (raio 35 u; spawn→centro ~6 s; rio bloqueia, 2 pontes; cratera com 4 entradas).
+- Mapa: layout, escala e marcadores em `docs/prd/mvp/spec/SPEC-044.md` (ADR-0007; raio 35 u; spawn→centro ~6 s; espelho N–S; rio N–S + anel bloqueiam, 4 pontes — 2 por metade; cratera com 4 entradas). SPEC-007 vale só para §1 (escala) e §4 (marcadores).
 - Portões: só o time dono passa (PRD §3.1). Centro (ilha + anel) é PvP desde 0:00.
 - Monstros: distribuição e XP em GDB §5.1 — base, centro e **4 campos laterais** (NO e SE, um de cada lado do rio). Monstros não-boss renascem **90 s** após morrer, só na fase 1 (decisão do PI 2026-10-10, F36). Baús: 24, não reabrem (GDB §6.2). Boss surge aos **3:30**; aviso global aos **3:00** (banner + som + pista visual no portal — decisão do PI 2026-10-09, origem benchmark §3.2).
 - Morte na fase 1: respawn 8,0 s na própria base, **não** conta kill, matador recebe 80 XP (GDB §3.3). Sem perda de itens.

@@ -20,7 +20,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | IA de time | PRD §1.3 | só com times | pós-MVP4 | 3x3 |
 | Steam, ranked, amigos | PRD §1.3 | fatia usa e-mail/senha e fila FIFO | fase B | decisão comercial |
 | Moedas, gemas, vales, sorteios, loja, passe, skins | PRD §1.3, §7 | monetização é fase B; risco regulatório R5 | fase B | revisão regulatória + decisão do PI |
-| Mobile (câmera/controles revisados, Mobile renderer) | PRD §1.2, §8.2 | PC primeiro (D1) | fase B | PC validado |
+| Mobile (câmera/controles revisados, **perfil gráfico próprio** — Game é Forward+ only, ADR-0006) | PRD §1.2, §8.2 | PC primeiro (D1) | fase B | PC validado + decisão de porte |
 | Arte comissionada | PRD §1.3, R6 | CC0 + arte própria no Blender bastam (ADR-0005) | fase B | produto comercial |
 | Câmera isométrica + mira assistida (plano B) | PRD §3.6 | decidir com dados | MVP4 | playtest mostrar perda de visão/aversão |
 | Armas específicas por herói | PRD §6 | dado genérico basta | fase B | — |
@@ -45,6 +45,10 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Item | Fonte | Motivo |
 |---|---|---|
 | Chat de voz/texto, replays, espectador, clãs, eventos sazonais, cross-play, web export, anti-cheat dedicado, localização além de pt-BR | PRD §12 | explícito no PRD |
+| SDFGI e SSIL dinâmico como GI principal | guia gráfico 2026-10-10 | arena estática: `LightmapGI` bakeado entrega o mesmo sem custo contínuo; vazamento em paredes finas (ADR-0006) |
+| Shaders procedurais sobre os hexes KayKit (`hex_water`/`hex_grass`) | guia gráfico 2026-10-10 | UV em atlas; substituído por malhas próprias (F40, ADR-0006) |
+| Torres de vigia e balistas/canhões **com função** | doc de reforma da arena 2026-10-10 | decisão "sem torres" mantida; entram só como enfeite sem colisão, fora da área jogável (ADR-0007) |
+| Relevo, degraus nas pontes, fosso na cratera | doc de reforma da arena 2026-10-10 | arena plana (V-16); magma é visual (ADR-0007) |
 | Host migration | PRD §8.5 | inexistente — servidor dedicado |
 | Launcher web (React/Tauri/Electron) | ADR-0002 | segundo stack sem validar risco do PRD |
 | "Hash de auditoria" / "Audit token" na tela de fim (DV tela 7) | DV | sem requisito; `match_id` do backend cumpre o papel |

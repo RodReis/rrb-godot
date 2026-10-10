@@ -41,7 +41,9 @@ Contraste WCAG calculado sobre `#171F33` (fórmula de luminância relativa; o te
 | `TYPE_COUNTER` | mono | 28 | Bold | relógio, placar |
 | `TYPE_BADGE` | display | 12 | Bold | `[Q]`, `[F]` |
 
-Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resolução 1080p). No Theme: `TYPE_*` viram `theme_type_variation` de `Label` (`LabelH1`, `LabelH2`, `LabelBody`, `LabelCounter`, `LabelBadge`, `LabelVictory`).
+Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resolução 1080p).
+
+**v2 (ADR-0006, 2026-10-10):** as famílias acima são **provisórias** até o PI decidir R-PEND-14 (candidatas do guia: Cinzel, Barlow Condensed, Montserrat SemiBold). Regras novas que já valem: todo texto sobre a arena (HUD) tem **outline 1–2 px `#000000`**; painéis usam `StyleBoxTexture` com moldura temática (metal escuro, cantos dourados) em vez de `StyleBoxFlat`; atalhos `Q/E/R` viram *badge* metálica no canto inferior direito do slot (`TYPE_BADGE`). Os nomes dos tokens não mudam; só os arquivos `font_*.ttf` e os `StyleBox` do `theme_moba.tres` — trocados no F43 (HUD v2) e consumidos pelo F24 (Theme do launcher). No Theme: `TYPE_*` viram `theme_type_variation` de `Label` (`LabelH1`, `LabelH2`, `LabelBody`, `LabelCounter`, `LabelBadge`, `LabelVictory`).
 
 ## 3. Espaçamento e tamanhos (px @1080p)
 

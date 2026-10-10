@@ -1,5 +1,7 @@
 # DESIGN-SYSTEM-LAUNCHER.md — Contrato de design
 
+> **v2 em andamento (ADR-0006, 2026-10-10):** fontes e molduras passam a temáticas (ver `TOKENS.md` §2); paleta mantida. R-PEND-14 decide as famílias. F43 implementa em `shared/ui/theme/`; F24 herda.
+
 **Contrato da verdade para aparência e comportamento visual** do Launcher **e** da HUD do Game (mesmo Theme). Dividido em quatro documentos; este é o índice e as regras de uso.
 
 | Documento | O que fixa |

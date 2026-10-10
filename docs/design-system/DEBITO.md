@@ -12,6 +12,7 @@ O que está fora do contrato **de propósito**, com dono e gatilho. Débito sem 
 | DS-05 | Sem tema claro / alto contraste | PC, público casual, fatia | — | fase B |
 | DS-06 | Ícones de skills/itens/HUD inexistentes (DV §3.1 lista nomes, não arquivos) | arte CC0 até M4; placeholders geométricos com letra | Code (placeholder) / PI (arte) | antes do playtest M4 |
 | DS-07 | `Minimap` da fase 1 por `SubViewport` (câmera ortográfica) pode custar FPS | mais simples que desenhar; medir | Code | `TIME_FPS` < 60 em partida → trocar por `_draw` como o `ZoneRadar`. Medido 2026-10-09 (F13, offline + bot, sem vsync): ~600–670 fps com o minimapa, ~570–620 sem — custo não mensurável nesta máquina |
+| DS-08 | Fontes provisórias (Space Grotesk/Outfit/JetBrains Mono) e `StyleBoxFlat` até o design system v2 (ADR-0006) | fontes dependem de R-PEND-14 | PI (fontes) / Code (F43) | F43 (HUD v2); F24 herda |
 | DS-08 | `ScoreBanner`, `ZoneRadar`, `Minimap`, `LatencyPlot` só existem a partir do MVP2/M0 — galeria incompleta até lá | ordem de implementação | Code | fechar com as fatias F13/F17 |
 | DS-09 | Textos em `tr()` sem arquivo de tradução | só pt-BR na fatia (PRD §12) | — | localização entrar no roadmap |
 | DS-10 | Sem som de UI definido (DV cita "lâmina/madeira") | assets de áudio não escolhidos | PI | antes de F24 |

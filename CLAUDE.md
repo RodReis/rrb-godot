@@ -28,9 +28,9 @@ Você atua como **engenheiro sênior de Godot 4 / GDScript** neste repositório.
 ## Projeto
 
 - MOBA 3D de 2 tempos (preparação 5 min → confronto com zona), multiplayer com **servidor autoritativo**.
-- Fonte de verdade de escopo: `docs/prd/PRD.md`. Números e fórmulas: `docs/prd/GDB.md` (vence o PRD — ADR-0004). Telas: `docs/prd/DESIGN-VISUAL-LAUNCHER.md`. Benchmark: `docs/prd/REFER.md`. Plano ativo: `docs/superpowers/plans/`. Decisões: `docs/adr/` (índice em `docs/DECISIONS.md`).
+- Fonte de verdade de escopo: `docs/prd/PRD.md`. Layout da arena: `docs/prd/mvp/spec/SPEC-044.md` (ADR-0007). Números e fórmulas: `docs/prd/GDB.md` (vence o PRD — ADR-0004). Telas: `docs/prd/DESIGN-VISUAL-LAUNCHER.md`. Benchmark: `docs/prd/REFER.md`. Plano ativo: `docs/superpowers/plans/`. Decisões: `docs/adr/` (índice em `docs/DECISIONS.md`).
 - Marco atual: **MVP0 / M0 — spike de netcode** (`docs/superpowers/plans/2026-10-08-m0-spike-netcode.md`). MVP-n = marco M-n do PRD.
-- Stack: **Godot 4.7.2** (Forward+), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, a partir do MVP3), **Blender 5.2 LTS + Blender MCP** (assets 3D, ADR-0005). Windows + PowerShell.
+- Stack: **Godot 4.7.2** (Forward+ **only** — ADR-0006), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, a partir do MVP3), **Blender 5.2 LTS + Blender MCP** (assets 3D, ADR-0005). Windows + PowerShell.
 - **Dois módulos independentes** (ADR-0002), mesmo monorepo, sem importar nada um do outro:
   - **Game** (`game/`): partida — cliente + servidor dedicado. Seleção de heróis, HUDs, fim de partida. `docs/ARCHITECTURE-GAME.md`.
   - **Launcher** (`launcher/` + `backend/`): fora da partida — login, lobby, fila, histórico, bestiário, forja, arena & mapa, configurações; backend de auth/fila/orquestração. `docs/ARCHITECTURE-LAUNCHER.md`.
@@ -88,7 +88,7 @@ docs/                 ver "Documentação do projeto"
 - Fonte `.blend` em `art/`. Em `shared/assets/` só entra glTF: pack CC0 como vem; o que passou pelo Blender, exportado em `.glb`. Nunca coloque `.blend` em `game/`, `launcher/` ou `shared/` (importação de `.blend` desligada no `project.godot`).
 - Colisão, navegação e occluder pelos sufixos de nome do importador: `-col`, `-convcol`, `-colonly`, `-convcolonly`, `-navmesh`, `-occ`, `-occonly`; `-noimp` remove nó auxiliar; `-loop` em animação de laço.
 - Asset novo ou alterado passa pela cena de alinhamento (PRD §11).
-- Estilo: sem subdivisão nem bevel, faces planas, cor por UV no atlas do KayKit (`shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png`, degradê por altura) para manter a paleta. Referência de orçamento: prop/cenário 50–800 triângulos, personagem 500–3.000. Conferir a silhueta na distância da câmera do jogo.
+- Estilo (ADR-0006): personagens e props dos packs CC0 ficam como vêm (faces planas, cor por UV no atlas do KayKit `shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png`). Cenário próprio em `shared/assets/rrb/` pode ter bevel de 1–2 segmentos e bake de AO/curvatura (máscara em UV2), cor-base ainda pelo atlas. Toon/outline aplicado por pós-import, nunca editando o glTF. Referência de orçamento: prop/cenário 50–800 triângulos, personagem 500–3.000. Conferir a silhueta na distância da câmera do jogo.
 - Quando a colisão vem do código (medidas da SPEC), a malha visual cobre a colisão — nunca menor, senão vira parede invisível. Não use convenções `COL_`/`UCX_` (Unreal/Unity): no Godot valem os sufixos acima.
 - Arte própria exportada em `shared/assets/rrb/<área>/`; fonte em `art/<área>/`.
 - MCP: modo interativo exige o Blender aberto com o servidor do addon ligado (porta 9876); modo em segundo plano (`*_for_cli`) usa `BLENDER_PATH`. O MCP executa código sem proteção (risco aceito pelo PI): trabalhe só sobre arquivos versionados.

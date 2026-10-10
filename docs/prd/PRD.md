@@ -26,7 +26,7 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 ### 1.2 Público e plataforma
 
 - Público-alvo: casual/família, 10+ anos. **Nota de risco:** a monetização escolhida (§7) com sorteios pagos tende a elevar a classificação indicativa e exige exibição de probabilidades em lojas mobile. O rótulo "para toda a família" fica condicionado a essa revisão na fase B.
-- **PC primeiro** (Windows; Steam/itch na fase B). Mobile depois, com câmera/controles revisados — a decisão de câmera (§3.6) já considera isso.
+- **PC primeiro** (Windows; Steam/itch na fase B). Mobile depois, com câmera/controles revisados — a decisão de câmera (§3.6) já considera isso. **O Game roda só no renderer Forward+ (ADR-0006, 2026-10-10)**: o porte mobile exigirá um perfil gráfico próprio (adiado em `FORA-DE-ESCOPO.md`).
 
 ### 1.3 Escopo: fatia vertical × roadmap
 
@@ -68,11 +68,11 @@ Nada do roadmap entra antes do M4 concluído. Exceção decidida pelo PI em 2026
 
 ### 3.1 Mapa
 
-Arena medieval em grade hexagonal (estilo KayKit Medieval Hexagon), três zonas:
+Arena "Ilha Flutuante Arcana" (ADR-0007, 2026-10-10): ilha circular de raio 35 u suspensa num abismo, bases com castelo nos cantos norte, rio de mana N–S que separa as metades oeste (A) e leste (B) e anel de rio em volta da ilha central com **4 pontes** (2 por metade), cratera de magma no centro. Layout normativo: `docs/prd/mvp/spec/SPEC-044.md`. Três zonas:
 
-- **Base A** e **Base B** — seguras na fase 1: portão que só deixa passar o time dono. Monstros comuns e baús comuns.
+- **Base A** e **Base B** — seguras na fase 1: portão que só deixa passar o time dono. Monstros comuns e baús comuns. Cada metade tem ainda 2 campos laterais (GDB §5.1).
 - **Centro** — contestado: monstros fortes, baús raros, boss. PvP permitido desde o início.
-- Escala: base → centro em ~8 s de caminhada; arena inteira atravessável em ~20 s.
+- Escala: base → centro em ~6,3 s de caminhada (raio 35 u, GDB §7.1 — P-02); spawn → spawn pela ilha medido no F44 (SPEC-044 §6).
 
 ### 3.2 Fase 1 — Preparação (5:00, cronômetro fixo)
 
@@ -265,10 +265,10 @@ O projeto atual (plataforma 2D) é descartado; `tools/setup-godot-mcp.ps1` e `.m
 | **Gate** | decisão Godot × Unity | — | — |
 | **M1 — Arena single-player** | mapa 3 zonas, Cavaleiro, monstros, XP/níveis, baús/itens, boss, bot | fase 1 completa contra bot, offline | 4 sem |
 | **M2 — Partida em rede** | Arqueira, fase 2 (zona, kills, fim garantido), HUD, transição | 1x1 online termina sempre; 50 partidas bot×bot sem travar | 4 sem |
-| **M3 — Meta + deploy** | backend, pool no VPS, build PC | dois amigos jogam pela internet sem intervenção do dev | 3 sem |
+| **M3 — Meta + deploy** | backend, pool no VPS, build PC; bloco visual (toon/PBR, arte da ilha, VFX, HUD v2 — ADR-0006) | dois amigos jogam pela internet sem intervenção do dev | 5 sem |
 | **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números | decisão sobre câmera, duração e ir para 3x3 | 2 sem |
 
-Total ≈ 15 semanas.
+Total ≈ 17 semanas (M3 passou de 3 para 5 semanas com o bloco visual, ADR-0006).
 
 ### 9.2 Critérios de sucesso (M4)
 
@@ -331,6 +331,7 @@ Fontes: [UGS Pricing](https://unity.com/products/gaming-services/pricing) · [Un
 - **Regra de alinhamento:** todo asset novo entra em `scenes/_alignment.tscn` ao lado do Cavaleiro (altura ≈ 1,8 u), mesma luz, material flat; ajusta escala/cor ou descarta.
 - **Blender (ADR-0005, decisão do PI em 2026-10-09):** usado sempre que necessário para criação (arte própria, feita pelo Claude via Blender MCP), acabamento, ajustes dos packs CC0 e rascunhos (blockout de arena e peças). Fonte `.blend` em `art/`; em `shared/assets/` só entra glTF (pack CC0 como vem; o que passou pelo Blender, exportado em `.glb`).
 - **Pack KayKit Adventurers:** versão grátis (Knight, Barbarian, Mage, Rogue, Ranger); a versão Extra é compra futura do PI.
+- **Direção visual (ADR-0006, 2026-10-10):** toon/outline + stylized PBR; `WorldEnvironment` (ACES, SSAO, SSIL, glow, fog sutil) + `LightmapGI` bakeado; cenário próprio (`shared/assets/rrb/`) pode ter bevel e bake de AO/curvatura; água e chão com malhas próprias e shaders dedicados; VFX de combate só no cliente. Arena = ilha flutuante da imagem panorâmica do conceito (ADR-0007). Spec: `docs/superpowers/specs/2026-10-10-bloco-visual-design.md`.
 
 ---
 

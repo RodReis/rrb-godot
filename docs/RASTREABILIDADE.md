@@ -9,7 +9,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | ID | Requisito | Fonte | Destino | Módulo | MVP | Status |
 |---|---|---|---|---|---|---|
 | P-01 | Arena hexagonal com Base A, Base B, Centro; portões por time | PRD §3.1 | F7 | game | MVP1 | mantido |
-| P-02 | Escala: base→centro ~8 s, arena ~20 s | PRD §3.1 | SPEC-007 §1 | game | MVP1 | **substituído** pelo PI em 2026-10-09: raio 35 u (GDB §7.1) → ~6,3 s / ~12,7 s |
+| P-02 | Escala: base→centro ~8 s, arena ~20 s | PRD §3.1 | SPEC-007 §1; SPEC-044 §6 | game | MVP1 / MVP2 | **substituído** pelo PI em 2026-10-09: raio 35 u (GDB §7.1) → ~6,3 s / ~12,7 s; spawn→spawn re-medido no F44 (layout novo, ADR-0007) |
 | P-03 | XP/nível 1–10, 1 ponto por nível, Q/E 5 níveis, R nível 6 | PRD §3.2, GDB §3 | F9 | game | MVP1 | mantido |
 | P-04 | Baús: 6 por base (comum), 4 no centro (raro), não reabrem | PRD §3.2, GDB §6.2 | F10 | game | MVP1 | mantido |
 | P-05 | 4 slots, 12 itens, 2 conjuntos, bônus 3/3 | PRD §6, GDB §6 | F10, F6 | game, shared | MVP1 | mantido (números GDB, ADR-0004) |
@@ -89,11 +89,11 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-09 | Tela 9 Histórico | F26 | launcher | mantido — "VS INIMIGO" = herói do oponente; F35 acrescenta o `#nickname` (PI 2026-10-10) |
 | V-09a | Painel de KPIs do M4 (snowball rate, ping médio, duração) | F29 | launcher + backend | mantido (é o critério PRD §9.2) |
 | V-09b | Exportar CSV, SQLite local, `/telemetry/matches` do cliente | — | — | adiado — o backend é a fonte; exportação é ferramenta do dev (script em `tools/`), não tela |
-| V-10 | Design system (paleta, tipografia, viewport) | `docs/design-system/` | shared | mantido — paleta e fontes de `docs/prd/telas/` (R-PEND-11 decidida em 2026-10-09) |
+| V-10 | Design system (paleta, tipografia, viewport) | `docs/design-system/` | shared | mantido — paleta de `docs/prd/telas/`; fontes e molduras em revisão (design system v2, ADR-0006, R-PEND-14) |
 | V-21 | Fidelidade das telas do Launcher ao protótipo de `docs/prd/telas/` (layout, acabamento, efeitos, animação); aceite lado a lado pelo PI | F24, F25, F26, F27, F33, F35 — `FRONTEND-LAUNCHER.md` §8 | launcher | mantido — requisito novo do PI em 2026-10-10 |
 | V-13 | Tela de Login (só em `docs/prd/telas/`, ausente no DV) | F25 | launcher | mantido como função (PRD §8.4); visual de `docs/prd/telas/Tela de Login & Autenticação/` com os tokens de `TOKENS.md` |
 | V-14 | "Pop-up Tático In-Game" (só em `docs/prd/telas/`) | — | — | **sem requisito** no PRD (R-PEND-11 decidiu só a fonte visual) |
-| V-15 | Conceito "Arena & Mapa — Vale Rúnico": topologia da imagem tática (bases opostas, rio, pontes, cratera) | SPEC-007 | game | mantido como layout |
+| V-15 | Conceito "Arena & Mapa — Vale Rúnico": topologia da imagem tática (bases opostas, rio, pontes, cratera) | SPEC-007 → **SPEC-044** | game | **substituído** em 2026-10-10 (ADR-0007): a imagem panorâmica (ilha flutuante) vira a referência de layout — bases nos cantos norte, rio N–S + anel, 4 pontes; SPEC-007 §2–3 superada |
 | V-16 | Idem: torres rúnicas, ouro 18 g/s, upgrade de skill por ouro, aura do boss, tier lendário, Elo, lama −15 %, relevo −1,8 m, zona 1,5→6 %, câmera isométrica padrão | `FORA-DE-ESCOPO.md` | — | **excluídos/adiados** pelo PI em 2026-10-09 |
 | V-17 | Mato alto que esconde (Astro Arena / Brawl Stars) | F7 (geometria), F32 (regra) | game | mantido — requisito novo aprovado pelo PI em 2026-10-09 |
 | V-19 | Neblina de guerra: visão (raio 12 u) + explorado; servidor não replica o que está fora da visão; continua na fase 2 com a zona sempre visível | F37 (reusa o filtro do F32) | game | mantido — **revertido** de V-16 pelo PI em 2026-10-10 |
@@ -130,4 +130,5 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ~~R-PEND-11~~ | **Decidido 2026-10-09:** `telas/` — paleta e fontes de `docs/prd/telas/` (Space Grotesk / Outfit / JetBrains Mono) substituem as do DV §1.2–1.3; `TOKENS.md` atualizado. ~~A estrutura das telas continua a do DV~~ — **emendado em 2026-10-10:** o protótipo vence o DV na composição e toda tela do Launcher é fiel ao protótipo, com acabamento; conteúdo segue as decisões; imagens viram renders dos assets reais (`FRONTEND-LAUNCHER.md` §8). O Pop-up Tático segue sem requisito | — | — |
 | ~~R-PEND-12~~ | **Decidido 2026-10-10:** revelação de 1,5 s; sem revelação por proximidade (GDB §7.3) | — | — |
 | ~~R-PEND-13~~ | **Decidido 2026-10-10:** relógio da fase 2 começa às 5:00 (a transição de 5 s conta dentro dela); colapso aos 10:00 com resolução imediata — maior HP%, desempate kills F2 → dano em heróis → sorteio pela seed; os dois desconectados → `abandoned` (GDB §7.1–7.2, `CONVENTION.md` §3) | — | — |
+| R-PEND-14 | Fontes do design system v2 (ADR-0006): o guia só exemplifica Cinzel / Barlow Condensed / Montserrat SemiBold | escolher 1 display + 1 corpo (+ mono opcional), licença OFL | trava só o F43 (HUD v2); F24 herda |
 | R-PEND-10 | Renomear `docs/prd/PRD.md` → `2026-10-08-prd-moba-2-tempos.md` (nome citado no plano M0 e nos agentes) | renomear / manter | links quebrados em `docs/superpowers/plans/` e `.claude/agents/` — `CLAUDE.md` já aponta para `PRD.md` |

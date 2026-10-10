@@ -25,7 +25,7 @@
 - [game] GUT 9.7.1 sai com 0 quando não há teste **e** quando um script de teste não compila (`Nothing was run`); `tools/test.ps1` trata isso, não confie só no exit code — PR #10 (#9).
 - [game] Cache `game/.godot` gerado antes de copiar `addons/` esconde os plugins; apague `.godot` e reabra — sessão do PI (#2).
 - [game] Godot não grava no `project.godot` valor igual ao padrão; ausência de chave ≠ não configurado — commit `9d69a6c` (#2).
-- [game] Cliente que trava ~1,4 s no sync inicial (shaders frios) pode ficar com rollback preso (`past the history limit of 64`); visto 1×, não reproduziu com cache quente — vigiar (#4).
+- [game] Cliente que trava ~1,4 s no sync inicial (shaders frios) pode ficar com rollback preso (`past the history limit of 64`); visto 1× (#4) — **promovido** a critério de aceite de toda fatia visual: warm-up de shaders antes do `connect` + 3/3 conexões a 100 ms (ADR-0006 item 7).
 - [game] Com perda, a RPC de estado pode chegar antes do spawn retransmitido (`Node not found .../RollbackSynchronizer`) e é descartada — F20 precisa de spawn confiável antes de estado (#6).
 - [game] `Label3D` com fonte padrão é ilegível a ~15 m; `font_size` alto + `pixel_size` 0.01 — commit `23d3fef` (#5).
 - [infra] `tc netem` só numa direção desalinha o relógio do netfox (ida e volta simétricas); `NETEM_DELAY_MS` é o RTT total dividido entre `eth0` e `ifb0` — ADR-0001 (#7).
