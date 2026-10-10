@@ -4,14 +4,15 @@ extends Node
 ## (5:00) em diante, a da fase 2. As duas so consomem sinais e estado replicado; esta classe so
 ## liga as duas ao heroi local e ao mundo e escolhe qual aparece em phase_changed.
 
-var _bound: bool = false
+var _hero: Hero
 
 @onready var _phase1: HudPhase1 = $HudPhase1
 @onready var _phase2: HudPhase2 = $HudPhase2
 
 
+## Ligada a um heroi que ainda existe (se ele sair, o main liga de novo).
 func is_bound() -> bool:
-	return _bound
+	return is_instance_valid(_hero)
 
 
 func bind(
@@ -26,7 +27,7 @@ func bind(
 	_phase2.bind(hero, clock, spawns, players, match_controller, zone)
 	if not match_controller.phase_changed.is_connected(_on_match_phase_changed):
 		match_controller.phase_changed.connect(_on_match_phase_changed)
-	_bound = true
+	_hero = hero
 	_show(match_controller.state)
 
 

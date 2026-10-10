@@ -50,10 +50,15 @@ func set_zone(p_radius_pct: float, p_next_radius_pct: float, p_t_next: float) ->
 	queue_redraw()
 
 
-## Pontos do mundo e cor de cada heroi; os arrays sao copiados pelo Godot (Packed).
+## Pontos do mundo e cor de cada heroi, copiados para buffers proprios: quem chama pode reusar
+## os arrays dele a cada frame sem alocar (Packed e copy-on-write).
 func set_players(positions: PackedVector3Array, colors: PackedColorArray) -> void:
-	_positions = positions
-	_colors = colors
+	var count := mini(positions.size(), colors.size())
+	_positions.resize(count)
+	_colors.resize(count)
+	for i: int in count:
+		_positions[i] = positions[i]
+		_colors[i] = colors[i]
 	queue_redraw()
 
 

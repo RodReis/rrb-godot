@@ -52,13 +52,13 @@ func bind(hero: Hero, clock: MatchClock, spawns: SpawnDirector, players: Node) -
 	_spawns = spawns
 	_players = players
 	_rules = clock.rules
-	_plate.bind(hero)
 	_minimap.bind(hero)
 	_collect_world()
 	if not spawns.boss_killed.is_connected(_on_spawns_boss_killed):
 		spawns.boss_killed.connect(_on_spawns_boss_killed)
 		clock.boss_spawned.connect(_on_clock_boss_spawned)
 		clock.boss_warning.connect(_on_clock_boss_warning)
+	visible = false  # set_active religa a base
 	set_active(true)
 
 

@@ -193,3 +193,18 @@ func test_fim_com_vitoria_de_quem_joga() -> void:
 	var banner := _node("%EndBanner") as PanelCard
 	assert_eq(banner.accent, PanelCard.Accent.GOLD)
 	assert_has(_texts(banner), "VITÓRIA")
+
+
+func test_fim_sem_vencedor_nao_diz_derrota() -> void:
+	_bind()
+	_phase(MatchState.State.PHASE2)
+	_match.match_ended.emit(MatchController.NO_WINNER, VictoryRules.ABANDONED, {}, 200)
+	var banner := _node("%EndBanner") as PanelCard
+	assert_eq(banner.accent, PanelCard.Accent.NONE)
+	assert_has(_texts(banner), "SEM VENCEDOR")
+
+
+func test_bind_so_com_heroi_ligado() -> void:
+	assert_false(_hud.is_bound(), "sem heroi ainda")
+	_bind()
+	assert_true(_hud.is_bound())

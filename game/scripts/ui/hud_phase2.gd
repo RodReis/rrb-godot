@@ -287,9 +287,13 @@ func _on_match_ended(winner: int, _reason: StringName, _stats: Dictionary, _tick
 	for node: Control in [_respawn, _transition, _sudden]:
 		node.hide()
 	_vignette.hide()
-	var won := winner == _hero.peer_id
-	_end.accent = PanelCard.Accent.GOLD if won else PanelCard.Accent.RED
-	_end_result.text = tr("VITÓRIA") if won else tr("DERROTA")
+	if winner == MatchController.NO_WINNER or not is_instance_valid(_hero):
+		_end.accent = PanelCard.Accent.NONE
+		_end_result.text = tr("SEM VENCEDOR")
+	else:
+		var won := winner == _hero.peer_id
+		_end.accent = PanelCard.Accent.GOLD if won else PanelCard.Accent.RED
+		_end_result.text = tr("VITÓRIA") if won else tr("DERROTA")
 	_end.visible = true
 
 
