@@ -6,12 +6,12 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 
 | Campo | Valor |
 |---|---|
-| Marco / MVP ativo | **MVP1 — Arena single-player** (`docs/prd/mvp/MVP-1.md`); MVP0 fechado em 2026-10-09 (ADR-0001: segue Godot) |
+| Marco / MVP ativo | **MVP1 — Arena single-player** (`docs/prd/mvp/MVP-1.md`): gate aprovado pelo PI em 2026-10-10 (`STATUS-ARQUIVO.md` §Gates). MVP2 aguarda os cards do Cowork. MVP0 fechado em 2026-10-09 (ADR-0001: segue Godot) |
 | Módulo em foco | `game/` |
-| Próximo gate | [GATE] MVP1 — fase 1 completa contra bot, offline |
+| Próximo gate | [GATE] MVP2 — 1x1 online termina sempre; soak verde |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos) |
-| Board | issue-pai [MVP1] #16; `todo`: [FIX] #41; `backlog`: F9–F13, [GATE] #27; `finalizado`: [INFRA] #17 e #34, F6 #18, F7 #19, F31 #20, F8 #21, F34 #38. MVP0 #1–#7 `finalizado` |
-| Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. R-PEND-11 decidida em 2026-10-09 (paleta e fontes de `docs/prd/telas/`). Abertos: 02, 03, 04, 06, 07, 10 (04 e 06 antes do MVP2) |
+| Board | issue-pai [MVP1] #16; `done`: [FIX] #52; `finalizado`: [GATE] #27, [INFRA] #17 e #34, F6–F13, F31 #20, F34 #38, [FIX] #41 e #42. MVP0 #1–#7 `finalizado`. `todo` vazio: MVP2 sem cards |
+| Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. R-PEND-11 decidida em 2026-10-09 (paleta e fontes de `docs/prd/telas/`). R-PEND-04, 06 e 12 decididas em 2026-10-10. Abertos: 02, 03, 07, 10 |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
 
@@ -39,13 +39,13 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F7 / SPEC-007 | MVP1 | game | Slice 1.2 — Arena "Vale Rúnico": layout da `spec/SPEC-007.md`, rio + 2 pontes, cratera com pilares, portões, mato (geometria), marcadores | finalizado (#19) |
 | F31 / SPEC-031 | MVP1 | game, shared | Slice 1.3 — Câmera 3ª pessoa, controles teclado/mouse/gamepad, cena de alinhamento KayKit (avaliação de câmera B-02 pelo PI) | finalizado (#20) |
 | F8 / SPEC-008 | MVP1 | game | Slice 1.4 — Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha, R Terremoto, lendo `shared/data` | finalizado (#21) |
-| F9 / SPEC-009 | MVP1 | game | Slice 1.5 — Monstros tier 1–3 com IA, XP, níveis, pontos de skill, catch-up | backlog (#22) |
-| F10 / SPEC-010 | MVP1 | game | Slice 1.6 — Baús, itens, inventário 4 slots, substituição, bônus de conjunto | backlog (#23) |
-| F11 / SPEC-011 | MVP1 | game | Slice 1.7 — Rei Esqueleto aos 3:30, drop épico | backlog (#24) |
-| F12 / SPEC-012 | MVP1 | game | Slice 1.8 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | backlog (#25) |
-| F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | backlog (#26) |
+| F9 / SPEC-009 | MVP1 | game | Slice 1.5 — Monstros tier 1–3 com IA, XP, níveis, pontos de skill, catch-up | finalizado (#22) |
+| F10 / SPEC-010 | MVP1 | game | Slice 1.6 — Baús, itens, inventário 4 slots, substituição, bônus de conjunto | finalizado (#23) |
+| F11 / SPEC-011 | MVP1 | game | Slice 1.7 — Rei Esqueleto aos 3:30, drop épico | finalizado (#24) |
+| F12 / SPEC-012 | MVP1 | game | Slice 1.8 — Bot FSM fase 1 (`BotInput`), modo offline com servidor embutido | finalizado (#25) |
+| F13 / SPEC-013 | MVP1 | game, shared | Slice 1.9 — HUD fase 1 + relógio + aviso do boss aos 3:00 + bestiário em partida (`B`) + componentes base do design system | finalizado (#26) |
 | F34 / SPEC-034 | MVP1 | game, shared | Slice 1.10 — Pilares da cratera e mato alto com assets do Blender (só visual; colisão do F7 intacta) — depois do [INFRA] #34 | finalizado (#38) |
-| [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | backlog (#27) |
+| [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | finalizado (#27) |
 | [INFRA] | MVP1 | ci | CI: `lint-gd` (tipagem, literais em `core/`, I9), path filter por módulo, `shared/test` no `test-game` — antes de F6 | finalizado (#17) |
 | [INFRA] | — | infra | Pipeline Blender (ADR-0005): `art/`, `.gitattributes`/`.gitignore`, import de `.blend` desligado — antes do primeiro asset via Blender | finalizado (#34) |
 | F14 / SPEC-014 | MVP2 | game | Slice 2.1 — Arqueira: projétil validado no servidor, Q perfurante, E rolamento, R chuva | — |
