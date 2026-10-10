@@ -23,6 +23,8 @@ extends Combatant
 ## Mato alto (F32): dentro de uma moita o heroi some para quem esta fora (hidden_from,
 ## VisibilityRules); atacar ou usar skill liga reveal_ticks. Quem filtra a replicacao e o
 ## Concealment; no cliente o heroi escondido fica invisivel e sem colisao.
+## Neblina de guerra (F37): o adversario so ve o heroi no raio de visao dele e fora do mato
+## (seen_by, VisionRules); o VisionDirector decide por tick e o Concealment filtra.
 
 const GROUP: StringName = &"heroes"
 ## respawn_off_tick enquanto o respawn vale.
@@ -181,7 +183,7 @@ func _ready() -> void:
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
 	var ack := SpawnAck.guard(self, [_rollback.visibility_filter])
-	_concealment = Concealment.guard(self, _rollback, ack)
+	_concealment = Concealment.guard(self, seen_by, _rollback, ack, peer_id)
 
 	var interpolator := TickInterpolator.new()
 	interpolator.name = "TickInterpolator"
@@ -319,6 +321,24 @@ func hidden_from(observer: Node3D) -> bool:
 		seen_from = VisibilityRules.grass_at(observer.global_position, _grass)
 	var grass := VisibilityRules.grass_at(global_position, _grass)
 	return VisibilityRules.is_hidden(grass, seen_from, reveal_ticks)
+
+
+## O jogador deste processo ve o heroi (neblina e mato; HUD e minimapa).
+func is_shown() -> bool:
+	return _concealment.is_shown()
+
+
+## Neblina (F37): o heroi [param observer] (null = ninguem) ve este heroi — o proprio e o time
+## sempre; o adversario so no raio de visao dele e fora do mato.
+func seen_by(observer: Hero) -> bool:
+	if observer == null:
+		return false
+	if observer == self or observer.team == team:
+		return true
+	var near := VisionRules.in_sight(
+		observer.global_position, global_position, observer.match_rules.vision_radius
+	)
+	return VisionRules.hero_shown(near, hidden_from(observer))
 
 
 func forward() -> Vector3:

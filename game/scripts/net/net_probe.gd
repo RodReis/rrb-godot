@@ -10,6 +10,10 @@ extends Node
 ## - "[probe] check": a cada CHECK_TICKS, monstros (no mapa, HP) e baus abertos como estavam no
 ##   tick X - LAG_TICKS do servidor, lidos do historico do StateSynchronizer, entao o mesmo tick
 ##   nos dois lados. Le um campo interno do netfox 1.35.3 (_state_history): so para medir.
+##   Neblina (F37): no cliente, monstro escondido do tick X em diante sai como "-" (o servidor
+##   nao manda o estado dele) e os baus sao o ultimo estado visto (subconjunto do servidor).
+## - "[probe] neblina": ciclos escondido -> visivel de herois e monstros no cliente e, deles,
+##   quantos receberam estado de um tick em que o servidor dizia "escondido" (deve ser 0).
 
 const CHECK_TICKS: int = 300
 ## Folga para o estado do tick chegar ao cliente mesmo com perda e 200 ms de RTT.
@@ -19,6 +23,8 @@ const WINDOW_SECONDS: float = 10.0
 const MOVING_SPEED: float = 0.5
 const STILL_DISTANCE: float = 0.0001
 const UNKNOWN: String = "?"
+## Monstro fora da visao do jogador deste cliente no tick do checkpoint (F37).
+const FOGGED: String = "-"
 
 ## Definidos pelo main antes de entrar na arvore.
 var players: Node3D
@@ -78,6 +84,9 @@ func digest(tick: int) -> String:
 
 
 func _monster_at(monster: Monster, tick: int) -> String:
+	var concealment := monster.get_node(NodePath(Concealment.NODE_NAME)) as Concealment
+	if not multiplayer.is_server() and concealment.last_hidden_tick >= tick:
+		return FOGGED
 	var sync := monster.get_node("StateSynchronizer") as StateSynchronizer
 	var snapshot := sync._state_history.get_history(tick)
 	var hp: Variant = snapshot.get_value(":hp")
@@ -107,6 +116,12 @@ func _report_window() -> void:
 	_window_seconds = 0.0
 	if multiplayer.is_server():
 		return
+	print(
+		(
+			"[probe] neblina: %d ciclos escondido -> visivel, %d com estado recebido escondido"
+			% [Concealment.hidden_cycles, Concealment.state_leaks]
+		)
+	)
 	_total_moving += _window_moving
 	_total_stopped += _window_stopped
 	print(

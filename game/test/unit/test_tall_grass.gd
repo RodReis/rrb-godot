@@ -63,6 +63,10 @@ func _concealment(hero: Hero) -> Concealment:
 	return hero.get_node(NodePath(Concealment.NODE_NAME)) as Concealment
 
 
+func _observers() -> Array[Hero]:
+	return [_hider, _seeker]
+
+
 func _filter(hero: Hero) -> PeerVisibilityFilter:
 	return (hero.get_node("RollbackSynchronizer") as RollbackSynchronizer).visibility_filter
 
@@ -116,20 +120,19 @@ func test_servidor_nao_manda_estado_a_quem_nao_ve() -> void:
 	var ack := _hider.get_node(NodePath(SpawnAck.NODE_NAME)) as SpawnAck
 	ack.confirm(SEEKER)
 	ack.confirm(HIDER)
-	var changed := _concealment(_hider).refresh(PackedInt32Array([HIDER, SEEKER]))
-	assert_eq(changed, PackedInt32Array([SEEKER]))
+	var changed := _concealment(_hider).refresh(_observers(), PackedInt32Array([HIDER, SEEKER]))
+	assert_eq(changed, PackedInt32Array(), "ja comeca escondido do adversario (F37)")
 	assert_false(_filter(_hider).get_visibility_for(SEEKER))
 	assert_true(_filter(_hider).get_visibility_for(HIDER), "o dono recebe o proprio estado")
-	assert_eq(_filter(_hider).get_visible_peers(), [HIDER] as Array[int])
 
 
 func test_revelado_volta_a_receber_estado() -> void:
 	var ack := _hider.get_node(NodePath(SpawnAck.NODE_NAME)) as SpawnAck
 	ack.confirm(SEEKER)
-	_concealment(_hider).refresh(PackedInt32Array([SEEKER]))
+	_concealment(_hider).refresh(_observers(), PackedInt32Array([SEEKER]))
 	_hider.input.attack = true
 	_step(_hider)
-	var changed := _concealment(_hider).refresh(PackedInt32Array([SEEKER]))
+	var changed := _concealment(_hider).refresh(_observers(), PackedInt32Array([SEEKER]))
 	assert_eq(changed, PackedInt32Array([SEEKER]))
 	assert_true(_filter(_hider).get_visibility_for(SEEKER))
 
@@ -137,12 +140,18 @@ func test_revelado_volta_a_receber_estado() -> void:
 func test_sem_mudanca_nao_reenvia() -> void:
 	var ack := _hider.get_node(NodePath(SpawnAck.NODE_NAME)) as SpawnAck
 	ack.confirm(SEEKER)
-	_concealment(_hider).refresh(PackedInt32Array([SEEKER]))
-	assert_eq(_concealment(_hider).refresh(PackedInt32Array([SEEKER])), PackedInt32Array())
+	_concealment(_hider).refresh(_observers(), PackedInt32Array([SEEKER]))
+	assert_eq(
+		_concealment(_hider).refresh(_observers(), PackedInt32Array([SEEKER])), PackedInt32Array()
+	)
 
 
 func test_peer_sem_spawn_confirmado_nao_recebe_aviso() -> void:
-	assert_eq(_concealment(_hider).refresh(PackedInt32Array([SEEKER])), PackedInt32Array())
+	_hider.input.attack = true
+	_step(_hider)
+	assert_eq(
+		_concealment(_hider).refresh(_observers(), PackedInt32Array([SEEKER])), PackedInt32Array()
+	)
 	assert_false(_filter(_hider).get_visibility_for(SEEKER))
 
 

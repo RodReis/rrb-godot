@@ -118,7 +118,7 @@
       "titulo": "Partida em rede",
       "pergunta": "Duas pessoas em máquinas diferentes terminam sempre uma partida?",
       "narrativa": [
-        "Entram a Arqueira, a seleção de heróis, o confronto com a zona, o placar de abates e a tela de fim de partida. O teste de aceite são 50 partidas seguidas de bot contra bot, sem travar e todas com no máximo 10 minutos."
+        "Entram a Arqueira, a seleção de heróis, o confronto com a zona, o placar de abates, a tela de fim de partida, o mato alto que esconde e a neblina de guerra. O teste de aceite são 50 partidas seguidas de bot contra bot, sem travar e todas com no máximo 10 minutos."
       ],
       "imagens": [
         { "arquivo": "mvp2-f15-selecao-de-herois.webp", "legenda": "A partida começa pela seleção de heróis: 24 segundos para escolher e confirmar. Quem não confirma entra com o herói padrão; os dois podem jogar com o mesmo herói.", "tipo": "entregue" },
@@ -135,7 +135,9 @@
         { "arquivo": "mvp2-f17-morte-subita.webp", "legenda": "Aos 9:00 ninguém mais renasce. Fora da zona, as bordas da tela pulsam em vermelho, mais forte quanto maior o dano, e o relógio conta até o colapso total aos 10:00.", "tipo": "entregue" },
         { "arquivo": "mvp2-f18-fim-de-partida.webp", "legenda": "No fim, a tela mostra quem venceu e por quê (aqui, o adversário foi eliminado na morte súbita), quanto durou a partida e a comparação lado a lado: abates, mortes, nível, dano causado e sofrido, monstros, baús, Rei Esqueleto e conjunto. Verde é onde você foi melhor.", "tipo": "entregue" },
         { "arquivo": "mvp2-f32-mato-esconde.webp", "legenda": "A Arqueira entrou no mato alto e sumiu para o Cavaleiro, que está colado na moita pelo lado de fora. Não é só visual: o servidor para de mandar a posição dela para ele. Quem entra na mesma moita se vê.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f32-mato-revela.webp", "legenda": "Atacar ou usar habilidade de dentro do mato revela o herói por 1,5 segundo. Monstros e o bot seguem a mesma regra: não perseguem quem está escondido.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f32-mato-revela.webp", "legenda": "Atacar ou usar habilidade de dentro do mato revela o herói por 1,5 segundo. Monstros e o bot seguem a mesma regra: não perseguem quem está escondido.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f37-visao-do-heroi.webp", "legenda": "Neblina de guerra: cada herói enxerga só um círculo ao redor de si. Monstros e o adversário só aparecem dentro desse círculo, e o servidor nem manda o que está fora dele, então não há como trapacear revelando o mapa.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f37-neblina-de-guerra.webp", "legenda": "O que nunca foi visto fica escuro; o que já foi visto fica em cinza, com o último estado conhecido, como um baú que pode já ter sido aberto por outro. O minimapa mostra o mesmo, e a zona do confronto aparece sempre. O bot joga sob a mesma neblina.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -179,6 +181,7 @@
     "F19": "Bot do confronto e teste de 50 partidas",
     "F20": "Monstros, baús e chefe sincronizados em rede",
     "F32": "Moita esconde o herói do adversário",
+    "F37": "Neblina de guerra e minimapa",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
     "F23": "Servidor de partida integrado ao backend",

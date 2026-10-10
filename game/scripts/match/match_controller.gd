@@ -9,7 +9,9 @@ extends Node
 ## do estado replicado dos herois, uma vez por mudanca (ressimulacao nao duplica evento); o XP do
 ## abate vai pelo ledger do matador (§3.2). Sem nenhum caso de modo offline: o bot e uma vaga.
 ## Estatisticas da tela de fim (F18): somadas aqui no servidor (MatchStats) e enviadas no
-## match_ended; so contam para quem tem vaga.
+## match_ended; so contam para quem tem vaga. Neblina (F37): nivel, bau aberto e morte fora da
+## fase 2 sao estado do heroi e do bau, entao so o proprio jogador recebe; fase e kill (morte na
+## fase 2) seguem para todos.
 
 signal phase_changed(from: int, to: int, tick: int)
 signal hero_picked(peer: int, hero_id: int, tick: int)
@@ -156,14 +158,18 @@ func watch_heroes(tick: int) -> void:
 		_dead[hero.peer_id] = dead
 		var shown: int = _levels.get(hero.peer_id, hero.level)
 		if hero.level > shown:
-			_leveled.rpc(tick, hero.peer_id, hero.level)
+			_leveled(tick, hero.peer_id, hero.level)
+			if _connected(hero.peer_id):
+				_leveled.rpc_id(hero.peer_id, tick, hero.peer_id, hero.level)
 		_levels[hero.peer_id] = maxi(hero.level, shown)
 
 
 ## Servidor: bau aberto por [param peer] (SpawnDirector.chest_opened).
 func report_chest_opened(peer: int, chest_uid: int, tick: int) -> void:
 	_counted(peer).chests += 1
-	_chest_opened.rpc(tick, peer, chest_uid)
+	_chest_opened(tick, peer, chest_uid)
+	if _connected(peer):
+		_chest_opened.rpc_id(peer, tick, peer, chest_uid)
 
 
 ## Servidor: monstro nao-boss abatido por [param peer] (SpawnDirector.monster_killed).
@@ -190,6 +196,11 @@ func submit_hero_selection(hero_id: int) -> void:
 		if not _refusals_logged.has(peer):
 			_refusals_logged[peer] = true
 			print("[match] lock-in recusado: peer %d, heroi %d" % [peer, hero_id])
+
+
+## Servidor: [param peer] e um cliente conectado (o bot e o jogador do host nao recebem RPC).
+func _connected(peer: int) -> bool:
+	return multiplayer.get_peers().has(peer)
 
 
 func _seat(peer: int) -> Seat:
@@ -326,7 +337,12 @@ func _on_hero_died(victim: Hero, tick: int) -> void:
 	var scored := _tracker.score(killer_id, state)
 	_counted(victim.peer_id).deaths += 1
 	print("[match] heroi %d morto por %d, tick %d" % [victim.peer_id, killer_id, tick])
-	_died.rpc(tick, victim.peer_id, killer_id)
+	if MatchState.is_phase2(state):
+		_died.rpc(tick, victim.peer_id, killer_id)
+	else:
+		_died(tick, victim.peer_id, killer_id)
+		if _connected(victim.peer_id):
+			_died.rpc_id(victim.peer_id, tick, victim.peer_id, killer_id)
 	if scored:
 		_scored.rpc(tick, killer_id, kills(killer_id))
 	if MatchState.is_phase2(state):

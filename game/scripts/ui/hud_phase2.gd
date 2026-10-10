@@ -162,7 +162,8 @@ func _update_vignette() -> void:
 		(_vignette.material as ShaderMaterial).set_shader_parameter(&"intensity", intensity)
 
 
-## Herois no radar (verde = eu, vermelho = adversario); o minimapa so gira junto.
+## Herois no radar (verde = eu, vermelho = adversario; neblina, F37: so o que o jogador ve); o
+## minimapa so gira junto. A zona do radar e sempre visivel.
 func _update_map() -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera != null:
@@ -172,7 +173,7 @@ func _update_map() -> void:
 	_radar_colors.clear()
 	for node: Node in _players.get_children():
 		var hero := node as Hero
-		if hero != null and hero.is_alive():
+		if hero != null and hero.is_alive() and hero.is_shown():
 			_radar_positions.append(hero.global_position)
 			_radar_colors.append(UiTokens.GREEN if hero == _hero else UiTokens.RED)
 	_radar.set_players(_radar_positions, _radar_colors)

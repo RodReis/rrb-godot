@@ -4,6 +4,11 @@ extends PlayerInput
 ## produz os mesmos campos do PlayerInput; nao toca em estado. Le so estado replicado: posicoes,
 ## HP, nivel, baus abertos, relogio (invariante de honestidade, CONVENTION §4.6) — nunca o drop.
 ## FSM em BotRules; aqui escolhe o alvo do estado e anda pelo navmesh (ArenaNav).
+## Neblina (F37): so enxerga o que o filtro entregaria ao peer dele — heroi adversario no raio de
+## visao e fora do mato (Hero.seen_by); de monstro e bau, o ultimo estado que entrou no raio
+## (memoria). No 1o think a memoria e o estado do inicio da partida, com que todo cliente carrega
+## a arena. Rei Esqueleto pelo que e publico: surge aos 3:30, sai aos 5:00 e a morte dele e aviso
+## global (o bau dele aparece para todos).
 
 const PROFILE: BotProfile = preload("res://shared/data/rules/bot_profile.tres")
 ## Recalcula o caminho a cada este tempo (s) ou quando o alvo muda.
@@ -23,6 +28,11 @@ var _path_index: int = 0
 var _path_goal: Vector3 = Vector3.INF
 var _path_tick: int = 0
 var _tapped: bool = false
+## Memoria da neblina: monstro -> vivo e onde estava; bau -> aberto (ultimo estado visto).
+var _known_alive: Dictionary[Monster, bool] = {}
+var _known_where: Dictionary[Monster, Vector3] = {}
+var _known_chest: Dictionary[Chest, bool] = {}
+var _tick: int = 0
 
 
 func _gather() -> void:
@@ -32,7 +42,9 @@ func _gather() -> void:
 ## Uma decisao do bot no [param tick] (publico para o teste rodar sem o NetworkTime).
 func think(tick: int) -> void:
 	_hero = get_parent() as Hero
+	_tick = tick
 	_reset()
+	_remember()
 	var enemy := _enemy_hero()
 	var view := _view(tick, enemy)
 	var next := BotRules.next_state(state, view, PROFILE)
@@ -117,13 +129,14 @@ func _farm(tick: int) -> void:
 ## Portoes caidos (5:00) e nada do proprio lado: farma o que sobrou na base do jogador e, sem
 ## monstro, vai ate ele (PI 2026-10-09, #52). Lutar continua com BotRules (FIGHT).
 func _invade(tick: int) -> void:
-	var enemy := _enemy_hero()
-	if enemy == null:
-		_go(tick, _center())
-		return
-	var monster := _nearest(_alive_monsters(enemy.team))
+	var monster := _nearest(_alive_monsters(_enemy_team()))
 	if monster != null:
 		_attack(tick, monster, false)
+		return
+	var enemy := _enemy_hero()
+	if enemy == null:
+		# Sem ver o jogador (F37): procura na base dele; morto (aviso global), espera no centro.
+		_go(tick, _spawn_of(_enemy_team()) if _enemy_alive() else _center())
 		return
 	aim = _flat(enemy.global_position).normalized()
 	if _flat(enemy.global_position).length() > _hero.hero_data.basic_attack.attack_range:
@@ -142,18 +155,19 @@ func _contest(tick: int) -> void:
 ## recarga): Q de projetil (Arqueira) ja no alcance dele, em linha com a mira; E que nao e avanco
 ## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele).
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
-	var to := _flat(target.global_position)
+	var where := _where(target)
+	var to := _flat(where)
 	var data := _hero.hero_data
 	aim = to.normalized()
 	aim_distance = to.length()
 	var q_range := data.skill_q.attack_range
 	skill_q = skills and q_range > 0.0 and to.length() <= q_range
 	var ranger := _hero as Ranger
-	var blocked := ranger != null and ranger.shot_blocked(target.global_position)
+	var blocked := ranger != null and ranger.shot_blocked(where)
 	skill_q = skill_q and not blocked
 	# Sem linha de tiro (Arqueira), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
-		_go(tick, target.global_position)
+		_go(tick, where)
 		return
 	attack = true
 	skill_e = skills and is_zero_approx(data.skill_e.distance)
@@ -254,8 +268,8 @@ func _enemy_hero() -> Hero:
 	var best: Hero = null
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
-		# Mato alto (F32): o que o filtro nao entregaria ao peer do bot, o bot nao ve.
-		if hero.team == _hero.team or not hero.is_alive() or hero.hidden_from(_hero):
+		# Mato alto (F32) e neblina (F37): o que o filtro nao entregaria ao peer do bot, nao ve.
+		if hero.team == _hero.team or not hero.is_alive() or not hero.seen_by(_hero):
 			continue
 		if (
 			best == null
@@ -271,7 +285,7 @@ func _alive_monsters(home: int) -> Array[Combatant]:
 	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
 		var monster := node as Monster
 		var boss := monster.data.tier == MonsterData.Tier.BOSS
-		if monster.is_alive() and not boss and monster.home_team == home:
+		if _known_alive.get(monster, false) and not boss and monster.home_team == home:
 			result.append(monster)
 	return result
 
@@ -279,9 +293,21 @@ func _alive_monsters(home: int) -> Array[Combatant]:
 func _boss() -> Monster:
 	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
 		var monster := node as Monster
-		if monster.data.tier == MonsterData.Tier.BOSS and monster.is_alive():
-			return monster
+		if monster.data.tier != MonsterData.Tier.BOSS:
+			continue
+		var up := monster.is_alive() if _sees(monster) else _boss_up(monster)
+		return monster if up else null
 	return null
+
+
+## Rei Esqueleto pelo que e publico: entre 3:30 e 5:00 do relogio e sem o bau dele no mapa.
+func _boss_up(boss: Monster) -> bool:
+	var clock := get_tree().get_first_node_in_group(MatchClock.GROUP) as MatchClock
+	if clock == null or not clock.is_started():
+		return false
+	var elapsed := clock.elapsed(_tick)
+	var window := elapsed >= clock.rules.boss_spawn_time and elapsed < clock.rules.phase1_duration
+	return window and not boss.get_parent().has_node(SpawnDirector.BOSS_CHEST_NAME)
 
 
 ## Bau fechado mais proximo da base [param home].
@@ -289,7 +315,7 @@ func _nearest_chest(home: int) -> Chest:
 	var best: Chest = null
 	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
 		var chest := node as Chest
-		if chest.opened or chest.home_team != home:
+		if _known_opened(chest) or chest.home_team != home:
 			continue
 		var closer := (
 			best == null
@@ -303,9 +329,53 @@ func _nearest_chest(home: int) -> Chest:
 func _nearest(candidates: Array[Combatant]) -> Combatant:
 	var best: Combatant = null
 	for c: Combatant in candidates:
-		if best == null or _flat(c.global_position).length() < _flat(best.global_position).length():
+		if best == null or _flat(_where(c)).length() < _flat(_where(best)).length():
 			best = c
 	return best
+
+
+## Neblina (F37): atualiza a memoria com o que esta no raio de visao do bot; o que nunca entrou
+## nela fica com o estado do inicio da partida (1o think).
+func _remember() -> void:
+	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
+		var monster := node as Monster
+		if not _known_alive.has(monster) or _sees(monster):
+			_known_alive[monster] = monster.is_alive()
+			_known_where[monster] = monster.global_position
+	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+		var chest := node as Chest
+		if not _known_chest.has(chest) or _sees(chest):
+			_known_chest[chest] = chest.opened
+
+
+func _sees(node: Node3D) -> bool:
+	var radius := _hero.match_rules.vision_radius
+	return VisionRules.in_sight(_hero.global_position, node.global_position, radius)
+
+
+## Onde o bot acha que o alvo esta: o agora, se o ve; senao, onde o viu por ultimo.
+func _where(target: Combatant) -> Vector3:
+	var monster := target as Monster
+	if monster == null or _sees(monster):
+		return target.global_position
+	return _known_where.get(monster, monster.global_position)
+
+
+func _known_opened(chest: Chest) -> bool:
+	return _known_chest.get(chest, chest.opened)
+
+
+func _enemy_team() -> int:
+	return GateRules.TEAM_A if _hero.team == GateRules.TEAM_B else GateRules.TEAM_B
+
+
+## O adversario esta vivo: a morte e aviso global (player_died) e o respawn tem tempo publico.
+func _enemy_alive() -> bool:
+	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
+		var hero := node as Hero
+		if hero.team != _hero.team and hero.is_alive():
+			return true
+	return false
 
 
 ## Fonte da base do bot (#74): recua ate ela enquanto cura (fase 1).
@@ -317,9 +387,14 @@ func _fountain() -> Fountain:
 
 
 func _home() -> Vector3:
+	return _spawn_of(_hero.team)
+
+
+## Spawn do time [param team] (marcador HERO).
+func _spawn_of(team: int) -> Vector3:
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker
-		if marker.kind == SpawnMarker.Kind.HERO and marker.team == _hero.team:
+		if marker.kind == SpawnMarker.Kind.HERO and marker.team == team:
 			return marker.global_position
 	return _hero.global_position
 

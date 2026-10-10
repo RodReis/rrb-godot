@@ -12,6 +12,8 @@ extends Combatant
 ## Lentidao (R da Arqueira, PI 2026-10-10): anda mais devagar enquanto dura.
 ## Mato alto (F32): heroi escondido nao entra no aggro e, se era o alvo, deixa de ser (volta ao
 ## marcador como quando o alvo morre).
+## Neblina de guerra (F37): so e replicado a quem tem o monstro no raio de visao do heroi
+## (seen_by, Concealment); no cliente, fora da visao, some e nao tem colisao.
 
 ## Servidor apenas. [param killer_id] = peer_id do golpe final; [param tick] = tick da morte.
 signal died(killer_id: int, tick: int)
@@ -36,6 +38,9 @@ var state: MonsterRules.State = MonsterRules.State.IDLE
 var _home: Vector3 = Vector3.ZERO
 var _home_basis: Basis = Basis.IDENTITY
 var _alive_mask: int = 0
+## Camada de colisao da cena; no cliente, monstro fora da visao fica sem ela.
+var _layer: int = 0
+var _concealment: Concealment
 var _stun_ticks: int = 0
 var _slow_ticks: int = 0
 var _slow_pct: float = 0.0
@@ -52,6 +57,7 @@ func _ready() -> void:
 	_home = global_position
 	_home_basis = global_basis
 	_alive_mask = collision_mask
+	_layer = collision_layer
 	if not present:
 		collision_mask = 0
 	axis_lock_linear_y = true
@@ -61,6 +67,7 @@ func _ready() -> void:
 	sync.root = self
 	sync.properties = [":transform", ":velocity", ":hp", ":attack_cooldown", ":present"]
 	add_child(sync)
+	_concealment = Concealment.guard(self, seen_by, sync)
 
 	var interpolator := TickInterpolator.new()
 	interpolator.name = "TickInterpolator"
@@ -72,6 +79,10 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	var shown := _concealment.is_shown()
+	visible = shown
+	if _concealment.on_client():
+		collision_layer = _layer if shown else 0
 	hp_label.visible = is_alive()
 	hp_bar.visible = is_alive()
 	hp_label.text = data.display_name
@@ -84,6 +95,21 @@ func is_alive() -> bool:
 
 func combat_id() -> int:
 	return uid
+
+
+## O jogador deste processo ve o monstro (neblina; minimapa).
+func is_shown() -> bool:
+	return _concealment.is_shown()
+
+
+## Neblina (F37): o heroi [param observer] (null = ninguem) tem o monstro no raio de visao.
+func seen_by(observer: Hero) -> bool:
+	return (
+		observer != null
+		and VisionRules.in_sight(
+			observer.global_position, global_position, observer.match_rules.vision_radius
+		)
+	)
 
 
 ## Servidor apenas (SpawnDirector, F36): volta ao marcador, parado, com HP cheio e colisao.

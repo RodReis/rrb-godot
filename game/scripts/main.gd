@@ -76,6 +76,9 @@ func _ready() -> void:
 	match_controller.phase_changed.connect(_on_match_phase_changed)
 	match_controller.match_ended.connect(_on_match_ended)
 	hero_select.bind(match_controller, ROSTER, _available_heroes())
+	var vision := VisionDirector.new()  # neblina (F37): so age no servidor
+	vision.name = VisionDirector.NODE_NAME
+	add_child(vision)
 
 	var args := LaunchArgs.parse(OS.get_cmdline_user_args())
 	PlayerInput.autopilot = args["autopilot"]
@@ -109,6 +112,10 @@ func _process(_delta: float) -> void:
 		return  # servidor dedicado, ou cliente ainda sem heroi
 	if not hud.is_bound():
 		hud.bind(hero, clock, spawns, players, match_controller, zone)
+		var fog := FogOfWar.new()  # neblina (F37): so quem joga desenha
+		fog.name = "FogOfWar"
+		add_child(fog)
+		fog.bind(hero)
 	status_label.text = (
 		"%s | tick %d%s"
 		% [_net_text(), NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]

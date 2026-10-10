@@ -5,8 +5,11 @@
   - Remoto parado: % acumulado da ultima linha "[probe] remoto" de cada cliente.
   - Checkpoints: para cada "[probe] check <tick>" do servidor, compara monstros (HP, fora do mapa)
     e baus abertos de cada cliente no mesmo tick; mostra as primeiras diferencas.
+    Neblina (F37): monstro "-" no cliente (fora da visao dele) nao conta; os baus abertos do
+    cliente sao o ultimo estado visto, entao basta serem um subconjunto dos do servidor.
+  - Neblina: ultima linha "[probe] neblina" de cada cliente (estado recebido escondido deve ser 0).
   - Contagens: "Node not found", "Reference tick ... missing", ERROR e WARNING por arquivo.
-  Sai com 1 se houver checkpoint diferente ou "Node not found".
+  Sai com 1 se houver checkpoint diferente, estado recebido escondido ou "Node not found".
 .EXAMPLE
   .\tools\net-probe-report.ps1 -Server logs\server.log -Clients logs\client1.log, logs\client2.log
 #>
@@ -29,7 +32,7 @@ function Get-Count([string]$path, [string]$pattern) {
     return @(Select-String -Path $path -Pattern $pattern).Count
 }
 
-# Diferencas monstro a monstro de dois digests "vivos=N baus=M a,b,c|baus".
+# Diferencas monstro a monstro de dois digests "vivos=N baus=M a,b,c|baus" (servidor, cliente).
 function Compare-Digest([string]$a, [string]$b) {
     $pa = ($a -split ' ', 3)[2] -split '\|'
     $pb = ($b -split ' ', 3)[2] -split '\|'
@@ -37,9 +40,12 @@ function Compare-Digest([string]$a, [string]$b) {
     $mb = $pb[0] -split ','
     $out = @()
     for ($i = 0; $i -lt [Math]::Max($ma.Count, $mb.Count); $i++) {
+        if ($mb[$i] -eq '-') { continue }  # fora da visao do cliente (F37)
         if ($ma[$i] -ne $mb[$i]) { $out += "monstro #$($i + 1): servidor $($ma[$i]) x cliente $($mb[$i])" }
     }
-    if ($pa[1] -ne $pb[1]) { $out += "baus: servidor [$($pa[1])] x cliente [$($pb[1])]" }
+    $ca = @($pa[1] -split ',' | Where-Object { $_ })
+    $extra = @($pb[1] -split ',' | Where-Object { $_ -and $ca -notcontains $_ })
+    if ($extra.Count -gt 0) { $out += "baus abertos so no cliente: [$($extra -join ',')]" }
     return $out
 }
 
@@ -58,15 +64,21 @@ foreach ($client in $Clients) {
     $last = Select-String -Path $client -Pattern '\[probe\] remoto' | Select-Object -Last 1
     if ($last) { Write-Host "${name}: $($last.Line.Trim())" } else { Write-Host "${name}: sem linha de remoto" }
     $checks = Read-Checks $client
+    $fog = Select-String -Path $client -Pattern '\[probe\] neblina: (\d+) .*, (\d+) com estado' | Select-Object -Last 1
+    if ($fog) {
+        Write-Host "${name}: $($fog.Line.Trim())"
+        if ([int]$fog.Matches[0].Groups[2].Value -gt 0) { $failed = $true }
+    }
     $same = 0; $diff = 0; $missing = 0; $shown = 0
     foreach ($tick in ($serverChecks.Keys | Sort-Object)) {
         if (-not $checks.ContainsKey($tick)) { $missing++; continue }
-        if ($checks[$tick] -eq $serverChecks[$tick]) { $same++; continue }
+        $diffs = @(Compare-Digest $serverChecks[$tick] $checks[$tick])
+        if ($diffs.Count -eq 0) { $same++; continue }
         $diff++
         if ($shown -lt $ShowDiffs) {
             $shown++
             Write-Host "  tick ${tick}:"
-            Compare-Digest $serverChecks[$tick] $checks[$tick] | ForEach-Object { Write-Host "    $_" }
+            $diffs | ForEach-Object { Write-Host "    $_" }
         }
     }
     Write-Host "${name}: checkpoints iguais ao servidor $same, diferentes $diff, sem par $missing"
