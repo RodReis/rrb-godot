@@ -1,6 +1,6 @@
 extends Node
 ## Visual do heroi: esconde as pecas do pack que o heroi nao usa e escolhe a animacao pelo
-## estado do Hero (replicado/previsto). So le estado; nunca o altera.
+## estado do Hero (replicado/previsto). So le estado; nunca o altera. Morto: cai uma vez e fica.
 
 @export var model: Node3D
 @export var hidden_parts: Array[StringName] = []
@@ -11,6 +11,7 @@ extends Node
 @export var stunned: StringName = &"Hit_B"
 @export var basic_attack: StringName = &"1H_Melee_Attack_Slice_Horizontal"
 @export var skill_r: StringName = &"1H_Melee_Attack_Chop"
+@export var death: StringName = &"Death_A"
 ## Velocidade abaixo da qual o heroi esta parado (u/s).
 @export var moving_speed: float = 0.1
 
@@ -19,6 +20,7 @@ var _player: AnimationPlayer
 var _one_shot: bool = false
 var _last_basic: int = 0
 var _last_r: int = 0
+var _fallen: bool = false
 
 
 func _ready() -> void:
@@ -35,6 +37,12 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if not _hero.is_alive():
+		if not _fallen:
+			_fallen = true
+			_once(death)
+		return
+	_fallen = false
 	var started_basic := _hero.basic_cooldown > _last_basic
 	var started_r := _hero.r_cooldown > _last_r
 	_last_basic = _hero.basic_cooldown

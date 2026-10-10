@@ -49,6 +49,7 @@ var _seats: Array[Seat] = []
 var _kills: Dictionary = {}  # peer -> kills na fase 2
 var _dead: Dictionary = {}  # peer -> morto no ultimo tick visto
 var _levels: Dictionary = {}  # peer -> maior nivel ja avisado
+var _refusals_logged: Dictionary = {}  # peer -> true: log de lock-in recusado uma vez por peer
 
 
 func _ready() -> void:
@@ -152,7 +153,9 @@ func submit_hero_selection(hero_id: int) -> void:
 	if peer == 0:
 		peer = multiplayer.get_unique_id()
 	if not submit_pick(peer, Ids.to_name(hero_id), NetworkTime.tick):
-		print("[match] lock-in recusado: peer %d, heroi %d" % [peer, hero_id])
+		if not _refusals_logged.has(peer):
+			_refusals_logged[peer] = true
+			print("[match] lock-in recusado: peer %d, heroi %d" % [peer, hero_id])
 
 
 func _seat(peer: int) -> Seat:

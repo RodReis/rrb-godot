@@ -1,7 +1,8 @@
 class_name HudPhase1
 extends CanvasLayer
 ## HUD da fase 1 (DV tela 3, ARCHITECTURE-GAME §3.6): relogio, portao, boss, minimapa, HP/XP,
-## 4 slots com conjuntos, skills com recarga e pontos livres, catch-up, loot e oferta do bau.
+## 4 slots com conjuntos, skills com recarga e pontos livres, catch-up, loot, oferta do bau e o
+## aviso de respawn enquanto o heroi local esta morto (F15).
 ## So le estado replicado (heroi local, relogio, nos do mundo) e nunca decide regra; tempos
 ## e limiares vem de MatchRules/XpCurve. Fica escondida ate bind() com o heroi local.
 
@@ -57,6 +58,8 @@ var _banner_tween: Tween
 @onready var _boss_banner: PanelCard = %BossBanner
 @onready var _boss_banner_text: Label = %BossBannerText
 @onready var _boss_sound: AudioStreamPlayer = %BossSound
+@onready var _respawn: PanelCard = %Respawn
+@onready var _respawn_text: Label = %RespawnText
 
 
 func _ready() -> void:
@@ -113,6 +116,7 @@ func _process(_delta: float) -> void:
 	_update_offer()
 	_update_loot_text()
 	_update_minimap()
+	_update_respawn()
 
 
 func _update_clock(elapsed: float) -> void:
@@ -220,6 +224,14 @@ func _update_catch_up() -> void:
 		_catch_up_text.text = tr("CATCH-UP +%d%% XP") % roundi(bonus * PERCENT)
 		var gap := _hero.xp_curve.catch_up_level_gap
 		_catch_up_hint.text = tr("%d+ níveis atrás do adversário") % gap
+
+
+## Morto: segundos ate renascer, do estado replicado do heroi (respawn_ticks).
+func _update_respawn() -> void:
+	_respawn.visible = not _hero.is_alive()
+	if _respawn.visible:
+		var seconds := ceili(float(_hero.respawn_ticks) / NetworkTime.tickrate)
+		_respawn_text.text = tr("Renascendo na base em %d s") % seconds
 
 
 ## Bau aberto ao alcance com item esperando troca: segurar F troca (Chest).

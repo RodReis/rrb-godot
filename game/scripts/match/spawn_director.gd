@@ -10,6 +10,8 @@ extends Node3D
 
 ## Para a HUD (F13). [param peer] = quem deu o golpe final.
 signal boss_killed(peer: int)
+## Servidor apenas: bau (inclusive o do boss) aberto pela primeira vez por [param peer].
+signal chest_opened(peer: int, chest_uid: int, tick: int)
 
 const SCENE_PATH: String = "res://scenes/monsters/%s.tscn"
 const CHEST_SCENE: String = "res://scenes/world/chest.tscn"
@@ -25,7 +27,6 @@ var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _chest_scene: PackedScene = preload(CHEST_SCENE)
 ## Ultimo numero usado em nome/uid; o boss e o bau dele continuam a contagem.
 var _last_number: int = 0
-var _boss_killer: int = 0
 
 
 func _ready() -> void:
@@ -85,14 +86,6 @@ func spawn_boss(_tick: int = 0) -> void:
 	add_child(boss)
 
 
-## Servidor apenas: cria o bau do boss no peer que acabou de conectar (o estado do bau vai
-## depois, com os outros baus).
-func send_state(peer: int) -> void:
-	var chest := get_node_or_null(BOSS_CHEST_NAME) as Chest
-	if chest != null:
-		_boss_defeated.rpc_id(peer, NetworkTime.tick, _boss_killer, chest.uid, chest.position)
-
-
 func _boss_marker() -> SpawnMarker:
 	for node: Node in get_tree().get_nodes_in_group(SpawnMarker.GROUP):
 		var marker := node as SpawnMarker
@@ -121,6 +114,7 @@ func _chest(marker: SpawnMarker, number: int) -> Chest:
 	chest.rare = marker.chest_kind == SpawnMarker.ChestKind.RARE
 	chest.home_team = marker.team
 	chest.drop = ChestRules.roll(chest.rare, chest.rules, chest.catalog.items, _rng)
+	chest.first_opened.connect(chest_opened.emit)
 	return chest
 
 
@@ -129,7 +123,6 @@ func _chest(marker: SpawnMarker, number: int) -> Chest:
 func _boss_defeated(_tick: int, killer_id: int, chest_uid: int, where: Vector3) -> void:
 	if has_node(BOSS_CHEST_NAME):
 		return
-	_boss_killer = killer_id
 	var chest := _chest_scene.instantiate() as Chest
 	chest.name = BOSS_CHEST_NAME
 	chest.uid = chest_uid
@@ -137,6 +130,7 @@ func _boss_defeated(_tick: int, killer_id: int, chest_uid: int, where: Vector3) 
 	if multiplayer.is_server():
 		chest.drop = ChestRules.boss_drop(chest.catalog.items, _rng)
 	chest.position = where
+	chest.first_opened.connect(chest_opened.emit)
 	add_child(chest)
 	boss_killed.emit(killer_id)
 

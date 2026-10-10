@@ -13,6 +13,8 @@ extends Combatant
 ## heroi (mark_disconnected), senao o netfox para de simula-lo (ARCHITECTURE-GAME §6).
 
 const GROUP: StringName = &"heroes"
+## Cena de cada heroi pelo id do HeroData.
+const SCENE_PATH: String = "res://scenes/heroes/%s.tscn"
 ## Contato da Investida = soma dos raios das capsulas (geometria, nao balanceamento).
 const CHARGE_REACH: float = 0.8
 
@@ -227,7 +229,9 @@ func _refresh_attributes() -> void:
 ## Colisao que sai do estado (vale tambem para o heroi remoto no cliente): morto nao bloqueia
 ## ninguem; a Muralha bloqueia so enquanto dura.
 func _refresh_body() -> void:
-	collision_layer = _alive_layer if is_alive() else 0
+	var layer := _alive_layer if is_alive() else 0
+	if collision_layer != layer:
+		collision_layer = layer
 	_shield_blocker.collision_layer = PhysicsLayers.SHIELD if shield_ticks > 0 else 0
 
 
