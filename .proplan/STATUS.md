@@ -13,7 +13,12 @@ updated: 2026-10-10
 
 ## A Fazer
 
-_(vazio)_
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-014][F14] Arqueira: modelo KayKit, flecha validada no servidor, Q Flecha Perfurante, E Rolamento e R Chuva de Flechas (#62)
+- [MVP2][SPEC-020][F20] Monstros, baús e boss replicados para 2 clientes reais sob latência e perda (#60)
+- [MVP2][SPEC-036][F36] Economia de campo: 4 campos laterais de monstros e baús e respawn de 90 s na fase 1 (#59)
+- [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58)
 
 ## Em Andamento
 
@@ -21,9 +26,7 @@ _(vazio)_
 
 ## Feito
 
-### Sem épico
-
-- [MVP1][FIX] Bot gira no lugar no centro depois que o boss morre e não há mais alvo (#52)
+_(vazio)_
 
 ## Finalizado
 
@@ -56,6 +59,7 @@ _(vazio)_
 
 ### Sem épico
 
+- [MVP1][FIX] Bot gira no lugar no centro depois que o boss morre e não há mais alvo (#52, finalizado em: 2026-10-10)
 - [INFRA] Pipeline Blender: art/, .gitattributes/.gitignore e import de .blend desligado (ADR-0005) (#34, finalizado em: 2026-10-09)
 
 ## Descartado
