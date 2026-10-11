@@ -258,13 +258,24 @@ text = "Mover"
 [node name="Key1" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
 script = ExtResource("badge")
-key = "LMB"
+key = "RMB"
 size_variant = 0
 
 [node name="Action1" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
 theme_type_variation = &"LabelMuted"
 text = "Ataque básico"
+
+[node name="KeyOrbit" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+layout_mode = 2
+script = ExtResource("badge")
+key = "LMB"
+size_variant = 0
+
+[node name="ActionOrbit" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Segure e arraste: girar câmera"
 
 [node name="Key2" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2

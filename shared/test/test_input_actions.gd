@@ -44,11 +44,26 @@ func test_movimento_em_wasd() -> void:
 	assert_eq(ev.physical_keycode, KEY_W)
 
 
-func test_ataque_primario_e_botao_esquerdo() -> void:
+func _click(button: MouseButton) -> InputEventMouseButton:
+	var ev := InputEventMouseButton.new()
+	ev.button_index = button
+	ev.pressed = true
+	return ev
+
+
+func test_ataque_primario_e_botao_direito() -> void:
+	# SPEC-045 §2: o esquerdo passou para o giro da camera.
 	InputActions.ensure()
-	var ev := InputMap.action_get_events(InputActions.PRIMARY_ATTACK)[0] as InputEventMouseButton
-	assert_not_null(ev)
-	assert_eq(ev.button_index, MOUSE_BUTTON_LEFT)
+	assert_true(InputMap.event_is_action(_click(MOUSE_BUTTON_RIGHT), InputActions.PRIMARY_ATTACK))
+	assert_false(InputMap.event_is_action(_click(MOUSE_BUTTON_LEFT), InputActions.PRIMARY_ATTACK))
+
+
+func test_giro_da_camera_e_botao_esquerdo_so_no_mouse() -> void:
+	InputActions.ensure()
+	assert_eq(InputActions.CAMERA_ORBIT, &"camera_orbit")
+	assert_true(InputMap.event_is_action(_click(MOUSE_BUTTON_LEFT), InputActions.CAMERA_ORBIT))
+	assert_false(InputMap.event_is_action(_click(MOUSE_BUTTON_RIGHT), InputActions.CAMERA_ORBIT))
+	assert_eq(InputMap.action_get_events(InputActions.CAMERA_ORBIT).size(), 1)
 
 
 func _events(action: StringName) -> Array[InputEvent]:

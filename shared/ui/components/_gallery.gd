@@ -158,11 +158,11 @@ func _skills() -> void:
 	var samples: Array[Array] = [
 		[KNIGHT.skill_q, "Q", 2, 0.0, false, false, "READY"],
 		[KNIGHT.skill_e, "E", 2, 3.4, false, false, "COOLING"],
-		[KNIGHT.basic_attack, "LMB", 1, 0.6, false, false, "COOLING < 1 s"],
+		[KNIGHT.basic_attack, "RMB", 1, 0.6, false, false, "COOLING < 1 s"],
 		[KNIGHT.skill_q, "Q", 1, 0.0, false, true, "upgradable"],
 		[KNIGHT.skill_r, "R", 0, 0.0, true, false, "LOCKED"],
 		[KNIGHT.skill_r, "R", 0, 0.0, true, true, "LOCKED + upgradable"],
-		[RANGER.basic_attack, "LMB", 1, 0.0, false, false, "Arqueira"],
+		[RANGER.basic_attack, "RMB", 1, 0.0, false, false, "Arqueira"],
 		[RANGER.skill_q, "Q", 1, 0.0, false, false, "Arqueira"],
 		[RANGER.skill_e, "E", 1, 2.2, false, false, "Arqueira"],
 		[RANGER.skill_r, "R", 1, 0.0, false, false, "Arqueira"],

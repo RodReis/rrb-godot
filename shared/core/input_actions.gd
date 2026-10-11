@@ -9,6 +9,7 @@ const MOVE_BACK: StringName = &"move_back"
 const MOVE_LEFT: StringName = &"move_left"
 const MOVE_RIGHT: StringName = &"move_right"
 const PRIMARY_ATTACK: StringName = &"primary_attack"
+const CAMERA_ORBIT: StringName = &"camera_orbit"
 const SKILL_Q: StringName = &"skill_q"
 const SKILL_E: StringName = &"skill_e"
 const SKILL_R: StringName = &"skill_r"
@@ -40,6 +41,8 @@ const ALL: Array[StringName] = [
 ## Gastar ponto de habilidade em Q, E, R (indice = SkillRules.SLOT_*): Ctrl + tecla da skill.
 ## So teclado ate os botoes +Q/+E/+R da HUD (F13) (PI 2026-10-09).
 const LEARN: Array[StringName] = [LEARN_Q, LEARN_E, LEARN_R]
+## Girar a camera segurando o botao esquerdo. So mouse: giro no gamepad fora (SPEC-045 §6).
+const MOUSE_ONLY: Array[StringName] = [CAMERA_ORBIT]
 const CTRL_KEYS: Dictionary = {
 	LEARN_Q: KEY_Q,
 	LEARN_E: KEY_E,
@@ -61,8 +64,10 @@ const KEYS: Dictionary = {
 	CANCEL: KEY_ESCAPE,
 	OPEN_BESTIARY: KEY_B,
 }
+# SPEC-045 §2: ataque no direito, giro da camera no esquerdo.
 const MOUSE_BUTTONS: Dictionary = {
-	PRIMARY_ATTACK: MOUSE_BUTTON_LEFT,
+	PRIMARY_ATTACK: MOUSE_BUTTON_RIGHT,
+	CAMERA_ORBIT: MOUSE_BUTTON_LEFT,
 }
 ## acao -> [eixo, sentido]
 const JOY_AXES: Dictionary = {
@@ -85,7 +90,7 @@ const JOY_BUTTONS: Dictionary = {
 
 
 static func ensure() -> void:
-	for action: StringName in ALL + LEARN:
+	for action: StringName in ALL + LEARN + MOUSE_ONLY:
 		if InputMap.has_action(action):
 			continue
 		InputMap.add_action(action)

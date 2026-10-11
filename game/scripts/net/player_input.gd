@@ -63,7 +63,8 @@ func _gather() -> void:
 	if _gamepad:
 		aim = _stick_aim(yaw)
 		aim_distance = INF
-	else:
+	elif not Input.is_action_pressed(InputActions.CAMERA_ORBIT):
+		# Girando a camera o cursor fica capturado: a mira mantem o ultimo valor (SPEC-045 §3).
 		_gather_mouse_aim()
 
 
