@@ -92,10 +92,13 @@ func _ready() -> void:
 		probe.players = players
 		probe.spawns = spawns
 		add_child(probe)
+	var dedicated: bool = args["mode"] == "server" or OS.has_feature("dedicated_server")
+	if not dedicated:
+		await _warm_shaders()
 	if args["offline"]:
 		if start_server(EPHEMERAL_PORT, HOST_BIND_IP):
 			_join(multiplayer.get_unique_id())
-	elif args["mode"] == "server" or OS.has_feature("dedicated_server"):
+	elif dedicated:
 		_dedicated = true
 		start_server(args["port"])
 	elif args["host"] != "":
@@ -120,6 +123,20 @@ func _process(_delta: float) -> void:
 		"%s | tick %d%s"
 		% [_net_text(), NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]
 	)
+
+
+## Aquece shaders antes de qualquer conexao (F38, ADR-0006 item 7): cliente que trava no sync
+## inicial pode ficar com o rollback preso (APRENDIZADOS #4). No headless volta na hora.
+func _warm_shaders() -> void:
+	connect_button.disabled = true
+	var warmup := ShaderWarmup.new()
+	add_child(warmup)
+	var world := get_node_or_null("Arena/WorldEnvironment") as WorldEnvironment
+	if world == null:
+		push_warning("[warmup] arena sem WorldEnvironment: aquecendo sem o ambiente")
+	await warmup.run(world.environment if world else null)
+	warmup.queue_free()
+	connect_button.disabled = false
 
 
 ## Falso se a porta nao abriu (o processo sai com codigo 1). Abre a espera pelos jogadores; com
