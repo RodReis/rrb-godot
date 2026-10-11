@@ -54,6 +54,8 @@ const DIRT_TINT: Color = Color(0.72, 0.66, 0.6)
 const ROCK_TINT: Color = Color(0.7, 0.72, 0.75)
 const MOSS_TINT: Color = Color(0.5, 0.62, 0.4)
 const PAVING_TINT: Color = Color(0.72, 0.72, 0.74)
+const FOLIAGE_ROUGHNESS: float = 0.85
+const FOLIAGE_SPECULAR: float = 0.15
 
 var _jungle: Dictionary = {}
 
@@ -272,9 +274,9 @@ func _save_materials() -> void:
 	_save(_triplanar("rock", ROCK_TINT, 0.15, 0.62, 0.0), ROCK_MATERIAL)
 	_save(_triplanar("bricks", Color(0.78, 0.78, 0.8), 0.45, 0.78, 0.65), STONE_MATERIAL)
 	# Folhagem: detalhe da grama, cor (tronco marrom, galho verde-escuro) pela celula do atlas.
-	_save(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0), PINE_MATERIAL)
+	_save(_foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0)), PINE_MATERIAL)
 	# Mato alto: mesma receita, mais claro que o pinheiro (leitura a distancia da camera).
-	_save(_triplanar("grass", Color(0.85, 0.88, 0.62), 0.9, 1.0, 1.0), TALL_GRASS_MATERIAL)
+	_save(_foliage(_triplanar("grass", Color(0.85, 0.88, 0.62), 0.9, 1.0, 1.0)), TALL_GRASS_MATERIAL)
 
 
 func _save(material: Material, path: String) -> void:
@@ -325,6 +327,12 @@ func _triplanar(
 	m.set_shader_parameter("atlas_tint", atlas_tint)
 	m.set_shader_parameter("brightness", TERRAIN_BRIGHTNESS)
 	m.set_shader_parameter("saturation", TERRAIN_SATURATION)
+	return m
+
+
+func _foliage(m: ShaderMaterial) -> ShaderMaterial:
+	m.set_shader_parameter("min_roughness", FOLIAGE_ROUGHNESS)
+	m.set_shader_parameter("specular_amount", FOLIAGE_SPECULAR)
 	return m
 
 

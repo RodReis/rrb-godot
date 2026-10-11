@@ -11,6 +11,9 @@ uniform sampler2D base_normal : hint_normal, filter_linear_mipmap_anisotropic, r
 uniform sampler2D base_rough : hint_roughness_gray, filter_linear_mipmap_anisotropic, repeat_enable;
 uniform float base_tile = 0.35;
 uniform vec3 base_tint : source_color = vec3(1.0);
+// Folhagem e fosca: piso da rugosidade e especular reduzido (sem brilho de "neve" no sol baixo).
+uniform float min_roughness : hint_range(0.0, 1.0) = 0.0;
+uniform float specular_amount : hint_range(0.0, 1.0) = 0.5;
 
 group_uniforms moss;
 uniform sampler2D moss_albedo : source_color, filter_linear_mipmap_anisotropic, repeat_enable;
@@ -91,6 +94,7 @@ void fragment() {
 	}
 	float luma = dot(albedo, vec3(0.299, 0.587, 0.114));
 	ALBEDO = mix(vec3(luma), albedo, saturation) * brightness;
-	ROUGHNESS = rough;
+	ROUGHNESS = max(rough, min_roughness);
+	SPECULAR = specular_amount;
 	NORMAL = normalize((VIEW_MATRIX * vec4(normal, 0.0)).xyz);
 }
