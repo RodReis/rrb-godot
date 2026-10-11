@@ -7,10 +7,6 @@ updated: 2026-10-11
 
 ## Backlog
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-052][F52] Tela de vitória/derrota fiel ao protótipo novo, só com dados reais (#133)
-
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
@@ -33,6 +29,7 @@ updated: 2026-10-11
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-052][F52] Tela de vitória/derrota fiel ao protótipo novo, só com dados reais (#133)
 - [MVP2][SPEC-051][F51] Tela de seleção de heróis fiel ao protótipo novo, só com dados reais (#132)
 - [MVP2][SPEC-050][F50] Pátio da base com construções do Medieval Village MegaKit (CC0) adaptadas ao castelo atual (#131)
 - [MVP2][FIX] Cliente loga ERROR a cada quadro depois que o servidor encerra a partida (#108)
