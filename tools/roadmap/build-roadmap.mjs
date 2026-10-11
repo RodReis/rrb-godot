@@ -56,12 +56,13 @@ const cells = (l) => l.trim().replace(/^\||\|$/g, "").split("|").map((c) => c.tr
 
 const mvps = [];
 for (const l of section(statusMd, /^## 2\./)) {
-  const m = l.match(/^\|\s*\*{0,2}(MVP\d+)\*{0,2}\s*\|/);
+  const m = l.match(/^\|\s*\*{0,2}(MVP\d+(?:\.\d+)?)\*{0,2}\s*\|/);
   if (!m) continue;
   const c = cells(l);
   mvps.push({ id: m[1], entrega: c[1], criterio: c[3] });
 }
 if (!mvps.length) throw new Error("docs/STATUS.md §2: nenhuma linha de MVP encontrada");
+mvps.sort((a, b) => Number(a.id.slice(3)) - Number(b.id.slice(3))); // por valor: MVP2.5 entre MVP2 e MVP3
 
 const fatias = [];
 for (const l of section(statusMd, /^## 3\./)) {
@@ -88,7 +89,7 @@ for (const l of proplanMd.split("\n")) {
   if (!cur || !l.startsWith("- ")) continue;
   const iss = (l.match(/\(#(\d+)[,)]/) || [])[1];
   if (iss) byIssue.set(iss, cur);
-  const mv = (l.match(/\[(MVP\d+)\]/) || [])[1];
+  const mv = (l.match(/\[(MVP\d+(?:\.\d+)?)\]/) || [])[1];
   const fk = (l.match(/\[(F\d+)\]/) || [])[1];
   if (fk) byKey.set(fk, cur);
   else if (mv && /\[GATE\]/.test(l)) byKey.set(mv + ":GATE", cur);

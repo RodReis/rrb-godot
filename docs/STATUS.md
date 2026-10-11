@@ -20,7 +20,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | **MVP0** | Spike de netcode: 2 clientes + servidor headless em Docker, cápsula com predição, 1 ataque validado | game, infra | jogável a 100 ms sem "borracha" perceptível | **gate aprovado** — segue Godot (ADR-0001) |
 | MVP1 | Arena single-player: mapa 3 zonas, Cavaleiro, monstros, XP/níveis, baús/itens, boss, bot, HUD F1 | game, shared | fase 1 completa contra bot, offline | **gate aprovado** (2026-10-10) |
 | MVP2 | Partida em rede: Arqueira, pick, fase 2 (zona, kills, fim garantido), HUD F2, fim de partida, economia de campo (laterais + respawn), mato alto e neblina de guerra | game, shared | 1x1 online termina sempre; soak 50 partidas bot×bot | **em andamento** (#57) |
-| MVP2.5 | Bloco visual: giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX, vegetação, HUD v2 (ADR-0006) | game, shared | 6 fatias aceitas pelo PI + critério de netcode do ADR-0006 item 7 | backlog (#99) |
+| MVP2.5 | Bloco visual: giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX, vegetação, HUD v2 (ADR-0006) | game, shared | 6 fatias aceitas pelo PI + critério de netcode do ADR-0006 item 7 | **em andamento** (#99) |
 | MVP3 | Meta + deploy: backend, launcher, pool no VPS, build PC | launcher, backend, infra | dois amigos jogam pela internet sem o dev | backlog (#76) |
 | MVP4 | Playtest: telemetria, 10+ pessoas, ajuste de números | todos | decisão câmera/duração/3x3; critérios PRD §9.2 | planejado |
 
@@ -68,21 +68,21 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F27 / SPEC-027 | MVP3 | launcher | Slice 3.7 — Bestiário e Forja (simulador com `shared/core`) | backlog (#84) |
 | F33 / SPEC-033 | MVP3 | launcher, shared | Slice 3.9 — Tela Arena & Mapa (DV tela 10): render da arena real, marcadores (POIs), regras das 2 fases pelos números do GDB | backlog (#85) |
 | F35 / SPEC-035 | MVP3 | launcher, backend | Slice 3.10 — Perfil de conta: nickname único obrigatório no 1º login (3–16 `A–Z a–z 0–9 _`, prefixo `#` de exibição); avatar predefinido ou upload ≤ 1 MB, só local; sem XP de conta, sem data de nascimento (R-PEND-02) | backlog (#86) |
-| F38 / SPEC-038 | MVP2.5 | game | Slice 2.5.1 — Iluminação e pós: `WorldEnvironment`, `Sun`, `LightmapGI`, warm-up de shaders, baseline do profiler, toggles em `settings.cfg` (ADR-0006) | backlog (#93) |
-| F39 / SPEC-039 | MVP2.5 | game, shared | Slice 2.5.2 — Toon + outline por pós-import | backlog (#94) |
-| F40 / SPEC-040 | MVP2.5 | game, shared | Slice 2.5.3 — Arte da ilha sobre a SPEC-044: ilha + abismo, castelos, rio de mana e cachoeiras, cratera de magma, cristais, skybox, ilhotas; shaders de água/magma/cristal/sky (ADR-0007) | backlog (#95) |
-| F41 / SPEC-041 | MVP2.5 | game | Slice 2.5.4 — Arquitetura VFX + VFX do Cavaleiro e da Arqueira | backlog (#96) |
-| F42 / SPEC-042 | MVP2.5 | game, shared | Slice 2.5.5 — Vegetação (grama `MultiMesh`, distinta do mato alto) | backlog (#97) |
-| F43 / SPEC-043 | MVP2.5 | game, shared | Slice 2.5.6 — HUD v2 (ghost bar, ícones, molduras, fontes R-PEND-14, 3 pontos) | backlog (#98) |
+| F38 / SPEC-038 | MVP2.5 | game | Slice 2.5.1 — Iluminação e pós: `WorldEnvironment`, `Sun`, `LightmapGI`, warm-up de shaders, baseline do profiler, toggles em `settings.cfg` (ADR-0006) | finalizado (#93) |
+| F39 / SPEC-039 | MVP2.5 | game, shared | Slice 2.5.2 — Toon + outline por pós-import | finalizado (#94) |
+| F40 / SPEC-040 | MVP2.5 | game, shared | Slice 2.5.3 — Arte da ilha sobre a SPEC-044: ilha + abismo, castelos, rio de mana e cachoeiras, cratera de magma, cristais, skybox, ilhotas; shaders de água/magma/cristal/sky (ADR-0007) | finalizado (#95) |
+| F41 / SPEC-041 | MVP2.5 | game | Slice 2.5.4 — Arquitetura VFX + VFX do Cavaleiro e da Arqueira | finalizado (#96) |
+| F42 / SPEC-042 | MVP2.5 | game, shared | Slice 2.5.5 — Vegetação (grama `MultiMesh`, distinta do mato alto) | finalizado (#97) |
+| F43 / SPEC-043 | MVP2.5 | game, shared | Slice 2.5.6 — HUD v2 (ghost bar, ícones, molduras, fontes R-PEND-14, 3 pontos) | finalizado (#98) |
 | F28 / SPEC-028 | MVP3 | infra | Slice 3.8 — Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets, pacote de instalação (`launcher/` + `game/`) | backlog (#82) |
-| F45 / SPEC-045 | MVP2.5 | game, shared | Slice 2.5.7 — Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (só cliente; substitui #47) | backlog (#103) |
-| [INFRA] | MVP2.5 | infra | Roadmap público (`build-roadmap.mjs`) e `GITHUB.md` passam a aceitar o marco `MVP2.5` — antes da 1ª fatia do marco ser entregue | backlog (#100) |
+| F45 / SPEC-045 | MVP2.5 | game, shared | Slice 2.5.7 — Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (só cliente; substitui #47) | todo (#103) |
+| [INFRA] | MVP2.5 | infra | Roadmap público (`build-roadmap.mjs`) e `GITHUB.md` passam a aceitar o marco `MVP2.5` — antes da 1ª fatia do marco ser entregue | doing (#100) |
 | [GATE] | MVP3 | — | Dois amigos jogam pela internet sem intervenção do dev | backlog (#87) |
 | F29 / SPEC-029 | MVP4 | backend, launcher, game | Slice 4.1 — Telemetria: ping médio, duração, líder de nível F1 × vencedor; painel de KPIs no histórico | — |
 | F30 / SPEC-030 | MVP4 | shared | Slice 4.2 — Ajustes de balanceamento pós-playtest (só `.tres`) | — |
 | F32 / SPEC-032 | MVP2 | game | Slice 2.8 — Mato alto: herói dentro da moita não é replicado para o adversário (visibilidade no servidor); regra em `CONVENTION.md` §4.7, números em GDB §7.3 (revelação 1,5 s) | done (#66) |
-| F44 / SPEC-044 | MVP2 | game, shared | Slice 2.11 — Arena "Ilha Flutuante Arcana": layout novo (espelho N–S, rio N–S + anel, 4 pontes), builder, colisão, marcadores, navmesh **+ a arte do F40 no mesmo card** (decisão do PI 2026-10-10: kits Blender, shaders de rio/magma/cristal/céu, baú novo) | doing (#92) |
-| F46 / SPEC-046 | MVP2 | game, shared | Slice 2.12 — Arena "Rift Medieval adaptado": borda quadrada 80×80, rio em S NO–SE com lagoas, bases SO/NE (rotação 180°), 2 pontes na MID, 3 corredores de 8 u, selva nos quadrantes; builder, chassi Blender, marcadores, navmesh; kits do F44 reposicionados (ADR-0009) | todo (#110) |
+| F44 / SPEC-044 | MVP2 | game, shared | Slice 2.11 — Arena "Ilha Flutuante Arcana": layout novo (espelho N–S, rio N–S + anel, 4 pontes), builder, colisão, marcadores, navmesh **+ a arte do F40 no mesmo card** (decisão do PI 2026-10-10: kits Blender, shaders de rio/magma/cristal/céu, baú novo) | finalizado (#92) |
+| F46 / SPEC-046 | MVP2 | game, shared | Slice 2.12 — Arena "Rift Medieval adaptado": borda quadrada 80×80, rio em S NO–SE com lagoas, bases SO/NE (rotação 180°), 2 pontes na MID, 3 corredores de 8 u, selva nos quadrantes; builder, chassi Blender, marcadores, navmesh; kits do F44 reposicionados (ADR-0009) | finalizado (#110) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
 Próximo número livre: **F47 / SPEC-047**.

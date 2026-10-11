@@ -149,7 +149,7 @@ Confirmar `mergedAt`/`mergeSha` na origem antes de declarar integrado (`CLAUDE.m
 
 ## 9. Título da issue
 
-`[MVP<n>][SPEC-<nnn>][<F<n> | FIX | GATE | INFRA | TEST>] <título livre>` — tokens nesta ordem, seguidos de espaço e título livre. **Só entra token que é verdade**; o que não existe, omite. Nunca o número nu, sempre o par.
+`[MVP<n>][SPEC-<nnn>][<F<n> | FIX | GATE | INFRA | TEST>] <título livre>` — tokens nesta ordem, seguidos de espaço e título livre. **Só entra token que é verdade**; o que não existe, omite. Nunca o número nu, sempre o par. `<n>` do MVP pode ser decimal quando o marco é intermediário (`[MVP2.5]`).
 
 - Fatia com spec → `[MVP1][SPEC-007][F7] Arena hexagonal com três zonas e portões`
 - Correção ligada a uma spec → `[MVP1][SPEC-007][FIX] portão deixa passar o time adversário`
