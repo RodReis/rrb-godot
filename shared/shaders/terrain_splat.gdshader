@@ -70,7 +70,7 @@ varying vec3 v_world_normal;
 
 void vertex() {
 	v_world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
-	v_world_normal = normalize((MODEL_MATRIX * vec4(NORMAL, 0.0)).xyz);
+	v_world_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
 }
 
 // Normal map (convencao GL) com o eixo v do Godot (para baixo na imagem) desvirado.
@@ -162,8 +162,9 @@ void fragment() {
 		rough = mix(rough, r, w_paving);
 		normal = normalize(mix(normal, nn, w_paving));
 	}
-	float bed = smoothstep(bed_top, bed_bottom, pos.y);
-	float slope = smoothstep(slope_start, slope_end, n.y);
+	// Bordas em ordem crescente (smoothstep com edge0 >= edge1 e indefinido no GLSL).
+	float bed = 1.0 - smoothstep(bed_bottom, bed_top, pos.y);
+	float slope = 1.0 - smoothstep(slope_end, slope_start, n.y);
 	float w_rock = max(max(edge(mask.a, fine), slope), bed);
 	if (w_rock > 0.001) {
 		triplanar(rock_albedo, rock_normal, rock_rough, rock_tile, rock_tint, pos, n, a, r, nn);

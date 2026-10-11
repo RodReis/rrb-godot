@@ -7,14 +7,13 @@ extends GutTest
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const JUNGLE_JSON: String = "../tools/arena/jungle.json"
-## Trilhas da selva (indice no jungle.json) percorridas pela capsula: as 2 primeiras passam pelo
-## portao e pelos muros internos da base, que tem prova propria (test_ilha_arcana_physics).
-const JUNGLE_TRAILS_FROM: int = 2
 const CAPSULE_RADIUS: float = 0.4
 const CAPSULE_HEIGHT: float = 1.8
 const LIFT: float = 0.05
 ## Pegada horizontal da rocha com escala 1 (art/arena/build_island.py: raio >= 1,05 no pe).
 const OUTCROP_FOOT: float = 1.05
+## Altura minima do modelo da rocha com escala 1 (art/arena/build_island.py, rock_outcrop_*).
+const OUTCROP_MIN_HEIGHT: float = 1.35
 const SAMPLE_STEP: float = 0.5
 
 var _arena: Node3D
@@ -89,14 +88,32 @@ func _covered(rocks: Array[Node3D], p: Vector2) -> bool:
 	return false
 
 
+## Toda rocha e mais alta que a colisao do bolsao: nada de parede invisivel por cima da malha.
+func test_rochas_mais_altas_que_a_colisao() -> void:
+	var height := 0.0
+	for shape: CollisionShape3D in _jungle_shapes():
+		if shape.shape is CylinderShape3D:
+			height = maxf(height, (shape.shape as CylinderShape3D).height)
+	assert_gt(height, 0.0)
+	for node: Node in _arena.get_node("Jungle").get_children():
+		if node.name.begins_with("Rock"):
+			var rock := node as Node3D
+			var top := rock.transform.basis.get_scale().y * OUTCROP_MIN_HEIGHT
+			assert_gt(top, height, "%s mais baixa que a colisao" % rock.name)
+
+
 func test_trilhas_da_selva_livres_para_o_heroi() -> void:
 	await wait_physics_frames(2)
 	var capsule := CapsuleShape3D.new()
 	capsule.radius = CAPSULE_RADIUS
 	capsule.height = CAPSULE_HEIGHT
 	var lift := Vector3.UP * (CAPSULE_HEIGHT / 2 + LIFT)
+	# Trilhas com "physics": false cruzam portao/muros da base ou a cratera (prova propria em
+	# test_ilha_arcana_physics).
 	var trails: Array = _jungle["trails"]
-	for t: int in range(JUNGLE_TRAILS_FROM, trails.size()):
+	for t: int in range(trails.size()):
+		if not trails[t].get("physics", true):
+			continue
 		var points: Array = trails[t]["points"]
 		for flip: float in [1.0, -1.0]:
 			for i: int in range(points.size() - 1):

@@ -179,7 +179,7 @@ func _build_rim_decor(flip: float) -> void:
 		var torch := _asset(decor, RRB_ARENA + "torch_post.glb", "Torch%s%d" % [tag, i])
 		var at := _world(torches[i], flip)
 		# Braco da tocha voltado para dentro da arena.
-		torch.transform = Transform3D(_tangent_basis(-_inward(torches[i]) * flip), at)
+		torch.transform = Transform3D(_tangent_basis(_inward(torches[i]) * flip), at)
 	for i: int in range(RIM_CRYSTALS_A.size()):
 		var c: Array = RIM_CRYSTALS_A[i]
 		var at := _world(c[0], flip)
@@ -222,7 +222,9 @@ func _rim_torch_points() -> PackedVector2Array:
 	var t := RIM_SPAN.x + RIM_TORCH_STEP * 0.5
 	while t <= RIM_SPAN.y:
 		for p: Vector2 in [Vector2(t, -RIM_TORCH_ROW), Vector2(-RIM_TORCH_ROW, t)]:
-			if not Array(_rim_decor_points()).any(func(q: Vector2) -> bool: return p.distance_to(q) < RIM_CLEAR):
+			if not Array(_rim_decor_points()).any(
+				func(q: Vector2) -> bool: return p.distance_to(q) < RIM_CLEAR
+			):
 				out.append(p)
 		t += RIM_TORCH_STEP
 	return out

@@ -26,7 +26,6 @@ const PINE_MATERIAL: String = MATERIALS + "pine_foliage.tres"
 const TALL_GRASS_MATERIAL: String = MATERIALS + "tall_grass.tres"
 
 # Mascara: o que vira cada camada (metade A; a B e a rotacao).
-const CLEARING_DIRT: float = 4.5
 const CENTER_CLEARING: float = 3.5
 const BANK_MOSS: float = 1.8
 const WALL_MOSS: float = 1.4
@@ -45,6 +44,8 @@ const OUTCROP_MARGIN: float = 0.35
 const ROCK_STEP: float = 1.6
 const PINE_STEP: float = 2.1
 const PINE_SCALE: Vector2 = Vector2(0.85, 1.35)
+## Escala vertical das rochas (altura do modelo ~1,4 u): a menor fica acima da colisao do bolsao.
+const OUTCROP_HEIGHT_SCALE: Vector2 = Vector2(1.7, 2.3)
 
 # Tom realista e sombrio (verificacao visual do PI).
 const TERRAIN_BRIGHTNESS: float = 0.82
@@ -93,11 +94,13 @@ func _polylines(key: String) -> Array[Array]:
 	return out
 
 
-func _clearings() -> Array[Vector2]:
-	var out: Array[Vector2] = []
+## Clareiras [centro, raio] nas duas metades.
+func _clearings() -> Array[Array]:
+	var out: Array[Array] = []
 	for item: Dictionary in _jungle["clearings"]:
 		var c := Vector2(item["center"][0], item["center"][1])
-		out.append_array([c, -c])
+		var radius: float = item["radius"]
+		out.append_array([[c, radius], [-c, radius]])
 	return out
 
 
@@ -136,8 +139,8 @@ func _paint_terrain() -> void:
 	_stamp_border(moss)
 	for trail: Array in _polylines("trails"):
 		_stamp_polyline(dirt, trail[0], trail[1])
-	for c: Vector2 in _clearings():
-		_stamp_disc(dirt, c, CLEARING_DIRT)
+	for clearing: Array in _clearings():
+		_stamp_disc(dirt, clearing[0], clearing[1])
 	for az: float in FIELD_AZIMUTHS:
 		_stamp_disc(dirt, _flat(_polar(az, FIELD_RADIUS)), CENTER_CLEARING)
 	_stamp_bases(paving)
@@ -276,7 +279,9 @@ func _save_materials() -> void:
 	# Folhagem: detalhe da grama, cor (tronco marrom, galho verde-escuro) pela celula do atlas.
 	_save(_foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0)), PINE_MATERIAL)
 	# Mato alto: mesma receita, mais claro que o pinheiro (leitura a distancia da camera).
-	_save(_foliage(_triplanar("grass", Color(0.85, 0.88, 0.62), 0.9, 1.0, 1.0)), TALL_GRASS_MATERIAL)
+	_save(
+		_foliage(_triplanar("grass", Color(0.85, 0.88, 0.62), 0.9, 1.0, 1.0)), TALL_GRASS_MATERIAL
+	)
 
 
 func _save(material: Material, path: String) -> void:
@@ -377,7 +382,8 @@ func _build_jungle_visuals() -> void:
 			var model: String = OUTCROPS[int(h * OUTCROPS.size()) % OUTCROPS.size()]
 			var rock := _asset(group, RRB_ARENA + model + ".glb", "Rock%d" % index)
 			var s := scale * (1.0 + 0.25 * _hash(at + Vector2(3.1, 7.7)))
-			var basis := Basis(Vector3.UP, TAU * h).scaled(Vector3(s, s * (0.8 + 0.5 * h), s))
+			var sy := lerpf(OUTCROP_HEIGHT_SCALE.x, OUTCROP_HEIGHT_SCALE.y, h)
+			var basis := Basis(Vector3.UP, TAU * h).scaled(Vector3(s, sy, s))
 			rock.transform = Transform3D(basis, Vector3(at.x, 0, at.y))
 			index += 1
 		for at: Vector2 in _along(points, PINE_STEP):

@@ -15,6 +15,8 @@ extends "arena_terrain.gd"
 const JUNGLE_CHECK_STEP: float = 0.5
 ## Raio do agente do navmesh (ArenaNav): passagem entre bolsoes tem de caber o bot.
 const AGENT_CLEARANCE: float = 0.5
+## Altura da colisao dos bolsoes: abaixo da rocha mais baixa (nada de parede invisivel por cima).
+const JUNGLE_HEIGHT: float = 2.2
 
 
 func _initialize() -> void:
@@ -438,22 +440,23 @@ func _build_jungle(walls: StaticBody3D) -> void:
 		for k: int in range(points.size()):
 			var cylinder := CylinderShape3D.new()
 			cylinder.radius = half
-			cylinder.height = WALL_HEIGHT
-			var at := Vector3(points[k].x, WALL_HEIGHT / 2, points[k].y)
+			cylinder.height = JUNGLE_HEIGHT
+			var at := Vector3(points[k].x, JUNGLE_HEIGHT / 2, points[k].y)
 			_shape(walls, cylinder, at).name = "Jungle%dC%d" % [w, k]
 		for i: int in range(points.size() - 1):
 			var a := Vector3(points[i].x, 0, points[i].y)
 			var b := Vector3(points[i + 1].x, 0, points[i + 1].y)
 			var dir := (b - a).normalized()
 			var box := BoxShape3D.new()
-			box.size = Vector3(a.distance_to(b), WALL_HEIGHT, half * 2)
-			var shape := _shape(walls, box, (a + b) / 2 + Vector3.UP * WALL_HEIGHT / 2)
+			box.size = Vector3(a.distance_to(b), JUNGLE_HEIGHT, half * 2)
+			var shape := _shape(walls, box, (a + b) / 2 + Vector3.UP * JUNGLE_HEIGHT / 2)
 			shape.basis = Basis(Vector3.UP, atan2(-dir.z, dir.x))
 			shape.name = "Jungle%dS%d" % [w, i]
 
 
 ## Bolsao dentro de trilha ou clareira, e marcador que nao se alcanca a pe a partir do spawn A
-## (rio com pontes, borda e bolsoes bloqueiam; grade de JUNGLE_CHECK_STEP).
+## (rio com pontes, borda e bolsoes bloqueiam; grade de JUNGLE_CHECK_STEP). E piso, nao prova
+## completa: muros da base, casas, rochas soltas e pilares nao entram no flood.
 func _jungle_violations() -> Array[String]:
 	var violations: Array[String] = []
 	var walls := _polylines("walls")
@@ -464,9 +467,9 @@ func _jungle_violations() -> Array[String]:
 				if _polyline_distance(p, trail[0]) < wall[1] + trail[1]:
 					violations.append("bolsao %s invade a trilha %s" % [wall[0], trail[0]])
 					break
-		for c: Vector2 in _clearings():
-			if _polyline_distance(c, wall[0]) < wall[1] + CLEARING_DIRT:
-				violations.append("bolsao %s invade a clareira %s" % [wall[0], c])
+		for clearing: Array in _clearings():
+			if _polyline_distance(clearing[0], wall[0]) < wall[1] + clearing[1]:
+				violations.append("bolsao %s invade a clareira %s" % [wall[0], clearing[0]])
 	var reach := _walkable_from(_flat(AXIS_A * SPAWN_S), walls)
 	for node: Node in _root.get_node("Markers").get_children():
 		var at := _flat((node as Node3D).position)
