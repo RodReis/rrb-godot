@@ -37,6 +37,12 @@ func test_chave_falsa_desliga_so_ela() -> void:
 	assert_true(flags[GraphicsSettings.SSAO])
 
 
+func test_grama_desligada_no_cfg() -> void:
+	var flags := GraphicsSettings.read(_config({"grass": false}))
+	assert_false(flags[GraphicsSettings.GRASS])
+	assert_true(flags[GraphicsSettings.FOG])
+
+
 func test_tipo_errado_fica_ligado() -> void:
 	var flags := GraphicsSettings.read(_config({"ssao": "nao"}))
 	assert_true(flags[GraphicsSettings.SSAO])

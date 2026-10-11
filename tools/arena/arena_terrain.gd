@@ -12,6 +12,8 @@ const SPLAT_ORIGIN: Vector2 = Vector2(-50, -50)
 const SPLAT_EXTENT: float = 100.0
 ## Borda macia das manchas da mascara (u); o shader ainda quebra a borda com ruido.
 const SPLAT_SOFT: float = 0.9
+## Canal do musgo na mascara (R terra, G pedra, B musgo, A rocha).
+const MOSS_CHANNEL: int = 2
 
 const TEXTURES: String = "res://shared/assets/ambientcg/%s_%s.jpg"
 const TERRAIN_LAYERS: Array[String] = ["grass", "moss", "dirt", "paving", "rock"]
@@ -59,6 +61,8 @@ const FOLIAGE_ROUGHNESS: float = 0.85
 const FOLIAGE_SPECULAR: float = 0.15
 
 var _jungle: Dictionary = {}
+## Canais da mascara em float (terra, pedra, musgo, rocha), guardados para a grama (F42).
+var _splat: Array[PackedFloat32Array] = []
 
 # --- dados da selva ----------------------------------------------------------------------
 
@@ -145,6 +149,7 @@ func _paint_terrain() -> void:
 		_stamp_disc(dirt, _flat(_polar(az, FIELD_RADIUS)), CENTER_CLEARING)
 	_stamp_bases(paving)
 	_stamp_disc(rock, Vector2.ZERO, CRATER_ROCK)
+	_splat = channels
 	var bytes := PackedByteArray()
 	bytes.resize(SPLAT_SIZE * SPLAT_SIZE * 4)
 	for i: int in range(SPLAT_SIZE * SPLAT_SIZE):
@@ -153,6 +158,19 @@ func _paint_terrain() -> void:
 	var image := Image.create_from_data(SPLAT_SIZE, SPLAT_SIZE, false, Image.FORMAT_RGBA8, bytes)
 	var err := image.save_png(ProjectSettings.globalize_path(SPLAT_PATH))
 	print("[arena] mascara do terreno %s -> %s" % [SPLAT_PATH, error_string(err)])
+
+
+## Maior peso, no ponto (x, z), entre as camadas que nao sao grama (0 = grama pura), menos o
+## canal [param skip].
+func _splat_at(p: Vector2, skip: int = -1) -> float:
+	var scale := SPLAT_SIZE / SPLAT_EXTENT
+	var col := clampi(floori((p.x - SPLAT_ORIGIN.x) * scale), 0, SPLAT_SIZE - 1)
+	var row := clampi(floori((p.y - SPLAT_ORIGIN.y) * scale), 0, SPLAT_SIZE - 1)
+	var weight := 0.0
+	for c: int in range(_splat.size()):
+		if c != skip:
+			weight = maxf(weight, _splat[c][row * SPLAT_SIZE + col])
+	return weight
 
 
 ## Pixel (coluna, linha) -> ponto (x, z) do mundo no centro do pixel.

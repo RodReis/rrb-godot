@@ -164,7 +164,7 @@ Ambos os projetos: `application/config/use_custom_user_dir=true`, `custom_user_d
 [audio]   master=float  music=float  sfx=float  voice=float   ; 0.0–1.0
 [controls] move_forward="W" ... skill_q="Q" ... interact="F"   ; nomes de ação do InputMap = os de shared/core/input_actions.gd
           mouse_sensitivity=float  gamepad=bool
-[graphics] fog=bool  ssil=bool  ssao=bool   ; padrão true; Game só desliga o que a arena traz ligado (F38, ADR-0006 item 8)
+[graphics] fog=bool  ssil=bool  ssao=bool  grass=bool   ; padrão true; Game só desliga o que a arena traz ligado (F38, ADR-0006 item 8; grass = grama decorativa, F42)
 [meta]    schema=1
 ```
 
