@@ -23,6 +23,8 @@ argv = sys.argv[sys.argv.index("--") + 1:]
 REPO = argv[0]
 ART = os.path.join(REPO, "art", "arena")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "arena")
+# Quina mais aguda que isto fica marcada no smooth shading (graus).
+SMOOTH_ANGLE = 60.0
 ATLAS = os.path.join(REPO, "shared", "assets", "kaykit", "medieval_hexagon", "hexagons_medieval.png")
 
 # Celulas do atlas KayKit (coluna 0..7, linha 0..3; linha 0 = topo).
@@ -285,7 +287,6 @@ def build(kit, bevel=0.0):
     rune_slots = {}
     uv = mesh.uv_layers.new(name="UVMap")
     for poly in mesh.polygons:
-        poly.use_smooth = False
         (cell, (t_lo, t_hi)) = kit.cells[poly.index]
         rune = kit.rune.get(poly.index)
         if rune is not None:
@@ -296,8 +297,11 @@ def build(kit, bevel=0.0):
         ys = [kit.verts[mesh.loops[l].vertex_index][1] for l in poly.loop_indices]
         y_min, y_max = min(ys), max(ys)
         for l in poly.loop_indices:
-            y = kit.verts[mesh.loops[l].vertex_index][1]
-            if y_max - y_min < 1e-4:
+            x, y, z = kit.verts[mesh.loops[l].vertex_index]
+            if callable(t_lo):
+                # Tom por vertice (piso): faces vizinhas casam no vertice, sem mosaico de triangulos.
+                t = t_lo(x, z)
+            elif y_max - y_min < 1e-4:
                 t = t_hi if poly.normal.z > 0.5 else (t_lo if poly.normal.z < -0.5 else (t_lo + t_hi) / 2)
             else:
                 t = t_lo + (t_hi - t_lo) * (y - y_min) / (y_max - y_min)
@@ -317,6 +321,14 @@ def build(kit, bevel=0.0):
         mod.segments = 2
         mod.limit_method = "ANGLE"
         mod.angle_limit = math.radians(40.0)
+    # Smooth shading por angulo (F39, PI 2026-10-10): sem os triangulos marcados do sombreamento
+    # chapado; quina acima de SMOOTH_ANGLE continua viva. Modificador por ultimo (depois do bevel).
+    for o in bpy.context.scene.objects:
+        o.select_set(False)
+    obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj
+    bpy.ops.object.shade_auto_smooth(angle=math.radians(SMOOTH_ANGLE))
+    obj.select_set(False)
     TRIS[kit.name] = kit.tris()
     return obj
 
@@ -527,25 +539,26 @@ def in_castle_bastion(x, z):
 
 
 def ground_cell(cx, cz):
+    """Celula do atlas e faixa t da face do piso em (cx, cz); patio e grama dao t por vertice
+    (callable em vez da faixa), para o tom variar sem marcar cada triangulo (F39)."""
     r = math.hypot(cx, cz)
     if island_height(cx, cz) < -0.05 and island_sd(cx, cz) < -0.2:
-        return STONE_BLUE, (0.15, 0.35)
+        return STONE_BLUE, (lambda x, z: 0.25, None)
     if r < CRATER_RADIUS + 0.3:
-        return STONE_DARK, (0.2, 0.45)
+        return STONE_DARK, (lambda x, z: 0.325, None)
     if r < CRATER_RADIUS + 1.4:
-        return CHARCOAL, (0.25, 0.5)
+        return CHARCOAL, (lambda x, z: 0.375, None)
     if in_base(cx, cz) or in_castle_bastion(cx, cz):
-        light = n3(cx * 0.5, 2.0, cz * 0.5)
-        return STONE, (0.4 + light * 0.08, 0.6 + light * 0.08)
+        return STONE, (lambda x, z: 0.5 + n3(x * 0.5, 2.0, z * 0.5) * 0.08, None)
     for a, b, hw in ROADS:
         if segment_distance(cx, cz, a[0], a[1], b[0], b[1]) < hw:
-            return DIRT, (0.45, 0.65)
+            return DIRT, (lambda x, z: 0.55, None)
     for center, radius in PATCHES:
         if math.hypot(cx - center[0], cz - center[1]) < radius:
-            return DIRT, (0.45, 0.65)
+            return DIRT, (lambda x, z: 0.55, None)
     light = n3(cx * 0.35, 1.0, cz * 0.35)
     cell = GRASS_LIGHT if light > 0.45 else GRASS
-    return cell, (0.45 + light * 0.1, 0.7 + light * 0.1)
+    return cell, (lambda x, z: 0.575 + n3(x * 0.35, 1.0, z * 0.35) * 0.1, None)
 
 
 def build_island():

@@ -27,6 +27,10 @@ const BOT_ID: int = 2
 const EXIT_DELAY_SECONDS: float = 2.0
 ## Intervalo do log de heroi desconectado (s): prova que ele segue simulado, sem inundar o log.
 const DISCONNECTED_LOG_SECONDS: float = 5.0
+## Overlay escuro da neblina de guerra (F37) no cliente. Desligado durante o MVP2.5 (decisao do
+## PI em 2026-10-10, F39) para a verificacao visual da arena; o servidor continua filtrando o que
+## cada um ve. Religar no [GATE] do MVP2.5.
+const FOG_OF_WAR_OVERLAY: bool = false
 
 ## Nivel dos herois spawnados por este servidor (--level de dev ate o F9).
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
@@ -115,10 +119,11 @@ func _process(_delta: float) -> void:
 		return  # servidor dedicado, ou cliente ainda sem heroi
 	if not hud.is_bound():
 		hud.bind(hero, clock, spawns, players, match_controller, zone)
-		var fog := FogOfWar.new()  # neblina (F37): so quem joga desenha
-		fog.name = "FogOfWar"
-		add_child(fog)
-		fog.bind(hero)
+		if FOG_OF_WAR_OVERLAY:
+			var fog := FogOfWar.new()  # neblina (F37): so quem joga desenha
+			fog.name = "FogOfWar"
+			add_child(fog)
+			fog.bind(hero)
 	status_label.text = (
 		"%s | tick %d%s"
 		% [_net_text(), NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]

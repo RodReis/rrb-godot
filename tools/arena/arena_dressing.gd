@@ -74,15 +74,18 @@ const EMBERS_AMOUNT: int = 60
 const WATERFALL_AMOUNT: int = 110
 
 # Luz e pos (SPEC-038; valores iniciais do guia, ajuste final na verificacao visual do PI).
+# F39 (PI 2026-10-10, sem toon): sombra mais macia, AO mais leve e ambiente mais alto.
 const EXPOSURE: float = 1.05
 const SSAO_RADIUS: float = 1.5
-const SSAO_INTENSITY: float = 2.0
+const SSAO_INTENSITY: float = 1.4
+const AMBIENT_COLOR: Color = Color(0.38, 0.4, 0.55)
+const AMBIENT_ENERGY: float = 0.9
 const GLOW_THRESHOLD: float = 1.05
 const FOG_DENSITY: float = 0.008
 const SUN_COLOR: Color = Color(1.0, 0.96, 0.88)
 const SUN_ENERGY: float = 1.35
 const SUN_ROTATION_DEG: Vector3 = Vector3(-48, 38, 0)
-const SUN_SHADOW_BLUR: float = 1.8
+const SUN_SHADOW_BLUR: float = 3.0
 const SUN_SHADOW_DISTANCE: float = 65.0
 ## Lightmap so com a luz indireta (o sol e direto em tempo real): baixa frequencia, meia
 ## resolucao do texel do import basta e mantem o .exr versionado pequeno.
@@ -105,8 +108,8 @@ func _build_environment() -> void:
 	sky.sky_material = load(SKY_MATERIAL)
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color(0.38, 0.4, 0.55)
-	env.ambient_light_energy = 0.7
+	env.ambient_light_color = AMBIENT_COLOR
+	env.ambient_light_energy = AMBIENT_ENERGY
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
 	env.tonemap_exposure = EXPOSURE
 	env.ssao_enabled = true

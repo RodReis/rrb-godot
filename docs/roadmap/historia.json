@@ -150,11 +150,13 @@
       "titulo": "A cara do jogo",
       "pergunta": "A arena e os combates ficam com cara de jogo pronto, sem o jogo travar?",
       "narrativa": [
-        "Com a partida funcionando, o jogo ganha acabamento visual: luz do sol com sombras suaves, luz rebatida calculada de antemão, neblina e brilho, contorno de desenho animado nos personagens, a arte final da ilha, efeitos de golpe, grama ao vento e um painel de jogo novo. A regra é não pesar: cada passo mede o tempo de quadro e o jogo prepara os efeitos visuais antes de entrar na partida, para não engasgar na hora da conexão."
+        "Com a partida funcionando, o jogo ganha acabamento visual: luz do sol com sombras suaves, luz rebatida calculada de antemão, neblina e brilho, superfícies suavizadas, a arte final da ilha, efeitos de golpe, grama ao vento e um painel de jogo novo. A regra é não pesar: cada passo mede o tempo de quadro e o jogo prepara os efeitos visuais antes de entrar na partida, para não engasgar na hora da conexão."
       ],
       "imagens": [
         { "arquivo": "mvp2.5-f38-luz-antes-depois.webp", "legenda": "A mesma vista antes e depois da nova iluminação: o sol agora é quente e vem de lado, as sombras ficam macias e a luz que bate no chão e nas muralhas rebate no resto da cena. O céu do abismo continua escuro e estrelado.", "tipo": "entregue" },
-        { "arquivo": "mvp2.5-f38-base-no-jogo.webp", "legenda": "A base vista do jogo com a luz nova. Fora do alcance da visão do herói, a névoa de guerra continua escondendo o mapa.", "tipo": "entregue" }
+        { "arquivo": "mvp2.5-f38-base-no-jogo.webp", "legenda": "A base vista do jogo com a luz nova. Fora do alcance da visão do herói, a névoa de guerra continua escondendo o mapa.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f39-ilha-suave.webp", "legenda": "A ilha perdeu o mosaico de triângulos: o chão de pedra e a grama variam de tom suavemente, rochas e ilhotas ficaram arredondadas e o castelo mantém as quinas vivas. As sombras do sol ficaram mais macias e as áreas de sombra, menos escuras.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f39-base-no-jogo.webp", "legenda": "A base vista do jogo com o acabamento novo. Durante esta etapa de arte a névoa de guerra fica desligada na tela para dar para ver a ilha inteira; ela volta no fim da etapa.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
