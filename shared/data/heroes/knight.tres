@@ -2,10 +2,15 @@
 
 [ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
 [ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/knight_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/knight_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/knight_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/knight_r.svg" id="icon_r"]
 
 [sub_resource type="Resource" id="basic"]
 script = ExtResource("2_skill")
 id = &"knight_basic"
+icon = ExtResource("icon_basic")
 display_name = "Espada Curta"
 max_rank = 1
 required_hero_level = PackedInt32Array(1)
@@ -17,6 +22,7 @@ arc_degrees = 70.0
 [sub_resource type="Resource" id="q"]
 script = ExtResource("2_skill")
 id = &"knight_q"
+icon = ExtResource("icon_q")
 display_name = "Investida"
 max_rank = 5
 required_hero_level = PackedInt32Array(1)
@@ -30,6 +36,7 @@ knockback = 1.5
 [sub_resource type="Resource" id="e"]
 script = ExtResource("2_skill")
 id = &"knight_e"
+icon = ExtResource("icon_e")
 display_name = "Muralha"
 max_rank = 5
 required_hero_level = PackedInt32Array(2)
@@ -41,6 +48,7 @@ duration = PackedFloat64Array(3.0)
 [sub_resource type="Resource" id="r"]
 script = ExtResource("2_skill")
 id = &"knight_r"
+icon = ExtResource("icon_r")
 display_name = "Terremoto"
 max_rank = 2
 required_hero_level = PackedInt32Array(6, 10)

@@ -36,13 +36,28 @@ func test_stat_bar_bind_sets_variant_and_numbers() -> void:
 	assert_eq((bar.get_node("%Numbers") as Label).text, "300 / 735")
 
 
-func test_stat_bar_animates_bar_but_updates_numbers_now() -> void:
+func test_stat_bar_damage_drops_now_and_ghost_follows_after_delay() -> void:
 	var bar: StatBar = add_child_autofree(STAT_BAR.instantiate())
-	bar.bind("XP", 100.0, 300.0, StatBar.Kind.XP)
-	bar.animate_to(250.0, UiTokens.DUR_FAST)
-	assert_eq((bar.get_node("%Numbers") as Label).text, "250 / 300")
-	await wait_seconds(UiTokens.DUR_FAST * 2.0)
-	assert_almost_eq((bar.get_node("%Bar") as ProgressBar).value, 250.0, 0.01)
+	bar.bind("HP", 600.0, 600.0, StatBar.Kind.HP)
+	var ghost := bar.get_node("%Ghost") as ProgressBar
+	bar.animate_to(400.0)
+	assert_eq((bar.get_node("%Numbers") as Label).text, "400 / 600")
+	assert_eq((bar.get_node("%Bar") as ProgressBar).value, 400.0)
+	await wait_seconds(StatBar.GHOST_DELAY * 0.5)
+	assert_eq(ghost.value, 600.0, "ghost segura o valor antigo durante o atraso")
+	await wait_seconds(StatBar.GHOST_DELAY * 0.5 + StatBar.GHOST_DURATION + 0.1)
+	assert_almost_eq(ghost.value, 400.0, 0.01)
+
+
+func test_stat_bar_heal_updates_bar_and_ghost_now() -> void:
+	var bar: StatBar = add_child_autofree(STAT_BAR.instantiate())
+	bar.bind("HP", 600.0, 600.0, StatBar.Kind.HP)
+	bar.animate_to(300.0)
+	bar.animate_to(500.0)
+	assert_eq((bar.get_node("%Bar") as ProgressBar).value, 500.0)
+	assert_eq((bar.get_node("%Ghost") as ProgressBar).value, 500.0)
+	await wait_seconds(StatBar.GHOST_DELAY + StatBar.GHOST_DURATION + 0.1)
+	assert_eq((bar.get_node("%Ghost") as ProgressBar).value, 500.0, "tween antigo morto")
 
 
 func test_skill_cooldown_text() -> void:
@@ -63,6 +78,24 @@ func test_skill_states() -> void:
 	assert_eq(button.state, SkillButton.State.READY)
 	button.set_locked(true)
 	assert_eq(button.state, SkillButton.State.LOCKED)
+
+
+func test_skill_icon_replaces_letter() -> void:
+	var button: SkillButton = add_child_autofree(SKILL_BUTTON.instantiate())
+	button.bind(KNIGHT.skill_q, 1)
+	assert_eq(button.texture_under, KNIGHT.skill_q.icon)
+	assert_false((button.get_node("%Letter") as Label).visible)
+	var bare := SkillData.new()
+	bare.display_name = "Teste"
+	button.bind(bare, 1)
+	assert_ne(button.texture_under, KNIGHT.skill_q.icon)
+	assert_true((button.get_node("%Letter") as Label).visible)
+
+
+func test_every_hero_skill_has_an_icon() -> void:
+	for hero: HeroData in [KNIGHT, preload("res://shared/data/heroes/ranger.tres")]:
+		for skill: SkillData in [hero.basic_attack, hero.skill_q, hero.skill_e, hero.skill_r]:
+			assert_not_null(skill.icon, "%s sem icone" % skill.id)
 
 
 func test_skill_locked_shows_required_level_and_upgradable_frame() -> void:

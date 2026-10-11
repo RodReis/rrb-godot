@@ -17,6 +17,22 @@ const LABELS: Dictionary[StringName, Array] = {
 	&"LabelCounter": [UiTokens.FONT_MONO_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_COUNTER],
 	&"LabelBadge": [UiTokens.FONT_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_BADGE],
 }
+## Variacoes com contorno de 2 px (as demais herdam o de 1 px do Label).
+const OUTLINE_LARGE: Array[StringName] = [&"LabelVictory", &"LabelH1", &"LabelH2", &"LabelCounter"]
+## Molduras StyleBoxTexture (TOKENS v2), renderizadas por art/ui/build_frames.py:
+## caminho, margem 9-slice e respiro do conteudo (px).
+const FRAMES_DIR: String = "res://shared/ui/theme/frames/"
+const FRAME_PANEL: String = FRAMES_DIR + "frame_panel.png"
+const FRAME_SURFACE: String = FRAMES_DIR + "frame_surface.png"
+const FRAME_SKILL: String = FRAMES_DIR + "frame_skill.png"
+const FRAME_SKILL_GOLD: String = FRAMES_DIR + "frame_skill_gold.png"
+const BADGE_KEY: String = FRAMES_DIR + "badge_key.png"
+const FRAME_MARGIN: int = 24
+const FRAME_CONTENT: int = 16
+const SKILL_MARGIN: int = 16
+const BADGE_MARGIN: int = 8
+## Fill da ghost bar do StatBar: clara, para o dano recente se destacar do GREEN/RED.
+const GHOST_FILL: Color = Color(UiTokens.TEXT, 0.85)
 
 var _fonts: Dictionary[String, FontVariation] = {}
 
@@ -47,11 +63,15 @@ func build() -> Theme:
 
 func _labels(theme: Theme) -> void:
 	theme.set_color(&"font_color", &"Label", UiTokens.TEXT)
+	theme.set_color(&"font_outline_color", &"Label", UiTokens.OUTLINE)
+	theme.set_constant(&"outline_size", &"Label", UiTokens.OUTLINE_W)
 	for type: StringName in LABELS:
 		var spec: Array = LABELS[type]
 		theme.set_type_variation(type, &"Label")
 		theme.set_font(&"font", type, _font(spec[0], spec[1]))
 		theme.set_font_size(&"font_size", type, spec[2])
+	for type: StringName in OUTLINE_LARGE:
+		theme.set_constant(&"outline_size", type, UiTokens.OUTLINE_W_LARGE)
 	theme.set_color(&"font_color", &"LabelBadge", UiTokens.TEXT_MUTED)
 	theme.set_type_variation(&"LabelMuted", &"Label")
 	theme.set_color(&"font_color", &"LabelMuted", UiTokens.TEXT_MUTED)
@@ -63,17 +83,18 @@ func _labels(theme: Theme) -> void:
 	# ScoreBanner: kills de quem joga (as do adversario usam o Danger).
 	theme.set_type_variation(&"LabelCounterAlly", &"LabelCounter")
 	theme.set_color(&"font_color", &"LabelCounterAlly", UiTokens.GREEN)
-	# HotkeyBadge MD: sobre o icone da skill, precisa de fundo para ler.
+	# HotkeyBadge MD: badge metalica sobre o icone da skill (TOKENS v2).
 	theme.set_type_variation(&"LabelBadgeMd", &"LabelBadge")
 	theme.set_color(&"font_color", &"LabelBadgeMd", UiTokens.TEXT)
-	var badge := _box(UiTokens.BG_SURFACE, UiTokens.RADIUS_SM)
-	badge.set_content_margin_all(UiTokens.SPACE_XS / 2.0)
+	var badge := _frame(BADGE_KEY, BADGE_MARGIN, UiTokens.SPACE_XS)
+	badge.content_margin_left = UiTokens.SPACE_SM
+	badge.content_margin_right = UiTokens.SPACE_SM
 	theme.set_stylebox(&"normal", &"LabelBadgeMd", badge)
 	theme.set_color(&"font_color", &"TooltipLabel", UiTokens.TEXT)
 	# O Godot embrulha todo tooltip num TooltipPanel: vazio, para o ItemTooltip (PanelCard) nao
 	# ganhar borda dupla; o tooltip de texto desenha o proprio card no TooltipLabel.
 	theme.set_stylebox(&"panel", &"TooltipPanel", StyleBoxEmpty.new())
-	theme.set_stylebox(&"normal", &"TooltipLabel", _panel(UiTokens.BG_PANEL))
+	theme.set_stylebox(&"normal", &"TooltipLabel", _frame(FRAME_PANEL, FRAME_MARGIN, FRAME_CONTENT))
 
 
 func _buttons(theme: Theme) -> void:
@@ -104,9 +125,13 @@ func _button_states(theme: Theme, type: StringName, fill: Color, text: Color) ->
 
 
 func _panels(theme: Theme) -> void:
-	theme.set_stylebox(&"panel", &"PanelContainer", _panel(UiTokens.BG_PANEL))
+	# Paineis com moldura de metal (TOKENS v2); o card interno (celula) fica liso.
+	theme.set_stylebox(
+		&"panel", &"PanelContainer", _frame(FRAME_PANEL, FRAME_MARGIN, FRAME_CONTENT)
+	)
 	theme.set_type_variation(&"PanelCardSurface", &"PanelContainer")
-	theme.set_stylebox(&"panel", &"PanelCardSurface", _panel(UiTokens.BG_SURFACE))
+	var surface := _frame(FRAME_SURFACE, FRAME_MARGIN, FRAME_CONTENT)
+	theme.set_stylebox(&"panel", &"PanelCardSurface", surface)
 	theme.set_type_variation(&"PanelCardInner", &"PanelContainer")
 	theme.set_stylebox(&"panel", &"PanelCardInner", _panel(UiTokens.BG_CARD))
 	# Acento do PanelCard (borda 3 px): tipos lidos pelo componente, desenhados sobre o fundo.
@@ -136,6 +161,8 @@ func _progress(theme: Theme) -> void:
 	for type: StringName in fills:
 		theme.set_type_variation(type, &"ProgressBar")
 		theme.set_stylebox(&"fill", type, _box(fills[type], UiTokens.RADIUS_SM))
+	theme.set_type_variation(StatBar.GHOST_TYPE, &"ProgressBar")
+	theme.set_stylebox(&"fill", StatBar.GHOST_TYPE, _box(GHOST_FILL, UiTokens.RADIUS_SM))
 
 
 func _inputs(theme: Theme) -> void:
@@ -169,8 +196,6 @@ func _slots(theme: Theme) -> void:
 		&"FrameCommon": [UiTokens.RARITY_COMMON, UiTokens.BORDER_W_ACTIVE, true],
 		&"FrameRare": [UiTokens.RARITY_RARE, UiTokens.BORDER_W_ACTIVE, true],
 		&"FrameEpic": [UiTokens.RARITY_EPIC, UiTokens.BORDER_W_ACTIVE, true],
-		&"SkillFrame": [UiTokens.BORDER, UiTokens.BORDER_W, false],
-		&"SkillFrameUpgradable": [UiTokens.GOLD, UiTokens.BORDER_W_ACTIVE, false],
 	}
 	for type: StringName in frames:
 		theme.set_type_variation(type, &"Panel")
@@ -179,6 +204,12 @@ func _slots(theme: Theme) -> void:
 		frame.draw_center = spec[2]
 		frame.bg_color = UiTokens.BG_CARD
 		theme.set_stylebox(&"panel", type, frame)
+	# SkillButton: so a moldura, por cima do icone e da recarga.
+	theme.set_type_variation(SkillButton.FRAME_READY, &"Panel")
+	theme.set_stylebox(&"panel", SkillButton.FRAME_READY, _frame(FRAME_SKILL, SKILL_MARGIN, 0))
+	theme.set_type_variation(SkillButton.FRAME_UPGRADABLE, &"Panel")
+	var gold := _frame(FRAME_SKILL_GOLD, SKILL_MARGIN, 0)
+	theme.set_stylebox(&"panel", SkillButton.FRAME_UPGRADABLE, gold)
 
 
 func _font(path: String, weight: int) -> FontVariation:
@@ -188,8 +219,21 @@ func _font(path: String, weight: int) -> FontVariation:
 		font.base_font = load(path) as FontFile
 		var wght := TextServerManager.get_primary_interface().name_to_tag("wght")
 		font.variation_opentype = {wght: weight}
+		if path == UiTokens.FONT_MONO_PATH:
+			# Algarismos tabulares: relogio e placar nao "dancam" quando o numero muda.
+			var tnum := TextServerManager.get_primary_interface().name_to_tag("tnum")
+			font.opentype_features = {tnum: 1}
 		_fonts[key] = font
 	return _fonts[key]
+
+
+## Moldura 9-slice: [param margin] na textura, [param content] de respiro.
+func _frame(path: String, margin: int, content: int) -> StyleBoxTexture:
+	var box := StyleBoxTexture.new()
+	box.texture = load(path) as Texture2D
+	box.set_texture_margin_all(margin)
+	box.set_content_margin_all(content)
+	return box
 
 
 func _box(fill: Color, radius: int) -> StyleBoxFlat:
