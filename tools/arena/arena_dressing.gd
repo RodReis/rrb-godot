@@ -74,17 +74,20 @@ const EMBERS_AMOUNT: int = 60
 const WATERFALL_AMOUNT: int = 110
 
 # Luz e pos (SPEC-038; valores iniciais do guia, ajuste final na verificacao visual do PI).
-# F39 (PI 2026-10-10, sem toon): sombra mais macia, AO mais leve e ambiente mais alto.
-const EXPOSURE: float = 1.05
+# F39 (PI 2026-10-10, sem toon): sombra mais macia, AO mais leve. F40 (PI 2026-10-11, realista e
+# sombrio): exposicao e ambiente mais baixos e frios, sol frio mais inclinado (sombra longa),
+# neblina mais densa e azulada.
+const EXPOSURE: float = 0.92
 const SSAO_RADIUS: float = 1.5
 const SSAO_INTENSITY: float = 1.4
-const AMBIENT_COLOR: Color = Color(0.38, 0.4, 0.55)
-const AMBIENT_ENERGY: float = 0.9
+const AMBIENT_COLOR: Color = Color(0.24, 0.27, 0.36)
+const AMBIENT_ENERGY: float = 0.72
 const GLOW_THRESHOLD: float = 1.05
-const FOG_DENSITY: float = 0.008
-const SUN_COLOR: Color = Color(1.0, 0.96, 0.88)
-const SUN_ENERGY: float = 1.35
-const SUN_ROTATION_DEG: Vector3 = Vector3(-48, 38, 0)
+const FOG_DENSITY: float = 0.016
+const FOG_ALBEDO: Color = Color(0.36, 0.41, 0.5)
+const SUN_COLOR: Color = Color(0.8, 0.85, 0.95)
+const SUN_ENERGY: float = 1.05
+const SUN_ROTATION_DEG: Vector3 = Vector3(-38, 38, 0)
 const SUN_SHADOW_BLUR: float = 3.0
 const SUN_SHADOW_DISTANCE: float = 65.0
 ## Lightmap so com a luz indireta (o sol e direto em tempo real): baixa frequencia, meia
@@ -123,6 +126,7 @@ func _build_environment() -> void:
 	env.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
 	env.volumetric_fog_enabled = true
 	env.volumetric_fog_density = FOG_DENSITY
+	env.volumetric_fog_albedo = FOG_ALBEDO
 	env.volumetric_fog_sky_affect = 0.0  # neblina so na ilha: o abismo/ceu do F40 fica escuro
 	var world := WorldEnvironment.new()
 	world.name = "WorldEnvironment"
@@ -167,7 +171,7 @@ func _build_rim_decor(flip: float) -> void:
 	var tag := _team_tag(flip)
 	for i: int in range(RIM_PINES_A.size()):
 		var at := _world(RIM_PINES_A[i], flip)
-		var pine := _asset(decor, RRB_ARENA + "pine_tree.glb", "Pine%s%d" % [tag, i])
+		var pine := _asset(decor, RRB_ARENA + "pine_dark.glb", "Pine%s%d" % [tag, i])
 		pine.transform = Transform3D(Basis(Vector3.UP, at.x * 0.37 + at.z * 0.61), at)
 	for i: int in range(RIM_CRYSTALS_A.size()):
 		var c: Array = RIM_CRYSTALS_A[i]
@@ -194,7 +198,7 @@ func _build_islets() -> void:
 		var scale: float = islet[2]
 		node.transform = Transform3D(Basis(Vector3.UP, 0.7 * i).scaled(Vector3.ONE * scale), at)
 		for k: int in range(2):
-			var pine := _asset(node, RRB_ARENA + "pine_tree.glb", "Pine%d" % k)
+			var pine := _asset(node, RRB_ARENA + "pine_dark.glb", "Pine%d" % k)
 			pine.position = Vector3(2.5 - 5.0 * k, 0.2, 1.5 * k - 1.0)
 		if i % 2 == 0:
 			_crystal(node, Vector3(0.5, 0.2, 2.5), true, "Crystal", 0.0)

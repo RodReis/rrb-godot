@@ -1250,11 +1250,101 @@ def build_house():
     return build(kit, bevel=0.03)
 
 
+# --- kit 7 (F40, PI 2026-10-11: realista e sombrio): bolsoes de selva -----------------------
+
+
+def icosphere(subdivisions):
+    """Icosfera unitaria: (vertices, faces) com vertices normalizados."""
+    t = (1.0 + math.sqrt(5.0)) / 2.0
+    verts = [Vector(v).normalized() for v in (
+        (-1, t, 0), (1, t, 0), (-1, -t, 0), (1, -t, 0), (0, -1, t), (0, 1, t),
+        (0, -1, -t), (0, 1, -t), (t, 0, -1), (t, 0, 1), (-t, 0, -1), (-t, 0, 1))]
+    faces = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11), (1, 5, 9), (5, 11, 4), (11, 10, 2),
+             (10, 7, 6), (7, 1, 8), (3, 9, 4), (3, 4, 2), (3, 2, 6), (3, 6, 8), (3, 8, 9), (4, 9, 5),
+             (2, 4, 11), (6, 2, 10), (8, 6, 7), (9, 8, 1)]
+    for _ in range(subdivisions):
+        cache = {}
+
+        def mid(a, b):
+            key = (min(a, b), max(a, b))
+            if key not in cache:
+                verts.append(((verts[a] + verts[b]) / 2.0).normalized())
+                cache[key] = len(verts) - 1
+            return cache[key]
+
+        new = []
+        for a, b, c in faces:
+            ab, bc, ca = mid(a, b), mid(b, c), mid(c, a)
+            new += [(a, ab, ca), (b, bc, ab), (c, ca, bc), (ab, bc, ca)]
+        faces = new
+    return verts, faces
+
+
+def build_outcrop(name, seed, stretch):
+    """Afloramento de rocha dos bolsoes: icosfera achatada e deslocada por ruido. No pe (y ate
+    0,4) o raio horizontal nunca fica abaixo de 1,05 u: com a escala do builder a pegada cobre a
+    colisao do bolsao (meia largura + folga). Altura ~1,6 u; base enterrada 0,3 u. A textura e
+    do material triplanar (rock_moss.tres no .import); a celula do atlas so marca o UV."""
+    verts, faces = icosphere(3)
+    out = []
+    for v in verts:
+        n = noise.fractal(Vector((v.x * 1.6 + seed, v.y * 1.6, v.z * 1.6 - seed)), 0.7, 2.1, 4)
+        ridges = abs(noise.noise(Vector((v.x * 3.1, v.y * 4.7 + seed, v.z * 3.1))))
+        r = 1.05 + 0.32 * abs(n) + 0.12 * ridges
+        x, y, z = v.x * r * stretch, v.y * r, v.z * r / stretch
+        if y < 0.0:
+            y *= 0.25
+        horizontal = math.hypot(x, z)
+        if y < 0.4 and horizontal < 1.05:
+            k = 1.05 / max(horizontal, 1e-4)
+            x, z = x * k, z * k
+        out.append((x, y * 1.25 + 0.05, z))
+    kit = Kit(name)
+    kit.add(translate((out, faces), 0.0, -0.3, 0.0), STONE, (0.4, 0.7))
+    return build(kit)
+
+
+def build_pine_dark():
+    """Pinheiro dos bolsoes (substitui o cone do pine_tree na selva): tronco e 7 saias de galhos
+    serrilhadas, ~4,6 u. Cor por celula do atlas (marrom/verde-escuro) usada como matiz pelo
+    material triplanar (pine_foliage.tres no .import)."""
+    kit = Kit("pine_dark")
+    kit.add(prism(0, 0, 0.0, 1.4, 0.2, 0.12, 8, jitter=0.02, seed=31), BROWN_DARK, (0.3, 0.6))
+    layers = ((0.8, 1.45, 1.3), (1.35, 1.25, 1.2), (1.9, 1.05, 1.1), (2.45, 0.85, 1.0), (2.95, 0.66, 0.9),
+              (3.4, 0.48, 0.8), (3.8, 0.3, 0.8))
+    for k, (y, r, h) in enumerate(layers):
+        kit.add(star_cone(y, y + h, r, 9, 37.0 * k, 40.0 + k), GREEN_DARK, (0.25, 0.75))
+    return build(kit)
+
+
+def star_cone(y0, y1, r, points, phase, seed):
+    """Saia de galhos: base em estrela (pontas em r, reentrancias em 0,55 r) com as pontas caidas
+    e apice em y1; silhueta recortada vista de cima."""
+    verts, faces = [], []
+    n = points * 2
+    for i in range(n):
+        a = math.radians(phase + 360.0 * i / n)
+        tip = i % 2 == 0
+        rr = r * (1.0 if tip else 0.55) * (1.0 + 0.15 * n3(math.cos(a) * 2.0, seed, math.sin(a) * 2.0))
+        verts.append((math.cos(a) * rr, y0 - (0.18 * r if tip else -0.05), math.sin(a) * rr))
+    verts.append((0.0, y1, 0.0))
+    verts.append((0.0, y0 + 0.1, 0.0))
+    for i in range(n):
+        j = (i + 1) % n
+        faces.append((i, n, j))
+        faces.append((j, n + 1, i))
+    return verts, faces
+
+
 # --- montagem -------------------------------------------------------------------------------
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
+    only = argv[1].split(",") if len(argv) > 1 else None
+    if only == ["jungle"]:
+        build_jungle_kit()
+        return
 
     reset_scene()
     island = build_island()
@@ -1304,9 +1394,22 @@ def main():
     save("props_crystals")
     preview("props_crystals", props, spread=9.0)
 
+    build_jungle_kit()
     print("[island] triangulos por asset:")
     for name, tris in TRIS.items():
         print("  %-18s %6d" % (name, tris))
+
+
+def build_jungle_kit():
+    reset_scene()
+    jungle = [build_outcrop("rock_outcrop_a", 1.0, 1.25), build_outcrop("rock_outcrop_b", 7.0, 1.0),
+              build_outcrop("rock_outcrop_c", 13.0, 1.45), build_pine_dark()]
+    for obj in jungle:
+        export(obj, obj.name)
+    save("jungle")
+    preview("jungle", jungle, spread=4.0)
+    for obj in jungle:
+        print("  %-18s %6d" % (obj.name, TRIS[obj.name]))
 
 
 main()

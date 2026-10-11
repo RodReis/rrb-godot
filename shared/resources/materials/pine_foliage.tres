@@ -1,0 +1,29 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shared/shaders/triplanar_pbr.gdshader" id="1_8lnby"]
+[ext_resource type="Texture2D" path="res://shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png" id="2_5cah1"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/grass_albedo.jpg" id="3_d1rxt"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/grass_normal.jpg" id="4_rcc11"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/grass_rough.jpg" id="5_yan7g"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/moss_albedo.jpg" id="6_ub2av"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/moss_normal.jpg" id="7_fhv7d"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_8lnby")
+shader_parameter/base_albedo = ExtResource("3_d1rxt")
+shader_parameter/base_normal = ExtResource("4_rcc11")
+shader_parameter/base_rough = ExtResource("5_yan7g")
+shader_parameter/base_tile = 0.9
+shader_parameter/base_tint = Color(0.55, 0.6, 0.5, 1)
+shader_parameter/moss_albedo = ExtResource("6_ub2av")
+shader_parameter/moss_normal = ExtResource("7_fhv7d")
+shader_parameter/moss_tile = null
+shader_parameter/moss_tint = Color(0.5, 0.62, 0.4, 1)
+shader_parameter/moss_from = 1.0
+shader_parameter/moss_amount = 0.0
+shader_parameter/atlas = ExtResource("2_5cah1")
+shader_parameter/atlas_tint = 1.0
+shader_parameter/atlas_reference = null
+shader_parameter/brightness = 0.82
+shader_parameter/saturation = 0.85

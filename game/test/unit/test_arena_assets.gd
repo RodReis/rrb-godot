@@ -85,6 +85,29 @@ func test_duas_pontes_de_pedra_e_um_piso_unico() -> void:
 	assert_eq(_instances_of("hex_grass.gltf").size(), 0, "piso proprio, sem hexes (ADR-0006)")
 
 
+## F40 (PI 2026-10-11, realista e sombrio): chao com o shader de terreno (texturas CC0 misturadas
+## pela mascara 512 x 512 gerada pelo builder); castelo, rochas e pinheiros com PBR triplanar.
+func test_terreno_e_cenario_com_material_realista() -> void:
+	var expected := {
+		"island_chassis.glb": "terrain.tres",
+		"castle_wall_a.glb": "castle_stone.tres",
+		"rock_outcrop_a.glb": "rock_moss.tres",
+		"pine_dark.glb": "pine_foliage.tres",
+	}
+	for file: String in expected:
+		var instances := _instances_of(file)
+		assert_gt(instances.size(), 0, file)
+		var mi := (
+			instances[0].find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
+		)
+		var material := mi.get_active_material(0)
+		assert_true(material.resource_path.ends_with(expected[file]), "%s: %s" % [file, material])
+	var terrain := load("res://shared/resources/materials/terrain.tres") as ShaderMaterial
+	var splat := terrain.get_shader_parameter("splat_map") as Texture2D
+	assert_not_null(splat, "rode o builder (mascara do terreno)")
+	assert_eq(splat.get_size(), Vector2(512, 512))
+
+
 func test_cena_nao_tem_placeholder_geometrico() -> void:
 	for node: Node in _arena.find_children("*", "MeshInstance3D", true, false):
 		var mesh := (node as MeshInstance3D).mesh

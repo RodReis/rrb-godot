@@ -1,0 +1,72 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shared/shaders/terrain_splat.gdshader" id="1_n56yv"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/dirt_albedo.jpg" id="2_rd35u"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/dirt_normal.jpg" id="3_pc16b"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/dirt_rough.jpg" id="4_cjmf7"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/grass_albedo.jpg" id="5_dwdbs"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/grass_normal.jpg" id="6_51xfb"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/grass_rough.jpg" id="7_68mu6"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/moss_albedo.jpg" id="8_n7ery"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/moss_normal.jpg" id="9_1y48o"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/moss_rough.jpg" id="10_bgqb1"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/paving_albedo.jpg" id="11_u2tp7"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/paving_normal.jpg" id="12_t8ems"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/paving_rough.jpg" id="13_5ojhi"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/rock_albedo.jpg" id="14_tvw4b"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/rock_normal.jpg" id="15_mtbi8"]
+[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/rock_rough.jpg" id="16_xcqio"]
+[ext_resource type="Texture2D" path="res://shared/assets/rrb/arena/terrain_splat.png" id="17_3lpld"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_geasv"]
+frequency = 0.012
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_odxcy"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_geasv")
+seamless = true
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_n56yv")
+shader_parameter/splat_map = ExtResource("17_3lpld")
+shader_parameter/splat_rect = Vector4(-50, -50, 100, 100)
+shader_parameter/grass_albedo = ExtResource("5_dwdbs")
+shader_parameter/grass_normal = ExtResource("6_51xfb")
+shader_parameter/grass_rough = ExtResource("7_68mu6")
+shader_parameter/grass_tile = null
+shader_parameter/grass_tint = Color(0.78, 0.84, 0.72, 1)
+shader_parameter/moss_albedo = ExtResource("8_n7ery")
+shader_parameter/moss_normal = ExtResource("9_1y48o")
+shader_parameter/moss_rough = ExtResource("10_bgqb1")
+shader_parameter/moss_tile = null
+shader_parameter/moss_tint = Color(0.5, 0.62, 0.4, 1)
+shader_parameter/dirt_albedo = ExtResource("2_rd35u")
+shader_parameter/dirt_normal = ExtResource("3_pc16b")
+shader_parameter/dirt_rough = ExtResource("4_cjmf7")
+shader_parameter/dirt_tile = null
+shader_parameter/dirt_tint = Color(0.72, 0.66, 0.6, 1)
+shader_parameter/paving_albedo = ExtResource("11_u2tp7")
+shader_parameter/paving_normal = ExtResource("12_t8ems")
+shader_parameter/paving_rough = ExtResource("13_5ojhi")
+shader_parameter/paving_tile = null
+shader_parameter/paving_tint = Color(0.72, 0.72, 0.74, 1)
+shader_parameter/rock_albedo = ExtResource("14_tvw4b")
+shader_parameter/rock_normal = ExtResource("15_mtbi8")
+shader_parameter/rock_rough = ExtResource("16_xcqio")
+shader_parameter/rock_tile = null
+shader_parameter/rock_tint = Color(0.7, 0.72, 0.75, 1)
+shader_parameter/slope_start = null
+shader_parameter/slope_end = null
+shader_parameter/macro_noise = SubResource("NoiseTexture2D_odxcy")
+shader_parameter/edge_noise = null
+shader_parameter/edge_sharpness = null
+shader_parameter/macro_scale = null
+shader_parameter/macro_strength = null
+shader_parameter/bed_top = null
+shader_parameter/bed_bottom = null
+shader_parameter/wet_darken = null
+shader_parameter/brightness = 0.82
+shader_parameter/saturation = 0.85
