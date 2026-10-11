@@ -33,9 +33,9 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | Fatia vertical (M0–M4) | Roadmap (pós-M4) |
 |---|---|
 | Modo 1x1 | 2x2, 3x3 |
-| 2 heróis: Cavaleiro (Tanque), Arqueira (Ranger) | 1 herói por classe (5), depois mais |
+| 4 heróis: Cavaleiro (Tanque), Arqueira (Ranger), Bárbaro (Algoz), Bruxo de Fogo (Mago) — Bárbaro e Bruxo por decisão do PI em 2026-10-11 (ADR-0011) | 1 herói por classe, depois mais |
 | 1 arena medieval hexagonal | mais arenas |
-| 5 monstros (incl. boss) | bestiário maior |
+| 7 monstros (incl. boss; Lobo e Golem de canto pelo ADR-0011) | bestiário maior |
 | 12 itens, 2 conjuntos | tabela de loot completa |
 | Bot básico | IA de time |
 | Contas e-mail/senha, fila 1x1 | Steam, ranked, amigos |
@@ -43,7 +43,7 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | PC | mobile |
 | Arte CC0 (KayKit/Quaternius) + arte própria no Blender quando necessário (ADR-0005) | arte comissionada |
 
-Nada do roadmap entra antes do M4 concluído. Exceção decidida pelo PI em 2026-10-09: arte própria feita no Blender (ADR-0005).
+Nada do roadmap entra antes do M4 concluído. Exceções decididas pelo PI: arte própria feita no Blender (2026-10-09, ADR-0005); Bárbaro, Bruxo de Fogo e campos de canto no MVP2 (2026-10-11, ADR-0011).
 
 ---
 
@@ -56,7 +56,7 @@ Nada do roadmap entra antes do M4 concluído. Exceção decidida pelo PI em 2026
 | D3 | Fase 1 em mapa único com bases seguras + centro contestado | mapas separados; mapa totalmente aberto | resolve tempo morto e snowball sem explodir balanceamento |
 | D4 | Fase 2 com zona encolhendo + meta de kills | 10 kills fixo; sem respawn | garante fim de partida; respawn crescente removido (redundante com zona) |
 | D5 | Monetização com sorteios/vales/loja/passe (fase B) | sem aleatoriedade paga; sem economia | decisão do dono; risco regulatório documentado |
-| D6 | Fatia 1x1 com 2 heróis | 3x3 direto; 1x1 com 5 heróis | netcode/zona/loot são o risco técnico; classes e times são conteúdo |
+| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011, 2026-10-11) | 3x3 direto; 1x1 com 5 heróis | netcode/zona/loot são o risco técnico; classes e times são conteúdo |
 | D7 | Engine: **Godot 4.7** | Unity 6; Godot + servidor Node/Java | ver §10 |
 | D8 | GDScript | C# | iteração, ecossistema (netfox, tutoriais, godot-mcp), export iOS |
 | D9 | Assets KayKit (principal) + Quaternius (secundário) com cena de alinhamento; Blender para ajustes e arte própria (ADR-0005, 2026-10-09) | só KayKit; Synty | variedade sem perder coerência visual |
@@ -123,7 +123,8 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 |---|---|---|
 | **Tanque** | absorve dano, controla espaço | sim — Cavaleiro |
 | **Ranger** | dano à distância | sim — Arqueira |
-| **Algoz** | dano alto corpo a corpo, frágil | roadmap |
+| **Algoz** | dano alto corpo a corpo, frágil | sim — Bárbaro (ADR-0011) |
+| **Mago** | dano mágico em área à distância, frágil | sim — Bruxo de Fogo (classe nova, ADR-0011) |
 | **Suporte** | cura/buff; depende do time | roadmap (sem sentido no 1x1) |
 | **Controle** | atordoa, lentidão, área | roadmap (sem sentido no 1x1) |
 
@@ -147,7 +148,15 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 | E | **Muralha** — escudo absorve X dano por 3 s | **Rolamento** — esquiva 4 u com 0,3 s de invulnerabilidade |
 | R (nv 6) | **Terremoto** — área 5 u, atordoa 1,5 s | **Chuva de Flechas** — área 4 u, dano contínuo 3 s |
 
-Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não neste documento.
+| | **Bárbaro (Algoz)** — ADR-0011 | **Bruxo de Fogo (Mago)** — ADR-0011 |
+|---|---|---|
+| Modelo | KayKit Adventurers 1.0 — Barbarian | KayKit Adventurers 1.0 — Mage |
+| Ataque básico | machado em arco (corpo a corpo) | bola de fogo (projétil) |
+| Q | **Salto Brutal** — salta até 7 u, dano em área na aterrissagem | **Explosão de Chamas** — projétil que explode em área |
+| E | **Rodopio** — gira 1,5 s causando dano em volta | **Anel de Fogo** — área em volta, empurra |
+| R (nv 6) | **Execução** — golpe frontal, dano extra pelo HP faltante | **Meteoro** — área marcada, cai após 1 s |
+
+Números dos 4 heróis: GDB §4 (vence este documento, ADR-0004). Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não neste documento.
 
 ---
 
@@ -159,6 +168,8 @@ Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não nest
 | Esqueleto Guerreiro | KayKit Skeletons | 2 | bases (poucos) / centro | farm médio |
 | Esqueleto Mago | KayKit Skeletons | 2 | centro | ataque à distância |
 | Golem *ou* Aranha | Quaternius (confirmar pack) | 3 | centro | monstro "forte", visual distinto |
+| Lobo | arte própria (Blender, ADR-0005) | 2 | campos de canto NO/SE | rápido, em dupla com o golem de canto (ADR-0011) |
+| Golem de canto | mesmo modelo do Golem de Pedra | 3 | campos de canto NO/SE | sem item; loot do canto vem do Baú Reforçado (ADR-0011) |
 | **Rei Esqueleto** (boss) | KayKit Skeletons | boss | centro, 3:30 | drop épico garantido |
 
 Monstros não-boss renascem 90 s após morrer durante a fase 1 e não renascem na fase 2; há campos de monstros e baús também nas laterais do mapa (decisão do PI em 2026-10-10 — números no GDB §5 e §6.2, que vencem este documento).

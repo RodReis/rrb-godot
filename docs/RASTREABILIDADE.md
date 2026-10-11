@@ -28,9 +28,10 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-18 | Gamepad | PRD §3.6 | F31 | game | MVP1 | mantido |
 | P-19 | Plano B câmera isométrica + mira assistida | PRD §3.6 | decisão M4 | game | MVP4 | adiado (gatilho: playtest) |
 | P-20 | Bot FSM fase 1 e fase 2 | PRD §3.7 | F12, F19 | game | MVP1/2 | mantido |
-| P-21 | 2 heróis: Cavaleiro, Arqueira | PRD §4.3 | F8, F14 | game | MVP1/2 | mantido |
+| P-21 | 2 heróis: Cavaleiro, Arqueira | PRD §4.3 | F8, F14 | game | MVP1/2 | mantido — ampliado para 4 pelo PI em 2026-10-11 (ADR-0011): Bárbaro F53, Bruxo de Fogo F54 |
+| P-21a | Classe Algoz (Bárbaro) e classe nova Mago (Bruxo de Fogo); elmo não aparece nesses 2 heróis | PRD §4.1, §4.3; ADR-0011 | F53, F54 | game, shared | MVP2 | mantido — requisito novo aprovado pelo PI em 2026-10-11 |
 | P-22 | Valores de skill em `.tres`, não no doc | PRD §4.3 | F6 | shared | MVP1 | mantido |
-| P-23 | 5 monstros incl. boss; tier 3 = **Golem de Pedra** (decisão PI 2026-10-09) | PRD §5 | F9, F11 | game | MVP1 | mantido |
+| P-23 | 5 monstros incl. boss; tier 3 = **Golem de Pedra** (decisão PI 2026-10-09) | PRD §5 | F9, F11 | game | MVP1 | mantido — +Lobo e Golem de canto (7 monstros) pelo ADR-0011, F55 |
 | P-24 | Economia/monetização | PRD §7 | — | launcher/backend | fase B | adiado |
 | P-25 | Export cliente Windows e servidor headless | PRD §8.2 | F1, F28 | game, infra | MVP0/3 | mantido |
 | P-26 | netfox 30 Hz, predição, rollback, interpolação, lag comp | PRD §8.3 | F3–F5 | game | MVP0 | mantido |
@@ -58,8 +59,8 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | G-01 | Fórmulas DEF/CDR/velocidade/ataque | GDB §2.2 | `shared/core/stats.gd` (F6) | mantido |
 | G-02 | Tabela de XP | GDB §3.2 | `shared/data/rules/xp_table.tres` (F6) | mantido |
 | G-03 | Catch-up, XP por morte F1/F2 | GDB §3.3 | F9, F16 | mantido |
-| G-04 | Heróis (stats, crescimento, skills) | GDB §4 | `shared/data/heroes/*.tres` (F6), F8, F14 | mantido |
-| G-05 | Bestiário (5 monstros) | GDB §5.1 | `shared/data/monsters/*.tres` (F6), F9, F11 | mantido |
+| G-04 | Heróis (stats, crescimento, skills) | GDB §4 | `shared/data/heroes/*.tres` (F6), F8, F14, F53, F54 | mantido (GDB §4.3–4.4 novos, ADR-0011) |
+| G-05 | Bestiário (5 monstros) | GDB §5.1 | `shared/data/monsters/*.tres` (F6), F9, F11, F55 | mantido (7 monstros, ADR-0011) |
 | G-06 | Itens e conjuntos | GDB §6.1 | `shared/data/items/**` (F6), F10 | mantido |
 | G-07 | Baús e regra de substituição; épico 10 % no baú raro | GDB §6.2 | F10 | mantido (decisão PI 2026-10-09) |
 | G-08 | Cronograma da fase 2 | GDB §7.1 | `match_pacing.tres` (F6), F16 | mantido |
@@ -67,6 +68,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | G-10 | Estrutura `data/` | GDB §8 | `shared/data/` (muda de `game/data` para `shared/data` — ADR-0003) | transferido |
 | G-11 | TTK e teto de snowball < 75% | GDB §1.1 | F29 (medição), GATE MVP4 | mantido |
 | G-12 | Economia de campo: 4 campos laterais (2 T1 + 1 T2 e 2 baús comuns cada), respawn de monstros não-boss 90 s só na fase 1 | GDB §5, §6.2 | F36 | mantido — requisito novo aprovado pelo PI em 2026-10-10 (corrige economia: mapa somava 1.710 XP, meta nível 8–9 inalcançável) |
+| G-13 | Campos de canto NO/SE: Golem de canto (sem item) + 2 Lobos + 2 Baús Reforçados (50 % raro / 50 % comum); aggro golem 4 u, lobos 3 u; moita de lagoa movida | GDB §5.1, §5.2, §6.2; SPEC-055 | F55 | mantido — requisito novo aprovado pelo PI em 2026-10-11 (ADR-0011); boss sem mudança |
 
 ## 3. Design visual (DV)
 

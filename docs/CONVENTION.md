@@ -60,7 +60,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 ### 4.1 Fase 1 — preparação
 - Mapa: layout, escala e marcadores em `docs/prd/mvp/spec/SPEC-044.md` (ADR-0007; raio 35 u; spawn→centro ~6 s; espelho N–S; rio N–S + anel bloqueiam, 4 pontes — 2 por metade; cratera com 4 entradas). SPEC-007 vale só para §1 (escala) e §4 (marcadores).
 - Portões: só o time dono passa (PRD §3.1). Centro (ilha + anel) é PvP desde 0:00.
-- Monstros: distribuição e XP em GDB §5.1 — base, centro e **4 campos laterais** (NO e SE, um de cada lado do rio). Monstros não-boss renascem **90 s** após morrer, só na fase 1 (decisão do PI 2026-10-10, F36). Baús: 24, não reabrem (GDB §6.2). Boss surge aos **3:30**; aviso global aos **3:00** (banner + som + pista visual no portal — decisão do PI 2026-10-09, origem benchmark §3.2).
+- Monstros: distribuição e XP em GDB §5.1 — base, centro, **4 campos laterais** (NO e SE, um de cada lado do rio) e **2 campos de canto** (curva TOP/BOT, Golem de canto + 2 Lobos — ADR-0011, F55). Monstros não-boss renascem **90 s** após morrer, só na fase 1 (decisão do PI 2026-10-10, F36). Baús: 28 (inclui 4 Reforçados — 50 % raro / 50 % comum, ADR-0011), não reabrem (GDB §6.2). Boss surge aos **3:30**; aviso global aos **3:00** (banner + som + pista visual no portal — decisão do PI 2026-10-09, origem benchmark §3.2).
 - Morte na fase 1: respawn 8,0 s na própria base, **não** conta kill, matador recebe 80 XP (GDB §3.3). Sem perda de itens.
 - Catch-up: `nível ≤ nível_adversário − 2` → +25% em todo XP de monstro/objetivo (GDB §3.3).
 
@@ -84,8 +84,9 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - Monstros comuns não respawnam na fase 2; os que sobraram continuam vivos e dão XP. O **Rei Esqueleto** existe até morrer ou até 5:00: vivo na transição, sai do mapa **sem drop** (decisão do PI 2026-10-10, R-PEND-06).
 
 ### 4.5 Heróis
-- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro) e §4.2 (Arqueira).
-- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueira projétil 20 u/s, 9 u, raio 0,3 u.
+- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueira), §4.3 (Bárbaro) e §4.4 (Bruxo de Fogo) — os 2 últimos pelo ADR-0011.
+- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueira projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u.
+- ATK escala básico, Q e E; INT escala só o R — vale para os 4 heróis (GDB §2.1).
 - Tudo validado no servidor; cliente prevê só movimento próprio e disparo visual do projétil (benchmark §4).
 
 ### 4.6 Bot

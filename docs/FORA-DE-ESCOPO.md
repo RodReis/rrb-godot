@@ -5,6 +5,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 ## Regras
 
 - Nada daqui entra em código antes do MVP4 concluído (PRD §1.3: "nada do roadmap entra antes do M4").
+- Bárbaro (Algoz), Bruxo de Fogo (Mago) e campos de canto saíram desta lista em 2026-10-11 por decisão do PI (ADR-0011): entram no MVP2.
 - Arte própria saiu desta lista em 2026-10-09 por decisão do PI (ADR-0005): entra em qualquer MVP quando a fatia precisar.
 - Item do design visual ou do benchmark que não está no PRD **não é requisito** — fica aqui ou em `RASTREABILIDADE.md` §5 até o PI decidir.
 - "Adiado" tem MVP ou fase de destino; "excluído" tem motivo.
@@ -14,7 +15,10 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Item | Fonte | Motivo | Destino | Gatilho de retorno |
 |---|---|---|---|---|
 | Modos 2x2 e 3x3 | PRD §1.3 | classes e times são conteúdo, não risco | pós-MVP4 | decisão do PI no gate M4 ("ir para 3x3") |
-| Heróis Algoz, Suporte, Controle (+ mais) | PRD §1.3, §4.1 | sem sentido no 1x1 | pós-MVP4 | 3x3 aprovado |
+| Heróis Suporte, Controle (+ mais) | PRD §1.3, §4.1 | sem sentido no 1x1 (Algoz e Mago entraram pelo ADR-0011) | pós-MVP4 | 3x3 aprovado |
+| Ajuste do Rei Esqueleto (knockback 2,5 u > alcance 2,2 u do Cavaleiro; HP 2.400 às 3:30) | ADR-0011 (análise apresentada ao PI) | PI escolheu só campos e baús novos | F30 (MVP4) | medição do F55 (nível do bot aos 3:30) ou soak do F19 mostrar boss ainda inviável, ou pedido do PI |
+| Queimadura (dano contínuo) no Bruxo de Fogo | ADR-0011 | mecânica nova no rollback; PI aprovou o kit sem | pós-MVP4 | pedido do PI |
+| Necromante e Golem do KayKit Skeletons Extra (pago) | ADR-0011 | PI escolheu não usar agora (golem atual + lobo no Blender) | pós-MVP4 | compra do pack Extra pelo PI |
 | Pontes nas pontas do rio e pontes de selva (5 travessias) | ADR-0009 | PI escolheu 3 rotas (TOP/MID/BOT) | MVP2 ou MVP4 | F19/[GATE] mostrar funil na MID |
 | Três portões por base (um por rota) | ADR-0009 / SPEC-046 §7 | 1 portão por base basta; regra e testes do F8 intactos | — | pedido do PI após playtest |
 | Cascatas do rio de mana (F40) | SPEC-046 §5 | rio em S não toca mais a borda | — | rio voltar a tocar a borda |

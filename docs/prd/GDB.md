@@ -165,6 +165,76 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 
 ---
 
+### 4.3 Bárbaro (Algoz — Melee) — ADR-0011, SPEC-053
+- **Papel:** dano alto corpo a corpo, frágil; entra com salto e finaliza com a Execução.
+- **Modelo:** KayKit Adventurers 1.0 `Barbarian`; arma visível = machado (F48).
+- **Velocidade Base:** $6.0\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-11 como proposta, conferidos no soak (F19).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 480 | +35 | 795 |
+| **Defesa** | 15 | +1.8 | 31.2 |
+| **Ataque** | 52 | +4.5 | 92.5 |
+| **Inteligência** | 8 | +0.8 | 15.2 (CDR: 7.6%) |
+| **Agilidade** | 20 | +1.8 | 36.2 |
+
+#### Habilidades do Bárbaro
+- **Ataque Básico (Machado):**
+  - Tipo: Melee em arco cônico ($90^\circ$, raio $2.4\text{ u}$).
+  - Cooldown: $0.9\text{ s}$.
+  - Dano: $100\%\text{ ATK}$.
+- **Q — Salto Brutal:**
+  - Salta até $7.0\text{ u}$ até o ponto mirado em $0.45\text{ s}$; o deslocamento para no primeiro obstáculo (rio, muro, pilar — como a Investida). Na aterrissagem, dano em área de raio $2.5\text{ u}$.
+  - Cooldown Base: $[10.0, 9.5, 9.0, 8.5, 8.0]\text{ s}$.
+  - Dano: $[60, 95, 130, 165, 200] + (0.8 \times \text{ATK})$.
+- **E — Rodopio:**
+  - Gira por $1.5\text{ s}$: 3 pulsos (a cada $0.5\text{ s}$) em raio $2.5\text{ u}$. Anda normalmente; sem ataque básico enquanto gira.
+  - Cooldown Base: $9.0\text{ s}$.
+  - Dano por Pulso: $[30, 45, 60, 75, 90] + (0.35 \times \text{ATK})$.
+- **R — Execução (Ultimate, Nv 6+):**
+  - Golpe frontal único (cone $60^\circ$, raio $2.5\text{ u}$).
+  - Cooldown Base: $[55.0, 45.0]\text{ s}$.
+  - Dano: $[200, 320] + (1.0 \times \text{INT}) + (0.5 \times \text{ATK}) + 25\%$ do HP faltante do alvo (calculado antes da mitigação por DEF).
+
+---
+
+### 4.4 Bruxo de Fogo (Mago — Ranged) — ADR-0011, SPEC-054
+- **Papel:** dano mágico em área à distância, frágil; afasta quem chega perto com o Anel de Fogo.
+- **Modelo:** KayKit Adventurers 1.0 `Mage`; arma visível = cajado (F48). Fogo é visual + área — sem queimadura contínua.
+- **Velocidade Base:** $6.0\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-11 como proposta, conferidos no soak (F19). Q e E escalam ATK (regra do §2.1).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 360 | +26 | 594 |
+| **Defesa** | 8 | +1.0 | 17 |
+| **Ataque** | 45 | +4.0 | 81 |
+| **Inteligência** | 30 | +3.0 | 57 (CDR: 28.5%) |
+| **Agilidade** | 15 | +1.2 | 25.8 |
+
+#### Habilidades do Bruxo de Fogo
+- **Ataque Básico (Bola de Fogo):**
+  - Tipo: Projétil direto (velocidade $16\text{ u/s}$, alcance $8.0\text{ u}$, raio colisão $0.4\text{ u}$). Bloqueado pela Muralha, como a flecha.
+  - Cooldown Base: $1.0\text{ s}$.
+  - Dano: $100\%\text{ ATK}$.
+- **Q — Explosão de Chamas:**
+  - Projétil (velocidade $16\text{ u/s}$, alcance $9.0\text{ u}$) que explode no primeiro alvo atingido ou no fim do alcance; dano em área de raio $2.0\text{ u}$.
+  - Cooldown Base: $6.0\text{ s}$.
+  - Dano: $[70, 105, 140, 175, 210] + (0.9 \times \text{ATK})$.
+- **E — Anel de Fogo:**
+  - Área instantânea de raio $3.0\text{ u}$ em volta do Bruxo; empurra os inimigos atingidos $2.0\text{ u}$ para fora.
+  - Cooldown Base: $10.0\text{ s}$.
+  - Dano: $[40, 65, 90, 115, 140] + (0.5 \times \text{ATK})$.
+- **R — Meteoro (Ultimate, Nv 6+):**
+  - Marca área circular de raio $3.5\text{ u}$ em até $9.0\text{ u}$ de distância; o meteoro cai $1.0\text{ s}$ depois (a marcação é visível como a da Chuva de Flechas).
+  - Cooldown Base: $[50.0, 42.0]\text{ s}$.
+  - Dano: $[260, 400] + (1.4 \times \text{INT}) + (0.6 \times \text{ATK})$.
+
+---
+
 ## 5. Bestiário e Economia de Campo (Fase 1)
 
 **Respawn na fase 1 (decisão do PI em 2026-10-10, F36):** todo monstro não-boss renasce no próprio ponto de spawn **90 s** depois de morrer, enquanto durar a fase 1. Na fase 2 ninguém renasce; os vivos aos 5:00 ficam (o Rei Esqueleto vivo aos 5:00 sai sem drop — §7.1). A quantidade continua limitada para que o centro seja a melhor fonte de XP.
@@ -176,6 +246,8 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 | **Esqueleto Guerreiro** | 2 | 8 (1 em cada base, 2 no centro, 1 em cada campo lateral) | Base / Centro / Lateral | 360 | 28 | 1.1 s | 85 | Item Comum Garantido |
 | **Esqueleto Mago** | 2 | 2 (ambos no centro) | Centro Contestado | 260 | 38 (Ranged 7u) | 1.5 s | 80 | Item Comum ou Raro |
 | **Golem de Pedra** | 3 | 2 (ambos no centro) | Centro Contestado | 680 | 50 (Melee AoE) | 1.6 s | 190 | Item Raro Garantido |
+| **Lobo** | 2 | 4 (2 em cada campo de canto) | Canto NO / SE | 300 | 22 | 0.9 s | 70 | Chance 20% Item Comum |
+| **Golem de Pedra (canto)** | 3 | 2 (1 em cada campo de canto) | Canto NO / SE | 680 | 50 (Melee AoE) | 1.6 s | 190 | Sem item (o loot do canto vem do Baú Reforçado) |
 | **Rei Esqueleto (Boss)** | Boss | 1 (surge em 3:30) | Centro Absoluto | 2400 | 75 (AoE + Knockback)| 1.4 s | 550 | 1 Item Épico Garantido |
 
 #### Comportamento dos monstros não-boss (decisão do PI em 2026-10-09, F9)
@@ -187,6 +259,8 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 | **Alcance corpo a corpo** | $1.8\text{ u}$ | Esqueleto, Esqueleto Guerreiro e Golem golpeiam o alvo nesse alcance. |
 | **Área do Golem** | raio $2.5\text{ u}$ | O golpe acerta todos os heróis em volta do Golem. |
 | **Esqueleto Mago** | $7.0\text{ u}$, acerto instantâneo | Sem projétil: não é bloqueado pela Muralha do Cavaleiro. |
+| **Campos de canto** (ADR-0011) | aggro Golem $4.0\text{ u}$, Lobo $3.0\text{ u}$; leash $10.0\text{ u}$ | Lobos menores para não puxarem quem passa no corredor TOP/BOT. |
+| **Lobo** | velocidade $5.0\text{ u/s}$, corpo a corpo $1.8\text{ u}$ | Mais rápido que os outros monstros, ainda abaixo dos heróis (5,8–6,2): dá para fugir. |
 
 Valores em `shared/data/monsters/*.tres` (`aggro_range`, `leash_range`, `move_speed`, `melee_range`, `area_radius`). O Rei Esqueleto (Boss) fica para o F11.
 
@@ -201,6 +275,12 @@ Valores em `shared/data/monsters/*.tres` (`aggro_range`, `leash_range`, `move_sp
 - **Uma limpeza da própria metade** (base + 2 laterais): $535\text{ XP}$ → nível 4.
 - **Estimativa com respawn de 90 s** (≈ 3 limpezas até 5:00): ≈ 1.600 XP → nível ~6 farmando só a própria metade; disputando centro + boss → nível 8–9.
 - **Meta (mantida):** só a própria metade → nível ~5–6; centro + boss → 8–9. As estimativas acima dependem do tempo real de limpeza e são conferidas no soak (F19) e no playtest (F29/F30).
+
+#### Revisão de 2026-10-11 (ADR-0011, F55): campos de canto
+- **Campos de canto:** 2 (NO e SE, no bolso da curva TOP/BOT, sobre a diagonal — alcançáveis pelos dois times sem ponte), cada um com 1 Golem de canto + 2 Lobos = $330\text{ XP}$ e 2 Baús Reforçados. Respawn de 90 s como os demais.
+- **Pedido do PI:** campo pensado para herói de nível 4 a 7, para chegar ao Rei Esqueleto (3:30) com mais nível e itens. O boss não muda (decisão do PI em 2026-10-11).
+- **Estimativa:** uma limpeza da própria metade (535 XP, nível 4) + 1 canto (330 XP) = 865 XP → nível 5; com 2 limpezas de canto até 3:30 → ~1.200 XP → nível 6. Conferido no F55 (nível do bot aos 3:30, antes e depois) e no soak (F19).
+- **Risco aceito pelo PI:** mais XP/itens elevam a curva inteira — vigiar TTK da fase 2 e teto de snowball (§1.1).
 
 ---
 
@@ -238,6 +318,8 @@ O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
   - Drop: 70% Item Comum, 30% Ouro/Consumível temporário de cura ($+120\text{ HP}$).
 - **Baús Comuns Laterais (2 por campo lateral, 8 no total — decisão do PI em 2026-10-10, F36):**
   - Mesmo drop do baú comum. Total do mapa: **24 baús** (12 de base + 8 laterais + 4 raros). Baús não reabrem.
+- **Baús Reforçados (2 por campo de canto, 4 no total — decisão do PI em 2026-10-11, ADR-0011):**
+  - Drop: 50% Item Raro, 50% Item Comum. Sem épico, sem ouro/consumível. Total do mapa: **28 baús** (12 de base + 8 laterais + 4 reforçados + 4 raros). Baús não reabrem.
 - **Baús Raros (4 no centro contestado):**
   - Drop: 65% Item Raro, 25% Item Comum, 10% Item Épico.
 - **Regra de Substituição (decisão do PI em 2026-10-11, SPEC-047):** nada é automático. A tecla `F` segurada por $0.4\text{ s}$ troca o item **só quando ele é melhor para quem segura**: slot vazio, raridade maior, ou mesma raridade de outro conjunto (escolha lateral). Raridade menor ou item idêntico: sem troca. A regra é avaliada por herói no servidor; o item não aceito fica no baú para outro herói.
@@ -281,7 +363,9 @@ Para manter a separação estrita de dados exigida no PRD §4.3 e §8.6, todos o
 game/data/
 ├── heroes/
 │   ├── knight.tres          # Herói Cavaleiro (HP, Def, Atk, Skills Q/E/R)
-│   └── ranger.tres          # Herói Arqueira (HP, Def, Atk, Skills Q/E/R)
+│   ├── ranger.tres          # Herói Arqueira (HP, Def, Atk, Skills Q/E/R)
+│   ├── barbarian.tres       # Herói Bárbaro (ADR-0011, F53)
+│   └── fire_wizard.tres     # Herói Bruxo de Fogo (ADR-0011, F54)
 ├── items/
 │   ├── weapons/
 │   │   ├── sword_t1.tres
@@ -294,6 +378,8 @@ game/data/
 │   ├── skeleton_warrior_t2.tres
 │   ├── skeleton_mage_t2.tres
 │   ├── golem_t3.tres
+│   ├── golem_corner.tres    # Golem de canto, sem item (F55)
+│   ├── wolf_t2.tres         # Lobo (F55)
 │   └── skeleton_king_boss.tres
 └── rules/
     ├── match_pacing.tres    # Timers, raio da zona, curvas de dano

@@ -2,7 +2,7 @@
 
 **Objetivo:** 1x1 online completo (duas máquinas, servidor dedicado) que **sempre** termina em ≤ 10 min.
 **Módulos:** `game`. **Prazo PRD:** 4 semanas.
-**Critério de pronto:** 1x1 online termina sempre; 50 partidas bot × bot headless sem travar e todas ≤ 10 min (I1); nunca empate (I2).
+**Critério de pronto:** 1x1 online termina sempre (com os 4 heróis — ADR-0011); 50 partidas bot × bot headless sem travar e todas ≤ 10 min (I1); nunca empate (I2).
 
 ## Fatias
 
@@ -26,6 +26,9 @@
 | 2.16 | F50 / SPEC-050 | pátio da base com construções do Medieval Village MegaKit (Quaternius, CC0) adaptadas no Blender ao castelo do F46; só complementa, fora dos corredores | #131; ADR-0005, ADR-0006 |
 | 2.17 | F51 / SPEC-051 | seleção de heróis fiel ao protótipo novo; layout fiel, só dado real (2 heróis, atributos do `HeroData`) | #132; `docs/prd/telas/Seleção de Heróis/` |
 | 2.18 | F52 / SPEC-052 | vitória/derrota fiel ao protótipo novo; layout fiel, só o `MatchStats` do F18 | #133; `docs/prd/telas/Destaques da Tela de Fim de Partida/` |
+| 2.19 | F53 / SPEC-053 | Bárbaro (Algoz): Machado, Salto Brutal, Rodopio, Execução; pick, bot, VFX, machado visível; elmo não aparece | ADR-0011; SPEC-053; GDB §4.3 |
+| 2.20 | F54 / SPEC-054 | Bruxo de Fogo (Mago): Bola de Fogo, Explosão de Chamas, Anel de Fogo, Meteoro; pick, bot, VFX de fogo, cajado visível; elmo não aparece | ADR-0011; SPEC-054; GDB §4.4 |
+| 2.21 | F55 / SPEC-055 | campos de canto NO/SE: Golem de canto + 2 Lobos + 2 Baús Reforçados (50/50 raro/comum); moita de lagoa movida; 35 monstros, 28 baús | ADR-0011; SPEC-055; GDB §5, §6.2 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
@@ -43,6 +46,8 @@
 **Revisão do PI em 2026-10-11 (ADR-0010):** F47 (regra do baú + card), F48 (equipamento visível) e F49 (dia/noite) entram no MVP2 — decisão do PI: "colocar no MVP2" — **depois do F46 e antes do F19**: **… → F46 → F47 → F48 → F49 → F19 → [GATE]**. O F47 vem antes do soak porque muda o comportamento do bot no baú.
 
 **Pedido do PI em 2026-10-11:** [FIX] #130 (muralha do pátio da base), F50 (pátio com MegaKit), F51 (seleção) e F52 (vitória/derrota) entram **depois do F49 e antes do F19**: **… → F49 → [FIX] #130 → F50 → F51 → F52 → F19 → [GATE]**. Issues criadas pelo Code por ordem do PI; specs formais não escritas, o corpo de cada issue vale como spec.
+
+**Decisão do PI em 2026-10-11 (ADR-0011):** Bárbaro (F53 #135), Bruxo de Fogo (F54 #136) e campos de canto (F55 #137) entram no MVP2 **depois do F50 e antes do F51**: **… → F50 → F53 → F54 → F55 → F51 → F52 → F19 → [GATE]**. A seleção (F51) nasce com 4 heróis; o soak (F19) cobre os 4. O Rei Esqueleto não muda (risco aceito pelo PI — ADR-0011, Consequências).
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 

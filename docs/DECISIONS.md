@@ -17,7 +17,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | D3 | Fase 1 em mapa único: bases seguras + centro contestado | game |
 | D4 | Fase 2 com zona encolhendo + meta de kills; sem respawn crescente | game |
 | D5 | Monetização por sorteios/vales/loja/passe só na fase B | launcher/backend (futuro) |
-| D6 | Fatia 1x1 com 2 heróis | game |
+| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011) | game |
 | D7 | Engine Godot 4.7, condicionada ao gate M0 | ambos |
 | D8 | GDScript (não C#) | ambos |
 | D9 | Assets KayKit (principal) + Quaternius (secundário), cena de alinhamento; ajustes e arte própria no Blender (ADR-0005) | shared |
@@ -37,6 +37,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0008](adr/0008-vale-runico-preservado.md) | Vale Rúnico preservado congelado (`legacy/` + tag `arena-vale-runico`); F44 gera a Ilha em cena nova; F44 depois do F37, antes do F19 | aceito | 2026-10-10 |
 | [0009](adr/0009-arena-rift-medieval-adaptado.md) | Arena "Rift Medieval adaptado": quadrado 80×80 (spawn ≤ 35 u, zona do GDB intacta), rio em S NO–SE com lagoas, bases SO/NE por rotação 180°, 3 rotas (2 pontes na MID), corredores livres + selva nos quadrantes; Ilha v1 só por tag (sem `legacy/`); F46 depois do F44, antes do F19; supera ADR-0007 (topologia) | aceito | 2026-10-10 |
 | [0010](adr/0010-equipamento-visivel-e-dia-noite.md) | Equipamento visível (armas + armaduras próprias presas a ossos) e ciclo dia/noite pelo relógio (sentido pela seed, dia claro × noite do F40, lightmap sem sol); supera parcialmente ADR-0006 itens 3–4 e o clima fixo do F40 | aceito | 2026-10-11 |
+| [0011](adr/0011-quatro-herois-e-campos-de-canto.md) | Quatro heróis no MVP2 (Bárbaro/Algoz e Bruxo de Fogo/Mago, KayKit Adventurers 1.0) e campos de canto NO/SE (Golem de canto + 2 Lobos + 2 Baús Reforçados 50/50); boss não muda; F53–F55 antes do F51; supera parcialmente PRD §1.3/D6/§4.1 e SPEC-046 §2.7/§3 | aceito | 2026-10-11 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 
