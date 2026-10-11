@@ -46,10 +46,6 @@ zone = NodePath("../ZoneController")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
 
-[node name="Sun" type="DirectionalLight3D" parent="."]
-rotation = Vector3(-1, 0.6, 0)
-shadow_enabled = true
-
 [node name="Camera" type="Camera3D" parent="."]
 current = true
 script = ExtResource("3_cam")
