@@ -164,7 +164,8 @@
         { "arquivo": "mvp2.5-f42-grama-vento.webm", "legenda": "Os campos abertos ganharam grama baixa que balança ao vento, em ondas que atravessam a ilha.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f42-grama-e-mato.webp", "legenda": "A grama do chão é baixa e escura; o mato alto, onde dá para se esconder, continua uma moita clara e fácil de reconhecer de longe.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f43-hud-fase2.webp", "legenda": "A interface ganhou molduras de metal com cantos dourados, letras novas com contorno escuro para ler sobre a arena e ícones nas habilidades, com a tecla numa plaquinha no canto.", "tipo": "entregue" },
-        { "arquivo": "mvp2.5-f43-selecao-luz.webp", "legenda": "Na escolha do herói, os personagens agora têm luz de estúdio: uma quente de frente, uma fria de lado e um contorno dourado por trás.", "tipo": "entregue" }
+        { "arquivo": "mvp2.5-f43-selecao-luz.webp", "legenda": "Na escolha do herói, os personagens agora têm luz de estúdio: uma quente de frente, uma fria de lado e um contorno dourado por trás.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f45-camera-giro.webm", "legenda": "Segurando o botão esquerdo, a câmera dá a volta inteira em volta do herói e mostra o que os muros escondiam. Ao soltar, ela fica onde parou, o W continua levando para longe da câmera e o ataque básico passou para o botão direito.", "tipo": "entregue" }
       ]
     },
     "MVP3": {

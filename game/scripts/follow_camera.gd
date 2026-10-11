@@ -41,7 +41,8 @@ func _input(event: InputEvent) -> void:
 		return
 	var motion := event as InputEventMouseMotion
 	if motion:
-		_yaw = CameraRig.orbit(_yaw, motion.relative.x, orbit_sensitivity)
+		# screen_relative: pixels da tela, sem a escala do stretch (o giro nao muda com a janela).
+		_yaw = CameraRig.orbit(_yaw, motion.screen_relative.x, orbit_sensitivity)
 	elif event.is_action_released(InputActions.CAMERA_ORBIT):
 		_stop_orbit()
 
