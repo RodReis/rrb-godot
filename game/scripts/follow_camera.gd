@@ -53,6 +53,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		_start_orbit()
 
 
+## Camera sai da arvore no meio do giro (fim de partida, troca de cena): nao deixa o cursor preso.
+func _exit_tree() -> void:
+	if _orbiting:
+		_orbiting = false
+		Input.mouse_mode = _mouse_mode_before_orbit
+
+
 func _notification(what: int) -> void:
 	# Janela perdeu o foco no meio do giro: o release nao chega; devolve o cursor.
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT and _orbiting:
