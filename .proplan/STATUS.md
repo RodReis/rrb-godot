@@ -7,6 +7,12 @@ updated: 2026-10-11
 
 ## Backlog
 
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-052][F52] Tela de vitória/derrota fiel ao protótipo novo, só com dados reais (#133)
+- [MVP2][SPEC-051][F51] Tela de seleção de heróis fiel ao protótipo novo, só com dados reais (#132)
+- [MVP2][SPEC-050][F50] Pátio da base com construções do Medieval Village MegaKit (CC0) adaptadas ao castelo atual (#131)
+
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
@@ -46,6 +52,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-046][FIX] Muralha do pátio da base esticada e com fresta junto à torre do portão (#130, finalizado em: 2026-10-11)
 - [MVP2][SPEC-049][F49] Ciclo dia/noite sincronizado com o relógio da partida, sentido sorteado pela seed (#122, finalizado em: 2026-10-11)
 - [MVP2][SPEC-048][F48] Equipamento visível: armas e armaduras modeladas no Blender no herói 3D e ícones dos itens (#121, finalizado em: 2026-10-11)
 - [MVP2][SPEC-047][F47] Baú: F só para item melhor, regra por herói no servidor e card de comparação na HUD (#120, finalizado em: 2026-10-11)
