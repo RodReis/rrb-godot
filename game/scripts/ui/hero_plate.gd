@@ -14,6 +14,7 @@ var _skills: Array[SkillData] = []
 var _buttons: Array[SkillButton] = []
 var _learn_badges: Array[HotkeyBadge] = []
 var _slots: Array[SlotItem] = []
+var _items: ItemVisuals  # icones dos itens deste heroi
 ## Ultimo estado mostrado: so redesenha o que mudou.
 var _shown_hp: Vector2i = -Vector2i.ONE
 var _shown_xp: int = -1
@@ -46,6 +47,7 @@ func _ready() -> void:
 ## Liga ao heroi local e redesenha tudo; o que ja esta equipado nao vira aviso.
 func bind(hero: Hero) -> void:
 	_hero = hero
+	_items = ItemVisuals.for_hero(hero.hero_data.id)
 	_offer_card.bind(hero)
 	_shown_hp = -Vector2i.ONE
 	_shown_xp = -1
@@ -145,5 +147,5 @@ func _refresh_equipment() -> void:
 		if item == null:
 			_slots[slot].clear()
 		else:
-			_slots[slot].bind(item)
+			_slots[slot].bind(item, _items.icon(item) if _items != null else null)
 	_set_text.text = set_text(_shown_equipment, catalog)

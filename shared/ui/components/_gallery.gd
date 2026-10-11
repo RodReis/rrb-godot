@@ -188,7 +188,7 @@ func _slots() -> void:
 		var slot := SLOT_ITEM.instantiate() as SlotItem
 		slot.slot = item.slot
 		_add(row, slot, ItemData.RARITY_NAMES[item.rarity])
-		slot.bind(item)
+		slot.bind(item, ItemVisuals.for_hero(&"knight").icon(item))
 	var tooltip := ItemTooltip.new()
 	_add(row, tooltip, "ItemTooltip")
 	tooltip.bind(ITEMS[ITEMS.size() - 1])

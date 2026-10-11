@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/client/equipment_lineup.gd" id="1_script"]
+
+[sub_resource type="ProceduralSkyMaterial" id="Sky_mat"]
+
+[sub_resource type="Sky" id="Sky_lineup"]
+sky_material = SubResource("Sky_mat")
+
+[sub_resource type="Environment" id="Env_lineup"]
+background_mode = 2
+sky = SubResource("Sky_lineup")
+ambient_light_source = 3
+tonemap_mode = 3
+
+[sub_resource type="PlaneMesh" id="Plane_floor"]
+size = Vector2(40, 40)
+
+[node name="EquipmentLineup" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.8, -0.36, 0.48, 0, 0.8, 0.6, -0.6, -0.48, 0.64, 0, 6, 0)
+shadow_enabled = true
+
+[node name="Environment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env_lineup")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+mesh = SubResource("Plane_floor")
+
+[node name="Camera" type="Camera3D" parent="."]

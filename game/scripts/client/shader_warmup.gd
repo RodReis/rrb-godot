@@ -18,6 +18,8 @@ const SCENE_DIRS: Array[String] = [
 	"res://scenes/heroes/", "res://scenes/monsters/", "res://scenes/vfx/"
 ]
 const SCENES: Array[String] = ["res://scenes/world/chest.tscn"]
+## Pecas de equipamento (SPEC-048): entram no heroi quando o item e equipado, no meio da partida.
+const PIECE_DIR: String = "res://shared/assets/rrb/equipment/"
 ## Shaders spatial cujo material e criado em codigo (WorldHealthBar, FogOfWar, parede da zona da
 ## fase 2) ou que so desenham depois de montados (VFX do F41: fita, fantasma, particula). Todo
 ## spatial de res://scenes/ tem de estar aqui (test_shader_warmup).
@@ -49,6 +51,9 @@ static func scene_paths() -> PackedStringArray:
 			if file.get_extension() == "tscn":
 				paths.append(dir + file)
 	paths.append_array(SCENES)
+	for file: String in ResourceLoader.list_directory(PIECE_DIR):
+		if file.get_extension() == "glb":
+			paths.append(PIECE_DIR + file)
 	return paths
 
 

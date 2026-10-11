@@ -13,6 +13,13 @@ func test_cobre_herois_monstros_e_bau() -> void:
 	assert_has(paths, "res://scenes/world/chest.tscn")
 
 
+func test_cobre_as_pecas_de_equipamento() -> void:
+	var paths := ShaderWarmup.scene_paths()
+	var visuals := ItemVisuals.for_hero(&"knight")
+	for item: StringName in [&"guard_helm_t3", &"hunter_chest_t1", &"sword_t2"]:
+		assert_has(paths, (visuals.pieces[item] as PackedScene).resource_path)
+
+
 func test_toda_cena_carrega() -> void:
 	for path: String in ShaderWarmup.scene_paths():
 		assert_true(load(path) is PackedScene, path)
