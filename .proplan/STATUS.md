@@ -7,11 +7,6 @@ updated: 2026-10-11
 
 ## Backlog
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][FIX] Cliente loga ERROR a cada quadro depois que o servidor encerra a partida (#108)
-- [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
-
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
@@ -34,6 +29,8 @@ updated: 2026-10-11
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][FIX] Cliente loga ERROR a cada quadro depois que o servidor encerra a partida (#108)
+- [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
 - [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
 - [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
 - [MVP2][SPEC-049][F49] Ciclo dia/noite sincronizado com o relógio da partida, sentido sorteado pela seed (#122)
