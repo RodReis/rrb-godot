@@ -1,7 +1,8 @@
 extends GutTest
 ## Integracao headless: arena + SpawnDirector + Cavaleiro. Baus (GDB §6.2): um por marcador,
-## abre uma vez com toque em F a ate chest_interact_range; troca de raridade igual/menor com F
-## segurado swap_hold_time, item fica no bau e o antigo some; cura pelo ledger (PI 2026-10-09).
+## abre uma vez com toque em F a ate chest_interact_range (abrir nao equipa); o item so troca com
+## F segurado swap_hold_time e so se ItemRules.offer for verdadeiro para aquele heroi (SPEC-047);
+## sem oferta o item fica para outro; o item antigo some; cura pelo ledger.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
@@ -69,6 +70,13 @@ func _tap() -> void:
 	_run(1, false)
 
 
+## Abre com um toque e segura F pelo tempo da troca (F apertado depois da abertura).
+func _open_and_hold(chest: Chest) -> void:
+	_tap()
+	_run(_hold_ticks(chest), true)
+	_run(1, false)
+
+
 func _hold_ticks(chest: Chest) -> int:
 	return SkillRules.seconds_to_ticks(chest.rules.swap_hold_time, NetworkTime.tickrate)
 
@@ -98,10 +106,17 @@ func test_mesma_seed_mesmos_drops() -> void:
 	assert_eq(a, b)
 
 
-func test_toque_em_f_abre_e_equipa_no_slot_vazio() -> void:
+func test_abrir_nao_equipa_nem_em_slot_vazio() -> void:
 	var chest := _chest_with(_number(&"sword_t1"))
 	_tap()
 	assert_true(chest.opened)
+	assert_eq(chest.item, _number(&"sword_t1"))
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], Ids.NONE)
+
+
+func test_slot_vazio_equipa_segurando_f() -> void:
+	var chest := _chest_with(_number(&"sword_t1"))
+	_open_and_hold(chest)
 	assert_eq(chest.item, Ids.NONE)
 	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t1"))
 	assert_almost_eq(_hero.attributes.attack, _hero.hero_data.base_attack + 12.0, 0.0001)
@@ -112,18 +127,23 @@ func test_bau_aberto_nao_reabre() -> void:
 	_tap()
 	chest.drop = _number(&"sword_t2")
 	_tap()
-	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t1"))
+	assert_eq(chest.item, _number(&"sword_t1"))
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], Ids.NONE)
 
 
-func test_raridade_maior_troca_sozinha() -> void:
+func test_raridade_maior_troca_so_segurando_f() -> void:
 	_equip(&"sword_t1")
 	var chest := _chest_with(_number(&"sword_t2"))
 	_tap()
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t1"))
+	assert_eq(chest.item, _number(&"sword_t2"))
+	_run(_hold_ticks(chest), true)
+	_run(1, false)
 	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t2"))
 	assert_eq(chest.item, Ids.NONE)
 
 
-func test_raridade_igual_fica_no_bau_ate_segurar_f() -> void:
+func test_mesma_raridade_outro_conjunto_e_oferta_lateral() -> void:
 	_equip(&"guard_helm_t1")
 	var chest := _chest_with(_number(&"hunter_helm_t1"))
 	_tap()
@@ -136,24 +156,64 @@ func test_raridade_igual_fica_no_bau_ate_segurar_f() -> void:
 	assert_eq(chest.item, Ids.NONE)
 
 
-func test_segurar_f_desde_a_abertura_nao_troca_sem_ver_a_oferta() -> void:
+func test_item_identico_nao_troca_e_fica_no_bau() -> void:
 	_equip(&"sword_t2")
-	var chest := _chest_with(_number(&"sword_t1"))
+	var chest := _chest_with(_number(&"sword_t2"))
+	_open_and_hold(chest)
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t2"))
+	assert_eq(chest.item, _number(&"sword_t2"))
+
+
+func test_raridade_menor_nao_troca_e_fica_no_bau() -> void:
+	_equip(&"guard_chest_t2")
+	var chest := _chest_with(_number(&"guard_chest_t1"))
+	_open_and_hold(chest)
+	assert_true(chest.opened)
+	assert_eq(_hero.equipment[ItemData.Slot.CHEST], _number(&"guard_chest_t2"))
+	assert_eq(chest.item, _number(&"guard_chest_t1"))
+
+
+func test_segurar_f_desde_a_abertura_nao_troca_sem_ver_a_oferta() -> void:
+	_equip(&"sword_t1")
+	var chest := _chest_with(_number(&"sword_t2"))
 	_run(_hold_ticks(chest) * 2, true)
 	_run(1, false)
 	assert_true(chest.opened)
-	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t2"))
-	assert_eq(chest.item, _number(&"sword_t1"))
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t1"))
+	assert_eq(chest.item, _number(&"sword_t2"))
 
 
 func test_soltar_f_antes_de_04_s_nao_troca() -> void:
-	_equip(&"sword_t2")
-	var chest := _chest_with(_number(&"sword_t1"))
+	_equip(&"sword_t1")
+	var chest := _chest_with(_number(&"sword_t2"))
 	_tap()
 	_run(_hold_ticks(chest) - 1, true)
 	_run(1, false)
-	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t2"))
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t1"))
+	assert_eq(chest.item, _number(&"sword_t2"))
+
+
+## Item que o primeiro heroi recusou continua no bau: um segundo heroi com oferta valida leva.
+func test_item_recusado_fica_para_outro_heroi() -> void:
+	_equip(&"sword_t2")
+	var chest := _chest_with(_number(&"sword_t1"))
+	_open_and_hold(chest)
 	assert_eq(chest.item, _number(&"sword_t1"))
+	var other := (load(KNIGHT) as PackedScene).instantiate() as Hero
+	other.name = "2"
+	other.team = GateRules.TEAM_B
+	add_child_autofree(other)
+	other.global_position = chest.global_position + Vector3(-1.0, 0.0, 0.0)
+	other.input.interact_hold = true
+	for i: int in _hold_ticks(chest) + 1:
+		_tick += 1
+		other._rollback_tick(DT, _tick, true)
+	other.input.interact_hold = false
+	_tick += 1
+	other._rollback_tick(DT, _tick, true)
+	assert_eq(other.equipment[ItemData.Slot.WEAPON], _number(&"sword_t1"))
+	assert_eq(chest.item, Ids.NONE)
+	assert_eq(_hero.equipment[ItemData.Slot.WEAPON], _number(&"sword_t2"))
 
 
 func test_longe_do_bau_nao_abre() -> void:
@@ -181,8 +241,7 @@ func test_fechar_guarda_3_de_3_sobe_hp_max() -> void:
 	_equip(&"guard_chest_t1")
 	var before := _hero.attributes.max_hp
 	assert_eq(before, roundi(_hero.hero_data.base_hp + 50.0))
-	_chest_with(_number(&"guard_boots_t1"))
-	_tap()
+	_open_and_hold(_chest_with(_number(&"guard_boots_t1")))
 	assert_eq(_hero.attributes.max_hp, roundi((_hero.hero_data.base_hp + 50.0) * 1.15))
 	assert_almost_eq(_hero.attributes.defense, _hero.hero_data.base_defense + 8 + 5 + 10, 0.0001)
 
@@ -190,9 +249,6 @@ func test_fechar_guarda_3_de_3_sobe_hp_max() -> void:
 func test_trocar_para_menos_hp_max_corta_o_hp() -> void:
 	_equip(&"guard_chest_t2")
 	_hero.hp = _hero.attributes.max_hp
-	var chest := _chest_with(_number(&"guard_chest_t1"))
-	_tap()
-	_run(_hold_ticks(chest), true)
-	_run(1, false)
+	_open_and_hold(_chest_with(_number(&"hunter_chest_t2")))
 	assert_eq(_hero.hp, _hero.attributes.max_hp)
-	assert_eq(_hero.attributes.max_hp, roundi(_hero.hero_data.base_hp + 50.0))
+	assert_eq(_hero.attributes.max_hp, roundi(_hero.hero_data.base_hp + 75.0))

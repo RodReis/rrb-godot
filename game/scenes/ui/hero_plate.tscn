@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://shared/ui/components/slot_item.tscn" id="slot"]
 [ext_resource type="Script" path="res://scripts/ui/hero_plate.gd" id="plate"]
 [ext_resource type="Script" path="res://shared/ui/components/panel_card.gd" id="card"]
+[ext_resource type="Script" path="res://scripts/ui/chest_offer_card.gd" id="offer_card"]
 [ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="badge"]
 [ext_resource type="Script" path="res://shared/ui/components/toast.gd" id="toast"]
 
@@ -27,39 +28,10 @@ offset_right = 520.0
 offset_bottom = 450.0
 script = ExtResource("toast")
 
-[node name="Offer" type="PanelContainer" parent="."]
+[node name="OfferCard" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 layout_mode = 1
-script = ExtResource("card")
-variant = 1
-accent = 1
-visible = false
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -260.0
-offset_top = -520.0
-offset_right = 260.0
-offset_bottom = -470.0
-grow_horizontal = 2
-grow_vertical = 0
-
-[node name="OfferRow" type="HBoxContainer" parent="Offer"]
-layout_mode = 2
-alignment = 1
-
-[node name="OfferKey" type="Label" parent="Offer/OfferRow"]
-layout_mode = 2
-script = ExtResource("badge")
-key = "F"
-size_variant = 1
-
-[node name="OfferText" type="Label" parent="Offer/OfferRow"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Segure para trocar"
+script = ExtResource("offer_card")
 
 [node name="Bottom" type="MarginContainer" parent="."]
 layout_mode = 1

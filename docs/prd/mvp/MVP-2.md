@@ -20,6 +20,9 @@
 | 2.8 | F32 / SPEC-032 | mato alto: herói dentro da moita deixa de ser replicado para o adversário (filtro de visibilidade no servidor); revela ao atacar | `CONVENTION.md` §4.7; GDB §7.3; SPEC-007 §2 |
 | 2.11 | F44 / SPEC-044 | arena "Ilha Flutuante Arcana" — **layout novo, greybox jogável**: espelho N–S, bases nos cantos norte, rio N–S + anel, 4 pontes (2 por metade), campos do centro em 0°/180°; builder, colisão, marcadores (reposiciona os campos do F36), portões, mato, navmesh; sem arte nova | ADR-0007; SPEC-044; GDB §5.1, §6.2, §7.1 |
 | 2.12 | F46 / SPEC-046 | arena "Rift Medieval adaptado" — relayout da Ilha: **borda quadrada 80×80**, rio em S NO–SE (anel + braços em arco + lagoas), bases SO/NE (rotação 180°), 2 pontes na MID, 3 corredores livres de 8 u, selva (4 campos do F36) nos quadrantes; builder, chassi Blender, colisão, marcadores, navmesh; kits do F44 reposicionados, sem kit novo | ADR-0009; SPEC-046; GDB §5.1, §6.2, §7.1 |
+| 2.13 | F47 / SPEC-047 | baú: `F` só para item melhor (vazio, raridade maior, lateral de conjunto), nada automático, regra por herói no servidor, item recusado fica no baú; card de comparação na HUD ancorado ao baú; bot segura `F` | SPEC-047; GDB §6.2 |
+| 2.14 | F48 / SPEC-048 | equipamento visível: armas (3 tiers por herói) e armaduras Guarda/Caçador (3 slots × 3 raridades) modeladas no Blender, presas a ossos; ícones dos itens no `SlotItem` | ADR-0010; SPEC-048; GDB §6.1 |
+| 2.15 | F49 / SPEC-049 | ciclo dia/noite pelo relógio (0–600 s), sentido 50/50 pela seed, dia claro × noite do F40, lightmap sem sol, `--daynight` | ADR-0010; SPEC-049 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
@@ -33,6 +36,8 @@
 **Revisão do PI em 2026-10-10 (ADR-0008, supera a ordem acima do ADR-0007):** F16, F17, F18 e F32 foram mergeados e o F37 entrou em `doing` no layout antigo antes do F44. O F37 termina; o F44 entra **depois do F37 e antes do F19** e confere no layout novo as moitas do F32 e a neblina/minimapa do F37. O F44 gera a Ilha em cena nova (`ilha_arcana.tscn`); o Vale Rúnico fica congelado em `game/scenes/arena/legacy/` + tag `arena-vale-runico` (fora do fluxo, sem teste).
 
 **Revisão do PI em 2026-10-10 (ADR-0009):** F44 mergeado (#109). O F46 (relayout "Rift Medieval adaptado", #110) entra **logo depois do F44 e antes do F19**, para o soak nascer no layout final. Regera `ilha_arcana.tscn` no lugar; Ilha v1 preservada só pela tag `arena-ilha-arcana`.
+
+**Revisão do PI em 2026-10-11 (ADR-0010):** F47 (regra do baú + card), F48 (equipamento visível) e F49 (dia/noite) entram no MVP2 — decisão do PI: "colocar no MVP2" — **depois do F46 e antes do F19**: **… → F46 → F47 → F48 → F49 → F19 → [GATE]**. O F47 vem antes do soak porque muda o comportamento do bot no baú.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 

@@ -30,10 +30,14 @@ static func equip(equipment: Vector4i, item: ItemData) -> Vector4i:
 	return result
 
 
-static func swap_mode(
-	equipment: Vector4i, incoming: ItemData, catalog: ItemCatalog
-) -> ItemRules.Swap:
-	return ItemRules.swap_mode(item_at(equipment, incoming.slot, catalog), incoming)
+## O heroi com [param equipment] pode trocar o item do slot por [param incoming] (ItemRules.offer).
+static func offer(equipment: Vector4i, incoming: ItemData, catalog: ItemCatalog) -> bool:
+	return ItemRules.offer(item_at(equipment, incoming.slot, catalog), incoming)
+
+
+## Slot vazio ou raridade maior (ItemRules.is_upgrade).
+static func is_upgrade(equipment: Vector4i, incoming: ItemData, catalog: ItemCatalog) -> bool:
+	return ItemRules.is_upgrade(item_at(equipment, incoming.slot, catalog), incoming)
 
 
 static func attributes(

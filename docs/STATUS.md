@@ -10,7 +10,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Módulo em foco | `game/` |
 | Próximo gate | [GATE] MVP2 — 1x1 online termina sempre; soak verde. MVP2.5 (bloco visual, #99) e MVP3 (#76): cards criados em 2026-10-10 |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos); ADR-0006 (direção visual) e ADR-0007 (layout da arena) em 2026-10-10 |
-| Board | issue-pai [MVP2] #57 — ordem F15 → F36 → F20 → F14 → F16 → **F44 #92** → **F46 #110** → F17 → F18 → F32 → F37 → F19 → [GATE] (ADR-0007; F16 já estava em `doing`); `done`: F15 #58; `todo`: F36 #59, F20 #60, F14 #62, F16 #63, F17 #64; `backlog`: F18 #65, F32 #66, F37 #67, F19 #68, [GATE] #69. Issue-pai [MVP2.5] **#99** (bloco visual, ADR-0006; depois do [GATE] MVP2 e antes do MVP3) — ordem **F45 #103 → F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98**, todos `backlog`; `[INFRA]` #100 (roadmap público reconhecer MVP2.5). Issue-pai [MVP3] #76 — ordem F21 → F22 → F23 → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE], todos `backlog` (#77–#87). Sem MVP, `planejado`: oclusão #70 (câmera #47 fechada, substituída pelo F45 #103). MVP1 (#16): `done` [FIX] #52; demais `finalizado`. MVP0 #1–#7 `finalizado` |
+| Board | **2026-10-11 (ADR-0010):** F47 #120 → F48 #121 → F49 #122 entram no MVP2 depois do F46 e antes do F19; `todo`: F47 #120, F48 #121, F49 #122, F19 #68, [GATE] #69. issue-pai [MVP2] #57 — ordem F15 → F36 → F20 → F14 → F16 → **F44 #92** → **F46 #110** → F17 → F18 → F32 → F37 → F19 → [GATE] (ADR-0007; F16 já estava em `doing`); `done`: F15 #58; `todo`: F36 #59, F20 #60, F14 #62, F16 #63, F17 #64; `backlog`: F18 #65, F32 #66, F37 #67, F19 #68, [GATE] #69. Issue-pai [MVP2.5] **#99** (bloco visual, ADR-0006; depois do [GATE] MVP2 e antes do MVP3) — ordem **F45 #103 → F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98**, todos `backlog`; `[INFRA]` #100 (roadmap público reconhecer MVP2.5). Issue-pai [MVP3] #76 — ordem F21 → F22 → F23 → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE], todos `backlog` (#77–#87). Sem MVP, `planejado`: oclusão #70 (câmera #47 fechada, substituída pelo F45 #103). MVP1 (#16): `done` [FIX] #52; demais `finalizado`. MVP0 #1–#7 `finalizado` |
 | Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. R-PEND-11 decidida em 2026-10-09 (paleta e fontes de `docs/prd/telas/`). R-PEND-02 (completada), 04, 06, 12 e 13 decididas em 2026-10-10; 03 e 07 em 2026-10-09; R-PEND-11 emendada em 2026-10-10 (protótipo vence o DV na estrutura). Abertos: 10, 14 (fontes do design system v2 — trava só o F43) |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
@@ -54,11 +54,11 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F16 / SPEC-016 | MVP2 | game | Slice 2.3 — Fase 2: zona, dano, respawn, kills, morte súbita, regras de vitória | done (#63) |
 | F17 / SPEC-017 | MVP2 | game | Slice 2.4 — Transição 5:00 + HUD fase 2 + vinheta de zona | done (#64) |
 | F18 / SPEC-018 | MVP2 | game | Slice 2.5 — Tela de fim de partida com estatísticas | done (#65) |
-| F19 / SPEC-019 | MVP2 | game | Slice 2.6 — Bot fase 2 + soak 50 partidas headless (`tools/soak.ps1`) | backlog (#68) |
+| F19 / SPEC-019 | MVP2 | game | Slice 2.6 — Bot fase 2 + soak 50 partidas headless (`tools/soak.ps1`) | todo (#68) |
 | F20 / SPEC-020 | MVP2 | game | Slice 2.7 — Monstros, baús e boss replicados (2 clientes reais) | finalizado (#60) |
 | F36 / SPEC-036 | MVP2 | game, shared | Slice 2.9 — Economia de campo: 4 campos laterais (2 T1 + 1 T2 e 2 baús comuns cada), respawn de monstros não-boss 90 s na fase 1 (GDB §5, §6.2) | finalizado (#59) |
 | F37 / SPEC-037 | MVP2 | game, shared | Slice 2.10 — Neblina de guerra: visão 12 u + explorado, filtro de replicação por peer (generaliza o F32), minimapa (`CONVENTION.md` §4.9) | done (#67) |
-| [GATE] | MVP2 | — | Homologação: 1x1 online termina sempre; soak verde | backlog (#69) |
+| [GATE] | MVP2 | — | Homologação: 1x1 online termina sempre; soak verde | todo (#69) |
 | F21 / SPEC-021 | MVP3 | backend | Slice 3.1 — NestJS: auth e-mail/senha, JWT, usuários, migrações | backlog (#77) |
 | F22 / SPEC-022 | MVP3 | backend | Slice 3.2 — Fila 1x1 FIFO + orquestrador (pool Docker, token de partida, heartbeat) | backlog (#78) |
 | F23 / SPEC-023 | MVP3 | game | Slice 3.3 — Game server: `--token`, validar no backend, reportar resultado, códigos de saída | backlog (#79) |
@@ -83,9 +83,12 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F32 / SPEC-032 | MVP2 | game | Slice 2.8 — Mato alto: herói dentro da moita não é replicado para o adversário (visibilidade no servidor); regra em `CONVENTION.md` §4.7, números em GDB §7.3 (revelação 1,5 s) | done (#66) |
 | F44 / SPEC-044 | MVP2 | game, shared | Slice 2.11 — Arena "Ilha Flutuante Arcana": layout novo (espelho N–S, rio N–S + anel, 4 pontes), builder, colisão, marcadores, navmesh **+ a arte do F40 no mesmo card** (decisão do PI 2026-10-10: kits Blender, shaders de rio/magma/cristal/céu, baú novo) | finalizado (#92) |
 | F46 / SPEC-046 | MVP2 | game, shared | Slice 2.12 — Arena "Rift Medieval adaptado": borda quadrada 80×80, rio em S NO–SE com lagoas, bases SO/NE (rotação 180°), 2 pontes na MID, 3 corredores de 8 u, selva nos quadrantes; builder, chassi Blender, marcadores, navmesh; kits do F44 reposicionados (ADR-0009) | finalizado (#110) |
+| F47 / SPEC-047 | MVP2 | game, shared | Slice 2.13 — Baú: `F` só para item melhor, nada automático, regra por herói, item recusado fica no baú; card de comparação na HUD; bot segura `F` (GDB §6.2) | todo (#120) |
+| F48 / SPEC-048 | MVP2 | game, shared | Slice 2.14 — Equipamento visível: armas e armaduras modeladas no Blender presas a ossos; ícones dos itens (ADR-0010) | todo (#121) |
+| F49 / SPEC-049 | MVP2 | game, shared | Slice 2.15 — Ciclo dia/noite pelo relógio da partida, sentido pela seed, lightmap sem sol (ADR-0010) | todo (#122) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
-Próximo número livre: **F47 / SPEC-047**.
+Próximo número livre: **F50 / SPEC-050**.
 
 ## 4. Regras deste índice
 

@@ -1,10 +1,11 @@
 class_name Chest
 extends Node3D
 ## Bau de loot (GDB §6.2). O drop e sorteado pelo SpawnDirector com a seed da partida; so o do
-## servidor vale. Abre uma vez com toque em F; o item vai ao heroi pelo ledger dele se a troca
-## for automatica (ItemRules), senao fica no bau ate alguem segurar F swap_hold_time, e o item
-## antigo some (PI 2026-10-09). Cura vai pelo ledger. Clientes recebem aberto + item (numero de
-## Ids) por RPC confiavel. A oferta de troca aparece na HUD (F13), nao no bau.
+## servidor vale. Abre uma vez com toque em F e o item fica no bau (nada e automatico). Quem
+## segura F swap_hold_time leva o item pelo ledger se ItemRules.offer for verdadeiro para ele
+## (SPEC-047); sem oferta nada acontece e o item fica para outro heroi. O item antigo some (PI
+## 2026-10-09). Cura vai pelo ledger na abertura. Clientes recebem aberto + item (numero de Ids)
+## por RPC confiavel. O card da oferta aparece na HUD (ChestOfferCard), nao no bau.
 ## Neblina de guerra (F37): o estado so vai a quem tem o bau no raio de visao (seen_by,
 ## Concealment); quem passa a ver recebe o estado atual. Fora da visao o bau continua no mapa com
 ## o ultimo estado visto (shown_opened; no host, o do jogador local).
@@ -97,7 +98,7 @@ func interact(hero: Hero, tick: int, held_ticks: int) -> void:
 	var pressed_tick := tick - held_ticks + 1
 	if held_ticks == 1 and not opened:
 		_open(hero, tick)
-	elif item != Ids.NONE and held_ticks == _hold_ticks() and pressed_tick > _opened_tick:
+	elif held_ticks == hold_ticks() and pressed_tick > _opened_tick and offers(hero.equipment):
 		_give(hero, tick)
 	else:
 		return
@@ -107,7 +108,15 @@ func interact(hero: Hero, tick: int, held_ticks: int) -> void:
 			_show.rpc_id(peer, tick, opened, item)
 
 
-func _hold_ticks() -> int:
+## O bau aberto tem um item que o heroi com [param equipment] pode trocar (ItemRules.offer).
+func offers(equipment: Vector4i) -> bool:
+	if item == Ids.NONE:
+		return false
+	return Inventory.offer(equipment, catalog.find(item), catalog)
+
+
+## Ticks de F segurado para trocar (swap_hold_time).
+func hold_ticks() -> int:
 	return SkillRules.seconds_to_ticks(rules.swap_hold_time, NetworkTime.tickrate)
 
 
@@ -121,12 +130,10 @@ func _open(hero: Hero, tick: int) -> void:
 		_reward(hero, tick, effect)
 	else:
 		item = drop
-		var auto := ItemRules.Swap.AUTO
-		if Inventory.swap_mode(hero.equipment, catalog.find(item), catalog) == auto:
-			_give(hero, tick)
 
 
 func _give(hero: Hero, tick: int) -> void:
+	print("[chest] %s leva %s" % [hero.name, catalog.find(item).display_name])
 	var effect := HitEffect.new()
 	effect.item = item
 	_reward(hero, tick, effect)

@@ -240,7 +240,7 @@ O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
   - Mesmo drop do baú comum. Total do mapa: **24 baús** (12 de base + 8 laterais + 4 raros). Baús não reabrem.
 - **Baús Raros (4 no centro contestado):**
   - Drop: 65% Item Raro, 25% Item Comum, 10% Item Épico.
-- **Regra de Substituição:** O servidor substitui automaticamente o equipamento se a raridade do item coletado for maior. Em caso de empate ou escolha lateral, a tecla `F` (segurada por $0.4\text{ s}$) valida a troca.
+- **Regra de Substituição (decisão do PI em 2026-10-11, SPEC-047):** nada é automático. A tecla `F` segurada por $0.4\text{ s}$ troca o item **só quando ele é melhor para quem segura**: slot vazio, raridade maior, ou mesma raridade de outro conjunto (escolha lateral). Raridade menor ou item idêntico: sem troca. A regra é avaliada por herói no servidor; o item não aceito fica no baú para outro herói.
 
 ---
 
