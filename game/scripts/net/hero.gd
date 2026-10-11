@@ -25,6 +25,12 @@ extends Combatant
 ## Concealment; no cliente o heroi escondido fica invisivel e sem colisao.
 ## Neblina de guerra (F37): o adversario so ve o heroi no raio de visao dele e fora do mato
 ## (seen_by, VisionRules); o VisionDirector decide por tick e o Concealment filtra.
+## VFX (F41): cada golpe registrado no ledger do alvo sai em struck (servidor); o ImpactRelay
+## anuncia uma vez aos clientes. O heroi nao tem no de VFX: o cliente cria os efeitos (VfxSpawner).
+
+## Servidor: golpe de [param slot] registrado em [param target] no [param tick] (pode repetir na
+## ressimulacao do atacante; o ImpactRelay filtra).
+signal struck(target: Combatant, slot: HitLedger.Slot, tick: int)
 
 const GROUP: StringName = &"heroes"
 ## respawn_off_tick enquanto o respawn vale.
@@ -523,6 +529,7 @@ func _hit(other: Combatant, tick: int, slot: HitLedger.Slot, effect: HitEffect) 
 	other.receive_hit(tick + 1, HitLedger.source_key(peer_id, slot), effect)
 	# Forca ressimular o alvo a partir de tick+1 se ele ja foi simulado.
 	NetworkRollback.mutate(other, tick + 1)
+	struck.emit(other, slot, tick)
 
 
 func _miss(other: Combatant, tick: int, slot: HitLedger.Slot) -> void:

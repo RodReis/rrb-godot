@@ -5,7 +5,12 @@ extends Node3D
 ## teria historico. Por isso o pool e fixo, filho do heroi, nasce com ele pelo MultiplayerSpawner,
 ## e o estado de cada flecha (STATE) entra no RollbackSynchronizer do heroi: disparar e ocupar um
 ## slot, ressimular o heroi reproduz a flecha. A Ranger avanca e acerta; aqui so o visual
-## (top_level, extrapolado dentro do tick para nao andar aos saltos de 30 Hz).
+## (top_level). Visual desacoplado do estado (F41): a flecha mostrada anda sozinha na velocidade do
+## disparo e so acompanha a posicao da rede (extrapolada dentro do tick), sem recuar
+## (VfxRules.arrow_progress) — a flecha ressimulada nao ziguezagueia nem anda aos saltos de 30 Hz.
+
+## Visual: disparo novo neste slot (o rastro do VFX recomeca daqui).
+signal shown_launched
 
 enum Kind { NONE, BASIC, PIERCE }
 
@@ -13,6 +18,8 @@ enum Kind { NONE, BASIC, PIERCE }
 const STATE: Array[String] = [
 	"kind", "origin", "direction", "traveled", "max_range", "damage", "pierced", "hits"
 ]
+## Ponto de disparo (origin - direction * traveled) que mudou mais que isto (u^2) = disparo novo.
+const RELAUNCH_EPSILON_SQ: float = 0.0001
 
 ## Velocidade de voo (u/s), so para o visual; definida pela Ranger.
 var speed: float = 0.0
@@ -32,13 +39,26 @@ var pierced: int = 0
 ## Sempre reatribuido, nunca alterado no lugar (o netfox guarda a referencia no historico).
 var hits: PackedInt32Array = PackedInt32Array()
 
+## Visual: avanco mostrado desde o disparo e o ponto de disparo que ele segue.
+var _shown_progress: float = 0.0
+var _shown_launch: Vector3 = Vector3.INF
 
-func _process(_delta: float) -> void:
+
+func _process(delta: float) -> void:
 	visible = is_active()
 	if not visible:
+		_shown_launch = Vector3.INF
 		return
 	var ahead := minf(speed * NetworkTime.tick_factor * NetworkTime.ticktime, max_range - traveled)
-	var at := origin + direction * maxf(ahead, 0.0)
+	var network := traveled + maxf(ahead, 0.0)
+	var launch := origin - direction * traveled
+	if launch.distance_squared_to(_shown_launch) > RELAUNCH_EPSILON_SQ:
+		_shown_launch = launch
+		_shown_progress = network
+		shown_launched.emit()
+	else:
+		_shown_progress = VfxRules.arrow_progress(_shown_progress, network, speed, delta, max_range)
+	var at := _shown_launch + direction * _shown_progress
 	global_position = at
 	if not direction.is_zero_approx():
 		look_at(at + direction, Vector3.UP)

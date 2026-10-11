@@ -31,6 +31,7 @@ game/
     monsters/                   skeleton*.tscn, golem.tscn, skeleton_king.tscn
     projectiles/                arrow.tscn, pool
     world/                      chest.tscn, gate.tscn, zone.tscn
+    vfx/                        efeitos de combate (F41): one-shots do pool, efeitos por herói, shaders — só cliente
     ui/                         hero_select.tscn, hud_phase1.tscn, hud_phase2.tscn, match_end.tscn, net_debug.tscn
   scripts/
     core/                       regras puras — sem Node, sem rede, 100% GUT (ver §3.1)
@@ -41,6 +42,7 @@ game/
     ui/                         hud_controller.gd, hero_select_controller.gd, match_end_controller.gd
     server/                     server_main.gd, backend_client.gd (HTTP interno), result_reporter.gd
     client/                     client_main.gd, follow_camera.gd, local_input.gd
+    vfx/                        VfxSpawner, VfxPool, HeroVfx (Knight/Ranger), TrailRibbon — só cliente (§3.8)
   test/
     unit/                       GUT: core/, match/ (FSM com relógio falso), items/
     net/                        cenários 2 clientes + servidor (manual/semi-automático)
@@ -121,6 +123,16 @@ PHASE1 (5:00) ─(relógio)─▶ TRANSITION (5 s) ─▶ PHASE2 ─(4:00 da fas
 
 - `ServerMain`: parse args → sobe `ENetMultiplayerPeer` → `BackendClient.validate_token()` (HTTP interno) → espera 2 peers → `MatchController.start()` → ao `match_ended`: `ResultReporter.post()` → encerra processo com código 0. Timeout de espera por jogadores: parâmetro em `match_pacing.tres`; expirou → reporta `abandoned` e encerra.
 - `ClientMain`: parse args → conecta → instancia UI → entrega `PlayerInput` ao herói local → ao `match_ended`: mostra `match_end` → botão "Voltar" encerra o processo. "Jogar novamente" também encerra (o Launcher reabre a fila) — o Game não tem fila.
+
+### 3.8 `vfx/` — efeitos de combate (F41, ADR-0006 item 7)
+
+- **Só cliente.** A `main` cria o `VfxSpawner` apenas quando o processo desenha (`VfxSpawner.wanted()`); o servidor headless não tem nó de VFX (GUT `test_vfx_headless`). O herói não ganha filho: os efeitos ficam sob o `VfxSpawner` e seguem o herói.
+- **Disparo de habilidade = borda do estado**, lida no `_process` (`HeroVfx._started/_ended`, `VfxRules.started`), como o `HeroVisual`: nada nasce no `_rollback_tick`, então ressimular (que restaura o mesmo estado) não duplica, e o herói remoto — que o cliente não simula (`enable_prediction=false`) — entra pelo mesmo caminho. `is_fresh` sozinho não cobriria o remoto. Herói escondido (mato, neblina) ou morto não mostra nada; ao reaparecer as bordas recomeçam do estado atual.
+- **Impacto = servidor.** `Hero._hit` emite `struck` quando registra o golpe no ledger do alvo; o `ImpactRelay` (existe nos dois lados desde o load) anuncia uma vez por (tick, atacante, slot, alvo) — `ImpactLog`, porque a ressimulação do atacante repete o `_hit` — por RPC `unreliable` só ao peer que vê o alvo (`Concealment.shown_to`). Perder um impacto tira uma faísca; nunca duplica.
+- **Pool** (`VfxPool`) só para o frequente: faísca, poeira, pulso, Terremoto, fantasma. Persistente (Muralha, rastros, saraivada) mora no `HeroVfx`.
+- **Flecha visual desacoplada da rede** (`Arrow._process` + `VfxRules.arrow_progress`): anda na velocidade do disparo e só acompanha a posição da rede, sem recuar.
+- Números de gameplay (alcance e arco do básico, raios do Terremoto e da Chuva, forma da Muralha) vêm do `HeroData`/cena; duração dos efeitos é dado visual das cenas de `scenes/vfx/`. Shaders de `scenes/vfx/` entram no warm-up (`ShaderWarmup.SHADERS`).
+- Medição: com `--probe`, o `NetProbe` imprime `[probe] vfx` — bordas autoritativas no servidor × eventos mostrados no cliente, impactos anunciados × recebidos × repetidos.
 
 ## 4. Modo offline ("Praticar vs Bot")
 

@@ -1,0 +1,85 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/knight_vfx.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/vfx/trail_ribbon.gd" id="2_trail"]
+[ext_resource type="Shader" path="res://scenes/vfx/shield_wall.gdshader" id="3_shield"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_trail"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.5, 1.75, 2.2, 0.85)
+
+[sub_resource type="QuadMesh" id="QuadMesh_warmup"]
+size = Vector2(0.05, 0.05)
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fade"]
+gradient = SubResource("Gradient_fade")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_lines"]
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.6, 0.25)
+direction = Vector3(0, 0, 1)
+spread = 6.0
+initial_velocity_min = 7.0
+initial_velocity_max = 10.0
+gravity = Vector3(0, 0, 0)
+color_ramp = SubResource("GradientTexture1D_fade")
+particle_flag_align_y = true
+
+[sub_resource type="StandardMaterial3D" id="Mat_lines"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.6, 2, 2.6, 0.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_line"]
+material = SubResource("Mat_lines")
+size = Vector3(0.025, 0.9, 0.025)
+
+[sub_resource type="ShaderMaterial" id="Mat_shield"]
+shader = ExtResource("3_shield")
+
+[sub_resource type="SphereMesh" id="SphereMesh_shield"]
+radius = 0.5
+height = 1.0
+radial_segments = 32
+rings = 16
+
+[node name="KnightVfx" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Swing" type="Node3D" parent="."]
+
+[node name="Tip" type="Node3D" parent="Swing"]
+
+[node name="Trail" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_warmup")
+material_override = SubResource("Mat_trail")
+script = ExtResource("2_trail")
+lifetime = 0.25
+width = 0.55
+min_step = 0.03
+
+[node name="SpeedLines" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+cast_shadow = 0
+emitting = false
+amount = 28
+lifetime = 0.22
+visibility_aabb = AABB(-6, -2, -6, 12, 4, 12)
+process_material = SubResource("PPM_lines")
+draw_pass_1 = SubResource("BoxMesh_line")
+
+[node name="Shield" type="MeshInstance3D" parent="."]
+visible = false
+cast_shadow = 0
+mesh = SubResource("SphereMesh_shield")
+material_override = SubResource("Mat_shield")

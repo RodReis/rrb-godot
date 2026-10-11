@@ -11,23 +11,20 @@
 [ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="8_rules"]
 [ext_resource type="Script" path="res://scripts/net/arrow.gd" id="9_arrow"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers2/arrow_bow.gltf" id="10_arrow_model"]
+[ext_resource type="Shader" path="res://scenes/vfx/area_indicator.gdshader" id="11_area"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
 radius = 0.4
 height = 1.8
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rain"]
-transparency = 1
-shading_mode = 0
-albedo_color = Color(0.36, 0.62, 1, 0.3)
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rain"]
+render_priority = 1
+shader = ExtResource("11_area")
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_rain"]
-material = SubResource("StandardMaterial3D_rain")
-top_radius = 1.0
-bottom_radius = 1.0
-height = 0.04
-radial_segments = 48
-rings = 1
+[sub_resource type="PlaneMesh" id="PlaneMesh_rain"]
+material = SubResource("ShaderMaterial_rain")
+size = Vector2(2, 2)
+center_offset = Vector3(0, 0.05, 0)
 
 [node name="Ranger" type="CharacterBody3D"]
 script = ExtResource("1_hero")
@@ -72,7 +69,7 @@ script = ExtResource("2_input")
 top_level = true
 visible = false
 cast_shadow = 0
-mesh = SubResource("CylinderMesh_rain")
+mesh = SubResource("PlaneMesh_rain")
 
 [node name="Arrows" type="Node" parent="."]
 

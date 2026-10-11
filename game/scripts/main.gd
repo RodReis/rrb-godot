@@ -10,6 +10,8 @@ extends Node3D
 ## uma vaga, a selecao acontece na HeroSelect e os herois nascem na PHASE1, cada um com o heroi
 ## escolhido. Quem decide e o MatchController; aqui so se liga sinal e se spawna. No fim, quem
 ## joga ve a MatchEnd (F18); os dois botoes dela encerram o processo (ARCHITECTURE-GAME §3.7).
+## VFX de combate (F41): o ImpactRelay leva o impacto do servidor aos clientes; o VfxSpawner so
+## nasce em quem desenha (nunca no servidor headless).
 
 const MAX_PLAYERS: int = 2
 ## Herois da selecao; sem cena (Hero.SCENE_PATH) aparece indisponivel.
@@ -83,6 +85,16 @@ func _ready() -> void:
 	var vision := VisionDirector.new()  # neblina (F37): so age no servidor
 	vision.name = VisionDirector.NODE_NAME
 	add_child(vision)
+	var relay := ImpactRelay.new()  # impacto do servidor ate o VFX (F41): existe nos dois lados
+	relay.name = ImpactRelay.NODE_NAME
+	relay.players = players
+	add_child(relay)
+	if VfxSpawner.wanted():  # VFX so em quem desenha; servidor headless nao tem no de VFX
+		var vfx := VfxSpawner.new()
+		vfx.name = VfxSpawner.NODE_NAME
+		vfx.players = players
+		vfx.relay = relay
+		add_child(vfx)
 
 	var args := LaunchArgs.parse(OS.get_cmdline_user_args())
 	PlayerInput.autopilot = args["autopilot"]

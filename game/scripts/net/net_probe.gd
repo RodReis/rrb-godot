@@ -14,6 +14,10 @@ extends Node
 ##   nao manda o estado dele) e os baus sao o ultimo estado visto (subconjunto do servidor).
 ## - "[probe] neblina": ciclos escondido -> visivel de herois e monstros no cliente e, deles,
 ##   quantos receberam estado de um tick em que o servidor dizia "escondido" (deve ser 0).
+## - "[probe] vfx" (F41): servidor = bordas do estado autoritativo por "peer:chave" (basico, R,
+##   inicio e fim do avanco) e impactos anunciados; cliente = os mesmos eventos mostrados pelo
+##   HeroVfx e impactos recebidos/repetidos. VFX duplicada = cliente acima do servidor ou
+##   repetido > 0 (cliente pode ficar abaixo: heroi escondido, impacto perdido).
 
 const CHECK_TICKS: int = 300
 ## Folga para o estado do tick chegar ao cliente mesmo com perda e 200 ms de RTT.
@@ -37,6 +41,9 @@ var _window_stopped: int = 0
 var _total_moving: int = 0
 var _total_stopped: int = 0
 var _min_throttle: Dictionary[int, int] = {}
+## Servidor: ultimo (basico, R, avanco) de cada heroi e bordas contadas por "peer:chave".
+var _last_timers: Dictionary[Hero, Vector3i] = {}
+var _server_events: Dictionary = {}
 
 
 func _ready() -> void:
@@ -115,7 +122,14 @@ func _report_window() -> void:
 		_min_throttle.clear()
 	_window_seconds = 0.0
 	if multiplayer.is_server():
+		print("[probe] vfx servidor %s anunciados=%d" % [_server_events, ImpactRelay.announced])
 		return
+	print(
+		(
+			"[probe] vfx cliente %s recebidos=%d repetidos=%d"
+			% [HeroVfx.shown_events, ImpactRelay.received, ImpactRelay.repeated]
+		)
+	)
 	print(
 		(
 			"[probe] neblina: %d ciclos escondido -> visivel, %d com estado recebido escondido"
@@ -145,6 +159,32 @@ func _pct(part: int, whole: int) -> float:
 	return 100.0 * part / whole if whole > 0 else 0.0
 
 
+## Servidor: bordas do estado autoritativo, com as chaves do HeroVfx.
+func _count_server_events() -> void:
+	for node: Node in players.get_children():
+		var hero := node as Hero
+		if hero == null:
+			continue
+		var now := Vector3i(hero.basic_cooldown, hero.r_cooldown, int(hero.dash_ticks > 0))
+		var before: Vector3i = _last_timers.get(hero, now)
+		_last_timers[hero] = now
+		if now.x > before.x:
+			_bump(hero, "basic")
+		if now.y > before.y:
+			_bump(hero, "r")
+		if now.z > before.z:
+			_bump(hero, "dash_start")
+		if now.z < before.z:
+			_bump(hero, "dash_end")
+
+
+func _bump(hero: Hero, key: String) -> void:
+	var id := "%d:%s" % [hero.peer_id, key]
+	_server_events[id] = _server_events.get(id, 0) + 1
+
+
 func _on_network_after_tick(_delta: float, tick: int) -> void:
+	if multiplayer.is_server():
+		_count_server_events()
 	if tick % CHECK_TICKS == 0 and tick > LAG_TICKS:
 		print("[probe] check %d %s" % [tick - LAG_TICKS, digest(tick - LAG_TICKS)])

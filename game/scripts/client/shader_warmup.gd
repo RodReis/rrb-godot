@@ -6,21 +6,29 @@ extends Node
 ## connect) ainda compilam no 1o uso: o cliente trava no sync inicial e o rollback pode ficar
 ## preso (`past the history limit`). Doc: tutorials/performance/pipeline_compilations (4.7),
 ## "hidden instancing" + "feature warm-up".
-## Como: copia so a parte visual (GeometryInstance3D, sem script) dessas cenas e dos shaders
-## criados em codigo para um SubViewport oculto, com o Environment da arena e um sol com sombra,
-## e renderiza FRAMES quadros. Depois libera tudo. No headless nao faz nada.
+## Como: copia so a parte visual (GeometryInstance3D, sem script; particula emitindo) dessas cenas
+## e dos shaders criados em codigo para um SubViewport oculto, com o Environment da arena e um sol
+## com sombra, e renderiza FRAMES quadros. Depois libera tudo. No headless nao faz nada.
 
 signal finished(copies: int)
 
-## Pastas com cenas que nascem depois do connect (Hero.SCENE_PATH, SpawnDirector.SCENE_PATH).
-const SCENE_DIRS: Array[String] = ["res://scenes/heroes/", "res://scenes/monsters/"]
+## Pastas com cenas que nascem depois do connect (Hero.SCENE_PATH, SpawnDirector.SCENE_PATH, VFX
+## de combate do F41).
+const SCENE_DIRS: Array[String] = [
+	"res://scenes/heroes/", "res://scenes/monsters/", "res://scenes/vfx/"
+]
 const SCENES: Array[String] = ["res://scenes/world/chest.tscn"]
 ## Shaders spatial cujo material e criado em codigo (WorldHealthBar, FogOfWar, parede da zona da
-## fase 2). Todo spatial de res://scenes/ tem de estar aqui (test_shader_warmup).
+## fase 2) ou que so desenham depois de montados (VFX do F41: fita, fantasma, particula). Todo
+## spatial de res://scenes/ tem de estar aqui (test_shader_warmup).
 const SHADERS: Array[String] = [
 	"res://scenes/ui/world_health_bar.gdshader",
 	"res://scenes/world/fog_of_war.gdshader",
 	"res://scenes/world/zone_wall.gdshader",
+	"res://scenes/vfx/area_indicator.gdshader",
+	"res://scenes/vfx/ghost.gdshader",
+	"res://scenes/vfx/shield_wall.gdshader",
+	"res://scenes/vfx/shockwave.gdshader",
 ]
 ## Quadros desenhados com tudo na tela (compilacao acontece no 1o; folga para o resto).
 const FRAMES: int = 4
@@ -107,6 +115,8 @@ func _fill(viewport: SubViewport) -> int:
 		var row := floorf(float(i) / GRID_COLUMNS)
 		var cell := Vector3(i % GRID_COLUMNS - GRID_COLUMNS * 0.5, 0, -row)
 		copy.transform.origin += cell * GRID_STEP
+		if copy is GPUParticles3D:
+			(copy as GPUParticles3D).emitting = true  # compila o shader de processo da particula
 		viewport.add_child(copy)
 	return copies.size()
 
