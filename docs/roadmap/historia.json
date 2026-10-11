@@ -146,6 +146,17 @@
         { "arquivo": "mvp2-f46-rift-base-a-no-jogo.webp", "legenda": "A base vista do jogo: pátio de pedra, casas atrás do ponto de renascimento, a fonte no canto, os baús e os Esqueletos de sempre. No minimapa, o desenho em S do rio e as duas lagoas.", "tipo": "entregue" }
       ]
     },
+    "MVP2.5": {
+      "titulo": "A cara do jogo",
+      "pergunta": "A arena e os combates ficam com cara de jogo pronto, sem o jogo travar?",
+      "narrativa": [
+        "Com a partida funcionando, o jogo ganha acabamento visual: luz do sol com sombras suaves, luz rebatida calculada de antemão, neblina e brilho, contorno de desenho animado nos personagens, a arte final da ilha, efeitos de golpe, grama ao vento e um painel de jogo novo. A regra é não pesar: cada passo mede o tempo de quadro e o jogo prepara os efeitos visuais antes de entrar na partida, para não engasgar na hora da conexão."
+      ],
+      "imagens": [
+        { "arquivo": "mvp2.5-f38-luz-antes-depois.webp", "legenda": "A mesma vista antes e depois da nova iluminação: o sol agora é quente e vem de lado, as sombras ficam macias e a luz que bate no chão e nas muralhas rebate no resto da cena. O céu do abismo continua escuro e estrelado.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f38-base-no-jogo.webp", "legenda": "A base vista do jogo com a luz nova. Fora do alcance da visão do herói, a névoa de guerra continua escondendo o mapa.", "tipo": "entregue" }
+      ]
+    },
     "MVP3": {
       "titulo": "Jogar com os amigos",
       "pergunta": "Dois amigos conseguem jogar pela internet sem o desenvolvedor ajudar?",
@@ -190,6 +201,7 @@
     "F37": "Neblina de guerra e minimapa",
     "F44": "Ilha Flutuante Arcana: a arena nova",
     "F46": "Ilha Flutuante Arcana: layout definitivo, com castelos nos cantos e rio em S",
+    "F38": "Iluminação, sombras suaves e preparo dos efeitos visuais",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
     "F23": "Servidor de partida integrado ao backend",
