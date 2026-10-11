@@ -890,12 +890,15 @@ def build_gate(team):
     return build(kit, bevel=0.05)
 
 
-def build_door():
-    kit = Kit("castle_door")
-    for x0 in (-2.45, 0.05):
-        kit.add(box(x0, 0.05, -0.18, 2.4, 2.85, 0.36), WOOD, (0.35, 0.7))
-        for y in (0.5, 1.45, 2.4):
-            kit.add(box(x0 - 0.02, y, -0.22, 2.44, 0.14, 0.44), CHARCOAL, (0.3, 0.5))
+def build_door_leaf(side):
+    """Folha da porta do portao ("l" ou "r") com a origem na dobradica (a borda de fora, x = 0 do
+    objeto), para o gate.gd girar cada folha. Vao do portao: 2 x 2,4 u; a folha "l" cobre
+    x in [0, 2,4] e a "r" x in [-2,4, 0] no espaco do objeto (no portao: dobradicas em x = -/+ 2,45)."""
+    kit = Kit("castle_door_%s" % side)
+    x0 = 0.0 if side == "l" else -2.4
+    kit.add(box(x0, 0.05, -0.18, 2.4, 2.85, 0.36), WOOD, (0.35, 0.7))
+    for y in (0.5, 1.45, 2.4):
+        kit.add(box(x0 - 0.02, y, -0.22, 2.44, 0.14, 0.44), CHARCOAL, (0.3, 0.5))
     return build(kit, bevel=0.03)
 
 
@@ -1363,7 +1366,7 @@ def main():
     preview("volcanic_crater", [pillar])
 
     reset_scene()
-    castle = [build_wall("a"), build_wall("b"), build_tower("a"), build_tower("b"), build_gate("a"), build_gate("b"), build_door()]
+    castle = [build_wall("a"), build_wall("b"), build_tower("a"), build_tower("b"), build_gate("a"), build_gate("b"), build_door_leaf("l"), build_door_leaf("r")]
     for obj in castle:
         export(obj, obj.name)
     save("castle_modular")
