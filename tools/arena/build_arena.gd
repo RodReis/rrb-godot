@@ -1,157 +1,32 @@
-extends "arena_dressing.gd"
+extends "arena_terrain.gd"
 ## Gera game/scenes/arena/ilha_arcana.tscn — Ilha Flutuante Arcana, layout "Rift Medieval
-## adaptado" (SPEC-046 + arte do F40/F44). Ferramenta de autoria: as medidas da spec vivem aqui;
-## o jogo so le a cena gerada ("edite o builder, nao a cena"). Simetria por rotacao de 180 graus:
+## adaptado" (SPEC-046 + arte do F40/F44) com os bolsoes de selva do F40 (PI 2026-10-11).
+## Ferramenta de autoria: as medidas vivem em arena_layout.gd e jungle.json; o jogo so le a cena
+## gerada ("edite o builder, nao a cena"). Simetria por rotacao de 180 graus:
 ## tudo da metade A em (x, z) vale para a B em (-x, -z). Uso (na raiz do repo):
 ##   godot --headless --path game -s <repo>/tools/arena/build_arena.gd
 ## Sai com 1 se o rio nao fechar a ilha central sem as pontes, se TOP/BOT nao contornarem as
-## lagoas, se as pontes nao ligarem ou se algum colisor/moita invadir um corredor (§2.3).
+## lagoas, se as pontes nao ligarem, se algum colisor/moita invadir um corredor (§2.3), se um
+## bolsao invadir trilha ou clareira ou se algum marcador ficar inalcancavel a pe.
 ## Azimute: graus anti-horarios a partir do norte (-Z), vistos de cima (N 0, O 90, S 180, L 270).
 ## Colisao toda por codigo (box do chao, prismas do rio, cilindros, caixas); os .glb do Blender
 ## (art/arena/build_island.py) sao so visual e cobrem a colisao, nunca menores.
 
-# Escala (SPEC-046 §1): quadrado |x|, |z| <= 40; 4 muros retos em 41.
-const ARENA_HALF: float = 40.0
-const BORDER_THICKNESS: float = 2.0
-const BORDER_HEIGHT: float = 4.0
-
-# Rio (SPEC-046 §2.1): anel 14-18 u + 2 bracos em arco + 2 lagoas. Colisao do anel e dos bracos
-# em setores poligonais de 2,5 graus (erro de corda < 1 cm); o anel e recortado pela borda reta
-# das 2 pontes, o braco pelo circulo interno do anel (meio-plano por setor).
-const RING_IN: float = 14.0
-const RING_OUT: float = 18.0
-const RING_MID: float = 16.0
-const RIVER_HALF: float = 2.0
-const RIVER_SECTOR_DEG: float = 2.5
-const RIVER_HEIGHT: float = 2.0
-## Braco NO: arco de circulo (eixo) de centro ARM_CENTER_A e raio ARM_RADIUS, da juncao com o
-## anel (azimute 45, r 16) ate o centro da lagoa NO, barriga para NE. O SE e a rotacao.
-const ARM_CENTER_A: Vector2 = Vector2(-22.5, -6.2)
-const ARM_RADIUS: float = 12.35
-const ARM_JOIN_AZIMUTH: float = 45.0
-## Graus a mais no comeco do arco, para dentro do anel, garantindo a juncao sem fresta.
-const ARM_OVERLAP_DEG: float = 12.0
-
-const LAGOON_RADIUS: float = 5.0
-## Meia largura util das pontes (largura efetiva 5 u; nominal 4 u).
-const BRIDGE_HALF: float = 2.5
-const BRIDGE_CENTER: float = 16.0
-## So na MID: SO (metade A) e NE (metade B).
-const BRIDGE_AZIMUTHS: Array[float] = [135.0, 315.0]
-const BRIDGE_AZIMUTH_A: float = 135.0
-
-# Cratera (SPEC-046 §2.2 = SPEC-044): 8 pilares no raio 6 u, 4 entradas de 4 u.
-
-const CRATER_ENTRIES: Array[float] = [45.0, 135.0, 225.0, 315.0]
-const PILLAR_RADIUS: float = 1.4
-const PILLAR_HEIGHT: float = 3.0
-## Angulo entre o centro de uma entrada e o pilar vizinho: 12 sin(a) = 4 + 2 x 1,4.
-const PILLAR_OFFSET_DEG: float = 34.52
-
-# Base A (canto SO) em coordenadas locais: s ao longo de centro -> spawn A (-24, +24); l para a
-# esquerda de quem esta no spawn olhando o centro. A base B e a rotacao de 180 graus.
-
-const GATE_HALF: float = 2.5
-const ARC_STEP_DEG: float = 8.0
-## Muros de fechamento (SPEC-046 §2.4): dos extremos do arco ate a borda, em (x, z) do mundo.
-const CLOSURE_WALLS_A: Array[Array] = [
-	[Vector2(-33, 15), Vector2(-40, 15)],
-	[Vector2(-15, 33), Vector2(-15, 40)],
-]
-const BASE_WALLS: Array[Array] = [
-	[Vector2(29, -2), Vector2(29, 2)],
-	[Vector2(27.5, 6), Vector2(27.5, 10)],
-	[Vector2(27.5, -6), Vector2(27.5, -10)],
-]
-const BASE_T1: Array[Vector2] = [
-	Vector2(31, 6), Vector2(31, -6), Vector2(26.5, 4.5), Vector2(26.5, -4.5)
-]
-const BASE_T2: Vector2 = Vector2(25.2, 0)
-const BASE_CHESTS: Array[Vector2] = [
-	Vector2(29.5, 8.5),
-	Vector2(29.5, -8.5),
-	Vector2(33, 9),
-	Vector2(33, -9),
-	Vector2(24.5, 7.5),
-	Vector2(24.5, -7.5),
-]
-## Fonte no canto esquerdo da base (#74), em (s, l).
-const FOUNTAIN_LOCAL: Vector2 = Vector2(32, 11)
-## Torres do castelo ao lado do portao (l).
-const GATE_TOWER_L: float = 4.0
-## Casas de pedra atras do spawn (decisao do PI 2026-10-10: kit novo), em (s, l) com yaw; tem
-## colisao (caixa) para o heroi nao atravessar a parede — ficam fora de toda rota.
-const HOUSES_LOCAL: Array[Array] = [[Vector2(37.5, 7.0), 0.35], [Vector2(37.5, -7.0), -0.35]]
-const HOUSE_HALF: Vector2 = Vector2(1.9, 1.6)
-const HOUSE_HEIGHT: float = 3.4
-## Torreao no canto da ilha, atras da borda (bastiao do chassi), em (x, z) do mundo.
-const KEEP_A: Vector2 = Vector2(-44.5, 44.5)
-## Cortina do castelo ao longo da borda da base ate a face do torreao (so visual: o colisor e o
-## muro da borda).
-const CURTAIN_A: Array[Array] = [
-	[Vector2(-41, 15), Vector2(-41, 43.5)],
-	[Vector2(-15, 41), Vector2(-43.5, 41)],
-]
-
-# Campos laterais (F36 na SPEC-046 §2.5), metade A em (x, z) do mundo: A-top entre TOP (O) e MID,
-# A-bot entre MID e BOT (S). Rochas formam um bolso paralelo ao corredor vizinho (em z no A-top,
-# em x no A-bot): a 5,5 u em z o A-bot entraria 0,8 u na banda S (SPEC-046 §2.3), que vence.
-const SIDE_FIELDS: Array[Array] = [
-	["Top", Vector2(-26, -4), Vector2(0, 1)], ["Bot", Vector2(4, 26), Vector2(1, 0)]
-]
-const SIDE_T1_OFFSETS: Array[Vector2] = [Vector2(-2.5, -1.5), Vector2(2.5, -1.5)]
-const SIDE_T2_OFFSET: Vector2 = Vector2(0, 1.5)
-const SIDE_CHEST_OFFSETS: Array[Vector2] = [Vector2(-3, 2.5), Vector2(3, 2.5)]
-const SIDE_ROCK_OFFSET: float = 5.5
-
-# Patio da ponte da metade A (s radial, l lateral): moita de um lado e rocha do outro, fora da
-# banda MID de 8 u (|l| > 4; SPEC-046 §2.7 herdava l 4,6 da SPEC-044, que invadiria 2 u).
-const YARD_GRASS_LOCAL: Vector2 = Vector2(19.5, 6.5)
-const YARD_ROCK_LOCAL: Vector2 = Vector2(19.5, -6.0)
-const YARD_GRASS_SIZE: Vector2 = Vector2(4, 4)
-## Moita de lagoa (SPEC-046 §2.7), em (x, z) do mundo, fora do corredor TOP.
-const LAGOON_GRASS_A: Vector2 = Vector2(-30, -26)
-
-# Centro (azimute, raio): campos em 45/225 (equidistantes das pontes); raros em 45/225 e 90/270.
-const FIELD_AZIMUTHS: Array[float] = [45.0, 225.0]
-const FIELD_RADIUS: float = 10.0
-const FIELD_SPREAD_DEG: float = 15.0
-const FIELD_CHEST_RADIUS: float = 12.5
-const LATERAL_CHESTS: Array[Vector2] = [Vector2(90, 8), Vector2(270, 8)]
-const CENTER_ROCKS: Array[Vector2] = [
-	Vector2(0, 9.5), Vector2(180, 9.5), Vector2(112, 9.5), Vector2(292, 9.5)
-]
-const CENTER_GRASS: Array[Vector2] = [Vector2(90, 12), Vector2(270, 12)]
-const CENTER_GRASS_SIZE: Vector2 = Vector2(4, 3)
-
-# Corredores livres (SPEC-046 §2.3), retangulos (x0, z0, x1, z1) da metade A; BOT e a rotacao.
-# MID: 8 u entre o portao e a ponte; na ilha, 4 u (a largura da entrada da cratera, que a
-# propria spec fixa). O rio (pontes de 5 u) fica fora da conferencia da MID.
-const CORRIDOR_TOP_A: Array[Rect2] = [
-	Rect2(-40, -40, 8, 55),  # O: x -40..-32, z -40..15
-	Rect2(-40, -40, 55, 8),  # N: z -40..-32, x -40..15
-]
-const MID_OUTER_HALF: float = 4.0
-const MID_OUTER_RANGE: Vector2 = Vector2(18.0, 20.71)
-const MID_ISLAND_HALF: float = 2.0
-const MID_ISLAND_RANGE: Vector2 = Vector2(-14.0, 14.0)
-## Profundidade de invasao tolerada (u): o fim do arco (extremo em x -33, SPEC-046 §2.4) e o muro
-## de fechamento encostam na banda TOP; a largura util fica >= 6,5 u nesse ponto.
-const CORRIDOR_TOLERANCE: float = 1.5
-
-# Bloqueios.
-const WALL_HEIGHT: float = 2.5
-const WALL_THICKNESS: float = 0.8
-const ROCK_RADIUS: float = 1.3
-const GRASS_HEIGHT: float = 1.2
+const JUNGLE_CHECK_STEP: float = 0.5
+## Raio do agente do navmesh (ArenaNav): passagem entre bolsoes tem de caber o bot.
+const AGENT_CLEARANCE: float = 0.5
+## Altura da colisao dos bolsoes: abaixo da rocha mais baixa (nada de parede invisivel por cima).
+const JUNGLE_HEIGHT: float = 2.2
 
 
 func _initialize() -> void:
 	_root = Node3D.new()
 	_root.name = "Arena"
-	if not _river_separates():
+	if not _load_jungle() or not _river_separates():
 		quit(1)
 		return
+	_paint_terrain()
+	_save_materials()
 	_build_environment()
 	_build_lighting()
 	_build_floor()
@@ -164,11 +39,17 @@ func _initialize() -> void:
 		_build_yard(walls, flip)
 		_build_rim_decor(flip)
 	_build_center(walls)
+	_build_jungle(walls)
+	_build_jungle_visuals()
 	_build_islets()
 	_build_ambience()
 	var violations := _corridor_violations()
 	for v: String in violations:
 		push_error("[arena] corredor invadido: %s" % v)
+	var jungle := _jungle_violations()
+	for v: String in jungle:
+		push_error("[arena] selva: %s" % v)
+	violations.append_array(jungle)
 	if not violations.is_empty():
 		quit(1)
 		return
@@ -182,51 +63,7 @@ func _initialize() -> void:
 	quit(0 if err == OK else 1)
 
 
-# --- rio: predicados e prova de separacao -------------------------------------------------
-
-
-func _is_bridge(p: Vector2) -> bool:
-	for azimuth: float in BRIDGE_AZIMUTHS:
-		var axis := _flat(_polar(azimuth, 1.0))
-		var s := p.dot(axis)
-		var l := absf(p.dot(Vector2(-axis.y, axis.x)))
-		if s > RING_IN - 1.0 and s < RING_OUT + 1.0 and l <= BRIDGE_HALF:
-			return true
-	return false
-
-
-## Angulos (rad) do arco do braco NO em torno de ARM_CENTER_A: x = no anel (com a sobra),
-## y = no centro da lagoa. O arco e o curto, percorrido de x para y.
-func _arm_angles() -> Vector2:
-	var join := _flat(_polar(ARM_JOIN_AZIMUTH, RING_MID)) - ARM_CENTER_A
-	var end := LAGOON_A - ARM_CENTER_A
-	var start := join.angle()
-	var sweep := wrapf(end.angle() - start, -PI, PI)
-	return Vector2(start - signf(sweep) * deg_to_rad(ARM_OVERLAP_DEG), start + sweep)
-
-
-func _in_arm(p: Vector2) -> bool:
-	var v := p - ARM_CENTER_A
-	var d := v.length()
-	if d < ARM_RADIUS - RIVER_HALF or d > ARM_RADIUS + RIVER_HALF:
-		return false
-	var angles := _arm_angles()
-	var sweep := angles.y - angles.x
-	var t := wrapf(v.angle() - angles.x, -PI, PI)
-	return t * signf(sweep) >= 0.0 and absf(t) <= absf(sweep)
-
-
-func _in_lagoon(p: Vector2) -> bool:
-	return p.distance_to(LAGOON_A) <= LAGOON_RADIUS
-
-
-func _is_river(p: Vector2, with_bridges: bool) -> bool:
-	var r := p.length()
-	if r <= RING_IN:
-		return false
-	if r <= RING_OUT:
-		return not (with_bridges and _is_bridge(p))
-	return _in_arm(p) or _in_arm(-p) or _in_lagoon(p) or _in_lagoon(-p)
+# --- rio: prova de separacao -------------------------------------------------------
 
 
 ## Flood fill numa grade de 1 u pelas celulas andaveis: sem pontes, o spawn A nao alcanca a ilha
@@ -450,7 +287,7 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	fountain.position = _local(FOUNTAIN_LOCAL, flip)
 	_add(_group("Fountains"), fountain)
 	for i: int in range(SIDE_FIELDS.size()):
-		_build_side_field(walls, markers, flip, i)
+		_build_side_field(markers, flip, i)
 
 
 ## Castelo (kit F40 + torreao e casas do F46): portal com torres, torres nos extremos do arco e
@@ -476,12 +313,13 @@ func _build_castle(
 		towers.append(_world(seg[0], flip))
 	for i: int in range(towers.size()):
 		var tower := _asset(castle, RRB_ARENA + "castle_tower_%s.glb" % kit, "Tower%s%d" % [tag, i])
-		tower.position = towers[i]
+		tower.transform = Transform3D(Basis().scaled(Vector3.ONE * TOWER_SCALE), towers[i])
 	for i: int in range(CURTAIN_A.size()):
 		var seg: Array = CURTAIN_A[i]
 		_curtain(_world(seg[0], flip), _world(seg[1], flip), "Curtain%s%d" % [tag, i], tag)
 	var keep := _asset(castle, RRB_ARENA + "castle_keep_%s.glb" % kit, "Keep%s" % tag)
-	keep.transform = Transform3D(_tangent_basis(_rotate_if(LATERAL, flip)), _world(KEEP_A, flip))
+	var keep_basis := _tangent_basis(_rotate_if(LATERAL, flip)).scaled(Vector3.ONE * KEEP_SCALE)
+	keep.transform = Transform3D(keep_basis, _world(KEEP_A, flip))
 	for i: int in range(HOUSES_LOCAL.size()):
 		var spec: Array = HOUSES_LOCAL[i]
 		var at := _local(spec[0], flip)
@@ -496,13 +334,13 @@ func _build_castle(
 
 
 ## Campo lateral [param index] da metade de [param flip]. Marcadores com o time da metade: o bot
-## conta base + laterais como "a propria metade" (GDB §5.2). 2 rochas por campo (SPEC-046 §2.5).
-func _build_side_field(walls: StaticBody3D, markers: Node3D, flip: float, index: int) -> void:
+## conta base + laterais como "a propria metade" (GDB §5.2). O bolso e dos bolsoes de selva
+## (jungle.json; F40, PI 2026-10-11), no lugar das 2 rochas da SPEC-046 §2.5.
+func _build_side_field(markers: Node3D, flip: float, index: int) -> void:
 	var team := GateRules.TEAM_A if flip > 0 else GateRules.TEAM_B
 	var field: Array = SIDE_FIELDS[index]
 	var tag := "%s%s" % [_team_tag(flip), field[0]]
 	var center: Vector2 = field[1]
-	var rock_axis: Vector2 = field[2]
 	for i: int in range(SIDE_T1_OFFSETS.size()):
 		var at := _world(center + SIDE_T1_OFFSETS[i], flip)
 		_monster(markers, "T1%s%d" % [tag, i], at, team, 1, &"skeleton_t1")
@@ -511,9 +349,6 @@ func _build_side_field(walls: StaticBody3D, markers: Node3D, flip: float, index:
 	for i: int in range(SIDE_CHEST_OFFSETS.size()):
 		var at := _world(center + SIDE_CHEST_OFFSETS[i], flip)
 		_common_chest(markers, "Chest%s%d" % [tag, i], at, team)
-	for side: float in [-1.0, 1.0]:
-		var at := _world(center + rock_axis * SIDE_ROCK_OFFSET * side, flip)
-		_rock(walls, at, "Field%s%d" % [tag, int(side > 0)])
 
 
 ## Patio da ponte da metade: moita de um lado e rocha do outro, fora da banda MID; moita da
@@ -590,6 +425,83 @@ func _build_center(walls: StaticBody3D) -> void:
 		var at := _polar(g.x, g.y)
 		var basis := _tangent_basis(Vector3(-at.z, 0, at.x))
 		_tall_grass(at, CENTER_GRASS_SIZE, basis, "GrassCenter%d" % i, "tall_grass_4x3")
+
+
+# --- selva (F40, PI 2026-10-11): colisao dos bolsoes e provas ------------------------------
+
+
+## Bolsao = caixa por trecho da polilinha + cilindro em cada vertice (cantos redondos), na
+## camada do mundo como os muros: bloqueia heroi, monstro, flecha e entra no navmesh.
+func _build_jungle(walls: StaticBody3D) -> void:
+	var walls_list := _polylines("walls")
+	for w: int in range(walls_list.size()):
+		var points: PackedVector2Array = walls_list[w][0]
+		var half: float = walls_list[w][1]
+		for k: int in range(points.size()):
+			var cylinder := CylinderShape3D.new()
+			cylinder.radius = half
+			cylinder.height = JUNGLE_HEIGHT
+			var at := Vector3(points[k].x, JUNGLE_HEIGHT / 2, points[k].y)
+			_shape(walls, cylinder, at).name = "Jungle%dC%d" % [w, k]
+		for i: int in range(points.size() - 1):
+			var a := Vector3(points[i].x, 0, points[i].y)
+			var b := Vector3(points[i + 1].x, 0, points[i + 1].y)
+			var dir := (b - a).normalized()
+			var box := BoxShape3D.new()
+			box.size = Vector3(a.distance_to(b), JUNGLE_HEIGHT, half * 2)
+			var shape := _shape(walls, box, (a + b) / 2 + Vector3.UP * JUNGLE_HEIGHT / 2)
+			shape.basis = Basis(Vector3.UP, atan2(-dir.z, dir.x))
+			shape.name = "Jungle%dS%d" % [w, i]
+
+
+## Bolsao dentro de trilha ou clareira, e marcador que nao se alcanca a pe a partir do spawn A
+## (rio com pontes, borda e bolsoes bloqueiam; grade de JUNGLE_CHECK_STEP). E piso, nao prova
+## completa: muros da base, casas, rochas soltas e pilares nao entram no flood.
+func _jungle_violations() -> Array[String]:
+	var violations: Array[String] = []
+	var walls := _polylines("walls")
+	for wall: Array in walls:
+		var samples := _along(wall[0], JUNGLE_CHECK_STEP / 2)
+		for trail: Array in _polylines("trails"):
+			for p: Vector2 in samples:
+				if _polyline_distance(p, trail[0]) < wall[1] + trail[1]:
+					violations.append("bolsao %s invade a trilha %s" % [wall[0], trail[0]])
+					break
+		for clearing: Array in _clearings():
+			if _polyline_distance(clearing[0], wall[0]) < wall[1] + clearing[1]:
+				violations.append("bolsao %s invade a clareira %s" % [wall[0], clearing[0]])
+	var reach := _walkable_from(_flat(AXIS_A * SPAWN_S), walls)
+	for node: Node in _root.get_node("Markers").get_children():
+		var at := _flat((node as Node3D).position)
+		var key := Vector2i((at / JUNGLE_CHECK_STEP).round())
+		if not reach.has(key):
+			violations.append("marcador %s inalcancavel em %s" % [node.name, at])
+	return violations
+
+
+func _walkable_from(from: Vector2, walls: Array[Array]) -> Dictionary:
+	var seen: Dictionary = {}
+	var queue: Array[Vector2i] = [Vector2i((from / JUNGLE_CHECK_STEP).round())]
+	var steps: Array[Vector2i] = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	while not queue.is_empty():
+		var key: Vector2i = queue.pop_back()
+		if seen.has(key):
+			continue
+		var p := Vector2(key) * JUNGLE_CHECK_STEP
+		if _is_river(p, true) or maxf(absf(p.x), absf(p.y)) > ARENA_HALF:
+			continue
+		var blocked := false
+		for wall: Array in walls:
+			if _polyline_distance(p, wall[0]) < wall[1] + AGENT_CLEARANCE:
+				blocked = true
+				break
+		if blocked:
+			continue
+		seen[key] = true
+		for step: Vector2i in steps:
+			if not seen.has(key + step):
+				queue.append(key + step)
+	return seen
 
 
 # --- corredores livres (SPEC-046 §2.3) ----------------------------------------------------

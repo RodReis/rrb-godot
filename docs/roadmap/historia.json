@@ -156,7 +156,10 @@
         { "arquivo": "mvp2.5-f38-luz-antes-depois.webp", "legenda": "A mesma vista antes e depois da nova iluminação: o sol agora é quente e vem de lado, as sombras ficam macias e a luz que bate no chão e nas muralhas rebate no resto da cena. O céu do abismo continua escuro e estrelado.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f38-base-no-jogo.webp", "legenda": "A base vista do jogo com a luz nova. Fora do alcance da visão do herói, a névoa de guerra continua escondendo o mapa.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f39-ilha-suave.webp", "legenda": "A ilha perdeu o mosaico de triângulos: o chão de pedra e a grama variam de tom suavemente, rochas e ilhotas ficaram arredondadas e o castelo mantém as quinas vivas. As sombras do sol ficaram mais macias e as áreas de sombra, menos escuras.", "tipo": "entregue" },
-        { "arquivo": "mvp2.5-f39-base-no-jogo.webp", "legenda": "A base vista do jogo com o acabamento novo. Durante esta etapa de arte a névoa de guerra fica desligada na tela para dar para ver a ilha inteira; ela volta no fim da etapa.", "tipo": "entregue" }
+        { "arquivo": "mvp2.5-f39-base-no-jogo.webp", "legenda": "A base vista do jogo com o acabamento novo. Durante esta etapa de arte a névoa de guerra fica desligada na tela para dar para ver a ilha inteira; ela volta no fim da etapa.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f40-base-no-jogo.webp", "legenda": "A ilha ficou realista e sombria: grama, trilhas de terra e calçamento de pedra com textura de verdade, muralhas de blocos cobertas de musgo e uma luz fria de fim de tarde, com sombras longas.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f40-selva-e-castelos.webp", "legenda": "A selva agora é feita de bolsões de rocha e pinheiros escuros que formam caminhos sinuosos entre os campos de monstros. Uma floresta fecha a beira da ilha, tochas marcam a borda e os castelos cresceram.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f40-cascata.webm", "legenda": "Nos cantos da ilha, a água escorre pelo penhasco e cai no abismo.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -204,6 +207,7 @@
     "F44": "Ilha Flutuante Arcana: a arena nova",
     "F46": "Ilha Flutuante Arcana: layout definitivo, com castelos nos cantos e rio em S",
     "F38": "Iluminação, sombras suaves e preparo dos efeitos visuais",
+    "F40": "Arena realista: terreno, selva de rochas e pinheiros, castelos",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
     "F23": "Servidor de partida integrado ao backend",

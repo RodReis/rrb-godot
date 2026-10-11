@@ -1,7 +1,8 @@
 extends GutTest
 ## F38 (SPEC-038): a arena e dona da ambientacao (sol, WorldEnvironment, LightmapGI bakeado e
-## ReflectionProbe); main.tscn nao tem mais luz propria. Valores iniciais do guia; sombra, AO e
-## ambiente suavizados no F39 (PI 2026-10-10, sem toon).
+## ReflectionProbe); main.tscn nao tem mais luz propria. Valores iniciais do guia; sombra e AO
+## suavizados no F39 (PI 2026-10-10, sem toon); luz realista e sombria no F40 (PI 2026-10-11):
+## exposicao e ambiente mais baixos e frios, sol frio mais inclinado, neblina mais densa.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const MAIN: String = "res://scenes/main.tscn"
@@ -23,9 +24,9 @@ func test_sol_da_arena() -> void:
 	var sun := _arena.get_node("Sun") as DirectionalLight3D
 	assert_not_null(sun)
 	assert_true(sun.shadow_enabled)
-	assert_almost_eq(sun.light_energy, 1.35, 0.001)
-	assert_eq(sun.light_color, Color(1.0, 0.96, 0.88))
-	assert_almost_eq(sun.rotation_degrees, Vector3(-48, 38, 0), Vector3.ONE * 0.01)
+	assert_almost_eq(sun.light_energy, 1.05, 0.001)
+	assert_eq(sun.light_color, Color(0.8, 0.85, 0.95))
+	assert_almost_eq(sun.rotation_degrees, Vector3(-38, 38, 0), Vector3.ONE * 0.01)
 	assert_almost_eq(sun.shadow_blur, 3.0, 0.001)
 	assert_eq(sun.directional_shadow_mode, DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS)
 	assert_almost_eq(sun.directional_shadow_max_distance, 65.0, 0.001)
@@ -36,17 +37,17 @@ func test_environment_da_arena() -> void:
 	assert_true(world is ArenaEnvironment, "script que aplica o settings.cfg")
 	var env := world.environment
 	assert_eq(env.tonemap_mode, Environment.TONE_MAPPER_ACES)
-	assert_between(env.tonemap_exposure, 1.0, 1.15)
+	assert_between(env.tonemap_exposure, 0.85, 1.0)
 	assert_true(env.ssao_enabled)
 	assert_almost_eq(env.ssao_radius, 1.5, 0.001)
 	assert_almost_eq(env.ssao_intensity, 1.4, 0.001)
-	assert_almost_eq(env.ambient_light_energy, 0.9, 0.001)
+	assert_almost_eq(env.ambient_light_energy, 0.72, 0.001)
 	assert_true(env.ssil_enabled)
 	assert_true(env.glow_enabled)
 	assert_almost_eq(env.glow_hdr_threshold, 1.05, 0.001)
 	assert_eq(env.glow_blend_mode, Environment.GLOW_BLEND_MODE_SOFTLIGHT)
 	assert_true(env.volumetric_fog_enabled)
-	assert_almost_eq(env.volumetric_fog_density, 0.008, 0.0001)
+	assert_almost_eq(env.volumetric_fog_density, 0.016, 0.0001)
 
 
 func test_lightmap_bakeado_e_reflection_probe() -> void:
