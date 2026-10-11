@@ -1,0 +1,108 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/earthquake_vfx.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://scenes/vfx/crack.png" id="2_crack"]
+[ext_resource type="Shader" path="res://scenes/vfx/shockwave.gdshader" id="3_shock"]
+
+[sub_resource type="Curve" id="Curve_shrink"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.75, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_shrink"]
+curve = SubResource("Curve_shrink")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_fragments"]
+resource_local_to_scene = true
+particle_flag_rotate_y = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.1
+emission_ring_radius = 5.0
+emission_ring_inner_radius = 0.4
+angle_min = -180.0
+angle_max = 180.0
+direction = Vector3(0, 1, 0)
+spread = 25.0
+initial_velocity_min = 3.5
+initial_velocity_max = 7.5
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+gravity = Vector3(0, -14, 0)
+scale_min = 0.5
+scale_max = 1.3
+scale_curve = SubResource("CurveTexture_shrink")
+
+[sub_resource type="StandardMaterial3D" id="Mat_rock"]
+albedo_color = Color(0.26, 0.22, 0.19, 1)
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_rock"]
+material = SubResource("Mat_rock")
+size = Vector3(0.2, 0.16, 0.22)
+
+[sub_resource type="Curve" id="Curve_grow"]
+_data = [Vector2(0, 0.05), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_grow"]
+curve = SubResource("Curve_grow")
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fade"]
+gradient = SubResource("Gradient_fade")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_shock"]
+resource_local_to_scene = true
+gravity = Vector3(0, 0, 0)
+scale_min = 10.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_grow")
+color_ramp = SubResource("GradientTexture1D_fade")
+
+[sub_resource type="ShaderMaterial" id="Mat_shock"]
+render_priority = 1
+shader = ExtResource("3_shock")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_shock"]
+material = SubResource("Mat_shock")
+size = Vector2(1, 1)
+
+[node name="Earthquake" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 4.0
+light_seconds = 0.3
+fade_seconds = 1.5
+
+[node name="Crack" type="Decal" parent="."]
+size = Vector3(10, 0.8, 10)
+texture_albedo = ExtResource("2_crack")
+
+[node name="Fragments" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 40
+lifetime = 1.3
+one_shot = true
+explosiveness = 0.85
+visibility_aabb = AABB(-7, -1, -7, 14, 6, 14)
+process_material = SubResource("PPM_fragments")
+draw_pass_1 = SubResource("BoxMesh_rock")
+
+[node name="Shockwave" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 0.55
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-7, -1, -7, 14, 2, 14)
+process_material = SubResource("PPM_shock")
+draw_pass_1 = SubResource("PlaneMesh_shock")
+
+[node name="Flash" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+light_color = Color(1, 0.6, 0.3, 1)
+light_energy = 4.0
+omni_range = 8.0
