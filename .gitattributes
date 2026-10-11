@@ -7,3 +7,4 @@
 *.bin binary
 *.glb binary
 *.blend binary
+*.exr binary
