@@ -149,7 +149,9 @@
         { "arquivo": "mvp2-f49-dia.webp", "legenda": "A luz agora anda com o relógio da partida. Uma partida pode começar de dia — céu azul, sol alto, sombras nítidas — e terminar de noite; outra faz o caminho inverso. O sentido é sorteado quando a partida começa e vale igual para os dois jogadores.", "tipo": "entregue" },
         { "arquivo": "mvp2-f49-entardecer.webp", "legenda": "No meio da partida, aos 5 minutos, é entardecer: sol baixo e alaranjado, sombras longas, o magma e os cristais já brilhando mais.", "tipo": "entregue" },
         { "arquivo": "mvp2-f49-noite.webp", "legenda": "Aos 10 minutos a ilha está de noite, com o céu cósmico e a luz fria de sempre. A luz só muda o clima: a visão dos heróis e as regras não mudam.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f49-ciclo-dia-noite.webm", "legenda": "A partida inteira, dos 0 aos 10 minutos, acelerada em 10 segundos.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f49-ciclo-dia-noite.webm", "legenda": "A partida inteira, dos 0 aos 10 minutos, acelerada em 10 segundos.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f50-patio-da-base.webp", "legenda": "O pátio de trás do castelo deixou de ser um chão vazio: duas casas de dois andares encostadas nas muralhas, duas casinhas de enxaimel e, no canto, uma carroça com caixotes. A base agora parece um castelo onde alguém mora.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f50-casas-do-patio.webp", "legenda": "De perto: tijolo no térreo, madeira e reboco em cima, telhado de telha e chaminé. As casas fecham o fundo do pátio sem ocupar o caminho do ponto de renascimento até o portão.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {
@@ -221,6 +223,9 @@
     "F47": "Baú que compara o item com o que você já usa",
     "F48": "Armas e armaduras visíveis no herói, com ícone de cada item",
     "F49": "Ciclo de dia e noite ao longo da partida",
+    "F50": "Casas e carroça no pátio do castelo",
+    "F51": "Nova tela de escolha do herói",
+    "F52": "Nova tela de vitória e derrota",
     "F38": "Iluminação, sombras suaves e preparo dos efeitos visuais",
     "F39": "Acabamento suave da ilha e sombras mais macias",
     "F40": "Arena realista: terreno, selva de rochas e pinheiros, castelos",

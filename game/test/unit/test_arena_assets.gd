@@ -97,6 +97,30 @@ func test_muralha_em_modulos_sem_deformar() -> void:
 		assert_lt(basis.x.length(), MAX_WALL_STRETCH, "esticado: " + label)
 
 
+## F50 (PI 2026-10-11): patio de cada base com construcoes do MegaKit (2 casas de 2 andares,
+## 2 casinhas, 1 canto de carroca e caixotes) e caixa de colisao coberta pela malha.
+func test_patio_com_construcoes_do_megakit_cobrindo_a_colisao() -> void:
+	await wait_physics_frames(1)
+	var expected := {
+		"megakit_house_long.glb": 4, "megakit_house_small.glb": 4, "megakit_yard_corner.glb": 2
+	}
+	var boxes: Array[AABB] = []
+	for child: Node in _arena.get_node("Walls").get_children():
+		var shape_node := child as CollisionShape3D
+		if shape_node != null and shape_node.shape is BoxShape3D:
+			var size := (shape_node.shape as BoxShape3D).size
+			boxes.append(shape_node.global_transform * AABB(-size / 2, size))
+	for file: String in expected:
+		var instances := _instances_of(file)
+		assert_eq(instances.size(), expected[file], file)
+		for node: Node3D in instances:
+			var visual := _visual_aabb(node).grow(0.05)
+			var covered := false
+			for box: AABB in boxes:
+				covered = covered or (visual.has_point(box.get_center()) and visual.encloses(box))
+			assert_true(covered, "%s sem caixa de colisao coberta pela malha" % node.name)
+
+
 func test_duas_pontes_de_pedra_e_um_piso_unico() -> void:
 	assert_eq(_instances_of("bridge_stone.glb").size(), 2)
 	assert_eq(_instances_of("island_chassis.glb").size(), 1)

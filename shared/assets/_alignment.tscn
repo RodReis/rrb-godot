@@ -14,6 +14,8 @@
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Warrior.glb" id="12_warrior"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Mage.glb" id="13_mage"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/golem.glb" id="14_golem"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/megakit_house_small.glb" id="15_house_small"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/megakit_house_long.glb" id="16_house_long"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ref"]
 radius = 0.4
@@ -76,3 +78,9 @@ transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, -6, 0, 0)
 
 [node name="Golem" parent="." instance=ExtResource("14_golem")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 0, 0)
+
+[node name="MegakitHouseSmall" parent="." instance=ExtResource("15_house_small")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 0)
+
+[node name="MegakitHouseLong" parent="." instance=ExtResource("16_house_long")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 0)
