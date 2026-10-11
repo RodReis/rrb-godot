@@ -99,7 +99,9 @@ const SIDE_CHEST_OFFSETS: Array[Vector2] = [Vector2(-3, 2.5), Vector2(3, 2.5)]
 # Patio da ponte da metade A (s radial, l lateral): moita de um lado e rocha do outro, fora da
 # banda MID de 8 u (|l| > 4; SPEC-046 §2.7 herdava l 4,6 da SPEC-044, que invadiria 2 u).
 const YARD_GRASS_LOCAL: Vector2 = Vector2(19.5, 6.5)
-const YARD_ROCK_LOCAL: Vector2 = Vector2(19.5, -6.0)
+## Rocha do patio: fora da rota portao -> BOT (trilha 7 do jungle.json, o builder confere) e a
+## 0,5 u da margem do rio; a SPEC-046 §2.7 a punha em (19,5, -4,6), dentro dessa rota.
+const YARD_ROCK_LOCAL: Vector2 = Vector2(17.1, -10.0)
 const YARD_GRASS_SIZE: Vector2 = Vector2(4, 4)
 ## Moita de lagoa (SPEC-046 §2.7), em (x, z) do mundo, fora do corredor TOP.
 const LAGOON_GRASS_A: Vector2 = Vector2(-30, -26)
