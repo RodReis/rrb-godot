@@ -1,7 +1,8 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/world/gate.gd" id="1_gate"]
-[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/castle_door.glb" id="2_door"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/castle_door_l.glb" id="2_door_l"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/castle_door_r.glb" id="3_door_r"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gate"]
 size = Vector3(5, 3, 1)
@@ -13,4 +14,10 @@ script = ExtResource("1_gate")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 shape = SubResource("BoxShape3D_gate")
 
-[node name="Door" parent="." instance=ExtResource("2_door")]
+[node name="Door" type="Node3D" parent="."]
+
+[node name="LeafL" parent="Door" instance=ExtResource("2_door_l")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.45, 0, 0)
+
+[node name="LeafR" parent="Door" instance=ExtResource("3_door_r")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.45, 0, 0)
