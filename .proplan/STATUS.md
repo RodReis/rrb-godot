@@ -38,7 +38,6 @@ updated: 2026-10-11
 - [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
 - [MVP2][SPEC-049][F49] Ciclo dia/noite sincronizado com o relógio da partida, sentido sorteado pela seed (#122)
 - [MVP2][SPEC-048][F48] Equipamento visível: armas e armaduras modeladas no Blender no herói 3D e ícones dos itens (#121)
-- [MVP2][SPEC-047][F47] Baú: F só para item melhor, regra por herói no servidor e card de comparação na HUD (#120)
 
 ## Em Andamento
 
@@ -54,6 +53,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-047][F47] Baú: F só para item melhor, regra por herói no servidor e card de comparação na HUD (#120, finalizado em: 2026-10-11)
 - [MVP2][SPEC-046][FIX] Saída direita do portão da base fechada por rocha e bolsão de selva (#123, finalizado em: 2026-10-11)
 - [MVP2][SPEC-046][F46] Arena "Rift Medieval adaptado": borda quadrada 80×80, rio em S NO–SE com lagoas, 3 rotas, selva nos quadrantes (#110, finalizado em: 2026-10-10)
 - [MVP2][SPEC-044][F44] Arena "Ilha Flutuante Arcana": layout novo em greybox — espelho N–S, rio N–S + anel, 4 pontes (#92, finalizado em: 2026-10-10)
