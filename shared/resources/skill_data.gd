@@ -6,6 +6,8 @@ extends Resource
 
 @export var id: StringName
 @export var display_name: String
+## Icone do SkillButton (placeholder geometrico ate a arte, DEBITO DS-06); nulo = inicial.
+@export var icon: Texture2D
 @export var max_rank: int
 ## Nivel minimo do heroi para cada rank (Q [1], E [2], R [6, 10]).
 @export var required_hero_level: PackedInt32Array

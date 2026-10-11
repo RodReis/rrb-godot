@@ -1,8 +1,9 @@
 class_name MonsterPreview3D
 extends SubViewportContainer
 ## Preview 3D girando (COMPONENTS.md, base do HeroPreview3D): mundo proprio num SubViewport
-## com camera e luz; enquadra o modelo pela altura. Recebe o no do modelo pronto (so visual);
-## nao sabe de cena de monstro nem de rede. Gira so enquanto visivel.
+## com camera e luz de 3 pontos (key quente, fill fria, rim dourada); enquadra o modelo pela
+## altura. Recebe o no do modelo pronto (so visual); nao sabe de cena de monstro nem de rede.
+## Gira so enquanto visivel.
 
 ## Graus por segundo do giro.
 const TURN_SPEED: float = 30.0

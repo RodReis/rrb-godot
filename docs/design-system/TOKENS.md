@@ -31,9 +31,9 @@ Contraste WCAG calculado sobre `#171F33` (fórmula de luminância relativa; o te
 
 | Token | Família | Tamanho @1080p | Peso | Uso |
 |---|---|---|---|---|
-| `FONT_DISPLAY` | `font_display.ttf` = **Space Grotesk** (OFL) | — | Bold | títulos, anúncios, atalhos |
-| `FONT_DATA` | `font_data.ttf` = **Outfit** (OFL) | — | Regular/Medium | corpo, descrições, HUD |
-| `FONT_MONO` | `font_mono.ttf` = **JetBrains Mono** (OFL) | — | Bold | contadores, timers, HP |
+| `FONT_DISPLAY` | `font_display.ttf` = **Cinzel** (OFL, variável `wght`) | — | Bold | títulos, anúncios, atalhos |
+| `FONT_DATA` | `font_data.ttf` = **Montserrat** (OFL, variável `wght`) | — | Medium/SemiBold | corpo, descrições, HUD |
+| `FONT_MONO` | `font_mono.ttf` = **Barlow Condensed** Bold (OFL, estática) | — | Bold, algarismos tabulares (`tnum`) | contadores, timers, HP |
 | `TYPE_VICTORY` | display | 56 | Bold, caps | VITÓRIA / DERROTA / MORTE SÚBITA |
 | `TYPE_H1` | display | 32 | Bold | título de tela |
 | `TYPE_H2` | display | 22 | SemiBold | nome de habilidade/monstro |
@@ -43,7 +43,7 @@ Contraste WCAG calculado sobre `#171F33` (fórmula de luminância relativa; o te
 
 Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resolução 1080p).
 
-**v2 (ADR-0006, 2026-10-10):** as famílias acima são **provisórias** até o PI decidir R-PEND-14 (candidatas do guia: Cinzel, Barlow Condensed, Montserrat SemiBold). Regras novas que já valem: todo texto sobre a arena (HUD) tem **outline 1–2 px `#000000`**; painéis usam `StyleBoxTexture` com moldura temática (metal escuro, cantos dourados) em vez de `StyleBoxFlat`; atalhos `Q/E/R` viram *badge* metálica no canto inferior direito do slot (`TYPE_BADGE`). Os nomes dos tokens não mudam; só os arquivos `font_*.ttf` e os `StyleBox` do `theme_moba.tres` — trocados no F43 (HUD v2) e consumidos pelo F24 (Theme do launcher). No Theme: `TYPE_*` viram `theme_type_variation` de `Label` (`LabelH1`, `LabelH2`, `LabelBody`, `LabelCounter`, `LabelBadge`, `LabelVictory`).
+**v2 (ADR-0006; R-PEND-14 decidida pelo PI em 2026-10-11, F43):** famílias acima — Cinzel, Montserrat e Barlow Condensed — no lugar das provisórias Space Grotesk/Outfit/JetBrains Mono. O token `FONT_MONO` mantém o nome; os números ficam fixos por `tnum`, não por fonte monoespaçada. Contorno: `OUTLINE` (`#000000`), `OUTLINE_W` 1 px no `Label` e `OUTLINE_W_LARGE` 2 px em `LabelVictory/H1/H2/Counter`. Molduras renderizadas por `art/ui/build_frames.py` em `shared/ui/theme/frames/` (painel 96 px e margem 9-slice 24; skill 72 px, margem 16; badge 24 px, margem 8); `PanelCardInner`, acentos e molduras de raridade continuam `StyleBoxFlat` (cor semântica). Regras do v2: todo texto sobre a arena (HUD) tem **outline 1–2 px `#000000`**; painéis usam `StyleBoxTexture` com moldura temática (metal escuro, cantos dourados) em vez de `StyleBoxFlat`; atalhos `Q/E/R` viram *badge* metálica no canto inferior direito do slot (`TYPE_BADGE`). Os nomes dos tokens não mudam; só os arquivos `font_*.ttf` e os `StyleBox` do `theme_moba.tres` — trocados no F43 (HUD v2) e consumidos pelo F24 (Theme do launcher). No Theme: `TYPE_*` viram `theme_type_variation` de `Label` (`LabelH1`, `LabelH2`, `LabelBody`, `LabelCounter`, `LabelBadge`, `LabelVictory`).
 
 ## 3. Espaçamento e tamanhos (px @1080p)
 

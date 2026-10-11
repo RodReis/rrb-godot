@@ -1,5 +1,5 @@
 extends GutTest
-## theme_moba.tres bate com UiTokens (TOKENS.md §6) e o contraste da tabela do §1 se mantem.
+## theme_moba.tres bate com UiTokens (TOKENS.md §6, v2) e o contraste da tabela do §1 se mantem.
 ## Theme desatualizado: rode o ThemeBuilder (comando no cabecalho de theme_builder.gd).
 
 const THEME_PATH: String = "res://shared/ui/theme/theme_moba.tres"
@@ -46,13 +46,18 @@ func test_primary_and_danger_buttons() -> void:
 	assert_color(_theme.get_color(&"font_color", &"ButtonDanger"), UiTokens.TEXT)
 
 
-func test_panels() -> void:
-	var panel := _flat(&"panel", &"PanelContainer")
-	assert_color(panel.bg_color, UiTokens.BG_PANEL)
-	assert_color(panel.border_color, UiTokens.BORDER)
-	assert_eq(panel.border_width_left, UiTokens.BORDER_W)
-	assert_eq(panel.corner_radius_top_left, UiTokens.RADIUS_MD)
-	assert_color(_flat(&"panel", &"PanelCardSurface").bg_color, UiTokens.BG_SURFACE)
+func test_panels_use_metal_frames() -> void:
+	var frames: Dictionary[StringName, String] = {
+		&"PanelContainer": ThemeBuilder.FRAME_PANEL,
+		&"PanelCardSurface": ThemeBuilder.FRAME_SURFACE,
+	}
+	for type: StringName in frames:
+		var frame := _texture(&"panel", type)
+		assert_eq(frame.texture.resource_path, frames[type], type)
+		assert_eq(frame.texture_margin_left, float(ThemeBuilder.FRAME_MARGIN), type)
+		assert_eq(frame.content_margin_left, float(ThemeBuilder.FRAME_CONTENT), type)
+	var tooltip := _theme.get_stylebox(&"normal", &"TooltipLabel") as StyleBoxTexture
+	assert_eq(tooltip.texture.resource_path, ThemeBuilder.FRAME_PANEL)
 	assert_color(_flat(&"panel", &"PanelCardInner").bg_color, UiTokens.BG_CARD)
 	for accent: StringName in PanelCard.ACCENT_TOKENS:
 		var outline := _flat(&"panel", accent)
@@ -67,6 +72,7 @@ func test_progress_bars() -> void:
 	assert_color(_flat(&"fill", &"ProgressXp").bg_color, UiTokens.GOLD_BRIGHT)
 	assert_color(_flat(&"fill", &"ProgressEnemy").bg_color, UiTokens.RED)
 	assert_color(_flat(&"fill", &"ProgressStat").bg_color, UiTokens.BLUE)
+	assert_color(_flat(&"fill", StatBar.GHOST_TYPE).bg_color, ThemeBuilder.GHOST_FILL)
 
 
 func test_inputs_lists_tabs_and_separators() -> void:
@@ -100,6 +106,25 @@ func test_labels_and_typography() -> void:
 		assert_eq(_theme.get_font_size(&"font_size", type), sizes[type], type)
 	var counter := _theme.get_font(&"font", &"LabelCounter") as FontVariation
 	assert_eq(counter.base_font.resource_path, UiTokens.FONT_MONO_PATH)
+	assert_false(counter.opentype_features.is_empty(), "contador sem algarismos tabulares")
+
+
+func test_text_outline_over_arena() -> void:
+	assert_color(_theme.get_color(&"font_outline_color", &"Label"), UiTokens.OUTLINE)
+	assert_eq(_theme.get_constant(&"outline_size", &"Label"), UiTokens.OUTLINE_W)
+	for type: StringName in ThemeBuilder.OUTLINE_LARGE:
+		assert_eq(_theme.get_constant(&"outline_size", type), UiTokens.OUTLINE_W_LARGE, type)
+
+
+func test_skill_frames_and_key_badge() -> void:
+	var frames: Dictionary[StringName, String] = {
+		SkillButton.FRAME_READY: ThemeBuilder.FRAME_SKILL,
+		SkillButton.FRAME_UPGRADABLE: ThemeBuilder.FRAME_SKILL_GOLD,
+	}
+	for type: StringName in frames:
+		assert_eq(_texture(&"panel", type).texture.resource_path, frames[type], type)
+	var badge := _texture(&"normal", &"LabelBadgeMd")
+	assert_eq(badge.texture.resource_path, ThemeBuilder.BADGE_KEY)
 
 
 func test_every_variation_used_by_components_exists() -> void:
@@ -135,6 +160,10 @@ func assert_color(got: Color, expected: Color) -> void:
 
 func _flat(name: StringName, type: StringName) -> StyleBoxFlat:
 	return _theme.get_stylebox(name, type) as StyleBoxFlat
+
+
+func _texture(name: StringName, type: StringName) -> StyleBoxTexture:
+	return _theme.get_stylebox(name, type) as StyleBoxTexture
 
 
 ## Razao de contraste WCAG 2.x entre duas cores opacas.

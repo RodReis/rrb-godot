@@ -10,10 +10,10 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | `ScreenHeader` | `HBoxContainer` | `bind(title: String, show_back: bool)` ; slot `%RightSlot` ; sinal `back_requested` | — | todas as telas do Launcher; `hero_select` |
 | `ScreenFooter` | `PanelContainer` | `bind(hints: Array[HotkeyHint], status: String)` | — | todas |
 | `HotkeyBadge` | `Label` (variation `LabelBadge`) | `@export var key: String` | `size`: `SM` (12 px), `MD` (sobre ícone de skill) | HUD, rodapés, tela de controles |
-| `StatBar` | `HBoxContainer` | `bind(label: String, value: float, max_value: float, variant)` ; `animate_to(value, dur)` | `variant`: `HP`, `HP_ENEMY`, `XP`, `STAT` (azul) ; `show_numbers: bool` | seleção de herói, forja, HUD |
+| `StatBar` | `HBoxContainer` | `bind(label: String, value: float, max_value: float, variant)` ; `animate_to(value)` (queda: barra na hora + ghost bar após 0,35 s em 0,4 s `QUAD/EASE_OUT`; subida: tudo na hora) | `variant`: `HP`, `HP_ENEMY`, `XP`, `STAT` (azul) ; `show_numbers: bool` | seleção de herói, forja, HUD |
 | `SlotItem` | `TextureButton` | `bind(item: ItemData)` ; `clear()` ; sinal `hovered(item)`, `pressed_slot(slot)` | borda por raridade (`RARITY_*`); `empty` ; tooltip rico (`ItemTooltip`) | HUD F1/F2, forja |
 | `ItemTooltip` | `PanelCard` | `bind(item: ItemData)` | — | `SlotItem` |
-| `SkillButton` | `TextureProgressBar` | `bind(skill: SkillData, level: int)` ; `set_cooldown(remaining: float, total: float)` ; `set_locked(bool)` | `locked` (R < nível 6), `ready`, `cooling`, `upgradable` (ponto disponível) | HUD |
+| `SkillButton` | `TextureProgressBar` | `bind(skill: SkillData, level: int)` ; `set_cooldown(remaining: float, total: float)` ; `set_locked(bool)` | `locked` (R < nível 6), `ready`, `cooling`, `upgradable` (ponto disponível, moldura dourada) ; ícone de `SkillData.icon` (sem ícone: inicial) ; tecla em badge metálica no canto inferior direito | HUD |
 | `TimerLabel` | `Label` (`LabelCounter`) | `set_seconds(s: float)` ; `@export var format: Format = MM_SS` | `warning` (pisca `GOLD`), `danger` (`RED`) | HUD, lobby (fila), pick |
 | `StateBox` | `Control` | `set_state(State, message := "")` ; sinal `retry_requested` | `IDLE`, `LOADING` (spinner), `READY`, `EMPTY`, `ERROR` | toda tela/card com dado remoto |
 | `FormRow` | `VBoxContainer` | `bind(label)` ; slot `%Control` ; `set_error(msg)` ; `clear_error()` | `error` | login, configurações |

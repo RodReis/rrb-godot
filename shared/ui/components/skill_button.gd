@@ -1,8 +1,10 @@
 class_name SkillButton
 extends TextureProgressBar
 ## Habilidade na HUD (COMPONENTS.md): icone, tecla, rank e recarga radial com os segundos.
-## Icone e placeholder (quadrado com a inicial, DEBITO DS-06). Estados: LOCKED (sem rank
-## ainda, ex.: R antes do nivel 6), COOLING, READY; upgradable (ponto livre) poe moldura GOLD.
+## Icone vem do SkillData (placeholder geometrico, DEBITO DS-06); sem icone, quadrado com a
+## inicial. Tecla em badge metalica no canto inferior direito (TOKENS v2). Estados: LOCKED
+## (sem rank ainda, ex.: R antes do nivel 6), COOLING, READY; upgradable (ponto livre) poe
+## moldura dourada.
 ## Cena: chame bind()/set_*() depois de entrar na arvore (os nos internos sao @onready).
 
 enum State { LOCKED, READY, COOLING }
@@ -26,6 +28,7 @@ var upgradable: bool = false
 var _required_level: int = 0
 var _locked: bool = false
 var _remaining: float = 0.0
+var _has_icon: bool = false
 
 @onready var _letter: Label = %Letter
 @onready var _cooldown: Label = %Cooldown
@@ -59,6 +62,9 @@ static func cooldown_text(remaining: float) -> String:
 func bind(skill: SkillData, rank: int) -> void:
 	tooltip_text = skill.display_name
 	_letter.text = skill.display_name.left(1).to_upper()
+	_has_icon = skill.icon != null
+	texture_under = skill.icon if _has_icon else _blank
+	tint_under = Color.WHITE if _has_icon else UiTokens.BG_CARD
 	_rank.text = str(rank) if rank > 0 else ""
 	_required_level = (
 		skill.required_hero_level[0] if not skill.required_hero_level.is_empty() else 0
@@ -90,7 +96,7 @@ func _refresh() -> void:
 	else:
 		state = State.READY
 	modulate.a = UiTokens.DISABLED_ALPHA if state == State.LOCKED else 1.0
-	_letter.visible = state == State.READY
+	_letter.visible = state == State.READY and not _has_icon
 	_cooldown.visible = state != State.READY
 	if state == State.LOCKED:
 		_cooldown.text = tr("Nv%d") % _required_level

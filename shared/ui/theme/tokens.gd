@@ -54,6 +54,10 @@ const TYPE_H2: int = 22
 const TYPE_BODY: int = 15
 const TYPE_COUNTER: int = 28
 const TYPE_BADGE: int = 12
+## Contorno preto do texto sobre a arena (TOKENS v2): 1 px no corpo, 2 px em titulo/contador.
+const OUTLINE: Color = Color(0.0, 0.0, 0.0)
+const OUTLINE_W: int = 1
+const OUTLINE_W_LARGE: int = 2
 
 # Espacamento e tamanhos em px @1080p (TOKENS §3).
 const SPACE_XS: int = 4

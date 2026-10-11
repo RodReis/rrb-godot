@@ -2,10 +2,15 @@
 
 [ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
 [ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ranger_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ranger_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ranger_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ranger_r.svg" id="icon_r"]
 
 [sub_resource type="Resource" id="basic"]
 script = ExtResource("2_skill")
 id = &"ranger_basic"
+icon = ExtResource("icon_basic")
 display_name = "Disparo com Arco"
 max_rank = 1
 required_hero_level = PackedInt32Array(1)
@@ -18,6 +23,7 @@ speed = 20.0
 [sub_resource type="Resource" id="q"]
 script = ExtResource("2_skill")
 id = &"ranger_q"
+icon = ExtResource("icon_q")
 display_name = "Flecha Perfurante"
 max_rank = 5
 required_hero_level = PackedInt32Array(1)
@@ -31,6 +37,7 @@ pierce_min = 0.4
 [sub_resource type="Resource" id="e"]
 script = ExtResource("2_skill")
 id = &"ranger_e"
+icon = ExtResource("icon_e")
 display_name = "Rolamento"
 max_rank = 5
 required_hero_level = PackedInt32Array(2)
@@ -43,6 +50,7 @@ resets_basic_attack = true
 [sub_resource type="Resource" id="r"]
 script = ExtResource("2_skill")
 id = &"ranger_r"
+icon = ExtResource("icon_r")
 display_name = "Chuva de Flechas"
 max_rank = 2
 required_hero_level = PackedInt32Array(6, 10)

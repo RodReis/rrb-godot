@@ -90,7 +90,7 @@ func _update_plate() -> void:
 	if hp.y != _shown_hp.y:
 		_hp_bar.bind(tr("HP"), hp.x, hp.y, StatBar.Kind.HP)
 	elif hp.x != _shown_hp.x:
-		_hp_bar.animate_to(hp.x, UiTokens.DUR_FAST)
+		_hp_bar.animate_to(hp.x)
 	_shown_hp = hp
 	if _hero.xp != _shown_xp:
 		_shown_xp = _hero.xp

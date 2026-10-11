@@ -26,6 +26,10 @@ const ITEMS: Array[ItemData] = [
 const TOAST_FOREVER: float = 3600.0
 const CARD_SIZE: Vector2 = Vector2(180, 72)
 const RADAR_SIZE: Vector2 = Vector2(160, 160)
+## Demo da ghost bar: um golpe a cada [constant GHOST_PERIOD] s; cura cheia ao zerar.
+const GHOST_PERIOD: float = 1.5
+const GHOST_HIT: float = 0.2
+const GHOST_MAX_HP: float = 600.0
 
 ## Secoes na coluna esquerda; as seguintes vao para a direita.
 const LEFT_SECTIONS: int = 5
@@ -117,6 +121,18 @@ func _stat_bars() -> void:
 		_add(row, bar, _name(StatBar.Kind, variant))
 		bar.show_numbers = sample[4]
 		bar.bind(sample[0], sample[1], sample[2], variant)
+	var ghost := STAT_BAR.instantiate() as StatBar
+	_add(row, ghost, "ghost (dano a cada %.1f s)" % GHOST_PERIOD)
+	ghost.bind("HP", GHOST_MAX_HP, GHOST_MAX_HP, StatBar.Kind.HP_ENEMY)
+	var timer := Timer.new()
+	timer.wait_time = GHOST_PERIOD
+	timer.autostart = true
+	ghost.add_child(timer)
+	timer.timeout.connect(
+		func() -> void:
+			var hp := (ghost.get_node("%Bar") as ProgressBar).value - GHOST_MAX_HP * GHOST_HIT
+			ghost.animate_to(hp if hp > 0.0 else GHOST_MAX_HP)
+	)
 
 
 func _timers() -> void:
@@ -146,6 +162,10 @@ func _skills() -> void:
 		[KNIGHT.skill_q, "Q", 1, 0.0, false, true, "upgradable"],
 		[KNIGHT.skill_r, "R", 0, 0.0, true, false, "LOCKED"],
 		[KNIGHT.skill_r, "R", 0, 0.0, true, true, "LOCKED + upgradable"],
+		[RANGER.basic_attack, "LMB", 1, 0.0, false, false, "Arqueira"],
+		[RANGER.skill_q, "Q", 1, 0.0, false, false, "Arqueira"],
+		[RANGER.skill_e, "E", 1, 2.2, false, false, "Arqueira"],
+		[RANGER.skill_r, "R", 1, 0.0, false, false, "Arqueira"],
 	]
 	for sample: Array in samples:
 		var button := SKILL_BUTTON.instantiate() as SkillButton
