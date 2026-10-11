@@ -51,12 +51,12 @@ func _bound() -> void:
 func _refresh(shown: bool, delta: float) -> void:
 	var dashing := hero.dash_ticks > 0
 	_speed_lines.emitting = shown and dashing
-	if _ended(&"dash", dashing) and shown:
+	if _ended(&"dash_end", dashing):
 		pool.spawn(DUST, hero.global_transform)
-	if _started(&"basic", hero.basic_cooldown) and shown:
+	if _started(&"basic", hero.basic_cooldown):
 		_trail.clear()
 		_swing_age = 0.0
-	if _started(&"r", hero.r_cooldown) and shown:
+	if _started(&"r", hero.r_cooldown):
 		var at := Transform3D(Basis.IDENTITY, hero.global_position)
 		pool.spawn(EARTHQUAKE, at, hero.hero_data.skill_r.radius)
 	_swing_step(delta)

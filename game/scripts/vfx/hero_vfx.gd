@@ -7,6 +7,9 @@ extends Node3D
 ## Heroi escondido (mato, neblina) ou morto nao mostra nada; ao reaparecer as bordas recomecam do
 ## estado atual, para nao mostrar um disparo que aconteceu escondido.
 
+## Medicao (NetProbe, --probe): disparos mostrados por "peer:chave" (chaves = as do servidor).
+static var shown_events: Dictionary = {}
+
 var hero: Hero
 var pool: VfxPool
 
@@ -52,15 +55,23 @@ func _refresh(_shown: bool, _delta: float) -> void:
 	pass
 
 
-## O timer [param key] subiu (disparo novo). O 1o valor visto nao e borda.
+## O timer [param key] subiu (disparo novo) com o heroi visivel. O 1o valor visto nao e borda.
 func _started(key: StringName, value: int) -> bool:
 	var before: int = _previous.get(key, value)
 	_previous[key] = value
-	return VfxRules.started(before, value)
+	return VfxRules.started(before, value) and _shown_event(key)
 
 
-## A flag [param key] acabou de desligar (fim do avanco).
+## A flag [param key] acabou de desligar (fim do avanco) com o heroi visivel.
 func _ended(key: StringName, active: bool) -> bool:
 	var before: int = _previous.get(key, int(active))
 	_previous[key] = int(active)
-	return before == 1 and not active
+	return before == 1 and not active and _shown_event(key)
+
+
+func _shown_event(key: StringName) -> bool:
+	if not _was_shown:
+		return false
+	var id := "%d:%s" % [hero.peer_id, key]
+	shown_events[id] = shown_events.get(id, 0) + 1
+	return true

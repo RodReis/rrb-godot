@@ -60,11 +60,11 @@ func _refresh(shown: bool, delta: float) -> void:
 		_trails[i].emitting = shown and _arrows[i].visible
 	_spiral_step(shown, delta)
 	var rolling := hero.dash_ticks > 0
-	if _started(&"roll", int(rolling)) and shown:
+	if _started(&"dash_start", int(rolling)):
 		pool.spawn(DUST, hero.global_transform)
 		var ghost := pool.spawn(GHOST, hero.global_transform) as GhostVfx
 		ghost.capture(hero.get_node("Model") as Node3D)
-	if _ended(&"roll_end", rolling) and shown:
+	if _ended(&"dash_end", rolling):
 		pool.spawn(DUST, hero.global_transform)
 	var raining := shown and _ranger.rain_ticks > 0
 	_volley.emitting = raining

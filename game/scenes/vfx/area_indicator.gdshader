@@ -4,7 +4,7 @@ shader_type spatial;
 // o RainArea escala pelo raio do GDB.
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled;
 
-uniform vec4 fill_color : source_color = vec4(0.36, 0.62, 1.0, 0.16);
+uniform vec4 fill_color : source_color = vec4(0.36, 0.62, 1.0, 0.07);
 uniform vec4 rim_color : source_color = vec4(0.6, 0.85, 1.0, 0.95);
 uniform float rim_width = 0.05;
 uniform float dashes = 28.0;

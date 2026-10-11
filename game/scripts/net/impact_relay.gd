@@ -12,11 +12,19 @@ extends Node
 signal impacted(attacker_id: int, slot: int, at: Vector3)
 
 const NODE_NAME: StringName = &"ImpactRelay"
+## Cliente: impactos recentes lembrados para contar repetidos (medicao).
+const RECENT_LIMIT: int = 256
+
+## Medicao (NetProbe, --probe): anunciados (servidor), recebidos e recebidos repetidos (cliente).
+static var announced: int = 0
+static var received: int = 0
+static var repeated: int = 0
 
 ## Pai dos herois (Main/Players); definido antes de entrar na arvore.
 var players: Node
 
 var _announced: ImpactLog = ImpactLog.new()  # so no servidor
+var _recent: Dictionary = {}  # cliente: [atacante, slot, tick, posicao] -> true
 
 
 func _ready() -> void:
@@ -41,15 +49,23 @@ func _on_hero_struck(target: Combatant, slot: HitLedger.Slot, tick: int, hero: H
 	if not _announced.first(tick, hero.peer_id, slot, target.combat_id()):
 		return
 	_announced.trim_before(tick - NetworkRollback.history_limit)
+	announced += 1
 	var at := target.global_position
 	for peer: int in multiplayer.get_peers():
 		if _sees(target, peer):
-			_show.rpc_id(peer, hero.peer_id, slot, at)
+			_show.rpc_id(peer, hero.peer_id, slot, at, tick)
 	if _sees(target, multiplayer.get_unique_id()):
 		impacted.emit(hero.peer_id, slot, at)
 
 
-## Servidor -> cliente: um impacto que este jogador ve.
+## Servidor -> cliente: um impacto que este jogador ve ([param tick] do golpe, para a medicao).
 @rpc("authority", "call_remote", "unreliable")
-func _show(attacker_id: int, slot: int, at: Vector3) -> void:
+func _show(attacker_id: int, slot: int, at: Vector3, tick: int) -> void:
+	received += 1
+	if _recent.size() >= RECENT_LIMIT:
+		_recent.clear()
+	var key := [attacker_id, slot, tick, at]
+	if _recent.has(key):
+		repeated += 1
+	_recent[key] = true
 	impacted.emit(attacker_id, slot, at)

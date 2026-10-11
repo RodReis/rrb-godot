@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scripts/vfx/earthquake_vfx.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://scenes/vfx/crack.png" id="2_crack"]
 [ext_resource type="Shader" path="res://scenes/vfx/shockwave.gdshader" id="3_shock"]
+[ext_resource type="Texture2D" path="res://scenes/vfx/crack_glow.png" id="4_glow"]
 
 [sub_resource type="Curve" id="Curve_shrink"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.75, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -78,6 +79,8 @@ fade_seconds = 1.5
 [node name="Crack" type="Decal" parent="."]
 size = Vector3(10, 0.8, 10)
 texture_albedo = ExtResource("2_crack")
+texture_emission = ExtResource("4_glow")
+emission_energy = 3.0
 
 [node name="Fragments" type="GPUParticles3D" parent="."]
 emitting = false

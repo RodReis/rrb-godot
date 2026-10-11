@@ -159,7 +159,8 @@
         { "arquivo": "mvp2.5-f39-base-no-jogo.webp", "legenda": "A base vista do jogo com o acabamento novo. Durante esta etapa de arte a névoa de guerra fica desligada na tela para dar para ver a ilha inteira; ela volta no fim da etapa.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f40-base-no-jogo.webp", "legenda": "A ilha ficou realista e sombria: grama, trilhas de terra e calçamento de pedra com textura de verdade, muralhas de blocos cobertas de musgo e uma luz fria de fim de tarde, com sombras longas.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f40-selva-e-castelos.webp", "legenda": "A selva agora é feita de bolsões de rocha e pinheiros escuros que formam caminhos sinuosos entre os campos de monstros. Uma floresta fecha a beira da ilha, tochas marcam a borda e os castelos cresceram.", "tipo": "entregue" },
-        { "arquivo": "mvp2.5-f40-cascata.webm", "legenda": "Nos cantos da ilha, a água escorre pelo penhasco e cai no abismo.", "tipo": "entregue" }
+        { "arquivo": "mvp2.5-f40-cascata.webm", "legenda": "Nos cantos da ilha, a água escorre pelo penhasco e cai no abismo.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f41-vfx-combate.webm", "legenda": "Os golpes ganharam efeitos: o Cavaleiro investe com linhas de velocidade, ergue a Muralha de energia azul e racha o chão com o Terremoto; a Arqueira dispara flechas com rastro, rola deixando um fantasma e faz chover flechas numa área marcada.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
