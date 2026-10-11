@@ -1,6 +1,9 @@
+class_name HeroVisual
 extends Node
-## Visual do heroi: esconde as pecas do pack que o heroi nao usa e escolhe a animacao pelo
-## estado do Hero (replicado/previsto). So le estado; nunca o altera. Morto: cai uma vez e fica.
+## Visual do heroi: esconde as pecas do pack que o heroi nao usa, escolhe a animacao pelo
+## estado do Hero (replicado/previsto) e mostra o equipamento (SPEC-048): cada item equipado
+## vira pecas presas aos ossos por BoneAttachment3D (ItemVisuals). So le estado; nunca o altera.
+## Morto: cai uma vez e fica. Servidor headless nao carrega peca nenhuma.
 
 @export var model: Node3D
 @export var hidden_parts: Array[StringName] = []
@@ -24,6 +27,10 @@ var _last_basic: int = 0
 var _last_q: int = 0
 var _last_r: int = 0
 var _fallen: bool = false
+var _items: ItemVisuals
+var _skeleton: Skeleton3D
+var _shown_equipment: Vector4i = Inventory.NONE
+var _attachments: Array[Array] = [[], [], [], []]  # indice = ItemData.Slot -> BoneAttachment3D
 
 
 func _ready() -> void:
@@ -37,9 +44,14 @@ func _ready() -> void:
 		if _player.has_animation(looping):
 			_player.get_animation(looping).loop_mode = Animation.LOOP_LINEAR
 	_player.animation_finished.connect(_on_player_animation_finished)
+	_skeleton = model.find_child("Skeleton3D") as Skeleton3D
+	if DisplayServer.get_name() != "headless":  # so quem desenha carrega pecas e icones
+		use_items(ItemVisuals.for_hero(_hero.hero_data.id))
 
 
 func _process(_delta: float) -> void:
+	if _items != null and _hero.equipment != _shown_equipment:
+		_show_equipment(_hero.equipment)
 	if not _hero.is_alive():
 		if not _fallen:
 			_fallen = true
@@ -70,6 +82,57 @@ func _process(_delta: float) -> void:
 		_loop(run)
 	else:
 		_loop(idle)
+
+
+## Liga o visual dos itens (nulo desliga) e mostra o equipamento atual.
+func use_items(items: ItemVisuals) -> void:
+	_show_equipment(Inventory.NONE)  # tira as pecas e devolve as do pack com o visual anterior
+	_items = items
+	if _items != null:
+		_show_equipment(_hero.equipment)
+
+
+func _show_equipment(equipment: Vector4i) -> void:
+	for slot: int in Inventory.SLOTS:
+		if equipment[slot] != _shown_equipment[slot]:
+			_show_slot(slot, Inventory.item_at(equipment, slot, _hero.item_catalog))
+	_shown_equipment = equipment
+
+
+## Troca as pecas do slot pelas de [param item] (nulo = vazio) e esconde a peca do pack que elas
+## substituem. Cada no da peca e modelado no espaco do modelo em repouso: dentro do
+## BoneAttachment3D ele recebe o inverso da pose de repouso do osso.
+func _show_slot(slot: int, item: ItemData) -> void:
+	for attachment: Node in _attachments[slot]:
+		attachment.free()
+	_attachments[slot].clear()
+	var piece: PackedScene = null
+	if item != null and _items != null:
+		piece = _items.pieces.get(item.id) as PackedScene
+	var pack_part: Node3D = null
+	if _items != null and _items.pack_parts[slot] != &"":
+		pack_part = model.find_child(_items.pack_parts[slot]) as Node3D
+	if pack_part != null:
+		pack_part.visible = piece == null
+	if piece == null:
+		return
+	var root := piece.instantiate()
+	for node: Node in root.get_children():
+		var bone := ItemVisuals.bone_of(node.name)
+		var index := _skeleton.find_bone(bone)
+		if index < 0:
+			push_warning("[equipamento] osso %s nao existe (%s)" % [bone, node.name])
+			continue
+		var mesh := node as Node3D
+		var attachment := BoneAttachment3D.new()
+		attachment.bone_name = bone
+		_skeleton.add_child(attachment)
+		root.remove_child(mesh)
+		mesh.owner = null
+		attachment.add_child(mesh)
+		mesh.transform = _skeleton.get_bone_global_rest(index).affine_inverse() * mesh.transform
+		_attachments[slot].append(attachment)
+	root.free()
 
 
 func _loop(animation: StringName) -> void:

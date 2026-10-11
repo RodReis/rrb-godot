@@ -1,7 +1,8 @@
 class_name SlotItem
 extends TextureButton
-## Slot de equipamento (COMPONENTS.md, PATTERNS P6): moldura pela raridade, raridade em texto
-## e tooltip rico. Icone e placeholder com o nome do slot (DEBITO DS-06).
+## Slot de equipamento (COMPONENTS.md, PATTERNS P6): moldura pela raridade, raridade em texto,
+## icone do item (SPEC-048; o icone da arma depende do heroi, entao vem de quem chama, por
+## ItemVisuals) e tooltip rico. Sem icone (ou vazio), mostra o nome do slot.
 ## Cena: chame bind()/set_*() depois de entrar na arvore (os nos internos sao @onready).
 
 signal hovered(item: ItemData)
@@ -26,6 +27,7 @@ const HOVER_BRIGHTNESS: float = 1.25
 var item: ItemData
 
 @onready var _frame: Panel = %Frame
+@onready var _icon: TextureRect = %Icon
 @onready var _slot_label: Label = %SlotName
 @onready var _rarity_label: Label = %Rarity
 
@@ -38,8 +40,10 @@ func _ready() -> void:
 	clear()
 
 
-func bind(p_item: ItemData) -> void:
+func bind(p_item: ItemData, icon: Texture2D = null) -> void:
 	item = p_item
+	_icon.texture = icon
+	_slot_label.visible = icon == null
 	_frame.theme_type_variation = RARITY_FRAMES[p_item.rarity]
 	_rarity_label.text = ItemData.RARITY_NAMES[p_item.rarity]
 	_slot_label.theme_type_variation = &""
@@ -48,6 +52,8 @@ func bind(p_item: ItemData) -> void:
 
 func clear() -> void:
 	item = null
+	_icon.texture = null
+	_slot_label.visible = true
 	_frame.theme_type_variation = EMPTY_FRAME
 	_rarity_label.text = ""
 	_slot_label.theme_type_variation = &"LabelMuted"

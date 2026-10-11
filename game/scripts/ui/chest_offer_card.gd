@@ -21,6 +21,7 @@ var _shown_chest: Chest
 var _shown_item: int = Ids.NONE
 var _shown_equipment: Vector4i = Inventory.NONE
 var _shown_offer: bool = false
+var _items: ItemVisuals  # icones dos itens do heroi local
 
 var _slot: SlotItem = SLOT_ITEM.instantiate() as SlotItem
 var _name: Label = Label.new()
@@ -63,6 +64,7 @@ func _init() -> void:
 ## Liga ao heroi local e esconde o que sobrou de antes.
 func bind(hero: Hero) -> void:
 	_hero = hero
+	_items = ItemVisuals.for_hero(hero.hero_data.id)
 	_shown_chest = null
 	visible = false
 
@@ -105,7 +107,7 @@ func _rebuild(chest: Chest, incoming: ItemData) -> void:
 	var current := Inventory.item_at(_hero.equipment, incoming.slot, chest.catalog)
 	_shown_offer = ItemRules.offer(current, incoming)
 	_slot.slot = incoming.slot
-	_slot.bind(incoming)
+	_slot.bind(incoming, _items.icon(incoming) if _items != null else null)
 	_name.text = incoming.display_name
 	_rarity.text = ItemData.RARITY_NAMES[incoming.rarity]
 	_rarity.add_theme_color_override(&"font_color", RARITY_COLORS[incoming.rarity])
