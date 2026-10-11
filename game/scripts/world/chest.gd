@@ -133,6 +133,7 @@ func _open(hero: Hero, tick: int) -> void:
 
 
 func _give(hero: Hero, tick: int) -> void:
+	print("[chest] %s leva %s" % [hero.name, catalog.find(item).display_name])
 	var effect := HitEffect.new()
 	effect.item = item
 	_reward(hero, tick, effect)
