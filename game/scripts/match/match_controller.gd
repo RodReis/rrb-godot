@@ -50,6 +50,11 @@ var available_heroes: Array[StringName] = []
 var start_seconds: float = 0.0
 ## Servidor: seed da partida (a dos baus) para o sorteio do colapso.
 var match_seed: int = 0
+## Servidor: --daynight (LaunchArgs); vazio sorteia o sentido da luz pela seed (F49).
+var forced_daynight: String = LaunchArgs.DAYNIGHT_AUTO
+## Sentido da luz (F49): verdadeiro = comeca de dia e termina de noite. O servidor sorteia ao abrir
+## a selecao de herois e avisa os clientes por RPC; antes disso vale o padrao.
+var day_to_night: bool = true
 ## Espelhado nos clientes pelo RPC de fase.
 var state: MatchState.State = MatchState.State.LOBBY_WAIT
 ## Fim da espera ou da selecao em ticks; o cliente conta o tempo a partir do tick do evento.
@@ -244,6 +249,8 @@ func _start_phase1(tick: int) -> void:
 ## e zona (fase 2).
 func _enter(to: MatchState.State, tick: int, p_deadline_tick: int = 0) -> void:
 	print("[match] %s -> %s, tick %d" % [_name(state), _name(to), tick])
+	if to == MatchState.State.HERO_PICK:
+		_direction_set.rpc(DayNightRules.starts_at_day(match_seed, forced_daynight))
 	_changed.rpc(state, to, p_deadline_tick, tick)
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero
@@ -354,6 +361,12 @@ func _changed(from: int, to: int, p_deadline_tick: int, tick: int) -> void:
 	state = to as MatchState.State
 	deadline_tick = p_deadline_tick
 	phase_changed.emit(from, to, tick)
+
+
+@rpc("authority", "call_local", "reliable")
+func _direction_set(p_day_to_night: bool) -> void:
+	day_to_night = p_day_to_night
+	print("[match] luz: %s" % ("dia -> noite" if day_to_night else "noite -> dia"))
 
 
 @rpc("authority", "call_local", "reliable")

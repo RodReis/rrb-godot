@@ -12,6 +12,8 @@ uniform vec4 foam_color : source_color = vec4(0.85, 1.0, 0.95, 1.0);
 uniform float flow_speed : hint_range(0.0, 2.0) = 0.5;
 uniform float flow_repeat : hint_range(1.0, 16.0) = 6.0;
 uniform float emission_strength : hint_range(0.0, 4.0) = 1.6;
+// F49: DayNight escala a emissao pelo ciclo dia/noite (1 = noite, o visual do F40).
+uniform float day_night_emission : hint_range(0.0, 2.0) = 1.0;
 uniform float foam_depth : hint_range(0.01, 1.0) = 0.35;
 uniform float surface_alpha : hint_range(0.0, 1.0) = 0.92;
 // Altura (mundo) em que a cascata comeca a sumir e em que ja sumiu.
@@ -42,7 +44,7 @@ void fragment() {
 
 	vec3 water = mix(edge_color.rgb, core_color.rgb, streak);
 	ALBEDO = mix(water, foam_color.rgb, foam * 0.85);
-	EMISSION = core_color.rgb * (streak * 0.6 + 0.4) * emission_strength + foam_color.rgb * foam * 0.6;
+	EMISSION = (core_color.rgb * (streak * 0.6 + 0.4) * emission_strength + foam_color.rgb * foam * 0.6) * day_night_emission;
 	NORMAL_MAP = texture(normal_noise, flow_uv * 2.0).rgb;
 	NORMAL_MAP_DEPTH = 0.35;
 	ROUGHNESS = 0.12;
