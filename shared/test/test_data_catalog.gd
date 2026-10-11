@@ -91,6 +91,57 @@ func test_arqueira_no_nivel_10_bate_com_o_gdb() -> void:
 	assert_almost_eq(_hero(&"ranger").base_move_speed, 6.2, EPS)
 
 
+func test_barbaro_no_nivel_1_e_10_bate_com_o_gdb() -> void:
+	var b := _hero(&"barbarian")
+	assert_eq(b.display_name, "Bárbaro")
+	assert_almost_eq(b.base_move_speed, 6.0, EPS)
+	var a1 := Stats.attributes(b, 1, [], [])
+	assert_eq(a1.max_hp, 480)
+	assert_almost_eq(a1.defense, 15.0, EPS)
+	assert_almost_eq(a1.attack, 52.0, EPS)
+	assert_almost_eq(a1.intelligence, 8.0, EPS)
+	assert_almost_eq(a1.agility, 20.0, EPS)
+	var a10 := Stats.attributes(b, 10, [], [])
+	assert_eq(a10.max_hp, 795)
+	assert_almost_eq(a10.defense, 31.2, EPS)
+	assert_almost_eq(a10.attack, 92.5, EPS)
+	assert_almost_eq(a10.intelligence, 15.2, EPS)
+	assert_almost_eq(a10.agility, 36.2, EPS)
+
+
+func test_habilidades_do_barbaro() -> void:
+	var b := _hero(&"barbarian")
+	assert_almost_eq(b.basic_attack.arc_degrees, 90.0, EPS)
+	assert_almost_eq(b.basic_attack.attack_range, 2.4, EPS)
+	assert_eq(b.basic_attack.cooldown, PackedFloat64Array([0.9]))
+	assert_almost_eq(b.basic_attack.attack_ratio, 1.0, EPS)
+	# Q Salto Brutal
+	assert_almost_eq(b.skill_q.cast_range, 7.0, EPS)
+	assert_eq(b.skill_q.duration, PackedFloat64Array([0.45]))
+	assert_almost_eq(b.skill_q.radius, 2.5, EPS)
+	assert_eq(b.skill_q.cooldown, PackedFloat64Array([10.0, 9.5, 9.0, 8.5, 8.0]))
+	assert_eq(b.skill_q.base_amount, PackedFloat64Array([60, 95, 130, 165, 200]))
+	assert_almost_eq(b.skill_q.attack_ratio, 0.8, EPS)
+	# E Rodopio
+	assert_eq(b.skill_e.duration, PackedFloat64Array([1.5]))
+	assert_eq(b.skill_e.pulse_count, 3)
+	assert_almost_eq(b.skill_e.pulse_interval, 0.5, EPS)
+	assert_almost_eq(b.skill_e.radius, 2.5, EPS)
+	assert_eq(b.skill_e.cooldown, PackedFloat64Array([9.0]))
+	assert_eq(b.skill_e.base_amount, PackedFloat64Array([30, 45, 60, 75, 90]))
+	assert_almost_eq(b.skill_e.attack_ratio, 0.35, EPS)
+	assert_eq(b.skill_e.required_hero_level, PackedInt32Array([2]))
+	# R Execucao
+	assert_almost_eq(b.skill_r.arc_degrees, 60.0, EPS)
+	assert_almost_eq(b.skill_r.attack_range, 2.5, EPS)
+	assert_eq(b.skill_r.cooldown, PackedFloat64Array([55.0, 45.0]))
+	assert_eq(b.skill_r.base_amount, PackedFloat64Array([200, 320]))
+	assert_almost_eq(b.skill_r.intelligence_ratio, 1.0, EPS)
+	assert_almost_eq(b.skill_r.attack_ratio, 0.5, EPS)
+	assert_almost_eq(b.skill_r.missing_hp_ratio, 0.25, EPS)
+	assert_eq(b.skill_r.required_hero_level, PackedInt32Array([6, 10]))
+
+
 func test_habilidades_do_cavaleiro() -> void:
 	var k := _hero(&"knight")
 	assert_almost_eq(k.basic_attack.arc_degrees, 70.0, EPS)
