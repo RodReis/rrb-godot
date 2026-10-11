@@ -6,7 +6,7 @@ extends Control
 ## update() no proprio _process.
 
 ## Indice = slot do SkillButton: basico, Q, E, R.
-const SKILL_KEYS: Array[String] = ["LMB", "Q", "E", "R"]
+const SKILL_KEYS: Array[String] = ["RMB", "Q", "E", "R"]
 const LEARN_KEYS: Array[String] = ["Ctrl+Q", "Ctrl+E", "Ctrl+R"]
 
 var _hero: Hero
