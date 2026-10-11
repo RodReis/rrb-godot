@@ -145,7 +145,11 @@
         { "arquivo": "mvp2-f46-rift-portao-e-centro.webp", "legenda": "Do portão do castelo dá para ver a ponte, a cratera e, do outro lado, o castelo adversário com o torreão no canto. Dentro das muralhas agora há casas de pedra; nos cantos vazios da ilha, cascatas de mana caem no abismo.", "tipo": "entregue" },
         { "arquivo": "mvp2-f46-rift-base-a-no-jogo.webp", "legenda": "A base vista do jogo: pátio de pedra, casas atrás do ponto de renascimento, a fonte no canto, os baús e os Esqueletos de sempre. No minimapa, o desenho em S do rio e as duas lagoas.", "tipo": "entregue" },
         { "arquivo": "mvp2-f48-equipamento-na-partida.webp", "legenda": "O que sai do baú agora aparece no herói: o Cavaleiro com o elmo da Guarda, a espada rara e o peitoral do Caçador. No painel de equipamento, cada item tem o próprio ícone, com a cor da raridade na moldura.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f48-vitrine-equipamento.webp", "legenda": "Os dois conjuntos nos dois heróis, nas três raridades: placa de metal da Guarda e capuz de couro do Caçador. A forma é a mesma; o comum é liso, o raro ganha um friso azul e o épico, friso dourado e uma gema roxa. Armas também mudam: espada e arco com fio azul ou guarda dourada.", "tipo": "em-construcao" }
+        { "arquivo": "mvp2-f48-vitrine-equipamento.webp", "legenda": "Os dois conjuntos nos dois heróis, nas três raridades: placa de metal da Guarda e capuz de couro do Caçador. A forma é a mesma; o comum é liso, o raro ganha um friso azul e o épico, friso dourado e uma gema roxa. Armas também mudam: espada e arco com fio azul ou guarda dourada.", "tipo": "em-construcao" },
+        { "arquivo": "mvp2-f49-dia.webp", "legenda": "A luz agora anda com o relógio da partida. Uma partida pode começar de dia — céu azul, sol alto, sombras nítidas — e terminar de noite; outra faz o caminho inverso. O sentido é sorteado quando a partida começa e vale igual para os dois jogadores.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f49-entardecer.webp", "legenda": "No meio da partida, aos 5 minutos, é entardecer: sol baixo e alaranjado, sombras longas, o magma e os cristais já brilhando mais.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f49-noite.webp", "legenda": "Aos 10 minutos a ilha está de noite, com o céu cósmico e a luz fria de sempre. A luz só muda o clima: a visão dos heróis e as regras não mudam.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f49-ciclo-dia-noite.webm", "legenda": "A partida inteira, dos 0 aos 10 minutos, acelerada em 10 segundos.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {
@@ -216,6 +220,7 @@
     "F46": "Ilha Flutuante Arcana: layout definitivo, com castelos nos cantos e rio em S",
     "F47": "Baú que compara o item com o que você já usa",
     "F48": "Armas e armaduras visíveis no herói, com ícone de cada item",
+    "F49": "Ciclo de dia e noite ao longo da partida",
     "F38": "Iluminação, sombras suaves e preparo dos efeitos visuais",
     "F39": "Acabamento suave da ilha e sombras mais macias",
     "F40": "Arena realista: terreno, selva de rochas e pinheiros, castelos",

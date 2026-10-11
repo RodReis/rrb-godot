@@ -8,6 +8,8 @@ uniform vec4 magma_dark : source_color = vec4(0.9, 0.2, 0.05, 1.0);
 uniform vec4 rock_crust : source_color = vec4(0.12, 0.1, 0.1, 1.0);
 uniform float pulse_speed : hint_range(0.0, 3.0) = 1.2;
 uniform float emission_energy : hint_range(0.0, 5.0) = 3.0;
+// F49: DayNight escala a emissao pelo ciclo dia/noite (1 = noite, o visual do F40).
+uniform float day_night_emission : hint_range(0.0, 2.0) = 1.0;
 uniform float crack_width : hint_range(0.02, 0.5) = 0.16;
 uniform float pool_radius : hint_range(0.0, 0.5) = 0.14;
 uniform float tiles : hint_range(1.0, 8.0) = 3.0;
@@ -26,6 +28,6 @@ void fragment() {
 	vec3 lava = mix(magma_dark.rgb, magma_bright.rgb, pulse * 0.5 + drift * 0.5);
 
 	ALBEDO = mix(rock_crust.rgb, lava, is_lava);
-	EMISSION = lava * is_lava * emission_energy;
+	EMISSION = lava * is_lava * emission_energy * day_night_emission;
 	ROUGHNESS = mix(0.95, 0.3, is_lava);
 }

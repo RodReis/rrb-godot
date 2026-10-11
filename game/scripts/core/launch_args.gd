@@ -4,6 +4,7 @@ extends RefCounted
 ## --offline: modo host (servidor + jogador local no mesmo processo); --bot: heroi bot no 2o slot.
 ## --autopilot: o heroi local anda em circulo; --autopilot=bot: o BotInput joga pelo heroi local
 ## (so le estado replicado). --probe: sonda de rede (NetProbe, F20), para medir replicacao.
+## --daynight=day|night: forca o inicio da luz no servidor (F49); fora do contrato com o Launcher.
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
@@ -13,6 +14,10 @@ const DEFAULT_LEVEL: int = 1
 const NO_SEED: int = 0
 ## --time=S: relogio da partida ja comeca em S segundos (dev, para ver o boss sem esperar 3:30).
 const DEFAULT_TIME: float = 0.0
+## --daynight: ausente = sentido sorteado pela seed da partida (DayNightRules).
+const DAYNIGHT_AUTO: String = ""
+const DAYNIGHT_DAY: String = "day"
+const DAYNIGHT_NIGHT: String = "night"
 
 
 static func parse(args: PackedStringArray) -> Dictionary:
@@ -24,6 +29,7 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"level": DEFAULT_LEVEL,
 		"seed": NO_SEED,
 		"time": DEFAULT_TIME,
+		"daynight": DAYNIGHT_AUTO,
 		"offline": false,
 		"bot": false,
 		"bot_pilot": false,
@@ -51,6 +57,10 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			var seconds := arg.trim_prefix("--time=")
 			var valid := seconds.is_valid_float() and seconds.to_float() >= DEFAULT_TIME
 			result["time"] = seconds.to_float() if valid else DEFAULT_TIME
+		elif arg.begins_with("--daynight="):
+			var mode := arg.trim_prefix("--daynight=")
+			var valid := mode == DAYNIGHT_DAY or mode == DAYNIGHT_NIGHT
+			result["daynight"] = mode if valid else DAYNIGHT_AUTO
 		elif arg.begins_with("--port="):
 			result["port"] = _port_or_default(arg.trim_prefix("--port="))
 		elif arg.begins_with("--connect="):

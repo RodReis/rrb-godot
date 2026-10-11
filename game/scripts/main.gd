@@ -11,7 +11,8 @@ extends Node3D
 ## escolhido. Quem decide e o MatchController; aqui so se liga sinal e se spawna. No fim, quem
 ## joga ve a MatchEnd (F18); os dois botoes dela encerram o processo (ARCHITECTURE-GAME §3.7).
 ## VFX de combate (F41): o ImpactRelay leva o impacto do servidor aos clientes; o VfxSpawner so
-## nasce em quem desenha (nunca no servidor headless).
+## nasce em quem desenha (nunca no servidor headless). Ciclo dia/noite (F49): o DayNight tambem so
+## nasce em quem desenha; o sentido sai da seed no servidor (--daynight forca) e vai por RPC.
 
 const MAX_PLAYERS: int = 2
 ## Herois da selecao; sem cena (Hero.SCENE_PATH) aparece indisponivel.
@@ -101,6 +102,7 @@ func _ready() -> void:
 	_hero_level = args["level"]
 	match_controller.start_seconds = args["time"]
 	match_controller.match_seed = spawns.loot_seed
+	match_controller.forced_daynight = args["daynight"]
 	_wants_bot = args["bot"]
 	_bot_pilot = args["bot_pilot"]
 	if args["probe"]:
@@ -110,6 +112,7 @@ func _ready() -> void:
 		add_child(probe)
 	var dedicated: bool = args["mode"] == "server" or OS.has_feature("dedicated_server")
 	if not dedicated:
+		_start_day_night()
 		await _warm_shaders()
 	if args["offline"]:
 		if start_server(EPHEMERAL_PORT, HOST_BIND_IP):
@@ -140,6 +143,20 @@ func _process(_delta: float) -> void:
 		"%s | tick %d%s"
 		% [_net_text(), NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]
 	)
+
+
+## Liga o ciclo dia/noite (F49) aos nodes da arena; antes do warm-up, que ja renderiza o ceu dele.
+## No headless volta na hora: nada roda no servidor.
+func _start_day_night() -> void:
+	if not DayNight.wanted():
+		return
+	var world := get_node("Arena/WorldEnvironment") as WorldEnvironment
+	var sun := get_node("Arena/Sun") as DirectionalLight3D
+	var probe := get_node("Arena/ReflectionProbe") as ReflectionProbe
+	var day_night := DayNight.new()
+	day_night.name = "DayNight"
+	add_child(day_night)
+	day_night.bind(clock, match_controller, sun, world, probe)
 
 
 ## Aquece shaders antes de qualquer conexao (F38, ADR-0006 item 7): cliente que trava no sync

@@ -92,3 +92,19 @@ func test_piloto_bot_no_cliente() -> void:
 func test_sonda_de_rede() -> void:
 	assert_false(LaunchArgs.parse(PackedStringArray([]))["probe"])
 	assert_true(LaunchArgs.parse(PackedStringArray(["--server", "--probe"]))["probe"])
+
+
+func test_daynight_forca_o_inicio_da_luz() -> void:
+	assert_eq(LaunchArgs.parse(PackedStringArray([]))["daynight"], LaunchArgs.DAYNIGHT_AUTO)
+	assert_eq(
+		LaunchArgs.parse(PackedStringArray(["--daynight=day"]))["daynight"], LaunchArgs.DAYNIGHT_DAY
+	)
+	assert_eq(
+		LaunchArgs.parse(PackedStringArray(["--server", "--daynight=night"]))["daynight"],
+		LaunchArgs.DAYNIGHT_NIGHT
+	)
+	assert_eq(
+		LaunchArgs.parse(PackedStringArray(["--daynight=tarde"]))["daynight"],
+		LaunchArgs.DAYNIGHT_AUTO,
+		"valor invalido volta ao sorteio"
+	)

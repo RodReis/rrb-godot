@@ -85,3 +85,12 @@ func _shaders_under(dir: String) -> PackedStringArray:
 		elif entry.get_extension() == "gdshader":
 			found.append(dir + entry)
 	return found
+
+
+func test_ceu_do_ambiente_entra_no_warmup_sem_ambiente_nao_quebra() -> void:
+	assert_null(ShaderWarmup._sky_material(null))
+	var env := Environment.new()
+	assert_null(ShaderWarmup._sky_material(env))
+	env.sky = Sky.new()
+	env.sky.sky_material = ShaderMaterial.new()
+	assert_not_null(ShaderWarmup._sky_material(env))

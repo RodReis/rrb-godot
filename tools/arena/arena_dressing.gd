@@ -91,6 +91,10 @@ const SUN_SHADOW_DISTANCE: float = 65.0
 ## Lightmap so com a luz indireta (o sol e direto em tempo real): baixa frequencia, meia
 ## resolucao do texel do import basta e mantem o .exr versionado pequeno.
 const LIGHTMAP_TEXEL_SCALE: float = 0.5
+## F49 (ADR-0010): o Sun fica fora do bake (BAKE_DISABLED) porque o sol anda ao longo da partida;
+## o indireto vem so de um ceu neutro (nem o dia azul nem a noite cosmica) e dos emissivos.
+const LIGHTMAP_SKY_COLOR: Color = Color(0.6, 0.68, 0.85)
+const LIGHTMAP_SKY_ENERGY: float = 0.6
 ## Sonda de reflexo unica cobrindo a ilha (|x|, |z| <= 42 com a beira).
 const PROBE_SIZE: Vector3 = Vector3(88, 20, 88)
 const PROBE_CENTER: Vector3 = Vector3(0, 6, 0)
@@ -133,8 +137,9 @@ func _build_environment() -> void:
 	_add(_root, world)
 
 
-## Sol (luz direta em tempo real, sombra nos herois) + LightmapGI (indireta bakeada do cenario
-## estatico; herois e monstros pelas sondas do bake) + ReflectionProbe unico. SDFGI nao
+## Sol (luz direta em tempo real, sombra nos herois; fora do bake, F49) + LightmapGI (indireta
+## bakeada do cenario estatico com ceu neutro; herois e monstros pelas sondas do bake) +
+## ReflectionProbe unico (refeito em degraus pelo DayNight). SDFGI nao
 ## (ADR-0006 D-V6). O bake e passo do tools/bake-lightmap.ps1: aqui so se liga o dado ja bakeado.
 func _build_lighting() -> void:
 	var sun := DirectionalLight3D.new()
@@ -142,6 +147,7 @@ func _build_lighting() -> void:
 	sun.rotation_degrees = SUN_ROTATION_DEG
 	sun.light_color = SUN_COLOR
 	sun.light_energy = SUN_ENERGY
+	sun.light_bake_mode = Light3D.BAKE_DISABLED  # F49: sol 100% dinamico, fora do lightmap
 	sun.shadow_enabled = true
 	sun.shadow_blur = SUN_SHADOW_BLUR
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
@@ -151,6 +157,9 @@ func _build_lighting() -> void:
 	lightmap.name = "LightmapGI"
 	lightmap.generate_probes_subdiv = LightmapGI.GENERATE_PROBES_SUBDIV_8
 	lightmap.texel_scale = LIGHTMAP_TEXEL_SCALE
+	lightmap.environment_mode = LightmapGI.ENVIRONMENT_MODE_CUSTOM_COLOR
+	lightmap.environment_custom_color = LIGHTMAP_SKY_COLOR
+	lightmap.environment_custom_energy = LIGHTMAP_SKY_ENERGY
 	if ResourceLoader.exists(LIGHTMAP_DATA):
 		lightmap.light_data = load(LIGHTMAP_DATA)
 	else:

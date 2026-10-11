@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="DayNightProfile" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/day_night_profile.gd" id="1_profile"]
+[ext_resource type="Script" path="res://shared/resources/day_night_key.gd" id="2_key"]
+
+[sub_resource type="Resource" id="Key_day"]
+script = ExtResource("2_key")
+time = 0.0
+sun_pitch_deg = -62.0
+sun_yaw_deg = 98.0
+sun_color = Color(1, 0.96, 0.88, 1)
+sun_energy = 1.7
+sun_shadow_blur = 1.0
+ambient_color = Color(0.55, 0.68, 0.95, 1)
+ambient_energy = 0.95
+fog_density = 0.006
+fog_albedo = Color(0.78, 0.86, 1, 1)
+exposure = 1.0
+sky_day = 1.0
+emission_scale = 0.35
+
+[sub_resource type="Resource" id="Key_dusk"]
+script = ExtResource("2_key")
+time = 0.5
+sun_pitch_deg = -10.0
+sun_yaw_deg = 68.0
+sun_color = Color(1, 0.55, 0.28, 1)
+sun_energy = 1.4
+sun_shadow_blur = 2.0
+ambient_color = Color(0.42, 0.3, 0.4, 1)
+ambient_energy = 0.75
+fog_density = 0.012
+fog_albedo = Color(0.6, 0.42, 0.42, 1)
+exposure = 0.95
+sky_day = 0.5
+emission_scale = 0.7
+
+[sub_resource type="Resource" id="Key_night"]
+script = ExtResource("2_key")
+time = 1.0
+sun_pitch_deg = -38.0
+sun_yaw_deg = 38.0
+sun_color = Color(0.8, 0.85, 0.95, 1)
+sun_energy = 1.05
+sun_shadow_blur = 3.0
+ambient_color = Color(0.24, 0.27, 0.36, 1)
+ambient_energy = 0.72
+fog_density = 0.016
+fog_albedo = Color(0.36, 0.41, 0.5, 1)
+exposure = 0.92
+sky_day = 0.0
+emission_scale = 1.0
+
+[resource]
+script = ExtResource("1_profile")
+keys = Array[ExtResource("2_key")]([SubResource("Key_day"), SubResource("Key_dusk"), SubResource("Key_night")])

@@ -37,6 +37,10 @@ const FRAMES: int = 4
 ## Teto em tempo real: janela minimizada nao desenha e o warm-up e otimizacao, nunca bloqueio.
 const TIMEOUT_MS: int = 5000
 const VIEWPORT_SIZE: Vector2i = Vector2i(256, 256)
+## Ceu (F49): durante o warm-up o ceu fica no meio da mistura, onde o shader executa o ramo da noite
+## e o do dia (na pratica um so pipeline: day_amount e uniform). Restaurado ao fim.
+const SKY_BLEND_PARAM: StringName = &"day_amount"
+const SKY_WARMUP_BLEND: float = 0.5
 ## Grade das copias na frente da camera, todas dentro do frustum.
 const GRID_COLUMNS: int = 6
 const GRID_STEP: float = 2.5
@@ -64,6 +68,10 @@ func run(environment: Environment) -> int:
 		finished.emit(0)
 		return 0
 	var started := Time.get_ticks_msec()
+	var sky := _sky_material(environment)
+	var sky_blend: Variant = sky.get_shader_parameter(SKY_BLEND_PARAM) if sky != null else null
+	if sky != null:
+		sky.set_shader_parameter(SKY_BLEND_PARAM, SKY_WARMUP_BLEND)
 	var viewport := _make_viewport(environment)
 	add_child(viewport)
 	var copies := _fill(viewport)
@@ -74,9 +82,17 @@ func run(environment: Environment) -> int:
 			break
 		await get_tree().process_frame
 	viewport.queue_free()
+	if sky != null:
+		sky.set_shader_parameter(SKY_BLEND_PARAM, sky_blend)
 	print("[warmup] %d instancias aquecidas em %d ms" % [copies, Time.get_ticks_msec() - started])
 	finished.emit(copies)
 	return copies
+
+
+static func _sky_material(environment: Environment) -> ShaderMaterial:
+	if environment == null or environment.sky == null:
+		return null
+	return environment.sky.sky_material as ShaderMaterial
 
 
 func _make_viewport(environment: Environment) -> SubViewport:

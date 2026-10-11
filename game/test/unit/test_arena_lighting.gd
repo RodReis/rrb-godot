@@ -32,6 +32,16 @@ func test_sol_da_arena() -> void:
 	assert_almost_eq(sun.directional_shadow_max_distance, 65.0, 0.001)
 
 
+## F49 (ADR-0010): o sol anda ao longo da partida, entao fica fora do bake; o indireto vem de um
+## ceu neutro (nem o dia azul nem a noite cosmica) e dos emissivos. A cena nasce no estado da
+## noite (o DayNight, so no cliente, assume a partir dai).
+func test_sol_fora_do_bake_e_lightmap_com_ceu_neutro() -> void:
+	var sun := _arena.get_node("Sun") as DirectionalLight3D
+	assert_eq(sun.light_bake_mode, Light3D.BAKE_DISABLED)
+	var lightmap := _arena.get_node("LightmapGI") as LightmapGI
+	assert_eq(lightmap.environment_mode, LightmapGI.ENVIRONMENT_MODE_CUSTOM_COLOR)
+
+
 func test_environment_da_arena() -> void:
 	var world := _arena.get_node("WorldEnvironment") as WorldEnvironment
 	assert_true(world is ArenaEnvironment, "script que aplica o settings.cfg")
