@@ -86,9 +86,12 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F47 / SPEC-047 | MVP2 | game, shared | Slice 2.13 — Baú: `F` só para item melhor, nada automático, regra por herói, item recusado fica no baú; card de comparação na HUD; bot segura `F` (GDB §6.2) | todo (#120) |
 | F48 / SPEC-048 | MVP2 | game, shared | Slice 2.14 — Equipamento visível: armas e armaduras modeladas no Blender presas a ossos; ícones dos itens (ADR-0010) | todo (#121) |
 | F49 / SPEC-049 | MVP2 | game, shared | Slice 2.15 — Ciclo dia/noite pelo relógio da partida, sentido pela seed, lightmap sem sol (ADR-0010) | todo (#122) |
+| F50 / SPEC-050 | MVP2 | game, shared | Slice 2.16 — Pátio da base com construções do Medieval Village MegaKit (Quaternius, CC0), adaptadas no Blender ao castelo atual; só complementa (decisão do PI 2026-10-11) | backlog (#131) |
+| F51 / SPEC-051 | MVP2 | game | Slice 2.17 — Tela de seleção de heróis fiel ao protótipo novo (`docs/prd/telas/Seleção de Heróis/`), só com dados reais | backlog (#132) |
+| F52 / SPEC-052 | MVP2 | game | Slice 2.18 — Tela de vitória/derrota fiel ao protótipo novo (`docs/prd/telas/Destaques da Tela de Fim de Partida/`), só com dados reais | backlog (#133) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
-Próximo número livre: **F50 / SPEC-050**.
+Próximo número livre: **F53 / SPEC-053**.
 
 ## 4. Regras deste índice
 

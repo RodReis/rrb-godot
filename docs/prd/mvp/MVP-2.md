@@ -23,6 +23,9 @@
 | 2.13 | F47 / SPEC-047 | baú: `F` só para item melhor (vazio, raridade maior, lateral de conjunto), nada automático, regra por herói no servidor, item recusado fica no baú; card de comparação na HUD ancorado ao baú; bot segura `F` | SPEC-047; GDB §6.2 |
 | 2.14 | F48 / SPEC-048 | equipamento visível: armas (3 tiers por herói) e armaduras Guarda/Caçador (3 slots × 3 raridades) modeladas no Blender, presas a ossos; ícones dos itens no `SlotItem` | ADR-0010; SPEC-048; GDB §6.1 |
 | 2.15 | F49 / SPEC-049 | ciclo dia/noite pelo relógio (0–600 s), sentido 50/50 pela seed, dia claro × noite do F40, lightmap sem sol, `--daynight` | ADR-0010; SPEC-049 |
+| 2.16 | F50 / SPEC-050 | pátio da base com construções do Medieval Village MegaKit (Quaternius, CC0) adaptadas no Blender ao castelo do F46; só complementa, fora dos corredores | #131; ADR-0005, ADR-0006 |
+| 2.17 | F51 / SPEC-051 | seleção de heróis fiel ao protótipo novo; layout fiel, só dado real (2 heróis, atributos do `HeroData`) | #132; `docs/prd/telas/Seleção de Heróis/` |
+| 2.18 | F52 / SPEC-052 | vitória/derrota fiel ao protótipo novo; layout fiel, só o `MatchStats` do F18 | #133; `docs/prd/telas/Destaques da Tela de Fim de Partida/` |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
@@ -38,6 +41,8 @@
 **Revisão do PI em 2026-10-10 (ADR-0009):** F44 mergeado (#109). O F46 (relayout "Rift Medieval adaptado", #110) entra **logo depois do F44 e antes do F19**, para o soak nascer no layout final. Regera `ilha_arcana.tscn` no lugar; Ilha v1 preservada só pela tag `arena-ilha-arcana`.
 
 **Revisão do PI em 2026-10-11 (ADR-0010):** F47 (regra do baú + card), F48 (equipamento visível) e F49 (dia/noite) entram no MVP2 — decisão do PI: "colocar no MVP2" — **depois do F46 e antes do F19**: **… → F46 → F47 → F48 → F49 → F19 → [GATE]**. O F47 vem antes do soak porque muda o comportamento do bot no baú.
+
+**Pedido do PI em 2026-10-11:** [FIX] #130 (muralha do pátio da base), F50 (pátio com MegaKit), F51 (seleção) e F52 (vitória/derrota) entram **depois do F49 e antes do F19**: **… → F49 → [FIX] #130 → F50 → F51 → F52 → F19 → [GATE]**. Issues criadas pelo Code por ordem do PI; specs formais não escritas, o corpo de cada issue vale como spec.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 
