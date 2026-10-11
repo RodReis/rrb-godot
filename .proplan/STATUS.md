@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-10
+updated: 2026-10-11
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -46,7 +46,6 @@ updated: 2026-10-10
 - [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97)
 - [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96)
 - [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94)
-- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93)
 
 ## Em Andamento
 
@@ -57,6 +56,10 @@ _(vazio)_
 _(vazio)_
 
 ## Finalizado
+
+### [MVP2.5] Bloco visual — toon/PBR, arte da ilha, VFX e HUD v2 (#99)
+
+- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93, finalizado em: 2026-10-11)
 
 ### [MVP2] Partida em rede (#57)
 
