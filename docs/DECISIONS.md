@@ -36,6 +36,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0007](adr/0007-arena-ilha-flutuante-layout.md) | Arena "Ilha Flutuante Arcana": imagem panorâmica vira layout; espelho N–S, rio N–S + anel, 4 pontes (2 por metade); F44 (greybox, MVP2) + F40 (arte, MVP2.5); supera SPEC-007 §2–3 | aceito (entrega e ordem supersedidas pelo ADR-0008; topologia superada pelo ADR-0009) | 2026-10-10 |
 | [0008](adr/0008-vale-runico-preservado.md) | Vale Rúnico preservado congelado (`legacy/` + tag `arena-vale-runico`); F44 gera a Ilha em cena nova; F44 depois do F37, antes do F19 | aceito | 2026-10-10 |
 | [0009](adr/0009-arena-rift-medieval-adaptado.md) | Arena "Rift Medieval adaptado": quadrado 80×80 (spawn ≤ 35 u, zona do GDB intacta), rio em S NO–SE com lagoas, bases SO/NE por rotação 180°, 3 rotas (2 pontes na MID), corredores livres + selva nos quadrantes; Ilha v1 só por tag (sem `legacy/`); F46 depois do F44, antes do F19; supera ADR-0007 (topologia) | aceito | 2026-10-10 |
+| [0010](adr/0010-equipamento-visivel-e-dia-noite.md) | Equipamento visível (armas + armaduras próprias presas a ossos) e ciclo dia/noite pelo relógio (sentido pela seed, dia claro × noite do F40, lightmap sem sol); supera parcialmente ADR-0006 itens 3–4 e o clima fixo do F40 | aceito | 2026-10-11 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 
