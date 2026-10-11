@@ -11,6 +11,9 @@ const FOUNTAIN_SCENE: String = "res://scenes/world/fountain.tscn"
 const MATERIALS: String = "res://shared/resources/materials/"
 const SKY_MATERIAL: String = MATERIALS + "abyss_sky.tres"
 const AMBIENCE_SCRIPT: String = "res://scripts/world/arena_ambience.gd"
+const ENVIRONMENT_SCRIPT: String = "res://scripts/world/arena_environment.gd"
+## Gerado por tools/bake-lightmap.ps1 (plugin do LightmapGI: <cena>.lmbake ao lado da cena).
+const LIGHTMAP_DATA: String = "res://scenes/arena/ilha_arcana.lmbake"
 
 # Base A (canto SO) em coordenadas locais: s ao longo de centro -> spawn A (-24, +24); l para a
 # esquerda de quem esta no spawn olhando o centro. A base B e a rotacao de 180 graus.
@@ -70,11 +73,29 @@ const LAGOON_LIGHT_RANGE: float = 9.0
 const EMBERS_AMOUNT: int = 60
 const WATERFALL_AMOUNT: int = 110
 
+# Luz e pos (SPEC-038; valores iniciais do guia, ajuste final na verificacao visual do PI).
+const EXPOSURE: float = 1.05
+const SSAO_RADIUS: float = 1.5
+const SSAO_INTENSITY: float = 2.0
+const GLOW_THRESHOLD: float = 1.05
+const FOG_DENSITY: float = 0.008
+const SUN_COLOR: Color = Color(1.0, 0.96, 0.88)
+const SUN_ENERGY: float = 1.35
+const SUN_ROTATION_DEG: Vector3 = Vector3(-48, 38, 0)
+const SUN_SHADOW_BLUR: float = 1.8
+const SUN_SHADOW_DISTANCE: float = 65.0
+## Lightmap so com a luz indireta (o sol e direto em tempo real): baixa frequencia, meia
+## resolucao do texel do import basta e mantem o .exr versionado pequeno.
+const LIGHTMAP_TEXEL_SCALE: float = 0.5
+## Sonda de reflexo unica cobrindo a ilha (|x|, |z| <= 42 com a beira).
+const PROBE_SIZE: Vector3 = Vector3(88, 20, 88)
+const PROBE_CENTER: Vector3 = Vector3(0, 6, 0)
+
 var _root: Node3D
 var _scenes: Dictionary = {}
 var _crystal_count: int = 0
 
-# --- ambiente, enfeite (F40): beira da ilha e ilhotas de fundo, sem colisao ---------------
+# --- ambiente e luz (F38), enfeite (F40): beira da ilha e ilhotas de fundo, sem colisao -------
 
 
 func _build_environment() -> void:
@@ -87,19 +108,55 @@ func _build_environment() -> void:
 	env.ambient_light_color = Color(0.38, 0.4, 0.55)
 	env.ambient_light_energy = 0.7
 	env.tonemap_mode = Environment.TONE_MAPPER_ACES
-	env.tonemap_exposure = 1.05
+	env.tonemap_exposure = EXPOSURE
 	env.ssao_enabled = true
-	env.ssao_radius = 1.8
-	env.ssao_intensity = 2.0
+	env.ssao_radius = SSAO_RADIUS
+	env.ssao_intensity = SSAO_INTENSITY
+	env.ssil_enabled = true
 	env.glow_enabled = true
 	env.glow_intensity = 0.7
 	env.glow_bloom = 0.08
-	env.glow_hdr_threshold = 1.1
-	env.glow_blend_mode = Environment.GLOW_BLEND_MODE_ADDITIVE
+	env.glow_hdr_threshold = GLOW_THRESHOLD
+	env.glow_blend_mode = Environment.GLOW_BLEND_MODE_SOFTLIGHT
+	env.volumetric_fog_enabled = true
+	env.volumetric_fog_density = FOG_DENSITY
+	env.volumetric_fog_sky_affect = 0.0  # neblina so na ilha: o abismo/ceu do F40 fica escuro
 	var world := WorldEnvironment.new()
 	world.name = "WorldEnvironment"
 	world.environment = env
+	world.set_script(load(ENVIRONMENT_SCRIPT))
 	_add(_root, world)
+
+
+## Sol (luz direta em tempo real, sombra nos herois) + LightmapGI (indireta bakeada do cenario
+## estatico; herois e monstros pelas sondas do bake) + ReflectionProbe unico. SDFGI nao
+## (ADR-0006 D-V6). O bake e passo do tools/bake-lightmap.ps1: aqui so se liga o dado ja bakeado.
+func _build_lighting() -> void:
+	var sun := DirectionalLight3D.new()
+	sun.name = "Sun"
+	sun.rotation_degrees = SUN_ROTATION_DEG
+	sun.light_color = SUN_COLOR
+	sun.light_energy = SUN_ENERGY
+	sun.shadow_enabled = true
+	sun.shadow_blur = SUN_SHADOW_BLUR
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS
+	sun.directional_shadow_max_distance = SUN_SHADOW_DISTANCE
+	_add(_root, sun)
+	var lightmap := LightmapGI.new()
+	lightmap.name = "LightmapGI"
+	lightmap.generate_probes_subdiv = LightmapGI.GENERATE_PROBES_SUBDIV_8
+	lightmap.texel_scale = LIGHTMAP_TEXEL_SCALE
+	if ResourceLoader.exists(LIGHTMAP_DATA):
+		lightmap.light_data = load(LIGHTMAP_DATA)
+	else:
+		push_warning("[arena] sem %s: rode tools/bake-lightmap.ps1" % LIGHTMAP_DATA)
+	_add(_root, lightmap)
+	var probe := ReflectionProbe.new()
+	probe.name = "ReflectionProbe"
+	probe.position = PROBE_CENTER
+	probe.size = PROBE_SIZE
+	probe.update_mode = ReflectionProbe.UPDATE_ONCE
+	_add(_root, probe)
 
 
 func _build_rim_decor(flip: float) -> void:

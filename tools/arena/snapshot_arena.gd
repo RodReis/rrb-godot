@@ -28,10 +28,6 @@ func _initialize() -> void:
 	var root_node := Node3D.new()
 	root.add_child(root_node)
 	root_node.add_child((load(ARENA) as PackedScene).instantiate())
-	var sun := DirectionalLight3D.new()
-	sun.rotation = Vector3(-1.0, 0.6, 0.0)
-	sun.shadow_enabled = true
-	root_node.add_child(sun)
 	_camera = Camera3D.new()
 	root_node.add_child(_camera)
 	_camera.current = true

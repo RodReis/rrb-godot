@@ -153,6 +153,7 @@ func _initialize() -> void:
 		quit(1)
 		return
 	_build_environment()
+	_build_lighting()
 	_build_floor()
 	_build_river()
 	_build_crater()
