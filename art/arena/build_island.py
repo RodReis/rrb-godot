@@ -1400,10 +1400,22 @@ def main():
         print("  %-18s %6d" % (name, tris))
 
 
+def build_torch_post():
+    """Tocha da borda (moldura do F40): poste de madeira de 2,4 u, braco e cesto de ferro, chama
+    em material emissivo de magma (rune_*). Origem no chao, centro do poste."""
+    kit = Kit("torch_post")
+    kit.add(prism(0, 0, 0.0, 2.4, 0.13, 0.1, 6, jitter=0.01, seed=51), WOOD_DARK, (0.3, 0.6))
+    kit.add(prism(0, 0, 0.0, 0.35, 0.3, 0.22, 6, jitter=0.04, seed=52), STONE_DARK, (0.3, 0.5))
+    kit.add(box(-0.04, 2.1, -0.04, 0.42, 0.08, 0.08), CHARCOAL, (0.3, 0.5))
+    kit.add(prism(0.42, 0, 2.05, 2.3, 0.1, 0.17, 6), CHARCOAL, (0.3, 0.5))
+    kit.add(prism(0.42, 0, 2.28, 2.62, 0.12, 0.0, 6, jitter=0.03, seed=53), RED, (0.5, 0.5), rune=MAGMA)
+    return build(kit)
+
+
 def build_jungle_kit():
     reset_scene()
     jungle = [build_outcrop("rock_outcrop_a", 1.0, 1.25), build_outcrop("rock_outcrop_b", 7.0, 1.0),
-              build_outcrop("rock_outcrop_c", 13.0, 1.45), build_pine_dark()]
+              build_outcrop("rock_outcrop_c", 13.0, 1.45), build_pine_dark(), build_torch_post()]
     for obj in jungle:
         export(obj, obj.name)
     save("jungle")

@@ -311,12 +311,13 @@ func _build_castle(
 		towers.append(_world(seg[0], flip))
 	for i: int in range(towers.size()):
 		var tower := _asset(castle, RRB_ARENA + "castle_tower_%s.glb" % kit, "Tower%s%d" % [tag, i])
-		tower.position = towers[i]
+		tower.transform = Transform3D(Basis().scaled(Vector3.ONE * TOWER_SCALE), towers[i])
 	for i: int in range(CURTAIN_A.size()):
 		var seg: Array = CURTAIN_A[i]
 		_curtain(_world(seg[0], flip), _world(seg[1], flip), "Curtain%s%d" % [tag, i], tag)
 	var keep := _asset(castle, RRB_ARENA + "castle_keep_%s.glb" % kit, "Keep%s" % tag)
-	keep.transform = Transform3D(_tangent_basis(_rotate_if(LATERAL, flip)), _world(KEEP_A, flip))
+	var keep_basis := _tangent_basis(_rotate_if(LATERAL, flip)).scaled(Vector3.ONE * KEEP_SCALE)
+	keep.transform = Transform3D(keep_basis, _world(KEEP_A, flip))
 	for i: int in range(HOUSES_LOCAL.size()):
 		var spec: Array = HOUSES_LOCAL[i]
 		var at := _local(spec[0], flip)

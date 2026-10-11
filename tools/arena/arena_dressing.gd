@@ -29,20 +29,17 @@ const CRATER_RADIUS: float = 6.0
 # Enfeite (F40), metade A na beira da ilha (fora da area jogavel, sem colisao), em (x, z) do
 # mundo nos lados N e O (fora da cortina do castelo); a B e a rotacao. Ilhotas em (x, y, z).
 const RIM: float = 41.3
-const RIM_PINES_A: Array[Vector2] = [
-	Vector2(-38, -41.3),
-	Vector2(-30, -41.4),
-	Vector2(-20, -41.2),
-	Vector2(-6, -41.3),
-	Vector2(8, -41.4),
-	Vector2(-41.3, -36),
-	Vector2(-41.2, -22),
-	Vector2(-41.4, -12),
-	Vector2(-41.3, 0),
-	Vector2(-41.2, 10),
-	Vector2(-31.5, -12),
-	Vector2(-20.5, -24.5),
-]
+## Floresta da borda (moldura do F40, PI 2026-10-11): fileiras de pinheiros nos lados N e O da
+## metade A (a B e a rotacao), de RIM_SPAN.x a RIM_SPAN.y ao longo do lado, fora dos castelos.
+const RIM_FOREST_ROWS: Array[float] = [40.9, 41.9]
+const RIM_FOREST_STEP: float = 1.7
+const RIM_SPAN: Vector2 = Vector2(-38.5, 14.0)
+## Folga entre pinheiro e enfeite/tocha da borda; poca da cascata tem folga propria.
+const RIM_CLEAR: float = 1.6
+const FALLS_CLEAR: float = 4.2
+## Tochas da borda, a cada RIM_TORCH_STEP ao longo do lado; luz em uma sim, outra nao.
+const RIM_TORCH_ROW: float = 40.5
+const RIM_TORCH_STEP: float = 9.0
 const RIM_CRYSTALS_A: Array[Array] = [
 	[Vector2(-41.0, -30), true], [Vector2(2, -41.0), false], [Vector2(-41.0, 5), false]
 ]
@@ -68,6 +65,7 @@ const CRYSTAL_MATERIALS: Array[String] = ["magenta", "cyan", "green"]
 # Ambientacao (cliente): luzes e particulas.
 const MAGMA_LIGHT_RANGE: float = 12.0
 const TORCH_LIGHT_RANGE: float = 6.0
+const RIM_TORCH_LIGHT_ENERGY: float = 1.1
 const CRYSTAL_LIGHT_RANGE: float = 7.0
 const LAGOON_LIGHT_RANGE: float = 9.0
 const EMBERS_AMOUNT: int = 60
@@ -169,10 +167,19 @@ func _build_lighting() -> void:
 func _build_rim_decor(flip: float) -> void:
 	var decor := _group("RimDecor")
 	var tag := _team_tag(flip)
-	for i: int in range(RIM_PINES_A.size()):
-		var at := _world(RIM_PINES_A[i], flip)
+	var forest := _rim_forest_points()
+	for i: int in range(forest.size()):
+		var at := _world(forest[i], flip)
 		var pine := _asset(decor, RRB_ARENA + "pine_dark.glb", "Pine%s%d" % [tag, i])
-		pine.transform = Transform3D(Basis(Vector3.UP, at.x * 0.37 + at.z * 0.61), at)
+		var size := 0.9 + 0.5 * fposmod(at.x * 0.73 + at.z * 0.29, 1.0)
+		var basis := Basis(Vector3.UP, at.x * 0.37 + at.z * 0.61).scaled(Vector3.ONE * size)
+		pine.transform = Transform3D(basis, at)
+	var torches := _rim_torch_points()
+	for i: int in range(torches.size()):
+		var torch := _asset(decor, RRB_ARENA + "torch_post.glb", "Torch%s%d" % [tag, i])
+		var at := _world(torches[i], flip)
+		# Braco da tocha voltado para dentro da arena.
+		torch.transform = Transform3D(_tangent_basis(-_inward(torches[i]) * flip), at)
 	for i: int in range(RIM_CRYSTALS_A.size()):
 		var c: Array = RIM_CRYSTALS_A[i]
 		var at := _world(c[0], flip)
@@ -187,6 +194,52 @@ func _build_rim_decor(flip: float) -> void:
 	var ballista := _asset(decor, RRB_ARENA + "ballista.glb", "Ballista%s" % tag)
 	var ballista_at := _world(RIM_BALLISTA_A, flip)
 	ballista.transform = Transform3D(Basis.looking_at(-ballista_at.normalized()), ballista_at)
+
+
+## Pontos da floresta da borda (metade A): duas fileiras com passo e recuo variados por posicao,
+## longe do enfeite, das tochas e da poca da cascata do canto.
+func _rim_forest_points() -> PackedVector2Array:
+	var avoid := _rim_decor_points()
+	avoid.append_array(_rim_torch_points())
+	var out := PackedVector2Array()
+	for r: int in range(RIM_FOREST_ROWS.size()):
+		var row: float = RIM_FOREST_ROWS[r]
+		var t := RIM_SPAN.x + RIM_FOREST_STEP * 0.5 * r
+		while t <= RIM_SPAN.y:
+			var jitter := fposmod(t * 0.618 + row * 1.7, 1.0) - 0.5
+			for p: Vector2 in [Vector2(t + jitter * 0.6, -row), Vector2(-row, t + jitter * 0.6)]:
+				if p.distance_to(FALLS_A) < FALLS_CLEAR:
+					continue
+				if Array(avoid).any(func(q: Vector2) -> bool: return p.distance_to(q) < RIM_CLEAR):
+					continue
+				out.append(p)
+			t += RIM_FOREST_STEP
+	return out
+
+
+func _rim_torch_points() -> PackedVector2Array:
+	var out := PackedVector2Array()
+	var t := RIM_SPAN.x + RIM_TORCH_STEP * 0.5
+	while t <= RIM_SPAN.y:
+		for p: Vector2 in [Vector2(t, -RIM_TORCH_ROW), Vector2(-RIM_TORCH_ROW, t)]:
+			if not Array(_rim_decor_points()).any(func(q: Vector2) -> bool: return p.distance_to(q) < RIM_CLEAR):
+				out.append(p)
+		t += RIM_TORCH_STEP
+	return out
+
+
+func _rim_decor_points() -> PackedVector2Array:
+	var out := PackedVector2Array([RIM_WATCHTOWER_A, RIM_BALLISTA_A])
+	for c: Array in RIM_CRYSTALS_A:
+		out.append(c[0])
+	for b: Array in RIM_BARRICADES_A:
+		out.append(b[0])
+	return out
+
+
+## Normal para dentro da arena no lado da borda de [param p] (metade A: lado N ou O).
+func _inward(p: Vector2) -> Vector3:
+	return Vector3(0, 0, 1) if absf(p.y) > absf(p.x) else Vector3(1, 0, 0)
 
 
 func _build_islets() -> void:
@@ -260,6 +313,12 @@ func _build_ambience() -> void:
 		var lagoon_color := Color(0.3, 0.9, 1.0)
 		_light(ambience, "LagoonLight%s" % tag, lagoon_at, lagoon_color, LAGOON_LIGHT_RANGE, 1.1)
 		_waterfall(ambience, flip)
+		var torches := _rim_torch_points()
+		for i: int in range(0, torches.size(), 2):
+			var at := _world(torches[i], flip) + Vector3.UP * 2.5 + _inward(torches[i]) * flip * 0.5
+			var color := Color(1.0, 0.6, 0.25)
+			var label := "RimTorch%s%d" % [tag, i]
+			_light(ambience, label, at, color, TORCH_LIGHT_RANGE, RIM_TORCH_LIGHT_ENERGY)
 	_embers(ambience)
 
 

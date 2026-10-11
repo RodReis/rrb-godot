@@ -78,7 +78,10 @@ const HOUSES_LOCAL: Array[Array] = [[Vector2(37.5, 7.0), 0.35], [Vector2(37.5, -
 const HOUSE_HALF: Vector2 = Vector2(1.9, 1.6)
 const HOUSE_HEIGHT: float = 3.4
 ## Torreao no canto da ilha, atras da borda (bastiao do chassi), em (x, z) do mundo.
-const KEEP_A: Vector2 = Vector2(-44.5, 44.5)
+const KEEP_A: Vector2 = Vector2(-45, 45)
+## Escala do torreao e das torres (moldura do F40, PI 2026-10-11: castelos maiores).
+const KEEP_SCALE: float = 1.25
+const TOWER_SCALE: float = 1.2
 ## Cortina do castelo ao longo da borda da base ate a face do torreao (so visual: o colisor e o
 ## muro da borda).
 const CURTAIN_A: Array[Array] = [
