@@ -12,7 +12,9 @@ const SECTION: String = "graphics"
 const FOG: String = "fog"
 const SSIL: String = "ssil"
 const SSAO: String = "ssao"
-const KEYS: Array[String] = [FOG, SSIL, SSAO]
+## Grama decorativa (F42; Vegetation).
+const GRASS: String = "grass"
+const KEYS: Array[String] = [FOG, SSIL, SSAO, GRASS]
 
 
 static func defaults() -> Dictionary:
