@@ -88,6 +88,22 @@ const CURTAIN_A: Array[Array] = [
 	[Vector2(-41, 15), Vector2(-41, 43.5)],
 	[Vector2(-15, 41), Vector2(-43.5, 41)],
 ]
+## Patio da base (F50, PI 2026-10-11): construcoes do MegaKit (art/arena/build_megakit.py)
+## encostadas nas cortinas, simetricas pela diagonal da base, fora de spawn, fonte, monstros e
+## baus. (asset, (x, z) do mundo da metade A, yaw em graus; frente da casa em +x local.)
+const VILLAGE_A: Array[Array] = [
+	["megakit_house_long", Vector2(-37.4, 32.5), 0.0],
+	["megakit_house_long", Vector2(-32.5, 37.4), 90.0],
+	["megakit_house_small", Vector2(-37.4, 25.5), 0.0],
+	["megakit_house_small", Vector2(-25.5, 37.4), 90.0],
+	["megakit_yard_corner", Vector2(-40.0, 40.0), 0.0],
+]
+## Caixa de colisao de cada construcao no eixo local dela (a malha cobre a caixa).
+const VILLAGE_BOXES: Dictionary[String, AABB] = {
+	"megakit_house_long": AABB(Vector3(-2, 0, -3), Vector3(4, 6.24, 6)),
+	"megakit_house_small": AABB(Vector3(-2, 0, -2), Vector3(4, 3.12, 4)),
+	"megakit_yard_corner": AABB(Vector3(0.6, 0, -4.0), Vector3(3.4, 1.4, 3.4)),
+}
 
 # Campos laterais (F36 na SPEC-046 §2.5), metade A em (x, z) do mundo: A-top entre TOP (O) e MID,
 # A-bot entre MID e BOT (S). O bolso em volta e dos bolsoes de selva (jungle.json, F40).

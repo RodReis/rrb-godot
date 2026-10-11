@@ -273,6 +273,7 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	gate.transform = Transform3D(gate_basis, gate_at)
 	_add(_group("Gates"), gate)
 	_build_castle(walls, flip, tag, gate_basis, gate_at, arc_ends)
+	_build_village(walls, flip, tag)
 
 	var markers := _group("Markers")
 	var hero := _marker(markers, "Hero%s" % tag, _local(Vector2(SPAWN_S, 0), flip))
@@ -334,6 +335,24 @@ func _build_castle(
 		box.size = Vector3(HOUSE_HALF.x * 2, HOUSE_HEIGHT, HOUSE_HALF.y * 2)
 		var shape := _shape(walls, box, at + Vector3.UP * HOUSE_HEIGHT / 2)
 		shape.basis = basis
+
+
+## Patio da base (F50): construcoes do MegaKit, cada uma com a caixa de colisao de
+## VILLAGE_BOXES no eixo dela; a base B e a rotacao de 180 graus.
+func _build_village(walls: StaticBody3D, flip: float, tag: String) -> void:
+	for i: int in range(VILLAGE_A.size()):
+		var spec: Array = VILLAGE_A[i]
+		var asset: String = spec[0]
+		var yaw: float = spec[2] + (0.0 if flip > 0 else 180.0)
+		var basis := Basis(Vector3.UP, deg_to_rad(yaw))
+		var at := _world(spec[1], flip)
+		var node := _asset(_group("Village"), RRB_ARENA + asset + ".glb", "Village%s%d" % [tag, i])
+		node.transform = Transform3D(basis, at)
+		var box: AABB = VILLAGE_BOXES[asset]
+		var shape := BoxShape3D.new()
+		shape.size = box.size
+		var collider := _shape(walls, shape, at + basis * box.get_center())
+		collider.basis = basis
 
 
 ## Campo lateral [param index] da metade de [param flip]. Marcadores com o time da metade: o bot
