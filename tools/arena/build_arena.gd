@@ -17,6 +17,8 @@ const JUNGLE_CHECK_STEP: float = 0.5
 const AGENT_CLEARANCE: float = 0.5
 ## Altura da colisao dos bolsoes: abaixo da rocha mais baixa (nada de parede invisivel por cima).
 const JUNGLE_HEIGHT: float = 2.2
+## Comprimento do modulo castle_wall (art/arena/build_island.py, build_wall: x de -1 a 1).
+const WALL_MODULE: float = 2.0
 
 
 func _initialize() -> void:
@@ -622,14 +624,20 @@ func _wall(walls: StaticBody3D, a: Vector3, b: Vector3, label: String, tag: Stri
 	_curtain(a, b, label, tag)
 
 
-## Visual de muralha (castle_wall) entre [param a] e [param b], sem colisao propria.
+## Visual de muralha (castle_wall) entre [param a] e [param b], sem colisao propria: modulos de
+## WALL_MODULE repetidos, cada um ajustado so no proprio eixo X para fechar o vao (#130: escala
+## global cisalhava muro diagonal e engrossava muro ao longo de Z; um modulo por vao esticava).
 func _curtain(a: Vector3, b: Vector3, label: String, tag: String) -> void:
 	var dir := (b - a).normalized()
 	var length := a.distance_to(b)
-	var basis := Basis(Vector3.UP, atan2(-dir.z, dir.x))
-	var mid := (a + b) / 2
-	var visual := _asset(_group("Castle"), RRB_ARENA + "castle_wall_%s.glb" % tag.to_lower(), label)
-	visual.transform = Transform3D(basis.scaled(Vector3(length / 2, 1, 1)), mid)
+	var count := maxi(1, roundi(length / WALL_MODULE))
+	var piece := length / count
+	var stretch := Basis.from_scale(Vector3(piece / WALL_MODULE, 1, 1))
+	var basis := Basis(Vector3.UP, atan2(-dir.z, dir.x)) * stretch
+	var path := RRB_ARENA + "castle_wall_%s.glb" % tag.to_lower()
+	for i: int in range(count):
+		var visual := _asset(_group("Castle"), path, label if count == 1 else "%s_%d" % [label, i])
+		visual.transform = Transform3D(basis, a + dir * piece * (i + 0.5))
 
 
 func _rock(walls: StaticBody3D, at: Vector3, label: String) -> void:

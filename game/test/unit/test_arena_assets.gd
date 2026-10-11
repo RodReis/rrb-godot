@@ -9,6 +9,8 @@ const SMOOTH_DOT: float = 0.9998
 const POSITION_SNAP: float = 0.001
 ## Parcela minima de vertices coincidentes com a mesma normal por asset.
 const SMOOTH_SHARE: float = 0.7
+## Maior fator de comprimento aceito num modulo de muralha (#130).
+const MAX_WALL_STRETCH: float = 1.5
 
 var _arena: Node3D
 
@@ -77,6 +79,22 @@ func test_torreao_por_time_e_casas_na_base() -> void:
 	assert_eq(_instances_of("castle_keep_a.glb").size(), 1)
 	assert_eq(_instances_of("castle_keep_b.glb").size(), 1)
 	assert_eq(_instances_of("stone_house.glb").size(), 4)
+
+
+## #130: o modulo de muralha (2 u) so muda de comprimento no proprio eixo X: sem cisalhamento
+## nem espessura/altura alteradas (escala global num muro diagonal ou ao longo de Z deformava a
+## peca), e repetido em vez de esticado (uma peca por vao de 28,5 u virava rampa lisa).
+func test_muralha_em_modulos_sem_deformar() -> void:
+	var modules := _instances_of("castle_wall_a.glb")
+	modules.append_array(_instances_of("castle_wall_b.glb"))
+	assert_gt(modules.size(), 0)
+	for node: Node3D in modules:
+		var basis := node.global_basis
+		var label := "%s em %s" % [node.name, node.global_position]
+		assert_almost_eq(basis.x.dot(basis.z), 0.0, 0.001, "cisalhado: " + label)
+		assert_almost_eq(basis.y, Vector3.UP, Vector3.ONE * 0.001, "altura/inclinacao: " + label)
+		assert_almost_eq(basis.z.length(), 1.0, 0.001, "espessura: " + label)
+		assert_lt(basis.x.length(), MAX_WALL_STRETCH, "esticado: " + label)
 
 
 func test_duas_pontes_de_pedra_e_um_piso_unico() -> void:
