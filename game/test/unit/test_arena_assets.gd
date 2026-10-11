@@ -3,6 +3,12 @@ extends GutTest
 ## a colisao continua a do builder e a malha cobre o cilindro do pilar (nada de parede invisivel).
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
+## Normais a menos de ~1 grau contam como a mesma.
+const SMOOTH_DOT: float = 0.9998
+## Vertices a menos de 1 mm contam como a mesma posicao.
+const POSITION_SNAP: float = 0.001
+## Parcela minima de vertices coincidentes com a mesma normal por asset.
+const SMOOTH_SHARE: float = 0.7
 
 var _arena: Node3D
 
@@ -83,3 +89,39 @@ func test_cena_nao_tem_placeholder_geometrico() -> void:
 	for node: Node in _arena.find_children("*", "MeshInstance3D", true, false):
 		var mesh := (node as MeshInstance3D).mesh
 		assert_false(mesh is CylinderMesh or mesh is BoxMesh, "placeholder em %s" % node.name)
+
+
+## F39 (PI 2026-10-10): terreno e cenario proprio com smooth shading por angulo (60 graus) no
+## Blender — sem os triangulos marcados do sombreamento chapado. Terreno e pecas organicas ficam
+## lisos; o castelo (quinas de 90 graus) continua de quina viva.
+func test_terreno_e_cenario_com_smooth_shading() -> void:
+	for asset: String in ["island_chassis", "boulder", "islet_a"]:
+		var root := (
+			(load("res://shared/assets/rrb/arena/%s.glb" % asset) as PackedScene).instantiate()
+		)
+		var mesh := (
+			(root.find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D).mesh
+		)
+		var share := _smooth_share(mesh.surface_get_arrays(0))
+		gut.p("%s: %.0f%% dos vertices coincidentes com a mesma normal" % [asset, share * 100.0])
+		assert_gt(share, SMOOTH_SHARE, asset)
+		root.free()
+
+
+## Entre vertices na mesma posicao (a malha separa vertice por face, UV ou quina), parcela que
+## tem a mesma normal: no sombreamento chapado so coincide em face coplanar.
+func _smooth_share(arrays: Array) -> float:
+	var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+	var normals: PackedVector3Array = arrays[Mesh.ARRAY_NORMAL]
+	var first: Dictionary[Vector3, Vector3] = {}
+	var same := 0
+	var shared := 0
+	for v: int in range(vertices.size()):
+		var at := vertices[v].snappedf(POSITION_SNAP)
+		if not first.has(at):
+			first[at] = normals[v]
+			continue
+		shared += 1
+		if first[at].dot(normals[v]) > SMOOTH_DOT:
+			same += 1
+	return float(same) / maxi(shared, 1)

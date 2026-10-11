@@ -1,6 +1,7 @@
 extends GutTest
 ## F38 (SPEC-038): a arena e dona da ambientacao (sol, WorldEnvironment, LightmapGI bakeado e
-## ReflectionProbe); main.tscn nao tem mais luz propria. Valores iniciais do guia.
+## ReflectionProbe); main.tscn nao tem mais luz propria. Valores iniciais do guia; sombra, AO e
+## ambiente suavizados no F39 (PI 2026-10-10, sem toon).
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const MAIN: String = "res://scenes/main.tscn"
@@ -25,7 +26,7 @@ func test_sol_da_arena() -> void:
 	assert_almost_eq(sun.light_energy, 1.35, 0.001)
 	assert_eq(sun.light_color, Color(1.0, 0.96, 0.88))
 	assert_almost_eq(sun.rotation_degrees, Vector3(-48, 38, 0), Vector3.ONE * 0.01)
-	assert_almost_eq(sun.shadow_blur, 1.8, 0.001)
+	assert_almost_eq(sun.shadow_blur, 3.0, 0.001)
 	assert_eq(sun.directional_shadow_mode, DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS)
 	assert_almost_eq(sun.directional_shadow_max_distance, 65.0, 0.001)
 
@@ -38,7 +39,8 @@ func test_environment_da_arena() -> void:
 	assert_between(env.tonemap_exposure, 1.0, 1.15)
 	assert_true(env.ssao_enabled)
 	assert_almost_eq(env.ssao_radius, 1.5, 0.001)
-	assert_almost_eq(env.ssao_intensity, 2.0, 0.001)
+	assert_almost_eq(env.ssao_intensity, 1.4, 0.001)
+	assert_almost_eq(env.ambient_light_energy, 0.9, 0.001)
 	assert_true(env.ssil_enabled)
 	assert_true(env.glow_enabled)
 	assert_almost_eq(env.glow_hdr_threshold, 1.05, 0.001)
