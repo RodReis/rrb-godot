@@ -1,13 +1,18 @@
 class_name ItemRules
 extends RefCounted
-## Substituicao de equipamento no mesmo slot (GDB §6.2; raridade menor: PI 2026-10-09).
-
-## AUTO: o servidor troca sozinho. CONFIRM: troca so com F segurado.
-enum Swap { AUTO, CONFIRM }
+## Oferta de troca de equipamento no mesmo slot (GDB §6.2, SPEC-047): o F so aparece para item
+## melhor. Nada e automatico; quem decide e o servidor, por heroi.
 
 
-## [param current] nulo = slot vazio. Os dois itens sao do mesmo slot.
-static func swap_mode(current: ItemData, incoming: ItemData) -> Swap:
-	if current == null or incoming.rarity > current.rarity:
-		return Swap.AUTO
-	return Swap.CONFIRM
+## O heroi pode trocar [param current] por [param incoming] segurando F? [param current] nulo =
+## slot vazio. Os dois itens sao do mesmo slot. Vazio, raridade maior ou escolha lateral (mesma
+## raridade, outro conjunto): sim. Menor ou identico: nao.
+static func offer(current: ItemData, incoming: ItemData) -> bool:
+	if is_upgrade(current, incoming):
+		return true
+	return incoming.rarity == current.rarity and incoming.set_id != current.set_id
+
+
+## Slot vazio ou raridade maior: a parte de offer() que o bot aceita (ignora a lateral).
+static func is_upgrade(current: ItemData, incoming: ItemData) -> bool:
+	return current == null or incoming.rarity > current.rarity

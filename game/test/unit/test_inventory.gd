@@ -53,12 +53,20 @@ func test_equipar_no_slot_ocupado_substitui_sem_mexer_no_original() -> void:
 	assert_eq(Inventory.items(after, _catalog).size(), 1)
 
 
-func test_troca_automatica_so_com_raridade_maior_ou_slot_vazio() -> void:
+func test_oferta_so_para_slot_vazio_raridade_maior_ou_lateral() -> void:
 	var eq := Inventory.equip(Inventory.NONE, _item(&"guard_helm_t2"))
-	assert_eq(Inventory.swap_mode(eq, _item(&"sword_t1"), _catalog), ItemRules.Swap.AUTO)
-	assert_eq(Inventory.swap_mode(eq, _item(&"guard_helm_t3"), _catalog), ItemRules.Swap.AUTO)
-	assert_eq(Inventory.swap_mode(eq, _item(&"hunter_helm_t2"), _catalog), ItemRules.Swap.CONFIRM)
-	assert_eq(Inventory.swap_mode(eq, _item(&"guard_helm_t1"), _catalog), ItemRules.Swap.CONFIRM)
+	assert_true(Inventory.offer(eq, _item(&"sword_t1"), _catalog))
+	assert_true(Inventory.offer(eq, _item(&"guard_helm_t3"), _catalog))
+	assert_true(Inventory.offer(eq, _item(&"hunter_helm_t2"), _catalog))
+	assert_false(Inventory.offer(eq, _item(&"guard_helm_t2"), _catalog))
+	assert_false(Inventory.offer(eq, _item(&"guard_helm_t1"), _catalog))
+
+
+func test_melhoria_exclui_a_oferta_lateral() -> void:
+	var eq := Inventory.equip(Inventory.NONE, _item(&"guard_helm_t2"))
+	assert_true(Inventory.is_upgrade(eq, _item(&"sword_t1"), _catalog))
+	assert_true(Inventory.is_upgrade(eq, _item(&"guard_helm_t3"), _catalog))
+	assert_false(Inventory.is_upgrade(eq, _item(&"hunter_helm_t2"), _catalog))
 
 
 func test_i5_inventario_igual_a_shared_core() -> void:

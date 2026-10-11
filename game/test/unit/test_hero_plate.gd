@@ -4,7 +4,6 @@ extends GutTest
 
 const PLATE: PackedScene = preload("res://scenes/ui/hero_plate.tscn")
 const KNIGHT: PackedScene = preload("res://scenes/heroes/knight.tscn")
-const CHEST: PackedScene = preload("res://scenes/world/chest.tscn")
 const GUARD_HELM: ItemData = preload("res://shared/data/items/guard_set/guard_helm_t1.tres")
 
 var _hero: Hero
@@ -67,18 +66,9 @@ func test_new_item_fills_slot_notifies_and_counts_set() -> void:
 	assert_string_contains((_node("%SetText") as Label).text, "Guarda 1/3")
 
 
-func test_offer_when_chest_in_reach_holds_an_item() -> void:
-	var chest := CHEST.instantiate() as Chest
-	_spawns.add_child(chest)
-	chest.opened = true
-	chest.item = Ids.to_int(GUARD_HELM.id)
+func test_offer_card_stays_hidden_without_a_chest_in_reach() -> void:
 	await _bind_and_wait()
-	var offer := _node("%Offer") as Control
-	assert_true(offer.visible)
-	assert_string_contains((_node("%OfferText") as Label).text, GUARD_HELM.display_name)
-	_hero.global_position = Vector3(50.0, 0.0, 0.0)
-	_plate.update()
-	assert_false(offer.visible)
+	assert_false((_node("%OfferCard") as ChestOfferCard).visible)
 
 
 ## A HUD da fase 2 liga a base de novo aos 5:00: item equipado antes nao vira aviso atrasado.

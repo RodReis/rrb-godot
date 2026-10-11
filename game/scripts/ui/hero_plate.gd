@@ -1,9 +1,9 @@
 class_name HeroPlate
 extends Control
 ## Base de combate das duas HUDs (DV telas 3 e 4): nome, nivel, HP e XP, 4 slots com conjuntos,
-## skills com recarga e pontos livres, controles, aviso de item equipado e a oferta de troca do
-## bau ao alcance. So le o estado replicado do heroi local e nunca decide regra; a HUD dona chama
-## update() no proprio _process.
+## skills com recarga e pontos livres, controles, aviso de item equipado e o card de oferta do
+## bau ao alcance (ChestOfferCard, comum as duas HUDs). So le o estado replicado do heroi local e
+## nunca decide regra; a HUD dona chama update() no proprio _process.
 
 ## Indice = slot do SkillButton: basico, Q, E, R.
 const SKILL_KEYS: Array[String] = ["RMB", "Q", "E", "R"]
@@ -14,7 +14,6 @@ var _skills: Array[SkillData] = []
 var _buttons: Array[SkillButton] = []
 var _learn_badges: Array[HotkeyBadge] = []
 var _slots: Array[SlotItem] = []
-var _chests: Array[Chest] = []
 ## Ultimo estado mostrado: so redesenha o que mudou.
 var _shown_hp: Vector2i = -Vector2i.ONE
 var _shown_xp: int = -1
@@ -25,8 +24,7 @@ var _cooldown_totals: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 
 @onready var _toast: Toast = %Toast
-@onready var _offer: PanelCard = %Offer
-@onready var _offer_text: Label = %OfferText
+@onready var _offer_card: ChestOfferCard = %OfferCard
 @onready var _hero_name: Label = %HeroName
 @onready var _hero_level: Label = %HeroLevel
 @onready var _hp_bar: StatBar = %HpBar
@@ -48,6 +46,7 @@ func _ready() -> void:
 ## Liga ao heroi local e redesenha tudo; o que ja esta equipado nao vira aviso.
 func bind(hero: Hero) -> void:
 	_hero = hero
+	_offer_card.bind(hero)
 	_shown_hp = -Vector2i.ONE
 	_shown_xp = -1
 	_shown_ranks = -Vector3i.ONE
@@ -58,9 +57,9 @@ func bind(hero: Hero) -> void:
 	_refresh_equipment()
 
 
-## Baus da partida, para a oferta de troca (a HUD dona recolhe do SpawnDirector).
+## Baus da partida, para o card de oferta (a HUD dona recolhe do SpawnDirector).
 func set_chests(chests: Array[Chest]) -> void:
-	_chests = chests
+	_offer_card.set_chests(chests)
 
 
 func update() -> void:
@@ -69,7 +68,7 @@ func update() -> void:
 	if _hero.equipment != _shown_equipment:
 		_notify_equipped()
 		_refresh_equipment()
-	_update_offer()
+	_offer_card.update()
 
 
 ## Pecas de cada conjunto equipado ("Guarda 2/3"); tambem na tela de fim (F18).
@@ -148,17 +147,3 @@ func _refresh_equipment() -> void:
 		else:
 			_slots[slot].bind(item)
 	_set_text.text = set_text(_shown_equipment, catalog)
-
-
-## Bau aberto ao alcance com item esperando troca: segurar F troca (Chest).
-func _update_offer() -> void:
-	for chest: Chest in _chests:
-		if chest.item != Ids.NONE and chest.in_reach(_hero.global_position):
-			var offer := chest.catalog.find(chest.item)
-			if offer == null:
-				continue
-			var rarity := ItemData.RARITY_NAMES[offer.rarity]
-			_offer_text.text = tr("Segure para trocar: %s (%s)") % [offer.display_name, rarity]
-			_offer.visible = true
-			return
-	_offer.visible = false
