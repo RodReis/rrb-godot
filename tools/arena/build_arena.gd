@@ -471,12 +471,27 @@ func _jungle_violations() -> Array[String]:
 		for clearing: Array in _clearings():
 			if _polyline_distance(clearing[0], wall[0]) < wall[1] + clearing[1]:
 				violations.append("bolsao %s invade a clareira %s" % [wall[0], clearing[0]])
+	violations.append_array(_yard_rock_violations())
 	var reach := _walkable_from(_flat(AXIS_A * SPAWN_S), walls)
 	for node: Node in _root.get_node("Markers").get_children():
 		var at := _flat((node as Node3D).position)
 		var key := Vector2i((at / JUNGLE_CHECK_STEP).round())
 		if not reach.has(key):
 			violations.append("marcador %s inalcancavel em %s" % [node.name, at])
+	return violations
+
+
+## Rocha do patio da ponte (SPEC-046 §2.7) dentro de uma trilha: fecha a saida do portao.
+func _yard_rock_violations() -> Array[String]:
+	var violations: Array[String] = []
+	var axis := _polar(BRIDGE_AZIMUTH_A, 1.0)
+	var side := Vector3(-axis.z, 0, axis.x)
+	var rock := _flat(axis * YARD_ROCK_LOCAL.x + side * YARD_ROCK_LOCAL.y)
+	for flip: float in [1.0, -1.0]:
+		var at := rock * flip
+		for trail: Array in _polylines("trails"):
+			if _polyline_distance(at, trail[0]) < ROCK_RADIUS + trail[1]:
+				violations.append("rocha do patio %s invade a trilha %s" % [at, trail[0]])
 	return violations
 
 

@@ -104,16 +104,17 @@ func test_rochas_mais_altas_que_a_colisao() -> void:
 
 func test_trilhas_da_selva_livres_para_o_heroi() -> void:
 	await wait_physics_frames(2)
-	var capsule := CapsuleShape3D.new()
-	capsule.radius = CAPSULE_RADIUS
-	capsule.height = CAPSULE_HEIGHT
-	var lift := Vector3.UP * (CAPSULE_HEIGHT / 2 + LIFT)
 	# Trilhas com "physics": false cruzam portao/muros da base ou a cratera (prova propria em
 	# test_ilha_arcana_physics).
 	var trails: Array = _jungle["trails"]
 	for t: int in range(trails.size()):
 		if not trails[t].get("physics", true):
 			continue
+		var radius: float = trails[t].get("clear_radius", CAPSULE_RADIUS)
+		var capsule := CapsuleShape3D.new()
+		capsule.radius = radius
+		capsule.height = maxf(CAPSULE_HEIGHT, radius * 2.0 + LIFT)
+		var lift := Vector3.UP * (capsule.height / 2 + LIFT)
 		var points: Array = trails[t]["points"]
 		for flip: float in [1.0, -1.0]:
 			for i: int in range(points.size() - 1):
