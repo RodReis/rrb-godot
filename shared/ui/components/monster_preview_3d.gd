@@ -11,6 +11,9 @@ extends SubViewportContainer
 @export var camera_distance: float = 1.7
 @export var camera_height: float = 0.6
 @export var look_height: float = 0.45
+## Altura de enquadramento fixa em m (0 = mede o topo da malha). Retratos de herois usam a mesma
+## altura: o rig KayKit e igual, e chapeu/capuz nao encolhem o corpo na moldura.
+@export var frame_height: float = 0.0
 ## Giro inicial do modelo em graus (180 = de frente para a camera nos KayKit).
 @export var facing: float = 0.0
 
@@ -36,7 +39,7 @@ func show_model(model: Node3D, animation: StringName = &"Idle") -> void:
 	if model == null:
 		return
 	_stage.add_child(model)
-	_frame(_height(model))
+	_frame(frame_height if frame_height > 0.0 else _height(model))
 	var player := model.find_child("AnimationPlayer") as AnimationPlayer
 	if player != null and player.has_animation(animation):
 		player.get_animation(animation).loop_mode = Animation.LOOP_LINEAR

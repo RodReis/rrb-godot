@@ -8,10 +8,13 @@ const PREVIEW: PackedScene = preload("res://shared/ui/components/monster_preview
 const CARD_HEIGHT: float = 250.0
 const PORTRAIT_SIZE: Vector2 = Vector2(150, 150)
 ## Retrato: camera perto, de frente, enquadrando cabeca e tronco (multiplos da altura do modelo).
-const PORTRAIT_DISTANCE: float = 1.05
+const PORTRAIT_DISTANCE: float = 1.15
 const PORTRAIT_HEIGHT: float = 0.7
-const PORTRAIT_LOOK: float = 0.6
+const PORTRAIT_LOOK: float = 0.62
 const PORTRAIT_FACING: float = 180.0
+## Mesma altura de enquadramento para todos (topo do Cavaleiro): o corpo sai do mesmo tamanho
+## em toda moldura, com chapeu ou capuz (PI 2026-10-12).
+const PORTRAIT_FRAME_HEIGHT: float = 1.9
 ## Escala do card escolhido (scale-102 do prototipo).
 const ACTIVE_SCALE: float = 1.03
 ## Selo ATIVO: canto superior direito, meio para fora da borda.
@@ -60,6 +63,7 @@ func setup(data: HeroData) -> void:
 	_preview.camera_height = PORTRAIT_HEIGHT
 	_preview.look_height = PORTRAIT_LOOK
 	_preview.facing = PORTRAIT_FACING
+	_preview.frame_height = PORTRAIT_FRAME_HEIGHT
 	_preview.custom_minimum_size = Vector2.ZERO
 	_preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_frame.add_child(_preview)
