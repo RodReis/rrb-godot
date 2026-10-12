@@ -504,7 +504,7 @@ func _while_dashing(_tick: int) -> void:
 	pass
 
 
-## Efeitos ja lancados que seguem a cada tick, inclusive morto (flechas e Chuva da Ranger).
+## Efeitos ja lancados que seguem a cada tick, inclusive morto (projeteis, Chuva, Meteoro).
 func _simulate_effects(_tick: int) -> void:
 	pass
 

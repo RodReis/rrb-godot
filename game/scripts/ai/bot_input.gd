@@ -168,8 +168,8 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	aim_distance = to.length()
 	var q_range := data.skill_q.attack_range
 	skill_q = skills and q_range > 0.0 and to.length() <= q_range
-	var ranger := _hero as Ranger
-	var blocked := ranger != null and ranger.shot_blocked(where)
+	var shooter := _hero as ProjectileHero
+	var blocked := shooter != null and shooter.shot_blocked(where)
 	skill_q = skill_q and not blocked
 	var barbarian := _hero is Barbarian
 	var use := Vector3i.ZERO
