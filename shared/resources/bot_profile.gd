@@ -25,3 +25,6 @@ extends Resource
 @export var ring_range: float
 ## Bruxo: Meteoro com o alvo a ate isto (mira a posicao atual dele).
 @export var meteor_range: float
+## Fase 2 (F19): a menos disto da borda da zona (ou fora dela) o bot foge para dentro. Escolha do
+## Code: nenhum documento fixa o valor; a zona encolhe ~0,15 u/s, 2 u sao ~13 s de folga.
+@export var zone_margin: float

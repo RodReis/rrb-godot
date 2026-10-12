@@ -28,3 +28,6 @@ Thumbs.db
 # Blender (ADR-0005): backups
 *.blend1
 *.blend2
+
+# Relatorio do soak (tools/soak.ps1)
+soak-report/

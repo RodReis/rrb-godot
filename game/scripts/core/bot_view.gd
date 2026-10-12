@@ -22,3 +22,11 @@ var base_monsters_left: int = 0
 var base_chests_left: int = 0
 ## A fonte do proprio time cura agora (fase 1, #74).
 var can_heal: bool = false
+## Fase 2 (a partir dos 5:00): zona ligada, sem fonte e sem respawn de monstro.
+var phase2: bool = false
+## Distancia do heroi ate a borda da zona (u); negativa = fora. INF sem zona.
+var zone_edge: float = INF
+## O adversario esta vivo (a morte e aviso global e o respawn tem tempo publico).
+var enemy_alive: bool = false
+## O adversario esta dentro da zona; sem ve-lo, supoe que sim (a zona o empurra ao centro).
+var enemy_in_zone: bool = true

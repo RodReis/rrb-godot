@@ -1,13 +1,20 @@
 class_name BotRules
 extends RefCounted
-## FSM do bot da fase 1 (PRD §3.7; ARCHITECTURE-GAME §3.4). Prioridade: Recuar > Lutar >
-## Contestar > Farmar a base > Saquear a base > Farmar o centro (base primeiro, PI 2026-10-09).
-## Regra pura sobre BotView; o BotInput so escolhe o alvo do estado e produz input.
+## FSM do bot (PRD §3.7; ARCHITECTURE-GAME §3.4). Fase 1, prioridade: Recuar > Lutar > Contestar >
+## Farmar a base > Saquear a base > Farmar o centro (base primeiro, PI 2026-10-09). Fase 2 (F19, a
+## partir dos 5:00): Fugir da zona > Lutar > Perseguir > o resto; sem Recuar (a fonte fecha) e o
+## recuo da fase 1 acaba. Regra pura sobre BotView; o BotInput so escolhe o alvo do estado e
+## produz input.
 
-enum State { FARM, LOOT, CONTEST, FIGHT, RETREAT }
+enum State { FARM, LOOT, CONTEST, FIGHT, RETREAT, CHASE, FLEE_ZONE }
+
+## O ponto de fuga fica a esta quantidade de margens da borda, para nao reentrar na faixa de fuga.
+const FLEE_DEPTH_MARGINS: float = 2.0
 
 
 static func next_state(state: State, view: BotView, profile: BotProfile) -> State:
+	if view.phase2:
+		return _next_in_phase2(view, profile)
 	if state == State.RETREAT and view.safe_seconds < profile.safe_seconds:
 		return State.RETREAT
 	if state == State.RETREAT and view.can_heal and view.hp_pct < profile.contest_hp_pct:
@@ -16,6 +23,11 @@ static func next_state(state: State, view: BotView, profile: BotProfile) -> Stat
 		return State.RETREAT
 	if view.enemy_distance <= profile.fight_range and has_advantage(view):
 		return State.FIGHT
+	return _phase1_rest(view, profile)
+
+
+## Contestar, farmar e saquear (o que sobra quando nada mais pede o bot).
+static func _phase1_rest(view: BotView, profile: BotProfile) -> State:
 	if wants_contest(view, profile):
 		return State.CONTEST
 	if view.base_monsters_left > 0:
@@ -23,6 +35,37 @@ static func next_state(state: State, view: BotView, profile: BotProfile) -> Stat
 	if view.base_chests_left > 0:
 		return State.LOOT
 	return State.FARM
+
+
+## Fase 2: Fugir da zona > Lutar > Perseguir > o resto da fase 1 (sem Recuar).
+static func _next_in_phase2(view: BotView, profile: BotProfile) -> State:
+	if wants_flee_zone(view, profile):
+		return State.FLEE_ZONE
+	if view.enemy_distance <= profile.fight_range and has_advantage(view):
+		return State.FIGHT
+	if wants_chase(view):
+		return State.CHASE
+	return _phase1_rest(view, profile)
+
+
+## Fase 2: a menos de zone_margin da borda da zona (ou fora dela).
+static func wants_flee_zone(view: BotView, profile: BotProfile) -> bool:
+	return view.phase2 and view.zone_edge < profile.zone_margin
+
+
+## Fase 2: adversario vivo e dentro da zona (fora dela ele toma dano sozinho).
+static func wants_chase(view: BotView) -> bool:
+	return view.phase2 and view.enemy_alive and view.enemy_in_zone
+
+
+## Para onde correr ao fugir da zona: no rumo do centro, a FLEE_DEPTH_MARGINS margens dentro da
+## borda; zona menor que isso (ou heroi no centro) = o proprio centro. So o plano conta.
+static func flee_point(position: Vector3, center: Vector3, radius: float, margin: float) -> Vector3:
+	var out := Vector3(position.x - center.x, 0.0, position.z - center.z)
+	var depth := radius - margin * FLEE_DEPTH_MARGINS
+	if depth <= 0.0 or out.is_zero_approx():
+		return center
+	return center + out.normalized() * depth
 
 
 ## Sem regeneracao de HP: recua uma vez por queda abaixo do limiar, so com perigo perto.

@@ -7,6 +7,9 @@ extends RefCounted
 ## --daynight=day|night: forca o inicio da luz no servidor (F49); fora do contrato com o Launcher.
 ## --bot-hero=<id>: heroi do bot e, com --autopilot=bot, do heroi local (dev, F53); ausente ou sem
 ## cena = padrao do slot.
+## --bots: as duas vagas sao bots no servidor, sem cliente (soak bot x bot, F19; fora do contrato
+## com o Launcher). --bot-heroes=<time A>,<time B>: o heroi de cada bot; so vale com dois ids,
+## senao o padrao do slot.
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
@@ -20,6 +23,8 @@ const DEFAULT_TIME: float = 0.0
 const DAYNIGHT_AUTO: String = ""
 const DAYNIGHT_DAY: String = "day"
 const DAYNIGHT_NIGHT: String = "night"
+## --bot-heroes: um heroi por time.
+const HERO_PAIR_SIZE: int = 2
 
 
 static func parse(args: PackedStringArray) -> Dictionary:
@@ -35,6 +40,8 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"offline": false,
 		"bot": false,
 		"bot_hero": &"",
+		"bots": false,
+		"bot_heroes": [] as Array[StringName],
 		"bot_pilot": false,
 		"probe": false,
 	}
@@ -45,6 +52,10 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["offline"] = true
 		elif arg == "--bot":
 			result["bot"] = true
+		elif arg == "--bots":
+			result["bots"] = true
+		elif arg.begins_with("--bot-heroes="):
+			result["bot_heroes"] = _hero_pair(arg.trim_prefix("--bot-heroes="))
 		elif arg.begins_with("--bot-hero="):
 			result["bot_hero"] = StringName(arg.trim_prefix("--bot-hero="))
 		elif arg == "--autopilot":
@@ -74,6 +85,19 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			if parts.size() > 1:
 				result["port"] = _port_or_default(parts[1])
 	return result
+
+
+## Dois ids separados por virgula; qualquer outra forma = vazio (padrao do slot).
+static func _hero_pair(text: String) -> Array[StringName]:
+	var ids: Array[StringName] = []
+	var parts := text.split(",")
+	if parts.size() != HERO_PAIR_SIZE:
+		return ids
+	for part: String in parts:
+		if part.strip_edges().is_empty():
+			return []
+		ids.append(StringName(part.strip_edges()))
+	return ids
 
 
 static func _port_or_default(text: String) -> int:

@@ -8,7 +8,8 @@ extends PlayerInput
 ## visao e fora do mato (Hero.seen_by); de monstro e bau, o ultimo estado que entrou no raio
 ## (memoria). No 1o think a memoria e o estado do inicio da partida, com que todo cliente carrega
 ## a arena. Rei Esqueleto pelo que e publico: surge aos 3:30, sai aos 5:00 e a morte dele e aviso
-## global (o bau dele aparece para todos).
+## global (o bau dele aparece para todos). Fase 2 (F19): a zona vem do relogio replicado (ZoneRules,
+## o mesmo calculo do cliente) e o adversario, pela morte (aviso global) e por onde o bot o ve.
 
 const PROFILE: BotProfile = preload("res://shared/data/rules/bot_profile.tres")
 ## Recalcula o caminho a cada este tempo (s) ou quando o alvo muda.
@@ -37,6 +38,8 @@ var _known_chest: Dictionary[Chest, bool] = {}
 var _tick: int = 0
 ## Recargas de Q, E e R vistas no think anterior: a que subiu foi usada (log, SPEC-053 §6 item 5).
 var _last_cooldowns: Vector3i = Vector3i.ZERO
+## Raio da zona no ultimo think da fase 2 (do relogio replicado, igual ao do cliente).
+var _zone_radius: float = INF
 
 
 func _gather() -> void:
@@ -56,8 +59,14 @@ func think(tick: int) -> void:
 	if next != state:
 		print(
 			(
-				"[bot] %s -> %s (Nv %d, %d XP)"
-				% [BotRules.State.keys()[state], BotRules.State.keys()[next], _hero.level, _hero.xp]
+				"[bot %s] %s -> %s (Nv %d, %d XP)"
+				% [
+					_hero.name,
+					BotRules.State.keys()[state],
+					BotRules.State.keys()[next],
+					_hero.level,
+					_hero.xp
+				]
 			)
 		)
 	state = next
@@ -73,6 +82,10 @@ func think(tick: int) -> void:
 			_contest(tick)
 		BotRules.State.LOOT:
 			_loot(tick, _nearest_chest(_hero.team))
+		BotRules.State.CHASE:
+			_chase(tick, enemy)
+		BotRules.State.FLEE_ZONE:
+			_flee_zone(tick)
 		_:
 			_farm(tick)
 
@@ -106,12 +119,47 @@ func _view(tick: int, enemy: Hero) -> BotView:
 	if clock != null:
 		v.elapsed = clock.elapsed(tick)
 		v.contest_time = clock.rules.boss_warning_time
+		_view_zone(v, clock, tick, enemy)
 	else:
 		v.contest_time = INF
 	v.base_monsters_left = _alive_monsters(_hero.team).size()
 	v.base_chests_left = 0 if _nearest_chest(_hero.team) == null else 1
 	v.can_heal = _fountain() != null and clock != null and v.elapsed < clock.rules.phase1_duration
 	return v
+
+
+## Fase 2 (a partir dos 5:00): a zona sai so do relogio replicado e de ZoneRules, igual ao que o
+## cliente calcula (zone_updated); o adversario, pela morte (aviso global) e por onde o bot o ve.
+## Sem ve-lo, supoe que esta na zona: ela o empurra ao centro.
+func _view_zone(v: BotView, clock: MatchClock, tick: int, enemy: Hero) -> void:
+	var t_phase2 := clock.phase2_elapsed(tick)
+	v.phase2 = t_phase2 >= 0.0
+	if not v.phase2:
+		return
+	_zone_radius = ZoneRules.radius_at(clock.rules, t_phase2)
+	v.zone_edge = _zone_radius - _flat(ZoneController.CENTER).length()
+	v.enemy_alive = _enemy_alive()
+	var outside := (
+		enemy != null
+		and ZoneRules.is_outside(enemy.global_position, ZoneController.CENTER, _zone_radius)
+	)
+	v.enemy_in_zone = not outside
+
+
+## Fase 2: corre ate o adversario que ve (golpeia ao chegar); sem ve-lo, espera no centro da zona.
+func _chase(tick: int, enemy: Hero) -> void:
+	if enemy == null:
+		_go(tick, _center())
+		return
+	_attack(tick, enemy, true)
+
+
+## Fase 2: volta para dentro da zona, no rumo do centro (BotRules.flee_point).
+func _flee_zone(tick: int) -> void:
+	var point := BotRules.flee_point(
+		_hero.global_position, ZoneController.CENTER, _zone_radius, PROFILE.zone_margin
+	)
+	_go(tick, point)
 
 
 func _farm(tick: int) -> void:
@@ -250,7 +298,7 @@ func _take() -> bool:
 
 
 func _go(tick: int, goal: Vector3) -> void:
-	var map := _hero.get_world_3d().navigation_map
+	var map := _nav_map()
 	var due := (
 		tick - _path_tick >= SkillRules.seconds_to_ticks(REPATH_SECONDS, NetworkTime.tickrate)
 	)
@@ -280,6 +328,15 @@ func _go(tick: int, goal: Vector3) -> void:
 		aim = movement
 
 
+## Mapa de navegacao do time do bot (ArenaNav com mapa proprio); sem ele, o padrao do mundo.
+func _nav_map() -> RID:
+	for node: Node in get_tree().get_nodes_in_group(ArenaNav.GROUP):
+		var nav := node as ArenaNav
+		if nav.team == _hero.team:
+			return nav.get_navigation_map()
+	return _hero.get_world_3d().navigation_map
+
+
 ## Gasta pontos livres: R, depois Q, depois E (SkillRules.learn recusa o que nao pode).
 func _learn_points() -> void:
 	if SkillRules.free_points(_hero.level, _hero.ranks) == 0:
@@ -298,7 +355,7 @@ func _log_skills() -> void:
 	var now := Vector3i(_hero.q_cooldown, _hero.e_cooldown, _hero.r_cooldown)
 	for slot: int in [SkillRules.SLOT_Q, SkillRules.SLOT_E, SkillRules.SLOT_R]:
 		if now[slot] > _last_cooldowns[slot]:
-			print("[bot] %s usa %s" % [_hero.hero_data.display_name, "QER"[slot]])
+			print("[bot %s] %s usa %s" % [_hero.name, _hero.hero_data.display_name, "QER"[slot]])
 	_last_cooldowns = now
 
 
