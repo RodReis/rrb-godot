@@ -172,17 +172,19 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var blocked := ranger != null and ranger.shot_blocked(where)
 	skill_q = skill_q and not blocked
 	var barbarian := _hero is Barbarian
+	var use := Vector3i.ZERO
 	if barbarian:
-		var use := BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
+		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
 		skill_q = skills and use.x == 1
-		skill_e = skills and use.y == 1
-		skill_r = skills and use.z == 1
 	# Sem linha de tiro (Arqueira), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
 		return
 	attack = true
-	if not barbarian:
+	if barbarian:  # E e R so parado no alcance do golpe: andando, a Execucao pode errar o cone
+		skill_e = skills and use.y == 1
+		skill_r = skills and use.z == 1
+	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)
 		skill_r = skills
 
