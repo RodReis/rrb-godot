@@ -1,215 +1,700 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/hero_select.gd" id="1_script"]
-[ext_resource type="Script" path="res://shared/ui/components/panel_card.gd" id="2_card"]
-[ext_resource type="Script" path="res://shared/ui/components/timer_label.gd" id="3_timer"]
-[ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="4_badge"]
-[ext_resource type="PackedScene" path="res://shared/ui/components/stat_bar.tscn" id="5_stat"]
+[ext_resource type="Script" path="res://scripts/ui/runic_backdrop.gd" id="2_backdrop"]
+[ext_resource type="Shader" path="res://scenes/ui/runic_backdrop.gdshader" id="3_shader"]
+[ext_resource type="Script" path="res://shared/ui/components/timer_label.gd" id="4_timer"]
+[ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="5_badge"]
 [ext_resource type="PackedScene" path="res://shared/ui/components/monster_preview_3d.tscn" id="6_preview"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ui_swords.svg" id="7_swords"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ui_sparkle.svg" id="8_sparkle"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ui_check.svg" id="9_check"]
+[ext_resource type="Shader" path="res://scenes/ui/gradient_text.gdshader" id="10_text"]
+
+[sub_resource type="ShaderMaterial" id="mode_text"]
+shader = ExtResource("10_text")
+
+[sub_resource type="ShaderMaterial" id="screen_bg"]
+shader = ExtResource("3_shader")
+shader_parameter/color_a = Color(0.027, 0.047, 0.094, 1)
+shader_parameter/color_b = Color(0.027, 0.047, 0.094, 1)
+shader_parameter/color_c = Color(0.027, 0.047, 0.094, 1)
+shader_parameter/glow_color_1 = Color(0.961, 0.62, 0.043, 0.15)
+shader_parameter/glow_center_1 = Vector2(0.5, 0)
+shader_parameter/glow_radius_1 = 0.6
+shader_parameter/glow_color_2 = Color(0.576, 0.8, 1, 0.08)
+shader_parameter/glow_center_2 = Vector2(0.15, 0.5)
+shader_parameter/glow_radius_2 = 0.4
+shader_parameter/glow_color_3 = Color(0.937, 0.267, 0.267, 0.1)
+shader_parameter/glow_center_3 = Vector2(0.85, 0.5)
+shader_parameter/glow_radius_3 = 0.4
+shader_parameter/dot_color = Color(1, 1, 1, 0.03)
+shader_parameter/dot_spacing = 24.0
+
+[sub_resource type="ShaderMaterial" id="ally_stage"]
+shader = ExtResource("3_shader")
+shader_parameter/color_a = Color(0.031, 0.2, 0.267, 0.4)
+shader_parameter/color_b = Color(0.008, 0.024, 0.09, 0.8)
+shader_parameter/color_c = Color(0.059, 0.09, 0.165, 1)
+shader_parameter/dot_color = Color(0.576, 0.8, 1, 0.2)
+shader_parameter/dot_spacing = 16.0
+shader_parameter/corner_radius = 12.0
+shader_parameter/border_width = 1.0
+shader_parameter/border_color = Color(0.576, 0.8, 1, 0.3)
+
+[sub_resource type="ShaderMaterial" id="enemy_stage"]
+shader = ExtResource("3_shader")
+shader_parameter/color_a = Color(0.298, 0.02, 0.098, 0.4)
+shader_parameter/color_b = Color(0.008, 0.024, 0.09, 0.8)
+shader_parameter/color_c = Color(0.059, 0.09, 0.165, 1)
+shader_parameter/dot_color = Color(0.937, 0.267, 0.267, 0.2)
+shader_parameter/dot_spacing = 16.0
+shader_parameter/corner_radius = 12.0
+shader_parameter/border_width = 1.0
+shader_parameter/border_color = Color(0.937, 0.267, 0.267, 0.3)
+
+[sub_resource type="ShaderMaterial" id="lock_in"]
+shader = ExtResource("3_shader")
+shader_parameter/color_a = Color(0.984, 0.749, 0.141, 1)
+shader_parameter/color_b = Color(0.992, 0.878, 0.278, 1)
+shader_parameter/color_c = Color(0.961, 0.62, 0.043, 1)
+shader_parameter/horizontal = true
+shader_parameter/dot_color = Color(1, 1, 1, 0)
+shader_parameter/corner_radius = 16.0
+shader_parameter/border_width = 2.0
+shader_parameter/border_color = Color(0.992, 0.902, 0.541, 1)
 
 [node name="HeroSelect" type="CanvasLayer"]
 layer = 3
 script = ExtResource("1_script")
 
-[node name="Backdrop" type="PanelContainer" parent="."]
+[node name="Root" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_type_variation = &"PanelCardSurface"
-script = ExtResource("2_card")
-variant = 0
 
-[node name="Margin" type="MarginContainer" parent="Backdrop"]
+[node name="Backdrop" type="ColorRect" parent="Root"]
+material = SubResource("screen_bg")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_backdrop")
+
+[node name="Column" type="VBoxContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="Header" type="PanelContainer" parent="Root/Column"]
 layout_mode = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 40
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 40
+theme_type_variation = &"HeroHeader"
 
-[node name="Column" type="VBoxContainer" parent="Backdrop/Margin"]
+[node name="HeaderRow" type="HBoxContainer" parent="Root/Column/Header"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Header" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+[node name="TitleRow" type="HBoxContainer" parent="Root/Column/Header/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="TitleIcon" type="PanelContainer" parent="Root/Column/Header/HeaderRow/TitleRow"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HeroAllyIcon"
+
+[node name="Swords" type="TextureRect" parent="Root/Column/Header/HeaderRow/TitleRow/TitleIcon"]
+modulate = Color(0.576, 0.8, 1, 1)
+layout_mode = 2
+texture = ExtResource("7_swords")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Root/Column/Header/HeaderRow/TitleRow"]
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "SELEÇÃO DE HERÓIS"
+
+[node name="Dash" type="Label" parent="Root/Column/Header/HeaderRow/TitleRow"]
+modulate = Color(0.576, 0.8, 1, 1)
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "—"
+
+[node name="Mode" type="Label" parent="Root/Column/Header/HeaderRow/TitleRow"]
+unique_name_in_owner = true
+material = SubResource("mode_text")
+layout_mode = 2
+theme_type_variation = &"LabelHeroMode"
+text = "DUELO 1v1"
+
+[node name="TimerBox" type="PanelContainer" parent="Root/Column/Header/HeaderRow"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HeroTimer"
+
+[node name="TimerRow" type="HBoxContainer" parent="Root/Column/Header/HeaderRow/TimerBox"]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="Title" type="Label" parent="Backdrop/Margin/Column/Header"]
+[node name="TimerTitle" type="Label" parent="Root/Column/Header/HeaderRow/TimerBox/TimerRow"]
 layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"LabelH1"
-text = "SELEÇÃO DE HERÓIS — DUELO 1v1"
+theme_type_variation = &"LabelHeroHighlight"
+text = "TEMPO RESTANTE:"
 
-[node name="TimerTitle" type="Label" parent="Backdrop/Margin/Column/Header"]
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"LabelMuted"
-text = "TEMPO RESTANTE"
-
-[node name="Timer" type="Label" parent="Backdrop/Margin/Column/Header"]
+[node name="Timer" type="Label" parent="Root/Column/Header/HeaderRow/TimerBox/TimerRow"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_vertical = 4
 theme_type_variation = &"LabelCounter"
-text = "24s"
-script = ExtResource("3_timer")
+text = "24"
+script = ExtResource("4_timer")
 format = 1
 
-[node name="Body" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+[node name="TimerUnit" type="Label" parent="Root/Column/Header/HeaderRow/TimerBox/TimerRow"]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/separation = 30
+size_flags_vertical = 8
+theme_type_variation = &"LabelHeroHighlight"
+text = "s"
 
-[node name="PlayerCard" type="PanelContainer" parent="Backdrop/Margin/Column/Body"]
+[node name="Players" type="HBoxContainer" parent="Root/Column/Header/HeaderRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
-script = ExtResource("2_card")
-accent = 3
+theme_override_constants/separation = 24
+alignment = 2
 
-[node name="PlayerColumn" type="VBoxContainer" parent="Backdrop/Margin/Column/Body/PlayerCard"]
+[node name="You" type="VBoxContainer" parent="Root/Column/Header/HeaderRow/Players"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 0
 
-[node name="PlayerTitle" type="Label" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn"]
+[node name="YouName" type="Label" parent="Root/Column/Header/HeaderRow/Players/You"]
 layout_mode = 2
-theme_type_variation = &"LabelMuted"
+theme_type_variation = &"LabelHeroAccent"
 text = "VOCÊ"
+horizontal_alignment = 2
 
-[node name="PlayerPreview" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("6_preview")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 320)
-layout_mode = 2
-
-[node name="PlayerName" type="Label" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"LabelH2"
-text = "CAVALEIRO"
-
-[node name="Hp" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Def" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Atk" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Int" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Agi" parent="Backdrop/Margin/Column/Body/PlayerCard/PlayerColumn" instance=ExtResource("5_stat")]
-unique_name_in_owner = true
-layout_mode = 2
-
-[node name="Center" type="VBoxContainer" parent="Backdrop/Margin/Column/Body"]
-custom_minimum_size = Vector2(420, 0)
-layout_mode = 2
-theme_override_constants/separation = 20
-
-[node name="Instruction" type="Label" parent="Backdrop/Margin/Column/Body/Center"]
-layout_mode = 2
-theme_type_variation = &"LabelH2"
-text = "ESCOLHA SEU CAMPEÃO"
-horizontal_alignment = 1
-
-[node name="Choices" type="HBoxContainer" parent="Backdrop/Margin/Column/Body/Center"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="SkillsCard" type="PanelContainer" parent="Backdrop/Margin/Column/Body/Center"]
-layout_mode = 2
-theme_type_variation = &"PanelCardInner"
-script = ExtResource("2_card")
-variant = 2
-
-[node name="SkillsColumn" type="VBoxContainer" parent="Backdrop/Margin/Column/Body/Center/SkillsCard"]
-layout_mode = 2
-
-[node name="SkillsTitle" type="Label" parent="Backdrop/Margin/Column/Body/Center/SkillsCard/SkillsColumn"]
-layout_mode = 2
-theme_type_variation = &"LabelMuted"
-text = "HABILIDADES DO HERÓI"
-
-[node name="Skills" type="Label" parent="Backdrop/Margin/Column/Body/Center/SkillsCard/SkillsColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-autowrap_mode = 3
-
-[node name="LockIn" type="Button" parent="Backdrop/Margin/Column/Body/Center"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
-layout_mode = 2
-theme_type_variation = &"ButtonPrimary"
-text = "CONFIRMAR ESCOLHA (LOCK IN)"
-
-[node name="Status" type="Label" parent="Backdrop/Margin/Column/Body/Center"]
+[node name="YouStatus" type="Label" parent="Root/Column/Header/HeaderRow/Players/You"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"LabelMuted"
-horizontal_alignment = 1
-autowrap_mode = 3
+text = "Status: Escolhendo..."
+horizontal_alignment = 2
 
-[node name="EnemyCard" type="PanelContainer" parent="Backdrop/Margin/Column/Body"]
+[node name="Vs" type="Label" parent="Root/Column/Header/HeaderRow/Players"]
+modulate = Color(1, 1, 1, 0.4)
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-script = ExtResource("2_card")
-accent = 2
+theme_type_variation = &"LabelH1"
+text = "VS"
 
-[node name="EnemyColumn" type="VBoxContainer" parent="Backdrop/Margin/Column/Body/EnemyCard"]
+[node name="Rival" type="VBoxContainer" parent="Root/Column/Header/HeaderRow/Players"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 0
 
-[node name="EnemyTitle" type="Label" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn"]
+[node name="RivalName" type="Label" parent="Root/Column/Header/HeaderRow/Players/Rival"]
 layout_mode = 2
-theme_type_variation = &"LabelMuted"
+theme_type_variation = &"LabelHeroStrong"
 text = "OPONENTE"
 
-[node name="EnemyPreview" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn" instance=ExtResource("6_preview")]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 320)
-layout_mode = 2
-
-[node name="EnemyName" type="Label" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn"]
+[node name="RivalStatus" type="Label" parent="Root/Column/Header/HeaderRow/Players/Rival"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"LabelH2"
-text = "ADVERSÁRIO"
+theme_type_variation = &"LabelMuted"
+text = "Status: Escolhendo..."
 
-[node name="EnemyStatus" type="Label" parent="Backdrop/Margin/Column/Body/EnemyCard/EnemyColumn"]
+[node name="Body" type="MarginContainer" parent="Root/Column"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="Columns" type="HBoxContainer" parent="Root/Column/Body"]
+layout_mode = 2
+theme_override_constants/separation = 36
+
+[node name="PlayerCard" type="PanelContainer" parent="Root/Column/Body/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeroAllyCard"
+
+[node name="PlayerColumn" type="VBoxContainer" parent="Root/Column/Body/Columns/PlayerCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PlayerTags" type="HBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn"]
+layout_mode = 2
+
+[node name="YouTag" type="PanelContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerTags"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_type_variation = &"HeroAllyTag"
+
+[node name="Row" type="HBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerTags/YouTag"]
+layout_mode = 2
+
+[node name="YouDot" type="Panel" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerTags/YouTag/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HeroDotAlly"
+
+[node name="Label" type="Label" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerTags/YouTag/Row"]
+layout_mode = 2
+theme_type_variation = &"LabelHeroAccent"
+text = "VOCÊ"
+
+[node name="PlayerRoleTag" type="PanelContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerTags"]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_type_variation = &"HeroAllyTagSoft"
+
+[node name="PlayerRole" type="Label" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerTags/PlayerRoleTag"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Escolhendo..."
+theme_type_variation = &"LabelHeroAccent"
+text = "TANQUE"
 
-[node name="Footer" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+[node name="PlayerStage" type="Control" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Backdrop" type="ColorRect" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerStage"]
+material = SubResource("ally_stage")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_backdrop")
+
+[node name="PlayerPreview" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerStage" instance=ExtResource("6_preview")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="PlayerLocked" type="PanelContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerStage"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_type_variation = &"HeroAllyBadge"
+
+[node name="Row" type="HBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerStage/PlayerLocked"]
+layout_mode = 2
+alignment = 1
+
+[node name="Check" type="TextureRect" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerStage/PlayerLocked/Row"]
+modulate = Color(0.043, 0.075, 0.149, 1)
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+texture = ExtResource("9_check")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerStage/PlayerLocked/Row"]
+layout_mode = 2
+theme_type_variation = &"LabelHeroDark"
+text = "BLOQUEADO"
+
+[node name="PlayerIdentity" type="HBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Texts" type="VBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerIdentity"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="PlayerName" type="Label" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerIdentity/Texts"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "CAVALEIRO"
+
+[node name="PlayerSummary" type="Label" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerIdentity/Texts"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Absorção de dano, engajamento frontal e controle de grupo."
+autowrap_mode = 3
+
+[node name="PlayerIconBox" type="PanelContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerIdentity"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HeroAllyIcon"
+
+[node name="PlayerIcon" type="TextureRect" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/PlayerIdentity/PlayerIconBox"]
+unique_name_in_owner = true
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PlayerRule" type="HSeparator" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn"]
+modulate = Color(0.576, 0.8, 1, 0.5)
+layout_mode = 2
+
+[node name="SkillsCell" type="PanelContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn"]
+layout_mode = 2
+theme_type_variation = &"HeroAllyCell"
+
+[node name="SkillsColumn" type="VBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/SkillsCell"]
+layout_mode = 2
+
+[node name="SkillsTitle" type="Label" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/SkillsCell/SkillsColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelHeroAccent"
+text = "HABILIDADES DO HERÓI"
+
+[node name="Skills" type="HBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn/SkillsCell/SkillsColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Stats" type="VBoxContainer" parent="Root/Column/Body/Columns/PlayerCard/PlayerColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="RosterCard" type="PanelContainer" parent="Root/Column/Body/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeroRoster"
+
+[node name="RosterColumn" type="VBoxContainer" parent="Root/Column/Body/Columns/RosterCard"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Heading" type="VBoxContainer" parent="Root/Column/Body/Columns/RosterCard/RosterColumn"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="TitleRow" type="HBoxContainer" parent="Root/Column/Body/Columns/RosterCard/RosterColumn/Heading"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SparkleL" type="TextureRect" parent="Root/Column/Body/Columns/RosterCard/RosterColumn/Heading/TitleRow"]
+modulate = Color(0.961, 0.62, 0.043, 1)
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("8_sparkle")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Title" type="Label" parent="Root/Column/Body/Columns/RosterCard/RosterColumn/Heading/TitleRow"]
+layout_mode = 2
+theme_type_variation = &"LabelHeroTitle"
+text = "ESCOLHA SEU CAMPEÃO"
+
+[node name="SparkleR" type="TextureRect" parent="Root/Column/Body/Columns/RosterCard/RosterColumn/Heading/TitleRow"]
+modulate = Color(0.961, 0.62, 0.043, 1)
+custom_minimum_size = Vector2(18, 18)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("8_sparkle")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Hint" type="Label" parent="Root/Column/Body/Columns/RosterCard/RosterColumn/Heading"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Selecione uma lenda e trave sua escolha antes do duelo"
+horizontal_alignment = 1
+
+[node name="Choices" type="GridContainer" parent="Root/Column/Body/Columns/RosterCard/RosterColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 20
+columns = 2
+
+[node name="Spacer" type="Control" parent="Root/Column/Body/Columns/RosterCard/RosterColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="LockInFrame" type="PanelContainer" parent="Root/Column/Body/Columns/RosterCard/RosterColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+theme_type_variation = &"HeroLockInGlow"
+
+[node name="LockInGradient" type="ColorRect" parent="Root/Column/Body/Columns/RosterCard/RosterColumn/LockInFrame"]
+unique_name_in_owner = true
+material = SubResource("lock_in")
+layout_mode = 2
+script = ExtResource("2_backdrop")
+
+[node name="LockIn" type="Button" parent="Root/Column/Body/Columns/RosterCard/RosterColumn/LockInFrame"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ButtonLockIn"
+text = "CONFIRMAR ESCOLHA (LOCK IN)"
+icon = ExtResource("7_swords")
+icon_alignment = 0
+expand_icon = false
+
+[node name="Status" type="Label" parent="Root/Column/Body/Columns/RosterCard/RosterColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "ESCOLHA E CONFIRME ANTES DO FIM DO TEMPO"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="EnemyCard" type="PanelContainer" parent="Root/Column/Body/Columns"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeroEnemyCard"
+
+[node name="EnemyColumn" type="VBoxContainer" parent="Root/Column/Body/Columns/EnemyCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="EnemyTags" type="HBoxContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn"]
+layout_mode = 2
+
+[node name="RivalTag" type="PanelContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyTags"]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_type_variation = &"HeroEnemyTag"
+
+[node name="Row" type="HBoxContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyTags/RivalTag"]
+layout_mode = 2
+
+[node name="RivalDot" type="Panel" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyTags/RivalTag/Row"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HeroDotEnemy"
+
+[node name="Label" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyTags/RivalTag/Row"]
+layout_mode = 2
+theme_type_variation = &"LabelHeroStrong"
+text = "OPONENTE"
+
+[node name="EnemyRoleTag" type="PanelContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyTags"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 10
+theme_type_variation = &"HeroEnemyTagSoft"
+
+[node name="EnemyRole" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyTags/EnemyRoleTag"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelHeroStrong"
+text = "TANQUE"
+
+[node name="EnemyStage" type="Control" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+
+[node name="Backdrop" type="ColorRect" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyStage"]
+material = SubResource("enemy_stage")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_backdrop")
+
+[node name="EnemyUnknown" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyStage"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0.35)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"LabelVictory"
+text = "?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EnemyPreview" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyStage" instance=ExtResource("6_preview")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EnemyLocked" type="PanelContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyStage"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -150.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_type_variation = &"HeroEnemyBadge"
+
+[node name="Row" type="HBoxContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyStage/EnemyLocked"]
+layout_mode = 2
+alignment = 1
+
+[node name="Check" type="TextureRect" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyStage/EnemyLocked/Row"]
+custom_minimum_size = Vector2(14, 14)
+layout_mode = 2
+texture = ExtResource("9_check")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyStage/EnemyLocked/Row"]
+layout_mode = 2
+theme_type_variation = &"LabelHeroStrong"
+text = "BLOQUEADO"
+
+[node name="EnemyIdentity" type="HBoxContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Texts" type="VBoxContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyIdentity"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="EnemyName" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyIdentity/Texts"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelH1"
+text = "OPONENTE"
+
+[node name="EnemySummary" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyIdentity/Texts"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Escolhendo o herói..."
+autowrap_mode = 3
+
+[node name="EnemyIconBox" type="PanelContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyIdentity"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HeroEnemyIcon"
+
+[node name="EnemyIcon" type="TextureRect" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/EnemyIdentity/EnemyIconBox"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("7_swords")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EnemyRule" type="HSeparator" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn"]
+modulate = Color(0.937, 0.267, 0.267, 0.5)
+layout_mode = 2
+
+[node name="StateCell" type="PanelContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn"]
+layout_mode = 2
+theme_type_variation = &"HeroEnemyCell"
+
+[node name="StateColumn" type="VBoxContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/StateCell"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="StateTitle" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/StateCell/StateColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "ESTADO DE CONFIRMAÇÃO"
+
+[node name="StateRow" type="HBoxContainer" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/StateCell/StateColumn"]
+layout_mode = 2
+
+[node name="StateDot" type="Panel" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/StateCell/StateColumn/StateRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(12, 12)
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"HeroDotWaiting"
+
+[node name="EnemyState" type="Label" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn/StateCell/StateColumn/StateRow"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelHeroHighlight"
+text = "ESCOLHENDO..."
+
+[node name="EnemyFill" type="Control" parent="Root/Column/Body/Columns/EnemyCard/EnemyColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Footer" type="PanelContainer" parent="Root/Column"]
+layout_mode = 2
+theme_type_variation = &"HeroFooter"
+
+[node name="Keys" type="HBoxContainer" parent="Root/Column/Footer"]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Pick" type="Label" parent="Backdrop/Margin/Column/Footer"]
+[node name="Pick" type="Label" parent="Root/Column/Footer/Keys"]
 layout_mode = 2
-script = ExtResource("4_badge")
-key = "1 / 2"
+script = ExtResource("5_badge")
+key = "1–4"
+size_variant = 1
 
-[node name="PickText" type="Label" parent="Backdrop/Margin/Column/Footer"]
+[node name="PickText" type="Label" parent="Root/Column/Footer/Keys"]
 layout_mode = 2
 theme_type_variation = &"LabelMuted"
 text = "Escolher herói"
 
-[node name="Confirm" type="Label" parent="Backdrop/Margin/Column/Footer"]
+[node name="Gap" type="Control" parent="Root/Column/Footer/Keys"]
+custom_minimum_size = Vector2(16, 0)
 layout_mode = 2
-script = ExtResource("4_badge")
-key = "Espaço"
 
-[node name="ConfirmText" type="Label" parent="Backdrop/Margin/Column/Footer"]
+[node name="Confirm" type="Label" parent="Root/Column/Footer/Keys"]
+layout_mode = 2
+script = ExtResource("5_badge")
+key = "ESPAÇO"
+size_variant = 1
+
+[node name="ConfirmText" type="Label" parent="Root/Column/Footer/Keys"]
 layout_mode = 2
 theme_type_variation = &"LabelMuted"
-text = "Confirmar escolha"
+text = "Travar herói"

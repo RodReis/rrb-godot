@@ -57,6 +57,8 @@ Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resol
 | `SPACE_SCREEN` | 40 | margem externa de tela |
 | `RADIUS_SM` | 4 | slots, badges |
 | `RADIUS_MD` | 8 | cards, botões |
+| `RADIUS_LG` | 16 | cards grandes da seleção de heróis (F51) |
+| `SIZE_GLOW` | 24 | brilho neon de card (sombra `StyleBoxFlat`, F51) |
 | `BORDER_W` | 2 | borda padrão; 3 para moldura ativa/raridade |
 | `SIZE_LIST_COL` | 360 | coluna de lista (bestiário) |
 | `SIZE_NAV_COL` | 420 | coluna de navegação (lobby) |
@@ -97,5 +99,6 @@ Sem movimento acima de `DUR_SLOW` em UI; a opção "reduzir animação" não exi
 | `TabContainer` | aba ativa `GOLD` texto, inativa `TEXT_MUTED` | — |
 | `HSeparator`/`VSeparator` | `BORDER` 1 px | — |
 | `Label` default | `TEXT`, `TYPE_BODY` | — |
+| Seleção de heróis (F51) | `Hero{Ally,Enemy}{Card,Cell,Skill,Tag,TagSoft,Badge,Icon}` (acento `CYAN` / `RED`, card com sombra `SIZE_GLOW` e raio `RADIUS_LG`), `HeroGoldSkill`/`HeroGoldBadge`, `HeroRoster`, `HeroTimer`, `HeroHeader`/`HeroFooter`, `HeroChoice`/`HeroChoiceActive` (borda `GOLD`), `HeroPortrait`/`HeroPortraitActive`, `HeroLockInGlow` + `ButtonLockIn` (texto `BG_SURFACE`, gradiente por shader `runic_backdrop`), `ProgressHero` (`CYAN`), `HeroDot*`, `LabelHero{Accent,Highlight,Ready,Strong,Title,Mode,Dark}` | — |
 
 O teste `shared/test/test_theme_tokens.gd` lê o `.tres` e confere que cada cor acima bate com `UiTokens`.

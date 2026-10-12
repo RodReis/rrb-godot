@@ -68,6 +68,9 @@ const SPACE_XL: int = 30
 const SPACE_SCREEN: int = 40
 const RADIUS_SM: int = 4
 const RADIUS_MD: int = 8
+const RADIUS_LG: int = 16
+## Brilho neon de card (box-shadow do prototipo da selecao de herois).
+const SIZE_GLOW: int = 24
 const BORDER_W: int = 2
 const BORDER_W_ACTIVE: int = 3
 const SIZE_LIST_COL: int = 360

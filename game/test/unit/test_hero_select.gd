@@ -1,13 +1,20 @@
 extends GutTest
-## Tela de selecao (DV tela 2) ligada ao MatchController: abre com o primeiro heroi disponivel,
-## heroi sem cena fica indisponivel, o lock-in so vale quando o servidor confirma, e o pick do
-## adversario aparece no card dele (espelho permitido).
+## Tela de selecao (F51, prototipo "Seleção de Heróis") ligada ao MatchController: abre com o
+## primeiro heroi disponivel, a grade so tem heroi com cena, o card esquerdo mostra papel,
+## descricao, Q/E/R e atributos do HeroData, o lock-in so vale quando o servidor confirma, e o
+## pick do adversario aparece no card dele (espelho permitido).
 
 const SCENE: String = "res://scenes/ui/hero_select.tscn"
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
 const ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/knight.tres"),
 	preload("res://shared/data/heroes/ranger.tres"),
+]
+const FULL_ROSTER: Array[HeroData] = [
+	ROSTER[0],
+	ROSTER[1],
+	preload("res://shared/data/heroes/barbarian.tres"),
+	preload("res://shared/data/heroes/fire_wizard.tres"),
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 const RATE: int = 30
@@ -31,10 +38,7 @@ func before_each() -> void:
 	_match.open(START, RATE)
 	_match.join(multiplayer.get_unique_id(), GateRules.TEAM_A, false, START)
 	_match.join(RIVAL, GateRules.TEAM_B, false, START)
-	_screen = (load(SCENE) as PackedScene).instantiate() as HeroSelect
-	add_child_autofree(_screen)
-	_screen.bind(_match, ROSTER, KNIGHT_ONLY.duplicate())
-	_screen.open(24.0)
+	_screen = _make_screen(ROSTER, KNIGHT_ONLY.duplicate())
 
 
 ## Troca de modelo no preview usa queue_free: deixa o frame liberar antes da contagem de orfaos.
@@ -42,11 +46,19 @@ func after_each() -> void:
 	await wait_process_frames(1)
 
 
-func _press(key: Key) -> void:
+func _make_screen(roster: Array[HeroData], available: Array[StringName]) -> HeroSelect:
+	var screen := (load(SCENE) as PackedScene).instantiate() as HeroSelect
+	add_child_autofree(screen)
+	screen.bind(_match, roster, available)
+	screen.open(24.0)
+	return screen
+
+
+func _press(screen: HeroSelect, key: Key) -> void:
 	var event := InputEventKey.new()
 	event.keycode = key
 	event.pressed = true
-	_screen._unhandled_input(event)
+	screen._unhandled_input(event)
 
 
 func _my_hero() -> StringName:
@@ -56,42 +68,71 @@ func _my_hero() -> StringName:
 	return &"?"
 
 
-func test_abre_com_o_cavaleiro_e_a_arqueira_indisponivel() -> void:
+func test_abre_com_o_cavaleiro_e_a_grade_so_tem_heroi_com_cena() -> void:
 	assert_true(_screen.visible)
 	assert_eq(_screen._player_name.text, "CAVALEIRO")
-	assert_false(_screen._buttons[0].disabled)
-	assert_true(_screen._buttons[1].disabled)
-	assert_string_contains(_screen._buttons[1].text, "INDISPONÍVEL")
+	assert_eq(_screen._cards.keys(), [0], "Arqueira sem cena fica fora da grade")
+	assert_eq(_screen._choices.get_child_count(), 1)
+	assert_true(_screen._cards[0]._tag.visible, "selo ATIVO no escolhido")
 
 
-func test_tecla_2_nao_escolhe_heroi_indisponivel() -> void:
-	_press(KEY_2)
+func test_tecla_2_nao_escolhe_heroi_sem_cena() -> void:
+	_press(_screen, KEY_2)
 	assert_eq(_screen._player_name.text, "CAVALEIRO")
+
+
+func test_card_esquerdo_mostra_dados_do_heroi() -> void:
+	var knight := ROSTER[0]
+	assert_eq(_screen._player_role.text, "TANQUE")
+	assert_eq(_screen._player_summary.text, knight.summary)
+	assert_eq(_screen._player_icon.texture, knight.basic_attack.icon)
+	assert_eq(_screen._skill_names[0].text, knight.skill_q.display_name)
+	assert_eq(_screen._skill_names[2].text, knight.skill_r.display_name)
+	assert_eq(_screen._skill_cooldowns[0].text, "Recarga 8 s")
+	assert_eq(_screen._skill_cooldowns[2].text, "Recarga 50 s")
 
 
 func test_atributos_comparaveis_entre_os_herois() -> void:
-	var hp := _screen._stats[0]
-	assert_eq(hp._bar.max_value, maxf(ROSTER[0].base_hp, ROSTER[1].base_hp))
-	assert_eq(hp._bar.value, ROSTER[0].base_hp)
+	var hp := _screen._stat_bars[0]
+	var best := maxf(ROSTER[0].base_hp, ROSTER[1].base_hp)
+	assert_eq(hp.max_value, best)
+	assert_eq(hp.value, ROSTER[0].base_hp)
+	assert_eq(_screen._stat_values[0].text, "%d / %d" % [ROSTER[0].base_hp, best])
+	var atk := maxf(ROSTER[0].base_attack, ROSTER[1].base_attack)
+	assert_eq(_screen._stat_values[2].text, "%d / %d" % [ROSTER[0].base_attack, atk])
 
 
 func test_espaco_confirma_e_o_servidor_registra() -> void:
-	_press(KEY_1)
 	var space := InputEventAction.new()
 	space.action = &"ui_accept"
 	space.pressed = true
 	_screen._unhandled_input(space)
 	assert_eq(_my_hero(), &"knight")
 	assert_string_contains(_screen._status.text, "PRONTO")
+	assert_eq(_screen._you_status.text, "Status: Pronto")
 	assert_true(_screen._lock_in.disabled)
+	assert_true(_screen._player_locked.visible)
 	_screen.lock_in()
 	assert_eq(_match.state, MatchState.State.HERO_PICK, "segundo lock-in nao muda nada")
+
+
+func test_oponente_escolhendo_ate_o_servidor_confirmar() -> void:
+	assert_eq(_screen._enemy_state.text, "ESCOLHENDO...")
+	assert_true(_screen._enemy_unknown.visible)
+	assert_false(_screen._enemy_role_tag.visible)
+	assert_false(_screen._enemy_locked.visible)
+	assert_eq(_screen._rival_status.text, "Status: Escolhendo...")
 
 
 func test_pick_do_adversario_aparece_no_card_dele() -> void:
 	_match.submit_pick(RIVAL, &"knight", START)
 	assert_eq(_screen._enemy_name.text, "CAVALEIRO")
-	assert_eq(_screen._enemy_status.text, "PRONTO")
+	assert_eq(_screen._enemy_role.text, "TANQUE")
+	assert_eq(_screen._enemy_state.text, "PRONTO PARA COMBATE")
+	assert_true(_screen._enemy_locked.visible)
+	assert_false(_screen._enemy_unknown.visible)
+	assert_eq(_screen._rival_status.text, "Status: Pronto")
+	assert_eq(_screen._player_name.text, "CAVALEIRO", "meu card nao muda")
 
 
 func test_timeout_mostra_o_heroi_padrao_como_meu() -> void:
@@ -104,6 +145,17 @@ func test_timeout_mostra_o_heroi_padrao_como_meu() -> void:
 func test_close_esconde() -> void:
 	_screen.close()
 	assert_false(_screen.visible)
+
+
+func test_quatro_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
+	var all: Array[StringName] = [&"knight", &"ranger", &"barbarian", &"fire_wizard"]
+	var screen := _make_screen(FULL_ROSTER, all)
+	assert_eq(screen._choices.get_child_count(), 4)
+	_press(screen, KEY_4)
+	assert_eq(screen._player_name.text, "BRUXO DE FOGO")
+	assert_eq(screen._player_role.text, "MAGO")
+	assert_true(screen._cards[3]._tag.visible)
+	assert_false(screen._cards[0]._tag.visible)
 
 
 func test_modelo_so_do_heroi_com_cena() -> void:

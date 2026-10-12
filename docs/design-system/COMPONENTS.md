@@ -20,6 +20,7 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | `Toast` | `PanelCard` | `show_message(text, kind, dur := 3.0)` | `kind`: `INFO`, `SUCCESS`, `WARN`, `ERROR` | overlay global (App), HUD (notificação de loot) |
 | `ModalDialog` | `PanelCard` (overlay) | `open(title, body, actions: Array[DialogAction]) -> int` (await) | — | confirmar sair, abandonar partida, encerrar jogo |
 | `HeroPreview3D` | `SubViewportContainer` | `bind(hero: HeroData)` ; `set_animation(name)` | `idle`, `pose` | lobby (diorama), pick, bestiário (monstro: `MonsterPreview3D`, mesma base) |
+| `MonsterPreview3D` (implementado) | `SubViewportContainer` | `show_model(model, animation)` ; `@export` `turn_speed` (0 = parado), `camera_distance`/`camera_height`/`look_height` (× altura do modelo), `facing` (graus), `frame_height` (m; 0 = mede a malha) | girando, retrato parado | bestiário, cards da seleção, retratos da grade da seleção (F51) |
 | `StatsGrid` | `GridContainer` (2 col) | `bind(stats: Dictionary[String, float], max_ref: Dictionary)` | — | pick, forja, bestiário |
 | `ScoreBanner` | `PanelCard` | `bind(p1: PlayerScore, p2: PlayerScore, target: int)` | destaque do líder | HUD F2, fim de partida |
 | `ZoneRadar` | `Control` (`_draw`) | `set_zone(radius_pct: float, next_radius_pct: float, t_next: float)` ; `set_players(positions)` | — | HUD F2 (minimapa) |

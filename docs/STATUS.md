@@ -87,7 +87,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F48 / SPEC-048 | MVP2 | game, shared | Slice 2.14 — Equipamento visível: armas e armaduras modeladas no Blender presas a ossos; ícones dos itens (ADR-0010) | finalizado (#121) |
 | F49 / SPEC-049 | MVP2 | game, shared | Slice 2.15 — Ciclo dia/noite pelo relógio da partida, sentido pela seed, lightmap sem sol (ADR-0010) | finalizado (#122) |
 | F50 / SPEC-050 | MVP2 | game, shared | Slice 2.16 — Pátio da base com construções do Medieval Village MegaKit (Quaternius, CC0), adaptadas no Blender ao castelo atual; só complementa (decisão do PI 2026-10-11) | done (#131) |
-| F51 / SPEC-051 | MVP2 | game | Slice 2.17 — Tela de seleção de heróis fiel ao protótipo novo (`docs/prd/telas/Seleção de Heróis/`), só com dados reais (4 heróis — ADR-0011) | todo (#132) |
+| F51 / SPEC-051 | MVP2 | game | Slice 2.17 — Tela de seleção de heróis fiel ao protótipo novo (`docs/prd/telas/Seleção de Heróis/`), só com dados reais (4 heróis — ADR-0011) | done (#132) |
 | F52 / SPEC-052 | MVP2 | game | Slice 2.18 — Tela de vitória/derrota fiel ao protótipo novo (`docs/prd/telas/Destaques da Tela de Fim de Partida/`), só com dados reais | todo (#133) |
 | F53 / SPEC-053 | MVP2 | game, shared | Slice 2.19 — Bárbaro (Algoz): Machado, Salto Brutal, Rodopio, Execução; pick, bot, VFX, machado visível (ADR-0011) | done (#135) |
 | F54 / SPEC-054 | MVP2 | game, shared | Slice 2.20 — Bruxo de Fogo (Mago): Bola de Fogo, Explosão de Chamas, Anel de Fogo, Meteoro; pick, bot, VFX de fogo, cajado visível (ADR-0011) | done (#136) |

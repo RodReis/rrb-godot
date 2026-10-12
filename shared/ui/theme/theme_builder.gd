@@ -33,6 +33,17 @@ const SKILL_MARGIN: int = 16
 const BADGE_MARGIN: int = 8
 ## Fill da ghost bar do StatBar: clara, para o dano recente se destacar do GREEN/RED.
 const GHOST_FILL: Color = Color(UiTokens.TEXT, 0.85)
+## Selecao de herois (F51, prototipo): lado -> acento (voce CYAN, oponente RED). Gera os tipos
+## Hero<Lado>Card/Cell/Skill/Tag/TagSoft/Badge/Icon.
+const HERO_SIDES: Dictionary[StringName, Color] = {&"Ally": UiTokens.CYAN, &"Enemy": UiTokens.RED}
+## Alfas do prototipo (Tailwind /80, /30, /15) e escurecimento da celula sobre o card.
+const ALPHA_BORDER: float = 0.8
+const ALPHA_GLOW: float = 0.4
+const ALPHA_EDGE: float = 0.3
+const ALPHA_SOFT: float = 0.15
+const ALPHA_SHADE: float = 0.35
+## Raio "cheio" da barra de atributo (rounded-full).
+const RADIUS_PILL: int = 9
 
 var _fonts: Dictionary[String, FontVariation] = {}
 
@@ -58,6 +69,7 @@ func build() -> Theme:
 	_progress(theme)
 	_inputs(theme)
 	_slots(theme)
+	_hero_select(theme)
 	return theme
 
 
@@ -210,6 +222,205 @@ func _slots(theme: Theme) -> void:
 	theme.set_type_variation(SkillButton.FRAME_UPGRADABLE, &"Panel")
 	var gold := _frame(FRAME_SKILL_GOLD, SKILL_MARGIN, 0)
 	theme.set_stylebox(&"panel", SkillButton.FRAME_UPGRADABLE, gold)
+
+
+## Selecao de herois (F51): cards com brilho neon por lado, celulas, tags, badges, card de heroi
+## da grade, botao de lock-in (o gradiente e um RunicBackdrop atras), cabecalho, rodape e barra.
+func _hero_select(theme: Theme) -> void:
+	for side: StringName in HERO_SIDES:
+		var color: Color = HERO_SIDES[side]
+		var prefix := "Hero" + side
+		var card := _hero_box(UiTokens.BG_SURFACE, Color(color, ALPHA_BORDER), UiTokens.BORDER_W)
+		card.set_corner_radius_all(UiTokens.RADIUS_LG)
+		card.set_content_margin_all(UiTokens.SPACE_LG)
+		_glow(card, Color(color, ALPHA_GLOW))
+		_panel_variation(theme, prefix + "Card", card)
+		var cell := _hero_box(Color(Color.BLACK, ALPHA_SHADE), Color(color, ALPHA_EDGE), 1)
+		cell.set_content_margin_all(UiTokens.SPACE_MD)
+		_panel_variation(theme, prefix + "Cell", cell)
+		var skill := _hero_box(Color(color, ALPHA_SOFT), Color(color, ALPHA_EDGE), 1)
+		skill.set_content_margin_all(UiTokens.SPACE_SM)
+		_panel_variation(theme, prefix + "Skill", skill)
+		_panel_variation(theme, prefix + "Tag", _hero_tag(Color(color, ALPHA_SOFT), color))
+		var soft := _hero_tag(Color(Color.BLACK, ALPHA_SHADE), Color(color, ALPHA_EDGE))
+		_panel_variation(theme, prefix + "TagSoft", soft)
+		_panel_variation(theme, prefix + "Badge", _hero_tag(color, color))
+		var icon := _hero_box(Color(color, ALPHA_SOFT), color, 1)
+		icon.set_content_margin_all(UiTokens.SPACE_XS)
+		_panel_variation(theme, prefix + "Icon", icon)
+	var ultimate := _hero_box(Color(UiTokens.GOLD, ALPHA_SOFT), Color(UiTokens.GOLD, ALPHA_GLOW), 1)
+	ultimate.set_content_margin_all(UiTokens.SPACE_SM)
+	_panel_variation(theme, "HeroGoldSkill", ultimate)
+	_panel_variation(theme, "HeroGoldBadge", _hero_tag(UiTokens.GOLD, UiTokens.GOLD))
+	var roster := _hero_box(Color(UiTokens.BG_SURFACE, 0.6), UiTokens.BORDER, 1)
+	roster.set_corner_radius_all(UiTokens.RADIUS_LG)
+	roster.set_content_margin_all(UiTokens.SPACE_LG)
+	_glow(roster, Color(Color.BLACK, 0.5))
+	_panel_variation(theme, "HeroRoster", roster)
+	var timer := _hero_box(UiTokens.BG_SURFACE, Color(UiTokens.GOLD, ALPHA_EDGE), 1)
+	timer.set_corner_radius_all(UiTokens.RADIUS_LG)
+	timer.content_margin_left = UiTokens.SPACE_LG
+	timer.content_margin_right = UiTokens.SPACE_LG
+	timer.content_margin_top = UiTokens.SPACE_XS
+	timer.content_margin_bottom = UiTokens.SPACE_XS
+	_glow(timer, Color(UiTokens.GOLD, 0.2))
+	_panel_variation(theme, "HeroTimer", timer)
+	_hero_bars(theme)
+	_hero_choice(theme)
+	_hero_lock_in(theme)
+	_hero_labels(theme)
+
+
+## Cabecalho e rodape (faixas com uma borda so) e barra de atributo do card.
+func _hero_bars(theme: Theme) -> void:
+	var header := _box(Color(Color.BLACK, ALPHA_SHADE), 0)
+	header.border_color = Color(UiTokens.CYAN, 0.2)
+	header.border_width_bottom = 1
+	header.content_margin_left = UiTokens.SPACE_SCREEN
+	header.content_margin_right = UiTokens.SPACE_SCREEN
+	header.content_margin_top = UiTokens.SPACE_MD
+	header.content_margin_bottom = UiTokens.SPACE_MD
+	_panel_variation(theme, "HeroHeader", header)
+	var footer := header.duplicate() as StyleBoxFlat
+	footer.border_color = UiTokens.BORDER
+	footer.border_width_bottom = 0
+	footer.border_width_top = 1
+	footer.content_margin_top = UiTokens.SPACE_SM
+	footer.content_margin_bottom = UiTokens.SPACE_SM
+	_panel_variation(theme, "HeroFooter", footer)
+	theme.set_type_variation(&"ProgressHero", &"ProgressBar")
+	var track := _box(Color(Color.BLACK, ALPHA_SHADE), RADIUS_PILL)
+	track.border_color = UiTokens.BG_CARD
+	track.set_border_width_all(1)
+	theme.set_stylebox(&"background", &"ProgressHero", track)
+	var fill := _box(UiTokens.CYAN, RADIUS_PILL)
+	fill.shadow_color = Color(UiTokens.CYAN, ALPHA_GLOW)
+	fill.shadow_size = UiTokens.SPACE_SM
+	theme.set_stylebox(&"fill", &"ProgressHero", fill)
+
+
+## Card de heroi da grade: normal / hover (borda GOLD) / ativo (fundo e borda GOLD, brilho) e
+## a moldura do retrato.
+func _hero_choice(theme: Theme) -> void:
+	var normal := _hero_box(Color(UiTokens.BG_SURFACE, 0.8), UiTokens.BORDER, 1)
+	normal.set_content_margin_all(UiTokens.SPACE_MD)
+	var hover := normal.duplicate() as StyleBoxFlat
+	hover.bg_color = UiTokens.BG_CARD
+	hover.border_color = Color(UiTokens.GOLD, 0.6)
+	var active := _hero_box(Color(UiTokens.GOLD, 0.12), UiTokens.GOLD, UiTokens.BORDER_W)
+	active.set_content_margin_all(UiTokens.SPACE_MD)
+	_glow(active, Color(UiTokens.GOLD, ALPHA_EDGE))
+	var focus := _outline(UiTokens.GOLD_BRIGHT, UiTokens.BORDER_W_ACTIVE)
+	for type: StringName in [&"HeroChoice", &"HeroChoiceActive"]:
+		theme.set_type_variation(type, &"Button")
+		var base := normal if type == &"HeroChoice" else active
+		theme.set_stylebox(&"normal", type, base)
+		theme.set_stylebox(&"hover", type, hover if type == &"HeroChoice" else active)
+		theme.set_stylebox(&"pressed", type, active)
+		theme.set_stylebox(&"hover_pressed", type, active)
+		theme.set_stylebox(&"disabled", type, base)
+		theme.set_stylebox(&"focus", type, focus)
+	var portrait := _hero_box(UiTokens.BG_SURFACE, UiTokens.BORDER, 1)
+	_panel_variation(theme, "HeroPortrait", portrait)
+	var lit := _hero_box(UiTokens.BG_SURFACE, Color(UiTokens.GOLD, 0.6), 1)
+	_panel_variation(theme, "HeroPortraitActive", lit)
+
+
+## Lock-in: o botao so tem texto e foco; o brilho e a moldura dourada sao o painel atras.
+func _hero_lock_in(theme: Theme) -> void:
+	var glow := _hero_box(UiTokens.GOLD, UiTokens.GOLD_BRIGHT, UiTokens.BORDER_W)
+	glow.set_corner_radius_all(UiTokens.RADIUS_LG)
+	_glow(glow, Color(UiTokens.GOLD, 0.5))
+	_panel_variation(theme, "HeroLockInGlow", glow)
+	theme.set_type_variation(&"ButtonLockIn", &"Button")
+	for state: StringName in [&"normal", &"hover", &"pressed", &"hover_pressed", &"disabled"]:
+		theme.set_stylebox(state, &"ButtonLockIn", StyleBoxEmpty.new())
+	var focus := _outline(UiTokens.TEXT, UiTokens.BORDER_W_ACTIVE, UiTokens.RADIUS_LG)
+	theme.set_stylebox(&"focus", &"ButtonLockIn", focus)
+	theme.set_font(
+		&"font", &"ButtonLockIn", _font(UiTokens.FONT_DISPLAY_PATH, UiTokens.WEIGHT_BOLD)
+	)
+	theme.set_font_size(&"font_size", &"ButtonLockIn", UiTokens.TYPE_H2)
+	for color: StringName in [
+		&"font_color",
+		&"font_hover_color",
+		&"font_focus_color",
+		&"font_pressed_color",
+		&"font_hover_pressed_color",
+		&"font_disabled_color",
+		&"icon_normal_color",
+		&"icon_hover_color",
+		&"icon_focus_color",
+		&"icon_pressed_color",
+		&"icon_hover_pressed_color",
+		&"icon_disabled_color",
+	]:
+		theme.set_color(color, &"ButtonLockIn", UiTokens.BG_SURFACE)
+
+
+## Textos coloridos da selecao: acento CYAN, titulo GOLD, destaque GOLD_BRIGHT, pronto GREEN e
+## texto escuro sem contorno sobre badge (RED nunca em texto pequeno, TOKENS §1).
+func _hero_labels(theme: Theme) -> void:
+	var bold := _font(UiTokens.FONT_DATA_PATH, UiTokens.WEIGHT_BOLD)
+	var colors: Dictionary[StringName, Color] = {
+		&"LabelHeroAccent": UiTokens.CYAN,
+		&"LabelHeroHighlight": UiTokens.GOLD_BRIGHT,
+		&"LabelHeroReady": UiTokens.GREEN,
+	}
+	for type: StringName in colors:
+		theme.set_type_variation(type, &"Label")
+		theme.set_color(&"font_color", type, colors[type])
+		theme.set_font(&"font", type, bold)
+	theme.set_type_variation(&"LabelHeroStrong", &"Label")
+	theme.set_font(&"font", &"LabelHeroStrong", bold)
+	theme.set_type_variation(&"LabelHeroTitle", &"LabelH2")
+	theme.set_color(&"font_color", &"LabelHeroTitle", UiTokens.GOLD)
+	theme.set_type_variation(&"LabelHeroMode", &"LabelH1")
+	theme.set_color(&"font_color", &"LabelHeroMode", UiTokens.GOLD_BRIGHT)
+	# Ponto de status (circulo cheio): voce, oponente, pronto, escolhendo.
+	var dots: Dictionary[StringName, Color] = {
+		&"HeroDotAlly": UiTokens.CYAN,
+		&"HeroDotEnemy": UiTokens.RED,
+		&"HeroDotReady": UiTokens.GREEN,
+		&"HeroDotWaiting": UiTokens.GOLD_BRIGHT,
+	}
+	for type: StringName in dots:
+		theme.set_type_variation(type, &"Panel")
+		theme.set_stylebox(&"panel", type, _box(dots[type], UiTokens.SPACE_SM))
+	theme.set_type_variation(&"LabelHeroDark", &"LabelBadge")
+	theme.set_color(&"font_color", &"LabelHeroDark", UiTokens.BG_SURFACE)
+	theme.set_font(&"font", &"LabelHeroDark", bold)
+	theme.set_constant(&"outline_size", &"LabelHeroDark", 0)
+
+
+func _panel_variation(theme: Theme, type: StringName, box: StyleBox) -> void:
+	theme.set_type_variation(type, &"PanelContainer")
+	theme.set_stylebox(&"panel", type, box)
+
+
+## Caixa da selecao: fundo, borda de [param width] px e raio MD.
+func _hero_box(fill: Color, border: Color, width: int) -> StyleBoxFlat:
+	var box := _box(fill, UiTokens.RADIUS_MD)
+	box.border_color = border
+	box.set_border_width_all(width)
+	return box
+
+
+## Tag/badge: raio SM, respiro horizontal maior que o vertical.
+func _hero_tag(fill: Color, border: Color) -> StyleBoxFlat:
+	var box := _hero_box(fill, border, 1)
+	box.set_corner_radius_all(UiTokens.RADIUS_SM)
+	box.content_margin_left = UiTokens.SPACE_SM
+	box.content_margin_right = UiTokens.SPACE_SM
+	box.content_margin_top = 2
+	box.content_margin_bottom = 2
+	return box
+
+
+## Brilho neon (box-shadow do prototipo) como sombra do StyleBoxFlat.
+func _glow(box: StyleBoxFlat, color: Color) -> void:
+	box.shadow_color = color
+	box.shadow_size = UiTokens.SIZE_GLOW
 
 
 func _font(path: String, weight: int) -> FontVariation:
