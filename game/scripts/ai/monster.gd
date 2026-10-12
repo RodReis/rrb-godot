@@ -12,8 +12,9 @@ extends Combatant
 ## Lentidao (R da Arqueira, PI 2026-10-10): anda mais devagar enquanto dura.
 ## Mato alto (F32): heroi escondido nao entra no aggro e, se era o alvo, deixa de ser (volta ao
 ## marcador como quando o alvo morre).
-## Ferido por heroi (PI 2026-10-12, F55): mesmo fora do aggro, persegue quem feriu, e os monstros
-## do mesmo campo (spawn a ate MonsterRules.CAMP_RADIUS) tambem; o leash vale igual. Boss fora.
+## Campo (PI 2026-10-12, F55): ferido por heroi, mesmo fora do aggro, persegue quem feriu; e quando
+## um monstro acorda (aggro ou ferido), os do mesmo campo (spawn a ate MonsterRules.CAMP_RADIUS)
+## perseguem o mesmo heroi. O leash vale igual. Boss fora.
 ## Neblina de guerra (F37): so e replicado a quem tem o monstro no raio de visao do heroi
 ## (seen_by, Concealment); no cliente, fora da visao, some e nao tem colisao.
 
@@ -204,6 +205,8 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 	if next == MonsterRules.State.RESET and state != MonsterRules.State.RESET:
 		hp = roundi(data.hp)  # leash: volta com HP cheio (PI 2026-10-09)
 		_target = null
+	if state == MonsterRules.State.IDLE and next == MonsterRules.State.CHASE and _target != null:
+		_alert_camp(_target)
 	state = next
 	match state:
 		MonsterRules.State.CHASE:
@@ -278,16 +281,18 @@ func _die(tick: int, killer_id: int) -> void:
 func _provoke_camp(attacker_id: int) -> void:
 	if attacker_id == 0:
 		return
-	var attacker: Hero = null
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		if (node as Hero).peer_id == attacker_id:
-			attacker = node as Hero
-	if attacker == null:
-		return
+			provoke(node as Hero)
+			_alert_camp(node as Hero)
+
+
+## Os outros monstros do campo (spawn a ate CAMP_RADIUS) passam a perseguir [param hero].
+func _alert_camp(hero: Hero) -> void:
 	for node: Node in get_tree().get_nodes_in_group(GROUP):
 		var other := node as Monster
-		if other._home.distance_to(_home) <= MonsterRules.CAMP_RADIUS:
-			other.provoke(attacker)
+		if other != self and other._home.distance_to(_home) <= MonsterRules.CAMP_RADIUS:
+			other.provoke(hero)
 
 
 func _nearest_hero() -> Hero:

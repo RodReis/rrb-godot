@@ -1,9 +1,9 @@
 extends GutTest
 ## Campos de canto (SPEC-055, ADR-0011) na Ilha: NO (-27,5, -27,5) e SE por rotacao, neutros,
-## Golem de canto + 2 Lobos + 2 Baus Reforcados cada; folgas do §2 sobre a cena gerada; heroi no
-## meio do corredor N/O nao puxa os lobos (aggro 3 u), o golem acorda a 4 u e o leash de 10 u
-## devolve o monstro com HP cheio. Ferido de longe (PI 2026-10-12), o campo inteiro persegue
-## quem feriu. Contagens totais e rotacao: test_ilha_arcana.
+## Golem de canto + 2 Lobos + 2 Baus Reforcados cada; folgas do §2 sobre a cena gerada. Aggro de
+## 6 u (PI 2026-10-12, no lugar de 4/3 u): quem passa no meio do corredor N/O nao puxa; o campo
+## acorda inteiro quando um percebe o heroi ou e ferido de longe; leash de 10 u devolve com HP
+## cheio. Contagens totais e rotacao: test_ilha_arcana.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
@@ -95,16 +95,16 @@ func test_cada_canto_tem_golem_dois_lobos_e_dois_reforcados_neutros() -> void:
 		assert_eq([golems, wolves, chests], [1, 2, 2], str(center))
 
 
-## Folgas do §2: >= 2 u da borda da lagoa; o aggro dos lobos nao alcanca as bandas do corredor.
+## Folgas do §2: >= 2 u da borda da lagoa; o aggro nao alcanca o meio das bandas do corredor.
 func test_folgas_do_campo_de_canto() -> void:
-	var wolf := load("res://shared/data/monsters/wolf_t2.tres") as MonsterData
 	for flip: float in [1.0, -1.0]:
 		for m: SpawnMarker in _corner(CORNER_NO * flip):
 			var gap := m.position.distance_to(LAGOON_A * flip) - LAGOON_RADIUS
 			assert_gt(gap, LAGOON_GAP, "%s perto da lagoa" % m.name)
-			if m.monster_id == &"wolf_t2":
-				var to_band := minf(m.position.x * flip, m.position.z * flip) - BAND_EDGE
-				assert_gt(to_band, wolf.aggro_range, "%s puxa quem passa no corredor" % m.name)
+			if m.kind == SpawnMarker.Kind.MONSTER:
+				var data := load("res://shared/data/monsters/%s.tres" % m.monster_id) as MonsterData
+				var to_middle := minf(m.position.x * flip, m.position.z * flip) - BAND_MIDDLE
+				assert_gt(to_middle, data.aggro_range, "%s puxa quem passa no corredor" % m.name)
 
 
 ## Moita de lagoa movida para (-19, -29) (§2), fora da banda N (4 x 4 u: borda em z -31).
@@ -119,25 +119,39 @@ func test_moita_da_lagoa_movida() -> void:
 	assert_eq(found, 2)
 
 
-## Heroi no meio das bandas N e O, no ponto mais perto do campo: nenhum lobo acorda.
-func test_heroi_no_corredor_nao_puxa_os_lobos() -> void:
+## Heroi no meio das bandas N e O, no ponto mais perto do campo: ninguem do campo acorda.
+func test_heroi_no_corredor_nao_puxa_o_campo() -> void:
 	for at: Vector3 in [Vector3(-27.5, 0, BAND_MIDDLE), Vector3(BAND_MIDDLE, 0, -27.5)]:
 		_hero.global_position = at
-		for wolf: Monster in _no(&"wolf_t2"):
-			_think(wolf)
-			assert_eq(wolf.state, MonsterRules.State.IDLE, "%s em %s" % [wolf.name, at])
+		for monster: Monster in _no(&"wolf_t2") + _no(&"golem_corner"):
+			_think(monster)
+			assert_eq(monster.state, MonsterRules.State.IDLE, "%s em %s" % [monster.name, at])
 
 
-## Golem de canto acorda a 4 u (e nao antes).
-func test_golem_de_canto_acorda_a_4_u() -> void:
+## Golem de canto acorda a 6 u (e nao antes).
+func test_golem_de_canto_acorda_a_6_u() -> void:
 	var golem := _no(&"golem_corner")[0]
 	var toward_field := Vector3(1, 0, 1).normalized()
-	_hero.global_position = golem.global_position + toward_field * 4.3
+	_hero.global_position = golem.global_position + toward_field * 6.3
 	_think(golem)
 	assert_eq(golem.state, MonsterRules.State.IDLE)
-	_hero.global_position = golem.global_position + toward_field * 3.9
+	_hero.global_position = golem.global_position + toward_field * 5.9
 	_think(golem)
 	assert_eq(golem.state, MonsterRules.State.CHASE)
+
+
+## PI 2026-10-12: o golem percebe o heroi (5,9 u) fora do aggro dos lobos (6,2 u) e o campo
+## inteiro vem junto.
+func test_golem_percebe_e_o_campo_inteiro_vem_junto() -> void:
+	var golem := _no(&"golem_corner")[0]
+	_hero.global_position = golem.global_position + Vector3(1, 0, 1).normalized() * 5.9
+	_think(golem)
+	assert_eq(golem.state, MonsterRules.State.CHASE)
+	for wolf: Monster in _no(&"wolf_t2"):
+		assert_gt(wolf.global_position.distance_to(_hero.global_position), wolf.data.aggro_range)
+		_think(wolf)
+		assert_eq(wolf.state, MonsterRules.State.CHASE, wolf.name)
+		assert_eq(wolf._target, _hero, wolf.name)
 
 
 ## Leash de 10 u: passou, volta ao campo e regenera o HP.
