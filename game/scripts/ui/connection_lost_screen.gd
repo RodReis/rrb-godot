@@ -56,12 +56,12 @@ func _ready() -> void:
 	column.add_child(exit_button)
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if visible and event.is_action_pressed(&"ui_cancel"):
+		exit_requested.emit()
+
+
 ## Mostra a tela e leva o foco ao botao (teclado e gamepad).
 func present() -> void:
 	visible = true
 	exit_button.grab_focus()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed(&"ui_cancel"):
-		exit_requested.emit()

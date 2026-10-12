@@ -453,11 +453,11 @@ func _on_spawns_boss_killed(peer: int) -> void:
 
 
 ## Cliente: o servidor encerrou ou caiu. Pausa a arvore (sem peer, `get_unique_id()` erra a cada
-## quadro) e mostra o erro; se a partida ja tinha acabado, a tela do fim fica e so ela anima.
+## quadro) e mostra o erro; se a tela do fim ja esta aberta, ela fica e so ela anima.
 func _on_server_disconnected() -> void:
 	status_label.text = "desconectado do servidor"
 	get_tree().paused = true
-	if match_controller.state == MatchState.State.ENDED:
+	if match_controller.state == MatchState.State.ENDED and match_end.visible:
 		match_end.process_mode = Node.PROCESS_MODE_ALWAYS
 		return
 	_connection_lost.present()
