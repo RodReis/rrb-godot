@@ -5,7 +5,8 @@ extends RefCounted
 ## --autopilot: o heroi local anda em circulo; --autopilot=bot: o BotInput joga pelo heroi local
 ## (so le estado replicado). --probe: sonda de rede (NetProbe, F20), para medir replicacao.
 ## --daynight=day|night: forca o inicio da luz no servidor (F49); fora do contrato com o Launcher.
-## --bot-hero=<id>: heroi do bot (dev, F53); ausente ou sem cena = padrao do slot.
+## --bot-hero=<id>: heroi do bot e, com --autopilot=bot, do heroi local (dev, F53); ausente ou sem
+## cena = padrao do slot.
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
