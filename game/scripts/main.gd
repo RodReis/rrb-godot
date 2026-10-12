@@ -30,6 +30,9 @@ const BOT_ID: int = 2
 ## Servidor dedicado: espera antes de sair no fim, para os RPCs confiaveis do fim (estado ENDED,
 ## ultima morte, match_ended com o placar) chegarem mesmo com perda; sair na hora descarta a fila.
 const EXIT_DELAY_SECONDS: float = 2.0
+## Codigo de saida do cliente que perdeu o servidor no meio da partida: erro interno, o Launcher
+## mostra o erro generico (ARCHITECTURE-LAUNCHER §5.2).
+const EXIT_CONNECTION_LOST: int = 4
 ## Intervalo do log de heroi desconectado (s): prova que ele segue simulado, sem inundar o log.
 const DISCONNECTED_LOG_SECONDS: float = 5.0
 ## Overlay escuro da neblina de guerra (F37) no cliente. Desligado durante o MVP2.5 (decisao do
@@ -49,6 +52,8 @@ var _bot_pilot: bool = false
 var _dedicated: bool = false
 ## Navmesh do bot (so no servidor com --bot).
 var _nav: ArenaNav
+## Cliente: erro de servidor perdido (#102); null no servidor dedicado.
+var _connection_lost: ConnectionLostScreen
 ## Servidor: herois de jogadores que cairam (log periodico).
 var _disconnected: Array[Hero] = []
 var _disconnected_log: Timer
@@ -131,6 +136,9 @@ func _ready() -> void:
 		match_end.bind(match_controller, ROSTER)
 		match_end.play_again_requested.connect(_on_match_end_closed)
 		match_end.back_requested.connect(_on_match_end_closed)
+		_connection_lost = ConnectionLostScreen.new()
+		_connection_lost.exit_requested.connect(_on_connection_lost_exit_requested)
+		add_child(_connection_lost)
 
 
 func _process(_delta: float) -> void:
@@ -444,6 +452,16 @@ func _on_spawns_boss_killed(peer: int) -> void:
 	print("[match] Rei Esqueleto morto por %d" % peer)
 
 
+## Cliente: o servidor encerrou ou caiu. Pausa a arvore (sem peer, `get_unique_id()` erra a cada
+## quadro) e mostra o erro; se a tela do fim ja esta aberta, ela fica e so ela anima.
 func _on_server_disconnected() -> void:
 	status_label.text = "desconectado do servidor"
-	connect_panel.show()
+	get_tree().paused = true
+	if match_controller.state == MatchState.State.ENDED and match_end.visible:
+		match_end.process_mode = Node.PROCESS_MODE_ALWAYS
+		return
+	_connection_lost.present()
+
+
+func _on_connection_lost_exit_requested() -> void:
+	get_tree().quit(EXIT_CONNECTION_LOST)
