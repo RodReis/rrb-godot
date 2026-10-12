@@ -9,6 +9,10 @@
 [ext_resource type="Texture2D" path="res://shared/ui/icons/ui_swords.svg" id="7_swords"]
 [ext_resource type="Texture2D" path="res://shared/ui/icons/ui_sparkle.svg" id="8_sparkle"]
 [ext_resource type="Texture2D" path="res://shared/ui/icons/ui_check.svg" id="9_check"]
+[ext_resource type="Shader" path="res://scenes/ui/gradient_text.gdshader" id="10_text"]
+
+[sub_resource type="ShaderMaterial" id="mode_text"]
+shader = ExtResource("10_text")
 
 [sub_resource type="ShaderMaterial" id="screen_bg"]
 shader = ExtResource("3_shader")
@@ -129,6 +133,8 @@ theme_type_variation = &"LabelH1"
 text = "—"
 
 [node name="Mode" type="Label" parent="Root/Column/Header/HeaderRow/TitleRow"]
+unique_name_in_owner = true
+material = SubResource("mode_text")
 layout_mode = 2
 theme_type_variation = &"LabelHeroMode"
 text = "DUELO 1v1"

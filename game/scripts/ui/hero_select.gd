@@ -43,6 +43,7 @@ var _requested: bool = false
 var _ends_msec: int = 0
 var _rival_icon: Texture2D
 
+@onready var _mode: Label = %Mode
 @onready var _timer: TimerLabel = %Timer
 @onready var _you_status: Label = %YouStatus
 @onready var _rival_status: Label = %RivalStatus
@@ -87,6 +88,7 @@ func _ready() -> void:
 	_lock_in.button_down.connect(_on_lock_in_press.bind(true))
 	_lock_in.button_up.connect(_on_lock_in_press.bind(false))
 	_player_stage.resized.connect(_on_player_stage_resized)
+	_mode.resized.connect(_on_mode_resized)
 
 
 func _process(_delta: float) -> void:
@@ -377,6 +379,11 @@ func _on_match_hero_picked(peer: int, hero_id: int, _tick: int) -> void:
 
 func _on_player_stage_resized() -> void:
 	_enemy_stage.custom_minimum_size.y = _player_stage.size.y
+
+
+## Gradiente do "DUELO 1v1" vai de ponta a ponta do texto.
+func _on_mode_resized() -> void:
+	(_mode.material as ShaderMaterial).set_shader_parameter(&"width", _mode.size.x)
 
 
 func _on_lock_in_hover(inside: bool) -> void:
