@@ -30,6 +30,7 @@
 | 2.20 | F54 / SPEC-054 | Bruxo de Fogo (Mago): Bola de Fogo, Explosão de Chamas, Anel de Fogo, Meteoro; pick, bot, VFX de fogo, cajado visível; elmo não aparece | ADR-0011; SPEC-054; GDB §4.4 |
 | 2.21 | F55 / SPEC-055 | campos de canto NO/SE: Golem de canto + 2 Lobos + 2 Baús Reforçados (50/50 raro/comum); moita de lagoa movida; 35 monstros, 28 baús | ADR-0011; SPEC-055; GDB §5, §6.2 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
+| 2.22 | F56 / SPEC-056 | arena num vale: faixa externa só visual (floresta densa, encostas, cristas rochosas, neblina de distância) para a câmera nunca mostrar o vazio; cascatas NO/SE viram riacho; ilhotas saem | ADR-0012; #150 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
 
@@ -48,6 +49,8 @@
 **Pedido do PI em 2026-10-11:** [FIX] #130 (muralha do pátio da base), F50 (pátio com MegaKit), F51 (seleção) e F52 (vitória/derrota) entram **depois do F49 e antes do F19**: **… → F49 → [FIX] #130 → F50 → F51 → F52 → F19 → [GATE]**. Issues criadas pelo Code por ordem do PI; specs formais não escritas, o corpo de cada issue vale como spec.
 
 **Decisão do PI em 2026-10-11 (ADR-0011):** Bárbaro (F53 #135), Bruxo de Fogo (F54 #136) e campos de canto (F55 #137) entram no MVP2 **depois do F50 e antes do F51**: **… → F50 → F53 → F54 → F55 → F51 → F52 → F19 → [GATE]**. A seleção (F51) nasce com 4 heróis; o soak (F19) cobre os 4. O Rei Esqueleto não muda (risco aceito pelo PI — ADR-0011, Consequências).
+
+**Pedido do PI em 2026-10-12 (ADR-0012):** F56 (arena num vale, sem abismo) entra **depois do [GATE]**: **… → F19 → [GATE] → F56 #150**. O gate homologa a arena atual; issue criada pelo Code por ordem do PI, o corpo da issue vale como spec.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 
