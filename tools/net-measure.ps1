@@ -7,6 +7,8 @@
 .EXAMPLE
   .\tools\net-measure.ps1 -OutDir logs\b -DelayMs 100 -LossPct 2            # cenario B
   .\tools\net-measure.ps1 -OutDir logs\c -DelayMs 200 -JitterMs 30 -LossPct 5   # cenario C
+  Com -BothBots os dois clientes sao bots e se enfrentam no centro: um enxerga o outro sob a
+  neblina, e o "remoto parado" deixa de ser 0/0 (gate do MVP2).
 #>
 param(
     [Parameter(Mandatory)][string]$OutDir,
@@ -14,7 +16,8 @@ param(
     [int]$JitterMs = 0,
     [int]$LossPct = 0,
     [double]$Minutes = 10,
-    [int]$Seed = 20
+    [int]$Seed = 20,
+    [switch]$BothBots
 )
 $ErrorActionPreference = 'Continue'
 $repo = Split-Path -Parent $PSScriptRoot
@@ -34,7 +37,8 @@ try {
         if ((Get-Date) -gt $deadline) { throw 'servidor nao subiu em 2 min' }
         Start-Sleep -Seconds 1
     }
-    $clients = & (Join-Path $PSScriptRoot 'run-clients.ps1') -BotPilot -Autopilot -Probe -LogDir $OutDir
+    if ($BothBots) { $clients = & (Join-Path $PSScriptRoot 'run-clients.ps1') -BotPilotAll -Probe -LogDir $OutDir }
+    else { $clients = & (Join-Path $PSScriptRoot 'run-clients.ps1') -BotPilot -Autopilot -Probe -LogDir $OutDir }
     Write-Host "medindo $Minutes min (rtt=$DelayMs jitter=$JitterMs perda=$LossPct%)..."
     $counters = '/sys/class/net/eth0/statistics/tx_bytes', '/sys/class/net/eth0/statistics/rx_bytes'
     $before = docker compose -f $compose exec -T gameserver cat @counters
