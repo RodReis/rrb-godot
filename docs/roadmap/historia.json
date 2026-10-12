@@ -42,7 +42,8 @@
       "titulo": "Dois heróis",
       "itens": [
         { "nome": "Cavaleiro", "papel": "Tanque", "texto": "Investida que empurra, muralha que absorve dano e bloqueia projéteis, e um terremoto que atordoa." },
-        { "nome": "Arqueira", "papel": "Ranger", "texto": "Flecha que atravessa inimigos, rolamento para escapar e uma chuva de flechas em área." }
+        { "nome": "Arqueira", "papel": "Ranger", "texto": "Flecha que atravessa inimigos, rolamento para escapar e uma chuva de flechas em área." },
+        { "nome": "Bárbaro", "papel": "Algoz", "texto": "Machado de duas mãos, salto que cai no meio dos inimigos, rodopio que acerta todos em volta e uma execução que dói mais em quem já está ferido." }
       ]
     },
     {
@@ -151,7 +152,9 @@
         { "arquivo": "mvp2-f49-noite.webp", "legenda": "Aos 10 minutos a ilha está de noite, com o céu cósmico e a luz fria de sempre. A luz só muda o clima: a visão dos heróis e as regras não mudam.", "tipo": "entregue" },
         { "arquivo": "mvp2-f49-ciclo-dia-noite.webm", "legenda": "A partida inteira, dos 0 aos 10 minutos, acelerada em 10 segundos.", "tipo": "entregue" },
         { "arquivo": "mvp2-f50-patio-da-base.webp", "legenda": "O pátio de trás do castelo deixou de ser um chão vazio: duas casas de dois andares encostadas nas muralhas, duas casinhas de enxaimel e, no canto, uma carroça com caixotes. A base agora parece um castelo onde alguém mora.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f50-casas-do-patio.webp", "legenda": "De perto: tijolo no térreo, madeira e reboco em cima, telhado de telha e chaminé. As casas fecham o fundo do pátio sem ocupar o caminho do ponto de renascimento até o portão.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f50-casas-do-patio.webp", "legenda": "De perto: tijolo no térreo, madeira e reboco em cima, telhado de telha e chaminé. As casas fecham o fundo do pátio sem ocupar o caminho do ponto de renascimento até o portão.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f53-barbaro-machado.webp", "legenda": "O Bárbaro, terceiro herói, abre caminho entre esqueletos com o machado de duas mãos: o golpe varre um arco largo à frente dele.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f53-barbaro-equipamento.webp", "legenda": "O machado muda com a raridade (comum, raro com anel azul, épico com fio dourado e gema roxa). O capuz de urso fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" }
       ]
     },
     "MVP2.5": {
@@ -224,6 +227,9 @@
     "F48": "Armas e armaduras visíveis no herói, com ícone de cada item",
     "F49": "Ciclo de dia e noite ao longo da partida",
     "F50": "Casas e carroça no pátio do castelo",
+    "F53": "Bárbaro, o terceiro herói",
+    "F54": "Bruxo de Fogo, o quarto herói",
+    "F55": "Golem, lobos e baús reforçados nos cantos do mapa",
     "F51": "Nova tela de escolha do herói",
     "F52": "Nova tela de vitória e derrota",
     "F38": "Iluminação, sombras suaves e preparo dos efeitos visuais",
