@@ -67,10 +67,10 @@ func _meteor_step(shown: bool) -> void:
 		var at := Transform3D(Basis.IDENTITY, _wizard.meteor_center)
 		pool.spawn(BURST, at, r.radius)
 		pool.spawn(EARTHQUAKE, at, r.radius)
-	var show := shown and falling
-	_meteor.visible = show
-	_meteor_flames.emitting = show
-	if not show:
+	var visible_now := shown and falling
+	_meteor.visible = visible_now
+	_meteor_flames.emitting = visible_now
+	if not visible_now:
 		return
 	var rate := NetworkTime.tickrate
 	var total := SkillRules.seconds_to_ticks(SkillData.at_rank(r.duration, hero.ranks.z), rate)

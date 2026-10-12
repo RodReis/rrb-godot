@@ -74,7 +74,8 @@ func _shoot(kind: Arrow.Kind, max_range: float, damage: int) -> void:
 ## Servidor: alvo heroi que nenhum projetil atingiu neste tick tem o golpe desfeito (ressimulacao
 ## sem acerto, como o _melee do Cavaleiro).
 # ponytail: so roda com projetil no ar; golpe gravado numa simulacao em que ele ja tinha parado
-# fica. Raro (input atrasado no servidor) e o servidor segue autoritativo.
+# fica (na Explosao de Chamas, todos do raio). Raro (input atrasado no servidor) e o servidor segue
+# autoritativo; fechar exige contar ticks de _miss depois do stop() no estado de rollback.
 func _advance_arrows(tick: int) -> void:
 	_struck_basic.clear()
 	_struck_q.clear()
