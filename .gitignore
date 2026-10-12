@@ -12,6 +12,9 @@ export_presets.cfg
 /launcher/shared
 /art/
 
+# Saida local de testes, partidas e capturas (tools/*.ps1, verificacao visual)
+/logs/
+
 # Builds
 /build/
 *.exe
