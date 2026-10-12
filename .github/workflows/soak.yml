@@ -1,0 +1,51 @@
+name: soak
+
+# Soak (F19, ARCHITECTURE-GAME §8, CI-PR.md §2): 50 partidas bot x bot headless no servidor
+# dedicado, em tempo real e em paralelo. Fora do `gate` da PR: roda toda noite (03:00 BRT), sob
+# demanda e na PR que muda este arquivo (para provar o próprio job).
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      count:
+        description: Partidas (50 = 10 confrontos x 5 rodadas)
+        default: '50'
+  pull_request:
+    paths: ['.github/workflows/soak.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soak-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  soak:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/godot
+        with:
+          version: ${{ env.GODOT_VERSION }}
+
+      # 4 vCPU e 16 GB: cada servidor usa ~0,3 núcleo e ~350 MB, então 8 em paralelo cabem.
+      - name: 50 partidas bot x bot (tools/soak.ps1)
+        shell: pwsh
+        env:
+          SOAK_COUNT: ${{ inputs.count || '50' }}
+        run: ./tools/soak.ps1 -Count ([int]$env:SOAK_COUNT) -Parallel 8 -Out soak-report
+
+      - name: Relatório e logs das partidas
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: soak-report
+          path: soak-report
+          retention-days: 14

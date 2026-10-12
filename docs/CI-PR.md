@@ -23,7 +23,7 @@ Jobs paralelos por módulo, **um gate agregado**, duração medida, limites expl
 | `export-check` | `game`, `launcher` (a partir de F28) | `--export-debug` dos presets Windows e Linux-server, sem publicar | 4 min |
 | `lint-docs` | `docs` | links internos (`lychee --offline`), `markdownlint` | 30 s |
 | `gate` | sempre, `needs: [todos]`, `if: always()` | falha se qualquer job necessário falhou ou foi cancelado; **sucesso se os jobs pulados foram pulados por path filter** | 5 s |
-| `soak` (workflow separado, nightly + manual) | cron 03:00 BRT | `tools/soak.ps1`-equivalente Linux: 50 partidas bot × bot headless | 30 min, fora do gate |
+| `soak` (workflow separado, nightly + manual) | cron 03:00 BRT | `tools/soak.ps1` (pwsh, igual no Windows): 50 partidas bot × bot headless, 8 em paralelo | ~46 min medidos local, fora do gate |
 
 Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker própria em `infra/ci/` se a action não oferecer a versão — decidir em F1, registrar aqui). Cache: `~/.cache/pnpm`, `.godot/imported` por módulo (chave = hash dos `.import`).
 
@@ -35,7 +35,8 @@ Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker
 - **`test-game`:** `tools/test.ps1 -Module game` — GUT em `res://test/unit` e, se existir, `res://shared/test`.
 - **`gate`:** `needs: [changes, lint-gd, test-game]`, `if: always()`; pulado por path filter = sucesso; `changes` falho ou pulado = falha.
 - Base reformatada uma vez com `gdformat` (#17) para o check por arquivo tocado não herdar dívida.
-- Ainda não implementados: `test-launcher`, `test-backend`, `build-server`, `export-check`, `lint-docs`, `soak`, medição (§5) — entram por card `[INFRA]`. Até `lint-docs` existir, PR só de `docs/**` roda `changes` + `gate`.
+- **`soak` (F19 #68):** `.github/workflows/soak.yml`, `ubuntu-latest`, `timeout-minutes: 120`, `permissions: contents: read`. Roda `tools/soak.ps1 -Count 50 -Parallel 8` (servidor dedicado com `--bots`, tempo real) e sobe `soak-report/` (CSV, JSON e um log por partida) como artefato por 14 dias. Dispara por `schedule` (06:00 UTC), `workflow_dispatch` (input `count`) e `pull_request` só quando `soak.yml` muda. Fora do `gate`; falha do nightly é card `[FIX]`.
+- Ainda não implementados: `test-launcher`, `test-backend`, `build-server`, `export-check`, `lint-docs`, medição (§5) — entram por card `[INFRA]`. Até `lint-docs` existir, PR só de `docs/**` roda `changes` + `gate`.
 
 ## 3. Path filter
 
