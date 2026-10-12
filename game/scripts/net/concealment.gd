@@ -107,7 +107,10 @@ func _process(_delta: float) -> void:
 		return
 	# No _ready o peer ainda e offline e is_server() mente; aqui ja vale.
 	if multiplayer.is_server():
-		set_process(false)
+		# O cliente que ainda nao conectou (aquecimento de shaders) tem peer offline, que tambem
+		# diz is_server(): desligar ali apagaria o no para sempre (monstro e bau nascem no load).
+		if not multiplayer.multiplayer_peer is OfflineMultiplayerPeer:
+			set_process(false)
 		return
 	var last := _last_state()
 	if _hidden_here and _first_after_hide < 0 and _hide_tick >= 0 and last > _hide_tick:

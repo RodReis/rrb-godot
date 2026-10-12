@@ -2,7 +2,8 @@
 .SYNOPSIS
   Abre N clientes lado a lado conectando no servidor. -Autopilot liga o autopilot do 2o em diante.
   -BotPilot: o 1o cliente e jogado pelo BotInput (--autopilot=bot). -Probe liga a sonda de rede
-  (NetProbe, F20). -LogDir grava o log de cada cliente em <LogDir>\client<N>.log. Devolve os
+  (NetProbe, F20). -BotPilotAll: todos os clientes sao jogados pelo BotInput (os dois se encontram no
+  centro, entao um enxerga o outro sob a neblina; gate do MVP2). -LogDir grava o log de cada cliente em <LogDir>\client<N>.log. Devolve os
   processos abertos.
 #>
 param(
@@ -10,6 +11,7 @@ param(
     [int]$Count = 2,
     [switch]$Autopilot,
     [switch]$BotPilot,
+    [switch]$BotPilotAll,
     [switch]$Probe,
     [string]$LogDir = ''
 )
@@ -20,7 +22,7 @@ for ($i = 0; $i -lt $Count; $i++) {
     $gameArgs = @('--path', "`"$game`"", '--resolution', '960x540', '--position', "$x,80")
     if ($LogDir) { $gameArgs += @('--log-file', "`"$(Join-Path $LogDir "client$($i + 1).log")`"") }
     $gameArgs += @('--', "--connect=$Address")
-    if ($BotPilot -and $i -eq 0) { $gameArgs += '--autopilot=bot' }
+    if ($BotPilotAll -or ($BotPilot -and $i -eq 0)) { $gameArgs += '--autopilot=bot' }
     elseif ($Autopilot -and $i -gt 0) { $gameArgs += '--autopilot' }
     if ($Probe) { $gameArgs += '--probe' }
     Start-Process -FilePath $env:GODOT_PATH -ArgumentList $gameArgs -PassThru
