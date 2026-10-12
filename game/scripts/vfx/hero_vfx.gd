@@ -19,7 +19,7 @@ var _was_shown: bool = false
 
 
 func _process(delta: float) -> void:
-	if not is_instance_valid(hero):
+	if not is_instance_valid(hero) or not hero.is_inside_tree():  # fora da arvore: servidor saiu
 		queue_free()
 		return
 	global_transform = hero.global_transform
