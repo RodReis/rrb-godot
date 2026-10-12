@@ -154,6 +154,37 @@ func test_leash_volta_com_hp_cheio() -> void:
 	assert_eq(monster.hp, roundi(monster.data.hp))
 
 
+## Campo (PI 2026-10-12): ferir um monstro da base de longe acorda so quem tem o spawn a ate
+## MonsterRules.CAMP_RADIUS dele, sem cadeia (a base inteira fica a 4,7 u em 4,7 u); o golpe fatal
+## tambem acorda.
+func test_ferir_acorda_so_o_campo_sem_cadeia() -> void:
+	var base := _base_monsters(GateRules.TEAM_A)
+	var hit := base[0]
+	var center := Vector3.ZERO
+	for monster: Monster in base:
+		center += monster.global_position / base.size()
+	var away := hit.global_position - center
+	away.y = 0.0
+	_hero.global_position = hit.global_position + away.normalized() * 9.0
+	var effect := HitEffect.new(hit.hp)
+	effect.attacker_id = _hero.peer_id
+	hit.receive_hit(_tick, HitLedger.source_key(_hero.peer_id, HitLedger.Slot.BASIC), effect)
+	for _pass: int in 2:
+		_tick += 1
+		for monster: Monster in base:
+			monster._on_network_tick(DT, _tick)
+	var woke := 0
+	for monster: Monster in base:
+		if monster == hit:
+			continue
+		var near := monster._home.distance_to(hit._home) <= MonsterRules.CAMP_RADIUS
+		var expected := MonsterRules.State.CHASE if near else MonsterRules.State.IDLE
+		assert_eq(monster.state, expected, monster.name)
+		woke += 1 if near else 0
+	assert_gt(woke, 0)
+	assert_lt(woke, base.size() - 1)
+
+
 func test_aprender_gasta_ponto_no_tick_do_pedido() -> void:
 	for monster: Monster in _base_monsters(GateRules.TEAM_A):
 		_kill(monster, _hero)

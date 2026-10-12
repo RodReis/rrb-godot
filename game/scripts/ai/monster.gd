@@ -159,10 +159,9 @@ func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
 	if effect.slow_ticks > 0:
 		_slow_pct = maxf(_slow_pct, effect.slow) if _slow_ticks > 0 else effect.slow
 		_slow_ticks = maxi(_slow_ticks, effect.slow_ticks)
+	_provoke_camp(effect.attacker_id)
 	if not is_alive():
 		_die(tick, effect.attacker_id)
-		return
-	_provoke_camp(effect.attacker_id)
 
 
 ## Servidor: [param hero] feriu este monstro ou um do campo dele. Voltando ao spawn, ignora.
@@ -205,7 +204,9 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 	if next == MonsterRules.State.RESET and state != MonsterRules.State.RESET:
 		hp = roundi(data.hp)  # leash: volta com HP cheio (PI 2026-10-09)
 		_target = null
-	if state == MonsterRules.State.IDLE and next == MonsterRules.State.CHASE and _target != null:
+	# So quem acordou pelo aggro alerta; o provocado ja foi alertado (sem cadeia entre campos).
+	var woke := state == MonsterRules.State.IDLE and next == MonsterRules.State.CHASE
+	if woke and not provoked and _target != null:
 		_alert_camp(_target)
 	state = next
 	match state:
@@ -278,8 +279,10 @@ func _die(tick: int, killer_id: int) -> void:
 
 
 ## Dano de heroi (attacker_id = peer_id; 0 = sem heroi) acorda este monstro e os do campo dele.
+# ponytail: 2 get_nodes_in_group por golpe de heroi (35 monstros); cachear os do campo se o
+# profiler apontar.
 func _provoke_camp(attacker_id: int) -> void:
-	if attacker_id == 0:
+	if attacker_id == 0 or data.tier == MonsterData.Tier.BOSS:
 		return
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		if (node as Hero).peer_id == attacker_id:
