@@ -5,6 +5,7 @@ extends GutTest
 
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const RANGER: String = "res://scenes/heroes/ranger.tscn"
+const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -79,6 +80,18 @@ func test_arma_da_arqueira_e_o_arco_dela() -> void:
 	_equip([&"sword_t3_epic"])
 	assert_eq(_pieces("ranger_sword_t3_epic__handslot_l").size(), 1)
 	assert_false(_part("bow_withString").visible)
+
+
+func test_barbaro_usa_o_machado_e_nao_mostra_elmo() -> void:
+	_bind(BARBARIAN)
+	_equip([&"guard_helm_t3", &"guard_chest_t1", &"sword_t2"])
+	assert_eq(_pieces("barbarian_sword_t2__handslot_r").size(), 1)
+	assert_false(_part("2H_Axe").visible, "machado novo troca o do pack")
+	assert_eq(_pieces("guard_helm_*").size(), 0, "capuz fica (ADR-0011 item 3)")
+	assert_true(_part("Barbarian_Hat").visible)
+	assert_eq(_pieces("guard_chest_t1__*").size(), 1)
+	_hero._refresh_attributes()
+	assert_eq(_hero.attributes.defense, 15.0 + 25.0 + 5.0, "o elmo vale sem aparecer")
 
 
 func test_peca_em_repouso_fica_no_espaco_do_modelo() -> void:

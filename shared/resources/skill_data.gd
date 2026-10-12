@@ -17,6 +17,8 @@ extends Resource
 @export var attack_ratio: float
 @export var intelligence_ratio: float
 @export var max_hp_ratio: float
+## Fracao do HP faltante do alvo somada ao dano, antes da DEF (R do Barbaro).
+@export var missing_hp_ratio: float
 ## Alcance do golpe/projetil (u).
 @export var attack_range: float
 ## Raio da area ou da colisao do projetil (u).

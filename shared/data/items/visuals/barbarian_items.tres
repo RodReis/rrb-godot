@@ -1,0 +1,83 @@
+[gd_resource type="Resource" script_class="ItemVisuals" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/item_visuals.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/guard_boots_t1.glb" id="p0"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_boots_t1.png" id="i0"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/guard_boots_t2.glb" id="p1"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_boots_t2.png" id="i1"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/guard_boots_t3.glb" id="p2"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_boots_t3.png" id="i2"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/guard_chest_t1.glb" id="p3"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_chest_t1.png" id="i3"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/guard_chest_t2.glb" id="p4"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_chest_t2.png" id="i4"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/guard_chest_t3.glb" id="p5"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_chest_t3.png" id="i5"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_helm_t1.png" id="i6"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_helm_t2.png" id="i7"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/guard_helm_t3.png" id="i8"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/hunter_boots_t1.glb" id="p9"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_boots_t1.png" id="i9"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/hunter_boots_t2.glb" id="p10"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_boots_t2.png" id="i10"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/hunter_boots_t3.glb" id="p11"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_boots_t3.png" id="i11"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/hunter_chest_t1.glb" id="p12"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_chest_t1.png" id="i12"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/hunter_chest_t2.glb" id="p13"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_chest_t2.png" id="i13"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/hunter_chest_t3.glb" id="p14"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_chest_t3.png" id="i14"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_helm_t1.png" id="i15"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_helm_t2.png" id="i16"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/hunter_helm_t3.png" id="i17"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/barbarian_sword_t1.glb" id="p18"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/barbarian_sword_t1.png" id="i18"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/barbarian_sword_t2.glb" id="p19"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/barbarian_sword_t2.png" id="i19"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/equipment/barbarian_sword_t3_epic.glb" id="p20"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/items/barbarian_sword_t3_epic.png" id="i20"]
+
+[resource]
+script = ExtResource("1_script")
+pack_parts = Array[StringName]([&"2H_Axe", &"", &"", &""])
+pieces = Dictionary[StringName, PackedScene]({
+&"guard_boots_t1": ExtResource("p0"),
+&"guard_boots_t2": ExtResource("p1"),
+&"guard_boots_t3": ExtResource("p2"),
+&"guard_chest_t1": ExtResource("p3"),
+&"guard_chest_t2": ExtResource("p4"),
+&"guard_chest_t3": ExtResource("p5"),
+&"hunter_boots_t1": ExtResource("p9"),
+&"hunter_boots_t2": ExtResource("p10"),
+&"hunter_boots_t3": ExtResource("p11"),
+&"hunter_chest_t1": ExtResource("p12"),
+&"hunter_chest_t2": ExtResource("p13"),
+&"hunter_chest_t3": ExtResource("p14"),
+&"sword_t1": ExtResource("p18"),
+&"sword_t2": ExtResource("p19"),
+&"sword_t3_epic": ExtResource("p20")
+})
+icons = Dictionary[StringName, Texture2D]({
+&"guard_boots_t1": ExtResource("i0"),
+&"guard_boots_t2": ExtResource("i1"),
+&"guard_boots_t3": ExtResource("i2"),
+&"guard_chest_t1": ExtResource("i3"),
+&"guard_chest_t2": ExtResource("i4"),
+&"guard_chest_t3": ExtResource("i5"),
+&"guard_helm_t1": ExtResource("i6"),
+&"guard_helm_t2": ExtResource("i7"),
+&"guard_helm_t3": ExtResource("i8"),
+&"hunter_boots_t1": ExtResource("i9"),
+&"hunter_boots_t2": ExtResource("i10"),
+&"hunter_boots_t3": ExtResource("i11"),
+&"hunter_chest_t1": ExtResource("i12"),
+&"hunter_chest_t2": ExtResource("i13"),
+&"hunter_chest_t3": ExtResource("i14"),
+&"hunter_helm_t1": ExtResource("i15"),
+&"hunter_helm_t2": ExtResource("i16"),
+&"hunter_helm_t3": ExtResource("i17"),
+&"sword_t1": ExtResource("i18"),
+&"sword_t2": ExtResource("i19"),
+&"sword_t3_epic": ExtResource("i20")
+})

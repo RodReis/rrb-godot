@@ -93,6 +93,10 @@ func is_alive() -> bool:
 	return hp > 0
 
 
+func missing_hp() -> int:
+	return maxi(roundi(data.hp) - hp, 0)
+
+
 func combat_id() -> int:
 	return uid
 

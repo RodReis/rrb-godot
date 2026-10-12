@@ -10,12 +10,16 @@ extends Node
 @export var idle: StringName = &"Idle"
 @export var run: StringName = &"Running_A"
 @export var dash: StringName = &"Running_B"
+## Velocidade da animacao de avanco (o Salto do Barbaro cabe a animacao de pulo em 0,45 s).
+@export var dash_play_speed: float = 1.0
 @export var block: StringName = &"Blocking"
 @export var stunned: StringName = &"Hit_B"
 @export var basic_attack: StringName = &"1H_Melee_Attack_Slice_Horizontal"
 ## Vazio = o Q nao tem animacao propria (Investida usa a de avanco).
 @export var skill_q: StringName = &""
 @export var skill_r: StringName = &"1H_Melee_Attack_Chop"
+## Laco enquanto o heroi canaliza (Hero.is_channeling: Rodopio do Barbaro).
+@export var channel: StringName = &""
 @export var death: StringName = &"Death_A"
 ## Velocidade abaixo da qual o heroi esta parado (u/s).
 @export var moving_speed: float = 0.1
@@ -40,7 +44,7 @@ func _ready() -> void:
 		if node:
 			node.hide()
 	_player = model.find_child("AnimationPlayer") as AnimationPlayer
-	for looping: StringName in [idle, run, dash, block]:
+	for looping: StringName in [idle, run, dash, block, channel]:
 		if _player.has_animation(looping):
 			_player.get_animation(looping).loop_mode = Animation.LOOP_LINEAR
 	_player.animation_finished.connect(_on_player_animation_finished)
@@ -67,9 +71,11 @@ func _process(_delta: float) -> void:
 	if _hero.stun_ticks > 0:
 		_loop(stunned)
 	elif _hero.dash_ticks > 0:
-		_loop(dash)
+		_loop(dash, dash_play_speed)
 	elif started_r:
 		_once(skill_r)
+	elif _hero.is_channeling() and _player.current_animation != skill_r:
+		_loop(channel)
 	elif started_q:
 		_once(skill_q)
 	elif started_basic:
@@ -135,10 +141,10 @@ func _show_slot(slot: int, item: ItemData) -> void:
 	root.free()
 
 
-func _loop(animation: StringName) -> void:
+func _loop(animation: StringName, speed: float = 1.0) -> void:
 	_one_shot = false
 	if _player.current_animation != animation:
-		_player.play(animation)
+		_player.play(animation, -1.0, speed)
 
 
 func _once(animation: StringName) -> void:

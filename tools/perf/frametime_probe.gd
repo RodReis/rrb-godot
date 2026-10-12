@@ -21,6 +21,7 @@ const P99: float = 0.99
 const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"knight": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
 	&"ranger": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
+	&"barbarian": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
 }
 
 var _out: String = "frametime"

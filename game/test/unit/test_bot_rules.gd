@@ -157,3 +157,15 @@ func test_recuo_gasto_libera_quando_hp_passa_do_limiar() -> void:
 	assert_true(BotRules.retreat_spent_after(S.RETREAT, S.FARM, 0.2, false, _profile))
 	assert_true(BotRules.retreat_spent_after(S.FARM, S.FARM, 0.2, true, _profile))
 	assert_false(BotRules.retreat_spent_after(S.FARM, S.FARM, 0.3, true, _profile))
+
+
+func test_perfil_do_barbaro_vem_da_spec_053() -> void:
+	assert_eq([_profile.leap_range, _profile.spin_range, _profile.execute_range], [7.0, 2.5, 2.5])
+
+
+func test_barbaro_salta_so_fora_do_alcance_do_basico() -> void:
+	var basic := 2.4
+	assert_eq(BotRules.barbarian_skills(5.0, basic, _profile), Vector3i(1, 0, 0))
+	assert_eq(BotRules.barbarian_skills(7.5, basic, _profile), Vector3i(0, 0, 0), "longe demais")
+	assert_eq(BotRules.barbarian_skills(2.0, basic, _profile), Vector3i(0, 1, 1), "perto: E e R")
+	assert_eq(BotRules.barbarian_skills(2.45, basic, _profile), Vector3i(1, 1, 1))

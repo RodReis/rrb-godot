@@ -29,6 +29,11 @@ func is_alive() -> bool:
 	return true
 
 
+## HP que falta para o maximo (Execucao do Barbaro).
+func missing_hp() -> int:
+	return 0
+
+
 ## Id unico de quem e golpeado (peer_id do heroi, uid negativo do monstro).
 func combat_id() -> int:
 	return 0

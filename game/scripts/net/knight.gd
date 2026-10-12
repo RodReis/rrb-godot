@@ -47,21 +47,6 @@ func _while_dashing(tick: int) -> void:
 		return
 
 
-func _melee(tick: int) -> void:
-	if not multiplayer.is_server():
-		return
-	var basic := hero_data.basic_attack
-	var damage := roundi(SkillRules.amount(basic, 1, attributes))
-	for other: Combatant in _enemies():
-		var half_arc := basic.arc_degrees / 2.0
-		if CombatRules.is_in_melee_arc(
-			global_position, forward(), other.global_position, basic.attack_range, half_arc
-		):
-			_hit(other, tick, HitLedger.Slot.BASIC, HitEffect.new(damage, global_position))
-		else:
-			_miss(other, tick, HitLedger.Slot.BASIC)
-
-
 func _earthquake(tick: int) -> void:
 	if not multiplayer.is_server():
 		return

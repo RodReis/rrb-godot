@@ -35,6 +35,8 @@ var _known_alive: Dictionary[Monster, bool] = {}
 var _known_where: Dictionary[Monster, Vector3] = {}
 var _known_chest: Dictionary[Chest, bool] = {}
 var _tick: int = 0
+## Recargas de Q, E e R vistas no think anterior: a que subiu foi usada (log, SPEC-053 §6 item 5).
+var _last_cooldowns: Vector3i = Vector3i.ZERO
 
 
 func _gather() -> void:
@@ -60,6 +62,7 @@ func think(tick: int) -> void:
 		)
 	state = next
 	_learn_points()
+	_log_skills()
 	match state:
 		BotRules.State.RETREAT:
 			_go(tick, _fountain().global_position if view.can_heal else _home())
@@ -155,7 +158,8 @@ func _contest(tick: int) -> void:
 
 ## Chega no alcance do basico e golpeia; [param skills] usa as habilidades (o Hero confere
 ## recarga): Q de projetil (Arqueira) ja no alcance dele, em linha com a mira; E que nao e avanco
-## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele).
+## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele). Barbaro pelos
+## limiares do perfil (BotRules.barbarian_skills): o Salto cai no alvo (aim_distance).
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -167,13 +171,22 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var ranger := _hero as Ranger
 	var blocked := ranger != null and ranger.shot_blocked(where)
 	skill_q = skill_q and not blocked
+	var barbarian := _hero is Barbarian
+	var use := Vector3i.ZERO
+	if barbarian:
+		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
+		skill_q = skills and use.x == 1
 	# Sem linha de tiro (Arqueira), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
 		return
 	attack = true
-	skill_e = skills and is_zero_approx(data.skill_e.distance)
-	skill_r = skills
+	if barbarian:  # E e R so parado no alcance do golpe: andando, a Execucao pode errar o cone
+		skill_e = skills and use.y == 1
+		skill_r = skills and use.z == 1
+	else:
+		skill_e = skills and is_zero_approx(data.skill_e.distance)
+		skill_r = skills
 
 
 ## Recuando: golpeia o monstro ja no alcance do basico, sem parar de andar. O T1 da base
@@ -270,6 +283,15 @@ func _learn_points() -> void:
 		if SkillRules.learn(_hero.ranks, slot, skills[slot], _hero.level) != _hero.ranks:
 			learn = slot
 			return
+
+
+## Uma linha por habilidade que o heroi do bot acabou de usar (recarga subiu).
+func _log_skills() -> void:
+	var now := Vector3i(_hero.q_cooldown, _hero.e_cooldown, _hero.r_cooldown)
+	for slot: int in [SkillRules.SLOT_Q, SkillRules.SLOT_E, SkillRules.SLOT_R]:
+		if now[slot] > _last_cooldowns[slot]:
+			print("[bot] %s usa %s" % [_hero.hero_data.display_name, "QER"[slot]])
+	_last_cooldowns = now
 
 
 func _in_danger(enemy: Hero) -> bool:

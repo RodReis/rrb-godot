@@ -1,12 +1,16 @@
 extends Node3D
-## Vitrine do equipamento (SPEC-048 §6 item 5; regra de alinhamento do PRD §11): os dois herois
+## Vitrine do equipamento (SPEC-048 §6 item 5; regra de alinhamento do PRD §11): os herois
 ## com os dois conjuntos nas tres raridades (elmo, peito e bota do conjunto + a arma da mesma
 ## raridade), ou seja, os 21 itens em cada heroi. Fora da partida; so para a verificacao visual.
 ## Teclas: 1 = camera do jogo (14 u, 45°), 2 = de perto, W/S = linha em foco, Espaco = gira os
 ## herois, A = alterna parado/correndo (confere o clipping na animacao).
 ## Argumentos (depois de --): --close e --row=N abrem de perto na linha N (captura de tela).
 
-const HEROES: Array[String] = ["res://scenes/heroes/knight.tscn", "res://scenes/heroes/ranger.tscn"]
+const HEROES: Array[String] = [
+	"res://scenes/heroes/knight.tscn",
+	"res://scenes/heroes/ranger.tscn",
+	"res://scenes/heroes/barbarian.tscn",
+]
 const SETS: Array[String] = ["guard", "hunter"]
 const SLOTS: Array[String] = ["helm", "chest", "boots"]
 ## Indice = raridade.
@@ -14,7 +18,6 @@ const WEAPONS: Array[StringName] = [&"sword_t1", &"sword_t2", &"sword_t3_epic"]
 const SET_NAMES: Array[String] = ["Guarda", "Caçador"]
 const COLUMN_STEP: float = 3.0
 const ROW_STEP: float = 7.5
-const ROWS: int = 4
 const GAME_PITCH: float = 45.0
 const GAME_DISTANCE: float = 14.0
 const CLOSE_PITCH: float = 15.0
@@ -25,6 +28,8 @@ const RUN_SPEED: float = 5.0
 const LABEL_SIZE: int = 28
 const LABEL_OFFSET: Vector3 = Vector3(0.0, 0.15, 1.1)
 const LOCAL_PEER: String = "1"
+## Uma linha por heroi e conjunto.
+const ROWS: int = 6
 
 var _heroes: Array[Hero] = []
 var _turning: bool = false

@@ -19,6 +19,7 @@ const MAX_PLAYERS: int = 2
 const ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/knight.tres"),
 	preload("res://shared/data/heroes/ranger.tres"),
+	preload("res://shared/data/heroes/barbarian.tres"),
 ]
 ## Host so aceita conexao local, em porta escolhida pelo sistema.
 const HOST_BIND_IP: String = "127.0.0.1"
@@ -39,6 +40,8 @@ const FOG_OF_WAR_OVERLAY: bool = false
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 ## --bot: o bot ocupa a vaga do time B assim que o servidor abre.
 var _wants_bot: bool = false
+## --bot-hero=<id> (dev): heroi do bot e do heroi local com --autopilot=bot; vazio = padrao.
+var _bot_hero: StringName = &""
 ## --autopilot=bot: o heroi local e jogado pelo BotInput.
 var _bot_pilot: bool = false
 ## Servidor dedicado: encerra o processo no fim da partida.
@@ -104,6 +107,7 @@ func _ready() -> void:
 	match_controller.match_seed = spawns.loot_seed
 	match_controller.forced_daynight = args["daynight"]
 	_wants_bot = args["bot"]
+	_bot_hero = args["bot_hero"]
 	_bot_pilot = args["bot_pilot"]
 	if args["probe"]:
 		var probe := NetProbe.new()
@@ -365,13 +369,15 @@ func _on_disconnected_log_timeout() -> void:
 			)
 
 
-## Quem joga ve a selecao enquanto ela dura. Servidor: o bot confirma o padrao do slot assim
-## que a selecao abre (mesmo resultado do timeout, sem esperar 24 s); na PHASE1 nascem os
-## herois escolhidos.
+## Quem joga ve a selecao enquanto ela dura. Servidor: o bot confirma o padrao do slot (ou o
+## --bot-hero de dev) assim que a selecao abre (mesmo resultado do timeout, sem esperar 24 s);
+## na PHASE1 nascem os herois escolhidos.
 func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 	if not _dedicated and to == MatchState.State.HERO_PICK:
 		var ticks_left := match_controller.deadline_tick - tick
 		hero_select.open(float(ticks_left) / NetworkTime.tickrate)
+		if _bot_pilot:
+			_pilot_pick()
 	elif hero_select.visible:
 		hero_select.close()
 	if not multiplayer.is_server():
@@ -382,9 +388,19 @@ func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 			if seat.is_bot:
 				var slot := MatchController.SLOT_TEAMS.find(seat.team)
 				var hero_id := PickRules.default_hero(defaults, slot, _available_heroes())
+				if PickRules.can_pick(_bot_hero, _available_heroes()):
+					hero_id = _bot_hero
 				match_controller.submit_pick(seat.peer, hero_id, tick)
 	elif to == MatchState.State.PHASE1:
 		_spawn_heroes()
+
+
+## --autopilot=bot com --bot-hero (dev): confirma o heroi pedido pela propria selecao (RPC normal).
+func _pilot_pick() -> void:
+	var index := ROSTER.find_custom(func(d: HeroData) -> bool: return d.id == _bot_hero)
+	if index >= 0:
+		hero_select.select(index)
+		hero_select.lock_in()
 
 
 ## Servidor dedicado: partida encerrada encerra o processo com codigo 0 (ARCHITECTURE-GAME §3.7,

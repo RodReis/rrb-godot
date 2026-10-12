@@ -355,6 +355,15 @@ func combat_id() -> int:
 	return peer_id
 
 
+func missing_hp() -> int:
+	return maxi(attributes.max_hp - hp, 0)
+
+
+## Habilidade canalizada em curso (Rodopio do Barbaro): o HeroVisual mostra a animacao dela.
+func is_channeling() -> bool:
+	return false
+
+
 ## Fracao do segmento [param p0]-[param p1] em que a Muralha ativa bloqueia um projetil, ou
 ## CombatRules.NO_HIT (sem Muralha). A largura sai da forma do ShieldBlocker na cena.
 func projectile_block_fraction(p0: Vector3, p1: Vector3) -> float:
@@ -503,6 +512,22 @@ func _simulate_effects(_tick: int) -> void:
 ## Propriedades de estado de rollback alem das do Hero (caminhos relativos a este node).
 func _extra_state_properties() -> Array[String]:
 	return []
+
+
+## Basico corpo a corpo (Cavaleiro, Barbaro): golpeia quem esta no arco do basic_attack.
+func _melee(tick: int) -> void:
+	if not multiplayer.is_server():
+		return
+	var basic := hero_data.basic_attack
+	var damage := roundi(SkillRules.amount(basic, 1, attributes))
+	for other: Combatant in _enemies():
+		var half_arc := basic.arc_degrees / 2.0
+		if CombatRules.is_in_melee_arc(
+			global_position, forward(), other.global_position, basic.attack_range, half_arc
+		):
+			_hit(other, tick, HitLedger.Slot.BASIC, HitEffect.new(damage, global_position))
+		else:
+			_miss(other, tick, HitLedger.Slot.BASIC)
 
 
 ## Heroi do outro time e monstro vivo.

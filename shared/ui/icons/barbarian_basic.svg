@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 72 72">
+<defs><radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#8A4A2E"/><stop offset="1" stop-color="#2A120C"/></radialGradient></defs>
+<rect width="72" height="72" fill="url(#bg)"/>
+<g fill="#EFE3C4" stroke="#14100A" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+<rect x="33" y="14" width="6" height="48" rx="2"/><path d="M39 16 Q60 14 60 30 Q60 44 39 40 Z"/><path d="M33 16 Q16 18 18 28 Q20 36 33 34 Z"/>
+</g></svg>

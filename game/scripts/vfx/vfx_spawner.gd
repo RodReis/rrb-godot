@@ -10,6 +10,7 @@ const NODE_NAME: StringName = &"Vfx"
 const DRIVERS: Dictionary = {
 	&"knight": preload("res://scenes/vfx/knight_vfx.tscn"),
 	&"ranger": preload("res://scenes/vfx/ranger_vfx.tscn"),
+	&"barbarian": preload("res://scenes/vfx/barbarian_vfx.tscn"),
 }
 
 ## Pai dos herois (Main/Players) e o relay de impactos; definidos antes de entrar na arvore.
