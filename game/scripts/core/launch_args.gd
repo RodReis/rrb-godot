@@ -5,6 +5,7 @@ extends RefCounted
 ## --autopilot: o heroi local anda em circulo; --autopilot=bot: o BotInput joga pelo heroi local
 ## (so le estado replicado). --probe: sonda de rede (NetProbe, F20), para medir replicacao.
 ## --daynight=day|night: forca o inicio da luz no servidor (F49); fora do contrato com o Launcher.
+## --bot-hero=<id>: heroi do bot (dev, F53); ausente ou sem cena = padrao do slot.
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
@@ -32,6 +33,7 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"daynight": DAYNIGHT_AUTO,
 		"offline": false,
 		"bot": false,
+		"bot_hero": &"",
 		"bot_pilot": false,
 		"probe": false,
 	}
@@ -42,6 +44,8 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["offline"] = true
 		elif arg == "--bot":
 			result["bot"] = true
+		elif arg.begins_with("--bot-hero="):
+			result["bot_hero"] = StringName(arg.trim_prefix("--bot-hero="))
 		elif arg == "--autopilot":
 			result["autopilot"] = true
 		elif arg == "--autopilot=bot":

@@ -13,3 +13,9 @@ extends Resource
 @export var fight_range: float
 ## Contesta o boss so com HP a partir disto; abaixo farma e saqueia (PI 2026-10-10, #74).
 @export var contest_hp_pct: float
+## Barbaro (SPEC-053 §5): Salto com o alvo a ate isto (e fora do alcance do basico).
+@export var leap_range: float
+## Barbaro: Rodopio com inimigo a ate isto.
+@export var spin_range: float
+## Barbaro: Execucao com o alvo a ate isto.
+@export var execute_range: float

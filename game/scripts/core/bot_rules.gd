@@ -46,6 +46,17 @@ static func has_advantage(view: BotView) -> bool:
 	return view.hp_pct > view.enemy_hp_pct
 
 
+## Habilidades do Barbaro (SPEC-053 §5) contra um alvo a [param distance]: Q (x) para encurtar,
+## fora do [param basic_range] e ate leap_range; E (y) com o alvo perto; R (z) no alcance da
+## Execucao. 1 = usa (o Hero ainda confere recarga e rank).
+static func barbarian_skills(distance: float, basic_range: float, profile: BotProfile) -> Vector3i:
+	return Vector3i(
+		int(distance > basic_range and distance <= profile.leap_range),
+		int(distance <= profile.spin_range),
+		int(distance <= profile.execute_range),
+	)
+
+
 ## Recuo terminado (saiu de RETREAT) fica gasto ate o HP passar do limiar de novo.
 static func retreat_spent_after(
 	previous: State, current: State, hp_pct: float, spent: bool, profile: BotProfile

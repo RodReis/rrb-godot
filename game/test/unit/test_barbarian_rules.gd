@@ -7,19 +7,19 @@ const RATIO: float = 0.25
 
 
 func test_alvo_com_hp_cheio_toma_so_a_parte_fixa() -> void:
-	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, 600, 600), 234)
+	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, 600 - 600), 234)
 
 
 func test_alvo_com_metade_do_hp() -> void:
-	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, 300, 600), 234 + 75)
+	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, 600 - 300), 234 + 75)
 
 
 func test_alvo_com_10_por_cento_do_hp() -> void:
-	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, 60, 600), 234 + 135)
+	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, 600 - 60), 234 + 135)
 
 
-func test_hp_acima_do_maximo_nao_tira_dano() -> void:
-	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, 700, 600), 234)
+func test_hp_faltante_negativo_nao_tira_dano() -> void:
+	assert_eq(BarbarianRules.execution_damage(AMOUNT, RATIO, -100), 234)
 
 
 func test_rodopio_pulsa_tres_vezes_em_meio_segundo() -> void:

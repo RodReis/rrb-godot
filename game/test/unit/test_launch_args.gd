@@ -108,3 +108,9 @@ func test_daynight_forca_o_inicio_da_luz() -> void:
 		LaunchArgs.DAYNIGHT_AUTO,
 		"valor invalido volta ao sorteio"
 	)
+
+
+func test_heroi_do_bot_de_dev() -> void:
+	assert_eq(LaunchArgs.parse(PackedStringArray([]))["bot_hero"], &"")
+	var r := LaunchArgs.parse(PackedStringArray(["--offline", "--bot", "--bot-hero=barbarian"]))
+	assert_eq(r["bot_hero"], &"barbarian")
