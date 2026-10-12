@@ -39,6 +39,16 @@ func _input(event: InputEvent) -> void:
 	_gamepad = InputDevice.uses_gamepad(event, _gamepad)
 
 
+## O BaseNetInput liga um lambda em NetworkTime.before_tick_loop e so o solta quando o node e
+## liberado. Se o servidor sai, o heroi deixa a arvore antes disso e o lambda ainda roda
+## (is_multiplayer_authority erra fora da arvore).
+func _exit_tree() -> void:
+	for connection: Dictionary in NetworkTime.before_tick_loop.get_connections():
+		var hook: Callable = connection["callable"]
+		if hook.get_object() == self:
+			NetworkTime.before_tick_loop.disconnect(hook)
+
+
 func _gather() -> void:
 	if suspended or disconnected:
 		_gather_idle()
