@@ -6,6 +6,7 @@ extends GutTest
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const RANGER: String = "res://scenes/heroes/ranger.tscn"
 const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
+const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -92,6 +93,19 @@ func test_barbaro_usa_o_machado_e_nao_mostra_elmo() -> void:
 	assert_eq(_pieces("guard_chest_t1__*").size(), 1)
 	_hero._refresh_attributes()
 	assert_eq(_hero.attributes.defense, 15.0 + 25.0 + 5.0, "o elmo vale sem aparecer")
+
+
+func test_bruxo_usa_o_cajado_e_nao_mostra_elmo() -> void:
+	_bind(WIZARD)
+	_equip([&"hunter_helm_t3", &"hunter_chest_t2", &"hunter_boots_t1", &"sword_t3_epic"])
+	assert_eq(_pieces("fire_wizard_sword_t3_epic__handslot_r").size(), 1)
+	assert_false(_part("2H_Staff").visible, "cajado novo troca o do pack")
+	assert_eq(_pieces("hunter_helm_*").size(), 0, "chapeu fica (SPEC-054 §4)")
+	assert_true(_part("Mage_Hat").visible)
+	assert_eq(_pieces("hunter_chest_t2__*").size(), 1)
+	assert_eq(_pieces("hunter_boots_t1__*").size(), 4)
+	_hero._refresh_attributes()
+	assert_eq(_hero.attributes.attack, 45.0 + 15.0 + 12.0 + 45.0, "o elmo vale sem aparecer")
 
 
 func test_peca_em_repouso_fica_no_espaco_do_modelo() -> void:
