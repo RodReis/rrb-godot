@@ -157,7 +157,8 @@
         { "arquivo": "mvp2-f53-barbaro-machado.webp", "legenda": "O Bárbaro, terceiro herói, abre caminho entre esqueletos com o machado de duas mãos: o golpe varre um arco largo à frente dele.", "tipo": "entregue" },
         { "arquivo": "mvp2-f53-barbaro-equipamento.webp", "legenda": "O machado muda com a raridade (comum, raro com anel azul, épico com fio dourado e gema roxa). O capuz de urso fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" },
         { "arquivo": "mvp2-f54-bruxo-anel-de-fogo.webp", "legenda": "O Bruxo de Fogo, quarto herói, enfrenta o Rei Esqueleto no centro: o anel de chamas explode em volta dele e empurra para longe quem estiver perto.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f54-bruxo-cajado.webp", "legenda": "O cajado muda com a raridade (comum, raro com anéis azuis, épico com gola e ponta douradas). O chapéu de bruxo fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" }
+        { "arquivo": "mvp2-f54-bruxo-cajado.webp", "legenda": "O cajado muda com a raridade (comum, raro com anéis azuis, épico com gola e ponta douradas). O chapéu de bruxo fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" },
+        { "arquivo": "mvp2-f51-selecao-herois.webp", "legenda": "A nova tela de escolha do herói: os quatro heróis com retrato, o escolhido à esquerda com papel, habilidades e atributos, e o oponente à direita, ainda escolhendo. O tempo corre no alto.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {

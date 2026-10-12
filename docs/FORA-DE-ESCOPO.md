@@ -63,6 +63,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Telemetria netfox no Launcher (DV tela 8) | DV | Launcher não tem netfox; vive em `net_debug.tscn` do Game |
 | Protótipo 2D (starter) | PRD §8.6 | descartado na Tarefa 1 do M0 |
 | Ferramentas de "audit tracker" no cliente (`m4_audit_tracker.gd`) | DV §3.1 | cliente não é fonte de métrica; backend `telemetry/` |
+| Na tela de seleção (protótipo `docs/prd/telas/Seleção de Heróis/`): heróis Ladina, Maga Violeta e Esqueleto; dificuldade/nível do bot ("Platina I", "IA • Dificuldade Difícil"); servidor, ping, versão do Godot, nº da partida e nome do mapa; legenda do pack do modelo; "(BASE AZUL/VERMELHA)"; atalhos TAB "Ver Estatísticas" e ESC "Cancelar Busca"; rótulos de atributo que não existem no `HeroData` | F51 #132 (PI 2026-10-11) | sem regra no PRD/GDB: o jogo tem 4 heróis (ADR-0011), o bot não tem dificuldade, o time não tem cor e a seleção não tem estatística nem busca para cancelar; a tela mostra só dado real (`FRONTEND-LAUNCHER.md` §8.3) |
 
 ## Pendentes de classificação
 
