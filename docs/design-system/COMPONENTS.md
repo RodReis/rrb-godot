@@ -22,7 +22,9 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | `HeroPreview3D` | `SubViewportContainer` | `bind(hero: HeroData)` ; `set_animation(name)` | `idle`, `pose` | lobby (diorama), pick, bestiário (monstro: `MonsterPreview3D`, mesma base) |
 | `MonsterPreview3D` (implementado) | `SubViewportContainer` | `show_model(model, animation)` ; `@export` `turn_speed` (0 = parado), `camera_distance`/`camera_height`/`look_height` (× altura do modelo), `facing` (graus), `frame_height` (m; 0 = mede a malha) | girando, retrato parado | bestiário, cards da seleção, retratos da grade da seleção (F51) |
 | `StatsGrid` | `GridContainer` (2 col) | `bind(stats: Dictionary[String, float], max_ref: Dictionary)` | — | pick, forja, bestiário |
-| `ScoreBanner` | `PanelCard` | `bind(p1: PlayerScore, p2: PlayerScore, target: int)` | destaque do líder | HUD F2, fim de partida |
+| `ScoreBanner` | `PanelCard` | `bind(p1: PlayerScore, p2: PlayerScore, target: int)` | destaque do líder | HUD F2 |
+| `MatchEndCard` (implementado, `game/`) | `PanelContainer` | `setup_rows(names, icons)` ; `show_player(tone, side, who, hero_text, icon, level, tag)` | tom `Win`/`Lose`/`Draw` | fim de partida (F52): cartão do jogador com moldura do herói, nível, selo e a coluna de linhas |
+| `MatchEndRow` (implementado, `game/`) | `PanelContainer` | `setup(label, icon)` ; `show_value(style, value, value_type, icon_color)` | normal, hover (só `EndRow`), troféu, conjunto ativo, apagada | fim de partida (F52): ícone, nome e valor da estatística |
 | `ZoneRadar` | `Control` (`_draw`) | `set_zone(radius_pct: float, next_radius_pct: float, t_next: float)` ; `set_players(positions)` | — | HUD F2 (minimapa) |
 | `Minimap` | `SubViewportContainer` | `bind(world: Node3D)` ; `set_markers(...)` | — | HUD F1 |
 | `LatencyPlot` | `Control` (`_draw`) | `push_sample(ms)` ; `@export var ceiling_ms := 80` | — | `net_debug.tscn` (Game) |

@@ -40,7 +40,7 @@ Comum = borda `RARITY_COMMON` + texto "Comum"; Raro = `RARITY_RARE` + "Raro"; É
 
 ## P10 — Fim de partida
 
-`TYPE_VICTORY` em `GOLD` (vitória, `TRANS_BOUNCE`) ou `RED` (derrota, fade + dessaturação do fundo); razão + duração em `TYPE_BODY`; `ScoreBanner`; duas colunas `PanelCard` (vencedor `accent=GOLD`, perdedor `accent=RED`) com `StatsGrid`; dois botões (`ButtonPrimary` "Jogar novamente", `Button` "Voltar ao lobby"). Ambos encerram o processo do Game (`ARCHITECTURE-GAME.md` §3.7).
+Fiel ao protótipo `docs/prd/telas/Destaques da Tela de Fim de Partida/` (F52), só com o `MatchStats`. Tom por resultado (`Win` `GOLD`, `Lose` `RED`, `Draw` `TEXT_MUTED`) escolhe os tipos do Theme: título `LabelEndTitle<tom>` com brilho radial atrás (`TRANS_BOUNCE` de 1,5× na vitória; fade na derrota), selo da condição (`EndReason<tom>`), duração e modo; fundo `RunicBackdrop` com 3 brilhos (dourado/azul/vermelho na vitória, vermelho na derrota). Dois `MatchEndCard` (`EndCard<tom>`: vencedor `GOLD`, perdedor `RED`; ALIADO/INIMIGO, selo VENCEDOR/DERROTADO, ícone do básico do herói e `NV.n`) com 9 `MatchEndRow` cada; no meio, a coluna `VS` e o comparador `>` `<` `=` alinhado linha a linha. Quem está melhor na linha ganha a cor de acento; o pior apaga (ícone `RED` se a linha é "menos é melhor"). Rei Esqueleto abatido e conjunto ativo ganham destaque (`EndRowBoss`, `EndRowSet`). Rodapé: `ButtonEnd` "Voltar ao lobby" `[Esc]` e `ButtonEndPrimary` "Jogar novamente" `[Enter]` (vermelho na derrota; pulsa só na vitória). Ambos encerram o processo do Game (`ARCHITECTURE-GAME.md` §3.7).
 
 ## P11 — Navegação por teclado/gamepad
 

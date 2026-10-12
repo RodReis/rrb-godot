@@ -160,7 +160,8 @@
         { "arquivo": "mvp2-f54-bruxo-anel-de-fogo.webp", "legenda": "O Bruxo de Fogo, quarto herói, enfrenta o Rei Esqueleto no centro: o anel de chamas explode em volta dele e empurra para longe quem estiver perto.", "tipo": "entregue" },
         { "arquivo": "mvp2-f54-bruxo-cajado.webp", "legenda": "O cajado muda com a raridade (comum, raro com anéis azuis, épico com gola e ponta douradas). O chapéu de bruxo fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" },
         { "arquivo": "mvp2-f51-selecao-herois.webp", "legenda": "A nova tela de escolha do herói: os quatro heróis com retrato, o escolhido à esquerda com papel, habilidades e atributos, e o oponente à direita, ainda escolhendo. O tempo corre no alto.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f55-campo-de-canto.webp", "legenda": "Novo campo nos cantos do mapa: o Golem de Pedra e dois lobos guardam baús reforçados. Basta um perceber o herói, ou levar uma flechada de longe, para o campo inteiro vir junto.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f55-campo-de-canto.webp", "legenda": "Novo campo nos cantos do mapa: o Golem de Pedra e dois lobos guardam baús reforçados. Basta um perceber o herói, ou levar uma flechada de longe, para o campo inteiro vir junto.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f52-fim-de-partida.webp", "legenda": "A nova tela de fim de partida, aqui numa derrota por eliminação na morte súbita: o motivo no alto, a duração e o modo, e os dois jogadores lado a lado com a comparação no meio. Quem está melhor em cada linha ganha a cor; o Rei Esqueleto e o conjunto de itens só ganham destaque para quem os conquistou.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {
