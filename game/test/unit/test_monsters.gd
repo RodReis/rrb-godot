@@ -72,7 +72,7 @@ func test_um_monstro_por_marcador_na_quantidade_do_gdb() -> void:
 		assert_eq(monster.hp, roundi(monster.data.hp), monster.name)
 	for monster: Monster in _monsters():
 		assert_eq(counts[monster.data.id], monster.data.count, monster.data.id)
-	assert_eq(_monsters().size(), 28)
+	assert_eq(_monsters().size(), 34)
 
 
 func test_uid_negativo_e_unico() -> void:

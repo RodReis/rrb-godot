@@ -41,7 +41,7 @@ func _chests(director: SpawnDirector = _director) -> Array[Chest]:
 ## Bau comum de indice [param index], com o [param drop] (numero de Ids ou ChestRules.HEAL) e o
 ## heroi ao lado.
 func _chest_with(drop: int, index: int = 0) -> Chest:
-	var commons := _chests().filter(func(c: Chest) -> bool: return not c.rare)
+	var commons := _chests().filter(func(c: Chest) -> bool: return c.kind == ChestRules.Kind.COMMON)
 	var chest := commons[index] as Chest
 	chest.drop = drop
 	_hero.global_position = chest.global_position + Vector3(1.0, 0.0, 0.0)
@@ -81,14 +81,46 @@ func _hold_ticks(chest: Chest) -> int:
 	return SkillRules.seconds_to_ticks(chest.rules.swap_hold_time, NetworkTime.tickrate)
 
 
-## 12 de base + 8 dos campos laterais (F36) comuns, 4 raros.
-func test_um_bau_por_marcador_20_comuns_e_4_raros() -> void:
+func _of_kind(kind: ChestRules.Kind) -> Array[Chest]:
+	var result: Array[Chest] = []
+	for chest: Chest in _chests():
+		if chest.kind == kind:
+			result.append(chest)
+	return result
+
+
+## 12 de base + 8 dos campos laterais (F36) comuns, 4 reforcados dos cantos (F55), 4 raros.
+func test_um_bau_por_marcador_20_comuns_4_reforcados_e_4_raros() -> void:
 	var chests := _chests()
-	assert_eq(chests.size(), 24)
-	assert_eq(chests.filter(func(c: Chest) -> bool: return c.rare).size(), 4)
+	assert_eq(chests.size(), 28)
+	assert_eq(_of_kind(ChestRules.Kind.COMMON).size(), 20)
+	assert_eq(_of_kind(ChestRules.Kind.REINFORCED).size(), 4)
+	assert_eq(_of_kind(ChestRules.Kind.RARE).size(), 4)
 	for chest: Chest in chests:
 		assert_false(chest.opened)
 		assert_lt(chest.uid, 0)
+
+
+## SPEC-055 §4: variacao do bau comum com cantoneiras; cintas na cor do reforcado; mesma
+## dobradica (a tampa continua no node Lid que o bau gira).
+func test_bau_reforcado_usa_o_modelo_reforcado() -> void:
+	for chest: Chest in _of_kind(ChestRules.Kind.REINFORCED):
+		var body := chest.get_node("Body") as Node3D
+		var lid := chest.get_node("Lid/Mesh") as Node3D
+		assert_eq(body.scene_file_path, chest.reinforced_body.resource_path)
+		assert_eq(lid.scene_file_path, chest.reinforced_lid.resource_path)
+		var painted := false
+		for node: Node in body.find_children("*", "MeshInstance3D", true, false):
+			var mi := node as MeshInstance3D
+			for i: int in range(mi.get_surface_override_material_count()):
+				painted = (
+					painted or mi.get_surface_override_material(i) == chest.reinforced_material
+				)
+		assert_true(painted, chest.name)
+	var common := _of_kind(ChestRules.Kind.COMMON)[0]
+	assert_ne(
+		(common.get_node("Body") as Node3D).scene_file_path, common.reinforced_body.resource_path
+	)
 
 
 func test_uid_de_bau_e_monstro_nao_colidem() -> void:

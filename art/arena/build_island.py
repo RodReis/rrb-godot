@@ -944,9 +944,11 @@ def build_barricade():
     return build(kit, bevel=0.02)
 
 
-def build_chest_body():
-    """Corpo do bau (madeira + cintas de ferro; referencia do PI). Origem no chao, centro."""
-    kit = Kit("chest_body")
+def build_chest_body(name="chest_body", reinforced=False):
+    """Corpo do bau (madeira + cintas de ferro; referencia do PI). Origem no chao, centro.
+    [reinforced]: bau reforcado do campo de canto (SPEC-055) com cantoneiras nos 8 cantos, cinta
+    horizontal no meio e rebites; mesma caixa (colisao e interacao iguais)."""
+    kit = Kit(name)
     kit.add(box(-0.45, 0.0, -0.3, 0.9, 0.5, 0.6), WOOD, (0.3, 0.65))
     for z in (-0.31, 0.3):
         for y in (0.08, 0.3):
@@ -955,13 +957,26 @@ def build_chest_body():
         kit.add(box(x, -0.01, -0.32, 0.06, 0.53, 0.64), CHARCOAL, (0.3, 0.3), rune="trim")
     kit.add(box(-0.47, 0.0, -0.32, 0.94, 0.07, 0.64), CHARCOAL, (0.3, 0.3), rune="trim")
     kit.add(box(-0.06, 0.36, 0.3, 0.12, 0.12, 0.04), CHARCOAL, (0.3, 0.3), rune="trim")
+    if reinforced:
+        # Cantoneiras em L nos 8 cantos (2 abas por canto) e cinta horizontal no meio.
+        for sx in (-1.0, 1.0):
+            for sz in (-1.0, 1.0):
+                for y0 in (0.0, 0.38):
+                    kit.add(box(0.33 * sx - 0.07 + 0.07 * sx, y0, 0.31 * sz - 0.01 + 0.01 * sz, 0.14, 0.13, 0.02), CHARCOAL, (0.3, 0.3), rune="trim")
+                    kit.add(box(0.47 * sx - 0.01 + 0.01 * sx, y0, 0.2 * sz - 0.07 + 0.07 * sz, 0.02, 0.13, 0.14), CHARCOAL, (0.3, 0.3), rune="trim")
+        kit.add(box(-0.475, 0.22, -0.325, 0.95, 0.06, 0.65), CHARCOAL, (0.3, 0.3), rune="trim")
+        # Rebites na frente, entre as cintas.
+        for x in (-0.25, 0.2):
+            for y in (0.12, 0.4):
+                kit.add(box(x, y, 0.315, 0.04, 0.04, 0.025), CHARCOAL, (0.3, 0.3), rune="trim")
     return build(kit, bevel=0.015)
 
 
-def build_chest_lid():
+def build_chest_lid(name="chest_lid", reinforced=False):
     """Tampa abaulada; origem na dobradica (aresta de tras, em cima do corpo): o chest.gd gira o
-    node pai. Geometria em z 0..0.64 e y 0..0.32."""
-    kit = Kit("chest_lid")
+    node pai. Geometria em z 0..0.64 e y 0..0.32. [reinforced]: cantoneiras nas 4 quinas da
+    tampa e cinta extra entre as cintas (SPEC-055)."""
+    kit = Kit(name)
     n = 7
     verts, faces = [], []
     for side, x in ((0, -0.47), (1, 0.47)):
@@ -986,6 +1001,19 @@ def build_chest_lid():
             band_f.append((2 * i, 2 * i + 2, 2 * i + 3, 2 * i + 1))
         kit.add((band_v, band_f), CHARCOAL, (0.3, 0.3), rune="trim")
     kit.add(box(-0.05, 0.02, 0.6, 0.1, 0.1, 0.06), CHARCOAL, (0.3, 0.3), rune="trim")
+    if reinforced:
+        for x in (-0.27, 0.21):
+            band_v, band_f = [], []
+            for i in range(n):
+                a = math.pi * i / (n - 1)
+                for dx in (0.0, 0.06):
+                    band_v.append((x + dx, 0.03 + 0.315 * math.sin(a), 0.32 - 0.335 * math.cos(a)))
+            for i in range(n - 1):
+                band_f.append((2 * i, 2 * i + 2, 2 * i + 3, 2 * i + 1))
+            kit.add((band_v, band_f), CHARCOAL, (0.3, 0.3), rune="trim")
+        for sx in (-1.0, 1.0):
+            for z0 in (-0.015, 0.515):
+                kit.add(box(0.41 * sx - 0.07 + 0.07 * sx, 0.0, z0, 0.14, 0.12, 0.14), CHARCOAL, (0.3, 0.3), rune="trim")
     return build(kit, bevel=0.012)
 
 
@@ -1348,6 +1376,9 @@ def main():
     if only == ["jungle"]:
         build_jungle_kit()
         return
+    if only == ["chest_reinforced"]:
+        build_reinforced_chest_kit()
+        return
 
     reset_scene()
     island = build_island()
@@ -1413,6 +1444,20 @@ def build_torch_post():
     kit.add(prism(0.42, 0, 2.05, 2.3, 0.1, 0.17, 6), CHARCOAL, (0.3, 0.5))
     kit.add(prism(0.42, 0, 2.28, 2.62, 0.12, 0.0, 6, jitter=0.03, seed=53), RED, (0.5, 0.5), rune=MAGMA)
     return build(kit)
+
+
+def build_reinforced_chest_kit():
+    """Bau reforcado do campo de canto (SPEC-055): fonte em art/arena/chest_reinforced.blend."""
+    reset_scene()
+    chest = [build_chest_body("chest_reinforced_body", True), build_chest_lid("chest_reinforced_lid", True)]
+    for obj in chest:
+        export(obj, obj.name)
+    save("chest_reinforced")
+    # Tampa no lugar do chest.tscn (Lid em (0, 0,5, -0,32) do Godot) so na previa montada.
+    chest[1].location = (0.0, 0.32, 0.5)
+    preview("chest_reinforced", chest)
+    for obj in chest:
+        print("  %-24s %6d" % (obj.name, TRIS[obj.name]))
 
 
 def build_jungle_kit():

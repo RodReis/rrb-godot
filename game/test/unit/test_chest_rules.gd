@@ -1,6 +1,7 @@
 extends GutTest
 ## Sorteio dos baus (GDB §6.2): comum 70 % item comum / 30 % cura; raro 65 % raro / 25 % comum /
-## 10 % epico (PI 2026-10-09). Epico so de armadura; item uniforme na raridade (PI 2026-10-09).
+## 10 % epico (PI 2026-10-09); reforcado 50 % raro / 50 % comum, sem epico nem cura (SPEC-055).
+## Epico so de armadura; item uniforme na raridade (PI 2026-10-09).
 
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
 const CATALOG: String = "res://shared/data/items/catalog.tres"
@@ -24,11 +25,11 @@ func _rng(seed_value: int = SEED) -> RandomNumberGenerator:
 
 
 ## Fracao de cada resultado de roll_rarity em SAMPLES sorteios.
-func _rarity_share(is_rare: bool) -> Dictionary:
+func _rarity_share(kind: ChestRules.Kind) -> Dictionary:
 	var rng := _rng()
 	var counts: Dictionary = {}
 	for i: int in SAMPLES:
-		var r := ChestRules.roll_rarity(is_rare, _rules, rng)
+		var r := ChestRules.roll_rarity(kind, _rules, rng)
 		counts[r] = counts.get(r, 0) + 1
 	var share: Dictionary = {}
 	for key: int in counts:
@@ -37,18 +38,38 @@ func _rarity_share(is_rare: bool) -> Dictionary:
 
 
 func test_bau_comum_70_item_comum_30_cura() -> void:
-	var share := _rarity_share(false)
+	var share := _rarity_share(ChestRules.Kind.COMMON)
 	assert_eq(share.size(), 2)
 	assert_almost_eq(share[ItemData.Rarity.COMMON], 0.7, TOLERANCE)
 	assert_almost_eq(share[ChestRules.HEAL], 0.3, TOLERANCE)
 
 
 func test_bau_raro_65_raro_25_comum_10_epico_sem_cura() -> void:
-	var share := _rarity_share(true)
+	var share := _rarity_share(ChestRules.Kind.RARE)
 	assert_eq(share.size(), 3)
 	assert_almost_eq(share[ItemData.Rarity.RARE], 0.65, TOLERANCE)
 	assert_almost_eq(share[ItemData.Rarity.COMMON], 0.25, TOLERANCE)
 	assert_almost_eq(share[ItemData.Rarity.EPIC], 0.1, TOLERANCE)
+
+
+## SPEC-055 §7 item 3: 10.000 rolagens com seed fixa, 50 % +- 2 % raro, o resto comum.
+func test_bau_reforcado_50_raro_50_comum_sem_epico_nem_cura() -> void:
+	var share := _rarity_share(ChestRules.Kind.REINFORCED)
+	assert_eq(share.size(), 2)
+	assert_almost_eq(share[ItemData.Rarity.RARE], 0.5, TOLERANCE)
+	assert_almost_eq(share[ItemData.Rarity.COMMON], 0.5, TOLERANCE)
+	assert_false(share.has(ItemData.Rarity.EPIC))
+	assert_false(share.has(ChestRules.HEAL))
+
+
+func test_roll_reforcado_da_item_raro_ou_comum() -> void:
+	var rng := _rng()
+	var catalog := load(CATALOG) as ItemCatalog
+	for i: int in SAMPLES / 10:
+		var drop := ChestRules.roll(ChestRules.Kind.REINFORCED, _rules, _items, rng)
+		assert_ne(drop, ChestRules.HEAL)
+		var rarity := catalog.find(drop).rarity
+		assert_true(rarity in [ItemData.Rarity.RARE, ItemData.Rarity.COMMON], str(rarity))
 
 
 func test_epico_de_bau_e_so_armadura() -> void:
@@ -86,10 +107,10 @@ func test_roll_devolve_numero_de_item_da_raridade_ou_cura() -> void:
 	var rng := _rng()
 	var catalog := load(CATALOG) as ItemCatalog
 	for i: int in SAMPLES / 10:
-		var common := ChestRules.roll(false, _rules, _items, rng)
+		var common := ChestRules.roll(ChestRules.Kind.COMMON, _rules, _items, rng)
 		if common != ChestRules.HEAL:
 			assert_eq(catalog.find(common).rarity, ItemData.Rarity.COMMON)
-		var rare := ChestRules.roll(true, _rules, _items, rng)
+		var rare := ChestRules.roll(ChestRules.Kind.RARE, _rules, _items, rng)
 		assert_ne(rare, ChestRules.HEAL)
 		assert_not_null(catalog.find(rare))
 
@@ -113,6 +134,7 @@ func test_mesma_seed_mesmos_drops() -> void:
 	var a := _rng(7)
 	var b := _rng(7)
 	for i: int in 50:
+		var kind := ChestRules.Kind.RARE
 		assert_eq(
-			ChestRules.roll(true, _rules, _items, a), ChestRules.roll(true, _rules, _items, b)
+			ChestRules.roll(kind, _rules, _items, a), ChestRules.roll(kind, _rules, _items, b)
 		)

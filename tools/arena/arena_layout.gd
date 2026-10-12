@@ -119,8 +119,15 @@ const YARD_GRASS_LOCAL: Vector2 = Vector2(19.5, 6.5)
 ## 0,5 u da margem do rio; a SPEC-046 §2.7 a punha em (19,5, -4,6), dentro dessa rota.
 const YARD_ROCK_LOCAL: Vector2 = Vector2(17.1, -10.0)
 const YARD_GRASS_SIZE: Vector2 = Vector2(4, 4)
-## Moita de lagoa (SPEC-046 §2.7), em (x, z) do mundo, fora do corredor TOP.
-const LAGOON_GRASS_A: Vector2 = Vector2(-30, -26)
+## Moita de lagoa, em (x, z) do mundo, fora do corredor TOP: SPEC-055 §2 a tira de (-30, -26)
+## para abrir o campo de canto.
+const LAGOON_GRASS_A: Vector2 = Vector2(-19, -29)
+
+# Campos de canto (SPEC-055 §2, ADR-0011), no bolso da curva TOP (NO); o SE e a rotacao. Neutros:
+# os dois times chegam pela propria rota. Golem no centro, lobos e baus reforcados em volta.
+const CORNER_FIELD: Vector2 = Vector2(-27.5, -27.5)
+const CORNER_WOLF_OFFSETS: Array[Vector2] = [Vector2(1.41, -1.41), Vector2(-1.41, 1.41)]
+const CORNER_CHEST_OFFSETS: Array[Vector2] = [Vector2(2.5, -1.0), Vector2(-1.0, 2.5)]
 
 # Centro (azimute, raio): campos em 45/225 (equidistantes das pontes); raros em 45/225 e 90/270.
 const FIELD_AZIMUTHS: Array[float] = [45.0, 225.0]
