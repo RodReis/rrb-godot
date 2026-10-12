@@ -197,3 +197,46 @@ func test_hero_select_variations() -> void:
 	assert_color(_flat(&"fill", &"ProgressHero").bg_color, UiTokens.CYAN)
 	assert_color(_theme.get_color(&"font_color", &"LabelHeroReady"), UiTokens.GREEN)
 	assert_eq(_theme.get_constant(&"outline_size", &"LabelHeroDark"), 0)
+
+
+## Tela de fim (F52): tom por resultado (card, ícone, selo, nível, título), linhas, valores,
+## comparador, botões e rodapé.
+func test_match_end_variations() -> void:
+	for tone: StringName in ThemeBuilder.END_TONES:
+		var color: Color = ThemeBuilder.END_TONES[tone][0]
+		var card := _flat(&"panel", StringName("EndCard%s" % tone))
+		assert_color(card.border_color, Color(color, ThemeBuilder.END_TONES[tone][1]))
+		assert_eq(card.corner_radius_top_left, UiTokens.RADIUS_LG, tone)
+		assert_color(_flat(&"panel", StringName("EndIcon%s" % tone)).border_color, color)
+		assert_color(
+			_flat(&"panel", StringName("EndReason%s" % tone)).border_color,
+			Color(color, ThemeBuilder.ALPHA_EDGE)
+		)
+		var title := StringName("LabelEndTitle%s" % tone)
+		assert_color(_theme.get_color(&"font_color", title), color)
+		assert_eq(_theme.get_font_size(&"font_size", title), UiTokens.TYPE_END_TITLE, tone)
+		assert_eq(_theme.get_type_variation_base(title), &"LabelVictory", tone)
+		assert_not_null(_flat(&"normal", StringName("LabelEndTag%s" % tone)), tone)
+		assert_not_null(_flat(&"normal", StringName("LabelEndLevel%s" % tone)), tone)
+	assert_color(_flat(&"normal", &"LabelEndLevelWin").bg_color, UiTokens.GOLD)
+	assert_eq(
+		_theme.get_constant(&"outline_size", &"LabelEndLevelWin"), 0, "texto escuro sem contorno"
+	)
+	assert_color(
+		_flat(&"panel", &"EndRowHover").bg_color,
+		Color(UiTokens.BG_CARD, ThemeBuilder.ALPHA_ROW_HOVER)
+	)
+	assert_color(
+		_flat(&"panel", &"EndRowBoss").border_color, Color(UiTokens.GOLD, ThemeBuilder.ALPHA_EDGE)
+	)
+	assert_color(
+		_flat(&"panel", &"EndRowSet").border_color, Color(UiTokens.CYAN, ThemeBuilder.ALPHA_EDGE)
+	)
+	for token: StringName in ThemeBuilder.END_VALUE_TOKENS:
+		var value := StringName("LabelEndValue%s" % String(token).to_pascal_case())
+		assert_color(_theme.get_color(&"font_color", value), UiTokens.COLORS[token])
+		assert_eq(_theme.get_font_size(&"font_size", value), UiTokens.TYPE_END_VALUE, value)
+	assert_color(_flat(&"normal", &"ButtonEndPrimary").bg_color, UiTokens.GOLD)
+	assert_color(_flat(&"normal", &"ButtonEndDanger").bg_color, ThemeBuilder.END_DANGER)
+	assert_color(_flat(&"hover", &"ButtonEnd").border_color, UiTokens.GOLD)
+	assert_eq(_flat(&"normal", &"ButtonEndPrimary").corner_radius_top_left, UiTokens.RADIUS_BUTTON)

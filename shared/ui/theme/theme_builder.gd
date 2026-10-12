@@ -44,6 +44,31 @@ const ALPHA_SOFT: float = 0.15
 const ALPHA_SHADE: float = 0.35
 ## Raio "cheio" da barra de atributo (rounded-full).
 const RADIUS_PILL: int = 9
+## Tela de fim (F52, protótipo): tom do resultado -> [acento, alfa da borda do card, alfa do
+## brilho]. Gera EndCard/EndIcon/EndReason e LabelEndTitle/Tag/Level/Reason de cada tom.
+const END_TONES: Dictionary[StringName, Array] = {
+	&"Win": [UiTokens.GOLD, 0.45, 0.18],
+	&"Lose": [UiTokens.RED, 0.35, 0.12],
+	&"Draw": [UiTokens.TEXT_MUTED, 0.3, 0.0],
+}
+## Cor do texto de selos e razão por tom (RED nunca em texto pequeno, TOKENS §1).
+const END_TEXTS: Dictionary[StringName, Color] = {
+	&"Win": UiTokens.GOLD_BRIGHT, &"Lose": UiTokens.TEXT, &"Draw": UiTokens.TEXT_MUTED
+}
+## Tokens que o valor de uma linha da tabela pode ter: gera LabelEndValue<Token em PascalCase>.
+const END_VALUE_TOKENS: Array[StringName] = [
+	&"GOLD_BRIGHT", &"GREEN", &"CYAN", &"TEXT", &"TEXT_MUTED"
+]
+## red-600 do protótipo: botão "Jogar novamente" na derrota.
+const END_DANGER: Color = Color(0.863, 0.149, 0.149)
+## Alfas do protótipo da tela de fim (Tailwind /40, /70, /30, /10, /20).
+const ALPHA_ROW: float = 0.4
+const ALPHA_ROW_HOVER: float = 0.7
+const ALPHA_ROW_MUTED: float = 0.3
+const ALPHA_TINT: float = 0.1
+const ALPHA_PILL: float = 0.2
+## Raio do círculo do comparador (metade dos 28 px de MatchEnd.GLYPH_SIZE).
+const END_GLYPH_RADIUS: int = 14
 
 var _fonts: Dictionary[String, FontVariation] = {}
 
@@ -70,6 +95,7 @@ func build() -> Theme:
 	_inputs(theme)
 	_slots(theme)
 	_hero_select(theme)
+	_match_end(theme)
 	return theme
 
 
@@ -391,6 +417,186 @@ func _hero_labels(theme: Theme) -> void:
 	theme.set_color(&"font_color", &"LabelHeroDark", UiTokens.BG_SURFACE)
 	theme.set_font(&"font", &"LabelHeroDark", bold)
 	theme.set_constant(&"outline_size", &"LabelHeroDark", 0)
+
+
+## Tela de fim (F52): cards, selos e título por tom (vitória/derrota/sem vencedor), linhas da
+## tabela, comparador, botões e rodapé.
+func _match_end(theme: Theme) -> void:
+	for tone: StringName in END_TONES:
+		_end_tone(theme, tone, END_TONES[tone])
+	_end_rows(theme)
+	_end_values(theme)
+	_end_chrome(theme)
+	_end_buttons(theme)
+
+
+func _end_tone(theme: Theme, tone: StringName, spec: Array) -> void:
+	var color: Color = spec[0]
+	var text: Color = END_TEXTS[tone]
+	var card := _hero_box(Color(UiTokens.BG_SURFACE, 0.8), Color(color, spec[1]), 1)
+	card.set_corner_radius_all(UiTokens.RADIUS_LG)
+	card.set_content_margin_all(UiTokens.SPACE_LG)
+	_glow(card, Color(color, spec[2]))
+	_panel_variation(theme, "EndCard" + tone, card)
+	var icon := _hero_box(UiTokens.BG_SURFACE.darkened(0.5), color, UiTokens.BORDER_W)
+	icon.set_corner_radius_all(UiTokens.RADIUS_BUTTON)
+	icon.set_content_margin_all(UiTokens.SPACE_XS)
+	_panel_variation(theme, "EndIcon" + tone, icon)
+	var reason := _hero_box(Color(color, ALPHA_TINT), Color(color, ALPHA_EDGE), 1)
+	reason.set_corner_radius_all(UiTokens.RADIUS_LG)
+	reason.content_margin_left = UiTokens.SPACE_LG
+	reason.content_margin_right = UiTokens.SPACE_LG
+	reason.content_margin_top = UiTokens.SPACE_XS
+	reason.content_margin_bottom = UiTokens.SPACE_XS
+	_panel_variation(theme, "EndReason" + tone, reason)
+	_end_label(theme, "LabelEndReason" + tone, &"LabelBadge", text, UiTokens.TYPE_BODY)
+	_end_label(theme, "LabelEndTitle" + tone, &"LabelVictory", color, UiTokens.TYPE_END_TITLE)
+	var tag := "LabelEndTag" + tone
+	_end_label(theme, tag, &"LabelBadge", text, UiTokens.TYPE_BADGE)
+	theme.set_stylebox(
+		&"normal", tag, _hero_tag(Color(color, ALPHA_SOFT), Color(color, ALPHA_GLOW))
+	)
+	var level := "LabelEndLevel" + tone
+	var pill := (
+		_hero_tag(color, color) if tone == &"Win" else _hero_tag(UiTokens.BG_CARD, UiTokens.BORDER)
+	)
+	pill.set_corner_radius_all(RADIUS_PILL)
+	_end_label(theme, level, &"LabelBadge", UiTokens.BG_SURFACE, UiTokens.TYPE_BADGE)
+	theme.set_stylebox(&"normal", level, pill)
+	theme.set_font(&"font", level, _font(UiTokens.FONT_MONO_PATH, UiTokens.WEIGHT_BOLD))
+	if tone == &"Win":
+		theme.set_constant(&"outline_size", level, 0)
+	else:
+		theme.set_color(&"font_color", level, UiTokens.TEXT_MUTED)
+
+
+## Linhas da tabela: normal, hover (a /70), troféu dourado (Rei Esqueleto abatido), conjunto
+## ativo (borda CYAN) e apagada (o que o jogador não conquistou).
+func _end_rows(theme: Theme) -> void:
+	var row := _hero_box(Color(UiTokens.BG_CARD, ALPHA_ROW), Color.TRANSPARENT, 0)
+	row.content_margin_left = UiTokens.SPACE_MD
+	row.content_margin_right = UiTokens.SPACE_MD
+	_panel_variation(theme, "EndRow", row)
+	var hover := row.duplicate() as StyleBoxFlat
+	hover.bg_color = Color(UiTokens.BG_CARD, ALPHA_ROW_HOVER)
+	_panel_variation(theme, "EndRowHover", hover)
+	var trophy := row.duplicate() as StyleBoxFlat
+	trophy.bg_color = Color(UiTokens.GOLD, ALPHA_TINT)
+	trophy.border_color = Color(UiTokens.GOLD, ALPHA_EDGE)
+	trophy.set_border_width_all(1)
+	_panel_variation(theme, "EndRowBoss", trophy)
+	var active := row.duplicate() as StyleBoxFlat
+	active.border_color = Color(UiTokens.CYAN, ALPHA_EDGE)
+	active.set_border_width_all(1)
+	_panel_variation(theme, "EndRowSet", active)
+	var muted := row.duplicate() as StyleBoxFlat
+	muted.bg_color = Color(UiTokens.BG_CARD, ALPHA_ROW_MUTED)
+	_panel_variation(theme, "EndRowMuted", muted)
+
+
+## Valor da linha (mono bold, uma variação por token) e selo de status (Rei Esqueleto).
+func _end_values(theme: Theme) -> void:
+	var mono := _font(UiTokens.FONT_MONO_PATH, UiTokens.WEIGHT_BOLD)
+	for token: StringName in END_VALUE_TOKENS:
+		var type := "LabelEndValue" + String(token).to_pascal_case()
+		_end_label(theme, type, &"Label", UiTokens.COLORS[token], UiTokens.TYPE_END_VALUE)
+		theme.set_font(&"font", type, mono)
+	var pills: Dictionary[String, Array] = {
+		"LabelEndPillGold": [Color(UiTokens.GOLD, ALPHA_PILL), UiTokens.GOLD_BRIGHT],
+		"LabelEndPillMuted": [UiTokens.BG_CARD, UiTokens.TEXT_MUTED],
+	}
+	for type: String in pills:
+		var spec: Array = pills[type]
+		var box := _hero_tag(spec[0], Color.TRANSPARENT)
+		box.set_border_width_all(0)
+		_end_label(theme, type, &"LabelHeroStrong", spec[1], UiTokens.TYPE_BODY)
+		theme.set_stylebox(&"normal", type, box)
+
+
+## Comparador central (círculo >, <, =), pílula VS, teclas e faixa do rodapé.
+func _end_chrome(theme: Theme) -> void:
+	var glyph := _hero_box(Color(UiTokens.GOLD, ALPHA_SOFT), Color(UiTokens.GOLD, ALPHA_EDGE), 1)
+	glyph.set_corner_radius_all(END_GLYPH_RADIUS)
+	_panel_variation(theme, "EndGlyph", glyph)
+	var mono := _font(UiTokens.FONT_MONO_PATH, UiTokens.WEIGHT_BOLD)
+	_end_label(theme, &"LabelEndGlyph", &"Label", UiTokens.GOLD_BRIGHT, UiTokens.TYPE_END_VALUE)
+	theme.set_font(&"font", &"LabelEndGlyph", mono)
+	var vs := _hero_box(UiTokens.BG_SURFACE, UiTokens.BORDER, 1)
+	vs.set_corner_radius_all(RADIUS_PILL + UiTokens.SPACE_XS)
+	vs.content_margin_left = UiTokens.SPACE_MD
+	vs.content_margin_right = UiTokens.SPACE_MD
+	vs.content_margin_top = UiTokens.SPACE_XS
+	vs.content_margin_bottom = UiTokens.SPACE_XS
+	_panel_variation(theme, "EndVs", vs)
+	_end_label(theme, &"LabelEndVs", &"Label", UiTokens.TEXT_MUTED, UiTokens.TYPE_BODY)
+	theme.set_font(&"font", &"LabelEndVs", mono)
+	_panel_variation(
+		theme, "EndKey", _hero_tag(UiTokens.BG_SURFACE.darkened(0.5), UiTokens.BG_CARD)
+	)
+	var dark_key := _hero_tag(
+		Color(UiTokens.BG_SURFACE, ALPHA_SHADE), Color(UiTokens.BG_SURFACE, 0.2)
+	)
+	_panel_variation(theme, "EndKeyDark", dark_key)
+	var footer := _box(Color(UiTokens.BG_SURFACE.darkened(0.4), 0.9), 0)
+	footer.border_color = Color(UiTokens.BORDER, ALPHA_BORDER)
+	footer.border_width_top = 1
+	footer.content_margin_left = UiTokens.SPACE_SCREEN
+	footer.content_margin_right = UiTokens.SPACE_SCREEN
+	footer.content_margin_top = UiTokens.SPACE_LG
+	footer.content_margin_bottom = UiTokens.SPACE_LG
+	_panel_variation(theme, "EndFooter", footer)
+
+
+## Botões do rodapé (ícone, texto e tecla são filhos do botão; ver MatchEnd): secundário,
+## principal dourado e principal vermelho (derrota).
+func _end_buttons(theme: Theme) -> void:
+	# tipo -> [fundo, borda, fundo no hover, borda no hover]
+	var looks: Dictionary[StringName, Array] = {
+		&"ButtonEnd": [UiTokens.BG_SURFACE, UiTokens.BORDER, UiTokens.BG_CARD, UiTokens.GOLD],
+		&"ButtonEndPrimary":
+		[UiTokens.GOLD, UiTokens.GOLD, UiTokens.GOLD.lightened(0.15), UiTokens.GOLD_BRIGHT],
+		&"ButtonEndDanger": [END_DANGER, END_DANGER, END_DANGER.lightened(0.15), UiTokens.TEXT],
+	}
+	for type: StringName in looks:
+		var spec: Array = looks[type]
+		theme.set_type_variation(type, &"Button")
+		var normal := _end_button_box(spec[0], spec[1])
+		var hover := _end_button_box(spec[2], spec[3])
+		if type != &"ButtonEnd":
+			_end_button_glow(normal, Color(spec[0], ALPHA_SHADE))
+			_end_button_glow(hover, Color(spec[0], ALPHA_BORDER))
+		for state: StringName in [&"normal", &"disabled"]:
+			theme.set_stylebox(state, type, normal)
+		for state: StringName in [&"hover", &"pressed", &"hover_pressed"]:
+			theme.set_stylebox(state, type, hover)
+		var focus := _outline(UiTokens.TEXT, UiTokens.BORDER_W, UiTokens.RADIUS_BUTTON)
+		theme.set_stylebox(&"focus", type, focus)
+	_end_label(theme, &"LabelEndButton", &"LabelHeroStrong", UiTokens.TEXT, UiTokens.TYPE_BODY)
+	_end_label(
+		theme, &"LabelEndButtonDark", &"LabelHeroStrong", UiTokens.BG_SURFACE, UiTokens.TYPE_BODY
+	)
+	theme.set_constant(&"outline_size", &"LabelEndButtonDark", 0)
+
+
+func _end_button_box(fill: Color, border: Color) -> StyleBoxFlat:
+	var box := _hero_box(fill, border, 1)
+	box.set_corner_radius_all(UiTokens.RADIUS_BUTTON)
+	return box
+
+
+## Sombra do botão principal (shadow-lg do protótipo): desce 4 px, 12 px de espalhamento.
+func _end_button_glow(box: StyleBoxFlat, color: Color) -> void:
+	box.shadow_color = color
+	box.shadow_size = UiTokens.SPACE_MD
+	box.shadow_offset = Vector2(0, UiTokens.SPACE_XS)
+
+
+## Variação de Label que herda a fonte de [param base] (tipo do Theme) e muda cor e tamanho;
+## serve de tipo para todo texto colorido da tela de fim.
+func _end_label(theme: Theme, type: StringName, base: StringName, color: Color, size: int) -> void:
+	theme.set_type_variation(type, base)
+	theme.set_color(&"font_color", type, color)
+	theme.set_font_size(&"font_size", type, size)
 
 
 func _panel_variation(theme: Theme, type: StringName, box: StyleBox) -> void:
