@@ -73,14 +73,21 @@ func update() -> void:
 	_offer_card.update()
 
 
-## Pecas de cada conjunto equipado ("Guarda 2/3"); tambem na tela de fim (F18).
-static func set_text(equipment: Vector4i, catalog: ItemCatalog) -> String:
+## Pecas de cada conjunto equipado ("Guarda 2/3"), um texto por conjunto; vazio sem peca de
+## conjunto. Tambem na tela de fim (F18, F52).
+static func set_pieces(equipment: Vector4i, catalog: ItemCatalog) -> PackedStringArray:
 	var items := Inventory.items(equipment, catalog)
 	var parts := PackedStringArray()
 	for bonus: SetBonusData in catalog.set_bonuses:
 		var pieces := SetBonus.count_pieces(items, bonus.set_id)
 		if pieces > 0:
 			parts.append("%s %d/%d" % [bonus.display_name, pieces, bonus.pieces_required])
+	return parts
+
+
+## [method set_pieces] numa linha, ou "Sem conjunto".
+static func set_text(equipment: Vector4i, catalog: ItemCatalog) -> String:
+	var parts := set_pieces(equipment, catalog)
 	if parts.is_empty():
 		return TranslationServer.translate("Sem conjunto")
 	return " · ".join(parts)

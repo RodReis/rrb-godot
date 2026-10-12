@@ -40,6 +40,8 @@ Contraste WCAG calculado sobre `#171F33` (fórmula de luminância relativa; o te
 | `TYPE_BODY` | data | 15 | Medium | descrições |
 | `TYPE_COUNTER` | mono | 28 | Bold | relógio, placar |
 | `TYPE_BADGE` | display | 12 | Bold | `[Q]`, `[F]` |
+| `TYPE_END_TITLE` | display | 80 | Bold, caps | VITÓRIA / DERROTA / SEM VENCEDOR na tela de fim (F52, protótipo 72 px × 1,1) |
+| `TYPE_END_VALUE` | mono | 20 | Bold, `tnum` | valor de cada linha da tabela de fim e comparador `>` `<` (F52) |
 
 Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resolução 1080p).
 
@@ -57,7 +59,8 @@ Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resol
 | `SPACE_SCREEN` | 40 | margem externa de tela |
 | `RADIUS_SM` | 4 | slots, badges |
 | `RADIUS_MD` | 8 | cards, botões |
-| `RADIUS_LG` | 16 | cards grandes da seleção de heróis (F51) |
+| `RADIUS_LG` | 16 | cards grandes da seleção de heróis (F51) e da tela de fim (F52) |
+| `RADIUS_BUTTON` | 12 | botões e moldura do ícone de herói da tela de fim (rounded-xl do protótipo, F52) |
 | `SIZE_GLOW` | 24 | brilho neon de card (sombra `StyleBoxFlat`, F51) |
 | `BORDER_W` | 2 | borda padrão; 3 para moldura ativa/raridade |
 | `SIZE_LIST_COL` | 360 | coluna de lista (bestiário) |
@@ -100,5 +103,6 @@ Sem movimento acima de `DUR_SLOW` em UI; a opção "reduzir animação" não exi
 | `HSeparator`/`VSeparator` | `BORDER` 1 px | — |
 | `Label` default | `TEXT`, `TYPE_BODY` | — |
 | Seleção de heróis (F51) | `Hero{Ally,Enemy}{Card,Cell,Skill,Tag,TagSoft,Badge,Icon}` (acento `CYAN` / `RED`, card com sombra `SIZE_GLOW` e raio `RADIUS_LG`), `HeroGoldSkill`/`HeroGoldBadge`, `HeroRoster`, `HeroTimer`, `HeroHeader`/`HeroFooter`, `HeroChoice`/`HeroChoiceActive` (borda `GOLD`), `HeroPortrait`/`HeroPortraitActive`, `HeroLockInGlow` + `ButtonLockIn` (texto `BG_SURFACE`, gradiente por shader `runic_backdrop`), `ProgressHero` (`CYAN`), `HeroDot*`, `LabelHero{Accent,Highlight,Ready,Strong,Title,Mode,Dark}` | — |
+| Tela de fim (F52) | por tom `{Win,Lose,Draw}` (`GOLD`/`RED`/`TEXT_MUTED`): `EndCard<tom>` (fundo `BG_SURFACE` 80 %, borda do tom, brilho, raio `RADIUS_LG`), `EndIcon<tom>`, `EndReason<tom>` + `LabelEndReason<tom>`, `LabelEndTitle<tom>` (`TYPE_END_TITLE`), `LabelEndTag<tom>`, `LabelEndLevel<tom>`; linhas `EndRow`/`EndRowHover`/`EndRowBoss` (`GOLD`)/`EndRowSet` (`CYAN`)/`EndRowMuted`; valores `LabelEndValue{GoldBright,Green,Cyan,Text,TextMuted}` (`TYPE_END_VALUE`, mono), `LabelEndPill{Gold,Muted}`; comparador `EndGlyph` + `LabelEndGlyph`, `EndVs` + `LabelEndVs`; rodapé `EndFooter`, `EndKey`/`EndKeyDark`; botões `ButtonEnd`, `ButtonEndPrimary` (`GOLD`), `ButtonEndDanger` (red-600 do protótipo) + `LabelEndButton`/`LabelEndButtonDark` | — |
 
 O teste `shared/test/test_theme_tokens.gd` lê o `.tres` e confere que cada cor acima bate com `UiTokens`.

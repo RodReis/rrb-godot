@@ -54,6 +54,9 @@ const TYPE_H2: int = 22
 const TYPE_BODY: int = 15
 const TYPE_COUNTER: int = 28
 const TYPE_BADGE: int = 12
+## Tela de fim (F52, protótipo): título VITÓRIA/DERROTA e valor de cada linha da tabela.
+const TYPE_END_TITLE: int = 80
+const TYPE_END_VALUE: int = 20
 ## Contorno preto do texto sobre a arena (TOKENS v2): 1 px no corpo, 2 px em titulo/contador.
 const OUTLINE: Color = Color(0.0, 0.0, 0.0)
 const OUTLINE_W: int = 1
@@ -69,6 +72,8 @@ const SPACE_SCREEN: int = 40
 const RADIUS_SM: int = 4
 const RADIUS_MD: int = 8
 const RADIUS_LG: int = 16
+## rounded-xl do protótipo da tela de fim: botões e moldura do ícone de herói (12 px).
+const RADIUS_BUTTON: int = 12
 ## Brilho neon de card (box-shadow do prototipo da selecao de herois).
 const SIZE_GLOW: int = 24
 const BORDER_W: int = 2

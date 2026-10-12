@@ -1,7 +1,8 @@
 extends GutTest
-## Tela de fim de partida (F18, DV tela 7, ARCHITECTURE-GAME §3.6/§3.7): so exibe o que chegou
-## no match_ended (MatchStats do servidor); quem joga fica a esquerda; os dois botoes pedem o fim
-## do processo por sinal (o Game nao tem fila).
+## Tela de fim de partida (F18 + F52, protótipo "Destaques da Tela de Fim de Partida"): só exibe o
+## que chegou no match_ended (MatchStats do servidor); quem joga fica à esquerda; o tom da tela
+## (vitória, derrota, sem vencedor) vai por tipos do Theme; os dois botões pedem o fim do
+## processo por sinal (o Game não tem fila).
 
 const SCENE: PackedScene = preload("res://scenes/ui/match_end.tscn")
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
@@ -14,6 +15,7 @@ const THEM: int = 22
 
 var _match: MatchController
 var _end: MatchEnd
+var _theme: Theme = preload("res://shared/ui/theme/theme_moba.tres")
 
 
 func before_each() -> void:
@@ -51,15 +53,40 @@ func _stats() -> MatchStats:
 	return stats
 
 
+func _label(path: String) -> Label:
+	return _end.get_node(path) as Label
+
+
 func _text(path: String) -> String:
-	return (_end.get_node(path) as Label).text
+	return _label(path).text
 
 
-func _cells(grid: String) -> PackedStringArray:
-	var texts := PackedStringArray()
-	for child: Node in _end.get_node(grid).get_children():
-		texts.append((child as Label).text)
+func _type(path: String) -> StringName:
+	return (_end.get_node(path) as Control).theme_type_variation
+
+
+func _me() -> MatchEndCard:
+	return _end.get_node("%MeCard") as MatchEndCard
+
+
+func _them() -> MatchEndCard:
+	return _end.get_node("%ThemCard") as MatchEndCard
+
+
+func _values(card: MatchEndCard) -> Array[String]:
+	var texts: Array[String] = []
+	for row: MatchEndRow in card.rows:
+		texts.append(row.value_label.text)
 	return texts
+
+
+## Círculo e texto do comparador da linha [param index].
+func _glyph(index: int) -> Control:
+	return _end.get_node("%Compare").get_child(index).get_child(0) as Control
+
+
+func _glyph_text(index: int) -> String:
+	return (_glyph(index).get_child(0) as Label).text
 
 
 func test_escondida_ate_o_fim() -> void:
@@ -70,45 +97,157 @@ func test_vitoria_pela_meta_de_kills() -> void:
 	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
 	assert_true(_end.visible)
 	assert_eq(_text("%Title"), "VITÓRIA")
+	assert_eq(_type("%Title"), &"LabelEndTitleWin")
 	assert_eq(_text("%Reason"), "META DE %d KILLS ATINGIDA" % RULES.kill_goal)
-	assert_eq(_text("%Duration"), "Duração da partida: 07:48")
-	assert_eq((_end.get_node("%MeCard") as PanelCard).accent, PanelCard.Accent.GOLD)
-	assert_eq((_end.get_node("%ThemCard") as PanelCard).accent, PanelCard.Accent.RED)
+	assert_eq(_type("%ReasonPill"), &"EndReasonWin")
+	assert_eq(_text("%DurationValue"), "07:48")
+	assert_eq(_text("%ModeValue"), "DUELO 1V1")
+	assert_eq(_type("%MeCard"), &"EndCardWin")
+	assert_eq(_type("%ThemCard"), &"EndCardLose")
+	assert_eq(_type("%PlayAgain"), &"ButtonEndPrimary")
 
 
 func test_derrota_mostra_quem_joga_a_esquerda() -> void:
 	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), THEM)
 	assert_eq(_text("%Title"), "DERROTA")
-	assert_eq(_text("%MeHeader"), "VOCÊ · ARQUEIRA")
-	assert_eq(_text("%ThemHeader"), "OPONENTE · CAVALEIRO")
-	assert_eq((_end.get_node("%MeCard") as PanelCard).accent, PanelCard.Accent.RED)
+	assert_eq(_type("%Title"), &"LabelEndTitleLose")
+	assert_eq(_me().name_label.text, "VOCÊ")
+	assert_eq(_me().hero_label.text, "— ARQUEIRA")
+	assert_eq(_them().name_label.text, "OPONENTE")
+	assert_eq(_them().hero_label.text, "— CAVALEIRO")
+	assert_eq(_type("%MeCard"), &"EndCardLose")
+	assert_eq(_type("%ThemCard"), &"EndCardWin")
+	assert_eq(_type("%ReasonPill"), &"EndReasonLose")
+	assert_eq(_type("%PlayAgain"), &"ButtonEndDanger")
+
+
+func test_cabecalho_dos_cartoes_diz_lado_e_resultado() -> void:
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	assert_eq(_me().side_label.text, "ALIADO")
+	assert_eq(_them().side_label.text, "INIMIGO")
+	assert_eq(_me().tag_label.text, "VENCEDOR")
+	assert_eq(_them().tag_label.text, "DERROTADO")
+	assert_eq(_me().tag_label.theme_type_variation, &"LabelEndTagWin")
+	assert_eq(_them().tag_label.theme_type_variation, &"LabelEndTagLose")
+	assert_eq(_me().level_label.text, "NV.9")
+	assert_eq(_me().level_label.theme_type_variation, &"LabelEndLevelWin")
+	assert_eq(_them().level_label.theme_type_variation, &"LabelEndLevelLose")
+
+
+func test_icone_do_cartao_e_o_do_basico_do_heroi() -> void:
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	var knight: HeroData = ROSTER[0]
+	var ranger: HeroData = ROSTER[1]
+	assert_eq(_me().icon_rect.texture, knight.basic_attack.icon)
+	assert_eq(_them().icon_rect.texture, ranger.basic_attack.icon)
 
 
 func test_tabela_lado_a_lado_com_comparacao() -> void:
 	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
-	assert_eq(_text("%MeHeader"), "VOCÊ · CAVALEIRO")
-	var me := _cells("%MeStats")
-	var them := _cells("%ThemStats")
-	assert_eq(me.size(), MatchEnd.ROWS.size())
+	assert_eq(_me().name_label.text, "VOCÊ")
+	assert_eq(_me().hero_label.text, "— CAVALEIRO")
+	assert_eq(_me().rows.size(), MatchEnd.ROWS.size())
 	assert_eq(MatchEnd.BETTER.size(), MatchEnd.ROWS.size(), "uma regra de comparacao por linha")
 	assert_eq(
-		Array(me),
-		["5", "3", "9", "4250", "4800", "7", "5", "Abatido", "Guarda 1/3"],
+		_values(_me()),
+		["5", "3", "Nv. 9", "4.250", "4.800", "7", "5", "Abatido", "Guarda 1/3"],
 	)
 	assert_eq(
-		Array(them),
-		["3", "5", "9", "3820", "4900", "4", "5", "Não abatido", "Sem conjunto"],
+		_values(_them()),
+		["3", "5", "Nv. 9", "3.820", "4.900", "4", "5", "Não abatido", "Sem conjunto"],
 	)
-	assert_eq(Array(_cells("%Compare")), [">", "<", "=", ">", "<", ">", "=", ">", ""])
+	for i: int in MatchEnd.ROWS.size():
+		assert_eq(_me().rows[i].name_label.text, MatchEnd.ROWS[i])
+	var glyphs: Array[String] = []
+	for i: int in MatchEnd.ROWS.size():
+		glyphs.append(_glyph_text(i) if _glyph(i).visible else "")
+	assert_eq(glyphs, [">", "<", "=", ">", "<", ">", "=", ">", ""])
 
 
-func test_comparacao_colore_o_que_e_bom_para_quem_joga() -> void:
+func test_constantes_paralelas_tem_o_mesmo_tamanho() -> void:
+	var rows := MatchEnd.ROWS.size()
+	assert_eq(MatchEnd.ICONS.size(), rows)
+	assert_eq(MatchEnd.ICON_TOKENS.size(), MatchEnd.NUMBER_ROWS)
+	assert_eq(MatchEnd.VALUE_TOKENS.size(), MatchEnd.NUMBER_ROWS)
+	assert_eq(MatchEnd.NUMBER_ROWS, MatchEnd.BOSS_ROW, "o boss vem logo depois das contagens")
+	assert_eq(MatchEnd.SET_ROW, rows - 1)
+	var tokens: Array[StringName] = []
+	tokens.append_array(MatchEnd.ICON_TOKENS)
+	tokens.append_array(MatchEnd.VALUE_TOKENS)
+	for token: StringName in tokens:
+		assert_has(UiTokens.COLORS.keys(), token)
+
+
+## O comparador alinha com as linhas: cada círculo fica à altura da sua linha.
+func test_comparador_alinha_com_as_linhas() -> void:
 	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
-	var glyphs := _end.get_node("%Compare").get_children()
-	assert_eq((glyphs[0] as Label).theme_type_variation, &"LabelCounterAlly", "mais kills")
-	assert_eq((glyphs[1] as Label).theme_type_variation, &"LabelCounterAlly", "menos mortes")
-	assert_eq((glyphs[2] as Label).theme_type_variation, &"LabelCounter", "empate")
-	assert_eq((glyphs[4] as Label).theme_type_variation, &"LabelCounterAlly", "sofreu menos")
+	await wait_process_frames(2)
+	for i: int in MatchEnd.ROWS.size():
+		var row := _me().rows[i]
+		var holder := _glyph(i).get_parent() as Control
+		assert_almost_eq(holder.global_position.y, row.global_position.y, 0.5, "linha %d" % i)
+		assert_almost_eq(holder.size.y, row.size.y, 0.5, "altura da linha %d" % i)
+
+
+## Todo tipo de Theme que a tela de fim usa existe (cartão, linha, valor, tom).
+func test_tipos_usados_existem_no_theme() -> void:
+	var types := _theme.get_type_list()
+	var used: Array[StringName] = [&"EndGlyph", &"LabelEndGlyph", &"EndVs", &"EndFooter", &"EndKey"]
+	used.append_array([&"EndKeyDark", &"LabelEndButton", &"LabelEndButtonDark", &"ButtonEnd"])
+	used.append_array([&"LabelEndPillGold", &"LabelEndPillMuted", MatchEndRow.PLAIN_STYLE])
+	used.append(MatchEndRow.HOVER_STYLE)
+	for token: StringName in MatchEnd.VALUE_TOKENS:
+		used.append(StringName("LabelEndValue%s" % String(token).to_pascal_case()))
+	for type: StringName in used:
+		assert_has(types, type, "tipo %s fora do Theme" % type)
+
+
+func test_formata_milhar_com_ponto() -> void:
+	assert_eq(MatchEnd.format_number(0), "0")
+	assert_eq(MatchEnd.format_number(999), "999")
+	assert_eq(MatchEnd.format_number(1000), "1.000")
+	assert_eq(MatchEnd.format_number(4820), "4.820")
+	assert_eq(MatchEnd.format_number(1234567), "1.234.567")
+
+
+func test_lado_melhor_ganha_o_acento_da_linha_e_o_pior_apaga() -> void:
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	var mine := _me().rows
+	var theirs := _them().rows
+	assert_eq(mine[0].value_label.theme_type_variation, &"LabelEndValueText", "mais kills")
+	_assert_color(mine[0].icon_rect.modulate, UiTokens.GOLD)
+	assert_eq(theirs[0].value_label.theme_type_variation, &"LabelEndValueTextMuted")
+	_assert_color(theirs[0].icon_rect.modulate, UiTokens.TEXT_MUTED)
+	assert_eq(mine[1].value_label.theme_type_variation, &"LabelEndValueGreen", "menos mortes")
+	_assert_color(theirs[1].icon_rect.modulate, UiTokens.RED, "mais mortes: ícone vermelho")
+	assert_eq(theirs[1].value_label.theme_type_variation, &"LabelEndValueTextMuted")
+	assert_eq(mine[2].value_label.theme_type_variation, &"LabelEndValueCyan", "empate no nível")
+	assert_eq(theirs[2].value_label.theme_type_variation, &"LabelEndValueCyan")
+	_assert_color(mine[4].icon_rect.modulate, UiTokens.TEXT_MUTED, "sofreu menos: ícone neutro")
+	_assert_color(theirs[4].icon_rect.modulate, UiTokens.RED, "sofreu mais")
+
+
+func test_comparacao_vale_para_quem_joga() -> void:
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), THEM)
+	assert_eq(_glyph_text(0), "<", "o jogador local é o outro: menos kills")
+	assert_eq(_glyph_text(1), ">")
+	assert_eq(_me().rows[0].value_label.theme_type_variation, &"LabelEndValueTextMuted")
+	assert_eq(_them().rows[0].value_label.theme_type_variation, &"LabelEndValueText")
+
+
+func test_rei_esqueleto_e_conjunto_destacam_so_quando_conquistados() -> void:
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	var boss := MatchEnd.BOSS_ROW
+	var set_row := MatchEnd.SET_ROW
+	assert_eq(_me().rows[boss].style, &"EndRowBoss")
+	assert_eq(_me().rows[boss].value_label.theme_type_variation, &"LabelEndPillGold")
+	assert_eq(_them().rows[boss].style, &"EndRowMuted")
+	assert_eq(_them().rows[boss].value_label.theme_type_variation, &"LabelEndPillMuted")
+	assert_eq(_me().rows[set_row].style, &"EndRowSet")
+	assert_eq(_me().rows[set_row].value_label.theme_type_variation, &"LabelHeroAccent")
+	assert_eq(_them().rows[set_row].style, &"EndRowMuted")
+	assert_eq(_them().rows[set_row].value_label.theme_type_variation, &"LabelMuted")
+	assert_eq(_me().rows[0].style, &"EndRow")
 
 
 func test_condicao_do_colapso_diz_o_criterio() -> void:
@@ -129,10 +268,16 @@ func test_eliminacao_e_abandono() -> void:
 	assert_eq(_text("%Reason"), "ELIMINAÇÃO NA MORTE SÚBITA")
 	_end.present(MatchController.NO_WINNER, VictoryRules.ABANDONED, MatchStats.new(), ME)
 	assert_eq(_text("%Title"), "SEM VENCEDOR")
+	assert_eq(_type("%Title"), &"LabelEndTitleDraw")
 	assert_eq(_text("%Reason"), "PARTIDA ABANDONADA")
-	assert_eq((_end.get_node("%MeCard") as PanelCard).accent, PanelCard.Accent.NONE)
-	assert_eq(_text("%MeHeader"), "VOCÊ")
-	assert_eq(_cells("%ThemStats")[0], "0", "sem dado do oponente: zeros")
+	assert_eq(_type("%MeCard"), &"EndCardDraw")
+	assert_eq(_type("%ThemCard"), &"EndCardDraw")
+	assert_eq(_type("%PlayAgain"), &"ButtonEndPrimary")
+	assert_eq(_me().name_label.text, "VOCÊ")
+	assert_eq(_me().hero_label.text, "", "sem herói: só o papel")
+	assert_false(_me().tag_label.visible, "sem vencedor, sem selo")
+	assert_false(_me().level_label.visible, "sem herói, sem nível")
+	assert_eq(_values(_them())[0], "0", "sem dado do oponente: zeros")
 
 
 func test_chega_pelo_sinal_do_servidor() -> void:
@@ -159,3 +304,16 @@ func test_esc_volta() -> void:
 	esc.pressed = true
 	_end._unhandled_input(esc)
 	assert_signal_emitted(_end, "back_requested")
+
+
+func test_botao_principal_pulsa_so_na_vitoria() -> void:
+	var again := _end.get_node("%PlayAgain") as Button
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	assert_true(_end.is_pulsing(), "vitória: pulso do protótipo (pulse-subtle)")
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), THEM)
+	assert_false(_end.is_pulsing(), "derrota: sem pulso")
+	assert_eq(again.modulate.a, 1.0)
+
+
+func _assert_color(got: Color, expected: Color, text: String = "") -> void:
+	assert_true(got.is_equal_approx(expected), "%s esperado %s, veio %s" % [text, expected, got])
