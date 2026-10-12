@@ -155,6 +155,7 @@ func close() -> void:
 	for pulse: Tween in _pulses:
 		pulse.kill()
 	_pulses.clear()
+	_timer.set_state(TimerLabel.State.NORMAL)  # mata o pisca; o open religa
 
 
 ## Mostra o heroi [param index] do roster; ignorado se indisponivel ou ja confirmado.
@@ -299,6 +300,7 @@ func _refresh_cards() -> void:
 		card.disabled = _requested
 		card.modulate.a = DIM_ALPHA if _requested and index != _selected else 1.0
 	_lock_in.disabled = _requested
+	_lock_in_gradient.self_modulate = Color.WHITE  # hover nao fica preso depois do clique
 	_lock_in_frame.modulate = Color(1.0, 1.0, 1.0, UiTokens.DISABLED_ALPHA if _requested else 1.0)
 
 

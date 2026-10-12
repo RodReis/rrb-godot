@@ -32,6 +32,11 @@ var _tag: PanelContainer
 var _tween: Tween
 
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED and _tag != null:
+		_tag.position = Vector2(size.x - _tag.get_combined_minimum_size().x, 0.0) + TAG_OFFSET
+
+
 ## Monta o card de [param data]; chame antes de entrar na arvore.
 func setup(data: HeroData) -> void:
 	hero = data
@@ -85,11 +90,6 @@ func set_active(value: bool) -> void:
 	_tween = create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	var target := Vector2.ONE * (ACTIVE_SCALE if value else 1.0)
 	_tween.tween_property(self, ^"scale", target, UiTokens.DUR_FAST)
-
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_RESIZED and _tag != null:
-		_tag.position = Vector2(size.x - _tag.get_combined_minimum_size().x, 0.0) + TAG_OFFSET
 
 
 func _label(text: String, type: StringName) -> Label:
