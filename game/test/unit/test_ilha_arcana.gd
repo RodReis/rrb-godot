@@ -52,13 +52,15 @@ func test_contagem_de_monstros_por_zona() -> void:
 	for team: int in [GateRules.TEAM_A, GateRules.TEAM_B]:
 		assert_eq(_count(SpawnMarker.Kind.MONSTER, team, 1), 8)
 		assert_eq(_count(SpawnMarker.Kind.MONSTER, team, 2), 3)
-	assert_eq(_count(SpawnMarker.Kind.MONSTER, GateRules.TEAM_NEUTRAL, 2), 4)
-	assert_eq(_count(SpawnMarker.Kind.MONSTER, GateRules.TEAM_NEUTRAL, 3), 2)
+	# Centro: 2 Guerreiros + 2 Magos + 2 Golems; cantos (F55): 2 x (Golem de canto + 2 Lobos).
+	assert_eq(_count(SpawnMarker.Kind.MONSTER, GateRules.TEAM_NEUTRAL, 2), 8)
+	assert_eq(_count(SpawnMarker.Kind.MONSTER, GateRules.TEAM_NEUTRAL, 3), 4)
 	assert_eq(_count(SpawnMarker.Kind.BOSS, GateRules.TEAM_NEUTRAL), 1)
 
 
-## 16 T1 + 8 T2 + 2 Magos + 2 Golems + boss; 12 de base + 8 laterais + 4 raros (GDB §6.2).
-func test_total_de_29_monstros_e_24_baus() -> void:
+## 16 T1 + 8 T2 + 2 Magos + 2 Golems + 2 Golems de canto + 4 Lobos + boss; 12 de base + 8
+## laterais + 4 reforcados + 4 raros (GDB §6.2, SPEC-055 §6).
+func test_total_de_35_monstros_e_28_baus() -> void:
 	var monsters := 0
 	var chests := 0
 	for m: SpawnMarker in _markers():
@@ -66,18 +68,22 @@ func test_total_de_29_monstros_e_24_baus() -> void:
 			monsters += 1
 		elif m.kind == SpawnMarker.Kind.CHEST:
 			chests += 1
-	assert_eq(monsters, 29)
-	assert_eq(chests, 24)
+	assert_eq(monsters, 35)
+	assert_eq(chests, 28)
 
 
-func test_baus_comuns_nas_bases_e_raros_no_centro() -> void:
+## Raros no centro (r <= 14, dentro do anel do rio), reforcados nos cantos, comuns nas metades.
+func test_baus_comuns_nas_bases_raros_no_centro_e_reforcados_nos_cantos() -> void:
 	for m: SpawnMarker in _markers():
 		if m.kind != SpawnMarker.Kind.CHEST:
 			continue
 		if m.team == GateRules.TEAM_NEUTRAL:
-			assert_eq(m.chest_kind, SpawnMarker.ChestKind.RARE)
+			var center := Vector2(m.position.x, m.position.z).length() < 14.0
+			assert_eq(
+				m.chest_kind, ChestRules.Kind.RARE if center else ChestRules.Kind.REINFORCED, m.name
+			)
 		else:
-			assert_eq(m.chest_kind, SpawnMarker.ChestKind.COMMON)
+			assert_eq(m.chest_kind, ChestRules.Kind.COMMON)
 
 
 func test_monstros_tem_id_do_catalogo() -> void:
@@ -167,7 +173,7 @@ func test_campos_do_centro_em_45_e_225_graus() -> void:
 	for m: SpawnMarker in _markers():
 		if m.monster_id == &"golem_t3":
 			golems.append(m.position)
-		elif m.kind == SpawnMarker.Kind.CHEST and m.team == GateRules.TEAM_NEUTRAL:
+		elif m.kind == SpawnMarker.Kind.CHEST and m.chest_kind == ChestRules.Kind.RARE:
 			rares.append(m.position)
 	assert_eq(golems.size(), 2)
 	for g: Vector3 in golems:

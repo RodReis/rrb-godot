@@ -71,7 +71,7 @@ func test_dois_campos_por_metade_com_2_t1_1_t2_e_2_baus() -> void:
 				if m.position.distance_to(center) > FIELD_REACH:
 					continue
 				if m.kind == SpawnMarker.Kind.CHEST:
-					assert_eq(m.chest_kind, SpawnMarker.ChestKind.COMMON)
+					assert_eq(m.chest_kind, ChestRules.Kind.COMMON)
 					chests += 1
 				elif m.monster_id == &"skeleton_t1":
 					t1 += 1

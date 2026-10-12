@@ -1,18 +1,28 @@
 class_name ChestRules
 extends RefCounted
 ## Sorteio do bau (GDB §6.2). Comum: item comum ou cura. Raro: raro, comum ou epico (10 %, PI
-## 2026-10-09). Epico de bau so de armadura: a arma epica e do boss (boss_drop). Item
-## uniforme entre os da raridade sorteada (PI 2026-10-09). RNG injetado: seed por partida.
+## 2026-10-09). Reforcado (campo de canto, SPEC-055): raro ou comum, sem epico nem cura. Epico de
+## bau so de armadura: a arma epica e do boss (boss_drop). Item uniforme entre os da raridade
+## sorteada (PI 2026-10-09). RNG injetado: seed por partida.
+
+## Tipo do bau; o SpawnMarker guarda o mesmo enum (valores de COMMON e RARE gravados nas cenas).
+enum Kind { COMMON, RARE, REINFORCED }
 
 ## Drop de cura (consumivel +heal_amount); nao colide com numero de Ids nem com Ids.NONE.
 const HEAL: int = -2
 
 
 ## ItemData.Rarity sorteada, ou HEAL.
-static func roll_rarity(is_rare: bool, rules: MatchRules, rng: RandomNumberGenerator) -> int:
+static func roll_rarity(kind: Kind, rules: MatchRules, rng: RandomNumberGenerator) -> int:
 	var r := rng.randf()
-	if not is_rare:
+	if kind == Kind.COMMON:
 		return ItemData.Rarity.COMMON if r < rules.common_chest_item_chance else HEAL
+	if kind == Kind.REINFORCED:
+		return (
+			ItemData.Rarity.RARE
+			if r < rules.reinforced_chest_rare_chance
+			else ItemData.Rarity.COMMON
+		)
 	if r < rules.rare_chest_rare_chance:
 		return ItemData.Rarity.RARE
 	if r < rules.rare_chest_rare_chance + rules.rare_chest_common_chance:
@@ -48,9 +58,9 @@ static func boss_drop(items: Array[ItemData], rng: RandomNumberGenerator) -> int
 
 ## Numero de Ids do item sorteado, ou HEAL.
 static func roll(
-	is_rare: bool, rules: MatchRules, items: Array[ItemData], rng: RandomNumberGenerator
+	kind: Kind, rules: MatchRules, items: Array[ItemData], rng: RandomNumberGenerator
 ) -> int:
-	var rarity := roll_rarity(is_rare, rules, rng)
+	var rarity := roll_rarity(kind, rules, rng)
 	if rarity == HEAL:
 		return HEAL
 	return Ids.to_int(pick(pool(items, rarity), rng).id)

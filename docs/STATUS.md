@@ -91,7 +91,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F52 / SPEC-052 | MVP2 | game | Slice 2.18 — Tela de vitória/derrota fiel ao protótipo novo (`docs/prd/telas/Destaques da Tela de Fim de Partida/`), só com dados reais | todo (#133) |
 | F53 / SPEC-053 | MVP2 | game, shared | Slice 2.19 — Bárbaro (Algoz): Machado, Salto Brutal, Rodopio, Execução; pick, bot, VFX, machado visível (ADR-0011) | done (#135) |
 | F54 / SPEC-054 | MVP2 | game, shared | Slice 2.20 — Bruxo de Fogo (Mago): Bola de Fogo, Explosão de Chamas, Anel de Fogo, Meteoro; pick, bot, VFX de fogo, cajado visível (ADR-0011) | done (#136) |
-| F55 / SPEC-055 | MVP2 | game, shared | Slice 2.21 — Campos de canto NO/SE: Golem de canto + 2 Lobos + 2 Baús Reforçados; moita de lagoa movida; 35 monstros, 28 baús (ADR-0011) | todo (#137) |
+| F55 / SPEC-055 | MVP2 | game, shared | Slice 2.21 — Campos de canto NO/SE: Golem de canto + 2 Lobos + 2 Baús Reforçados; moita de lagoa movida; 35 monstros, 28 baús (ADR-0011) | done (#137) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
 Próximo número livre: **F56 / SPEC-056**.

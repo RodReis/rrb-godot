@@ -1,11 +1,13 @@
 class_name Chest
 extends Node3D
-## Bau de loot (GDB §6.2). O drop e sorteado pelo SpawnDirector com a seed da partida; so o do
-## servidor vale. Abre uma vez com toque em F e o item fica no bau (nada e automatico). Quem
-## segura F swap_hold_time leva o item pelo ledger se ItemRules.offer for verdadeiro para ele
-## (SPEC-047); sem oferta nada acontece e o item fica para outro heroi. O item antigo some (PI
-## 2026-10-09). Cura vai pelo ledger na abertura. Clientes recebem aberto + item (numero de Ids)
-## por RPC confiavel. O card da oferta aparece na HUD (ChestOfferCard), nao no bau.
+## Bau de loot (GDB §6.2). O reforcado do campo de canto (SPEC-055) troca corpo e tampa pelos
+## modelos com cantoneiras; colisao e area de interacao iguais. O drop e sorteado pelo
+## SpawnDirector com a seed da partida; so o do servidor vale. Abre uma vez com toque em F e o
+## item fica no bau (nada e automatico). Quem segura F swap_hold_time leva o item pelo ledger se
+## ItemRules.offer for verdadeiro para ele (SPEC-047); sem oferta nada acontece e o item fica
+## para outro heroi. O item antigo some (PI 2026-10-09). Cura vai pelo ledger na abertura.
+## Clientes recebem aberto + item (numero de Ids) por RPC confiavel. O card da oferta aparece na
+## HUD (ChestOfferCard), nao no bau.
 ## Neblina de guerra (F37): o estado so vai a quem tem o bau no raio de visao (seen_by,
 ## Concealment); quem passa a ver recebe o estado atual. Fora da visao o bau continua no mapa com
 ## o ultimo estado visto (shown_opened; no host, o do jogador local).
@@ -24,9 +26,13 @@ const TRIM_MATERIAL: String = "chest_trim"
 @export var common_material: Material
 @export var rare_material: Material
 @export var epic_material: Material
+@export var reinforced_material: Material
+## Corpo e tampa do bau reforcado (art/arena/build_island.py).
+@export var reinforced_body: PackedScene
+@export var reinforced_lid: PackedScene
 
 ## Definidos pelo SpawnDirector antes de entrar na arvore.
-var rare: bool = false
+var kind: ChestRules.Kind = ChestRules.Kind.COMMON
 ## Bau que o Rei Esqueleto deixa ao morrer (F11).
 var epic: bool = false
 ## Base onde fica (GateRules.TEAM_*; NEUTRAL = centro), do marcador.
@@ -58,13 +64,29 @@ func _ready() -> void:
 	var material := common_material
 	if epic:
 		material = epic_material
-	elif rare:
+	elif kind == ChestRules.Kind.RARE:
 		material = rare_material
+	elif kind == ChestRules.Kind.REINFORCED:
+		material = reinforced_material
+		_body = _swap(_body, reinforced_body)
+		_lid_mesh = _swap(_lid_mesh, reinforced_lid)
 	_paint_trim(_body, material)
 	_paint_trim(_lid_mesh, material)
 	_concealment = Concealment.guard(self, seen_by)
 	_concealment.sight_changed.connect(_on_concealment_sight_changed)
 	_refresh_visual()
+
+
+## Troca o modelo [param old] pela cena [param scene] no mesmo lugar (mesmo nome).
+func _swap(old: Node3D, scene: PackedScene) -> Node3D:
+	var fresh := scene.instantiate() as Node3D
+	fresh.name = old.name
+	fresh.transform = old.transform
+	var parent := old.get_parent()
+	parent.remove_child(old)
+	old.free()
+	parent.add_child(fresh)
+	return fresh
 
 
 ## Cor da raridade so nas cintas (superficie TRIM_MATERIAL); a madeira fica no atlas.

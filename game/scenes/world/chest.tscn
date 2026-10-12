@@ -5,6 +5,8 @@
 [ext_resource type="Resource" path="res://shared/data/items/catalog.tres" id="3_catalog"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/chest_body.glb" id="4_body"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/chest_lid.glb" id="5_lid"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/chest_reinforced_body.glb" id="6_reinforced_body"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/chest_reinforced_lid.glb" id="7_reinforced_lid"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_common"]
 albedo_color = Color(0.3, 0.31, 0.34, 1)
@@ -27,6 +29,11 @@ emission_enabled = true
 emission = Color(0.6, 0.4, 0.05, 1)
 emission_energy_multiplier = 0.8
 
+[sub_resource type="StandardMaterial3D" id="Mat_reinforced"]
+albedo_color = Color(0.62, 0.64, 0.68, 1)
+metallic = 0.85
+roughness = 0.3
+
 [node name="Chest" type="Node3D"]
 script = ExtResource("1_chest")
 rules = ExtResource("2_rules")
@@ -34,6 +41,9 @@ catalog = ExtResource("3_catalog")
 common_material = SubResource("Mat_common")
 rare_material = SubResource("Mat_rare")
 epic_material = SubResource("Mat_epic")
+reinforced_material = SubResource("Mat_reinforced")
+reinforced_body = ExtResource("6_reinforced_body")
+reinforced_lid = ExtResource("7_reinforced_lid")
 
 [node name="Body" parent="." instance=ExtResource("4_body")]
 

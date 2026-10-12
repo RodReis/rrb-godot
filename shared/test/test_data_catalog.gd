@@ -36,6 +36,9 @@ const MONSTERS: Dictionary = {
 	&"skeleton_mage_t2": [MonsterData.Tier.T2, 2, 260, 38, 1.5, 80, 0.35, 0.65, 0],
 	&"golem_t3": [MonsterData.Tier.T3, 2, 680, 50, 1.6, 190, 0, 1, 0],
 	&"skeleton_king_boss": [MonsterData.Tier.BOSS, 1, 2400, 75, 1.4, 550, 0, 0, 1],
+	# Campos de canto (ADR-0011, SPEC-055): golem de canto sem item; o loot vem do bau reforcado.
+	&"wolf_t2": [MonsterData.Tier.T2, 4, 300, 22, 0.9, 70, 0.2, 0, 0],
+	&"golem_corner": [MonsterData.Tier.T3, 2, 680, 50, 1.6, 190, 0, 0, 0],
 }
 
 var _by_id: Dictionary = {}
@@ -280,7 +283,7 @@ func test_monstros_batem_com_o_gdb() -> void:
 func test_ia_dos_monstros_nao_boss() -> void:
 	# Aggro, leash, velocidade e alcance: proposta aprovada pelo PI em 2026-10-09 (F9).
 	for id: StringName in [
-		&"skeleton_t1", &"skeleton_warrior_t2", &"skeleton_mage_t2", &"golem_t3"
+		&"skeleton_t1", &"skeleton_warrior_t2", &"skeleton_mage_t2", &"golem_t3", &"golem_corner"
 	]:
 		var m := _by_id[id] as MonsterData
 		assert_eq([m.aggro_range, m.leash_range, m.move_speed], [6.0, 10.0, 4.0], id)
@@ -289,6 +292,15 @@ func test_ia_dos_monstros_nao_boss() -> void:
 	assert_true(golem.area_attack)
 	assert_almost_eq(golem.area_radius, 2.5, EPS)
 	assert_eq(golem.knockback, 0.0)
+	# Campos de canto (ADR-0011): golem de canto igual ao do centro; lobo mais rapido, aggro 6 u
+	# como os outros (PI 2026-10-12; era 4 e 3 u).
+	var corner := _by_id[&"golem_corner"] as MonsterData
+	assert_true(corner.area_attack)
+	assert_almost_eq(corner.area_radius, 2.5, EPS)
+	var wolf := _by_id[&"wolf_t2"] as MonsterData
+	assert_eq([wolf.aggro_range, wolf.leash_range, wolf.move_speed], [6.0, 10.0, 5.0])
+	assert_almost_eq(wolf.melee_range, 1.8, EPS)
+	assert_false(wolf.area_attack)
 
 
 func test_ia_do_rei_esqueleto() -> void:
@@ -341,6 +353,10 @@ func test_ritmo_da_partida() -> void:
 			rules.rare_chest_epic_chance
 		],
 		[0.65, 0.25, 0.1]
+	)
+	# Bau reforcado do campo de canto (SPEC-055, GDB §6.2): 50 % raro, 50 % comum.
+	assert_eq(
+		[rules.reinforced_chest_rare_chance, rules.reinforced_chest_common_chance], [0.5, 0.5]
 	)
 	assert_eq([rules.heal_amount, rules.swap_hold_time], [120.0, 0.4])
 	# Abrir bau: toque em F a ate 1,5 u (PI 2026-10-09, F10).

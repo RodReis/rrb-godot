@@ -1,5 +1,6 @@
 extends GutTest
-## FSM dos monstros nao-boss: parado -> persegue (aggro) -> volta (leash) -> parado.
+## FSM dos monstros nao-boss: parado -> persegue (aggro ou provocado por dano) -> volta (leash)
+## -> parado.
 
 var _data: MonsterData
 
@@ -59,3 +60,25 @@ func test_alcance_do_golpe_e_corpo_a_corpo_ou_distancia() -> void:
 	mage.melee_range = 1.8
 	mage.ranged_range = 7.0
 	assert_almost_eq(MonsterRules.attack_reach(mage), 7.0, 0.0001)
+
+
+## PI 2026-10-12 (F55): ferido por heroi, o monstro parado persegue mesmo fora do aggro.
+func test_parado_provocado_persegue_fora_do_aggro() -> void:
+	assert_eq(
+		MonsterRules.next_state(MonsterRules.State.IDLE, _data, 9.0, 0.0, true),
+		MonsterRules.State.CHASE
+	)
+
+
+func test_provocado_alem_do_leash_volta() -> void:
+	assert_eq(
+		MonsterRules.next_state(MonsterRules.State.CHASE, _data, 9.0, 10.1, true),
+		MonsterRules.State.RESET
+	)
+
+
+func test_voltando_ignora_provocacao() -> void:
+	assert_eq(
+		MonsterRules.next_state(MonsterRules.State.RESET, _data, 9.0, 3.0, true),
+		MonsterRules.State.RESET
+	)

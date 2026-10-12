@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="MonsterData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/monster_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"golem_corner"
+display_name = "Golem de Pedra (canto)"
+tier = 2
+count = 2
+hp = 680.0
+damage = 50.0
+attack_interval = 1.6
+xp = 190
+area_attack = true
+area_radius = 2.5
+melee_range = 1.8
+aggro_range = 6.0
+leash_range = 10.0
+move_speed = 4.0

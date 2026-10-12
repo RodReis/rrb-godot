@@ -13,9 +13,11 @@
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/tall_grass_4x3.glb" id="11_grass43"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Warrior.glb" id="12_warrior"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/skeletons/Skeleton_Mage.glb" id="13_mage"]
-[ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/golem.glb" id="14_golem"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/stone_golem.glb" id="14_golem"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/megakit_house_small.glb" id="15_house_small"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/megakit_house_long.glb" id="16_house_long"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/wolf.glb" id="17_wolf"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/chest_reinforced_body.glb" id="18_chest_reinforced"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ref"]
 radius = 0.4
@@ -84,3 +86,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0, 0)
 
 [node name="MegakitHouseLong" parent="." instance=ExtResource("16_house_long")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 0)
+
+[node name="Wolf" parent="." instance=ExtResource("17_wolf")]
+transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 4, 0, 0)
+
+[node name="ChestReinforced" parent="." instance=ExtResource("18_chest_reinforced")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 0)

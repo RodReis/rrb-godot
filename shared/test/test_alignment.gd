@@ -54,11 +54,12 @@ func test_esqueletos_guerreiro_e_mago_tem_a_altura_do_heroi() -> void:
 
 
 func test_golem_e_maior_que_o_heroi() -> void:
-	# Golem a 2,5 u (art/monsters/golem.blend): cobre a capsula de colisao h 2,4 (F9).
+	# Golem proprio (art/monsters/build_golem.py, F55): cranio a ~2,6 u e chifres ate ~2,9 u, cobre
+	# a capsula de colisao h 2,4 (F9).
 	await wait_process_frames(2)
-	var golem := _top(_scene.get_node("Golem"), "golem")
+	var golem := _top(_scene.get_node("Golem"), "StoneGolem")
 	gut.p("Golem: %.2f u" % golem)
-	assert_almost_eq(golem, 2.5, 0.05)
+	assert_between(golem, 2.4, 3.0)
 
 
 func test_tem_tile_e_modelos_da_arena() -> void:

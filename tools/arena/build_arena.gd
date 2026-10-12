@@ -39,6 +39,7 @@ func _initialize() -> void:
 	for flip: float in [1.0, -1.0]:
 		_build_base(walls, flip)
 		_build_yard(walls, flip)
+		_build_corner_field(flip)
 		_build_rim_decor(flip)
 	_build_center(walls)
 	_build_jungle(walls)
@@ -371,6 +372,23 @@ func _build_side_field(markers: Node3D, flip: float, index: int) -> void:
 	for i: int in range(SIDE_CHEST_OFFSETS.size()):
 		var at := _world(center + SIDE_CHEST_OFFSETS[i], flip)
 		_common_chest(markers, "Chest%s%d" % [tag, i], at, team)
+
+
+## Campo de canto (SPEC-055 §2): NO com [param flip] 1, SE com -1. Neutro, como o centro.
+func _build_corner_field(flip: float) -> void:
+	var markers := _group("Markers")
+	var tag := "NO" if flip > 0 else "SE"
+	var neutral := GateRules.TEAM_NEUTRAL
+	_monster(markers, "Golem%s" % tag, _world(CORNER_FIELD, flip), neutral, 3, &"golem_corner")
+	for i: int in range(CORNER_WOLF_OFFSETS.size()):
+		var at := _world(CORNER_FIELD + CORNER_WOLF_OFFSETS[i], flip)
+		_monster(markers, "Wolf%s%d" % [tag, i], at, neutral, 2, &"wolf_t2")
+	for i: int in range(CORNER_CHEST_OFFSETS.size()):
+		var at := _world(CORNER_FIELD + CORNER_CHEST_OFFSETS[i], flip)
+		var m := _marker(markers, "Reinforced%s%d" % [tag, i], at)
+		m.kind = SpawnMarker.Kind.CHEST
+		m.team = neutral
+		m.chest_kind = ChestRules.Kind.REINFORCED
 
 
 ## Patio da ponte da metade: moita de um lado e rocha do outro, fora da banda MID; moita da
@@ -706,14 +724,14 @@ func _common_chest(parent: Node3D, label: String, at: Vector3, team: int) -> voi
 	var m := _marker(parent, label, at)
 	m.kind = SpawnMarker.Kind.CHEST
 	m.team = team
-	m.chest_kind = SpawnMarker.ChestKind.COMMON
+	m.chest_kind = ChestRules.Kind.COMMON
 
 
 func _rare_chest(parent: Node3D, label: String, at: Vector3) -> void:
 	var m := _marker(parent, label, at)
 	m.kind = SpawnMarker.Kind.CHEST
 	m.team = GateRules.TEAM_NEUTRAL
-	m.chest_kind = SpawnMarker.ChestKind.RARE
+	m.chest_kind = ChestRules.Kind.RARE
 
 
 func _marker(parent: Node3D, label: String, at: Vector3) -> SpawnMarker:

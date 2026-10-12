@@ -52,7 +52,8 @@
       "itens": [
         { "nome": "Esqueleto", "papel": "Tier 1 · bases", "texto": "Alvo de quem está começando." },
         { "nome": "Esqueleto Guerreiro e Esqueleto Mago", "papel": "Tier 2 · bases e centro", "texto": "O mago ataca à distância." },
-        { "nome": "Golem de Pedra", "papel": "Tier 3 · centro", "texto": "Golpe em área. Garante um item raro." },
+        { "nome": "Golem de Pedra", "papel": "Tier 3 · centro e cantos", "texto": "Golpe em área com os dois punhos. No centro garante um item raro; nos cantos guarda os baús reforçados." },
+        { "nome": "Lobo", "papel": "Tier 2 · cantos", "texto": "Rápido, anda em dupla com o Golem do canto. O campo inteiro ataca junto." },
         { "nome": "Rei Esqueleto", "papel": "Chefe · surge às 3:30", "texto": "Derrubá-lo garante um item épico. É a grande decisão da preparação." }
       ]
     },
@@ -158,7 +159,8 @@
         { "arquivo": "mvp2-f53-barbaro-equipamento.webp", "legenda": "O machado muda com a raridade (comum, raro com anel azul, épico com fio dourado e gema roxa). O capuz de urso fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" },
         { "arquivo": "mvp2-f54-bruxo-anel-de-fogo.webp", "legenda": "O Bruxo de Fogo, quarto herói, enfrenta o Rei Esqueleto no centro: o anel de chamas explode em volta dele e empurra para longe quem estiver perto.", "tipo": "entregue" },
         { "arquivo": "mvp2-f54-bruxo-cajado.webp", "legenda": "O cajado muda com a raridade (comum, raro com anéis azuis, épico com gola e ponta douradas). O chapéu de bruxo fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" },
-        { "arquivo": "mvp2-f51-selecao-herois.webp", "legenda": "A nova tela de escolha do herói: os quatro heróis com retrato, o escolhido à esquerda com papel, habilidades e atributos, e o oponente à direita, ainda escolhendo. O tempo corre no alto.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f51-selecao-herois.webp", "legenda": "A nova tela de escolha do herói: os quatro heróis com retrato, o escolhido à esquerda com papel, habilidades e atributos, e o oponente à direita, ainda escolhendo. O tempo corre no alto.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f55-campo-de-canto.webp", "legenda": "Novo campo nos cantos do mapa: o Golem de Pedra e dois lobos guardam baús reforçados. Basta um perceber o herói, ou levar uma flechada de longe, para o campo inteiro vir junto.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {

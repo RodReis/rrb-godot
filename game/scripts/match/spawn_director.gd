@@ -173,9 +173,9 @@ func _chest(marker: SpawnMarker, number: int) -> Chest:
 	var chest := _chest_scene.instantiate() as Chest
 	chest.name = "Chest%d" % number
 	chest.uid = -number
-	chest.rare = marker.chest_kind == SpawnMarker.ChestKind.RARE
+	chest.kind = marker.chest_kind
 	chest.home_team = marker.team
-	chest.drop = ChestRules.roll(chest.rare, chest.rules, chest.catalog.items, _rng)
+	chest.drop = ChestRules.roll(chest.kind, chest.rules, chest.catalog.items, _rng)
 	chest.first_opened.connect(chest_opened.emit)
 	return chest
 

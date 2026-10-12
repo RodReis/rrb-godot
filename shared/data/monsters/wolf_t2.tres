@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="MonsterData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/monster_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+id = &"wolf_t2"
+display_name = "Lobo"
+tier = 1
+count = 4
+hp = 300.0
+damage = 22.0
+attack_interval = 0.9
+xp = 70
+drop_common_chance = 0.2
+melee_range = 1.8
+aggro_range = 6.0
+leash_range = 10.0
+move_speed = 5.0

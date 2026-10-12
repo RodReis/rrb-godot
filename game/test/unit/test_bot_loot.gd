@@ -38,7 +38,7 @@ func _loot_chest(drop: StringName) -> Chest:
 	var chest: Chest = null
 	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
 		var candidate := node as Chest
-		if candidate.home_team == GateRules.TEAM_B and not candidate.rare:
+		if candidate.home_team == GateRules.TEAM_B and candidate.kind != ChestRules.Kind.RARE:
 			chest = candidate
 			break
 	chest.drop = Ids.to_int(drop)

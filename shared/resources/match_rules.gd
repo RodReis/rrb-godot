@@ -40,6 +40,9 @@ extends Resource
 @export var rare_chest_rare_chance: float
 @export var rare_chest_common_chance: float
 @export var rare_chest_epic_chance: float
+## Bau reforcado do campo de canto (SPEC-055): raro ou comum, sem epico nem cura.
+@export var reinforced_chest_rare_chance: float
+@export var reinforced_chest_common_chance: float
 @export var heal_amount: float
 ## Tempo segurando F para confirmar troca de item.
 @export var swap_hold_time: float

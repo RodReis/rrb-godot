@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://brwnpmqbr3mcl"
-path="res://.godot/imported/golem.glb-8410ae6aea12fb3eb9c936d9e9a18199.scn"
+uid="uid://c35j4ijirbfk5"
+path="res://.godot/imported/chest_reinforced_lid.glb-a6974582c2c65187692d05561d879026.scn"
 
 [deps]
 
-source_file="res://shared/assets/rrb/monsters/golem.glb"
-dest_files=["res://.godot/imported/golem.glb-8410ae6aea12fb3eb9c936d9e9a18199.scn"]
+source_file="res://shared/assets/rrb/arena/chest_reinforced_lid.glb"
+dest_files=["res://.godot/imported/chest_reinforced_lid.glb-a6974582c2c65187692d05561d879026.scn"]
 
 [params]
 
