@@ -34,8 +34,6 @@ updated: 2026-10-12
 
 ### [MVP2] Partida em rede (#57)
 
-- [MVP2][SPEC-055][F55] Campos de canto: golem + 2 lobos + 2 baús reforçados na curva TOP/BOT (#137)
-- [MVP2][SPEC-052][F52] Tela de vitória/derrota fiel ao protótipo novo, só com dados reais (#133)
 - [MVP2][FIX] Cliente loga ERROR a cada quadro depois que o servidor encerra a partida (#108)
 - [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102)
 
@@ -51,6 +49,8 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-052][F52] Tela de vitória/derrota fiel ao protótipo novo, só com dados reais (#133, finalizado em: 2026-10-12)
+- [MVP2][SPEC-055][F55] Campos de canto: golem + 2 lobos + 2 baús reforçados na curva TOP/BOT (#137, finalizado em: 2026-10-12)
 - [MVP2][SPEC-051][F51] Tela de seleção de heróis fiel ao protótipo novo, só com dados reais (#132, finalizado em: 2026-10-12)
 - [MVP2][SPEC-054][F54] Bruxo de Fogo (Mago): Bola de Fogo, Explosão de Chamas, Anel de Fogo, Meteoro, bot e VFX (#136, finalizado em: 2026-10-12)
 - [MVP2][SPEC-053][F53] Bárbaro (Algoz): Machado, Salto Brutal, Rodopio, Execução, bot e VFX (#135, finalizado em: 2026-10-12)
