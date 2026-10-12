@@ -2,7 +2,8 @@ extends GutTest
 ## Campos de canto (SPEC-055, ADR-0011) na Ilha: NO (-27,5, -27,5) e SE por rotacao, neutros,
 ## Golem de canto + 2 Lobos + 2 Baus Reforcados cada; folgas do §2 sobre a cena gerada; heroi no
 ## meio do corredor N/O nao puxa os lobos (aggro 3 u), o golem acorda a 4 u e o leash de 10 u
-## devolve o monstro com HP cheio. Contagens totais e rotacao: test_ilha_arcana.
+## devolve o monstro com HP cheio. Ferido de longe (PI 2026-10-12), o campo inteiro persegue
+## quem feriu. Contagens totais e rotacao: test_ilha_arcana.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
@@ -67,6 +68,13 @@ func _no(id: StringName) -> Array[Monster]:
 func _think(monster: Monster) -> void:
 	_tick += 1
 	monster._on_network_tick(DT, _tick)
+
+
+## Golpe do heroi (attacker_id = peer_id, como Hero._hit) de [param damage] no [param monster].
+func _shoot(monster: Monster, damage: int) -> void:
+	var effect := HitEffect.new(damage)
+	effect.attacker_id = _hero.peer_id
+	monster.receive_hit(_tick, HitLedger.source_key(_hero.peer_id, HitLedger.Slot.BASIC), effect)
 
 
 func test_cada_canto_tem_golem_dois_lobos_e_dois_reforcados_neutros() -> void:
@@ -144,3 +152,33 @@ func test_leash_devolve_lobo_e_golem_com_hp_cheio() -> void:
 		_think(monster)
 		assert_eq(monster.state, MonsterRules.State.RESET, id)
 		assert_eq(monster.hp, roundi(monster.data.hp), id)
+
+
+## PI 2026-10-12: flecha de 8 u num lobo acorda o campo inteiro (golem + 2 lobos), que persegue
+## o atirador; o campo do outro canto continua parado.
+func test_ferido_de_longe_o_campo_inteiro_persegue_quem_feriu() -> void:
+	var wolf := _no(&"wolf_t2")[0]
+	_hero.global_position = wolf.global_position + Vector3(8.0, 0.0, 0.0)
+	_shoot(wolf, 10)
+	var camp: Array[Monster] = _no(&"wolf_t2") + _no(&"golem_corner")
+	for monster: Monster in camp:
+		_think(monster)
+		assert_eq(monster.state, MonsterRules.State.CHASE, monster.name)
+		assert_eq(monster._target, _hero, monster.name)
+	for monster: Monster in _monsters(&"wolf_t2"):
+		if monster not in camp:
+			_think(monster)
+			assert_eq(monster.state, MonsterRules.State.IDLE, monster.name)
+
+
+## Provocado e puxado alem do leash, volta com HP cheio como no aggro.
+func test_provocado_respeita_o_leash() -> void:
+	var golem := _no(&"golem_corner")[0]
+	_hero.global_position = golem.global_position + Vector3(9.0, 0.0, 0.0)
+	_shoot(golem, 30)
+	_think(golem)
+	assert_eq(golem.state, MonsterRules.State.CHASE)
+	golem.global_position += Vector3(golem.data.leash_range + 1.0, 0.0, 0.0)
+	_think(golem)
+	assert_eq(golem.state, MonsterRules.State.RESET)
+	assert_eq(golem.hp, roundi(golem.data.hp))
