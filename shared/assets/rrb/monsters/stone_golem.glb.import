@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://brwnpmqbr3mcl"
-path="res://.godot/imported/golem.glb-8410ae6aea12fb3eb9c936d9e9a18199.scn"
+uid="uid://ca6i4uudyswh8"
+path="res://.godot/imported/stone_golem.glb-f3be7e3124fa9dee7cf112d7fad174f0.scn"
 
 [deps]
 
-source_file="res://shared/assets/rrb/monsters/golem.glb"
-dest_files=["res://.godot/imported/golem.glb-8410ae6aea12fb3eb9c936d9e9a18199.scn"]
+source_file="res://shared/assets/rrb/monsters/stone_golem.glb"
+dest_files=["res://.godot/imported/stone_golem.glb-f3be7e3124fa9dee7cf112d7fad174f0.scn"]
 
 [params]
 

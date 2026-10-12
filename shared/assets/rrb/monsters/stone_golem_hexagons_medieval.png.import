@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m8c7dlsruv7v"
-path="res://.godot/imported/golem_hexagons_medieval.png-c29ad4f1b9124ecf00e6b075dc7c1778.ctex"
+uid="uid://dtkkf320nyue0"
+path="res://.godot/imported/stone_golem_hexagons_medieval.png-c5b051db13b9ac83849a670d7f3fd6da.ctex"
 metadata={
 "vram_texture": false
 }
@@ -13,8 +13,8 @@ generator_parameters={
 
 [deps]
 
-source_file="res://shared/assets/rrb/monsters/golem_hexagons_medieval.png"
-dest_files=["res://.godot/imported/golem_hexagons_medieval.png-c29ad4f1b9124ecf00e6b075dc7c1778.ctex"]
+source_file="res://shared/assets/rrb/monsters/stone_golem_hexagons_medieval.png"
+dest_files=["res://.godot/imported/stone_golem_hexagons_medieval.png-c5b051db13b9ac83849a670d7f3fd6da.ctex"]
 
 [params]
 
