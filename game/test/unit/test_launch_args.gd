@@ -114,3 +114,20 @@ func test_heroi_do_bot_de_dev() -> void:
 	assert_eq(LaunchArgs.parse(PackedStringArray([]))["bot_hero"], &"")
 	var r := LaunchArgs.parse(PackedStringArray(["--offline", "--bot", "--bot-hero=barbarian"]))
 	assert_eq(r["bot_hero"], &"barbarian")
+
+
+func test_dois_bots_no_servidor_sem_cliente() -> void:
+	assert_false(LaunchArgs.parse(PackedStringArray(["--server"]))["bots"])
+	assert_true(LaunchArgs.parse(PackedStringArray(["--server", "--bots"]))["bots"])
+
+
+func test_herois_dos_dois_bots_um_por_time() -> void:
+	var r := LaunchArgs.parse(PackedStringArray(["--bots", "--bot-heroes=knight,ranger"]))
+	assert_eq(r["bot_heroes"], [&"knight", &"ranger"] as Array[StringName])
+	assert_eq(LaunchArgs.parse(PackedStringArray([]))["bot_heroes"], [] as Array[StringName])
+
+
+func test_herois_dos_bots_malformados_voltam_ao_padrao() -> void:
+	for bad: String in ["knight", "knight,", ",ranger", "a,b,c", ""]:
+		var r := LaunchArgs.parse(PackedStringArray(["--bot-heroes=" + bad]))
+		assert_eq(r["bot_heroes"], [] as Array[StringName], bad)

@@ -3,9 +3,10 @@ extends Node3D
 ## NetworkTime e iniciado pelo NetworkEvents do netfox (netfox/events/enabled).
 ## --offline = modo host (ARCHITECTURE-GAME §4, PI 2026-10-09): este processo e o servidor e o
 ## jogador local (peer 1), pelo mesmo caminho do online; o netfox tem um papel so por processo.
-## --bot poe o heroi bot no 2o slot (time B), com input do servidor. --autopilot=bot: o BotInput
-## joga pelo heroi local deste processo (medicao de rede com 2 clientes reais, F20). --probe: sonda
-## de rede (NetProbe).
+## --bot poe o heroi bot no 2o slot (time B), com input do servidor. --bots poe bots nas duas vagas
+## (soak bot x bot, F19): cada um com o proprio navmesh. --autopilot=bot: o BotInput joga pelo
+## heroi local deste processo (medicao de rede com 2 clientes reais, F20). --probe: sonda de rede
+## (NetProbe).
 ## Ciclo da partida no MatchController (F15): o servidor abre a espera, cada peer (e o bot) ocupa
 ## uma vaga, a selecao acontece na HeroSelect e os herois nascem na PHASE1, cada um com o heroi
 ## escolhido. Quem decide e o MatchController; aqui so se liga sinal e se spawna. No fim, quem
@@ -25,8 +26,9 @@ const ROSTER: Array[HeroData] = [
 ## Host so aceita conexao local, em porta escolhida pelo sistema.
 const HOST_BIND_IP: String = "127.0.0.1"
 const EPHEMERAL_PORT: int = 0
-## ponytail: id fixo do bot; peer real do ENet e aleatorio de 32 bits, colisao desprezivel.
+## ponytail: ids fixos dos bots; peer real do ENet e aleatorio de 32 bits, colisao desprezivel.
 const BOT_ID: int = 2
+const BOT_ID_TEAM_A: int = 3
 ## Servidor dedicado: espera antes de sair no fim, para os RPCs confiaveis do fim (estado ENDED,
 ## ultima morte, match_ended com o placar) chegarem mesmo com perda; sair na hora descarta a fila.
 const EXIT_DELAY_SECONDS: float = 2.0
@@ -44,14 +46,17 @@ const FOG_OF_WAR_OVERLAY: bool = false
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 ## --bot: o bot ocupa a vaga do time B assim que o servidor abre.
 var _wants_bot: bool = false
+## --bots: os dois slots sao bots (soak); --bot-heroes=a,b escolhe o heroi de cada um.
+var _wants_bots: bool = false
+var _bot_heroes: Array[StringName] = []
 ## --bot-hero=<id> (dev): heroi do bot e do heroi local com --autopilot=bot; vazio = padrao.
 var _bot_hero: StringName = &""
 ## --autopilot=bot: o heroi local e jogado pelo BotInput.
 var _bot_pilot: bool = false
 ## Servidor dedicado: encerra o processo no fim da partida.
 var _dedicated: bool = false
-## Navmesh do bot (so no servidor com --bot).
-var _nav: ArenaNav
+## Navmesh de cada bot, por time (so no servidor com --bot ou --bots).
+var _navs: Dictionary[int, ArenaNav] = {}
 ## Cliente: erro de servidor perdido (#102); null no servidor dedicado.
 var _connection_lost: ConnectionLostScreen
 ## Servidor: herois de jogadores que cairam (log periodico).
@@ -113,6 +118,8 @@ func _ready() -> void:
 	match_controller.match_seed = spawns.loot_seed
 	match_controller.forced_daynight = args["daynight"]
 	_wants_bot = args["bot"]
+	_wants_bots = args["bots"]
+	_bot_heroes = args["bot_heroes"]
 	_bot_hero = args["bot_hero"]
 	_bot_pilot = args["bot_pilot"]
 	if args["probe"]:
@@ -187,7 +194,7 @@ func _warm_shaders() -> void:
 
 
 ## Falso se a porta nao abriu (o processo sai com codigo 1). Abre a espera pelos jogadores; com
-## --bot, o bot ja ocupa a vaga do time B.
+## --bot, o bot ja ocupa a vaga do time B; com --bots, os bots ocupam as duas.
 func start_server(port: int, bind_ip: String = "*") -> bool:
 	var peer := ENetMultiplayerPeer.new()
 	peer.set_bind_ip(bind_ip)
@@ -204,7 +211,9 @@ func start_server(port: int, bind_ip: String = "*") -> bool:
 	print("[server] escutando em %s:%d" % [bind_ip, peer.host.get_local_port()])
 	match_controller.available_heroes = _available_heroes()
 	match_controller.open(NetworkTime.tick, NetworkTime.tickrate)
-	if _wants_bot:
+	if _wants_bots:
+		match_controller.join(BOT_ID_TEAM_A, GateRules.TEAM_A, true, NetworkTime.tick)
+	if _wants_bot or _wants_bots:
 		match_controller.join(BOT_ID, GateRules.TEAM_B, true, NetworkTime.tick)
 	return true
 
@@ -287,14 +296,18 @@ func _spawn_heroes() -> void:
 		print("[match] %s para o peer %d (time %d)" % [seat.hero, seat.peer, seat.team])
 
 
-## Navmesh do bot, antes dele nascer: o portao do outro time conta como parede. Um por processo.
+## Navmesh do bot, antes dele nascer: o portao do outro time conta como parede. Um por time; com
+## dois bots no processo (--bots) cada um tem o proprio mapa, senao a parede de um valeria no outro.
 func _bake_bot_nav(team: int) -> void:
-	if _nav != null:
+	if _navs.has(team):
 		return
 	var enemy := GateRules.TEAM_B if team == GateRules.TEAM_A else GateRules.TEAM_A
-	_nav = ArenaNav.new()
-	add_child(_nav)
-	_nav.bake($Arena as Node3D, GateRules.gate_layer(enemy))
+	var nav := ArenaNav.new()
+	nav.team = team
+	nav.own_map = _wants_bots
+	add_child(nav)
+	nav.bake($Arena as Node3D, GateRules.gate_layer(enemy))
+	_navs[team] = nav
 
 
 ## Roda no servidor e nos clientes (MultiplayerSpawner): mesmo heroi, posicao, time, nivel e
@@ -397,8 +410,9 @@ func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 			if seat.is_bot:
 				var slot := MatchController.SLOT_TEAMS.find(seat.team)
 				var hero_id := PickRules.default_hero(defaults, slot, _available_heroes())
-				if PickRules.can_pick(_bot_hero, _available_heroes()):
-					hero_id = _bot_hero
+				var wanted := _bot_heroes[slot] if _bot_heroes.size() > slot else _bot_hero
+				if PickRules.can_pick(wanted, _available_heroes()):
+					hero_id = wanted
 				match_controller.submit_pick(seat.peer, hero_id, tick)
 	elif to == MatchState.State.PHASE1:
 		_spawn_heroes()
@@ -422,6 +436,9 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 		)
 	)
 	if _dedicated:
+		# Uma linha em JSON para o tools/soak.ps1 (F19) ler sem depender da prosa acima.
+		var summary := {"winner": winner, "reason": reason, "tick": tick, "stats": stats.to_dict()}
+		print("[soak] ", JSON.stringify(summary))
 		await get_tree().create_timer(EXIT_DELAY_SECONDS).timeout
 		get_tree().quit(0)
 
@@ -439,8 +456,8 @@ func _on_clock_phase1_ended(tick: int) -> void:
 	print("[match] fim da fase 1 (5:00), portoes caem, tick %d" % tick)
 	for node: Node in get_tree().get_nodes_in_group(Gate.GROUP):
 		(node as Gate).fall()
-	if _nav != null:
-		_nav.bake($Arena as Node3D)  # sem portoes: o bot entra na base do jogador (#52)
+	for nav: ArenaNav in _navs.values():
+		nav.bake($Arena as Node3D)  # sem portoes: o bot entra na base do jogador (#52)
 	if multiplayer.is_server():
 		for node: Node in players.get_children():
 			var hero := node as Hero
