@@ -142,6 +142,58 @@ func test_habilidades_do_barbaro() -> void:
 	assert_eq(b.skill_r.required_hero_level, PackedInt32Array([6, 10]))
 
 
+func test_bruxo_no_nivel_1_e_10_bate_com_o_gdb() -> void:
+	var w := _hero(&"fire_wizard")
+	assert_eq(w.display_name, "Bruxo de Fogo")
+	assert_almost_eq(w.base_move_speed, 6.0, EPS)
+	var a1 := Stats.attributes(w, 1, [], [])
+	assert_eq(a1.max_hp, 360)
+	assert_almost_eq(a1.defense, 8.0, EPS)
+	assert_almost_eq(a1.attack, 45.0, EPS)
+	assert_almost_eq(a1.intelligence, 30.0, EPS)
+	assert_almost_eq(a1.agility, 15.0, EPS)
+	var a10 := Stats.attributes(w, 10, [], [])
+	assert_eq(a10.max_hp, 594)
+	assert_almost_eq(a10.defense, 17.0, EPS)
+	assert_almost_eq(a10.attack, 81.0, EPS)
+	assert_almost_eq(a10.intelligence, 57.0, EPS)
+	assert_almost_eq(a10.agility, 25.8, EPS)
+
+
+func test_habilidades_do_bruxo() -> void:
+	var w := _hero(&"fire_wizard")
+	# Bola de Fogo
+	assert_almost_eq(w.basic_attack.speed, 16.0, EPS)
+	assert_almost_eq(w.basic_attack.attack_range, 8.0, EPS)
+	assert_almost_eq(w.basic_attack.radius, 0.4, EPS)
+	assert_eq(w.basic_attack.cooldown, PackedFloat64Array([1.0]))
+	assert_almost_eq(w.basic_attack.attack_ratio, 1.0, EPS)
+	# Q Explosao de Chamas (voa na velocidade do basico, como o Q da Arqueira)
+	assert_almost_eq(w.skill_q.speed, w.basic_attack.speed, EPS)
+	assert_almost_eq(w.skill_q.attack_range, 9.0, EPS)
+	assert_almost_eq(w.skill_q.radius, 2.0, EPS)
+	assert_eq(w.skill_q.cooldown, PackedFloat64Array([6.0]))
+	assert_eq(w.skill_q.base_amount, PackedFloat64Array([70, 105, 140, 175, 210]))
+	assert_almost_eq(w.skill_q.attack_ratio, 0.9, EPS)
+	assert_almost_eq(w.skill_q.intelligence_ratio, 0.0, EPS)
+	# E Anel de Fogo
+	assert_almost_eq(w.skill_e.radius, 3.0, EPS)
+	assert_almost_eq(w.skill_e.knockback, 2.0, EPS)
+	assert_eq(w.skill_e.cooldown, PackedFloat64Array([10.0]))
+	assert_eq(w.skill_e.base_amount, PackedFloat64Array([40, 65, 90, 115, 140]))
+	assert_almost_eq(w.skill_e.attack_ratio, 0.5, EPS)
+	assert_eq(w.skill_e.required_hero_level, PackedInt32Array([2]))
+	# R Meteoro
+	assert_almost_eq(w.skill_r.radius, 3.5, EPS)
+	assert_almost_eq(w.skill_r.cast_range, 9.0, EPS)
+	assert_eq(w.skill_r.duration, PackedFloat64Array([1.0]), "queda 1 s depois da marcacao")
+	assert_eq(w.skill_r.cooldown, PackedFloat64Array([50.0, 42.0]))
+	assert_eq(w.skill_r.base_amount, PackedFloat64Array([260, 400]))
+	assert_almost_eq(w.skill_r.intelligence_ratio, 1.4, EPS)
+	assert_almost_eq(w.skill_r.attack_ratio, 0.6, EPS)
+	assert_eq(w.skill_r.required_hero_level, PackedInt32Array([6, 10]))
+
+
 func test_habilidades_do_cavaleiro() -> void:
 	var k := _hero(&"knight")
 	assert_almost_eq(k.basic_attack.arc_degrees, 70.0, EPS)
