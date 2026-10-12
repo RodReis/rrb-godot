@@ -172,9 +172,7 @@ func test_barbaro_salta_so_fora_do_alcance_do_basico() -> void:
 
 
 func test_perfil_do_bruxo_vem_da_spec_054() -> void:
-	assert_eq(
-		[_profile.blast_range, _profile.ring_range, _profile.meteor_range], [9.0, 3.0, 9.0]
-	)
+	assert_eq([_profile.blast_range, _profile.ring_range, _profile.meteor_range], [9.0, 3.0, 9.0])
 
 
 func test_bruxo_lanca_q_e_meteoro_ate_9_u_e_anel_ate_3_u() -> void:

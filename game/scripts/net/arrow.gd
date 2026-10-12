@@ -1,14 +1,15 @@
 class_name Arrow
 extends Node3D
 ## Projetil do pool de um ProjectileHero: flecha da Arqueira (F14), bola de fogo do Bruxo (F54;
-## EXPLODE = Explosao de Chamas, explode onde o voo acaba). O netfox 1.35.3 nao tem spawn dentro
-## do rollback (so o NetworkWeapon, por RPC e fora da ressimulacao): a flecha que nasce num tick
-## ressimulado nao teria historico. Por isso o pool e fixo, filho do heroi, nasce com ele pelo MultiplayerSpawner,
-## e o estado de cada flecha (STATE) entra no RollbackSynchronizer do heroi: disparar e ocupar um
-## slot, ressimular o heroi reproduz a flecha. O ProjectileHero avanca e acerta; aqui so o visual
-## (top_level). Visual desacoplado do estado (F41): a flecha mostrada anda sozinha na velocidade do
-## disparo e so acompanha a posicao da rede (extrapolada dentro do tick), sem recuar
-## (VfxRules.arrow_progress) — a flecha ressimulada nao ziguezagueia nem anda aos saltos de 30 Hz.
+## EXPLODE = Explosao de Chamas, explode onde o voo acaba). O netfox 1.35.3 nao tem spawn dentro do
+## rollback (so o NetworkWeapon, por RPC e fora da ressimulacao): a flecha que nasce num tick
+## ressimulado nao teria historico. Por isso o pool e fixo, filho do heroi, nasce com ele pelo
+## MultiplayerSpawner, e o estado de cada flecha (STATE) entra no RollbackSynchronizer do heroi:
+## disparar e ocupar um slot, ressimular o heroi reproduz a flecha. O ProjectileHero avanca e
+## acerta; aqui so o visual (top_level). Visual desacoplado do estado (F41): a flecha mostrada anda
+## sozinha na velocidade do disparo e so acompanha a posicao da rede (extrapolada dentro do tick),
+## sem recuar (VfxRules.arrow_progress) — a flecha ressimulada nao ziguezagueia nem anda aos saltos
+## de 30 Hz.
 
 ## Visual: disparo novo neste slot (o rastro do VFX recomeca daqui).
 signal shown_launched
