@@ -1,0 +1,107 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/fire_wizard_vfx.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/vfx/trail_ribbon.gd" id="2_trail"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_ball_trail"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(2.6, 1.1, 0.3, 0.9)
+
+[sub_resource type="QuadMesh" id="QuadMesh_warmup"]
+size = Vector2(0.05, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Mat_rock"]
+albedo_color = Color(0.35, 0.12, 0.05, 1)
+roughness = 0.9
+emission_enabled = true
+emission = Color(1, 0.35, 0.08, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="SphereMesh" id="Sphere_rock"]
+material = SubResource("Mat_rock")
+radius = 0.55
+height = 1.1
+radial_segments = 12
+rings = 6
+
+[sub_resource type="Gradient" id="Gradient_soft"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.55, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_soft"]
+gradient = SubResource("Gradient_soft")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="Gradient_fire"]
+offsets = PackedFloat32Array(0, 0.2, 0.55, 1)
+colors = PackedColorArray(1, 0.95, 0.7, 1, 1, 0.6, 0.15, 1, 0.85, 0.2, 0.05, 0.7, 0.2, 0.05, 0.02, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_fire"]
+gradient = SubResource("Gradient_fire")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_meteor"]
+emission_shape = 1
+emission_sphere_radius = 0.4
+direction = Vector3(0, 1, 0)
+spread = 25.0
+initial_velocity_min = 0.5
+initial_velocity_max = 1.5
+gravity = Vector3(0, 2, 0)
+scale_min = 0.9
+scale_max = 1.6
+color_ramp = SubResource("Ramp_fire")
+
+[sub_resource type="StandardMaterial3D" id="Mat_flame"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(3, 1.8, 0.9, 1)
+albedo_texture = SubResource("Tex_soft")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="Quad_flame"]
+material = SubResource("Mat_flame")
+size = Vector2(0.9, 0.9)
+
+[node name="FireWizardVfx" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="ArrowTrail" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_warmup")
+material_override = SubResource("Mat_ball_trail")
+script = ExtResource("2_trail")
+lifetime = 0.18
+width = 0.32
+
+[node name="Meteor" type="Node3D" parent="."]
+top_level = true
+visible = false
+
+[node name="Rock" type="MeshInstance3D" parent="Meteor"]
+cast_shadow = 0
+mesh = SubResource("Sphere_rock")
+
+[node name="Flames" type="GPUParticles3D" parent="Meteor"]
+cast_shadow = 0
+emitting = false
+amount = 48
+lifetime = 0.45
+local_coords = false
+visibility_aabb = AABB(-8, -16, -8, 16, 20, 16)
+process_material = SubResource("PPM_meteor")
+draw_pass_1 = SubResource("Quad_flame")
