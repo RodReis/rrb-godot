@@ -7,6 +7,8 @@ const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const RANGER: String = "res://scenes/heroes/ranger.tscn"
 const KNIGHT_VFX: PackedScene = preload("res://scenes/vfx/knight_vfx.tscn")
 const RANGER_VFX: PackedScene = preload("res://scenes/vfx/ranger_vfx.tscn")
+const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
+const BARBARIAN_VFX: PackedScene = preload("res://scenes/vfx/barbarian_vfx.tscn")
 const FRAME: float = 1.0 / 60.0
 const COOLDOWN: int = 1200
 
@@ -140,3 +142,48 @@ func test_flecha_em_voo_tem_rastro() -> void:
 	var trail := _driver.get_node("ArrowTrail") as TrailRibbon
 	assert_true(trail.emitting)
 	assert_true((_driver.get_node("Spiral") as TrailRibbon).emitting, "espiral do Q")
+
+
+func test_salto_tem_linhas_no_ar_e_rachadura_no_raio_do_salto_na_aterrissagem() -> void:
+	_bind(BARBARIAN, BARBARIAN_VFX)
+	var lines := _driver.get_node("SpeedLines") as GPUParticles3D
+	_hero.dash_ticks = 14
+	_frame()
+	assert_true(lines.emitting)
+	assert_eq(_effects(), 0, "no ar nada nasce")
+	_hero.dash_ticks = 0
+	_frame()
+	assert_eq(_effects(), 1, "impacto na aterrissagem")
+	var crack := (_pool.get_child(0) as EarthquakeVfx).get_node("Crack") as Decal
+	assert_eq(crack.size.x, _hero.hero_data.skill_q.radius * 2.0)
+
+
+func test_rodopio_gira_o_rastro_no_raio_do_e_enquanto_canaliza() -> void:
+	_bind(BARBARIAN, BARBARIAN_VFX)
+	var trail := _driver.get_node("Trail") as TrailRibbon
+	var swing := _driver.get_node("Swing") as Node3D
+	var tip := _driver.get_node("Swing/Tip") as Node3D
+	(_hero as Barbarian).spin_ticks = 45
+	_frame()
+	var turned := swing.rotation.y
+	_frame()
+	assert_true(trail.emitting)
+	assert_ne(swing.rotation.y, turned, "o rastro da volta")
+	assert_almost_eq(tip.position.length(), _hero.hero_data.skill_e.radius, 0.001)
+	(_hero as Barbarian).spin_ticks = 0
+	for i: int in 30:
+		_frame()
+	assert_false(trail.emitting, "parou de girar")
+
+
+func test_execucao_varre_o_arco_do_r_e_impacto_vira_faisca() -> void:
+	_bind(BARBARIAN, BARBARIAN_VFX)
+	var trail := _driver.get_node("Trail") as TrailRibbon
+	var tip := _driver.get_node("Swing/Tip") as Node3D
+	_hero.r_cooldown = COOLDOWN
+	_frame()
+	_frame()
+	assert_true(trail.emitting)
+	assert_almost_eq(tip.position.length(), _hero.hero_data.skill_r.attack_range, 0.001)
+	_driver.impact(HitLedger.Slot.R, Vector3(1.0, 0.0, -2.0))
+	assert_eq(_effects(), 1)

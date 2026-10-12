@@ -2,7 +2,7 @@
 renderiza os icones em shared/ui/icons/items/ (SPEC-048, ADR-0005, ADR-0010).
 
 Pecas rigidas: cada objeto e modelado no espaco do modelo do heroi em pose de repouso (Z para
-cima, frente -Y; o rig do Knight e do Ranger e o mesmo) e se chama "<peca>__<osso>" com "." do
+cima, frente -Y; o rig do Knight, do Ranger e do Barbarian e o mesmo) e se chama "<peca>__<osso>" com "." do
 osso trocado por "_" (o Godot nao aceita "." em nome de no). O HeroVisual prende cada objeto ao
 osso por BoneAttachment3D. Raridade = mesma forma, acabamento diferente: comum liso; raro com
 friso azul; epico com friso dourado e detalhe roxo (PATTERNS P6). Cores pelo atlas KayKit
@@ -26,6 +26,7 @@ PREVIEW = argv[1] if len(argv) > 1 else ""
 ATLAS = os.path.join(REPO, "shared", "assets", "kaykit", "medieval_hexagon", "hexagons_medieval.png")
 KNIGHT = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Knight.glb")
 RANGER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "ranger.glb")
+BARBARIAN = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Barbarian.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
@@ -374,11 +375,28 @@ def bow_accents(p, rarity):
     p.gem(BLUE if rarity == 1 else EPIC, (0.06, 0.0, 0.0), (0.045, 0.055, 0.055))
 
 
+def axe_accents(p, rarity):
+    # Espaco local do 2H_Axe (F53): cabo em +Z (-0.40 a 0.45, +-0.08), cabeca de lamina dupla em
+    # z 0.45-1.32 (+-0.62 em X no fio, espessura +-0.13 em Y no olho, fio fino).
+    if rarity == 0:
+        return
+    trim = BLUE if rarity == 1 else GOLD
+    p.cylinder(trim, (0.0, 0.0), 0.095, 0.095, 0.16, 0.26, 8, caps=False)  # anel da empunhadura
+    if rarity == 1:
+        p.gem(BLUE, (0.0, 0.0, 0.90), (0.09, 0.15, 0.09))  # pedra no olho da cabeca
+        return
+    for side in (-1.0, 1.0):
+        p.box(GOLD, (side * 0.60, 0.0, 0.88), (0.06, 0.05, 0.56))  # fio dourado das laminas
+    p.cylinder(GOLD, (0.0, 0.0), 0.10, 0.10, -0.44, -0.30, 8)  # pomo dourado
+    p.gem(EPIC, (0.0, 0.0, 0.90), (0.10, 0.17, 0.10))
+
+
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
     "knight": (KNIGHT, "1H_Sword", "handslot.r", sword_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
     "ranger": (RANGER, "bow_withString", "handslot.l", bow_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
+    "barbarian": (BARBARIAN, "2H_Axe", "handslot.r", axe_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
 }
 
 # ---------------------------------------------------------------------------------------------
