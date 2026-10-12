@@ -147,14 +147,17 @@ func _collect_hits(arrow: Arrow, p0: Vector3, p1: Vector3, reach: float, radius:
 		_hit_targets.insert(at, other)
 
 
-## Menor fracao do segmento em que muro/pilar/portao ou a Muralha inimiga barram o projetil.
+## Menor fracao do segmento em que muro/pilar/portao ou a Muralha inimiga barram o projetil. A
+## Muralha conta pela ponta do projetil (centro + raio): ela fica 0,8 u a frente do Cavaleiro e,
+## pelo centro, a bola de 0,4 u tocaria o corpo no mesmo ponto em que cruza a Muralha (F54).
 func _block_fraction(p0: Vector3, p1: Vector3) -> float:
 	var block := _wall_fraction(p0, p1)
+	var lead := (p1 - p0).normalized() * hero_data.basic_attack.radius
 	for other: Combatant in _targets:
 		var hero := other as Hero
 		if hero == null:
 			continue
-		var shield := hero.projectile_block_fraction(p0, p1)
+		var shield := hero.projectile_block_fraction(p0 + lead, p1 + lead)
 		if shield != CombatRules.NO_HIT and (block == CombatRules.NO_HIT or shield < block):
 			block = shield
 	return block

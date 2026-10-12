@@ -169,3 +169,15 @@ func test_barbaro_salta_so_fora_do_alcance_do_basico() -> void:
 	assert_eq(BotRules.barbarian_skills(7.5, basic, _profile), Vector3i(0, 0, 0), "longe demais")
 	assert_eq(BotRules.barbarian_skills(2.0, basic, _profile), Vector3i(0, 1, 1), "perto: E e R")
 	assert_eq(BotRules.barbarian_skills(2.45, basic, _profile), Vector3i(1, 1, 1))
+
+
+func test_perfil_do_bruxo_vem_da_spec_054() -> void:
+	assert_eq(
+		[_profile.blast_range, _profile.ring_range, _profile.meteor_range], [9.0, 3.0, 9.0]
+	)
+
+
+func test_bruxo_lanca_q_e_meteoro_ate_9_u_e_anel_ate_3_u() -> void:
+	assert_eq(BotRules.fire_wizard_skills(8.5, _profile), Vector3i(1, 0, 1))
+	assert_eq(BotRules.fire_wizard_skills(9.5, _profile), Vector3i(0, 0, 0), "longe demais")
+	assert_eq(BotRules.fire_wizard_skills(3.0, _profile), Vector3i(1, 1, 1), "perto: anel tambem")

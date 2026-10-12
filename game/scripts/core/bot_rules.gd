@@ -57,6 +57,17 @@ static func barbarian_skills(distance: float, basic_range: float, profile: BotPr
 	)
 
 
+## Habilidades do Bruxo de Fogo (SPEC-054 §5) contra um alvo a [param distance]: Q (x) ate
+## blast_range, Anel (y) ate ring_range, Meteoro (z) ate meteor_range, mirando o alvo. 1 = usa (o
+## Hero ainda confere recarga e rank).
+static func fire_wizard_skills(distance: float, profile: BotProfile) -> Vector3i:
+	return Vector3i(
+		int(distance <= profile.blast_range),
+		int(distance <= profile.ring_range),
+		int(distance <= profile.meteor_range),
+	)
+
+
 ## Recuo terminado (saiu de RETREAT) fica gasto ate o HP passar do limiar de novo.
 static func retreat_spent_after(
 	previous: State, current: State, hp_pct: float, spent: bool, profile: BotProfile

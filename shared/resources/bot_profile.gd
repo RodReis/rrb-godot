@@ -19,3 +19,9 @@ extends Resource
 @export var spin_range: float
 ## Barbaro: Execucao com o alvo a ate isto.
 @export var execute_range: float
+## Bruxo de Fogo (SPEC-054 §5): Explosao de Chamas com o alvo a ate isto.
+@export var blast_range: float
+## Bruxo: Anel de Fogo com inimigo a ate isto.
+@export var ring_range: float
+## Bruxo: Meteoro com o alvo a ate isto (mira a posicao atual dele).
+@export var meteor_range: float
