@@ -4,6 +4,9 @@ extends Resource
 
 @export var id: StringName
 @export var display_name: String
+## Classe (PRD §4.1) e frase do papel (GDB §4), mostradas na selecao.
+@export var role: String
+@export_multiline var summary: String
 @export var base_move_speed: float
 @export var base_hp: float
 @export var hp_per_level: float

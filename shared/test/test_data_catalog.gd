@@ -71,6 +71,24 @@ func test_todo_heroi_item_e_monstro_tem_id_na_tabela() -> void:
 	assert_eq(Ids.ALL.size(), expected, "Ids.ALL tem id sem .tres")
 
 
+## Classe do PRD §4.1 e "Papel" do GDB §4 (selecao de herois, F51; PI 2026-10-12).
+func test_papel_e_descricao_dos_herois() -> void:
+	var expected: Dictionary[StringName, Array] = {
+		&"knight": ["Tanque", "Absorção de dano, engajamento frontal e controle de grupo."],
+		&"ranger": ["Ranger", "Dano sustentado à distância, mobilidade e controle de terreno."],
+		&"barbarian":
+		["Algoz", "Dano alto corpo a corpo, frágil; entra com salto e finaliza com a Execução."],
+		&"fire_wizard":
+		[
+			"Mago",
+			"Dano mágico em área à distância, frágil; afasta quem chega perto com o Anel de Fogo."
+		],
+	}
+	for id: StringName in expected:
+		assert_eq(_hero(id).role, expected[id][0], "role de %s" % id)
+		assert_eq(_hero(id).summary, expected[id][1], "summary de %s" % id)
+
+
 func test_cavaleiro_no_nivel_10_bate_com_o_gdb() -> void:
 	var a := Stats.attributes(_hero(&"knight"), 10, [], [])
 	assert_eq(a.max_hp, 1005)
