@@ -178,3 +178,22 @@ func _luminance(color: Color) -> float:
 	for c: float in [color.r, color.g, color.b]:
 		channels.append(c / 12.92 if c <= 0.03928 else pow((c + 0.055) / 1.055, 2.4))
 	return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+
+## Selecao de herois (F51): acento por lado, brilho neon, card ativo e lock-in em GOLD, barra CYAN.
+func test_hero_select_variations() -> void:
+	for side: StringName in ThemeBuilder.HERO_SIDES:
+		var color: Color = ThemeBuilder.HERO_SIDES[side]
+		var card := _flat(&"panel", StringName("Hero%sCard" % side))
+		assert_color(card.border_color, Color(color, ThemeBuilder.ALPHA_BORDER))
+		assert_eq(card.shadow_size, UiTokens.SIZE_GLOW, side)
+		assert_eq(card.corner_radius_top_left, UiTokens.RADIUS_LG, side)
+		assert_color(_flat(&"panel", StringName("Hero%sBadge" % side)).bg_color, color)
+	assert_color(_flat(&"normal", &"HeroChoiceActive").border_color, UiTokens.GOLD)
+	assert_color(_flat(&"hover", &"HeroChoice").border_color, Color(UiTokens.GOLD, 0.6))
+	assert_color(_flat(&"panel", &"HeroLockInGlow").bg_color, UiTokens.GOLD)
+	assert_true(_theme.get_stylebox(&"normal", &"ButtonLockIn") is StyleBoxEmpty)
+	assert_color(_theme.get_color(&"font_color", &"ButtonLockIn"), UiTokens.BG_SURFACE)
+	assert_color(_flat(&"fill", &"ProgressHero").bg_color, UiTokens.CYAN)
+	assert_color(_theme.get_color(&"font_color", &"LabelHeroReady"), UiTokens.GREEN)
+	assert_eq(_theme.get_constant(&"outline_size", &"LabelHeroDark"), 0)
