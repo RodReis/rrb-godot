@@ -2,7 +2,7 @@
 renderiza os icones em shared/ui/icons/items/ (SPEC-048, ADR-0005, ADR-0010).
 
 Pecas rigidas: cada objeto e modelado no espaco do modelo do heroi em pose de repouso (Z para
-cima, frente -Y; o rig do Knight, do Ranger e do Barbarian e o mesmo) e se chama "<peca>__<osso>" com "." do
+cima, frente -Y; o rig do Knight, do Ranger, do Barbarian e do Mage e o mesmo) e se chama "<peca>__<osso>" com "." do
 osso trocado por "_" (o Godot nao aceita "." em nome de no). O HeroVisual prende cada objeto ao
 osso por BoneAttachment3D. Raridade = mesma forma, acabamento diferente: comum liso; raro com
 friso azul; epico com friso dourado e detalhe roxo (PATTERNS P6). Cores pelo atlas KayKit
@@ -27,6 +27,7 @@ ATLAS = os.path.join(REPO, "shared", "assets", "kaykit", "medieval_hexagon", "he
 KNIGHT = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Knight.glb")
 RANGER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "ranger.glb")
 BARBARIAN = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Barbarian.glb")
+MAGE = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Mage.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
@@ -391,12 +392,31 @@ def axe_accents(p, rarity):
     p.gem(EPIC, (0.0, 0.0, 0.90), (0.10, 0.17, 0.10))
 
 
+def staff_accents(p, rarity):
+    # Espaco local do 2H_Staff (F54): haste em +Z (-0.80 a 0.60, raio 0.05-0.09), gola em z ~0.60
+    # (raio 0.11), orbe verde com gancho em z 0.70-1.30 (x -0.25 a 0.33, y +-0.15).
+    if rarity == 0:
+        return
+    trim = BLUE if rarity == 1 else GOLD
+    p.cylinder(trim, (0.0, 0.0), 0.075, 0.075, 0.30, 0.40, 8, caps=False)  # anel da empunhadura
+    p.cylinder(trim, (0.0, 0.0), 0.10, 0.10, -0.62, -0.52, 8, caps=False)  # anel do pe
+    if rarity == 1:
+        p.gem(BLUE, (0.0, -0.11, 0.60), (0.05, 0.04, 0.06))  # pedra na gola
+        return
+    p.cylinder(GOLD, (0.0, 0.0), 0.13, 0.11, 0.52, 0.66, 8)  # gola dourada
+    m = Matrix.Translation((0.04, 0.0, 1.36))
+    r = bmesh.ops.create_cone(p.bm, cap_ends=True, segments=6, radius1=0.07, radius2=0.0, depth=0.22, matrix=m)
+    p.add(r["verts"], GOLD)  # ponta dourada sobre o orbe
+    p.gem(EPIC, (0.0, -0.14, 0.59), (0.06, 0.05, 0.07))
+
+
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
     "knight": (KNIGHT, "1H_Sword", "handslot.r", sword_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
     "ranger": (RANGER, "bow_withString", "handslot.l", bow_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
     "barbarian": (BARBARIAN, "2H_Axe", "handslot.r", axe_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
+    "fire_wizard": (MAGE, "2H_Staff", "handslot.r", staff_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
 }
 
 # ---------------------------------------------------------------------------------------------

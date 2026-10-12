@@ -1,0 +1,120 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/net/fire_wizard.gd" id="1_hero"]
+[ext_resource type="Script" path="res://scripts/net/player_input.gd" id="2_input"]
+[ext_resource type="Script" path="res://scripts/net/hero_visual.gd" id="3_visual"]
+[ext_resource type="Resource" path="res://shared/data/heroes/fire_wizard.tres" id="4_data"]
+[ext_resource type="Resource" path="res://shared/data/rules/xp_table.tres" id="5_xp"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers/Mage.glb" id="6_model"]
+[ext_resource type="Resource" path="res://shared/data/items/catalog.tres" id="7_catalog"]
+[ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
+[ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="8_rules"]
+[ext_resource type="Script" path="res://scripts/net/arrow.gd" id="9_arrow"]
+[ext_resource type="Shader" path="res://scenes/vfx/area_indicator.gdshader" id="11_area"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_meteor"]
+render_priority = 1
+shader = ExtResource("11_area")
+shader_parameter/fill_color = Color(1, 0.36, 0.1, 0.1)
+shader_parameter/rim_color = Color(1, 0.62, 0.25, 0.95)
+shader_parameter/rim_width = 0.05
+shader_parameter/dashes = 28.0
+shader_parameter/spin = 0.12
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_meteor"]
+material = SubResource("ShaderMaterial_meteor")
+size = Vector2(2, 2)
+center_offset = Vector3(0, 0.05, 0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_fireball"]
+shading_mode = 0
+albedo_color = Color(1, 0.55, 0.15, 1)
+emission_enabled = true
+emission = Color(1, 0.42, 0.08, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_fireball"]
+material = SubResource("Mat_fireball")
+radius = 0.22
+height = 0.44
+radial_segments = 12
+rings = 6
+
+[node name="FireWizard" type="CharacterBody3D"]
+script = ExtResource("1_hero")
+hero_data = ExtResource("4_data")
+xp_curve = ExtResource("5_xp")
+item_catalog = ExtResource("7_catalog")
+match_rules = ExtResource("8_rules")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_hero")
+
+[node name="Model" parent="." instance=ExtResource("6_model")]
+transform = Transform3D(-0.78, 0, 0, 0, 0.78, 0, 0, 0, -0.78, 0, 0, 0)
+
+[node name="Visual" type="Node" parent="." node_paths=PackedStringArray("model")]
+script = ExtResource("3_visual")
+model = NodePath("../Model")
+hidden_parts = Array[StringName]([&"1H_Wand", &"Spellbook", &"Spellbook_open"])
+block = &""
+basic_attack = &"Spellcast_Shoot"
+skill_q = &"Throw"
+skill_e = &"Spellcast_Raise"
+skill_r = &"Spellcast_Long"
+
+[node name="HpLabel" type="Label3D" parent="."]
+layers = 2
+position = Vector3(0, 2.85, 0)
+pixel_size = 0.01
+billboard = 1
+text = "0 / 0"
+font_size = 56
+outline_size = 12
+
+[node name="HpBar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.4, 0)
+script = ExtResource("hpbar_script")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_input")
+
+[node name="MeteorArea" type="MeshInstance3D" parent="."]
+top_level = true
+visible = false
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_meteor")
+
+[node name="Arrows" type="Node" parent="."]
+
+[node name="Arrow0" type="Node3D" parent="Arrows"]
+top_level = true
+visible = false
+script = ExtResource("9_arrow")
+
+[node name="Model" type="MeshInstance3D" parent="Arrows/Arrow0"]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_fireball")
+
+[node name="Arrow1" type="Node3D" parent="Arrows"]
+top_level = true
+visible = false
+script = ExtResource("9_arrow")
+
+[node name="Model" type="MeshInstance3D" parent="Arrows/Arrow1"]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_fireball")
+
+[node name="Arrow2" type="Node3D" parent="Arrows"]
+top_level = true
+visible = false
+script = ExtResource("9_arrow")
+
+[node name="Model" type="MeshInstance3D" parent="Arrows/Arrow2"]
+cast_shadow = 0
+mesh = SubResource("SphereMesh_fireball")

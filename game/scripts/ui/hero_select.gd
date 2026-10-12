@@ -1,11 +1,11 @@
 class_name HeroSelect
 extends CanvasLayer
 ## Selecao de herois (DV tela 2, CONVENTION §3, PATTERNS P9/P11): aberta pelo main na HERO_PICK
-## e fechada quando ela acaba. 1/2/3 escolhem, Espaco ou o botao confirma; o lock-in vai ao
+## e fechada quando ela acaba. 1/2/3/4 escolhem, Espaco ou o botao confirma; o lock-in vai ao
 ## servidor por RPC e so vale quando volta como hero_picked (inclusive o padrao do timeout).
 ## Heroi sem cena aparece indisponivel. So le sinais e dados; quem decide e o servidor.
 
-const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3]
+const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4]
 const STAT_NAMES: Array[String] = ["HP", "DEF", "ATK", "INT", "AGI"]
 const MSEC_PER_SECOND: float = 1000.0
 

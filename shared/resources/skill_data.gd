@@ -29,7 +29,8 @@ extends Resource
 @export var knockback: float
 ## Distancia maxima para posicionar a area (R da Arqueira).
 @export var cast_range: float
-## Duracao do efeito (escudo, rolamento, saraivada) por rank.
+## Duracao do efeito (escudo, rolamento, saraivada) por rank; no Meteoro do Bruxo, o atraso da
+## queda depois da marcacao.
 @export var duration: PackedFloat64Array
 @export var stun_duration: PackedFloat64Array
 @export var invulnerability: float

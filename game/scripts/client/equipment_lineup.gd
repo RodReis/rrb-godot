@@ -10,6 +10,7 @@ const HEROES: Array[String] = [
 	"res://scenes/heroes/knight.tscn",
 	"res://scenes/heroes/ranger.tscn",
 	"res://scenes/heroes/barbarian.tscn",
+	"res://scenes/heroes/fire_wizard.tscn",
 ]
 const SETS: Array[String] = ["guard", "hunter"]
 const SLOTS: Array[String] = ["helm", "chest", "boots"]
@@ -29,7 +30,7 @@ const LABEL_SIZE: int = 28
 const LABEL_OFFSET: Vector3 = Vector3(0.0, 0.15, 1.1)
 const LOCAL_PEER: String = "1"
 ## Uma linha por heroi e conjunto.
-const ROWS: int = 6
+const ROWS: int = 8
 
 var _heroes: Array[Hero] = []
 var _turning: bool = false

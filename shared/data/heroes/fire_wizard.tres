@@ -1,0 +1,83 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/fire_wizard_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/fire_wizard_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/fire_wizard_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/fire_wizard_r.svg" id="icon_r"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"fire_wizard_basic"
+icon = ExtResource("icon_basic")
+display_name = "Bola de Fogo"
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.0)
+attack_ratio = 1.0
+attack_range = 8.0
+radius = 0.4
+speed = 16.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"fire_wizard_q"
+icon = ExtResource("icon_q")
+display_name = "Explosão de Chamas"
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(6.0)
+base_amount = PackedFloat64Array(70.0, 105.0, 140.0, 175.0, 210.0)
+attack_ratio = 0.9
+attack_range = 9.0
+radius = 2.0
+speed = 16.0
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"fire_wizard_e"
+icon = ExtResource("icon_e")
+display_name = "Anel de Fogo"
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(10.0)
+base_amount = PackedFloat64Array(40.0, 65.0, 90.0, 115.0, 140.0)
+attack_ratio = 0.5
+radius = 3.0
+knockback = 2.0
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"fire_wizard_r"
+icon = ExtResource("icon_r")
+display_name = "Meteoro"
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(50.0, 42.0)
+base_amount = PackedFloat64Array(260.0, 400.0)
+attack_ratio = 0.6
+intelligence_ratio = 1.4
+radius = 3.5
+cast_range = 9.0
+duration = PackedFloat64Array(1.0)
+
+[resource]
+script = ExtResource("1_script")
+id = &"fire_wizard"
+display_name = "Bruxo de Fogo"
+base_move_speed = 6.0
+base_hp = 360.0
+hp_per_level = 26.0
+base_defense = 8.0
+defense_per_level = 1.0
+base_attack = 45.0
+attack_per_level = 4.0
+base_intelligence = 30.0
+intelligence_per_level = 3.0
+base_agility = 15.0
+agility_per_level = 1.2
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")

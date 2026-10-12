@@ -17,6 +17,8 @@ extends Node
 @export var basic_attack: StringName = &"1H_Melee_Attack_Slice_Horizontal"
 ## Vazio = o Q nao tem animacao propria (Investida usa a de avanco).
 @export var skill_q: StringName = &""
+## Vazio = o E nao tem animacao propria (Muralha usa a de bloqueio; Rolamento, a de avanco).
+@export var skill_e: StringName = &""
 @export var skill_r: StringName = &"1H_Melee_Attack_Chop"
 ## Laco enquanto o heroi canaliza (Hero.is_channeling: Rodopio do Barbaro).
 @export var channel: StringName = &""
@@ -29,6 +31,7 @@ var _player: AnimationPlayer
 var _one_shot: bool = false
 var _last_basic: int = 0
 var _last_q: int = 0
+var _last_e: int = 0
 var _last_r: int = 0
 var _fallen: bool = false
 var _items: ItemVisuals
@@ -65,8 +68,10 @@ func _process(_delta: float) -> void:
 	var started_basic := _hero.basic_cooldown > _last_basic
 	var started_r := _hero.r_cooldown > _last_r
 	var started_q := _hero.q_cooldown > _last_q and skill_q != &""
+	var started_e := _hero.e_cooldown > _last_e and skill_e != &""
 	_last_basic = _hero.basic_cooldown
 	_last_q = _hero.q_cooldown
+	_last_e = _hero.e_cooldown
 	_last_r = _hero.r_cooldown
 	if _hero.stun_ticks > 0:
 		_loop(stunned)
@@ -78,6 +83,8 @@ func _process(_delta: float) -> void:
 		_loop(channel)
 	elif started_q:
 		_once(skill_q)
+	elif started_e:
+		_once(skill_e)
 	elif started_basic:
 		_once(basic_attack)
 	elif _one_shot:

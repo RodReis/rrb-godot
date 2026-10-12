@@ -9,6 +9,8 @@ const KNIGHT_VFX: PackedScene = preload("res://scenes/vfx/knight_vfx.tscn")
 const RANGER_VFX: PackedScene = preload("res://scenes/vfx/ranger_vfx.tscn")
 const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
 const BARBARIAN_VFX: PackedScene = preload("res://scenes/vfx/barbarian_vfx.tscn")
+const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
+const WIZARD_VFX: PackedScene = preload("res://scenes/vfx/fire_wizard_vfx.tscn")
 const FRAME: float = 1.0 / 60.0
 const COOLDOWN: int = 1200
 
@@ -187,3 +189,75 @@ func test_execucao_varre_o_arco_do_r_e_impacto_vira_faisca() -> void:
 	assert_almost_eq(tip.position.length(), _hero.hero_data.skill_r.attack_range, 0.001)
 	_driver.impact(HitLedger.Slot.R, Vector3(1.0, 0.0, -2.0))
 	assert_eq(_effects(), 1)
+
+
+func test_bola_de_fogo_em_voo_tem_rastro() -> void:
+	_bind(WIZARD, WIZARD_VFX)
+	var ball := _hero.get_node("Arrows/Arrow0") as Arrow
+	ball.speed = 16.0
+	ball.launch(Arrow.Kind.BASIC, Vector3.UP, Vector3.FORWARD, 8.0, 45)
+	ball._process(FRAME)
+	_frame()
+	assert_true((_driver.get_node("ArrowTrail") as TrailRibbon).emitting)
+	assert_eq(_effects(), 0, "a bola em voo nao explode")
+
+
+func test_explosao_de_chamas_nasce_onde_o_voo_acaba_no_raio_do_q() -> void:
+	_bind(WIZARD, WIZARD_VFX)
+	var ball := _hero.get_node("Arrows/Arrow1") as Arrow
+	ball.launch(Arrow.Kind.EXPLODE, Vector3.UP, Vector3.FORWARD, 9.0, 110)
+	_frame()
+	ball.origin = Vector3(2.0, 1.0, -5.0)
+	ball.stop()
+	_frame()
+	assert_eq(_effects(), 1)
+	var burst := _pool.get_child(0) as FireBurstVfx
+	assert_almost_eq(burst.global_position, Vector3(2.0, 1.0, -5.0), Vector3.ONE * 0.001)
+	assert_almost_eq(burst.radius, _hero.hero_data.skill_q.radius, 0.001)
+	_frame()
+	assert_eq(_effects(), 1, "uma vez")
+
+
+func test_bola_do_basico_que_para_nao_explode() -> void:
+	_bind(WIZARD, WIZARD_VFX)
+	var ball := _hero.get_node("Arrows/Arrow0") as Arrow
+	ball.launch(Arrow.Kind.BASIC, Vector3.UP, Vector3.FORWARD, 8.0, 45)
+	_frame()
+	ball.stop()
+	_frame()
+	assert_eq(_effects(), 0)
+	_driver.impact(HitLedger.Slot.BASIC, Vector3(1.0, 0.0, -3.0))
+	assert_eq(_effects(), 1, "impacto confirmado da bola")
+
+
+func test_anel_de_fogo_no_raio_do_e() -> void:
+	_bind(WIZARD, WIZARD_VFX)
+	_hero.e_cooldown = COOLDOWN
+	_frame()
+	assert_eq(_effects(), 1)
+	var ring := _pool.get_child(0) as FireBurstVfx
+	assert_almost_eq(ring.radius, _hero.hero_data.skill_e.radius, 0.001)
+	assert_eq(ring.global_position, _hero.global_position)
+
+
+func test_meteoro_cai_sobre_a_marcacao_e_explode_na_queda() -> void:
+	_bind(WIZARD, WIZARD_VFX)
+	var wizard := _hero as FireWizard
+	var meteor := _driver.get_node("Meteor") as Node3D
+	wizard.meteor_center = Vector3(3.0, 0.0, -6.0)
+	wizard.meteor_ticks = 25
+	_frame()
+	assert_true(meteor.visible)
+	var high := meteor.global_position.y
+	assert_gt(high, 2.0, "ainda no alto")
+	wizard.meteor_ticks = 5
+	_frame()
+	assert_lt(meteor.global_position.y, high, "desce")
+	assert_eq(_effects(), 0)
+	wizard.meteor_ticks = 0
+	_frame()
+	assert_false(meteor.visible)
+	assert_eq(_effects(), 2, "explosao + cratera na queda")
+	var burst := _pool.get_child(0) as FireBurstVfx
+	assert_almost_eq(burst.global_position, wizard.meteor_center, Vector3.ONE * 0.001)
+	assert_almost_eq(burst.radius, wizard.hero_data.skill_r.radius, 0.001)

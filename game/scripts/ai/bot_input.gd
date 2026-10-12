@@ -159,7 +159,8 @@ func _contest(tick: int) -> void:
 ## Chega no alcance do basico e golpeia; [param skills] usa as habilidades (o Hero confere
 ## recarga): Q de projetil (Arqueira) ja no alcance dele, em linha com a mira; E que nao e avanco
 ## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele). Barbaro pelos
-## limiares do perfil (BotRules.barbarian_skills): o Salto cai no alvo (aim_distance).
+## limiares do perfil (BotRules.barbarian_skills): o Salto cai no alvo (aim_distance). Bruxo
+## pelos limiares do perfil (BotRules.fire_wizard_skills).
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -168,15 +169,20 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	aim_distance = to.length()
 	var q_range := data.skill_q.attack_range
 	skill_q = skills and q_range > 0.0 and to.length() <= q_range
-	var ranger := _hero as Ranger
-	var blocked := ranger != null and ranger.shot_blocked(where)
+	var shooter := _hero as ProjectileHero
+	var blocked := shooter != null and shooter.shot_blocked(where)
 	skill_q = skill_q and not blocked
 	var barbarian := _hero is Barbarian
+	var wizard := _hero is FireWizard
 	var use := Vector3i.ZERO
 	if barbarian:
 		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
 		skill_q = skills and use.x == 1
-	# Sem linha de tiro (Arqueira), segue pelo navmesh ate o obstaculo sair do caminho.
+	elif wizard:  # Q e Meteoro ja chegando: o Meteoro cai onde o alvo esta (aim_distance)
+		use = BotRules.fire_wizard_skills(to.length(), PROFILE)
+		skill_q = skills and use.x == 1 and not blocked
+		skill_r = skills and use.z == 1
+	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
 		return
@@ -184,6 +190,8 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	if barbarian:  # E e R so parado no alcance do golpe: andando, a Execucao pode errar o cone
 		skill_e = skills and use.y == 1
 		skill_r = skills and use.z == 1
+	elif wizard:
+		skill_e = skills and use.y == 1
 	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)
 		skill_r = skills
