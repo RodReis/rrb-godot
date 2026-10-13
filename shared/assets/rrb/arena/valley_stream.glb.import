@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://7lhy1q77sm0t"
-path="res://.godot/imported/islet_c.glb-c42aefac31117542767d5883b27ea3d0.scn"
+uid="uid://dvqjn4odxinj1"
+path="res://.godot/imported/valley_stream.glb-ce9ff6b55b39c2f8c33bf812ab82f7a5.scn"
 
 [deps]
 
-source_file="res://shared/assets/rrb/arena/islet_c.glb"
-dest_files=["res://.godot/imported/islet_c.glb-c42aefac31117542767d5883b27ea3d0.scn"]
+source_file="res://shared/assets/rrb/arena/valley_stream.glb"
+dest_files=["res://.godot/imported/valley_stream.glb-ce9ff6b55b39c2f8c33bf812ab82f7a5.scn"]
 
 [params]
 
@@ -43,8 +43,8 @@ _subresources={
 "materials": {
 "kaykit_atlas": {
 "use_external/enabled": true,
-"use_external/fallback_path": "res://shared/resources/materials/rock_moss.tres",
-"use_external/path": "res://shared/resources/materials/rock_moss.tres"
+"use_external/fallback_path": "res://shared/resources/materials/arcane_river.tres",
+"use_external/path": "res://shared/resources/materials/arcane_river.tres"
 }
 }
 }

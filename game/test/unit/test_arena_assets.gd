@@ -160,7 +160,7 @@ func test_cena_nao_tem_placeholder_geometrico() -> void:
 ## Blender — sem os triangulos marcados do sombreamento chapado. Terreno e pecas organicas ficam
 ## lisos; o castelo (quinas de 90 graus) continua de quina viva.
 func test_terreno_e_cenario_com_smooth_shading() -> void:
-	for asset: String in ["island_chassis", "boulder", "islet_a"]:
+	for asset: String in ["island_chassis", "boulder"]:
 		var root := (
 			(load("res://shared/assets/rrb/arena/%s.glb" % asset) as PackedScene).instantiate()
 		)

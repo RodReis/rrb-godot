@@ -1,4 +1,4 @@
-extends "arena_vegetation.gd"
+extends "arena_valley.gd"
 ## Gera game/scenes/arena/ilha_arcana.tscn — Ilha Flutuante Arcana, layout "Rift Medieval
 ## adaptado" (SPEC-046 + arte do F40/F44) com os bolsoes de selva do F40 (PI 2026-10-11).
 ## Ferramenta de autoria: as medidas vivem em arena_layout.gd e jungle.json; o jogo so le a cena
@@ -45,7 +45,7 @@ func _initialize() -> void:
 	_build_jungle(walls)
 	_build_jungle_visuals()
 	_build_vegetation()
-	_build_islets()
+	_build_valley()
 	_build_ambience()
 	var violations := _corridor_violations()
 	for v: String in violations:

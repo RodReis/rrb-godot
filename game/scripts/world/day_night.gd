@@ -123,6 +123,7 @@ func _apply_environment(key: DayNightKey) -> void:
 	_env.tonemap_exposure = key.exposure
 	_env.volumetric_fog_density = key.fog_density
 	_env.volumetric_fog_albedo = key.fog_albedo
+	_env.fog_light_color = key.fog_albedo
 
 
 func _apply_sky(key: DayNightKey) -> void:

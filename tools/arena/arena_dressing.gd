@@ -27,7 +27,7 @@ const LAGOON_A: Vector2 = Vector2(-26, -18)
 const CRATER_RADIUS: float = 6.0
 
 # Enfeite (F40), metade A na beira da ilha (fora da area jogavel, sem colisao), em (x, z) do
-# mundo nos lados N e O (fora da cortina do castelo); a B e a rotacao. Ilhotas em (x, y, z).
+# mundo nos lados N e O (fora da cortina do castelo); a B e a rotacao.
 const RIM: float = 41.3
 ## Floresta da borda (moldura do F40, PI 2026-10-11): fileiras de pinheiros nos lados N e O da
 ## metade A (a B e a rotacao), de RIM_SPAN.x a RIM_SPAN.y ao longo do lado, fora dos castelos.
@@ -49,17 +49,8 @@ const RIM_BARRICADES_A: Array[Array] = [
 const RIM_WATCHTOWER_A: Vector2 = Vector2(-41.6, -9)
 const RIM_BALLISTA_A: Vector2 = Vector2(-6, -41.2)
 ## Cascata de enfeite (decisao do PI 2026-10-10): poca no bastiao do canto NO (e SE, por
-## rotacao) caindo no abismo; o rio nao a alimenta.
-## Cascata de enfeite (decisao do PI 2026-10-10): poca no bastiao do canto NO (e SE, por
-## rotacao) caindo no abismo; o rio nao a alimenta.
+## rotacao); desde o F56 (ADR-0012) cai num degrau curto e vira o riacho do vale.
 const FALLS_A: Vector2 = Vector2(-43.0, -43.0)
-const ISLETS: Array[Array] = [
-	["islet_a", Vector3(-66, -9, -34), 1.0],
-	["islet_b", Vector3(70, -12, 14), 1.0],
-	["islet_c", Vector3(10, -14, 74), 1.0],
-	["islet_a", Vector3(-56, -16, 60), 0.7],
-	["islet_c", Vector3(58, -10, -58), 0.8],
-]
 const CRYSTAL_MATERIALS: Array[String] = ["magenta", "cyan", "green"]
 
 # Ambientacao (cliente): luzes e particulas.
@@ -69,7 +60,7 @@ const RIM_TORCH_LIGHT_ENERGY: float = 1.1
 const CRYSTAL_LIGHT_RANGE: float = 7.0
 const LAGOON_LIGHT_RANGE: float = 9.0
 const EMBERS_AMOUNT: int = 60
-const WATERFALL_AMOUNT: int = 110
+const WATERFALL_AMOUNT: int = 70
 
 # Luz e pos (SPEC-038; valores iniciais do guia, ajuste final na verificacao visual do PI).
 # F39 (PI 2026-10-10, sem toon): sombra mais macia, AO mais leve. F40 (PI 2026-10-11, realista e
@@ -83,6 +74,14 @@ const AMBIENT_ENERGY: float = 0.72
 const GLOW_THRESHOLD: float = 1.05
 const FOG_DENSITY: float = 0.016
 const FOG_ALBEDO: Color = Color(0.36, 0.41, 0.5)
+## Neblina de distancia (F56, ADR-0012): funde as encostas do vale no fundo e esconde o fim do
+## cenario. So em profundidade (o volumetrico nao passa de ~64 u) e fora do toggle de neblina
+## volumetrica: a vista fechada nao depende da configuracao grafica. Cor acompanha o dia/noite.
+const DISTANCE_FOG_BEGIN: float = 45.0
+const DISTANCE_FOG_END: float = 125.0
+const DISTANCE_FOG_CURVE: float = 1.3
+## No modo depth, fog_density e a forca maxima (1 = some por completo no fim).
+const DISTANCE_FOG_DENSITY: float = 1.0
 const SUN_COLOR: Color = Color(0.8, 0.85, 0.95)
 const SUN_ENERGY: float = 1.05
 const SUN_ROTATION_DEG: Vector3 = Vector3(-38, 38, 0)
@@ -103,7 +102,7 @@ var _root: Node3D
 var _scenes: Dictionary = {}
 var _crystal_count: int = 0
 
-# --- ambiente e luz (F38), enfeite (F40): beira da ilha e ilhotas de fundo, sem colisao -------
+# --- ambiente e luz (F38), enfeite (F40): beira da ilha, sem colisao -------------------------
 
 
 func _build_environment() -> void:
@@ -130,6 +129,14 @@ func _build_environment() -> void:
 	env.volumetric_fog_density = FOG_DENSITY
 	env.volumetric_fog_albedo = FOG_ALBEDO
 	env.volumetric_fog_sky_affect = 0.0  # neblina so na ilha: o abismo/ceu do F40 fica escuro
+	env.fog_enabled = true
+	env.fog_mode = Environment.FOG_MODE_DEPTH
+	env.fog_depth_begin = DISTANCE_FOG_BEGIN
+	env.fog_depth_end = DISTANCE_FOG_END
+	env.fog_depth_curve = DISTANCE_FOG_CURVE
+	env.fog_density = DISTANCE_FOG_DENSITY
+	env.fog_light_color = FOG_ALBEDO
+	env.fog_sky_affect = 0.0
 	var world := WorldEnvironment.new()
 	world.name = "WorldEnvironment"
 	world.environment = env
@@ -253,21 +260,6 @@ func _inward(p: Vector2) -> Vector3:
 	return Vector3(0, 0, 1) if absf(p.y) > absf(p.x) else Vector3(1, 0, 0)
 
 
-func _build_islets() -> void:
-	var decor := _group("Islets")
-	for i: int in range(ISLETS.size()):
-		var islet: Array = ISLETS[i]
-		var node := _asset(decor, RRB_ARENA + "%s.glb" % islet[0], "Islet%d" % i)
-		var at: Vector3 = islet[1]
-		var scale: float = islet[2]
-		node.transform = Transform3D(Basis(Vector3.UP, 0.7 * i).scaled(Vector3.ONE * scale), at)
-		for k: int in range(2):
-			var pine := _asset(node, RRB_ARENA + "pine_dark.glb", "Pine%d" % k)
-			pine.position = Vector3(2.5 - 5.0 * k, 0.2, 1.5 * k - 1.0)
-		if i % 2 == 0:
-			_crystal(node, Vector3(0.5, 0.2, 2.5), true, "Crystal", 0.0)
-
-
 ## Cristal arcano: material por variante (magenta, ciano, verde) em rodizio; so visual.
 func _crystal(parent: Node3D, at: Vector3, large: bool, label: String, yaw: float) -> void:
 	var model := "crystal_large" if large else "crystal_small"
@@ -369,23 +361,24 @@ func _embers(parent: Node3D) -> void:
 	_add(parent, particles)
 
 
-## Cascata de enfeite na beira do bastiao do canto NO (flip 1) / SE (flip -1), para o abismo.
+## Cascata de enfeite do bastiao do canto NO (flip 1) / SE (flip -1): degrau curto da poca para o
+## riacho do vale (F56).
 func _waterfall(parent: Node3D, flip: float) -> void:
 	var particles := GPUParticles3D.new()
 	particles.name = "Waterfall%s" % ("NO" if flip > 0 else "SE")
 	var outward := Vector3(-1, 0, -1).normalized() * flip
 	particles.position = _world(FALLS_A, flip) + outward * 1.6 + Vector3.UP * -0.4
 	particles.amount = WATERFALL_AMOUNT
-	particles.lifetime = 2.6
-	particles.preprocess = 2.0
+	particles.lifetime = 1.1
+	particles.preprocess = 1.1
 	var material := ParticleProcessMaterial.new()
 	material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
 	material.emission_box_extents = Vector3(0.9, 0.2, 0.9)
 	material.direction = outward * 0.5 + Vector3.DOWN * 0.4
 	material.spread = 12.0
-	material.initial_velocity_min = 1.5
-	material.initial_velocity_max = 3.0
-	material.gravity = Vector3(0, -6.0, 0)
+	material.initial_velocity_min = 0.8
+	material.initial_velocity_max = 1.6
+	material.gravity = Vector3(0, -4.0, 0)
 	material.scale_min = 0.8
 	material.scale_max = 1.6
 	material.color = Color(0.5, 1.0, 0.95)

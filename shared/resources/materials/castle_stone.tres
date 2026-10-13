@@ -27,5 +27,6 @@ shader_parameter/moss_amount = 0.8
 shader_parameter/atlas = ExtResource("2_tf5yh")
 shader_parameter/atlas_tint = 0.65
 shader_parameter/atlas_reference = null
+shader_parameter/ambient_lift = Color(0, 0, 0, 1)
 shader_parameter/brightness = 0.82
 shader_parameter/saturation = 0.85
