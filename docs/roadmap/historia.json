@@ -167,7 +167,8 @@
         { "arquivo": "mvp2-f56-vale-floresta.webp", "legenda": "Olhando para fora da borda do mapa: a floresta densa do vale, com a torre de vigia, as tochas e as moitas da beira em primeiro plano.", "tipo": "entregue" },
         { "arquivo": "mvp2-f60-centro-livre.webp", "legenda": "O centro do mapa mais aberto: os pilares de pedra em volta do lago de magma saíram, e agora dá para entrar e lutar na cratera por qualquer lado.", "tipo": "entregue" },
         { "arquivo": "mvp2-f65-minimapa-claro.webp", "legenda": "O mapa que aparece no minimapa: a arena vista de cima, clara e colorida, com o rio, as pontes, as trilhas, as bases e o magma no centro. Antes o minimapa filmava a cena ao vivo e ficava escuro como ela; agora é sempre fácil de ler, até de noite.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f61-bau-com-menu.webp", "legenda": "O baú agora abre um menu com 3 itens: você vê o que cada um muda no seu herói (verde ganha, vermelho perde) e escolhe um com o mouse. O baú fica guardado para quem abriu.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f61-bau-com-menu.webp", "legenda": "O baú agora abre um menu com 3 itens: você vê o que cada um muda no seu herói (verde ganha, vermelho perde) e escolhe um com o mouse. O baú fica guardado para quem abriu.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f62-ficha-do-heroi.webp", "legenda": "A tecla B agora abre a ficha do seu herói: o modelo girando, nível, atributos, os itens que você carrega e as quatro habilidades explicadas, com o rank e a recarga de cada uma. O bestiário dos monstros continua na aba ao lado.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {
