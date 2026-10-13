@@ -253,6 +253,9 @@ func _set_hidden(hidden: bool, tick: int) -> void:
 # ponytail: update_visibility aloca as listas do filtro a cada tick ressimulado de cada heroi
 # (1x1: 2 herois); trocar por um filtro que guarde a lista se o profiler apontar.
 ## Servidor: refaz o filtro do heroi antes de gravar e transmitir o tick seguinte do rollback.
+## Fora da arvore (heroi saindo no fim da partida) nao ha multiplayer: nada a fazer.
 func _on_network_rollback_after_process_tick(_tick: int) -> void:
+	if not is_inside_tree():
+		return
 	if multiplayer.is_server() and _filter != null:
 		_filter.update_visibility(_remote)
