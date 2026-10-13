@@ -77,6 +77,7 @@ var _disconnected_log: Timer
 @onready var hud: HudController = $Hud
 @onready var hero_select: HeroSelect = $HeroSelect
 @onready var match_end: MatchEnd = $MatchEnd
+@onready var bestiary: Bestiary = $Bestiary
 
 
 func _ready() -> void:
@@ -154,6 +155,7 @@ func _process(_delta: float) -> void:
 		return  # servidor dedicado, ou cliente ainda sem heroi
 	if not hud.is_bound():
 		hud.bind(hero, clock, spawns, players, match_controller, zone)
+		bestiary.bind_hero(hero)
 		if FOG_OF_WAR_OVERLAY:
 			var fog := FogOfWar.new()  # neblina (F37): so quem joga desenha
 			fog.name = "FogOfWar"
