@@ -80,6 +80,23 @@ func test_skill_states() -> void:
 	assert_eq(button.state, SkillButton.State.LOCKED)
 
 
+## Travada com ponto livre (PI 2026-10-12, F57): mostra o atalho de aprender, nao o nivel minimo,
+## e nao fica apagada; sem ponto, volta ao "Nv2" apagado.
+func test_locked_skill_with_free_point_shows_learn_key() -> void:
+	var button: SkillButton = add_child_autofree(SKILL_BUTTON.instantiate())
+	button.learn_key = "Ctrl+E"
+	button.bind(KNIGHT.skill_e, 0)
+	button.set_locked(true)
+	var label := button.get_node("%Cooldown") as Label
+	assert_eq(label.text, "Nv%d" % KNIGHT.skill_e.required_hero_level[0])
+	assert_eq(button.modulate.a, UiTokens.DISABLED_ALPHA)
+	button.set_upgradable(true)
+	assert_eq(label.text, "Ctrl+E")
+	assert_eq(button.modulate.a, 1.0)
+	button.set_upgradable(false)
+	assert_eq(label.text, "Nv%d" % KNIGHT.skill_e.required_hero_level[0])
+
+
 func test_skill_icon_replaces_letter() -> void:
 	var button: SkillButton = add_child_autofree(SKILL_BUTTON.instantiate())
 	button.bind(KNIGHT.skill_q, 1)

@@ -23,6 +23,8 @@ var _items: ItemVisuals  # icones dos itens deste heroi
 ## Ultimo estado mostrado: so redesenha o que mudou.
 var _shown_hp: Vector2i = -Vector2i.ONE
 var _shown_xp: int = -1
+## Nivel do ultimo aviso: subir com ponto livre avisa (F57); -1 = recem-ligada, nao avisa.
+var _shown_level: int = -1
 var _shown_ranks: Vector3i = -Vector3i.ONE
 var _shown_equipment: Vector4i = Inventory.NONE
 ## O heroi troca o objeto ao recalcular (nivel, item): referencia diferente = redesenhar.
@@ -62,6 +64,7 @@ func _ready() -> void:
 		_buttons[i].hotkey = SKILL_KEYS[i]
 	for i: int in _learn_badges.size():
 		_learn_badges[i].key = LEARN_KEYS[i]
+		_buttons[i + 1].learn_key = LEARN_KEYS[i]
 	_gear_menu.visible = false
 	_gear_button.pressed.connect(_on_gear_button_pressed)
 	_bestiary_button.pressed.connect(_on_bestiary_button_pressed)
@@ -76,6 +79,7 @@ func bind(hero: Hero) -> void:
 	_offer_card.bind(hero)
 	_shown_hp = -Vector2i.ONE
 	_shown_xp = -1
+	_shown_level = -1
 	_shown_ranks = -Vector3i.ONE
 	_cooldown_totals.fill(0)
 	_shown_attributes = null
@@ -134,6 +138,9 @@ func _update_plate() -> void:
 		var progress := HudMath.xp_progress(_hero.xp_curve, _hero.xp)
 		_xp_bar.bind(tr("XP"), progress.x, progress.y, StatBar.Kind.XP)
 		_hero_level.text = tr("NÍVEL %d") % _hero.level
+		if _shown_level >= 0 and _hero.level > _shown_level:
+			_notify_free_point()
+		_shown_level = _hero.level
 
 
 func _update_skills() -> void:
@@ -161,6 +168,14 @@ func _update_skills() -> void:
 		_buttons[i].set_upgradable(learnable)
 		_learn_badges[i - 1].visible = learnable
 	_points.visible = free > 0
+
+
+## Ponto de habilidade para gastar: o aviso diz o atalho (E e R comecam travados, GDB §3.1).
+func _notify_free_point() -> void:
+	if SkillRules.free_points(_hero.level, _hero.ranks) <= 0:
+		return
+	var text := tr("NÍVEL %d! Ponto de habilidade: aprenda com Ctrl+Q/E/R") % _hero.level
+	_toast.show_message(text, Toast.Kind.INFO)
 
 
 func _notify_equipped() -> void:
@@ -233,8 +248,9 @@ func _on_bestiary_button_pressed() -> void:
 	event.action = InputActions.OPEN_BESTIARY
 	event.pressed = true
 	Input.parse_input_event(event)
-	event.pressed = false  # solta: a acao nao fica "segurada" no Input
-	Input.parse_input_event(event)
+	var release := event.duplicate() as InputEventAction  # mesmo objeto 2x no quadro: inseguro
+	release.pressed = false  # solta: a acao nao fica "segurada" no Input
+	Input.parse_input_event(release)
 
 
 func _on_sound_game_toggled(on: bool) -> void:
