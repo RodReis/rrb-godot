@@ -26,7 +26,7 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | `MatchEndCard` (implementado, `game/`) | `PanelContainer` | `setup_rows(names, icons)` ; `show_player(tone, side, who, hero_text, icon, level, tag)` | tom `Win`/`Lose`/`Draw` | fim de partida (F52): cartão do jogador com moldura do herói, nível, selo e a coluna de linhas |
 | `MatchEndRow` (implementado, `game/`) | `PanelContainer` | `setup(label, icon)` ; `show_value(style, value, value_type, icon_color)` | normal, hover (só `EndRow`), troféu, conjunto ativo, apagada | fim de partida (F52): ícone, nome e valor da estatística |
 | `ZoneRadar` | `Control` (`_draw`) | `set_zone(radius_pct: float, next_radius_pct: float, t_next: float)` ; `set_players(positions)` | — | HUD F2 (minimapa) |
-| `Minimap` | `SubViewportContainer` | `bind(world: Node3D)` ; `set_markers(positions, colors, radii := [])` (raio por marcador; vazio = `marker_radius`) | — | HUD F1 e F2 |
+| `Minimap` | `Control` (`_draw`) | `@export map_texture` (imagem de cima gerada por `tools/arena/minimap_image.gd`, F65) ; `set_yaw(yaw)` ; `set_markers(positions, colors, radii := [])` (raio por marcador; vazio = `marker_radius`) ; `point_of(point)` ; `static map_transform(yaw, extent, area)` — mesma projeção do `ZoneRadar.to_radar` | — | HUD F1 e F2 |
 | `LatencyPlot` | `Control` (`_draw`) | `push_sample(ms)` ; `@export var ceiling_ms := 80` | — | `net_debug.tscn` (Game) |
 | `CatalogList` | `VBoxContainer` | `bind(entries: Array[CatalogEntry])` ; sinal `selected(id: StringName)` | — | bestiário, forja |
 | `DetailCard` | `PanelCard` | `bind(resource: Resource)` (despacha por tipo) | — | bestiário, forja, histórico |

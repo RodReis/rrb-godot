@@ -93,7 +93,6 @@ func bind(
 	_match = match_controller
 	_rules = clock.rules
 	_fade_ticks = SkillRules.seconds_to_ticks(Hero.ZONE_FADE_SECONDS, NetworkTime.tickrate)
-	_minimap.bind(hero)
 	_radar.world_extent = _minimap.world_extent
 	_radar.full_radius = _rules.zone_radius[0]
 	if not zone.zone_updated.is_connected(_on_zone_updated):

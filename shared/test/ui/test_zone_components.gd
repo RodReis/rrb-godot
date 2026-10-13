@@ -1,8 +1,6 @@
 extends GutTest
 ## ScoreBanner e ZoneRadar, componentes da HUD da fase 2 (COMPONENTS.md, regra 2; F17).
 
-const MINIMAP: PackedScene = preload("res://shared/ui/components/minimap.tscn")
-
 
 func test_score_banner_names_kills_and_target() -> void:
 	var banner: ScoreBanner = add_child_autofree(ScoreBanner.new())
@@ -61,18 +59,3 @@ func test_zone_radar_radius_in_pixels() -> void:
 	assert_almost_eq(radar.radius_px(radar.next_radius_pct), 35.0, 0.001)
 	radar.set_zone(-1.0, 0.0, 0.0)
 	assert_eq(radar.radius_pct, 0.0, "colapso nao fica negativo")
-
-
-## O radar fica por cima do Minimap: com o mesmo giro e extensao, cada ponto cai onde a camera
-## dele projeta.
-func test_zone_radar_matches_the_minimap_camera_when_turned() -> void:
-	var minimap: Minimap = add_child_autofree(MINIMAP.instantiate())
-	var yaw := 0.7
-	minimap.set_yaw(yaw)
-	var camera := minimap.get_node("%Camera") as Camera3D
-	var area := Vector2(minimap.get_node("%Viewport").size)
-	for point: Vector3 in [Vector3(10, 0, 0), Vector3(-5, 0, 20), Vector3(30, 0, -12)]:
-		var expected := camera.unproject_position(point)
-		var got := ZoneRadar.to_radar(point, yaw, minimap.world_extent, area)
-		assert_almost_eq(got.x, expected.x, 0.01, str(point))
-		assert_almost_eq(got.y, expected.y, 0.01, str(point))
