@@ -8,6 +8,8 @@
 [ext_resource type="Script" path="res://scripts/ui/chest_offer_card.gd" id="offer_card"]
 [ext_resource type="Script" path="res://shared/ui/components/hotkey_badge.gd" id="badge"]
 [ext_resource type="Script" path="res://shared/ui/components/toast.gd" id="toast"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ui_gear.svg" id="gear"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ui_book.svg" id="book"]
 
 [node name="HeroPlate" type="Control"]
 layout_mode = 3
@@ -33,6 +35,76 @@ unique_name_in_owner = true
 layout_mode = 1
 script = ExtResource("offer_card")
 
+[node name="Gear" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -320.0
+offset_right = 304.0
+offset_bottom = -24.0
+grow_vertical = 0
+mouse_filter = 2
+alignment = 2
+
+[node name="GearMenu" type="PanelContainer" parent="Gear"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+script = ExtResource("card")
+variant = 3
+
+[node name="GearColumn" type="VBoxContainer" parent="Gear/GearMenu"]
+layout_mode = 2
+
+[node name="GearTitle" type="Label" parent="Gear/GearMenu/GearColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(0.961, 0.62, 0.043, 1)
+text = "OPÇÕES DO JOGO"
+
+[node name="GearRule" type="HSeparator" parent="Gear/GearMenu/GearColumn"]
+layout_mode = 2
+
+[node name="BestiaryButton" type="Button" parent="Gear/GearMenu/GearColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+theme_override_constants/icon_max_width = 20
+text = "Bestiário [B]"
+icon = ExtResource("book")
+flat = true
+alignment = 0
+
+[node name="SoundGame" type="CheckButton" parent="Gear/GearMenu/GearColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+text = "Som do jogo"
+flat = true
+
+[node name="SoundBoss" type="CheckButton" parent="Gear/GearMenu/GearColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+button_pressed = true
+text = "Aviso do chefão"
+flat = true
+
+[node name="GearButton" type="Button" parent="Gear"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_horizontal = 0
+focus_mode = 0
+tooltip_text = "Opções do jogo"
+icon = ExtResource("gear")
+icon_alignment = 1
+expand_icon = true
+
 [node name="Bottom" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -43,252 +115,343 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_constants/margin_left = 40
 theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 48
+theme_override_constants/margin_bottom = 24
 
 [node name="BottomColumn" type="VBoxContainer" parent="Bottom"]
 layout_mode = 2
 mouse_filter = 2
 alignment = 2
 
-[node name="Plate" type="PanelContainer" parent="Bottom/BottomColumn"]
+[node name="Dock" type="PanelContainer" parent="Bottom/BottomColumn"]
+custom_minimum_size = Vector2(860, 0)
 layout_mode = 2
-script = ExtResource("card")
-variant = 1
-accent = 0
-custom_minimum_size = Vector2(560, 0)
 size_flags_horizontal = 4
+script = ExtResource("card")
+variant = 3
+corners = true
 
-[node name="PlateColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Plate"]
+[node name="DockColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Dock"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
-[node name="NameRow" type="HBoxContainer" parent="Bottom/BottomColumn/Plate/PlateColumn"]
+[node name="HeroRow" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn"]
 layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="HeroName" type="Label" parent="Bottom/BottomColumn/Plate/PlateColumn/NameRow"]
+[node name="IconFrame" type="PanelContainer" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow"]
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("card")
+variant = 4
+accent = 1
+
+[node name="HeroIcon" type="TextureRect" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/IconFrame"]
+unique_name_in_owner = true
+modulate = Color(1, 0.757, 0.455, 1)
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 2
+
+[node name="HeroName" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/NameColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"LabelH2"
 text = "CAVALEIRO"
-size_flags_horizontal = 3
 
-[node name="HeroLevel" type="Label" parent="Bottom/BottomColumn/Plate/PlateColumn/NameRow"]
+[node name="SetText" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/NameColumn"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.961, 0.62, 0.043, 1)
+theme_override_font_sizes/font_size = 13
+text = "Sem conjunto"
+
+[node name="Attributes" type="PanelContainer" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow"]
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("card")
+variant = 4
+
+[node name="AttributesGrid" type="GridContainer" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/Attributes"]
+layout_mode = 2
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 2
+columns = 3
+
+[node name="AttrAttack" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/Attributes/AttributesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Ataque"
+mouse_filter = 1
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(1, 0.757, 0.455, 1)
+text = "ATQ 0"
+
+[node name="AttrIntelligence" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/Attributes/AttributesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Inteligência"
+mouse_filter = 1
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(0.576, 0.8, 1, 1)
+text = "INT 0"
+
+[node name="AttrAgility" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/Attributes/AttributesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Agilidade"
+mouse_filter = 1
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(0.961, 0.62, 0.043, 1)
+text = "AGI 0"
+
+[node name="AttrDefense" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/Attributes/AttributesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Defesa"
+mouse_filter = 1
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(0.133, 0.773, 0.369, 1)
+text = "DEF 0"
+
+[node name="AttrSpeed" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/Attributes/AttributesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Velocidade de movimento (u/s)"
+mouse_filter = 1
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(0.192, 0.596, 0.863, 1)
+text = "VEL 0"
+
+[node name="AttrCdr" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/Attributes/AttributesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "Redução de recarga"
+mouse_filter = 1
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(0.855, 0.886, 0.992, 1)
+text = "RCG 0"
+
+[node name="LevelBox" type="PanelContainer" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow"]
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("card")
+variant = 4
+accent = 1
+
+[node name="HeroLevel" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/HeroRow/LevelBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"LabelH2"
+theme_override_colors/font_color = Color(1, 0.757, 0.455, 1)
 text = "NÍVEL"
 
-[node name="HpBar" parent="Bottom/BottomColumn/Plate/PlateColumn" instance=ExtResource("stat")]
+[node name="HeroRule" type="HSeparator" parent="Bottom/BottomColumn/Dock/DockColumn"]
+layout_mode = 2
+
+[node name="HpBar" parent="Bottom/BottomColumn/Dock/DockColumn" instance=ExtResource("stat")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="XpBar" parent="Bottom/BottomColumn/Plate/PlateColumn" instance=ExtResource("stat")]
+[node name="XpBar" parent="Bottom/BottomColumn/Dock/DockColumn" instance=ExtResource("stat")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Actions" type="HBoxContainer" parent="Bottom/BottomColumn"]
+[node name="Modules" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn"]
 layout_mode = 2
-mouse_filter = 2
-alignment = 1
-theme_override_constants/separation = 20
+theme_override_constants/separation = 10
 
-[node name="Equipment" type="PanelContainer" parent="Bottom/BottomColumn/Actions"]
+[node name="Equipment" type="PanelContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 4.0
 script = ExtResource("card")
-variant = 1
-accent = 0
+variant = 4
 
-[node name="EquipmentColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Actions/Equipment"]
+[node name="EquipmentColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment"]
 layout_mode = 2
 
-[node name="EquipmentTitle" type="Label" parent="Bottom/BottomColumn/Actions/Equipment/EquipmentColumn"]
+[node name="EquipmentHeader" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn"]
+layout_mode = 2
+
+[node name="EquipmentTitle" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn/EquipmentHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBadge"
+text = "EQUIPAMENTOS"
+
+[node name="EquipCount" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn/EquipmentHeader"]
+unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"LabelBadge"
-text = "EQUIPAMENTO"
+theme_override_colors/font_color = Color(0.961, 0.62, 0.043, 1)
+text = "0 / 4"
 
-[node name="SlotsRow" type="HBoxContainer" parent="Bottom/BottomColumn/Actions/Equipment/EquipmentColumn"]
+[node name="SlotsRow" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn"]
 layout_mode = 2
 
-[node name="Weapon" parent="Bottom/BottomColumn/Actions/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
+[node name="Weapon" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
 unique_name_in_owner = true
 layout_mode = 2
 slot = 0
 
-[node name="Helm" parent="Bottom/BottomColumn/Actions/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
+[node name="Helm" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
 unique_name_in_owner = true
 layout_mode = 2
 slot = 1
 
-[node name="Chest" parent="Bottom/BottomColumn/Actions/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
+[node name="Chest" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
 unique_name_in_owner = true
 layout_mode = 2
 slot = 2
 
-[node name="Boots" parent="Bottom/BottomColumn/Actions/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
+[node name="Boots" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Equipment/EquipmentColumn/SlotsRow" instance=ExtResource("slot")]
 unique_name_in_owner = true
 layout_mode = 2
 slot = 3
 
-[node name="SetText" type="Label" parent="Bottom/BottomColumn/Actions/Equipment/EquipmentColumn"]
-unique_name_in_owner = true
+[node name="Skills" type="PanelContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules"]
 layout_mode = 2
-theme_type_variation = &"LabelMuted"
-text = "Sem conjunto"
-
-[node name="Skills" type="PanelContainer" parent="Bottom/BottomColumn/Actions"]
-layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 5.0
 script = ExtResource("card")
-variant = 1
-accent = 0
+variant = 4
 
-[node name="SkillsColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Actions/Skills"]
+[node name="SkillsColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills"]
 layout_mode = 2
 
-[node name="SkillsTitle" type="Label" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn"]
+[node name="SkillsHeader" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn"]
 layout_mode = 2
+
+[node name="SkillsTitle" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/SkillsHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"LabelBadge"
 text = "HABILIDADES"
 
-[node name="SkillsRow" type="HBoxContainer" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn"]
+[node name="SkillsRow" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn"]
 layout_mode = 2
 
-[node name="Basic" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
+[node name="Basic" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SkillQ" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
+[node name="SkillQ" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SkillE" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
+[node name="SkillE" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SkillR" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
+[node name="SkillR" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/SkillsRow" instance=ExtResource("skill")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Points" type="HBoxContainer" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn"]
+[node name="Points" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 
-[node name="PointsTitle" type="Label" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/Points"]
+[node name="PointsTitle" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/Points"]
 layout_mode = 2
 theme_type_variation = &"LabelMuted"
 text = "Ponto livre:"
 
-[node name="LearnQ" type="Label" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/Points"]
+[node name="LearnQ" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/Points"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("badge")
 key = "Ctrl+Q"
 size_variant = 1
 
-[node name="LearnE" type="Label" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/Points"]
+[node name="LearnE" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/Points"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("badge")
 key = "Ctrl+E"
 size_variant = 1
 
-[node name="LearnR" type="Label" parent="Bottom/BottomColumn/Actions/Skills/SkillsColumn/Points"]
+[node name="LearnR" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/Points"]
 unique_name_in_owner = true
 layout_mode = 2
 script = ExtResource("badge")
 key = "Ctrl+R"
 size_variant = 1
 
-[node name="Controls" type="PanelContainer" parent="Bottom/BottomColumn/Actions"]
+[node name="Controls" type="PanelContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
 script = ExtResource("card")
-variant = 1
-accent = 0
+variant = 4
 
-[node name="ControlsColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Actions/Controls"]
+[node name="ControlsColumn" type="VBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls"]
 layout_mode = 2
 
-[node name="ControlsTitle" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn"]
+[node name="ControlsHeader" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn"]
 layout_mode = 2
+
+[node name="ControlsTitle" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"LabelBadge"
-text = "CONTROLES"
+text = "COMANDOS"
 
-[node name="ControlsGrid" type="GridContainer" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn"]
+[node name="ControlsGrid" type="GridContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn"]
 layout_mode = 2
 columns = 2
 
-[node name="Key0" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Key0" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
 script = ExtResource("badge")
 key = "WASD"
 size_variant = 0
 
-[node name="Action0" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Action0" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"LabelMuted"
 text = "Mover"
 
-[node name="Key1" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
-layout_mode = 2
-script = ExtResource("badge")
-key = "RMB"
-size_variant = 0
-
-[node name="Action1" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
-layout_mode = 2
-theme_type_variation = &"LabelMuted"
-text = "Ataque básico"
-
-[node name="KeyOrbit" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Key1" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
 script = ExtResource("badge")
 key = "LMB"
 size_variant = 0
 
-[node name="ActionOrbit" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Action1" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"LabelMuted"
-text = "Segure e arraste: girar câmera"
+text = "Girar câmera"
 
-[node name="Key2" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
-layout_mode = 2
-script = ExtResource("badge")
-key = "Q E R"
-size_variant = 0
-
-[node name="Action2" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
-layout_mode = 2
-theme_type_variation = &"LabelMuted"
-text = "Habilidades"
-
-[node name="Key3" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Key2" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
 script = ExtResource("badge")
 key = "F"
 size_variant = 0
 
-[node name="Action3" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Action2" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"LabelMuted"
 text = "Baú: toque abre, segure troca"
 
-[node name="Key4" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Key3" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
 script = ExtResource("badge")
 key = "Ctrl+Q/E/R"
 size_variant = 0
 
-[node name="Action4" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
+[node name="Action3" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"LabelMuted"
 text = "Aprender habilidade"
-
-[node name="Key5" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
-layout_mode = 2
-script = ExtResource("badge")
-key = "B"
-size_variant = 0
-
-[node name="Action5" type="Label" parent="Bottom/BottomColumn/Actions/Controls/ControlsColumn/ControlsGrid"]
-layout_mode = 2
-theme_type_variation = &"LabelMuted"
-text = "Bestiário"

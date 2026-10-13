@@ -20,6 +20,7 @@ var _chests: Array[Chest] = []
 var _monsters: Array[Monster] = []
 var _marker_positions: PackedVector3Array = PackedVector3Array()
 var _marker_colors: PackedColorArray = PackedColorArray()
+var _marker_radii: PackedFloat32Array = PackedFloat32Array()
 var _banner_tween: Tween
 
 @onready var _gate_text: Label = %GateText
@@ -143,25 +144,29 @@ func _update_loot_text() -> void:
 	_loot_text.text = tr("Baús abertos %d/%d · Monstros %d") % [opened, _chests.size(), alive]
 
 
-## Herois (verde = eu, vermelho = adversario) e o boss vivo (roxo); neblina (F37): so o que o
-## jogador ve agora.
+## Baus fechados e monstros vistos (LootMarkers, F57) por baixo; herois (verde = eu, vermelho =
+## adversario) e o boss vivo (roxo) por cima; neblina (F37): so o que o jogador ve agora.
 func _update_minimap() -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera != null:
 		_minimap.set_yaw(camera.global_rotation.y)
 	_marker_positions.clear()
 	_marker_colors.clear()
+	_marker_radii.clear()
+	LootMarkers.append(_chests, _monsters, _marker_positions, _marker_colors, _marker_radii)
 	for node: Node in _players.get_children():
 		var hero := node as Hero
 		if hero == null or not hero.is_shown():
 			continue
 		_marker_positions.append(hero.global_position)
 		_marker_colors.append(UiTokens.GREEN if hero == _hero else UiTokens.RED)
+		_marker_radii.append(LootMarkers.HERO_RADIUS)
 	var boss := _spawns.get_node_or_null(SpawnDirector.BOSS_NAME) as Monster
 	if boss != null and boss.is_alive() and boss.is_shown():
 		_marker_positions.append(boss.global_position)
 		_marker_colors.append(UiTokens.PURPLE)
-	_minimap.set_markers(_marker_positions, _marker_colors)
+		_marker_radii.append(LootMarkers.HERO_RADIUS)
+	_minimap.set_markers(_marker_positions, _marker_colors, _marker_radii)
 
 
 ## Baus e monstros sao filhos do SpawnDirector; o boss e o bau dele chegam depois.

@@ -1,13 +1,18 @@
 class_name HeroPlate
 extends Control
-## Base de combate das duas HUDs (DV telas 3 e 4): nome, nivel, HP e XP, 4 slots com conjuntos,
-## skills com recarga e pontos livres, controles, aviso de item equipado e o card de oferta do
-## bau ao alcance (ChestOfferCard, comum as duas HUDs). So le o estado replicado do heroi local e
+## Base de combate das duas HUDs (DV telas 3 e 4; dock do prototipo HUD Moderno, F57): icone,
+## nome, conjuntos, atributos, nivel, HP e XP, 4 slots, skills com recarga e pontos livres,
+## comandos, aviso de item equipado, o card de oferta do bau ao alcance (ChestOfferCard) e a
+## engrenagem (Bestiario e switches de som da sessao). So le o estado replicado do heroi local e
 ## nunca decide regra; a HUD dona chama update() no proprio _process.
 
 ## Indice = slot do SkillButton: basico, Q, E, R.
 const SKILL_KEYS: Array[String] = ["RMB", "Q", "E", "R"]
 const LEARN_KEYS: Array[String] = ["Ctrl+Q", "Ctrl+E", "Ctrl+R"]
+## Switches da engrenagem (decisao do PI 2026-10-12): tudo, ou so o jingle do chefao (barramento
+## do default_bus_layout.tres). Valem so na sessao (FORA-DE-ESCOPO: gravar no settings.cfg).
+const BUS_GAME: StringName = &"Master"
+const BUS_BOSS: StringName = &"Boss"
 
 var _hero: Hero
 var _skills: Array[SkillData] = []
@@ -20,6 +25,8 @@ var _shown_hp: Vector2i = -Vector2i.ONE
 var _shown_xp: int = -1
 var _shown_ranks: Vector3i = -Vector3i.ONE
 var _shown_equipment: Vector4i = Inventory.NONE
+## O heroi troca o objeto ao recalcular (nivel, item): referencia diferente = redesenhar.
+var _shown_attributes: HeroAttributes
 ## Maior recarga vista desde que zerou, por botao (ticks): total da volta radial.
 var _cooldown_totals: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
@@ -32,6 +39,19 @@ var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 @onready var _xp_bar: StatBar = %XpBar
 @onready var _set_text: Label = %SetText
 @onready var _points: HBoxContainer = %Points
+@onready var _hero_icon: TextureRect = %HeroIcon
+@onready var _equip_count: Label = %EquipCount
+@onready var _attr_attack: Label = %AttrAttack
+@onready var _attr_defense: Label = %AttrDefense
+@onready var _attr_intelligence: Label = %AttrIntelligence
+@onready var _attr_agility: Label = %AttrAgility
+@onready var _attr_speed: Label = %AttrSpeed
+@onready var _attr_cdr: Label = %AttrCdr
+@onready var _gear_button: Button = %GearButton
+@onready var _gear_menu: Control = %GearMenu
+@onready var _bestiary_button: Button = %BestiaryButton
+@onready var _sound_game: CheckButton = %SoundGame
+@onready var _sound_boss: CheckButton = %SoundBoss
 
 
 func _ready() -> void:
@@ -42,6 +62,11 @@ func _ready() -> void:
 		_buttons[i].hotkey = SKILL_KEYS[i]
 	for i: int in _learn_badges.size():
 		_learn_badges[i].key = LEARN_KEYS[i]
+	_gear_menu.visible = false
+	_gear_button.pressed.connect(_on_gear_button_pressed)
+	_bestiary_button.pressed.connect(_on_bestiary_button_pressed)
+	_sound_game.toggled.connect(_on_sound_game_toggled)
+	_sound_boss.toggled.connect(_on_sound_boss_toggled)
 
 
 ## Liga ao heroi local e redesenha tudo; o que ja esta equipado nao vira aviso.
@@ -53,9 +78,11 @@ func bind(hero: Hero) -> void:
 	_shown_xp = -1
 	_shown_ranks = -Vector3i.ONE
 	_cooldown_totals.fill(0)
+	_shown_attributes = null
 	var data := hero.hero_data
 	_skills = [data.basic_attack, data.skill_q, data.skill_e, data.skill_r]
 	_hero_name.text = data.display_name.to_upper()
+	_hero_icon.texture = data.basic_attack.icon
 	_refresh_equipment()
 
 
@@ -70,6 +97,8 @@ func update() -> void:
 	if _hero.equipment != _shown_equipment:
 		_notify_equipped()
 		_refresh_equipment()
+	if _hero.attributes != _shown_attributes:
+		_refresh_attributes()
 	_offer_card.update()
 
 
@@ -156,3 +185,61 @@ func _refresh_equipment() -> void:
 		else:
 			_slots[slot].bind(item, _items.icon(item) if _items != null else null)
 	_set_text.text = set_text(_shown_equipment, catalog)
+	var equipped := 0
+	for slot: int in Inventory.SLOTS:
+		if Inventory.item_at(_shown_equipment, slot, catalog) != null:
+			equipped += 1
+	_equip_count.text = "%d / %d" % [equipped, Inventory.SLOTS]
+
+
+## Grade de atributos (F57): os 6 finais do heroi (nivel + itens + conjuntos, Stats).
+func _refresh_attributes() -> void:
+	var attributes := _hero.attributes
+	_shown_attributes = attributes
+	_attr_attack.text = tr("ATQ %d") % roundi(attributes.attack)
+	_attr_defense.text = tr("DEF %d") % roundi(attributes.defense)
+	_attr_intelligence.text = tr("INT %d") % roundi(attributes.intelligence)
+	_attr_agility.text = tr("AGI %d") % roundi(attributes.agility)
+	_attr_speed.text = tr("VEL %s") % HudMath.decimal(attributes.move_speed)
+	_attr_cdr.text = tr("RCG %d%%") % roundi(attributes.cdr_percent)
+
+
+## Barramento ligado (nao mutado)? Sem o barramento (layout ausente): ligado.
+static func _bus_on(bus_name: StringName) -> bool:
+	var index := AudioServer.get_bus_index(bus_name)
+	return index < 0 or not AudioServer.is_bus_mute(index)
+
+
+static func _set_bus_on(bus_name: StringName, on: bool) -> void:
+	var index := AudioServer.get_bus_index(bus_name)
+	if index < 0:
+		push_warning("[hud] sem barramento de audio %s" % bus_name)
+		return
+	AudioServer.set_bus_mute(index, not on)
+
+
+## Ao abrir, os switches leem o barramento: a outra HUD pode ter mudado.
+func _on_gear_button_pressed() -> void:
+	_gear_menu.visible = not _gear_menu.visible
+	if _gear_menu.visible:
+		_sound_game.set_pressed_no_signal(_bus_on(BUS_GAME))
+		_sound_boss.set_pressed_no_signal(_bus_on(BUS_BOSS))
+
+
+## Mesmo caminho da tecla B: o Bestiario (no main) nao e referenciado pela HUD.
+func _on_bestiary_button_pressed() -> void:
+	_gear_menu.visible = false
+	var event := InputEventAction.new()
+	event.action = InputActions.OPEN_BESTIARY
+	event.pressed = true
+	Input.parse_input_event(event)
+	event.pressed = false  # solta: a acao nao fica "segurada" no Input
+	Input.parse_input_event(event)
+
+
+func _on_sound_game_toggled(on: bool) -> void:
+	_set_bus_on(BUS_GAME, on)
+
+
+func _on_sound_boss_toggled(on: bool) -> void:
+	_set_bus_on(BUS_BOSS, on)

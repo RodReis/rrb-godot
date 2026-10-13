@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://shared/ui/components/score_banner.gd" id="score"]
 [ext_resource type="Script" path="res://shared/ui/components/zone_radar.gd" id="radar"]
 [ext_resource type="AudioStream" path="res://shared/assets/kenney/music_jingles/jingles_STEEL07.ogg" id="jingle"]
+[ext_resource type="Script" path="res://scripts/ui/hud_telemetry.gd" id="telemetry"]
 
 [sub_resource type="ShaderMaterial" id="vignette_material"]
 shader = ExtResource("vignette")
@@ -51,8 +52,8 @@ mouse_filter = 2
 layout_mode = 2
 size_flags_horizontal = 4
 script = ExtResource("card")
-variant = 1
-accent = 0
+variant = 3
+corners = true
 
 [node name="ClockColumn" type="VBoxContainer" parent="Root/Top/Clock"]
 layout_mode = 2
@@ -76,49 +77,61 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 script = ExtResource("score")
+variant = 3
 
-[node name="Zone" type="PanelContainer" parent="Root"]
+[node name="TopLeft" type="VBoxContainer" parent="Root"]
 layout_mode = 1
 offset_left = 40.0
 offset_top = 24.0
 offset_right = 420.0
-offset_bottom = 180.0
+offset_bottom = 220.0
+mouse_filter = 2
+
+[node name="Zone" type="PanelContainer" parent="Root/TopLeft"]
+layout_mode = 2
 mouse_filter = 2
 script = ExtResource("card")
-variant = 1
+variant = 3
 accent = 2
 
-[node name="ZoneColumn" type="VBoxContainer" parent="Root/Zone"]
+[node name="Telemetry" type="Label" parent="Root/TopLeft"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+theme_override_font_sizes/font_size = 12
+text = "FPS -- · PING -- · TICK --"
+script = ExtResource("telemetry")
+
+[node name="ZoneColumn" type="VBoxContainer" parent="Root/TopLeft/Zone"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="ZoneTitle" type="Label" parent="Root/Zone/ZoneColumn"]
+[node name="ZoneTitle" type="Label" parent="Root/TopLeft/Zone/ZoneColumn"]
 layout_mode = 2
 theme_type_variation = &"LabelH2"
 text = "ZONA"
 
-[node name="ZoneRadius" type="Label" parent="Root/Zone/ZoneColumn"]
+[node name="ZoneRadius" type="Label" parent="Root/TopLeft/Zone/ZoneColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Raio 100%"
 
-[node name="ZoneDamage" type="Label" parent="Root/Zone/ZoneColumn"]
+[node name="ZoneDamage" type="Label" parent="Root/TopLeft/Zone/ZoneColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Dano fora"
 
-[node name="NextRow" type="HBoxContainer" parent="Root/Zone/ZoneColumn"]
+[node name="NextRow" type="HBoxContainer" parent="Root/TopLeft/Zone/ZoneColumn"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="NextLabel" type="Label" parent="Root/Zone/ZoneColumn/NextRow"]
+[node name="NextLabel" type="Label" parent="Root/TopLeft/Zone/ZoneColumn/NextRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_type_variation = &"LabelMuted"
 text = "Próximo fechamento"
 
-[node name="ZoneTimer" type="Label" parent="Root/Zone/ZoneColumn/NextRow"]
+[node name="ZoneTimer" type="Label" parent="Root/TopLeft/Zone/ZoneColumn/NextRow"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "--:--"
@@ -132,22 +145,32 @@ anchor_right = 1.0
 offset_left = -340.0
 offset_top = 24.0
 offset_right = -40.0
-offset_bottom = 500.0
+offset_bottom = 200.0
 grow_horizontal = 0
 mouse_filter = 2
 
-[node name="MapCard" type="PanelContainer" parent="Root/Right"]
-layout_mode = 2
+[node name="MapCard" type="PanelContainer" parent="Root"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -328.0
+offset_top = -328.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
 mouse_filter = 2
 script = ExtResource("card")
-variant = 1
-accent = 0
+variant = 3
 
-[node name="Minimap" parent="Root/Right/MapCard" instance=ExtResource("map")]
+[node name="Minimap" parent="Root/MapCard" instance=ExtResource("map")]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="ZoneRadar" type="Control" parent="Root/Right/MapCard/Minimap"]
+[node name="ZoneRadar" type="Control" parent="Root/MapCard/Minimap"]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -162,8 +185,7 @@ script = ExtResource("radar")
 layout_mode = 2
 mouse_filter = 2
 script = ExtResource("card")
-variant = 1
-accent = 0
+variant = 3
 
 [node name="RespawnColumn" type="VBoxContainer" parent="Root/Right/RespawnCard"]
 layout_mode = 2
@@ -207,7 +229,7 @@ offset_bottom = 360.0
 grow_horizontal = 2
 mouse_filter = 2
 script = ExtResource("card")
-variant = 1
+variant = 3
 accent = 1
 
 [node name="TransitionColumn" type="VBoxContainer" parent="Root/TransitionBanner"]
@@ -251,8 +273,9 @@ offset_bottom = 400.0
 grow_horizontal = 2
 mouse_filter = 2
 script = ExtResource("card")
-variant = 0
+variant = 3
 accent = 2
+corners = true
 
 [node name="SuddenColumn" type="VBoxContainer" parent="Root/SuddenDeathBanner"]
 layout_mode = 2
@@ -294,7 +317,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("card")
-variant = 1
+variant = 3
 accent = 2
 
 [node name="RespawnColumn" type="VBoxContainer" parent="Root/Respawn"]

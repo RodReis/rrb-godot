@@ -6,7 +6,7 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 
 | Componente | Extende | API pública | Variantes / estados | Usado em |
 |---|---|---|---|---|
-| `PanelCard` | `PanelContainer` | `@export var variant: Variant_ = PANEL` ; `@export var accent: Accent = NONE` | `variant`: `SURFACE`, `PANEL`, `INNER` ; `accent`: `NONE`, `GOLD`, `RED`, `GREEN`, `PURPLE` (borda 3 px) | todas |
+| `PanelCard` | `PanelContainer` | `@export var variant: Variant_ = PANEL` ; `@export var accent: Accent = NONE` | `variant`: `SURFACE`, `PANEL`, `INNER`, `GLASS`, `GLASS_INNER` (vidro, só HUD — F57) ; `accent`: `NONE`, `GOLD`, `RED`, `GREEN`, `PURPLE` (borda 3 px; no vidro, 1 px com o raio do vidro) ; `@export var corners: bool` (cantoneiras douradas) | todas |
 | `ScreenHeader` | `HBoxContainer` | `bind(title: String, show_back: bool)` ; slot `%RightSlot` ; sinal `back_requested` | — | todas as telas do Launcher; `hero_select` |
 | `ScreenFooter` | `PanelContainer` | `bind(hints: Array[HotkeyHint], status: String)` | — | todas |
 | `HotkeyBadge` | `Label` (variation `LabelBadge`) | `@export var key: String` | `size`: `SM` (12 px), `MD` (sobre ícone de skill) | HUD, rodapés, tela de controles |
@@ -26,7 +26,7 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | `MatchEndCard` (implementado, `game/`) | `PanelContainer` | `setup_rows(names, icons)` ; `show_player(tone, side, who, hero_text, icon, level, tag)` | tom `Win`/`Lose`/`Draw` | fim de partida (F52): cartão do jogador com moldura do herói, nível, selo e a coluna de linhas |
 | `MatchEndRow` (implementado, `game/`) | `PanelContainer` | `setup(label, icon)` ; `show_value(style, value, value_type, icon_color)` | normal, hover (só `EndRow`), troféu, conjunto ativo, apagada | fim de partida (F52): ícone, nome e valor da estatística |
 | `ZoneRadar` | `Control` (`_draw`) | `set_zone(radius_pct: float, next_radius_pct: float, t_next: float)` ; `set_players(positions)` | — | HUD F2 (minimapa) |
-| `Minimap` | `SubViewportContainer` | `bind(world: Node3D)` ; `set_markers(...)` | — | HUD F1 |
+| `Minimap` | `SubViewportContainer` | `bind(world: Node3D)` ; `set_markers(positions, colors, radii := [])` (raio por marcador; vazio = `marker_radius`) | — | HUD F1 e F2 |
 | `LatencyPlot` | `Control` (`_draw`) | `push_sample(ms)` ; `@export var ceiling_ms := 80` | — | `net_debug.tscn` (Game) |
 | `CatalogList` | `VBoxContainer` | `bind(entries: Array[CatalogEntry])` ; sinal `selected(id: StringName)` | — | bestiário, forja |
 | `DetailCard` | `PanelCard` | `bind(resource: Resource)` (despacha por tipo) | — | bestiário, forja, histórico |

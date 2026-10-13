@@ -32,6 +32,12 @@ var _damage_pct: float = 0.0
 var _fade_ticks: int = 0
 var _radar_positions: PackedVector3Array = PackedVector3Array()
 var _radar_colors: PackedColorArray = PackedColorArray()
+## Baus e monstros do minimapa (LootMarkers, F57), relidos ao aparecer.
+var _chests: Array[Chest] = []
+var _monsters: Array[Monster] = []
+var _loot_positions: PackedVector3Array = PackedVector3Array()
+var _loot_colors: PackedColorArray = PackedColorArray()
+var _loot_radii: PackedFloat32Array = PackedFloat32Array()
 var _transition_tween: Tween
 var _sudden_tween: Tween
 var _shake_tween: Tween
@@ -95,13 +101,15 @@ func bind(
 		match_controller.kill_scored.connect(_on_match_kill_scored)
 		match_controller.phase_changed.connect(_on_match_phase_changed)
 		match_controller.match_ended.connect(_on_match_ended)
+		spawns.boss_killed.connect(_on_spawns_boss_killed)
 
 
 ## Mostra e atualiza (ou esconde e para). Ao aparecer, a base, o placar e os baus sao relidos.
 func set_active(active: bool) -> void:
 	if active and not visible:
 		_plate.bind(_hero)
-		_plate.set_chests(_chests())
+		_collect_world()
+		_plate.set_chests(_chests)
 		_refresh_score()
 	visible = active and not _ended
 	set_process(visible)
@@ -162,8 +170,8 @@ func _update_vignette() -> void:
 		(_vignette.material as ShaderMaterial).set_shader_parameter(&"intensity", intensity)
 
 
-## Herois no radar (verde = eu, vermelho = adversario; neblina, F37: so o que o jogador ve); o
-## minimapa so gira junto. A zona do radar e sempre visivel.
+## Herois no radar (verde = eu, vermelho = adversario; neblina, F37: so o que o jogador ve); no
+## minimapa, por baixo, baus fechados e monstros vistos (F57). A zona do radar e sempre visivel.
 func _update_map() -> void:
 	var camera := get_viewport().get_camera_3d()
 	if camera != null:
@@ -177,6 +185,11 @@ func _update_map() -> void:
 			_radar_positions.append(hero.global_position)
 			_radar_colors.append(UiTokens.GREEN if hero == _hero else UiTokens.RED)
 	_radar.set_players(_radar_positions, _radar_colors)
+	_loot_positions.clear()
+	_loot_colors.clear()
+	_loot_radii.clear()
+	LootMarkers.append(_chests, _monsters, _loot_positions, _loot_colors, _loot_radii)
+	_minimap.set_markers(_loot_positions, _loot_colors, _loot_radii)
 
 
 ## Morto: segundos ate renascer (respawn_ticks replicado); na morte subita nao renasce.
@@ -206,12 +219,15 @@ func _refresh_score() -> void:
 	_score.bind(me, them, _rules.kill_goal)
 
 
-func _chests() -> Array[Chest]:
-	var result: Array[Chest] = []
+## Baus e monstros sao filhos do SpawnDirector (o bau do boss inclusive).
+func _collect_world() -> void:
+	_chests.clear()
+	_monsters.clear()
 	for node: Node in _spawns.get_children():
 		if node is Chest:
-			result.append(node as Chest)
-	return result
+			_chests.append(node as Chest)
+		elif node is Monster:
+			_monsters.append(node as Monster)
 
 
 ## Portoes caem (5:00): aviso central desce com fade e fica a transicao toda, camera treme, som.
@@ -287,6 +303,12 @@ func _on_match_ended(_winner: int, _reason: StringName, _stats: MatchStats, _tic
 		node.hide()
 	_vignette.hide()
 	visible = false
+
+
+## O bau do boss nasce na morte dele: entra no minimapa e no card de oferta.
+func _on_spawns_boss_killed(_peer: int) -> void:
+	_collect_world()
+	_plate.set_chests(_chests)
 
 
 func _on_match_kill_scored(peer: int, total: int, _tick: int) -> void:

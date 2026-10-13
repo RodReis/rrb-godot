@@ -42,6 +42,16 @@ const ALPHA_GLOW: float = 0.4
 const ALPHA_EDGE: float = 0.3
 const ALPHA_SOFT: float = 0.15
 const ALPHA_SHADE: float = 0.35
+## Vidro da HUD (F57, prototipo HUD Moderno): alfa do fundo, da borda dourada e do acento, e da
+## borda do modulo interno (slate-700/60 do prototipo ~ TEXT a 15 %).
+const ALPHA_GLASS: float = 0.82
+const ALPHA_GLASS_INNER: float = 0.45
+const ALPHA_GLASS_BORDER: float = 0.35
+const ALPHA_GLASS_ACCENT: float = 0.6
+const ALPHA_GLASS_EDGE: float = 0.15
+## Sombra do vidro (shadow-hud-panel do prototipo).
+const GLASS_SHADOW: Color = Color(0, 0, 0, 0.55)
+const GLASS_SHADOW_SIZE: int = 16
 ## Raio "cheio" da barra de atributo (rounded-full).
 const RADIUS_PILL: int = 9
 ## Tela de fim (F52, protótipo): tom do resultado -> [acento, alfa da borda do card, alfa do
@@ -177,6 +187,7 @@ func _panels(theme: Theme) -> void:
 		var color: Color = UiTokens.COLORS[PanelCard.ACCENT_TOKENS[accent]]
 		var outline := _outline(color, UiTokens.BORDER_W_ACTIVE, UiTokens.RADIUS_MD)
 		theme.set_stylebox(&"panel", accent, outline)
+	_glass(theme)
 	for box: StringName in [&"HBoxContainer", &"VBoxContainer"]:
 		theme.set_constant(&"separation", box, UiTokens.SPACE_SM)
 	var line := StyleBoxLine.new()
@@ -186,6 +197,27 @@ func _panels(theme: Theme) -> void:
 	var vline := line.duplicate() as StyleBoxLine
 	vline.vertical = true
 	theme.set_stylebox(&"separator", &"VSeparator", vline)
+
+
+## Vidro da HUD (F57): painel translucido com borda dourada fina e sombra; modulo interno mais
+## claro; acentos finos com o raio do vidro. So a HUD usa (Launcher segue no metal do F43).
+func _glass(theme: Theme) -> void:
+	var glass := _box(Color(UiTokens.BG_SURFACE, ALPHA_GLASS), UiTokens.RADIUS_LG)
+	glass.border_color = Color(UiTokens.GOLD, ALPHA_GLASS_BORDER)
+	glass.set_border_width_all(1)
+	glass.shadow_color = GLASS_SHADOW
+	glass.shadow_size = GLASS_SHADOW_SIZE
+	glass.set_content_margin_all(UiTokens.SPACE_MD)
+	_panel_variation(theme, &"PanelCardGlass", glass)
+	var inner := _box(Color(UiTokens.BG_SURFACE, ALPHA_GLASS_INNER), UiTokens.RADIUS_BUTTON)
+	inner.border_color = Color(UiTokens.TEXT, ALPHA_GLASS_EDGE)
+	inner.set_border_width_all(1)
+	inner.set_content_margin_all(UiTokens.SPACE_SM)
+	_panel_variation(theme, &"PanelCardGlassInner", inner)
+	for accent: StringName in PanelCard.ACCENT_TOKENS:
+		var color: Color = UiTokens.COLORS[PanelCard.ACCENT_TOKENS[accent]]
+		var outline := _outline(Color(color, ALPHA_GLASS_ACCENT), 1, UiTokens.RADIUS_LG)
+		theme.set_stylebox(&"panel", PanelCard.glass_accent_type(accent), outline)
 
 
 func _progress(theme: Theme) -> void:
