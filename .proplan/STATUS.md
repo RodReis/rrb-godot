@@ -9,6 +9,8 @@ updated: 2026-10-13
 
 ### [MVP3] Meta + deploy (#76)
 
+- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78)
+- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
 - [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85)
 - [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84)
@@ -18,8 +20,11 @@ updated: 2026-10-13
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 - [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79)
-- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78)
-- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
+
+### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
+
+- [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163)
+- [MVP2.6][SPEC-058][F58] Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça, Emboscada, bot e VFX (#162)
 
 ### Sem épico
 
@@ -27,11 +32,21 @@ updated: 2026-10-13
 
 ## A Fazer
 
-_(vazio)_
+### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
+
+- [MVP2.6][INFRA] Roadmap público aceita o marco MVP2.6 (#161)
+
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-064][F64] Fonte de cura: remodelada no Blender, textura realista e água caindo (#168)
+- [MVP2][SPEC-063][F63] Água do rio e do riacho com shader realista (#167)
+- [MVP2][SPEC-062][F62] Tecla B: ficha do herói (itens, atributos, habilidades) com aba Monstros (#166)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-061][F61] Baú com menu: F abre, 3 itens, clique escolhe, baú reservado a quem abriu (#165)
 
 ## Feito
 
@@ -41,6 +56,8 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-060][F60] Centro livre: remove os 8 pilares da cratera e mantém o magma (#164, finalizado em: 2026-10-13)
+- [MVP2][SPEC-065][F65] Minimapa claro: imagem pronta do mapa no lugar da câmera ao vivo (#170, finalizado em: 2026-10-13)
 - [MVP2][SPEC-056][F56] Arena num vale: floresta e montanhas em volta, câmera nunca mostra o vazio (#150, finalizado em: 2026-10-13)
 - [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69, finalizado em: 2026-10-13)
 - [MVP2][SPEC-037][FIX] Concealment com SCRIPT ERROR depois do fim da partida (herói fora da árvore) (#153, finalizado em: 2026-10-13)
