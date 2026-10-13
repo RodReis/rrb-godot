@@ -1017,7 +1017,7 @@ def build_chest_lid(name="chest_lid", reinforced=False):
     return build(kit, bevel=0.012)
 
 
-# --- kit 5: props (cristais, pinheiro, torre de vigia, balista, ilhotas) --------------------
+# --- kit 5: props (cristais, pinheiro, torre de vigia, balista) ----------------------------
 
 
 def shard(h, r, tilt_x, tilt_z, dx, dz):
@@ -1076,46 +1076,6 @@ def build_ballista():
     kit.add(rot_x(box(-0.1, 0.9, -1.0, 0.2, 0.14, 2.0), 12.0, (0, 0.9, 0)), WOOD, (0.4, 0.7))
     kit.add(rot_y(box(-1.1, 0.95, -0.95, 2.2, 0.12, 0.12), 0.0), WOOD, (0.4, 0.7))
     kit.add(box(-0.03, 1.02, -0.95, 0.06, 0.06, 1.6), CHARCOAL, (0.3, 0.5))
-    return build(kit)
-
-
-def build_islet(name, radius, seed):
-    kit = Kit(name)
-    n = 24
-    top = []
-    for i in range(n):
-        a = 2 * math.pi * i / n
-        rr = radius * (1.0 + 0.18 * n3(math.cos(a) * 2.0 + seed, seed, math.sin(a) * 2.0))
-        top.append((math.cos(a) * rr, 0.3 * n3(math.cos(a) * 4.0, seed + 3.0, math.sin(a) * 4.0), math.sin(a) * rr))
-    center = len(kit.verts)
-    kit.verts.append((0.0, 0.25, 0.0))
-    base = len(kit.verts)
-    kit.verts.extend(top)
-    for i in range(n):
-        j = (i + 1) % n
-        kit.faces.append((center, base + j, base + i))
-        kit.cells.append((GRASS, (0.5, 0.75)))
-    rings = [list(range(base, base + n))]
-    for k, (rk, yk, cell) in enumerate(((1.02, -1.8, BROWN), (0.85, -4.2, BROWN_DARK), (0.5, -6.5, BROWN_DARK))):
-        ring = []
-        for i in range(n):
-            a = 2 * math.pi * i / n
-            rr = radius * rk * (1.0 + 0.2 * n3(math.cos(a) * 3.0 + seed, k * 1.3 + seed, math.sin(a) * 3.0))
-            ring.append(len(kit.verts))
-            kit.verts.append((math.cos(a) * rr, yk * radius / 6.0, math.sin(a) * rr))
-        rings.append(ring)
-        above, below = rings[-2], rings[-1]
-        for i in range(n):
-            j = (i + 1) % n
-            kit.faces.append((above[i], above[j], below[j], below[i]))
-            kit.cells.append((cell, (0.3, 0.65)))
-    bottom = len(kit.verts)
-    kit.verts.append((0.0, -7.5 * radius / 6.0, 0.0))
-    last = rings[-1]
-    for i in range(n):
-        j = (i + 1) % n
-        kit.faces.append((last[i], last[j], bottom))
-        kit.cells.append((CHARCOAL, (0.2, 0.3)))
     return build(kit)
 
 
@@ -1422,7 +1382,7 @@ def main():
     large = [(2.6, 0.5, 5.0, -4.0, 0.0, 0.0), (1.7, 0.36, -22.0, 12.0, 0.7, 0.3), (1.3, 0.3, 15.0, 25.0, -0.6, 0.45),
              (1.0, 0.24, 28.0, -14.0, 0.2, -0.7), (0.8, 0.2, -10.0, -28.0, -0.55, -0.5)]
     props = [build_crystal("crystal_small", small), build_crystal("crystal_large", large), build_pine(), build_watchtower(),
-             build_ballista(), build_islet("islet_a", 6.0, 1.0), build_islet("islet_b", 9.0, 2.0), build_islet("islet_c", 7.0, 3.0)]
+             build_ballista()]
     for obj in props:
         export(obj, obj.name)
     save("props_crystals")
@@ -1472,4 +1432,5 @@ def build_jungle_kit():
         print("  %-18s %6d" % (obj.name, TRIS[obj.name]))
 
 
-main()
+if __name__ == "__main__":
+    main()

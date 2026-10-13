@@ -26,6 +26,21 @@ const ROCK_MATERIAL: String = MATERIALS + "rock_moss.tres"
 const STONE_MATERIAL: String = MATERIALS + "castle_stone.tres"
 const PINE_MATERIAL: String = MATERIALS + "pine_foliage.tres"
 const TALL_GRASS_MATERIAL: String = MATERIALS + "tall_grass.tres"
+## Piso e encostas do vale (F56, ADR-0012): pedra nas faces inclinadas, musgo nas de cima.
+const VALLEY_MATERIAL: String = MATERIALS + "valley_ground.tres"
+const VALLEY_ROCK_TILE: float = 0.12
+const VALLEY_MOSS_TILE: float = 0.22
+const VALLEY_MOSS_FROM: float = 0.55
+const VALLEY_MOSS_AMOUNT: float = 0.92
+const VALLEY_PINE_MATERIAL: String = MATERIALS + "valley_pine.tres"
+## Preenchimento do vale (shader `ambient_lift`, multiplica o albedo): o que nao entra no bake nao
+## recebe o indireto do lightmap e a sombra do sol ficaria preta. O chao tem albedo baixo e pede
+## mais; a copa ja e verde e satura com pouco.
+const VALLEY_GROUND_LIFT: Color = Color(0.8, 0.88, 1.12)
+const VALLEY_PINE_LIFT: Color = Color(0.5, 0.55, 0.7)
+## A copa do vale e vista de longe e em massa: mais escura e menos saturada que a da selva.
+const VALLEY_PINE_BRIGHTNESS: float = 0.6
+const VALLEY_PINE_SATURATION: float = 0.6
 
 # Mascara: o que vira cada camada (metade A; a B e a rotacao).
 const CENTER_CLEARING: float = 3.5
@@ -293,6 +308,8 @@ func _stamp_bases(channel: PackedFloat32Array) -> void:
 func _save_materials() -> void:
 	_save(_terrain_material(), TERRAIN_MATERIAL)
 	_save(_triplanar("rock", ROCK_TINT, 0.15, 0.62, 0.0), ROCK_MATERIAL)
+	_save(_valley_material(), VALLEY_MATERIAL)
+	_save(_valley_pine_material(), VALLEY_PINE_MATERIAL)
 	_save(_triplanar("bricks", Color(0.78, 0.78, 0.8), 0.45, 0.78, 0.65), STONE_MATERIAL)
 	# Folhagem: detalhe da grama, cor (tronco marrom, galho verde-escuro) pela celula do atlas.
 	_save(_foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0)), PINE_MATERIAL)
@@ -348,8 +365,25 @@ func _triplanar(
 	m.set_shader_parameter("moss_amount", 0.8 if moss_from < 1.0 else 0.0)
 	m.set_shader_parameter("atlas", _texture(ATLAS))
 	m.set_shader_parameter("atlas_tint", atlas_tint)
+	m.set_shader_parameter("ambient_lift", Color.BLACK)
 	m.set_shader_parameter("brightness", TERRAIN_BRIGHTNESS)
 	m.set_shader_parameter("saturation", TERRAIN_SATURATION)
+	return m
+
+
+func _valley_material() -> ShaderMaterial:
+	var m := _triplanar("rock", ROCK_TINT, VALLEY_ROCK_TILE, VALLEY_MOSS_FROM, 0.0)
+	m.set_shader_parameter("moss_amount", VALLEY_MOSS_AMOUNT)
+	m.set_shader_parameter("moss_tile", VALLEY_MOSS_TILE)
+	m.set_shader_parameter("ambient_lift", VALLEY_GROUND_LIFT)
+	return m
+
+
+func _valley_pine_material() -> ShaderMaterial:
+	var m := _foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0))
+	m.set_shader_parameter("ambient_lift", VALLEY_PINE_LIFT)
+	m.set_shader_parameter("brightness", VALLEY_PINE_BRIGHTNESS)
+	m.set_shader_parameter("saturation", VALLEY_PINE_SATURATION)
 	return m
 
 

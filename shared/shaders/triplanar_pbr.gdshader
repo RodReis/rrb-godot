@@ -31,6 +31,12 @@ uniform float atlas_tint : hint_range(0.0, 1.0) = 0.0;
 // Cor linear da celula que nao muda a textura (cinza da pedra do atlas).
 uniform float atlas_reference = 0.3;
 
+group_uniforms ambiente;
+// Luz de preenchimento (fake de GI) para o que nao entra no LightmapGI (o vale, F56): sem ela a
+// sombra do sol fica preta, porque so o cenario bakeado recebe a luz indireta. Multiplica o
+// albedo, entra como emissao e nao some na sombra. 0 = desligado (cenario bakeado).
+uniform vec3 ambient_lift : source_color = vec3(0.0);
+
 group_uniforms grade;
 uniform float brightness : hint_range(0.0, 2.0) = 1.0;
 uniform float saturation : hint_range(0.0, 2.0) = 1.0;
@@ -94,6 +100,7 @@ void fragment() {
 	}
 	float luma = dot(albedo, vec3(0.299, 0.587, 0.114));
 	ALBEDO = mix(vec3(luma), albedo, saturation) * brightness;
+	EMISSION = ALBEDO * ambient_lift;
 	ROUGHNESS = max(rough, min_roughness);
 	SPECULAR = specular_amount;
 	NORMAL = normalize((VIEW_MATRIX * vec4(normal, 0.0)).xyz);
