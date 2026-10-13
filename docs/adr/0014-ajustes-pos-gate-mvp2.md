@@ -3,7 +3,7 @@
 **Status:** aceito — 2026-10-13
 **Decisor:** Rodrigo Reis (PI)
 **Supera parcialmente:** SPEC-047 §2 e §3 (baú: `F` segurado, escolha lateral, card de comparação ancorado ao baú) · GDB §6.2 "Regra de Substituição" · `CONVENTION.md` §4.3 · SPEC-034 / SPEC-044 (8 pilares da cratera) · DV tela 5 em partida (tecla `B` = bestiário de monstros)
-**Relacionados:** F60 #164 · F61 #165 · F62 #166 · F63 #167 · F64 #168 (o corpo de cada issue vale como spec) · ADR-0006 · ADR-0010
+**Relacionados:** F60 #164 · F61 #165 · F62 #166 · F63 #167 · F64 #168 · F65 #170 (o corpo de cada issue vale como spec) · ADR-0006 · ADR-0010
 
 ## Contexto
 
@@ -21,7 +21,8 @@ Depois do [GATE] do MVP2 (#69, aprovado em 2026-10-13) o PI jogou e pediu quatro
 3. **Tecla `B` = ficha do herói (F62).** Mostra o herói que o jogador joga (preview 3D, itens equipados, atributos, 4 habilidades com descrição) com uma aba **Monstros** que mantém o bestiário atual. A decisão do PI de 2026-10-09 (bestiário em partida) continua valendo, agora como aba.
 4. **Água do rio (F63).** Shader de água no Godot sobre `river_mana.glb`: normal maps CC0 animados, fresnel, profundidade, espuma na margem e reflexo. Malha/UV no Blender só se precisar.
 5. **Fonte de cura (F64).** Pedido do PI no mesmo dia (print): remodelar a fonte no Blender (pedra com textura PBR realista CC0, bica central), com o shader de água do F63 na bacia e partículas da água caindo. Só visual: colisão, raio e regra de cura iguais.
-6. **Ordem:** F60 → F61 → F62 → F63 → F64, **antes** do MVP2.6 (#160) e do MVP3. O [GATE] #69 já está aprovado; os quatro cards entram depois dele, como o F56 entrou.
+6. **Minimapa claro (F65).** Pedido do PI no mesmo dia (print): o minimapa (câmera ao vivo no `SubViewport`) herda a luz sombria, a noite e a neblina. Vira uma **imagem pronta do mapa** gerada pelo builder com luz de dia, com a neblina de guerra como véu leve e os marcadores por cima; a câmera ao vivo sai (DEBITO DS-07).
+7. **Ordem:** F60 → **F65** → F61 → F62 → F63 → F64, **antes** do MVP2.6 (#160) e do MVP3. O [GATE] #69 já está aprovado; os cards entram depois dele, como o F56 entrou.
 
 ## Alternativas rejeitadas
 

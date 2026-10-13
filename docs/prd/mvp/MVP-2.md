@@ -36,6 +36,7 @@
 | 2.25 | F62 / SPEC-062 | tecla `B` = ficha do herói (preview, itens, atributos, 4 habilidades com descrição) com aba Monstros (bestiário atual) | ADR-0014; #166 |
 | 2.26 | F63 / SPEC-063 | água do rio e do riacho com shader (normal maps CC0 animados, fresnel, profundidade, espuma, reflexo); só visual | ADR-0014; #167 |
 | 2.27 | F64 / SPEC-064 | fonte de cura remodelada no Blender (pedra PBR CC0, bica), shader de água do F63 na bacia e partículas da água caindo; só visual | ADR-0014; #168 |
+| 2.28 | F65 / SPEC-065 | minimapa claro: imagem pronta do mapa (render do builder com luz de dia) no lugar da câmera ao vivo; neblina de guerra como véu leve; marcadores e giro iguais | ADR-0014; #170 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
 
@@ -57,7 +58,7 @@
 
 **Pedido do PI em 2026-10-12 (ADR-0012):** F56 (arena num vale, sem abismo) entra **depois do [GATE]**. **Revisto pelo PI no mesmo dia:** F56 #150 vem logo depois do F57 #151 e **antes do [GATE]**: **… → F57 #151 → F56 #150 → [GATE] #69**; o gate homologa a arena já no vale; issue criada pelo Code por ordem do PI, o corpo da issue vale como spec.
 
-**Pedido do PI em 2026-10-13 (ADR-0014), depois do [GATE] #69 aprovado:** lote de ajustes no MVP2 **antes do MVP2.6 (#160) e do MVP3**: **F60 #164 → F61 #165 → F62 #166 → F63 #167 → F64 #168**. Issues criadas pelo Code por ordem do PI; o corpo de cada issue vale como spec.
+**Pedido do PI em 2026-10-13 (ADR-0014), depois do [GATE] #69 aprovado:** lote de ajustes no MVP2 **antes do MVP2.6 (#160) e do MVP3**: **F60 #164 → F65 #170 → F61 #165 → F62 #166 → F63 #167 → F64 #168** (F65 entrou depois, pedido do PI no mesmo dia). Issues criadas pelo Code por ordem do PI; o corpo de cada issue vale como spec.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 

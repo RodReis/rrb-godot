@@ -106,6 +106,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-24 | Baú: `F` abre menu com 3 itens, clique escolhe 1, baú reservado a quem abriu (substitui a regra de troca da SPEC-047) | F61 (#165) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
 | V-25 | Tecla `B` mostra a ficha do herói jogado (itens, atributos, habilidades com descrição), com aba Monstros | F62 (#166) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
 | V-26 | Água realista em movimento: rio, riacho (F63) e fonte de cura remodelada com água caindo (F64) | F63 (#167), F64 (#168) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
+| V-27 | Minimapa claro e legível, também de noite: imagem pronta do mapa, neblina como véu leve | F65 (#170) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
 | V-18 | Tela "Arena & Mapa" no Launcher (DV tela 10): render da arena real + POIs + regras das 2 fases com números do GDB; arte conceito como meta visual da arena (decisão PI 2026-10-09) | F33 | launcher, shared | mantido (MVP3) |
 | V-11 | Mapa de controles §3.3 | `shared/core/input_actions.gd` | shared | mantido |
 | V-12 | `scripts/ui/m4_audit_tracker.gd` no cliente | backend `telemetry/` | — | transferido |
