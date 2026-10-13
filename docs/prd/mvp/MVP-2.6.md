@@ -20,9 +20,9 @@ Issue-pai **[MVP2.6]** (número no `STATUS.md` §1). Ordem: **`[INFRA]` (roadmap
 
 Dependências: F58 e F59 dependem do F48 (equipamento visível), do F41 (arquitetura de VFX), do F32/F37 (filtro de visão) e do F51 (seleção) — todos entregues. O F59 reusa a área temporária e o evento de VFX por visão criados no F58.
 
-## Pendências do PI
+## Pendências
 
-- **Gate do MVP2.6:** não foi criado card `[GATE]` (mesmo caso do MVP2.5); cada fatia tem aceite visual do PI e soak próprio. Se quiser um gate de marco, é decisão do PI.
+- **Gate do MVP2.6:** sem card `[GATE]` (aprovado pelo PI em 2026-10-13, como no MVP2.5); cada fatia tem aceite visual do PI e soak próprio.
 - **`[FIX]` do nome do Arqueiro** (ADR-0013 item 9): o Code abre o card para `ranger.tres` e telas; não bloqueia este marco.
 
 ## Fora deste MVP

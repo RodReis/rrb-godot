@@ -32,7 +32,7 @@ O PI pediu um Rogue com besta (ADR-0013). A Ladina é a 2ª heroína da classe *
 - **Exceção:** a subida da recarga do E da Ladina **não** conta como "agir" (`VisibilityRules.acted`). Q, básico e R contam normalmente.
 - Monstro e bot seguem a mesma regra (invariante de honestidade, CONVENTION §4.6): monstro não mira quem está oculto na nuvem.
 - A Emboscada pergunta ao servidor, no tick do uso, se a Ladina está oculta para o alvo (moita ou fumaça, sem revelação ativa) — esse é o critério do ×1,3.
-- **Decisão derivada (conferir no aceite):** herói dentro de uma moita e de uma nuvem ao mesmo tempo conta como dentro das duas; vê e é visto por quem estiver em qualquer uma delas.
+- **Decisão derivada, aprovada pelo PI em 2026-10-13:** herói dentro de uma moita e de uma nuvem ao mesmo tempo conta como dentro das duas; vê e é visto por quem estiver em qualquer uma delas.
 
 ## 4. Visual do modelo e equipamento (cliente)
 

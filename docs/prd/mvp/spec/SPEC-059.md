@@ -31,7 +31,7 @@ O PI pediu o Engineer do KayKit (ADR-0013). Ele cria a classe **Engenheiro**: da
 
 - **Recomendação de implementação:** a Torreta é **estado do Engenheiro** no rollback (posição, tick de fim, tick do próximo disparo), não um node novo de rollback — some o problema de spawn no netfox. O Code pode escolher outra forma se encontrar motivo concreto; registra na PR.
 - **Alvo:** a cada disparo, o inimigo (herói ou monstro) mais próximo da Torreta a ≤ 7,0 u que o Engenheiro vê pelas regras do GDB §7.3 (raio de visão 12 u a partir do Engenheiro, mato, fumaça). Sem alvo válido, o disparo não acontece (não acumula).
-- **Consequência derivada (conferir no aceite):** a Torreta não dá visão própria; se o Engenheiro se afasta e deixa de ver o alvo, ela para de atirar nele.
+- **Consequência derivada, aprovada pelo PI em 2026-10-13:** a Torreta não dá visão própria; se o Engenheiro se afasta e deixa de ver o alvo, ela para de atirar nele.
 - Disparo da Torreta **não** revela o Engenheiro na moita (não é ação dele). Instalar a Torreta é usar skill: revela, como qualquer skill.
 - Nova Torreta substitui a anterior na hora.
 - **Visual para o adversário:** a Torreta e os disparos dela chegam ao cliente por evento discreto do servidor (o mesmo caminho do `ImpactRelay`), só para quem tem a Torreta dentro da visão (F37) — o estado do Engenheiro não pode ser o caminho, porque ele some do adversário quando está oculto e a Torreta não.
