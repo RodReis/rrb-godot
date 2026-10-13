@@ -66,6 +66,23 @@ func test_panels_use_metal_frames() -> void:
 		assert_eq(outline.border_width_left, UiTokens.BORDER_W_ACTIVE)
 
 
+## Vidro da HUD (F57, prototipo HUD Moderno): so variantes novas; o PanelContainer segue metal.
+func test_hud_glass_panels() -> void:
+	assert_eq(_theme.get_type_variation_base(&"PanelCardGlass"), &"PanelContainer")
+	var glass := _flat(&"panel", &"PanelCardGlass")
+	assert_color(glass.border_color, Color(UiTokens.GOLD, ThemeBuilder.ALPHA_GLASS_BORDER))
+	assert_eq(glass.border_width_top, 1)
+	assert_true(glass.bg_color.a < 1.0, "vidro translucido")
+	assert_eq(_theme.get_type_variation_base(&"PanelCardGlassInner"), &"PanelContainer")
+	assert_eq(_flat(&"panel", &"PanelCardGlassInner").border_width_top, 1)
+	for accent: StringName in PanelCard.ACCENT_TOKENS:
+		var glass_accent := PanelCard.glass_accent_type(accent)
+		var color: Color = UiTokens.COLORS[PanelCard.ACCENT_TOKENS[accent]]
+		var outline := _flat(&"panel", glass_accent)
+		assert_color(outline.border_color, Color(color, ThemeBuilder.ALPHA_GLASS_ACCENT))
+		assert_eq(outline.corner_radius_top_left, glass.corner_radius_top_left, glass_accent)
+
+
 func test_progress_bars() -> void:
 	assert_color(_flat(&"background", &"ProgressBar").bg_color, UiTokens.BG_SURFACE)
 	assert_color(_flat(&"fill", &"ProgressBar").bg_color, UiTokens.GREEN)

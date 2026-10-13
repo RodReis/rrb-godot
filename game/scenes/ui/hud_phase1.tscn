@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://shared/ui/components/timer_label.gd" id="timer"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hero_plate.tscn" id="plate"]
 [ext_resource type="AudioStream" path="res://shared/assets/kenney/music_jingles/jingles_STEEL07.ogg" id="boss_sound"]
+[ext_resource type="Script" path="res://scripts/ui/hud_telemetry.gd" id="telemetry"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/ui_skull.svg" id="skull"]
 
 [node name="HudPhase1" type="CanvasLayer"]
 script = ExtResource("hud")
@@ -30,25 +32,54 @@ offset_bottom = 124.0
 grow_horizontal = 2
 mouse_filter = 2
 
-[node name="Gate" type="PanelContainer" parent="Root/TopBar"]
+[node name="TopLeft" type="VBoxContainer" parent="Root/TopBar"]
 layout_mode = 2
-theme_type_variation = &"PanelCardInner"
-script = ExtResource("card")
-variant = 2
-accent = 0
 size_flags_horizontal = 2
 size_flags_vertical = 0
+mouse_filter = 2
 
-[node name="GateText" type="Label" parent="Root/TopBar/Gate"]
+[node name="Gate" type="PanelContainer" parent="Root/TopBar/TopLeft"]
+layout_mode = 2
+size_flags_horizontal = 0
+script = ExtResource("card")
+variant = 3
+accent = 3
+
+[node name="GateRow" type="HBoxContainer" parent="Root/TopBar/TopLeft/Gate"]
+layout_mode = 2
+
+[node name="GateDot" type="Label" parent="Root/TopBar/TopLeft/Gate/GateRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.133, 0.773, 0.369, 1)
+text = "●"
+
+[node name="GateColumn" type="VBoxContainer" parent="Root/TopBar/TopLeft/Gate/GateRow"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="GateTitle" type="Label" parent="Root/TopBar/TopLeft/Gate/GateRow/GateColumn"]
+layout_mode = 2
+theme_type_variation = &"LabelBadge"
+theme_override_colors/font_color = Color(0.133, 0.773, 0.369, 1)
+text = "DEFESA"
+
+[node name="GateText" type="Label" parent="Root/TopBar/TopLeft/Gate/GateRow/GateColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "PORTÃO DA BASE: SEGURO"
 
+[node name="Telemetry" type="Label" parent="Root/TopBar/TopLeft"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+theme_override_font_sizes/font_size = 12
+text = "FPS -- · PING -- · TICK --"
+script = ExtResource("telemetry")
+
 [node name="Clock" type="PanelContainer" parent="Root/TopBar"]
 layout_mode = 2
 script = ExtResource("card")
-variant = 1
-accent = 0
+variant = 3
+corners = true
 size_flags_horizontal = 6
 size_flags_vertical = 0
 
@@ -72,48 +103,68 @@ script = ExtResource("timer")
 [node name="Boss" type="PanelContainer" parent="Root/TopBar"]
 layout_mode = 2
 script = ExtResource("card")
-variant = 1
+variant = 3
 accent = 4
 size_flags_horizontal = 10
 size_flags_vertical = 0
 
-[node name="BossColumn" type="VBoxContainer" parent="Root/TopBar/Boss"]
+[node name="BossLine" type="HBoxContainer" parent="Root/TopBar/Boss"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BossIconFrame" type="PanelContainer" parent="Root/TopBar/Boss/BossLine"]
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("card")
+variant = 4
+accent = 4
+
+[node name="BossIcon" type="TextureRect" parent="Root/TopBar/Boss/BossLine/BossIconFrame"]
+modulate = Color(0.576, 0.8, 1, 1)
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("skull")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BossColumn" type="VBoxContainer" parent="Root/TopBar/Boss/BossLine"]
 layout_mode = 2
 
-[node name="BossName" type="Label" parent="Root/TopBar/Boss/BossColumn"]
+[node name="BossRow" type="HBoxContainer" parent="Root/TopBar/Boss/BossLine/BossColumn"]
+layout_mode = 2
+
+[node name="BossName" type="Label" parent="Root/TopBar/Boss/BossLine/BossColumn/BossRow"]
 layout_mode = 2
 theme_type_variation = &"LabelH2"
 text = "REI ESQUELETO"
 
-[node name="BossRow" type="HBoxContainer" parent="Root/TopBar/Boss/BossColumn"]
-layout_mode = 2
-
-[node name="BossTimer" type="Label" parent="Root/TopBar/Boss/BossColumn/BossRow"]
+[node name="BossTimer" type="Label" parent="Root/TopBar/Boss/BossLine/BossColumn/BossRow"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "--:--"
 script = ExtResource("timer")
 
-[node name="BossStatus" type="Label" parent="Root/TopBar/Boss/BossColumn/BossRow"]
+[node name="BossStatus" type="Label" parent="Root/TopBar/Boss/BossLine/BossColumn"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"LabelMuted"
 text = "surge no centro"
-size_flags_vertical = 4
 
 [node name="MapCard" type="PanelContainer" parent="Root"]
 layout_mode = 1
 script = ExtResource("card")
-variant = 1
-accent = 0
-anchors_preset = 1
+variant = 3
+anchors_preset = 3
 anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
-offset_left = -340.0
-offset_top = 150.0
-offset_right = -40.0
-offset_bottom = 470.0
+anchor_bottom = 1.0
+offset_left = -328.0
+offset_top = -360.0
+offset_right = -24.0
+offset_bottom = -24.0
 grow_horizontal = 0
+grow_vertical = 0
 
 [node name="MapColumn" type="VBoxContainer" parent="Root/MapCard"]
 layout_mode = 2
@@ -132,7 +183,7 @@ text = "Baús abertos 0/0 · Monstros 0"
 unique_name_in_owner = true
 layout_mode = 1
 script = ExtResource("card")
-variant = 1
+variant = 3
 accent = 1
 visible = false
 offset_left = 40.0
@@ -159,7 +210,7 @@ text = "atrás do adversário"
 unique_name_in_owner = true
 layout_mode = 1
 script = ExtResource("card")
-variant = 1
+variant = 3
 accent = 4
 visible = false
 anchors_preset = 5
@@ -195,7 +246,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("card")
-variant = 1
+variant = 3
 accent = 2
 
 [node name="RespawnColumn" type="VBoxContainer" parent="Root/Respawn"]
@@ -217,6 +268,7 @@ horizontal_alignment = 1
 [node name="BossSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("boss_sound")
+bus = &"Boss"
 
 [node name="HeroPlate" parent="Root" instance=ExtResource("plate")]
 unique_name_in_owner = true

@@ -17,6 +17,7 @@ const MARKER_OUTLINE: float = 2.0
 
 var _positions: PackedVector3Array = PackedVector3Array()
 var _colors: PackedColorArray = PackedColorArray()
+var _radii: PackedFloat32Array = PackedFloat32Array()
 
 @onready var _viewport: SubViewport = %Viewport
 @onready var _camera: Camera3D = %Camera
@@ -42,10 +43,16 @@ func set_yaw(yaw: float) -> void:
 	_camera.transform = Transform3D(basis, Vector3(0.0, CAMERA_HEIGHT, 0.0))
 
 
-## Pontos do mundo e cor de cada um; os arrays sao copiados pelo Godot (Packed).
-func set_markers(positions: PackedVector3Array, colors: PackedColorArray) -> void:
+## Pontos do mundo, cor e raio (px) de cada um; sem raio = [member marker_radius]. Os arrays sao
+## copiados pelo Godot (Packed).
+func set_markers(
+	positions: PackedVector3Array,
+	colors: PackedColorArray,
+	radii: PackedFloat32Array = PackedFloat32Array()
+) -> void:
 	_positions = positions
 	_colors = colors
+	_radii = radii
 	_markers.queue_redraw()
 
 
@@ -53,5 +60,6 @@ func _on_markers_draw() -> void:
 	var ratio := _markers.size / Vector2(_viewport.size)
 	for i: int in mini(_positions.size(), _colors.size()):
 		var point := _camera.unproject_position(_positions[i]) * ratio
-		_markers.draw_circle(point, marker_radius + MARKER_OUTLINE, UiTokens.BG_SURFACE)
-		_markers.draw_circle(point, marker_radius, _colors[i])
+		var radius := _radii[i] if i < _radii.size() else marker_radius
+		_markers.draw_circle(point, radius + MARKER_OUTLINE, UiTokens.BG_SURFACE)
+		_markers.draw_circle(point, radius, _colors[i])

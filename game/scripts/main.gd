@@ -72,7 +72,7 @@ var _disconnected_log: Timer
 @onready var connect_panel: Control = $UI/ConnectPanel
 @onready var address_edit: LineEdit = $UI/ConnectPanel/Address
 @onready var connect_button: Button = $UI/ConnectPanel/ConnectButton
-## Rede e tick no rodape (DV tela 3); o relogio da partida esta na HUD.
+## Conexao no rodape ate a partida; com a HUD ligada, a telemetria dela (F57) assume.
 @onready var status_label: Label = $UI/Status
 @onready var hud: HudController = $Hud
 @onready var hero_select: HeroSelect = $HeroSelect
@@ -159,10 +159,7 @@ func _process(_delta: float) -> void:
 			fog.name = "FogOfWar"
 			add_child(fog)
 			fog.bind(hero)
-	status_label.text = (
-		"%s | tick %d%s"
-		% [_net_text(), NetworkTime.tick, " | AUTOPILOT" if PlayerInput.autopilot else ""]
-	)
+		status_label.visible = false
 
 
 ## Liga o ciclo dia/noite (F49) aos nodes da arena; antes do warm-up, que ja renderiza o ceu dele.
@@ -339,16 +336,6 @@ func _hero_spawn(team: int) -> Transform3D:
 	return Transform3D.IDENTITY
 
 
-func _net_text() -> String:
-	if multiplayer.is_server():
-		return "offline (host)"
-	var peer := multiplayer.multiplayer_peer as ENetMultiplayerPeer
-	if peer == null or peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED:
-		return "desconectado"
-	var rtt := peer.get_peer(1).get_statistic(ENetPacketPeer.PEER_ROUND_TRIP_TIME)
-	return "peer %d | RTT %d ms" % [multiplayer.get_unique_id(), rtt]
-
-
 ## Servidor: o heroi fica na partida, parado, e continua sofrendo dano (ARCHITECTURE-GAME §6).
 func _on_peer_disconnected(id: int) -> void:
 	print("[server] peer %d saiu" % id)
@@ -473,6 +460,7 @@ func _on_spawns_boss_killed(peer: int) -> void:
 ## quadro) e mostra o erro; se a tela do fim ja esta aberta, ela fica e so ela anima.
 func _on_server_disconnected() -> void:
 	status_label.text = "desconectado do servidor"
+	status_label.visible = true
 	get_tree().paused = true
 	if match_controller.state == MatchState.State.ENDED and match_end.visible:
 		match_end.process_mode = Node.PROCESS_MODE_ALWAYS

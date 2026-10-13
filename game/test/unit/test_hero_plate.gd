@@ -11,6 +11,11 @@ var _spawns: Node3D
 var _plate: HeroPlate
 
 
+func after_each() -> void:
+	for bus: StringName in [HeroPlate.BUS_GAME, HeroPlate.BUS_BOSS]:
+		AudioServer.set_bus_mute(AudioServer.get_bus_index(bus), false)
+
+
 func before_each() -> void:
 	_hero = KNIGHT.instantiate() as Hero
 	_hero.name = "1"
@@ -79,3 +84,58 @@ func test_rebind_does_not_notify_items_already_equipped() -> void:
 	_plate.update()
 	assert_false((_node("%Toast") as Toast).visible)
 	assert_false((_node("%Helm") as SlotItem).is_empty())
+
+
+## Grade de atributos (F57): valores reais do heroi (Stats), nao os do prototipo.
+func test_attributes_show_real_hero_values() -> void:
+	await _bind_and_wait()
+	var attributes := _hero.attributes
+	assert_eq((_node("%AttrAttack") as Label).text, "ATQ %d" % roundi(attributes.attack))
+	assert_eq((_node("%AttrDefense") as Label).text, "DEF %d" % roundi(attributes.defense))
+	assert_eq(
+		(_node("%AttrSpeed") as Label).text, "VEL %s" % HudMath.decimal(attributes.move_speed)
+	)
+	assert_eq((_node("%AttrCdr") as Label).text, "RCG %d%%" % roundi(attributes.cdr_percent))
+
+
+func test_equipment_count_follows_slots() -> void:
+	await _bind_and_wait()
+	assert_eq((_node("%EquipCount") as Label).text, "0 / 4")
+	_hero.equipment = Inventory.equip(_hero.equipment, GUARD_HELM)
+	_plate.update()
+	assert_eq((_node("%EquipCount") as Label).text, "1 / 4")
+
+
+func test_gear_button_toggles_menu() -> void:
+	await _bind_and_wait()
+	var menu := _node("%GearMenu") as Control
+	assert_false(menu.visible)
+	(_node("%GearButton") as Button).pressed.emit()
+	assert_true(menu.visible)
+	(_node("%GearButton") as Button).pressed.emit()
+	assert_false(menu.visible)
+
+
+## Switches da engrenagem (decisao do PI 2026-10-12): som do jogo muta o Master; aviso do
+## chefao muta so o barramento Boss. Desligar = switch solto.
+func test_sound_switches_mute_their_bus() -> void:
+	await _bind_and_wait()
+	var game_bus := AudioServer.get_bus_index(HeroPlate.BUS_GAME)
+	var boss_bus := AudioServer.get_bus_index(HeroPlate.BUS_BOSS)
+	assert_true(boss_bus > 0, "default_bus_layout tem o barramento Boss")
+	(_node("%SoundBoss") as CheckButton).button_pressed = false
+	assert_true(AudioServer.is_bus_mute(boss_bus))
+	assert_false(AudioServer.is_bus_mute(game_bus))
+	(_node("%SoundGame") as CheckButton).button_pressed = false
+	assert_true(AudioServer.is_bus_mute(game_bus))
+	(_node("%SoundGame") as CheckButton).button_pressed = true
+	assert_false(AudioServer.is_bus_mute(game_bus))
+
+
+## As duas HUDs tem a sua engrenagem: ao abrir, o switch mostra o estado real do barramento.
+func test_menu_reads_bus_state_when_opened() -> void:
+	await _bind_and_wait()
+	AudioServer.set_bus_mute(AudioServer.get_bus_index(HeroPlate.BUS_BOSS), true)
+	(_node("%GearButton") as Button).pressed.emit()
+	assert_false((_node("%SoundBoss") as CheckButton).button_pressed)
+	assert_true((_node("%SoundGame") as CheckButton).button_pressed)
