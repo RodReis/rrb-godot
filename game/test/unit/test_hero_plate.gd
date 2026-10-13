@@ -71,9 +71,9 @@ func test_new_item_fills_slot_notifies_and_counts_set() -> void:
 	assert_string_contains((_node("%SetText") as Label).text, "Guarda 1/3")
 
 
-func test_offer_card_stays_hidden_without_a_chest_in_reach() -> void:
+func test_chest_menu_stays_hidden_without_a_chest_in_reach() -> void:
 	await _bind_and_wait()
-	assert_false((_node("%OfferCard") as ChestOfferCard).visible)
+	assert_false((_node("%ChoiceMenu") as ChestChoiceMenu).visible)
 
 
 ## A HUD da fase 2 liga a base de novo aos 5:00: item equipado antes nao vira aviso atrasado.

@@ -166,7 +166,8 @@
         { "arquivo": "mvp2-f56-vale-canto-no.webp", "legenda": "O canto do mapa visto pela câmera do jogo, de fora para dentro: onde antes só havia céu e vazio, agora a floresta continua em volta da arena. O mapa deixou de ser uma ilha no ar e virou um vale.", "tipo": "entregue" },
         { "arquivo": "mvp2-f56-vale-floresta.webp", "legenda": "Olhando para fora da borda do mapa: a floresta densa do vale, com a torre de vigia, as tochas e as moitas da beira em primeiro plano.", "tipo": "entregue" },
         { "arquivo": "mvp2-f60-centro-livre.webp", "legenda": "O centro do mapa mais aberto: os pilares de pedra em volta do lago de magma saíram, e agora dá para entrar e lutar na cratera por qualquer lado.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f65-minimapa-claro.webp", "legenda": "O mapa que aparece no minimapa: a arena vista de cima, clara e colorida, com o rio, as pontes, as trilhas, as bases e o magma no centro. Antes o minimapa filmava a cena ao vivo e ficava escuro como ela; agora é sempre fácil de ler, até de noite.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f65-minimapa-claro.webp", "legenda": "O mapa que aparece no minimapa: a arena vista de cima, clara e colorida, com o rio, as pontes, as trilhas, as bases e o magma no centro. Antes o minimapa filmava a cena ao vivo e ficava escuro como ela; agora é sempre fácil de ler, até de noite.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f61-bau-com-menu.webp", "legenda": "O baú agora abre um menu com 3 itens: você vê o que cada um muda no seu herói (verde ganha, vermelho perde) e escolhe um com o mouse. O baú fica guardado para quem abriu.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {

@@ -29,7 +29,7 @@ var _path_index: int = 0
 var _path_goal: Vector3 = Vector3.INF
 var _path_tick: int = 0
 var _tapped: bool = false
-## Bau que o bot abriu e de onde vai pegar o item segurando F (SPEC-047 §4); null = nenhum.
+## Bau que o bot abriu e do qual vai escolher o item (F61); null = nenhum.
 var _taking: Chest
 ## Memoria da neblina: monstro -> vivo e onde estava; bau -> aberto (ultimo estado visto).
 var _known_alive: Dictionary[Monster, bool] = {}
@@ -100,6 +100,7 @@ func _reset() -> void:
 	skill_r = false
 	learn = LEARN_NONE
 	interact_hold = false
+	chest_pick = PICK_NONE
 
 
 func _view(tick: int, enemy: Hero) -> BotView:
@@ -258,8 +259,8 @@ func _fight_back() -> void:
 			return
 
 
-## Chega no alcance do bau e toca F (um tick apertado, o seguinte solto). Aberto o bau, segura F
-## ate a troca se o item for melhor que o equipado (_take).
+## Chega no alcance do bau e toca F (um tick apertado, o seguinte solto). Aberto o bau, escolhe o
+## melhor upgrade dos 3 itens (_take).
 func _loot(tick: int, chest: Chest) -> void:
 	if _taking != null and _take():
 		return
@@ -275,8 +276,9 @@ func _loot(tick: int, chest: Chest) -> void:
 		_taking = chest
 
 
-## Depois do toque que abriu: solta o F, e entao o segura enquanto o item do bau for slot vazio ou
-## raridade maior (a lateral o bot ignora). true = ainda ocupado com o bau; false = resolvido.
+## Depois do toque que abriu: solta o F e, com os itens do menu na mao (bau reservado ao bot),
+## clica no melhor upgrade (Inventory.best_choice); sem upgrade nao leva nada. true = ainda
+## ocupado com o bau; false = resolvido.
 func _take() -> bool:
 	var chest := _taking
 	if chest == null or not chest.in_reach(_hero.global_position):
@@ -285,16 +287,11 @@ func _take() -> bool:
 	if _tapped:
 		_tapped = false
 		return true
-	var item := chest.catalog.find(chest.item)
-	if (
-		not chest.opened
-		or item == null
-		or not Inventory.is_upgrade(_hero.equipment, item, chest.catalog)
-	):
-		_taking = null
+	_taking = null
+	if chest.opener != _hero.peer_id or chest.choices.is_empty():
 		return false
-	interact_hold = true
-	return true
+	chest_pick = Inventory.best_choice(_hero.equipment, chest.choices, chest.catalog)
+	return chest_pick != PICK_NONE
 
 
 func _go(tick: int, goal: Vector3) -> void:

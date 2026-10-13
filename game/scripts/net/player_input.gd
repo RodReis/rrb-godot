@@ -6,6 +6,8 @@ extends BaseNetInput
 
 ## learn sem pedido.
 const LEARN_NONE: int = -1
+## chest_pick sem clique.
+const PICK_NONE: int = -1
 
 static var autopilot: bool = false
 ## Tela por cima da partida (bestiario, F13): o heroi fica parado; a partida nao pausa.
@@ -23,13 +25,17 @@ var skill_r: bool = false
 ## Slot (SkillRules.SLOT_*) em que gastar um ponto neste tick, ou LEARN_NONE. So no tick em que
 ## o Ctrl+tecla foi apertado: segurar nao gasta varios pontos.
 var learn: int = LEARN_NONE
-## F pressionado neste tick; o Hero conta quanto tempo (toque abre bau, segurar troca item).
+## F pressionado neste tick; o Hero conta o toque que abre o bau.
 var interact_hold: bool = false
+## Item do menu do bau clicado neste tick (indice em Chest.choices), ou PICK_NONE. Vai mesmo com
+## o heroi suspenso pelo menu (F61).
+var chest_pick: int = PICK_NONE
 
 ## Servidor: o jogador deste heroi caiu; o input fica vazio (Hero.mark_disconnected).
 var disconnected: bool = false
 
 var _learn_held: int = LEARN_NONE
+var _pending_pick: int = PICK_NONE
 
 var _gamepad: bool = false
 var _last_stick_aim: Vector3 = Vector3.ZERO
@@ -49,7 +55,16 @@ func _exit_tree() -> void:
 			NetworkTime.before_tick_loop.disconnect(hook)
 
 
+## Clique no menu do bau (ChestChoiceMenu): sai no proximo tick, uma vez.
+func queue_pick(index: int) -> void:
+	_pending_pick = index
+
+
 func _gather() -> void:
+	chest_pick = _pending_pick
+	_pending_pick = PICK_NONE
+	if disconnected:
+		chest_pick = PICK_NONE
 	if suspended or disconnected:
 		_gather_idle()
 		return

@@ -175,12 +175,12 @@ func _chest(marker: SpawnMarker, number: int) -> Chest:
 	chest.uid = -number
 	chest.kind = marker.chest_kind
 	chest.home_team = marker.team
-	chest.drop = ChestRules.roll(chest.kind, chest.rules, chest.catalog.items, _rng)
+	chest.drops = ChestRules.roll_choices(chest.kind, chest.rules, chest.catalog.items, _rng)
 	chest.first_opened.connect(chest_opened.emit)
 	return chest
 
 
-## Nos dois lados; o uid vem do servidor. O drop so vale no servidor.
+## Nos dois lados; o uid vem do servidor. Os drops so valem no servidor.
 @rpc("authority", "call_local", "reliable")
 func _boss_defeated(_tick: int, killer_id: int, chest_uid: int, where: Vector3) -> void:
 	if has_node(BOSS_CHEST_NAME):
@@ -190,7 +190,7 @@ func _boss_defeated(_tick: int, killer_id: int, chest_uid: int, where: Vector3) 
 	chest.uid = chest_uid
 	chest.epic = true
 	if multiplayer.is_server():
-		chest.drop = ChestRules.boss_drop(chest.catalog.items, _rng)
+		chest.drops = ChestRules.boss_choices(chest.catalog.items, _rng)
 	chest.position = where
 	chest.first_opened.connect(chest_opened.emit)
 	add_child(chest)
