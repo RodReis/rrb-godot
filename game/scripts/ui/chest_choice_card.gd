@@ -3,6 +3,8 @@ extends PanelCard
 ## Um item do menu do bau (F61, ADR-0014; nasceu do card de oferta da SPEC-047 §3): icone, nome,
 ## raridade (cor e texto, P6), atributos contra o equipado no mesmo slot (+/-) e conjuntos
 ## antes -> depois. Clicavel: emite chosen. So exibe; o servidor valida a escolha (Chest.pick).
+## Borda cinza que clareia e ganha brilho com o mouse em cima (PI 2026-10-13: dourado parecia item
+## lendario).
 
 ## Clique no card do item de indice [param index] no menu.
 signal chosen(index: int)
@@ -12,10 +14,25 @@ const SLOT_ITEM: PackedScene = preload("res://shared/ui/components/slot_item.tsc
 const RARITY_COLORS: Array[Color] = [
 	UiTokens.RARITY_COMMON, UiTokens.RARITY_RARE, UiTokens.RARITY_EPIC
 ]
-## Realce do card sob o mouse.
-const HOVER_MODULATE: Color = Color(1.18, 1.18, 1.18)
+## Borda parada e com o mouse em cima; brilho em volta (px) e duracao da transicao (s).
+const BORDER: Color = Color(UiTokens.RARITY_COMMON, 0.75)
+const BORDER_HOVER: Color = Color(0.86, 0.89, 0.93)
+const BORDER_WIDTH: int = 2
+const GLOW_SIZE: float = 12.0
+const GLOW_ALPHA: float = 0.5
+const GLOW_SECONDS: float = 0.15
+## Fundo levemente mais claro sob o mouse.
+const HOVER_MODULATE: Color = Color(1.08, 1.08, 1.08)
 
 var index: int = 0
+## 0 = parado, 1 = mouse em cima (animado por tween).
+var glow: float = 0.0:
+	set(value):
+		glow = value
+		queue_redraw()
+
+var _border: StyleBoxFlat = StyleBoxFlat.new()
+var _tween: Tween
 
 var _slot: SlotItem = SLOT_ITEM.instantiate() as SlotItem
 var _name: Label = Label.new()
@@ -26,7 +43,9 @@ var _sets: Label = Label.new()
 
 func _init() -> void:
 	variant = Surface.PANEL
-	accent = Accent.GOLD
+	accent = Accent.NONE
+	_border.draw_center = false
+	_border.set_border_width_all(BORDER_WIDTH)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var column := VBoxContainer.new()
@@ -66,6 +85,17 @@ func show_item(hero: Hero, incoming: ItemData, catalog: ItemCatalog, icons: Item
 	_sets.visible = not _sets.text.is_empty()
 
 
+func _draw() -> void:
+	super()
+	var panel := get_theme_stylebox(&"panel") as StyleBoxFlat
+	if panel != null:
+		_border.set_corner_radius_all(panel.corner_radius_top_left)
+	_border.border_color = BORDER.lerp(BORDER_HOVER, glow)
+	_border.shadow_color = Color(BORDER_HOVER, GLOW_ALPHA * glow)
+	_border.shadow_size = roundi(GLOW_SIZE * glow)
+	draw_style_box(_border, Rect2(Vector2.ZERO, size))
+
+
 func _gui_input(event: InputEvent) -> void:
 	var click := event as InputEventMouseButton
 	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
@@ -86,9 +116,18 @@ func _row_node(row: OfferCompare.Row) -> HBoxContainer:
 	return line
 
 
+func _animate_glow(target: float) -> void:
+	if _tween != null:
+		_tween.kill()
+	_tween = create_tween()
+	_tween.tween_property(self, ^"glow", target, GLOW_SECONDS)
+
+
 func _on_mouse_entered() -> void:
 	modulate = HOVER_MODULATE
+	_animate_glow(1.0)
 
 
 func _on_mouse_exited() -> void:
 	modulate = Color.WHITE
+	_animate_glow(0.0)

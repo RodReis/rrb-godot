@@ -442,7 +442,7 @@ size_variant = 0
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"LabelMuted"
-text = "Baú: toque abre, segure troca"
+text = "Baú: abre e escolhe 1 item"
 
 [node name="Key3" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Controls/ControlsColumn/ControlsGrid"]
 layout_mode = 2
