@@ -93,9 +93,10 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F54 / SPEC-054 | MVP2 | game, shared | Slice 2.20 — Bruxo de Fogo (Mago): Bola de Fogo, Explosão de Chamas, Anel de Fogo, Meteoro; pick, bot, VFX de fogo, cajado visível (ADR-0011) | done (#136) |
 | F55 / SPEC-055 | MVP2 | game, shared | Slice 2.21 — Campos de canto NO/SE: Golem de canto + 2 Lobos + 2 Baús Reforçados; moita de lagoa movida; 35 monstros, 28 baús (ADR-0011) | done (#137) |
 | F56 / SPEC-056 | MVP2 | game, shared | Slice 2.22 — Arena num vale: faixa externa só visual (floresta, encostas, cristas, neblina de distância), cascatas viram riacho, ilhotas saem; câmera nunca mostra o vazio (ADR-0012) | backlog (#150) |
+| F57 / SPEC-057 | MVP2.5 | game, shared | Slice 2.5.8 — HUD moderna fiel ao protótipo (`docs/prd/telas/HUD Moderno/`): painéis de vidro só na HUD, dock único, minimapa no canto inferior direito com baús e monstros, telemetria FPS·PING·TICK, engrenagem com Bestiário e 2 switches de som, grade de atributos; fases 1 e 2 (decisão do PI 2026-10-12) | doing (#151) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
-Próximo número livre: **F56 / SPEC-056**.
+Próximo número livre: **F58 / SPEC-058**.
 
 ## 4. Regras deste índice
 

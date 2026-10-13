@@ -18,6 +18,7 @@
 | 2.5.4 | F41 / SPEC-041 | arquitetura VFX (pool, `is_fresh`, sinal do `HitLedger`) + VFX do Cavaleiro e da Arqueira | ADR-0006; GDB §3–4; spec §4 |
 | 2.5.5 | F42 / SPEC-042 | vegetação: grama `MultiMesh` com vento, distinta do mato alto | ADR-0006; CONVENTION §4.7; spec §4 |
 | 2.5.6 | F43 / SPEC-043 | HUD v2: ghost bar, ícones Q/E/R + badge, molduras, fontes (R-PEND-14), 3 pontos na seleção | ADR-0006; TOKENS v2; spec §4 |
+| 2.5.8 | F57 / SPEC-057 | HUD moderna fiel ao protótipo `docs/prd/telas/HUD Moderno/` (fases 1 e 2): vidro só na HUD, dock único, minimapa com baús/monstros, telemetria, engrenagem com Bestiário e switches de som, grade de atributos (decisão do PI 2026-10-12, implementada antes do [GATE] #69) | issue F57; TOKENS v2; protótipo |
 
 ## Ordem e issues
 

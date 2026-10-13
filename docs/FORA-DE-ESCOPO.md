@@ -46,6 +46,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Buff ao matar o boss ("Aura do Flagelo") | conceito Vale Rúnico | reforça snowball (métrica PRD §9.2 < 75 %) | pós-MVP4 | boss pouco disputado no playtest |
 | Orbes de XP soltos no mapa | Astro Arena | muda a curva GDB §5.2 | pós-MVP4 | fase 1 "chata" (R2) no playtest |
 | Relevo/depressão da cratera, lama −15 %, tier lendário, ouro/economia in-match, câmera isométrica padrão | conceito Vale Rúnico | não estão no PRD; custo de navmesh/câmera/replicação | fase B ou nunca | decisão do PI |
+| "Configurações (ESC)" no menu da engrenagem da HUD; switches de som gravados entre sessões | protótipo `docs/prd/telas/HUD Moderno/` (F57) | o jogo não tem tela de configurações; gravar no `settings.cfg` muda o contrato Launcher ↔ Game (exige ADR) | F24/F27 (MVP3, Configurações do launcher) | tela de configurações do launcher |
 | Merge queue no GitHub | `GITHUB.md` §5 | um autor, fila curta | — | mais de um autor concorrente |
 
 ## Excluídos (sem gatilho)

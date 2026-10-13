@@ -1,0 +1,446 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>HUD Moderno de Jogo RPG - Interface de Usuário</title>
+<!-- Tailwind CSS CDN v3 com plugins necessários -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Configuração personalizada do Tailwind para estilo RPG Glassmorphism -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            hud: {
+              dark: '#080c14',
+              panel: 'rgba(11, 17, 28, 0.78)',
+              border: 'rgba(212, 175, 55, 0.35)',
+              gold: '#f0c354',
+              health: '#10b981',
+              xp: '#f59e0b',
+              boss: '#a855f7',
+              rare: '#3b82f6',
+              common: '#64748b',
+            }
+          },
+          fontFamily: {
+            cinzel: ['Cinzel', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            'glow-gold': '0 0 15px rgba(240, 195, 84, 0.35)',
+            'glow-green': '0 0 12px rgba(16, 185, 129, 0.45)',
+            'glow-boss': '0 0 20px rgba(168, 85, 247, 0.4)',
+            'hud-panel': '0 8px 32px 0 rgba(0, 0, 0, 0.55)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- Google Fonts: Inter para UI limpa e Cinzel para toques clássicos de fantasia -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&amp;family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<!-- BEGIN: CustomStyles -->
+<style data-purpose="hud-effects">
+    /* Estilo de vidro e brilho metálico RPG */
+    .hud-glass {
+      background: linear-gradient(135deg, rgba(16, 24, 39, 0.82) 0%, rgba(8, 12, 22, 0.92) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(240, 195, 84, 0.28);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    }
+    
+    .hud-glass-subtle {
+      background: rgba(13, 20, 32, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .corner-decor {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      border-color: #f0c354;
+      pointer-events: none;
+    }
+
+    /* Animações e pulsações sutis */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 6px rgba(168, 85, 247, 0.5)); }
+      50% { opacity: 1; filter: drop-shadow(0 0 14px rgba(168, 85, 247, 0.85)); }
+    }
+
+    .boss-pulse {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+
+    /* Linha diagonal de destaque para barras */
+    .bar-sheen {
+      position: relative;
+      overflow: hidden;
+    }
+    .bar-sheen::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      animation: sheen 3.5s infinite;
+    }
+    @keyframes sheen {
+      100% { left: 160%; }
+    }
+
+    /* Scrollbar discreta para painéis */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(240, 195, 84, 0.4);
+      border-radius: 4px;
+    }
+  </style>
+<!-- END: CustomStyles -->
+</head>
+<body class="bg-[#04070d] text-slate-100 font-sans h-screen w-screen overflow-hidden select-none relative">
+<!-- BEGIN: GameBackgroundMock -->
+<!-- Plano de fundo estilizado de jogo RPG tático/MOBA para contextualizar o overlay de HUD -->
+<div class="absolute inset-0 bg-gradient-to-b from-[#060a12]/80 via-transparent to-[#03060c] pointer-events-none z-0">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(30,58,138,0.15)_0,rgba(3,6,12,0.85)_75%)]"></div>
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px]"></div>
+<!-- Arena Circular Central Iluminada (Representação abstrata elegante da cena) -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full border border-amber-500/20 bg-amber-500/5 blur-[1px]"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-amber-400/20 blur-xl animate-pulse"></div>
+</div>
+<!-- END: GameBackgroundMock -->
+<!-- BEGIN: MainHUDOverlay -->
+<main class="relative z-10 w-full h-full flex flex-col justify-between p-4 pointer-events-none">
+<!-- BEGIN: TopBar -->
+<!-- Barra superior com status da base, relógio da fase e alerta do chefe -->
+<header class="w-full flex items-start justify-between pointer-events-auto" data-purpose="hud-top-bar">
+<!-- Status do Portão / Base (Topo Esquerdo) -->
+<div class="hud-glass rounded-lg px-3.5 py-2 flex items-center gap-3 border border-emerald-500/30">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+<div>
+<p class="text-[10px] tracking-wider uppercase font-semibold text-emerald-400/80 leading-none">Defesa</p>
+<h2 class="text-xs font-bold tracking-wide text-emerald-200 mt-0.5">PORTÃO DA BASE: <span class="text-emerald-400">SEGURO</span></h2>
+</div>
+</div>
+<!-- Temporizador Central de Fase -->
+<section class="hud-glass px-6 py-2 rounded-xl text-center border-t-2 border-t-amber-500/60 shadow-lg relative min-w-[210px]" data-purpose="phase-timer">
+<!-- Cantoneiras ornamentais -->
+<div class="corner-decor top-0 left-0 border-t-2 border-l-2"></div>
+<div class="corner-decor top-0 right-0 border-t-2 border-r-2"></div>
+<p class="text-[10px] font-bold uppercase tracking-widest text-amber-300/90 font-cinzel">FASE 1: PREPARAÇÃO</p>
+<div class="text-2xl font-black tracking-wider text-slate-100 font-mono mt-0.5 drop-shadow">03:22</div>
+<div class="w-24 h-0.5 bg-gradient-to-r from-transparent via-amber-400 to-transparent mx-auto mt-0.5"></div>
+</section>
+<!-- Alerta de Invasão de Chefe (Topo Direito) -->
+<aside class="hud-glass boss-pulse rounded-lg px-4 py-2 flex items-center gap-3 border border-purple-500/50 bg-gradient-to-l from-purple-950/40 to-slate-900/90" data-purpose="boss-alert">
+<div class="p-1.5 rounded-md bg-purple-900/50 border border-purple-500/40 text-purple-300">
+<!-- Ícone de Caveira/Boss -->
+<svg class="w-5 h-5 text-purple-300" fill="currentColor" viewBox="0 0 24 24">
+<path d="M12 2C6.48 2 2 6.48 2 12c0 3.69 2.47 6.8 5.86 7.71.37.1.64.44.64.82v1.47h7v-1.47c0-.38.27-.72.64-.82C19.53 18.8 22 15.69 22 12c0-5.52-4.48-10-10-10zm-3 12c-.83 0-1.5-.67-1.5-1.5S8.17 11 9 11s1.5.67 1.5 1.5S9.83 14 9 14zm6 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm-5 4v-2h4v2h-4z"></path>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h2 class="text-xs font-black uppercase tracking-wider text-purple-200 font-cinzel">REI ESQUELETO</h2>
+<span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 border border-purple-400/30 font-bold">01:52</span>
+</div>
+<p class="text-[11px] text-purple-300/80 font-medium">surge no centro</p>
+</div>
+</aside>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: TelemetryDisplay -->
+<!-- FPS & Ping discretos no canto superior esquerdo abaixo do status -->
+<div class="absolute top-14 left-4 text-[10px] font-mono text-slate-500 flex gap-2 pointer-events-none">
+<span class="">FPS: <strong class="text-slate-400">144</strong></span>
+<span class="">•</span>
+<span class="">PING: <strong class="text-emerald-400">21ms</strong></span>
+<span class="">•</span>
+<span class="">TICK: <strong class="text-slate-400">3887</strong></span>
+</div>
+<!-- END: TelemetryDisplay -->
+<!-- BEGIN: BottomHUDContainer -->
+<!-- Contêiner inferior com configurações, barra centralizada de herói e minimapa alinhado -->
+<footer class="w-full flex items-end justify-between gap-3 pointer-events-auto" data-purpose="hud-bottom-container">
+<!-- BEGIN: SettingsQuickActions -->
+<!-- Canto Inferior Esquerdo: Botão moderno de Engrenagem / Opções com menu expansível rápido -->
+<section class="flex flex-col items-start gap-2" data-purpose="settings-control">
+<!-- Menu popover rápido (oculto por padrão / ativo via hover) -->
+<div class="hud-glass p-2.5 rounded-xl border border-slate-700/80 shadow-2xl mb-1 flex flex-col gap-1.5 w-48 opacity-95 transition-all duration-200 hidden" id="quick-menu">
+<div class="text-[10px] uppercase font-bold text-amber-400/90 tracking-wider px-2 py-0.5 border-b border-slate-800">Opções do Jogo</div>
+<button class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-slate-800/80 text-xs text-slate-300 hover:text-white transition group text-left">
+<svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
+<span class="">Configurações (ESC)</span>
+</button>
+<button class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-slate-800/80 text-xs text-slate-300 hover:text-white transition group text-left">
+<svg class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.732 5.477 15.246 5 17.5 5s3.332.477 4.5 1.253v13C20.332 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="">Bestiário &amp; Lore [B]</span>
+</button>
+</div>
+<!-- Botão Principal de Engrenagem com Efeito Metálico -->
+<button aria-label="Abrir Configurações" class="hud-glass p-3 rounded-xl border border-amber-500/30 hover:border-amber-400 hover:shadow-glow-gold hover:scale-105 active:scale-95 transition duration-150 group relative" id="btn-settings-toggle">
+<svg class="w-5 h-5 text-slate-300 group-hover:text-amber-400 group-hover:rotate-45 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<circle cx="12" cy="12" r="3" stroke-width="2"></circle>
+</svg>
+<span class="sr-only">Configurações</span>
+</button>
+</section>
+<!-- END: SettingsQuickActions -->
+<!-- BEGIN: CentralHeroHUD -->
+<!-- Bloco Principal Central: Perfil, Vida/XP, Equipamentos, Habilidades e Dicas de Atalhos -->
+<section class="flex flex-col items-center max-w-[820px] w-full" data-purpose="hero-main-dashboard"><div class="hud-glass w-full rounded-2xl p-3 border border-amber-500/35 relative shadow-hud-panel">
+  <div class="corner-decor top-0 left-0 border-t-2 border-l-2"></div>
+  <div class="corner-decor top-0 right-0 border-t-2 border-r-2"></div>
+  <div class="corner-decor bottom-0 left-0 border-b-2 border-l-2"></div>
+  <div class="corner-decor bottom-0 right-0 border-b-2 border-r-2"></div>
+
+  <!-- Top Row of Dock: Hero Avatar & Identity + Integrated HP/XP Vital Bars -->
+  <div class="flex items-center gap-3 pb-2.5 mb-2.5 border-b border-slate-700/60">
+    <!-- Hero Avatar & Level Badge -->
+    <div class="flex items-center gap-2.5 flex-shrink-0">
+      <div class="relative">
+        <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500 to-amber-700 p-0.5 shadow-glow-gold flex items-center justify-center">
+          <div class="w-full h-full bg-[#0d1522] rounded-[6px] flex items-center justify-center text-amber-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M5 19L19 5M19 5v7M19 5H12M4 20l3-3m5-5l5-5"></path>
+            </svg>
+          </div>
+        </div>
+        <span class="absolute -bottom-1.5 -right-1.5 text-[9px] font-black px-1.5 py-0.2 rounded bg-amber-500 text-black border border-amber-300 font-mono shadow leading-none">6</span>
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <h1 class="text-xs font-black tracking-wider font-cinzel text-slate-100 uppercase leading-none">ARQUEIRA</h1>
+          <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30">Nv. 6</span>
+        </div>
+        <p class="text-[9px] text-amber-400 font-medium tracking-wide mt-0.5 leading-none">Guarda 2/3 • Caçador 1/3</p>
+      </div>
+    </div><div class="flex items-center gap-2 pl-2 border-l border-slate-700/60" data-purpose="champion-attributes"><div class="grid grid-cols-3 gap-x-2.5 gap-y-1 bg-slate-900/60 rounded-lg p-1.5 border border-slate-700/50 shadow-inner"><div class="flex items-center gap-1 text-[9px] font-mono leading-none" title="Dano de Ataque (AD)"><svg class="w-3 h-3 text-amber-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.5 17.5L3 6V3h3l11.5 11.5m-3-1l3 3m1.5-6.5l3 3M19 5l-2 2"></path></svg><span class="font-bold text-amber-300">90</span></div><div class="flex items-center gap-1 text-[9px] font-mono leading-none" title="Poder de Habilidade (AP)"><svg class="w-3 h-3 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 2l2.4 5.8L20 9l-4.5 4 1.4 6-4.9-3.2L7.1 19l1.4-6L4 9l5.6-1.2L12 2z"></path></svg><span class="font-bold text-purple-300">30</span></div><div class="flex items-center gap-1 text-[9px] font-mono leading-none" title="Velocidade de Ataque (AS)"><svg class="w-3 h-3 text-yellow-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg><span class="font-bold text-yellow-300">0.966</span></div><div class="flex items-center gap-1 text-[9px] font-mono leading-none" title="Armadura"><svg class="w-3 h-3 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg><span class="font-bold text-emerald-300">93</span></div><div class="flex items-center gap-1 text-[9px] font-mono leading-none" title="Resistência Mágica"><svg class="w-3 h-3 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><circle cx="12" cy="12" r="2.5" stroke-width="1.5"></circle></svg><span class="font-bold text-blue-300">80</span></div><div class="flex items-center gap-1 text-[9px] font-mono leading-none" title="Velocidade de Movimento (MS)"><svg class="w-3 h-3 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg><span class="font-bold text-teal-300">370</span></div></div></div>
+
+    <!-- Compact Integrated HP & XP Dual Bars -->
+    <div class="flex-1 flex flex-col justify-center gap-1.5 pl-2 border-l border-slate-700/60">
+      <!-- HP Bar -->
+      <div>
+        <div class="flex justify-between items-center text-[10px] mb-0.5 leading-none">
+          <span class="font-bold text-emerald-400 flex items-center gap-1 font-mono tracking-wider text-[9px]">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-glow-green inline-block"></span> HP
+          </span>
+          <span class="font-mono text-emerald-200 text-[10px] font-semibold">425 <span class="text-slate-400">/ 570</span></span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-900/90 rounded-full p-0.5 border border-emerald-900/60 overflow-hidden shadow-inner">
+          <div class="h-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-400 rounded-full bar-sheen transition-all duration-300" style="width: 74.5%;"></div>
+        </div>
+      </div>
+      <!-- XP Bar -->
+      <div>
+        <div class="flex justify-between items-center text-[10px] mb-0.5 leading-none">
+          <span class="font-bold text-amber-400 flex items-center gap-1 font-mono tracking-wider text-[9px]">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shadow-glow-gold inline-block"></span> XP
+          </span>
+          <span class="font-mono text-amber-200 text-[9px] font-semibold">85 <span class="text-slate-400">/ 560</span></span>
+        </div>
+        <div class="w-full h-1.5 bg-slate-900/90 rounded-full p-0.5 border border-amber-950/60 overflow-hidden shadow-inner">
+          <div class="h-full bg-gradient-to-r from-amber-600 to-yellow-400 rounded-full transition-all duration-300" style="width: 15.2%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Row: Unified 3-Column Action Modules (Equipments, Skills & Keybinds) -->
+  <div class="grid grid-cols-12 gap-2.5 items-stretch">
+    <!-- Equipamentos (4 cols) -->
+    <section class="col-span-4 rounded-xl p-2 flex flex-col justify-between border border-slate-700/60 bg-slate-900/40" data-purpose="equipment-inventory">
+      <div class="flex items-center justify-between mb-1.5 px-0.5">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-300 font-cinzel">Equipamentos</span>
+        <span class="text-[9px] text-amber-400/90 font-mono font-semibold">3 / 4</span>
+      </div>
+      <div class="grid grid-cols-4 gap-1.5">
+        <!-- Slot 1: Arma -->
+        <div class="aspect-square rounded-lg bg-slate-900/90 border border-dashed border-slate-600/60 hover:border-amber-400/70 p-1 flex flex-col items-center justify-center transition group relative cursor-pointer" title="Arco Curto">
+          <svg class="w-4 h-4 text-slate-500 group-hover:text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+          <span class="text-[8px] font-semibold text-slate-400 mt-0.5">Arma</span>
+        </div>
+        <!-- Slot 2: Capacete Comum -->
+        <div class="aspect-square rounded-lg bg-slate-900/90 border border-slate-500/50 hover:border-slate-300 p-1 flex flex-col items-center justify-between relative group cursor-pointer" title="Capacete de Couro">
+          <span class="text-[8px] text-emerald-400 font-bold self-start leading-none mt-0.5">+</span>
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4a7 7 0 00-7 7v4a3 3 0 003 3h8a3 3 0 003-3v-4a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+          <span class="text-[7px] font-black uppercase tracking-tight text-slate-300 bg-slate-800/90 px-1 rounded">COMUM</span>
+        </div>
+        <!-- Slot 3: Armadura Comum -->
+        <div class="aspect-square rounded-lg bg-slate-900/90 border border-slate-500/50 hover:border-slate-300 p-1 flex flex-col items-center justify-between relative group cursor-pointer" title="Peitoral de Caçador">
+          <span class="text-[8px] text-emerald-400 font-bold self-start leading-none mt-0.5">+</span>
+          <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 4l4 4-2 6-6 4-6-4-2-6 4-4 4 2 4-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+          <span class="text-[7px] font-black uppercase tracking-tight text-slate-300 bg-slate-800/90 px-1 rounded">COMUM</span>
+        </div>
+        <!-- Slot 4: Acessório Raro -->
+        <div class="aspect-square rounded-lg bg-slate-900/90 border border-blue-500/70 shadow-sm shadow-blue-500/20 hover:border-blue-300 p-1 flex flex-col items-center justify-between relative group cursor-pointer" title="Amuleto Raro do Vento">
+          <span class="text-[8px] text-blue-400 font-bold self-start leading-none mt-0.5">★</span>
+          <svg class="w-4 h-4 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5" stroke-width="1.8"></circle><path d="M12 2v2m0 16v2M2 12h2m16 0h2" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"></path></svg>
+          <span class="text-[7px] font-black uppercase tracking-tight text-blue-200 bg-blue-900/80 px-1 rounded">RARO</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Habilidades (5 cols) -->
+    <section class="col-span-5 rounded-xl p-2 flex flex-col justify-between border border-slate-700/60 bg-slate-900/40" data-purpose="skill-bar">
+      <div class="flex items-center justify-between mb-1.5 px-0.5">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-300 font-cinzel">Habilidades</span>
+        <span class="text-[9px] text-amber-300/80 font-mono font-semibold">Prontas</span>
+      </div>
+      <div class="grid grid-cols-4 gap-1.5">
+        <!-- Skill 1 -->
+        <div class="aspect-square rounded-lg bg-gradient-to-b from-slate-800 to-slate-900 border border-amber-500/40 hover:border-amber-400 hover:shadow-glow-gold transition flex flex-col items-center justify-between p-1 relative cursor-pointer group">
+          <span class="text-[8px] font-bold text-amber-400 font-mono">1</span>
+          <svg class="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M5 19l14-14M19 5h-7M19 5v7"></path>
+          </svg>
+          <kbd class="text-[9px] font-black px-1.5 py-0.5 rounded bg-black/70 text-slate-200 border border-slate-700 font-mono leading-none">RMB</kbd>
+        </div>
+        <!-- Skill 2 -->
+        <div class="aspect-square rounded-lg bg-gradient-to-b from-slate-800 to-slate-900 border border-amber-500/40 hover:border-amber-400 hover:shadow-glow-gold transition flex flex-col items-center justify-between p-1 relative cursor-pointer group">
+          <span class="text-[8px] font-bold text-amber-400 font-mono">2</span>
+          <svg class="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="8" cy="12" r="3"></circle>
+            <circle cx="16" cy="12" r="3"></circle>
+            <path d="M11 12h2M5 12H3m18 0h-2"></path>
+          </svg>
+          <kbd class="text-[9px] font-black px-1.5 py-0.5 rounded bg-black/70 text-slate-200 border border-slate-700 font-mono leading-none">Q</kbd>
+        </div>
+        <!-- Skill 3 -->
+        <div class="aspect-square rounded-lg bg-gradient-to-b from-slate-800 to-slate-900 border border-amber-500/40 hover:border-amber-400 hover:shadow-glow-gold transition flex flex-col items-center justify-between p-1 relative cursor-pointer group">
+          <span class="text-[8px] font-bold text-amber-400 font-mono">3</span>
+          <div class="flex items-center justify-center font-bold text-xs text-emerald-300 font-cinzel">Nv2</div>
+          <kbd class="text-[9px] font-black px-1.5 py-0.5 rounded bg-black/70 text-slate-200 border border-slate-700 font-mono leading-none">E</kbd>
+        </div>
+        <!-- Skill 4 (ULT) -->
+        <div class="aspect-square rounded-lg bg-gradient-to-b from-slate-800 to-slate-900 border border-amber-400 shadow-glow-gold flex flex-col items-center justify-between p-1 relative cursor-pointer group">
+          <span class="text-[8px] font-bold text-amber-300 font-mono">ULT</span>
+          <div class="flex gap-0.5 text-amber-300 group-hover:scale-110 transition-transform">
+            <span class="text-xs font-black">↓↓↓</span>
+          </div>
+          <kbd class="text-[9px] font-black px-1.5 py-0.5 rounded bg-amber-500 text-black border border-amber-300 font-mono leading-none">R</kbd>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guia de Comandos (3 cols) -->
+    <section class="col-span-3 rounded-xl p-2 flex flex-col justify-between border border-slate-700/60 bg-slate-900/40" data-purpose="quick-controls-guide">
+      <div class="flex items-center justify-between mb-1 px-0.5">
+        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-300 font-cinzel">Comandos</span>
+        <span class="text-[9px] text-slate-400">Guia</span>
+      </div>
+      <div class="space-y-1 text-[10px] text-slate-300 pr-1 overflow-hidden font-medium">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400 font-mono">[WASD]</span>
+          <span class="truncate ml-1">Mover</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400 font-mono">[LMB]</span>
+          <span class="truncate ml-1">Girar Câm.</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400 font-mono">[F]</span>
+          <span class="truncate ml-1">Abrir Baú</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-400 font-mono">[CTRL+Q]</span>
+          <span class="truncate ml-1">Aprender</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</div></section>
+<!-- END: CentralHeroHUD -->
+<!-- BEGIN: MiniMapSection -->
+<!-- Canto Inferior Direito: Mini Mapa moderno, circular-hexagonal com contadores de baús e monstros -->
+<section class="flex flex-col items-end gap-1.5" data-purpose="minimap-panel">
+<!-- Radar / Mapa Circular Moderno -->
+<div class="hud-glass rounded-2xl p-2 border border-amber-500/35 relative shadow-hud-panel overflow-hidden">
+<!-- Bússola - Indicador Norte -->
+<div class="absolute top-3 left-3 z-20 flex items-center justify-center w-5 h-5 rounded-full bg-slate-900/90 border border-slate-700 text-[10px] font-black text-amber-400 font-mono">
+            N
+          </div>
+<!-- Janela do Mapa com Grid & Elementos Táticos -->
+<div class="relative w-44 h-44 rounded-xl bg-[#090f19] border border-slate-800 overflow-hidden flex items-center justify-center">
+<!-- Linhas de radar circular e eixos -->
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(56,189,248,0.06)_0%,transparent_70%)]"></div>
+<div class="w-36 h-36 rounded-full border border-slate-700/30 absolute"></div>
+<div class="w-24 h-24 rounded-full border border-slate-700/40 absolute"></div>
+<div class="w-12 h-12 rounded-full border border-dashed border-slate-700/60 absolute"></div>
+<div class="w-full h-[1px] bg-slate-800/80 absolute"></div>
+<div class="h-full w-[1px] bg-slate-800/80 absolute"></div>
+<!-- Camada de Terreno Esquemática Simplificada -->
+<div class="absolute w-28 h-28 rounded-full border-2 border-emerald-950/40 bg-emerald-900/10"></div>
+<div class="absolute w-14 h-14 bg-slate-800/30 rotate-45 border border-slate-700/40"></div>
+<!-- Indicadores de Pontos de Interesse (Baús e Inimigos) -->
+<span class="absolute top-8 left-10 w-2 h-2 rounded-full bg-blue-400 shadow-sm animate-pulse" title="Baú Próximo"></span>
+<span class="absolute top-12 right-12 w-2 h-2 rounded-full bg-blue-400 shadow-sm animate-pulse" title="Baú Próximo"></span>
+<span class="absolute bottom-10 left-12 w-2 h-2 rounded-full bg-blue-400 shadow-sm animate-pulse" title="Baú Próximo"></span>
+<span class="absolute top-16 right-9 w-2 h-2 rounded-full bg-rose-500 shadow-sm" title="Monstro Inimigo"></span>
+<span class="absolute top-20 right-14 w-2 h-2 rounded-full bg-rose-500 shadow-sm" title="Monstro Inimigo"></span>
+<span class="absolute bottom-12 right-16 w-2 h-2 rounded-full bg-rose-500 shadow-sm" title="Monstro Inimigo"></span>
+<!-- Jogador (Ponto Central Verde com Cone de Visão) -->
+<div class="relative z-10 flex flex-col items-center justify-center">
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[10px] border-b-amber-400 mb-0.5 filter drop-shadow"></div>
+<div class="w-3 h-3 rounded-full bg-amber-400 ring-4 ring-amber-400/20 shadow-glow-gold"></div>
+</div>
+<!-- Scanner Sweep de Radar -->
+<div class="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-amber-500/10 rounded-full animate-spin [animation-duration:8s] pointer-events-none"></div>
+</div>
+<!-- Contadores de Exploração e Objetivos do Mapa -->
+<div class="mt-2 pt-1.5 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono px-1 text-slate-300">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-sm bg-blue-400 inline-block"></span>
+<span class="">Baús: <strong class="text-white">14/24</strong></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-rose-500 inline-block"></span>
+<span class="">Monstros: <strong class="text-white">11</strong></span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: MiniMapSection -->
+</footer>
+<!-- END: BottomHUDContainer -->
+</main>
+<!-- END: MainHUDOverlay -->
+<!-- BEGIN: InteractiveUIBehavior -->
+<script data-purpose="hud-toggle-interactions">
+    // Comportamento interativo simples para abrir/fechar menu de configurações rápido
+    document.addEventListener('DOMContentLoaded', () => {
+      const settingsBtn = document.getElementById('btn-settings-toggle');
+      const quickMenu = document.getElementById('quick-menu');
+
+      if (settingsBtn && quickMenu) {
+        settingsBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          quickMenu.classList.toggle('hidden');
+        });
+
+        // Fechar ao clicar fora
+        document.addEventListener('click', (e) => {
+          if (!quickMenu.contains(e.target) && !settingsBtn.contains(e.target)) {
+            quickMenu.classList.add('hidden');
+          }
+        });
+      }
+    });
+  </script>
+<!-- END: InteractiveUIBehavior -->
+
+
+
+
+</body></html>
