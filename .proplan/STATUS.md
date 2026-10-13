@@ -24,7 +24,6 @@ updated: 2026-10-13
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
 
 - [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163)
-- [MVP2.6][SPEC-058][F58] Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça, Emboscada, bot e VFX (#162)
 
 ### Sem épico
 
@@ -34,6 +33,7 @@ updated: 2026-10-13
 
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
 
+- [MVP2.6][SPEC-058][F58] Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça, Emboscada, bot e VFX (#162)
 - [MVP2.6][INFRA] Roadmap público aceita o marco MVP2.6 (#161)
 
 ### [MVP2] Partida em rede (#57)
@@ -44,9 +44,7 @@ updated: 2026-10-13
 
 ## Em Andamento
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-061][F61] Baú com menu: F abre, 3 itens, clique escolhe, baú reservado a quem abriu (#165)
+_(vazio)_
 
 ## Feito
 
@@ -56,6 +54,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-061][F61] Baú com menu: F abre, 3 itens, clique escolhe, baú reservado a quem abriu (#165, finalizado em: 2026-10-13)
 - [MVP2][SPEC-060][F60] Centro livre: remove os 8 pilares da cratera e mantém o magma (#164, finalizado em: 2026-10-13)
 - [MVP2][SPEC-065][F65] Minimapa claro: imagem pronta do mapa no lugar da câmera ao vivo (#170, finalizado em: 2026-10-13)
 - [MVP2][SPEC-056][F56] Arena num vale: floresta e montanhas em volta, câmera nunca mostra o vazio (#150, finalizado em: 2026-10-13)
