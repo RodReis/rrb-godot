@@ -4,7 +4,7 @@ extends TextureProgressBar
 ## Icone vem do SkillData (placeholder geometrico, DEBITO DS-06); sem icone, quadrado com a
 ## inicial. Tecla em badge metalica no canto inferior direito (TOKENS v2). Estados: LOCKED
 ## (sem rank ainda, ex.: R antes do nivel 6), COOLING, READY; upgradable (ponto livre) poe
-## moldura dourada.
+## moldura dourada pulsando e, se ainda travada, troca o "Nv2" pelo atalho de aprender (F57).
 ## Cena: chame bind()/set_*() depois de entrar na arvore (os nos internos sao @onready).
 
 enum State { LOCKED, READY, COOLING }
@@ -13,6 +13,8 @@ const FRAME_READY: StringName = &"SkillFrame"
 const FRAME_UPGRADABLE: StringName = &"SkillFrameUpgradable"
 ## Opacidade do veu da recarga sobre o icone.
 const COOLDOWN_VEIL_ALPHA: float = 0.75
+## Pulso da moldura dourada: opacidade minima.
+const PULSE_MIN_ALPHA: float = 0.35
 
 static var _blank: ImageTexture
 
@@ -24,11 +26,14 @@ static var _blank: ImageTexture
 
 var state: State = State.READY
 var upgradable: bool = false
+## Atalho de aprender ("Ctrl+E"), mostrado no lugar do nivel minimo quando ha ponto livre.
+var learn_key: String = ""
 
 var _required_level: int = 0
 var _locked: bool = false
 var _remaining: float = 0.0
 var _has_icon: bool = false
+var _pulse: Tween
 
 @onready var _letter: Label = %Letter
 @onready var _cooldown: Label = %Cooldown
@@ -83,9 +88,22 @@ func set_locked(locked: bool) -> void:
 	_refresh()
 
 
+## Chamada a cada quadro pela HUD: so age quando muda.
 func set_upgradable(on: bool) -> void:
+	if on == upgradable:
+		return
 	upgradable = on
 	_frame.theme_type_variation = FRAME_UPGRADABLE if on else FRAME_READY
+	if _pulse != null:
+		_pulse.kill()
+		_pulse = null
+	_frame.self_modulate.a = 1.0
+	if on:
+		_pulse = create_tween().set_loops()
+		var half := UiTokens.PULSE_QUEUE / 2.0
+		_pulse.tween_property(_frame, ^"self_modulate:a", PULSE_MIN_ALPHA, half)
+		_pulse.tween_property(_frame, ^"self_modulate:a", 1.0, half)
+	_refresh()
 
 
 func _refresh() -> void:
@@ -95,11 +113,13 @@ func _refresh() -> void:
 		state = State.COOLING
 	else:
 		state = State.READY
-	modulate.a = UiTokens.DISABLED_ALPHA if state == State.LOCKED else 1.0
+	var dim := state == State.LOCKED and not upgradable
+	modulate.a = UiTokens.DISABLED_ALPHA if dim else 1.0
 	_letter.visible = state == State.READY and not _has_icon
 	_cooldown.visible = state != State.READY
 	if state == State.LOCKED:
-		_cooldown.text = tr("Nv%d") % _required_level
+		var learnable := upgradable and not learn_key.is_empty()
+		_cooldown.text = learn_key if learnable else tr("Nv%d") % _required_level
 		value = 0.0
 	elif state == State.COOLING:
 		_cooldown.text = cooldown_text(_remaining)

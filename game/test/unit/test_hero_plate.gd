@@ -139,3 +139,16 @@ func test_menu_reads_bus_state_when_opened() -> void:
 	(_node("%GearButton") as Button).pressed.emit()
 	assert_false((_node("%SoundBoss") as CheckButton).button_pressed)
 	assert_true((_node("%SoundGame") as CheckButton).button_pressed)
+
+
+## Subiu de nivel com ponto livre: aviso de aprender (PI 2026-10-12); ao ligar, nao avisa.
+func test_level_up_with_free_point_notifies() -> void:
+	await _bind_and_wait()
+	var toast := _node("%Toast") as Toast
+	assert_false(toast.visible)
+	_hero.level = 2
+	_hero.xp = XpTable.xp_for_level(_hero.xp_curve, 2)
+	_plate.update()
+	assert_true(toast.visible)
+	assert_string_contains((toast.get_child(0) as Label).text, "Ctrl+")
+	assert_eq((_node("%SkillE").get_node("%Cooldown") as Label).text, "Ctrl+E")
