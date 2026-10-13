@@ -7,10 +7,6 @@ updated: 2026-10-13
 
 ## Backlog
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-056][F56] Arena num vale: floresta e montanhas em volta, câmera nunca mostra o vazio (#150)
-
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
@@ -35,15 +31,15 @@ _(vazio)_
 
 ## Em Andamento
 
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-056][F56] Arena num vale: floresta e montanhas em volta, câmera nunca mostra o vazio (#150)
+
+## Feito
+
 ### #99 (#99)
 
 - [MVP2.5][SPEC-057][F57] HUD moderna: painéis de vidro, dock único, minimapa com baús e monstros, engrenagem com som (#151)
-
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
-
-## Feito
 
 ### Sem épico
 
@@ -53,6 +49,8 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69, finalizado em: 2026-10-13)
+- [MVP2][SPEC-037][FIX] Concealment com SCRIPT ERROR depois do fim da partida (herói fora da árvore) (#153, finalizado em: 2026-10-13)
 - [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68, finalizado em: 2026-10-13)
 - [MVP2][FIX] Cliente loga ERROR a cada quadro depois que o servidor encerra a partida (#108, finalizado em: 2026-10-12)
 - [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102, finalizado em: 2026-10-12)
@@ -82,6 +80,7 @@ _(vazio)_
 
 ### #99 (#99)
 
+- [MVP2.5][SPEC-057][FIX] HUD: E e R travados sem aviso de que precisam de ponto; evento do Bestiário reusado (#154, finalizado em: 2026-10-13)
 - [MVP2.5][SPEC-040][FIX] Portão da base não abre quando o herói do time passa (#124, finalizado em: 2026-10-11)
 - [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103, finalizado em: 2026-10-11)
 - [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100, finalizado em: 2026-10-11)
