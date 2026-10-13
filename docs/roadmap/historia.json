@@ -183,7 +183,8 @@
         { "arquivo": "mvp2.5-f42-grama-e-mato.webp", "legenda": "A grama do chão é baixa e escura; o mato alto, onde dá para se esconder, continua uma moita clara e fácil de reconhecer de longe.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f43-hud-fase2.webp", "legenda": "A interface ganhou molduras de metal com cantos dourados, letras novas com contorno escuro para ler sobre a arena e ícones nas habilidades, com a tecla numa plaquinha no canto.", "tipo": "entregue" },
         { "arquivo": "mvp2.5-f43-selecao-luz.webp", "legenda": "Na escolha do herói, os personagens agora têm luz de estúdio: uma quente de frente, uma fria de lado e um contorno dourado por trás.", "tipo": "entregue" },
-        { "arquivo": "mvp2.5-f45-camera-giro.webm", "legenda": "Segurando o botão esquerdo, a câmera dá a volta inteira em volta do herói e mostra o que os muros escondiam. Ao soltar, ela fica onde parou, o W continua levando para longe da câmera e o ataque básico passou para o botão direito.", "tipo": "entregue" }
+        { "arquivo": "mvp2.5-f45-camera-giro.webm", "legenda": "Segurando o botão esquerdo, a câmera dá a volta inteira em volta do herói e mostra o que os muros escondiam. Ao soltar, ela fica onde parou, o W continua levando para longe da câmera e o ataque básico passou para o botão direito.", "tipo": "entregue" },
+        { "arquivo": "mvp2.5-f57-hud-moderna.webp", "legenda": "O painel de jogo ficou mais leve: vidro escuro com borda dourada, tudo do herói num bloco só embaixo (atributos, nível, vida, experiência, equipamento e habilidades) e o mapa no canto, mostrando os baús fechados e os monstros à vista. A engrenagem abre o bestiário e liga ou desliga o som do jogo e o aviso do chefão. Quando sobra ponto de habilidade, o botão avisa o atalho para aprender.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -245,6 +246,7 @@
     "F41": "Efeitos visuais dos golpes do Cavaleiro e da Arqueira",
     "F42": "Grama baixa que balança ao vento",
     "F43": "Painel de jogo novo: molduras de metal, ícones e letras",
+    "F57": "Painel de jogo moderno: vidro, bloco do herói e mapa com baús",
     "F45": "Câmera que gira em volta do herói",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
