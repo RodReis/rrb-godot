@@ -21,7 +21,6 @@ func _ready() -> void:
 	mesh = quad
 	material_override = _material
 	cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	layers = Minimap.WORLD_OVERLAY_LAYER
 	set_friendly(false)
 
 
