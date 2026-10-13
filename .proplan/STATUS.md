@@ -31,9 +31,7 @@ _(vazio)_
 
 ## Em Andamento
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-056][F56] Arena num vale: floresta e montanhas em volta, câmera nunca mostra o vazio (#150)
+_(vazio)_
 
 ## Feito
 
@@ -41,22 +39,9 @@ _(vazio)_
 
 ## Finalizado
 
-### #99 (#99)
-
-- [MVP2.5][SPEC-057][F57] HUD moderna: painéis de vidro, dock único, minimapa com baús e monstros, engrenagem com som (#151, finalizado em: 2026-10-13)
-- [MVP2.5][SPEC-057][FIX] HUD: E e R travados sem aviso de que precisam de ponto; evento do Bestiário reusado (#154, finalizado em: 2026-10-13)
-- [MVP2.5][SPEC-040][FIX] Portão da base não abre quando o herói do time passa (#124, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103, finalizado em: 2026-10-11)
-- [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93, finalizado em: 2026-10-11)
-
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-056][F56] Arena num vale: floresta e montanhas em volta, câmera nunca mostra o vazio (#150, finalizado em: 2026-10-13)
 - [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69, finalizado em: 2026-10-13)
 - [MVP2][SPEC-037][FIX] Concealment com SCRIPT ERROR depois do fim da partida (herói fora da árvore) (#153, finalizado em: 2026-10-13)
 - [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68, finalizado em: 2026-10-13)
@@ -85,6 +70,20 @@ _(vazio)_
 - [MVP2][SPEC-036][F36] Economia de campo: 4 campos laterais de monstros e baús e respawn de 90 s na fase 1 (#59, finalizado em: 2026-10-10)
 - [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58, finalizado em: 2026-10-10)
 - [MVP2][SPEC-012][FIX] Bot contesta o Rei Esqueleto em loop e morre sem parar (#74, finalizado em: 2026-10-10)
+
+### #99 (#99)
+
+- [MVP2.5][SPEC-057][F57] HUD moderna: painéis de vidro, dock único, minimapa com baús e monstros, engrenagem com som (#151, finalizado em: 2026-10-13)
+- [MVP2.5][SPEC-057][FIX] HUD: E e R travados sem aviso de que precisam de ponto; evento do Bestiário reusado (#154, finalizado em: 2026-10-13)
+- [MVP2.5][SPEC-040][FIX] Portão da base não abre quando o herói do time passa (#124, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103, finalizado em: 2026-10-11)
+- [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93, finalizado em: 2026-10-11)
 
 ### #16 (#16)
 
