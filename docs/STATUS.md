@@ -100,7 +100,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F59 / SPEC-059 | MVP2.6 | game, shared | Slice 2.6.2 — Engenheiro (classe Engenheiro): Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite; bacamarte visível; bot; VFX (ADR-0013) | backlog (#163) |
 | F60 / SPEC-060 | MVP2 | game, shared | Slice 2.23 — Centro livre: saem os 8 pilares de obsidiana da cratera; magma fica (ADR-0014) | done (#164) |
 | F61 / SPEC-061 | MVP2 | game, shared | Slice 2.24 — Baú com menu: `F` abre, 3 itens, clique escolhe, baú reservado a quem abriu; bot escolhe o melhor (ADR-0014) | done (#165) |
-| F62 / SPEC-062 | MVP2 | game, shared | Slice 2.25 — Tecla `B`: ficha do herói (itens, atributos, habilidades com descrição) com aba Monstros (ADR-0014) | todo (#166) |
+| F62 / SPEC-062 | MVP2 | game, shared | Slice 2.25 — Tecla `B`: ficha do herói (itens, atributos, habilidades com descrição) com aba Monstros (ADR-0014) | done (#166) |
 | F63 / SPEC-063 | MVP2 | game, shared | Slice 2.26 — Água do rio e do riacho com shader realista; só visual (ADR-0014) | todo (#167) |
 | F64 / SPEC-064 | MVP2 | game, shared | Slice 2.27 — Fonte de cura remodelada no Blender, textura realista e água caindo; só visual (ADR-0014) | todo (#168) |
 | F65 / SPEC-065 | MVP2 | game, shared | Slice 2.28 — Minimapa claro: imagem pronta do mapa no lugar da câmera ao vivo; neblina como véu leve (ADR-0014) | done (#170) |

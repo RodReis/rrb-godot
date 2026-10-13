@@ -6,6 +6,8 @@ extends Resource
 
 @export var id: StringName
 @export var display_name: String
+## Efeito em texto curto para a ficha do heroi (F62): so o que o GDB §4 ja diz, sem regra nova.
+@export_multiline var description: String
 ## Icone do SkillButton (placeholder geometrico ate a arte, DEBITO DS-06); nulo = inicial.
 @export var icon: Texture2D
 @export var max_rank: int

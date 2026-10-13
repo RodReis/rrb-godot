@@ -1,19 +1,30 @@
 class_name Bestiary
 extends CanvasLayer
-## Bestiario em partida (DV tela 5, PI 2026-10-09): B abre e fecha, Esc fecha. Lista + ficha +
-## preview 3D dos monstros de shared/data/monsters. Nao pausa a partida; enquanto aberto o
-## heroi local fica parado (PlayerInput.suspended).
+## Bestiario em partida (DV tela 5, PI 2026-10-09): B abre e fecha, Esc fecha. Duas abas (F62,
+## ADR-0014): Heroi (ficha do heroi local, HeroSheet; abre primeiro quando ha heroi) e Monstros
+## (lista + ficha + preview 3D dos monstros de shared/data/monsters). Nao pausa a partida;
+## enquanto aberto o heroi local fica parado (PlayerInput.suspended).
+
+const TITLE_HERO: String = "FICHA DO HERÓI"
+const TITLE_MONSTERS: String = "BESTIÁRIO DA ARENA"
 
 @export var monsters: Array[MonsterData] = []
 
 @onready var _list: CatalogList = %List
 @onready var _detail: DetailCard = %Detail
 @onready var _preview: MonsterPreview3D = %Preview
+@onready var _title: Label = %Title
+@onready var _hero_tab: Button = %HeroTab
+@onready var _monster_tab: Button = %MonsterTab
+@onready var _hero_sheet: HeroSheet = %HeroSheet
+@onready var _monster_body: Control = %Body
 
 
 func _ready() -> void:
 	visible = false
 	_list.selected.connect(_on_list_selected)
+	_hero_tab.pressed.connect(show_hero)
+	_monster_tab.pressed.connect(show_monsters)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -38,12 +49,38 @@ func toggle() -> void:
 		open()
 
 
+## Liga a aba Heroi ao heroi do jogador deste processo.
+func bind_hero(hero: Hero) -> void:
+	_hero_sheet.bind(hero)
+
+
 func open() -> void:
 	if _list.get_child_count() == 0:
 		_build()  # so na primeira vez: o servidor dedicado nunca abre e nao carrega nada
 	visible = true
 	PlayerInput.suspended = true
+	_hero_tab.disabled = not _hero_sheet.has_hero()  # selecao: heroi ainda nao nasceu
+	if _hero_tab.disabled:
+		show_monsters()
+	else:
+		show_hero()
+
+
+func show_hero() -> void:
+	if not _hero_sheet.has_hero():
+		show_monsters()
+		return
+	_hero_sheet.refresh()
+	_set_tab(true)
+
+
+func show_monsters() -> void:
+	_set_tab(false)
 	_list.focus_selected()
+
+
+func is_hero_tab() -> bool:
+	return _hero_sheet.visible
 
 
 func close() -> void:
@@ -63,6 +100,14 @@ static func model_of(monster: MonsterData) -> Node3D:
 		instance.remove_child(model)
 	instance.free()
 	return model
+
+
+func _set_tab(hero: bool) -> void:
+	_hero_sheet.visible = hero
+	_monster_body.visible = not hero
+	_hero_tab.set_pressed_no_signal(hero)
+	_monster_tab.set_pressed_no_signal(not hero)
+	_title.text = tr(TITLE_HERO if hero else TITLE_MONSTERS)
 
 
 func _build() -> void:

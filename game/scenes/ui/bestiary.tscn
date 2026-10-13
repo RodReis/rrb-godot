@@ -13,6 +13,9 @@
 [ext_resource type="Resource" path="res://shared/data/monsters/skeleton_king_boss.tres" id="11_boss"]
 [ext_resource type="Resource" path="res://shared/data/monsters/wolf_t2.tres" id="12_wolf"]
 [ext_resource type="Resource" path="res://shared/data/monsters/golem_corner.tres" id="13_golem_corner"]
+[ext_resource type="Script" path="res://scripts/ui/hero_sheet.gd" id="14_sheet"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_tabs"]
 
 [node name="Bestiary" type="CanvasLayer"]
 layer = 2
@@ -44,10 +47,28 @@ theme_override_constants/separation = 20
 layout_mode = 2
 
 [node name="Title" type="Label" parent="Backdrop/Margin/Column/Header"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"LabelH1"
 text = "BESTIÁRIO DA ARENA"
+
+[node name="HeroTab" type="Button" parent="Backdrop/Margin/Column/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_group = SubResource("ButtonGroup_tabs")
+text = "HERÓI"
+
+[node name="MonsterTab" type="Button" parent="Backdrop/Margin/Column/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+toggle_mode = true
+button_pressed = true
+button_group = SubResource("ButtonGroup_tabs")
+text = "MONSTROS"
 
 [node name="Live" type="Label" parent="Backdrop/Margin/Column/Header"]
 layout_mode = 2
@@ -55,7 +76,15 @@ size_flags_vertical = 4
 theme_type_variation = &"LabelMuted"
 text = "A partida continua"
 
+[node name="HeroSheet" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+script = ExtResource("14_sheet")
+
 [node name="Body" type="HBoxContainer" parent="Backdrop/Margin/Column"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 30
