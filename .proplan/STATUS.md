@@ -37,15 +37,23 @@ _(vazio)_
 
 ## Feito
 
-### #99 (#99)
-
-- [MVP2.5][SPEC-057][F57] HUD moderna: painéis de vidro, dock único, minimapa com baús e monstros, engrenagem com som (#151)
-
-### Sem épico
-
-- [MVP2][SPEC-037][FIX] Concealment desliga o _process no cliente que conecta depois do load (sonda lê ? nos monstros) (#148)
+_(vazio)_
 
 ## Finalizado
+
+### #99 (#99)
+
+- [MVP2.5][SPEC-057][F57] HUD moderna: painéis de vidro, dock único, minimapa com baús e monstros, engrenagem com som (#151, finalizado em: 2026-10-13)
+- [MVP2.5][SPEC-057][FIX] HUD: E e R travados sem aviso de que precisam de ponto; evento do Bestiário reusado (#154, finalizado em: 2026-10-13)
+- [MVP2.5][SPEC-040][FIX] Portão da base não abre quando o herói do time passa (#124, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103, finalizado em: 2026-10-11)
+- [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94, finalizado em: 2026-10-11)
+- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93, finalizado em: 2026-10-11)
 
 ### [MVP2] Partida em rede (#57)
 
@@ -78,19 +86,6 @@ _(vazio)_
 - [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58, finalizado em: 2026-10-10)
 - [MVP2][SPEC-012][FIX] Bot contesta o Rei Esqueleto em loop e morre sem parar (#74, finalizado em: 2026-10-10)
 
-### #99 (#99)
-
-- [MVP2.5][SPEC-057][FIX] HUD: E e R travados sem aviso de que precisam de ponto; evento do Bestiário reusado (#154, finalizado em: 2026-10-13)
-- [MVP2.5][SPEC-040][FIX] Portão da base não abre quando o herói do time passa (#124, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-045][F45] Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (#103, finalizado em: 2026-10-11)
-- [MVP2.5][INFRA] Roadmap público e convenção de título passam a aceitar o marco MVP2.5 (#100, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-043][F43] HUD v2: ghost bar, ícones de habilidade com badge, molduras temáticas, fontes novas e luz de estúdio na seleção (#98, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-042][F42] Vegetação: grama MultiMesh com vento, distinta do mato alto (#97, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-041][F41] Arquitetura de VFX (cliente, pool, is_fresh) e efeitos de combate do Cavaleiro e da Arqueira (#96, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94, finalizado em: 2026-10-11)
-- [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93, finalizado em: 2026-10-11)
-
 ### #16 (#16)
 
 - [MVP1][SPEC-011][FIX] test_boss: empurrão do boss intermitente (física sem frame após montar a arena) (#71, finalizado em: 2026-10-10)
@@ -121,6 +116,7 @@ _(vazio)_
 
 ### Sem épico
 
+- [MVP2][SPEC-037][FIX] Concealment desliga o _process no cliente que conecta depois do load (sonda lê ? nos monstros) (#148, finalizado em: 2026-10-13)
 - Câmera: girar em volta do herói com o botão direito segurado (#47, finalizado em: 2026-10-10)
 - [MVP1][FIX] Bot gira no lugar no centro depois que o boss morre e não há mais alvo (#52, finalizado em: 2026-10-10)
 - [INFRA] Pipeline Blender: art/, .gitattributes/.gitignore e import de .blend desligado (ADR-0005) (#34, finalizado em: 2026-10-09)
