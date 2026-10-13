@@ -92,7 +92,9 @@ func test_attributes_show_real_hero_values() -> void:
 	var attributes := _hero.attributes
 	assert_eq((_node("%AttrAttack") as Label).text, "ATQ %d" % roundi(attributes.attack))
 	assert_eq((_node("%AttrDefense") as Label).text, "DEF %d" % roundi(attributes.defense))
-	assert_eq((_node("%AttrSpeed") as Label).text, "VEL %s" % HudMath.decimal(attributes.move_speed))
+	assert_eq(
+		(_node("%AttrSpeed") as Label).text, "VEL %s" % HudMath.decimal(attributes.move_speed)
+	)
 	assert_eq((_node("%AttrCdr") as Label).text, "RCG %d%%" % roundi(attributes.cdr_percent))
 
 
