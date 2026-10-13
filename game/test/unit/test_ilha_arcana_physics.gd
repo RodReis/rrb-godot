@@ -23,6 +23,8 @@ const AXIS_A: Vector3 = Vector3(-0.70710678, 0, 0.70710678)
 const LATERAL: Vector3 = Vector3(-0.70710678, 0, -0.70710678)
 const BRIDGE_AZIMUTHS: Array[float] = [135.0, 315.0]
 const CRATER_ENTRIES: Array[float] = [45.0, 135.0, 225.0, 315.0]
+## Azimutes dos 8 pilares que sairam no F60.
+const FORMER_PILLARS: Array[float] = [10.48, 79.52, 100.48, 169.52, 190.48, 259.52, 280.48, 349.52]
 const LAGOON_A: Vector3 = Vector3(-26, 0, -18)
 
 var _arena: Node3D
@@ -268,27 +270,21 @@ func test_portao_barra_so_o_adversario_ate_cair() -> void:
 	assert_false(_hits(_capsule(), outside, inside, GateRules.hero_mask(GateRules.TEAM_B)))
 
 
-func test_flecha_bate_nos_pilares_e_passa_nas_entradas() -> void:
+## F60 (ADR-0014): sem pilares, a borda da cratera (raio 6) e livre em todo azimute, inclusive
+## onde ficavam os pilares (entrada +/- 34,52 graus) e as entradas antigas.
+func test_flecha_cruza_a_borda_da_cratera_em_qualquer_azimute() -> void:
 	await wait_physics_frames(2)
 	var arrow := SphereShape3D.new()
 	arrow.radius = ARROW_RADIUS
 	var height := Vector3.UP
-	for azimuth: float in [0.0, 10.48, 79.52, 90.0, 180.0, 270.0]:
+	for azimuth: float in FORMER_PILLARS + CRATER_ENTRIES:
 		var blocked := _hits(
 			arrow,
 			_polar(azimuth, 9.0) + height,
 			_polar(azimuth, 3.0) + height,
 			GateRules.LAYER_WORLD
 		)
-		assert_true(blocked, "flecha passou entre pilares em %s" % azimuth)
-	for azimuth: float in CRATER_ENTRIES:
-		var blocked := _hits(
-			arrow,
-			_polar(azimuth, 9.0) + height,
-			_polar(azimuth, 3.0) + height,
-			GateRules.LAYER_WORLD
-		)
-		assert_false(blocked, "entrada %s bloqueada" % azimuth)
+		assert_false(blocked, "borda da cratera bloqueada em %s" % azimuth)
 
 
 ## ADR-0008/0009: o Vale Runico congelado nao e referenciado; a Ilha v1 ficou so em tag

@@ -33,13 +33,7 @@ const BRIDGE_CENTER: float = 16.0
 const BRIDGE_AZIMUTHS: Array[float] = [135.0, 315.0]
 const BRIDGE_AZIMUTH_A: float = 135.0
 
-# Cratera (SPEC-046 §2.2 = SPEC-044): 8 pilares no raio 6 u, 4 entradas de 4 u.
-
-const CRATER_ENTRIES: Array[float] = [45.0, 135.0, 225.0, 315.0]
-const PILLAR_RADIUS: float = 1.4
-const PILLAR_HEIGHT: float = 3.0
-## Angulo entre o centro de uma entrada e o pilar vizinho: 12 sin(a) = 4 + 2 x 1,4.
-const PILLAR_OFFSET_DEG: float = 34.52
+# Cratera (SPEC-046 §2.2): so o lago de magma, sem colisao; os 8 pilares sairam (F60, ADR-0014).
 
 # Base A (canto SO) em coordenadas locais: s ao longo de centro -> spawn A (-24, +24); l para a
 # esquerda de quem esta no spawn olhando o centro. A base B e a rotacao de 180 graus.

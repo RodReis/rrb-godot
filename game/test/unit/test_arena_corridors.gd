@@ -86,7 +86,7 @@ func _depth_in_mid(corners: PackedVector2Array, along: Vector2, half: float) -> 
 
 
 func test_top_e_bot_sem_colisor_nem_moita() -> void:
-	for body: String in ["Walls", "River", "Crater", "TallGrass"]:
+	for body: String in ["Walls", "River", "TallGrass"]:
 		for shape: CollisionShape3D in _shapes(body):
 			var corners := _corners(shape)
 			for flip: float in [1.0, -1.0]:
@@ -100,7 +100,7 @@ func test_top_e_bot_sem_colisor_nem_moita() -> void:
 
 
 func test_mid_sem_muro_rocha_nem_moita() -> void:
-	for body: String in ["Walls", "Crater", "TallGrass"]:
+	for body: String in ["Walls", "TallGrass"]:
 		for shape: CollisionShape3D in _shapes(body):
 			var corners := _corners(shape)
 			var bands: Array[Array] = [

@@ -1,6 +1,6 @@
 extends GutTest
-## F40 sobre o F46: pilares, moitas e pontes da Ilha usam os assets do Blender so como visual;
-## a colisao continua a do builder e a malha cobre o cilindro do pilar (nada de parede invisivel).
+## F40 sobre o F46: moitas e pontes da Ilha usam os assets do Blender so como visual; a colisao
+## continua a do builder e a malha cobre a colisao (nada de parede invisivel). Pilares: F60.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 ## Normais a menos de ~1 grau contam como a mesma.
@@ -43,22 +43,11 @@ func _instances_of(file: String) -> Array[Node3D]:
 	return result
 
 
-func test_pilares_de_obsidiana_cobrem_a_colisao() -> void:
-	await wait_physics_frames(1)
-	var pillars := _instances_of("obsidian_pillar.glb")
-	assert_eq(pillars.size(), 8)
-	for node: Node in _arena.get_node("Crater").get_children():
-		var shape_node := node as CollisionShape3D
-		if shape_node == null:
-			continue
-		var cylinder := shape_node.shape as CylinderShape3D
-		var center := shape_node.global_position
-		var half := Vector3(cylinder.radius, cylinder.height / 2, cylinder.radius)
-		var needed := AABB(center - half, half * 2)
-		var covered := false
-		for pillar: Node3D in pillars:
-			covered = covered or _visual_aabb(pillar).grow(0.01).encloses(needed)
-		assert_true(covered, "pilar sem malha cobrindo a colisao em %s" % center)
+## F60 (ADR-0014): centro livre, sem pilares nem corpo de colisao da cratera; o magma fica.
+func test_centro_sem_pilares_e_com_magma() -> void:
+	assert_eq(_instances_of("obsidian_pillar.glb").size(), 0)
+	assert_null(_arena.get_node_or_null("Crater"))
+	assert_eq(_instances_of("lava_lake.glb").size(), 1)
 
 
 func test_moitas_usam_o_asset_do_tamanho_certo() -> void:
