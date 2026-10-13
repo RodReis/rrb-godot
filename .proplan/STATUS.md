@@ -21,10 +21,6 @@ updated: 2026-10-13
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 - [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79)
 
-### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
-
-- [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163)
-
 ### Sem épico
 
 - Câmera: pilares e muros tapam o herói (oclusão) (#70)
@@ -33,18 +29,19 @@ updated: 2026-10-13
 
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
 
+- [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163)
 - [MVP2.6][SPEC-058][F58] Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça, Emboscada, bot e VFX (#162)
 - [MVP2.6][INFRA] Roadmap público aceita o marco MVP2.6 (#161)
 
 ### [MVP2] Partida em rede (#57)
 
 - [MVP2][SPEC-064][F64] Fonte de cura: remodelada no Blender, textura realista e água caindo (#168)
-- [MVP2][SPEC-063][F63] Água do rio e do riacho com shader realista (#167)
-- [MVP2][SPEC-062][F62] Tecla B: ficha do herói (itens, atributos, habilidades) com aba Monstros (#166)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][SPEC-063][F63] Água do rio e do riacho com shader realista (#167)
 
 ## Feito
 
@@ -54,6 +51,7 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-062][F62] Tecla B: ficha do herói (itens, atributos, habilidades) com aba Monstros (#166, finalizado em: 2026-10-13)
 - [MVP2][SPEC-061][F61] Baú com menu: F abre, 3 itens, clique escolhe, baú reservado a quem abriu (#165, finalizado em: 2026-10-13)
 - [MVP2][SPEC-060][F60] Centro livre: remove os 8 pilares da cratera e mantém o magma (#164, finalizado em: 2026-10-13)
 - [MVP2][SPEC-065][F65] Minimapa claro: imagem pronta do mapa no lugar da câmera ao vivo (#170, finalizado em: 2026-10-13)
