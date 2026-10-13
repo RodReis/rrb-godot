@@ -1,13 +1,13 @@
 class_name Chest
 extends Node3D
 ## Bau de loot (GDB §6.2). O reforcado do campo de canto (SPEC-055) troca corpo e tampa pelos
-## modelos com cantoneiras; colisao e area de interacao iguais. O drop e sorteado pelo
-## SpawnDirector com a seed da partida; so o do servidor vale. Abre uma vez com toque em F e o
-## item fica no bau (nada e automatico). Quem segura F swap_hold_time leva o item pelo ledger se
-## ItemRules.offer for verdadeiro para ele (SPEC-047); sem oferta nada acontece e o item fica
-## para outro heroi. O item antigo some (PI 2026-10-09). Cura vai pelo ledger na abertura.
-## Clientes recebem aberto + item (numero de Ids) por RPC confiavel. O card da oferta aparece na
-## HUD (ChestOfferCard), nao no bau.
+## modelos com cantoneiras; colisao e area de interacao iguais. Os drops sao sorteados pelo
+## SpawnDirector com a seed da partida; so os do servidor valem. F61 (ADR-0014, supera a
+## SPEC-047): o toque em F abre o bau uma vez e o reserva a quem abriu (opener), que ve os 3 itens
+## (choices) num menu da HUD (ChestChoiceMenu) e leva 1 com o clique (input chest_pick ->
+## pick); o bau fecha. Pode ser pior que o equipado; o item antigo some (PI 2026-10-09). Cura vai
+## pelo ledger na abertura, sem menu. Clientes recebem aberto + opener por RPC confiavel; so o
+## opener recebe os choices.
 ## Neblina de guerra (F37): o estado so vai a quem tem o bau no raio de visao (seen_by,
 ## Concealment); quem passa a ver recebe o estado atual. Fora da visao o bau continua no mapa com
 ## o ultimo estado visto (shown_opened; no host, o do jogador local).
@@ -39,19 +39,19 @@ var epic: bool = false
 var home_team: int = GateRules.TEAM_NEUTRAL
 ## Negativo e unico entre baus e monstros (chave do ledger).
 var uid: int = 0
-## So no servidor: numero de Ids ou ChestRules.HEAL.
-var drop: int = Ids.NONE
+## So no servidor: numeros de Ids sorteados (ChestRules.roll_choices) ou [ChestRules.HEAL].
+var drops: PackedInt32Array = PackedInt32Array()
 
 var opened: bool = false
 ## Tick do servidor em que abriu (NOT_OPENED = fechado), igual nos dois lados (NetProbe, F20).
 var opened_tick: int = NOT_OPENED
-## Item esperando troca no bau aberto; Ids.NONE = vazio.
-var item: int = Ids.NONE
+## Peer que abriu e a quem o bau fica reservado (0 = ninguem).
+var opener: int = 0
+## Itens do menu, so no servidor e no opener; vazio = nada a escolher (cura, ou ja escolhido).
+var choices: PackedInt32Array = PackedInt32Array()
 ## Aberto como o jogador deste processo o viu por ultimo (tampa e HUD); no cliente = opened.
 var shown_opened: bool = false
 
-## So no servidor: tick em que abriu. A troca so conta de um F apertado depois (confirmacao).
-var _opened_tick: int = 0
 var _concealment: Concealment
 
 @onready var _body: Node3D = $Body
@@ -113,53 +113,55 @@ func seen_by(observer: Hero) -> bool:
 	)
 
 
-## Servidor apenas. [param held_ticks] = ticks seguidos com F (1 = toque) do [param hero].
-# ponytail: abrir/trocar e irreversivel e vale pela ordem de chegada no servidor; ressimulacao
+## Servidor apenas: toque em F do [param hero] ao alcance. Abre uma vez; aberto, nao faz nada
+## (o menu reabre so no cliente do opener).
+# ponytail: abrir/escolher e irreversivel e vale pela ordem de chegada no servidor; ressimulacao
 # que tire o heroi do alcance depois nao desfaz. Raro (input atrasado); servidor segue autoritativo.
-func interact(hero: Hero, tick: int, held_ticks: int) -> void:
-	var pressed_tick := tick - held_ticks + 1
-	if held_ticks == 1 and not opened:
-		_open(hero, tick)
-	elif held_ticks == hold_ticks() and pressed_tick > _opened_tick and offers(hero.equipment):
-		_give(hero, tick)
-	else:
+func interact(hero: Hero, tick: int) -> void:
+	if opened:
 		return
-	_show(tick, opened, item)
-	for peer: int in multiplayer.get_peers():
-		if _concealment.shown_to(peer):
-			_show.rpc_id(peer, tick, opened, item)
+	_open(hero, tick)
+	_broadcast(tick)
 
 
-## O bau aberto tem um item que o heroi com [param equipment] pode trocar (ItemRules.offer).
-func offers(equipment: Vector4i) -> bool:
-	if item == Ids.NONE:
-		return false
-	return Inventory.offer(equipment, catalog.find(item), catalog)
-
-
-## Ticks de F segurado para trocar (swap_hold_time).
-func hold_ticks() -> int:
-	return SkillRules.seconds_to_ticks(rules.swap_hold_time, NetworkTime.tickrate)
-
-
-func _open(hero: Hero, tick: int) -> void:
-	opened = true
-	_opened_tick = tick
-	first_opened.emit(hero.peer_id, uid, tick)
-	if drop == ChestRules.HEAL:
-		var effect := HitEffect.new()
-		effect.heal = roundi(rules.heal_amount)
-		_reward(hero, tick, effect)
-	else:
-		item = drop
-
-
-func _give(hero: Hero, tick: int) -> void:
+## Servidor apenas: clique no item [param index] do menu (input do cliente, validado aqui).
+func pick(hero: Hero, tick: int, index: int) -> void:
+	var valid := index >= 0 and index < choices.size()
+	if not valid or hero.peer_id != opener or not in_reach(hero.global_position):
+		return
+	var item := choices[index]
 	print("[chest] %s leva %s" % [hero.name, catalog.find(item).display_name])
 	var effect := HitEffect.new()
 	effect.item = item
 	_reward(hero, tick, effect)
-	item = Ids.NONE
+	choices = PackedInt32Array()
+	_broadcast(tick)
+
+
+func _open(hero: Hero, tick: int) -> void:
+	opened = true
+	opened_tick = tick
+	opener = hero.peer_id
+	first_opened.emit(hero.peer_id, uid, tick)
+	if drops == PackedInt32Array([ChestRules.HEAL]):
+		var effect := HitEffect.new()
+		effect.heal = roundi(rules.heal_amount)
+		_reward(hero, tick, effect)
+	else:
+		choices = drops
+
+
+## Estado atual a cada peer que ve o bau (Concealment); os itens so ao opener.
+func _broadcast(tick: int) -> void:
+	_refresh_visual()
+	for peer: int in multiplayer.get_peers():
+		if _concealment.shown_to(peer):
+			_send(peer, tick)
+
+
+func _send(peer: int, tick: int) -> void:
+	var items := choices if peer == opener else PackedInt32Array()
+	_show.rpc_id(peer, tick, opened, opener, items)
 
 
 ## O heroi aplica no proprio _rollback_tick de tick+1 (ARCHITECTURE-GAME §3.2).
@@ -175,13 +177,14 @@ func _refresh_visual() -> void:
 	_lid.rotation_degrees.x = LID_OPEN_DEGREES if opened else 0.0
 
 
-## [param tick] do evento (ARCHITECTURE-GAME §3.2).
-@rpc("authority", "call_local", "reliable")
-func _show(tick: int, p_opened: bool, p_item: int) -> void:
+## [param tick] do evento (ARCHITECTURE-GAME §3.2). So cliente: o servidor ja tem o estado.
+@rpc("authority", "call_remote", "reliable")
+func _show(tick: int, p_opened: bool, p_opener: int, p_choices: PackedInt32Array) -> void:
 	if p_opened and opened_tick == NOT_OPENED:
 		opened_tick = tick
 	opened = p_opened
-	item = p_item
+	opener = p_opener
+	choices = p_choices
 	_refresh_visual()
 
 
@@ -193,4 +196,4 @@ func _on_concealment_sight_changed(peer: int, shown: bool, _tick: int) -> void:
 	if peer == multiplayer.get_unique_id():
 		_refresh_visual()
 	elif multiplayer.get_peers().has(peer):
-		_show.rpc_id(peer, opened_tick, opened, item)
+		_send(peer, opened_tick)

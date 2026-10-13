@@ -163,7 +163,7 @@ func test_bau_avisa_quem_passa_a_ver() -> void:
 func test_bau_no_host_mostra_o_ultimo_estado_visto() -> void:
 	var chest := _chest()
 	_me.global_position = _beside(chest.global_position, 30.0)
-	chest._show(50, true, Ids.NONE)  # aberto pelo adversario fora da visao do jogador local
+	chest._show(50, true, 2, PackedInt32Array())  # aberto pelo adversario fora da visao do local
 	assert_true(chest.opened)
 	assert_false(chest.shown_opened, "o jogador local nao viu abrir")
 	_me.global_position = _beside(chest.global_position, 5.0)

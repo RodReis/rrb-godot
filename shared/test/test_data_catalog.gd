@@ -358,7 +358,7 @@ func test_ritmo_da_partida() -> void:
 	assert_eq(
 		[rules.reinforced_chest_rare_chance, rules.reinforced_chest_common_chance], [0.5, 0.5]
 	)
-	assert_eq([rules.heal_amount, rules.swap_hold_time], [120.0, 0.4])
+	assert_eq(rules.heal_amount, 120.0)
 	# Abrir bau: toque em F a ate 1,5 u (PI 2026-10-09, F10).
 	assert_eq(rules.chest_interact_range, 1.5)
 

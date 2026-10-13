@@ -35,6 +35,22 @@ static func offer(equipment: Vector4i, incoming: ItemData, catalog: ItemCatalog)
 	return ItemRules.offer(item_at(equipment, incoming.slot, catalog), incoming)
 
 
+## Indice do melhor upgrade entre [param choices] (numeros de Ids do menu do bau, F61): o de maior
+## raridade entre os que ocupam slot vazio ou sobem a raridade; empate = o primeiro. -1 = nenhum
+## upgrade (o bot nao troca por pior).
+static func best_choice(
+	equipment: Vector4i, choices: PackedInt32Array, catalog: ItemCatalog
+) -> int:
+	var best := -1
+	var best_rarity := -1
+	for i: int in choices.size():
+		var item := catalog.find(choices[i])
+		if item != null and is_upgrade(equipment, item, catalog) and item.rarity > best_rarity:
+			best = i
+			best_rarity = item.rarity
+	return best
+
+
 ## Slot vazio ou raridade maior (ItemRules.is_upgrade).
 static func is_upgrade(equipment: Vector4i, incoming: ItemData, catalog: ItemCatalog) -> bool:
 	return ItemRules.is_upgrade(item_at(equipment, incoming.slot, catalog), incoming)

@@ -2,7 +2,7 @@ class_name HeroPlate
 extends Control
 ## Base de combate das duas HUDs (DV telas 3 e 4; dock do prototipo HUD Moderno, F57): icone,
 ## nome, conjuntos, atributos, nivel, HP e XP, 4 slots, skills com recarga e pontos livres,
-## comandos, aviso de item equipado, o card de oferta do bau ao alcance (ChestOfferCard) e a
+## comandos, aviso de item equipado, o menu do bau (ChestChoiceMenu, F61) e a
 ## engrenagem (Bestiario e switches de som da sessao). So le o estado replicado do heroi local e
 ## nunca decide regra; a HUD dona chama update() no proprio _process.
 
@@ -34,7 +34,7 @@ var _cooldown_totals: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 
 @onready var _toast: Toast = %Toast
-@onready var _offer_card: ChestOfferCard = %OfferCard
+@onready var _choice_menu: ChestChoiceMenu = %ChoiceMenu
 @onready var _hero_name: Label = %HeroName
 @onready var _hero_level: Label = %HeroLevel
 @onready var _hp_bar: StatBar = %HpBar
@@ -76,7 +76,7 @@ func _ready() -> void:
 func bind(hero: Hero) -> void:
 	_hero = hero
 	_items = ItemVisuals.for_hero(hero.hero_data.id)
-	_offer_card.bind(hero)
+	_choice_menu.bind(hero)
 	_shown_hp = -Vector2i.ONE
 	_shown_xp = -1
 	_shown_level = -1
@@ -90,9 +90,9 @@ func bind(hero: Hero) -> void:
 	_refresh_equipment()
 
 
-## Baus da partida, para o card de oferta (a HUD dona recolhe do SpawnDirector).
+## Baus da partida, para o menu do bau (a HUD dona recolhe do SpawnDirector).
 func set_chests(chests: Array[Chest]) -> void:
-	_offer_card.set_chests(chests)
+	_choice_menu.set_chests(chests)
 
 
 func update() -> void:
@@ -103,7 +103,7 @@ func update() -> void:
 		_refresh_equipment()
 	if _hero.attributes != _shown_attributes:
 		_refresh_attributes()
-	_offer_card.update()
+	_choice_menu.update()
 
 
 ## Pecas de cada conjunto equipado ("Guarda 2/3"), um texto por conjunto; vazio sem peca de

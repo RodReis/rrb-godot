@@ -185,6 +185,7 @@ func _ready() -> void:
 		"Input:skill_r",
 		"Input:learn",
 		"Input:interact_hold",
+		"Input:chest_pick",
 	]
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
@@ -449,16 +450,22 @@ func _learn() -> void:
 	ranks = SkillRules.learn(ranks, slot, skills[slot], level)
 
 
-## F: o bau ao alcance decide pelo tempo segurado (toque abre, segurar troca). Servidor apenas;
-## o saque volta pelo ledger. Baus ficam a >= 3 u um do outro (SPEC-007): no maximo um ao alcance.
+## F: o toque abre o bau ao alcance; o clique no menu (input chest_pick) leva o item escolhido
+## (F61). Servidor apenas; o saque volta pelo ledger. Baus ficam a >= 3 u um do outro (SPEC-007):
+## no maximo um ao alcance.
 func _interact(tick: int) -> void:
 	interact_ticks = interact_ticks + 1 if input.interact_hold else 0
-	if interact_ticks == 0 or not multiplayer.is_server():
+	var pick := input.chest_pick
+	var tapped := interact_ticks == 1
+	if not multiplayer.is_server() or (not tapped and pick == PlayerInput.PICK_NONE):
 		return
 	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
 		var chest := node as Chest
 		if chest.in_reach(global_position):
-			chest.interact(self, tick, interact_ticks)
+			if tapped:
+				chest.interact(self, tick)
+			if pick != PlayerInput.PICK_NONE:
+				chest.pick(self, tick, pick)
 			return
 
 

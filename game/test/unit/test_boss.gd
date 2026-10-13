@@ -150,8 +150,9 @@ func test_morte_vira_bau_epico_no_lugar() -> void:
 	assert_true(chest.epic)
 	assert_false(chest.opened)
 	assert_true(chest.global_position.is_equal_approx(where))
-	var item := (load(CATALOG) as ItemCatalog).find(chest.drop)
-	assert_eq(item.rarity, ItemData.Rarity.EPIC)
+	assert_eq(chest.drops.size(), ChestRules.CHOICES)
+	for drop: int in chest.drops:
+		assert_eq((load(CATALOG) as ItemCatalog).find(drop).rarity, ItemData.Rarity.EPIC)
 
 
 func test_aviso_poe_o_portal_no_marcador_e_o_boss_tira() -> void:

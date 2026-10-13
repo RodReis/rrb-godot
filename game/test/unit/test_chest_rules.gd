@@ -1,7 +1,8 @@
 extends GutTest
 ## Sorteio dos baus (GDB §6.2): comum 70 % item comum / 30 % cura; raro 65 % raro / 25 % comum /
 ## 10 % epico (PI 2026-10-09); reforcado 50 % raro / 50 % comum, sem epico nem cura (SPEC-055).
-## Epico so de armadura; item uniforme na raridade (PI 2026-10-09).
+## Epico so de armadura; item uniforme na raridade (PI 2026-10-09). F61 (ADR-0014): o bau mostra 3
+## itens distintos da raridade sorteada; cura fica sozinha; o do boss mostra 3 epicos com a arma.
 
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
 const CATALOG: String = "res://shared/data/items/catalog.tres"
@@ -62,14 +63,23 @@ func test_bau_reforcado_50_raro_50_comum_sem_epico_nem_cura() -> void:
 	assert_false(share.has(ChestRules.HEAL))
 
 
-func test_roll_reforcado_da_item_raro_ou_comum() -> void:
+func _rarities(drops: PackedInt32Array, catalog: ItemCatalog) -> Array[int]:
+	var result: Array[int] = []
+	for drop: int in drops:
+		result.append(catalog.find(drop).rarity)
+	return result
+
+
+func test_reforcado_da_3_itens_distintos_raro_ou_comum() -> void:
 	var rng := _rng()
 	var catalog := load(CATALOG) as ItemCatalog
 	for i: int in SAMPLES / 10:
-		var drop := ChestRules.roll(ChestRules.Kind.REINFORCED, _rules, _items, rng)
-		assert_ne(drop, ChestRules.HEAL)
-		var rarity := catalog.find(drop).rarity
-		assert_true(rarity in [ItemData.Rarity.RARE, ItemData.Rarity.COMMON], str(rarity))
+		var drops := ChestRules.roll_choices(ChestRules.Kind.REINFORCED, _rules, _items, rng)
+		assert_eq(drops.size(), ChestRules.CHOICES)
+		assert_false(drops.has(ChestRules.HEAL))
+		var rarities := _rarities(drops, catalog)
+		assert_true(rarities[0] in [ItemData.Rarity.RARE, ItemData.Rarity.COMMON], str(rarities))
+		assert_eq(rarities.count(rarities[0]), drops.size(), "uma raridade so: %s" % [rarities])
 
 
 func test_epico_de_bau_e_so_armadura() -> void:
@@ -91,43 +101,62 @@ func test_comum_e_raro_tem_arma_e_seis_armaduras() -> void:
 		assert_eq(weapons, 1)
 
 
-func test_item_uniforme_dentro_da_raridade() -> void:
+func test_tres_distintos_e_cada_item_uniforme_na_raridade() -> void:
 	var rng := _rng()
 	var pool := ChestRules.pool(_items, ItemData.Rarity.COMMON)
 	var counts: Dictionary = {}
 	for i: int in SAMPLES:
-		var item := ChestRules.pick(pool, rng)
-		counts[item.id] = counts.get(item.id, 0) + 1
+		var drops := ChestRules.choices(pool, ChestRules.CHOICES, rng)
+		assert_eq(drops.size(), ChestRules.CHOICES)
+		for drop: int in drops:
+			assert_eq(drops.count(drop), 1, "repetido em %s" % [drops])
+			counts[drop] = counts.get(drop, 0) + 1
 	assert_eq(counts.size(), pool.size())
-	for id: StringName in counts:
-		assert_almost_eq(float(counts[id]) / SAMPLES, 1.0 / pool.size(), TOLERANCE, id)
+	var expected := float(ChestRules.CHOICES) / pool.size()
+	for drop: int in counts:
+		assert_almost_eq(float(counts[drop]) / SAMPLES, expected, TOLERANCE, str(drop))
 
 
-func test_roll_devolve_numero_de_item_da_raridade_ou_cura() -> void:
+func test_pool_menor_que_3_devolve_os_que_existem() -> void:
+	var two: Array[ItemData] = [_items[0], _items[1]]
+	var drops := ChestRules.choices(two, ChestRules.CHOICES, _rng())
+	assert_eq(drops.size(), 2)
+	assert_ne(drops[0], drops[1])
+
+
+func test_cura_vem_sozinha_e_item_vem_em_3_da_raridade() -> void:
 	var rng := _rng()
 	var catalog := load(CATALOG) as ItemCatalog
+	var heals := 0
 	for i: int in SAMPLES / 10:
-		var common := ChestRules.roll(ChestRules.Kind.COMMON, _rules, _items, rng)
-		if common != ChestRules.HEAL:
-			assert_eq(catalog.find(common).rarity, ItemData.Rarity.COMMON)
-		var rare := ChestRules.roll(ChestRules.Kind.RARE, _rules, _items, rng)
-		assert_ne(rare, ChestRules.HEAL)
-		assert_not_null(catalog.find(rare))
+		var common := ChestRules.roll_choices(ChestRules.Kind.COMMON, _rules, _items, rng)
+		if common.has(ChestRules.HEAL):
+			assert_eq(common.size(), 1)
+			heals += 1
+		else:
+			assert_eq(_rarities(common, catalog), [0, 0, 0])
+		var rare := ChestRules.roll_choices(ChestRules.Kind.RARE, _rules, _items, rng)
+		assert_eq(rare.size(), ChestRules.CHOICES)
+		assert_false(rare.has(ChestRules.HEAL))
+	assert_gt(heals, 0)
 
 
-func test_boss_da_um_dos_7_epicos_uniforme_com_a_arma() -> void:
-	# Arma Epica (Furia) + 6 armaduras epicas, cada um 1/7 (PI 2026-10-09, F11).
+func test_boss_da_3_epicos_distintos_com_a_arma_no_sorteio() -> void:
+	# Arma Epica (Furia) + 6 armaduras epicas, cada um com 3/7 de chance de aparecer.
 	var rng := _rng()
 	var catalog := load(CATALOG) as ItemCatalog
 	var counts: Dictionary = {}
 	for i: int in SAMPLES:
-		var item := catalog.find(ChestRules.boss_drop(_items, rng))
-		assert_eq(item.rarity, ItemData.Rarity.EPIC)
-		counts[item.id] = counts.get(item.id, 0) + 1
+		var drops := ChestRules.boss_choices(_items, rng)
+		assert_eq(drops.size(), ChestRules.CHOICES)
+		assert_eq(_rarities(drops, catalog), [2, 2, 2])
+		for drop: int in drops:
+			var id := catalog.find(drop).id
+			counts[id] = counts.get(id, 0) + 1
 	assert_eq(counts.size(), 7)
 	assert_true(counts.has(&"sword_t3_epic"))
 	for id: StringName in counts:
-		assert_almost_eq(float(counts[id]) / SAMPLES, 1.0 / 7.0, TOLERANCE, id)
+		assert_almost_eq(float(counts[id]) / SAMPLES, 3.0 / 7.0, TOLERANCE, id)
 
 
 func test_mesma_seed_mesmos_drops() -> void:
@@ -136,5 +165,6 @@ func test_mesma_seed_mesmos_drops() -> void:
 	for i: int in 50:
 		var kind := ChestRules.Kind.RARE
 		assert_eq(
-			ChestRules.roll(kind, _rules, _items, a), ChestRules.roll(kind, _rules, _items, b)
+			ChestRules.roll_choices(kind, _rules, _items, a),
+			ChestRules.roll_choices(kind, _rules, _items, b)
 		)
