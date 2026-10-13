@@ -183,7 +183,7 @@ CanvasLayer (LobbyUI)
 
 * **Animações de Hover:** Todos os botões do menu esquerdo deslizam $8	ext{ px}$ para a direita com tween `TRANS_CUBIC, EASE_OUT` (0.15 s) e tocam efeito sonoro suave de lâmina/madeira.
 
-### TELA 2: Seleção de Heróis (Seleção de Heróis — Cavaleiro vs Arqueira)
+### TELA 2: Seleção de Heróis (Seleção de Heróis — Cavaleiro vs Arqueiro)
 
 #### 1. Objetivo & UX
 
@@ -214,7 +214,7 @@ Apresenta o confronto 1v1 com visual estilo arena de luta. Exibe os dois heróis
 |                                                                                                  |
 |                             [ BLOQUEAR HERÓI (LOCK IN) ]                                         |
 +--------------------------------------------------------------------------------------------------+
-| Teclas de Atalho: [1] Cavaleiro   [2] Arqueira   [Espaço] Confirmar Escolha                      |
+| Teclas de Atalho: [1] Cavaleiro   [2] Arqueiro   [Espaço] Confirmar Escolha                      |
 +--------------------------------------------------------------------------------------------------+
 
 ```
@@ -266,7 +266,7 @@ CanvasLayer (HeroSelectUI)
 
 #### 4. Regras de Integração & Dados
 
-* Ao alternar entre Cavaleiro e Arqueira, o script carrega os recursos serializados `data/heroes/knight.tres` ou `data/heroes/ranger.tres`.
+* Ao alternar entre Cavaleiro e Arqueiro, o script carrega os recursos serializados `data/heroes/knight.tres` ou `data/heroes/ranger.tres`.
 
 * Os valores de `HP (600 vs 380)`, `DEF (30 vs 10)`, `ATK (40 vs 55)`, `INT (10 vs 15)` e `AGI (10 vs 25)` atualizam as barras em tempo real com tweens dinâmicos.
 
@@ -574,7 +574,7 @@ CanvasLayer (BestiaryUI)
 
 #### 1. Objetivo & UX
 
-Apresenta o ecossistema de equipamentos da fatia vertical (GDB §6). Permite ao jogador inspecionar os 12 itens distribuídos nos 4 slots corporais (**Arma, Elmo, Peitoral, Botas**), entender a progressão pelas 3 raridades (Comum, Rara e Épica) e simular interativamente o impacto dos **Bônus de Conjunto (Guarda vs Caçador)** nos atributos finais do Cavaleiro ou da Arqueira.
+Apresenta o ecossistema de equipamentos da fatia vertical (GDB §6). Permite ao jogador inspecionar os 12 itens distribuídos nos 4 slots corporais (**Arma, Elmo, Peitoral, Botas**), entender a progressão pelas 3 raridades (Comum, Rara e Épica) e simular interativamente o impacto dos **Bônus de Conjunto (Guarda vs Caçador)** nos atributos finais do Cavaleiro ou do Arqueiro.
 
 #### 2. Layout Wireframe (ASCII)
 
@@ -616,7 +616,7 @@ CanvasLayer (ForgeCatalogUI)
     │   ├── HBoxContainer (HeaderBar)
     │   │   ├── Button (BtnBack: "<- Menu")
     │   │   ├── Label (Title: "GUIA & FORJA — 12 EQUIPAMENTOS E SETS", Font: 32)
-    │   │   └── OptionButton (HeroSelector: "Cavaleiro", "Arqueira")
+    │   │   └── OptionButton (HeroSelector: "Cavaleiro", "Arqueiro")
     │   ├── HBoxContainer (SplitColumns - separation 30)
     │   │   ├── ScrollContainer (CatalogScroll - Width 700)
     │   │   │   └── VBoxContainer (CatalogSections)
@@ -849,14 +849,14 @@ O painel de Histórico e Auditoria M4 atende diretamente ao objetivo do dev solo
 | +----------------------------------------------------------------------------------------------+ |
 | | DATA/HORA        | HERÓI   | VS INIMIGO | RESULTADO | DURAÇÃO | KILLS | PING MÉD | AUDITORIA M4| |
 | +------------------+---------+------------+-----------+---------+-------+----------+-------------+ |
-| | 08/10/26 19:42   | Cavaleiro| Arqueira  | VITÓRIA   | 07m 48s | 5 - 3 | 32 ms    | CONFORME    | |
-| | 08/10/26 19:25   | Arqueira | Cavaleiro | DERROTA   | 08m 10s | 2 - 5 | 29 ms    | CONFORME    | |
+| | 08/10/26 19:42   | Cavaleiro| Arqueiro  | VITÓRIA   | 07m 48s | 5 - 3 | 32 ms    | CONFORME    | |
+| | 08/10/26 19:25   | Arqueiro | Cavaleiro | DERROTA   | 08m 10s | 2 - 5 | 29 ms    | CONFORME    | |
 | | 08/10/26 18:50   | Cavaleiro| Cavaleiro | VITÓRIA   | 09m 04s | 5 - 4 | 36 ms    | MORTE SÚBITA| |
-| | 08/10/26 18:15   | Arqueira | Arqueira  | VITÓRIA   | 06m 52s | 5 - 1 | 31 ms    | CONFORME    | |
+| | 08/10/26 18:15   | Arqueiro | Arqueiro  | VITÓRIA   | 06m 52s | 5 - 1 | 31 ms    | CONFORME    | |
 | +----------------------------------------------------------------------------------------------+ |
 |                                                                                                  |
 | DETALHE DA PARTIDA SELECIONADA (#a8f9-42b1):                                                     |
-| - Líder de Nível na Fase 1: Cavaleiro (Nv 6) vs Arqueira (Nv 4) -> Vencedor Final: Cavaleiro    |
+| - Líder de Nível na Fase 1: Cavaleiro (Nv 6) vs Arqueiro (Nv 4) -> Vencedor Final: Cavaleiro    |
 | - Boss Rei Esqueleto: Disputado aos 3:30 (Abatido pelo Cavaleiro)                               |
 | - Desfecho da Zona: Fechamento em 50% (Raio 17.5u)                                               |
 | - Total de Teleportes / Dessincronizações: ZERO (netfox rollback suave)                         |
@@ -1047,7 +1047,7 @@ func _ready() -> void:
 
 * \[x\] **Lobby 1v1:** Conexão com backend NestJS, botão de fila casual e treino bot M1.
 
-* \[x\] **Seleção de Heróis:** Exibição 3D do Cavaleiro e da Arqueira com atributos GDB §4.
+* \[x\] **Seleção de Heróis:** Exibição 3D do Cavaleiro e do Arqueiro com atributos GDB §4.
 
 * \[x\] **HUD Fase 1:** Relógio de 5:00, contador do Rei Esqueleto (3:30), inventário de 4 slots e catch-up.
 

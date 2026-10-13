@@ -6,11 +6,11 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 
 | Campo | Valor |
 |---|---|
-| Marco / MVP ativo | **MVP2 — Partida em rede** (`docs/prd/mvp/MVP-2.md`), cards criados em 2026-10-10. MVP1 com gate aprovado pelo PI em 2026-10-10 (`STATUS-ARQUIVO.md` §Gates). MVP0 fechado em 2026-10-09 (ADR-0001: segue Godot) |
+| Marco / MVP ativo | **MVP2.6 — Heróis 5 e 6** (`docs/prd/mvp/MVP-2.6.md`, issue-pai #160, ADR-0013), cards criados em 2026-10-13. [GATE] MVP2 #69 aprovado pelo PI em 2026-10-13; MVP2.5 com as 7 fatias entregues. MVP1 com gate aprovado em 2026-10-10; MVP0 fechado em 2026-10-09 (ADR-0001: segue Godot) |
 | Módulo em foco | `game/` |
-| Próximo gate | [GATE] MVP2 — 1x1 online termina sempre; soak verde. MVP2.5 (bloco visual, #99) e MVP3 (#76): cards criados em 2026-10-10 |
+| Próximo gate | MVP2.6 sem `[GATE]` (aceite visual + soak por fatia, como o MVP2.5); depois, [GATE] MVP3 #87 |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos); ADR-0006 (direção visual) e ADR-0007 (layout da arena) em 2026-10-10 |
-| Board | **2026-10-12 (ADR-0012):** F56 #150 entra depois do F57 #151 e antes do [GATE] #69 (revisão do PI no mesmo dia), em `todo`. **2026-10-11 (ADR-0011):** F53 #135 → F54 #136 → F55 #137 entram depois do F50 e antes do F51; `todo`: F53, F54, F55, F51 #132, F52 #133; F19 #68 e [GATE] #69 voltam a `backlog`. **2026-10-11 (ADR-0010):** F47 #120 → F48 #121 → F49 #122 entram no MVP2 depois do F46 e antes do F19; `todo`: F47 #120, F48 #121, F49 #122, F19 #68, [GATE] #69. issue-pai [MVP2] #57 — ordem F15 → F36 → F20 → F14 → F16 → **F44 #92** → **F46 #110** → F17 → F18 → F32 → F37 → F19 → [GATE] (ADR-0007; F16 já estava em `doing`); `done`: F15 #58; `todo`: F36 #59, F20 #60, F14 #62, F16 #63, F17 #64; `backlog`: F18 #65, F32 #66, F37 #67, F19 #68, [GATE] #69. Issue-pai [MVP2.5] **#99** (bloco visual, ADR-0006; depois do [GATE] MVP2 e antes do MVP3) — ordem **F45 #103 → F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98**, todos `backlog`; `[INFRA]` #100 (roadmap público reconhecer MVP2.5). Issue-pai [MVP3] #76 — ordem F21 → F22 → F23 → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE], todos `backlog` (#77–#87). Sem MVP, `planejado`: oclusão #70 (câmera #47 fechada, substituída pelo F45 #103). MVP1 (#16): `done` [FIX] #52; demais `finalizado`. MVP0 #1–#7 `finalizado` |
+| Board | **2026-10-13 (ADR-0013):** issue-pai [MVP2.6] **#160** — ordem `[INFRA]` #161 → F58 #162 → F59 #163, os 3 em `todo`; F21 #77 e F22 #78 (MVP3) passam a `todo` (próximos 5). O Code abre `[FIX]` do nome do Arqueiro (ADR-0013 item 9). **2026-10-12 (ADR-0012):** F56 #150 entra depois do F57 #151 e antes do [GATE] #69 (revisão do PI no mesmo dia), em `todo`. **2026-10-11 (ADR-0011):** F53 #135 → F54 #136 → F55 #137 entram depois do F50 e antes do F51; `todo`: F53, F54, F55, F51 #132, F52 #133; F19 #68 e [GATE] #69 voltam a `backlog`. **2026-10-11 (ADR-0010):** F47 #120 → F48 #121 → F49 #122 entram no MVP2 depois do F46 e antes do F19; `todo`: F47 #120, F48 #121, F49 #122, F19 #68, [GATE] #69. issue-pai [MVP2] #57 — ordem F15 → F36 → F20 → F14 → F16 → **F44 #92** → **F46 #110** → F17 → F18 → F32 → F37 → F19 → [GATE] (ADR-0007; F16 já estava em `doing`); `done`: F15 #58; `todo`: F36 #59, F20 #60, F14 #62, F16 #63, F17 #64; `backlog`: F18 #65, F32 #66, F37 #67, F19 #68, [GATE] #69. Issue-pai [MVP2.5] **#99** (bloco visual, ADR-0006; depois do [GATE] MVP2 e antes do MVP3) — ordem **F45 #103 → F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98**, todos `backlog`; `[INFRA]` #100 (roadmap público reconhecer MVP2.5). Issue-pai [MVP3] #76 — ordem F21 → F22 → F23 → F24 → F25 → F28 → F26 → F27 → F33 → F35 → [GATE], todos `backlog` (#77–#87). Sem MVP, `planejado`: oclusão #70 (câmera #47 fechada, substituída pelo F45 #103). MVP1 (#16): `done` [FIX] #52; demais `finalizado`. MVP0 #1–#7 `finalizado` |
 | Bloqueios do PI | `RASTREABILIDADE.md` §5 — resolvidos em 2026-10-09: R-PEND-01, 05, 08, 09. R-PEND-11 decidida em 2026-10-09 (paleta e fontes de `docs/prd/telas/`). R-PEND-02 (completada), 04, 06, 12 e 13 decididas em 2026-10-10; 03 e 07 em 2026-10-09; R-PEND-11 emendada em 2026-10-10 (protótipo vence o DV na estrutura). Abertos: 10, 14 (fontes do design system v2 — trava só o F43) |
 
 ## 2. Roadmap (MVP-n = marco M-n do PRD §9.1)
@@ -19,8 +19,9 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 |---|---|---|---|---|
 | **MVP0** | Spike de netcode: 2 clientes + servidor headless em Docker, cápsula com predição, 1 ataque validado | game, infra | jogável a 100 ms sem "borracha" perceptível | **gate aprovado** — segue Godot (ADR-0001) |
 | MVP1 | Arena single-player: mapa 3 zonas, Cavaleiro, monstros, XP/níveis, baús/itens, boss, bot, HUD F1 | game, shared | fase 1 completa contra bot, offline | **gate aprovado** (2026-10-10) |
-| MVP2 | Partida em rede: Arqueira, pick, fase 2 (zona, kills, fim garantido), HUD F2, fim de partida, economia de campo (laterais + respawn), mato alto e neblina de guerra | game, shared | 1x1 online termina sempre; soak 50 partidas bot×bot | **em andamento** (#57) |
+| MVP2 | Partida em rede: Arqueiro, pick, fase 2 (zona, kills, fim garantido), HUD F2, fim de partida, economia de campo (laterais + respawn), mato alto e neblina de guerra | game, shared | 1x1 online termina sempre; soak 50 partidas bot×bot | **gate aprovado** (2026-10-13, #69) |
 | MVP2.5 | Bloco visual: giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX, vegetação, HUD v2 (ADR-0006) | game, shared | 6 fatias aceitas pelo PI + critério de netcode do ADR-0006 item 7 | **em andamento** (#99) |
+| MVP2.6 | Heróis 5 e 6: Ladina (Algoz, besta) e Engenheiro (classe nova) — ADR-0013 | game, shared | 2 fatias aceitas pelo PI; soak de cada herói verde; critério de netcode do ADR-0006 item 7 | **cards criados** (#160) |
 | MVP3 | Meta + deploy: backend, launcher, pool no VPS, build PC | launcher, backend, infra | dois amigos jogam pela internet sem o dev | backlog (#76) |
 | MVP4 | Playtest: telemetria, 10+ pessoas, ajuste de números | todos | decisão câmera/duração/3x3; critérios PRD §9.2 | planejado |
 
@@ -49,7 +50,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | [GATE] | MVP1 | — | Homologação: fase 1 completa contra bot, offline (PRD M1) | finalizado (#27) |
 | [INFRA] | MVP1 | ci | CI: `lint-gd` (tipagem, literais em `core/`, I9), path filter por módulo, `shared/test` no `test-game` — antes de F6 | finalizado (#17) |
 | [INFRA] | — | infra | Pipeline Blender (ADR-0005): `art/`, `.gitattributes`/`.gitignore`, import de `.blend` desligado — antes do primeiro asset via Blender | finalizado (#34) |
-| F14 / SPEC-014 | MVP2 | game | Slice 2.1 — Arqueira: projétil validado no servidor, Q perfurante, E rolamento, R chuva | done (#62) |
+| F14 / SPEC-014 | MVP2 | game | Slice 2.1 — Arqueiro: projétil validado no servidor, Q perfurante, E rolamento, R chuva | done (#62) |
 | F15 / SPEC-015 | MVP2 | game | Slice 2.2 — Ciclo de partida: `MatchController` (FSM), seleção de heróis, PvP fase 1, respawn, eventos por RPC | done (#58) |
 | F16 / SPEC-016 | MVP2 | game | Slice 2.3 — Fase 2: zona, dano, respawn, kills, morte súbita, regras de vitória | done (#63) |
 | F17 / SPEC-017 | MVP2 | game | Slice 2.4 — Transição 5:00 + HUD fase 2 + vinheta de zona | done (#64) |
@@ -71,7 +72,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F38 / SPEC-038 | MVP2.5 | game | Slice 2.5.1 — Iluminação e pós: `WorldEnvironment`, `Sun`, `LightmapGI`, warm-up de shaders, baseline do profiler, toggles em `settings.cfg` (ADR-0006) | finalizado (#93) |
 | F39 / SPEC-039 | MVP2.5 | game, shared | Slice 2.5.2 — Toon + outline por pós-import | finalizado (#94) |
 | F40 / SPEC-040 | MVP2.5 | game, shared | Slice 2.5.3 — Arte da ilha sobre a SPEC-044: ilha + abismo, castelos, rio de mana e cachoeiras, cratera de magma, cristais, skybox, ilhotas; shaders de água/magma/cristal/sky (ADR-0007) | finalizado (#95) |
-| F41 / SPEC-041 | MVP2.5 | game | Slice 2.5.4 — Arquitetura VFX + VFX do Cavaleiro e da Arqueira | finalizado (#96) |
+| F41 / SPEC-041 | MVP2.5 | game | Slice 2.5.4 — Arquitetura VFX + VFX do Cavaleiro e do Arqueiro | finalizado (#96) |
 | F42 / SPEC-042 | MVP2.5 | game, shared | Slice 2.5.5 — Vegetação (grama `MultiMesh`, distinta do mato alto) | finalizado (#97) |
 | F43 / SPEC-043 | MVP2.5 | game, shared | Slice 2.5.6 — HUD v2 (ghost bar, ícones, molduras, fontes R-PEND-14, 3 pontos) | finalizado (#98) |
 | F28 / SPEC-028 | MVP3 | infra | Slice 3.8 — Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets, pacote de instalação (`launcher/` + `game/`) | backlog (#82) |
@@ -94,9 +95,12 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F55 / SPEC-055 | MVP2 | game, shared | Slice 2.21 — Campos de canto NO/SE: Golem de canto + 2 Lobos + 2 Baús Reforçados; moita de lagoa movida; 35 monstros, 28 baús (ADR-0011) | done (#137) |
 | F56 / SPEC-056 | MVP2 | game, shared | Slice 2.22 — Arena num vale: faixa externa só visual (floresta, encostas, cristas, neblina de distância), cascatas viram riacho, ilhotas saem; câmera nunca mostra o vazio (ADR-0012) | done (#150) |
 | F57 / SPEC-057 | MVP2.5 | game, shared | Slice 2.5.8 — HUD moderna fiel ao protótipo (`docs/prd/telas/HUD Moderno/`): painéis de vidro só na HUD, dock único, minimapa no canto inferior direito com baús e monstros, telemetria FPS·PING·TICK, engrenagem com Bestiário e 2 switches de som, grade de atributos; fases 1 e 2 (decisão do PI 2026-10-12) | done (#151) |
+| [INFRA] | MVP2.6 | infra | Roadmap público aceita o marco `MVP2.6` (sem F/SPEC) — antes do F58 | todo (#161) |
+| F58 / SPEC-058 | MVP2.6 | game, shared | Slice 2.6.1 — Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça (moita temporária), Emboscada; besta visível; bot; VFX (ADR-0013) | todo (#162) |
+| F59 / SPEC-059 | MVP2.6 | game, shared | Slice 2.6.2 — Engenheiro (classe Engenheiro): Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite; bacamarte visível; bot; VFX (ADR-0013) | todo (#163) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
-Próximo número livre: **F58 / SPEC-058**.
+Próximo número livre: **F60 / SPEC-060**.
 
 ## 4. Regras deste índice
 

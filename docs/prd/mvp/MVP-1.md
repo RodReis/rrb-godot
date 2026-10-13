@@ -42,4 +42,4 @@ Nenhuma. R-PEND-11 foi decidida em 2026-10-09: paleta e fontes de `docs/prd/tela
 
 ## Fora deste MVP
 
-Arqueira, rede entre máquinas, fase 2, pick, fim de partida, launcher.
+Arqueiro, rede entre máquinas, fase 2, pick, fim de partida, launcher.

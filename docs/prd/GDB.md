@@ -133,7 +133,7 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 
 ---
 
-### 4.2 Arqueira (Ranger — Ranged)
+### 4.2 Arqueiro (Ranger — Ranged)
 - **Papel:** Dano sustentado à distância, mobilidade e controle de terreno.
 - **Velocidade Base:** $6.2\text{ u/s}$.
 
@@ -146,7 +146,7 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 | **Inteligência** | 15 | +1.5 | 28.5 (CDR: 14.2%) |
 | **Agilidade** | 25 | +2.2 | 44.8 |
 
-#### Habilidades da Arqueira
+#### Habilidades do Arqueiro
 - **Ataque Básico (Disparo com Arco):**
   - Tipo: Projétil balístico direto (velocidade $20\text{ u/s}$, alcance $9.0\text{ u}$, raio colisão $0.3\text{ u}$).
   - Cooldown Base: $0.8\text{ s}$.
@@ -232,6 +232,76 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
   - Marca área circular de raio $3.5\text{ u}$ em até $9.0\text{ u}$ de distância; o meteoro cai $1.0\text{ s}$ depois (a marcação é visível como a da Chuva de Flechas).
   - Cooldown Base: $[50.0, 42.0]\text{ s}$.
   - Dano: $[260, 400] + (1.4 \times \text{INT}) + (0.6 \times \text{ATK})$.
+
+---
+
+### 4.5 Ladina (Algoz — Ranged curto) — ADR-0013, SPEC-058
+- **Papel:** dano alto de perto com a besta, frágil; some na fumaça e entra com a Emboscada.
+- **Modelo:** KayKit Adventurers 2.0 `Rogue_Hooded` (cor original); arma visível = besta (F48).
+- **Velocidade Base:** $6.3\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-13 como proposta, conferidos no soak do F58. Q e E escalam ATK (regra do §2.1).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 400 | +30 | 670 |
+| **Defesa** | 12 | +1.3 | 23.7 |
+| **Ataque** | 54 | +4.8 | 97.2 |
+| **Inteligência** | 12 | +1.2 | 22.8 (CDR: 11.4%) |
+| **Agilidade** | 28 | +2.4 | 49.6 |
+
+#### Habilidades da Ladina
+- **Ataque Básico (Virote):**
+  - Tipo: Projétil direto (velocidade $24\text{ u/s}$, alcance $7.0\text{ u}$, raio colisão $0.3\text{ u}$). Bloqueado pela Muralha, como a flecha.
+  - Cooldown Base: $1.0\text{ s}$.
+  - Dano: $100\%\text{ ATK}$.
+- **Q — Rajada em Leque:**
+  - Dispara 3 virotes ao mesmo tempo, em $-12^\circ$, $0^\circ$ e $+12^\circ$ da mira (mesma velocidade, alcance e raio do básico). Cada virote para no primeiro alvo; o mesmo alvo pode levar os 3 (de perto). Bloqueados pela Muralha.
+  - Cooldown Base: $[8.0, 7.5, 7.0, 6.5, 6.0]\text{ s}$.
+  - Dano por Virote: $[30, 45, 60, 75, 90] + (0.4 \times \text{ATK})$.
+- **E — Bomba de Fumaça:**
+  - Nuvem circular de raio $3.0\text{ u}$ centrada na posição da Ladina no lançamento, por $3.0\text{ s}$. A nuvem é uma **moita temporária** (§7.3, CONVENTION §4.7) para qualquer herói dentro dela. **Lançar a Bomba de Fumaça não revela a Ladina** (única exceção à revelação ao agir).
+  - Cooldown Base: $[14.0, 13.0, 12.0, 11.0, 10.0]\text{ s}$.
+  - Sem dano.
+- **R — Emboscada (Ultimate, Nv 6+):**
+  - Avança até $8.0\text{ u}$ na direção mirada a $24\text{ u/s}$; para no primeiro herói ou monstro inimigo tocado ou no primeiro obstáculo (como a Investida). Parando num inimigo, golpeia com a faca uma vez.
+  - Cooldown Base: $[50.0, 42.0]\text{ s}$.
+  - Dano: $[220, 340] + (1.2 \times \text{INT}) + (0.6 \times \text{ATK})$; $\times 1.3$ se, no tick do uso, a Ladina estava oculta (dentro de moita ou fumaça e sem revelação ativa).
+
+---
+
+### 4.6 Engenheiro (Engenheiro — curta distância + zona) — ADR-0013, SPEC-059
+- **Papel:** dano em cone de perto com o bacamarte; puxa o adversário com a Garra e controla a área com a Torreta e a Dinamite.
+- **Modelo:** KayKit Adventurers 2.0 Extra `Engineer`; arma visível = bacamarte (F48).
+- **Velocidade Base:** $5.9\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-13 como proposta, conferidos no soak do F59. Q e E escalam ATK (regra do §2.1).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 520 | +38 | 862 |
+| **Defesa** | 22 | +2.2 | 41.8 |
+| **Ataque** | 46 | +4.0 | 82 |
+| **Inteligência** | 18 | +1.8 | 34.2 (CDR: 17.1%) |
+| **Agilidade** | 12 | +1.0 | 21 |
+
+#### Habilidades do Engenheiro
+- **Ataque Básico (Bacamarte):**
+  - Tipo: Cone instantâneo ($40^\circ$, raio $4.5\text{ u}$) — acerta todos os inimigos no cone; sem projétil (a Muralha trata como dano corpo a corpo).
+  - Cooldown Base: $1.2\text{ s}$.
+  - Dano: $100\%\text{ ATK}$ em cada alvo.
+- **Q — Garra Mecânica:**
+  - Projétil (velocidade $20\text{ u/s}$, alcance $7.0\text{ u}$, raio colisão $0.4\text{ u}$) que para no primeiro inimigo. Herói atingido é **puxado** em $0.3\text{ s}$ até ficar a $2.0\text{ u}$ do Engenheiro (para no obstáculo). Monstro e boss só tomam dano. Bloqueada pela Muralha.
+  - Cooldown Base: $[11.0, 10.5, 10.0, 9.5, 9.0]\text{ s}$.
+  - Dano: $[50, 80, 110, 140, 170] + (0.7 \times \text{ATK})$.
+- **E — Torreta:**
+  - Instala no ponto mirado, até $3.0\text{ u}$ (para no obstáculo). Dura $6.0\text{ s}$; a cada $0.75\text{ s}$ (8 disparos) acerta o inimigo (herói ou monstro) mais próximo a até $7.0\text{ u}$ que o Engenheiro vê (§7.3). Acerto instantâneo, não bloqueado pela Muralha. Indestrutível, sem colisão, uma por vez (a nova substitui a anterior). Disparo da Torreta não revela o Engenheiro.
+  - Cooldown Base: $14.0\text{ s}$.
+  - Dano por Disparo: $[14, 20, 26, 32, 38] + (0.15 \times \text{ATK})$.
+- **R — Caixa de Dinamite (Ultimate, Nv 6+):**
+  - Posiciona a caixa no ponto mirado, até $6.0\text{ u}$; explode $1.5\text{ s}$ depois em raio $4.5\text{ u}$ e empurra os atingidos $3.0\text{ u}$ para fora (radial, para no obstáculo, como o Anel de Fogo). A marcação é visível como a do Meteoro.
+  - Cooldown Base: $[55.0, 46.0]\text{ s}$.
+  - Dano: $[240, 380] + (1.3 \times \text{INT}) + (0.6 \times \text{ATK})$.
 
 ---
 
@@ -352,6 +422,7 @@ A transição de 5 s (portões caem, aviso) **já conta como fase 2**: o relógi
 - **Raio de visão do herói:** $12.0\text{ u}$ (decisão do PI em 2026-10-10). Fora dele, herói adversário e monstros não são replicados para aquele jogador; área nunca vista fica escura, área já vista fica cinza. O círculo da zona é sempre visível.
 - **Revelação ao agir:** atacar ou usar skill de dentro da moita revela o herói ao adversário por $1.5\text{ s}$ (decisão do PI em 2026-10-10).
 - **Proximidade:** sem revelação por proximidade — quem está fora da moita não vê quem está dentro, a qualquer distância; só vê quem está na mesma moita.
+- **Fumaça da Ladina (ADR-0013, F58):** a nuvem da Bomba de Fumaça (§4.5) vale como moita por $3.0\text{ s}$, com as mesmas regras acima; lançar a fumaça não revela. A Torreta do Engenheiro (§4.6) só atira em quem o Engenheiro vê por estas regras.
 
 ---
 
@@ -363,9 +434,11 @@ Para manter a separação estrita de dados exigida no PRD §4.3 e §8.6, todos o
 game/data/
 ├── heroes/
 │   ├── knight.tres          # Herói Cavaleiro (HP, Def, Atk, Skills Q/E/R)
-│   ├── ranger.tres          # Herói Arqueira (HP, Def, Atk, Skills Q/E/R)
+│   ├── ranger.tres          # Herói Arqueiro (HP, Def, Atk, Skills Q/E/R)
 │   ├── barbarian.tres       # Herói Bárbaro (ADR-0011, F53)
-│   └── fire_wizard.tres     # Herói Bruxo de Fogo (ADR-0011, F54)
+│   ├── fire_wizard.tres     # Herói Bruxo de Fogo (ADR-0011, F54)
+│   ├── rogue.tres           # Heroína Ladina (ADR-0013, F58)
+│   └── engineer.tres        # Herói Engenheiro (ADR-0013, F59)
 ├── items/
 │   ├── weapons/
 │   │   ├── sword_t1.tres

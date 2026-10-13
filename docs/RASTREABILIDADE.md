@@ -28,8 +28,9 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-18 | Gamepad | PRD §3.6 | F31 | game | MVP1 | mantido |
 | P-19 | Plano B câmera isométrica + mira assistida | PRD §3.6 | decisão M4 | game | MVP4 | adiado (gatilho: playtest) |
 | P-20 | Bot FSM fase 1 e fase 2 | PRD §3.7 | F12, F19 | game | MVP1/2 | mantido |
-| P-21 | 2 heróis: Cavaleiro, Arqueira | PRD §4.3 | F8, F14 | game | MVP1/2 | mantido — ampliado para 4 pelo PI em 2026-10-11 (ADR-0011): Bárbaro F53, Bruxo de Fogo F54 |
+| P-21 | 2 heróis: Cavaleiro, Arqueiro | PRD §4.3 | F8, F14 | game | MVP1/2 | mantido — ampliado para 4 pelo PI em 2026-10-11 (ADR-0011): Bárbaro F53, Bruxo de Fogo F54; e para 6 em 2026-10-13 (ADR-0013): Ladina F58, Engenheiro F59 |
 | P-21a | Classe Algoz (Bárbaro) e classe nova Mago (Bruxo de Fogo); elmo não aparece nesses 2 heróis | PRD §4.1, §4.3; ADR-0011 | F53, F54 | game, shared | MVP2 | mantido — requisito novo aprovado pelo PI em 2026-10-11 |
+| P-21b | Ladina (Algoz, besta, `Rogue_Hooded` cor original) e classe nova Engenheiro (Adventurers 2.0 Extra); fumaça = moita temporária que não revela ao lançar; Torreta indestrutível 6 s contra heróis e monstros vistos pelo Engenheiro; elmo não aparece nos 2; nome do Ranger = "Arqueiro" | PRD §4.1, §4.3; ADR-0013 | F58, F59; `[FIX]` do Code (nome) | game, shared | MVP2.6 | mantido — requisito novo aprovado pelo PI em 2026-10-13 |
 | P-22 | Valores de skill em `.tres`, não no doc | PRD §4.3 | F6 | shared | MVP1 | mantido |
 | P-23 | 5 monstros incl. boss; tier 3 = **Golem de Pedra** (decisão PI 2026-10-09) | PRD §5 | F9, F11 | game | MVP1 | mantido — +Lobo e Golem de canto (7 monstros) pelo ADR-0011, F55 |
 | P-24 | Economia/monetização | PRD §7 | — | launcher/backend | fase B | adiado |
@@ -59,7 +60,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | G-01 | Fórmulas DEF/CDR/velocidade/ataque | GDB §2.2 | `shared/core/stats.gd` (F6) | mantido |
 | G-02 | Tabela de XP | GDB §3.2 | `shared/data/rules/xp_table.tres` (F6) | mantido |
 | G-03 | Catch-up, XP por morte F1/F2 | GDB §3.3 | F9, F16 | mantido |
-| G-04 | Heróis (stats, crescimento, skills) | GDB §4 | `shared/data/heroes/*.tres` (F6), F8, F14, F53, F54 | mantido (GDB §4.3–4.4 novos, ADR-0011) |
+| G-04 | Heróis (stats, crescimento, skills) | GDB §4 | `shared/data/heroes/*.tres` (F6), F8, F14, F53, F54, F58, F59 | mantido (GDB §4.3–4.4 novos, ADR-0011; §4.5–4.6 novos, ADR-0013) |
 | G-05 | Bestiário (5 monstros) | GDB §5.1 | `shared/data/monsters/*.tres` (F6), F9, F11, F55 | mantido (7 monstros, ADR-0011) |
 | G-06 | Itens e conjuntos | GDB §6.1 | `shared/data/items/**` (F6), F10 | mantido |
 | G-07 | Baús e regra de substituição; épico 10 % no baú raro | GDB §6.2 | F10 | mantido (decisão PI 2026-10-09) |
@@ -124,7 +125,7 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ~~R-PEND-01~~ | **Decidido 2026-10-09:** GDB — baú raro 10 % | — | — |
 | ~~R-PEND-02~~ | **Decidido 2026-10-09:** sem nível/XP de conta (só V–D do histórico). Perfil no Launcher (fatia F35): nickname **único**, prefixo `#` **automático** (ex.: `#RodReis`); avatar por imagem predefinida ou upload, **guardado só local no Launcher** (não vai ao backend, não aparece para outros jogadores). **Sem data de nascimento.** **Completado em 2026-10-10:** nickname obrigatório no 1º login, 3–16 `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas; upload PNG/JPG ≤ 1 MB recortado 256×256; F35 entra no gate do MVP3. PRD ainda não editado | — | — |
 | ~~R-PEND-03~~ | **Decidido 2026-10-09:** não — sem "lembrar-me"; JWT só em memória, login a cada abertura | — | — |
-| ~~R-PEND-04~~ | **Decidido 2026-10-10:** herói padrão do slot (P1 Cavaleiro, P2 Arqueira). Espelho permitido no pick | — | — |
+| ~~R-PEND-04~~ | **Decidido 2026-10-10:** herói padrão do slot (P1 Cavaleiro, P2 Arqueiro). Espelho permitido no pick | — | — |
 | ~~R-PEND-05~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
 | ~~R-PEND-06~~ | **Decidido 2026-10-10:** monstros comuns ficam na fase 2 (sem respawn); o Rei Esqueleto existe até morrer ou até 5:00 — vivo na transição, sai do mapa sem drop | — | — |
 | ~~R-PEND-07~~ | **Decidido 2026-10-09:** roadmap — F21 sem recuperação de senha nem verificação de e-mail (fica em `FORA-DE-ESCOPO.md`) | — | — |

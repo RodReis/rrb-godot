@@ -267,4 +267,4 @@ Para reproduzir o contraste vibrante da ilustração:
 | **Passo 3** | **Godot 4** | Criar os shaders da água arcana, lava central, cristais e skybox do abismo. | `game/shaders/*.gdshader` |
 | **Passo 4** | **Godot 4** | Montar a nova cena `arena_island.tscn`, substituindo o grid hexagonal. Aplicar materiais e iluminação de contraste. | `game/scenes/arena/arena_island.tscn` |
 | **Passo 5** | **Godot 4** | Ajustar o `NavigationRegion3D` e fazer o bake da nova malha de navegação (garantindo que bots e monstros cruzem as pontes sem travar). | `NavigationMesh` assado |
-| **Passo 6** | **Godot 4** | Reatrelar os spawners de monstros, baús e o trigger da zona ao novo cenário. Testar com o Cavaleiro e Arqueira. | Validação da Fatia Vertical |
+| **Passo 6** | **Godot 4** | Reatrelar os spawners de monstros, baús e o trigger da zona ao novo cenário. Testar com o Cavaleiro e Arqueiro. | Validação da Fatia Vertical |

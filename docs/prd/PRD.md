@@ -33,7 +33,7 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | Fatia vertical (M0–M4) | Roadmap (pós-M4) |
 |---|---|
 | Modo 1x1 | 2x2, 3x3 |
-| 4 heróis: Cavaleiro (Tanque), Arqueira (Ranger), Bárbaro (Algoz), Bruxo de Fogo (Mago) — Bárbaro e Bruxo por decisão do PI em 2026-10-11 (ADR-0011) | 1 herói por classe, depois mais |
+| 6 heróis: Cavaleiro (Tanque), Arqueiro (Ranger), Bárbaro (Algoz), Bruxo de Fogo (Mago) — Bárbaro e Bruxo por decisão do PI em 2026-10-11 (ADR-0011); Ladina (Algoz) e Engenheiro (Engenheiro) no MVP2.6 por decisão do PI em 2026-10-13 (ADR-0013) | 1 herói por classe, depois mais |
 | 1 arena medieval hexagonal | mais arenas |
 | 7 monstros (incl. boss; Lobo e Golem de canto pelo ADR-0011) | bestiário maior |
 | 12 itens, 2 conjuntos | tabela de loot completa |
@@ -122,9 +122,10 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 | Classe | Papel | Na fatia? |
 |---|---|---|
 | **Tanque** | absorve dano, controla espaço | sim — Cavaleiro |
-| **Ranger** | dano à distância | sim — Arqueira |
-| **Algoz** | dano alto corpo a corpo, frágil | sim — Bárbaro (ADR-0011) |
+| **Ranger** | dano à distância | sim — Arqueiro |
+| **Algoz** | dano alto, frágil (corpo a corpo ou à distância curta) | sim — Bárbaro (ADR-0011) e Ladina (ADR-0013) |
 | **Mago** | dano mágico em área à distância, frágil | sim — Bruxo de Fogo (classe nova, ADR-0011) |
+| **Engenheiro** | dano em curta distância + controle de zona por estrutura (torreta, explosivo) | sim — Engenheiro (classe nova, ADR-0013) |
 | **Suporte** | cura/buff; depende do time | roadmap (sem sentido no 1x1) |
 | **Controle** | atordoa, lentidão, área | roadmap (sem sentido no 1x1) |
 
@@ -139,7 +140,7 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 
 ### 4.3 Heróis da fatia
 
-| | **Cavaleiro (Tanque)** | **Arqueira (Ranger)** |
+| | **Cavaleiro (Tanque)** | **Arqueiro (Ranger)** |
 |---|---|---|
 | Modelo | KayKit Adventurers — Knight | KayKit Adventurers — Ranger |
 | Base (nv 1) | HP 600, Def 30, Atq 40, Int 10, Agi 10 | HP 380, Def 10, Atq 55, Int 15, Agi 25 |
@@ -156,7 +157,15 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 | E | **Rodopio** — gira 1,5 s causando dano em volta | **Anel de Fogo** — área em volta, empurra |
 | R (nv 6) | **Execução** — golpe frontal, dano extra pelo HP faltante | **Meteoro** — área marcada, cai após 1 s |
 
-Números dos 4 heróis: GDB §4 (vence este documento, ADR-0004). Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não neste documento.
+| | **Ladina (Algoz)** — ADR-0013 | **Engenheiro (Engenheiro)** — ADR-0013 |
+|---|---|---|
+| Modelo | KayKit Adventurers 2.0 — Rogue_Hooded | KayKit Adventurers 2.0 Extra — Engineer |
+| Ataque básico | virote de besta (projétil) | bacamarte (cone curto, instantâneo) |
+| Q | **Rajada em Leque** — 3 virotes em leque | **Garra Mecânica** — gancho que puxa o herói atingido |
+| E | **Bomba de Fumaça** — nuvem que funciona como moita por 3 s | **Torreta** — 6 s atirando no inimigo visível mais próximo |
+| R (nv 6) | **Emboscada** — avança e golpeia com a faca; bônus se oculta | **Caixa de Dinamite** — explode após 1,5 s, área e empurrão |
+
+Números dos 6 heróis: GDB §4 (vence este documento, ADR-0004). Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não neste documento.
 
 ---
 
@@ -275,12 +284,13 @@ O projeto atual (plataforma 2D) é descartado; `tools/setup-godot-mcp.ps1` e `.m
 | **M0 — Spike netcode** | 2 clientes + servidor headless em Docker local; cápsula com predição (netfox); 1 ataque validado no servidor | jogável a 100 ms de latência simulada sem "borracha" perceptível | 2 sem |
 | **Gate** | decisão Godot × Unity | — | — |
 | **M1 — Arena single-player** | mapa 3 zonas, Cavaleiro, monstros, XP/níveis, baús/itens, boss, bot | fase 1 completa contra bot, offline | 4 sem |
-| **M2 — Partida em rede** | Arqueira, fase 2 (zona, kills, fim garantido), HUD, transição | 1x1 online termina sempre; 50 partidas bot×bot sem travar | 4 sem |
-| **M2.5 — Bloco visual** | giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX do Cavaleiro e da Arqueira, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
+| **M2 — Partida em rede** | Arqueiro, fase 2 (zona, kills, fim garantido), HUD, transição | 1x1 online termina sempre; 50 partidas bot×bot sem travar | 4 sem |
+| **M2.5 — Bloco visual** | giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX do Cavaleiro e do Arqueiro, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
+| **M2.6 — Heróis 5 e 6** | Ladina e Engenheiro (ADR-0013) | 2 fatias aceitas pelo PI; soak de cada herói verde | — (sem prazo definido pelo PI) |
 | **M3 — Meta + deploy** | backend, pool no VPS, build PC | dois amigos jogam pela internet sem intervenção do dev | 3 sem |
 | **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números | decisão sobre câmera, duração e ir para 3x3 | 2 sem |
 
-Total ≈ 17 semanas (inclui o M2.5, bloco visual de 2 semanas entre o M2 e o M3 — ADR-0006).
+Total ≈ 17 semanas (inclui o M2.5, bloco visual de 2 semanas entre o M2 e o M3 — ADR-0006). O M2.6 (ADR-0013) entrou sem prazo definido.
 
 ### 9.2 Critérios de sucesso (M4)
 

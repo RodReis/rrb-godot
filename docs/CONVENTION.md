@@ -11,7 +11,7 @@
 | Ticket de fila | `queue_ticket` | pedido de partida 1x1; `waiting → matched \| cancelled \| expired`. |
 | Partida | `match` | uma execução do Game com 2 jogadores; `assigned → running → finished \| aborted \| abandoned`. |
 | Jogador | `player` | participante de uma partida (peer + conta + herói). |
-| Herói | `hero` | Cavaleiro (`knight`) ou Arqueira (`ranger`). Dados em `shared/data/heroes/`. |
+| Herói | `hero` | Cavaleiro (`knight`) ou Arqueiro (`ranger`). Dados em `shared/data/heroes/`. |
 | Atributos | `stats` | HP, DEF, ATK, INT, AGI (GDB §2.1). |
 | Habilidade | `skill` | Q, E (5 níveis), R (2 níveis, nível 6+). |
 | Nível / XP | `level`, `xp` | 1–10; tabela GDB §3.2. |
@@ -46,7 +46,7 @@ LOBBY_WAIT → HERO_PICK → PHASE1 → TRANSITION → PHASE2 → SUDDEN_DEATH �
 | Estado | Entra quando | Sai quando | Relógio |
 |---|---|---|---|
 | `LOBBY_WAIT` | servidor sobe | 2 peers válidos (ou timeout → `ENDED/abandoned`) | — |
-| `HERO_PICK` | 2 peers | ambos lock-in **ou** 24 s (sem escolha → herói padrão do slot: P1 Cavaleiro, P2 Arqueira — decidido pelo PI em 2026-10-10, R-PEND-04). **Espelho permitido** (os dois podem escolher o mesmo herói) | pick |
+| `HERO_PICK` | 2 peers | ambos lock-in **ou** 24 s (sem escolha → herói padrão do slot: P1 Cavaleiro, P2 Arqueiro — decidido pelo PI em 2026-10-10, R-PEND-04). **Espelho permitido** (os dois podem escolher o mesmo herói) | pick |
 | `PHASE1` | pick concluído | `t_match = 5:00` | `t_match` 0:00–5:00 |
 | `TRANSITION` | 5:00 | +5 s | aviso visual/sonoro; **já conta como fase 2**: `t_phase2` começa às 5:00 (decisão do PI 2026-10-10) |
 | `PHASE2` | 5:05 | meta de kills **ou** `t_phase2 = 4:00` (9:00 de partida) | `t_phase2` 0:05–4:00 |
@@ -84,9 +84,10 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - Monstros comuns não respawnam na fase 2; os que sobraram continuam vivos e dão XP. O **Rei Esqueleto** existe até morrer ou até 5:00: vivo na transição, sai do mapa **sem drop** (decisão do PI 2026-10-10, R-PEND-06).
 
 ### 4.5 Heróis
-- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueira), §4.3 (Bárbaro) e §4.4 (Bruxo de Fogo) — os 2 últimos pelo ADR-0011.
-- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueira projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u.
-- ATK escala básico, Q e E; INT escala só o R — vale para os 4 heróis (GDB §2.1).
+- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013.
+- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo.
+- ATK escala básico, Q e E; INT escala só o R — vale para os 6 heróis (GDB §2.1).
+- **Torreta do Engenheiro** (ADR-0013): indestrutível, 6 s, uma por vez; acerta heróis e monstros que o Engenheiro vê (§4.7, §4.9); não dá visão própria; o disparo dela não revela o Engenheiro.
 - Tudo validado no servidor; cliente prevê só movimento próprio e disparo visual do projétil (benchmark §4).
 
 ### 4.6 Bot
@@ -96,6 +97,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 ### 4.7 Mato alto (regra nova — decisão do PI 2026-10-09, origem Astro Arena / Brawl Stars)
 - Herói dentro de uma moita (`Area3D` grupo `tall_grass`, SPEC-007 §2) **não é visível** para o adversário que está fora dela: o servidor deixa de replicar sua posição para aquele peer (F32).
 - Vê quem está na mesma moita. Atacar ou usar skill de dentro revela o herói por **1,5 s** (GDB §7.3). **Sem revelação por proximidade**: chegar perto da moita pelo lado de fora não revela (decisão do PI 2026-10-10, R-PEND-12).
+- **Fumaça da Ladina** (ADR-0013, F58): a nuvem da Bomba de Fumaça vale como moita por 3 s, para qualquer herói dentro dela. Única exceção à revelação ao agir: **lançar a própria fumaça não revela**.
 - Monstros e bot seguem a mesma regra que um jogador (invariante de honestidade do bot, §4.6).
 - Geometria entra no F7; a regra de visibilidade é F32 (MVP2), porque depende de filtro de replicação do netfox.
 

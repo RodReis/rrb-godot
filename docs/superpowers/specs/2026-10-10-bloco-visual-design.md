@@ -23,7 +23,7 @@ Elevar a qualidade visual do módulo Game (arena, heróis, combate, HUD) de "Kay
 | D-V5 | **Game só Forward+**; abre mão do renderer Mobile | PRD §1.2: mobile passa a exigir perfil gráfico próprio, fora de escopo. Libera SSAO, SSIL, fog volumétrico, decals |
 | D-V6 | GI = **LightmapGI bakeado** (não SDFGI) | arena é estática; custo zero em runtime; SDFGI/SSIL dinâmicos vão para `FORA-DE-ESCOPO.md` como rejeitados |
 | D-V7 | Água e chão com **malhas próprias no Blender** (rio como malha única UV 0..1; piso hex próprio) | os shaders do guia não funcionam sobre os hexes do KayKit (UV em atlas, costura por tile) |
-| D-V8 | 6 cards: F40 = malhas + shaders; F41 = arquitetura VFX + Cavaleiro + Arqueira | menos PRs, cards maiores |
+| D-V8 | 6 cards: F40 = malhas + shaders; F41 = arquitetura VFX + Cavaleiro + Arqueiro | menos PRs, cards maiores |
 | D-V9 | **Arena vira a "Ilha Flutuante Arcana" da imagem panorâmica** (doc `docs/prd/especificacao_reforma_arena_godot_blender.md`): layout novo com espelho N–S, bases nos cantos norte, rio N–S + anel, 4 pontes (2 por metade). Layout em greybox = **F44 (MVP2, após F14)**; arte = F40. Torres/balistas só enfeite | ADR-0007; SPEC-044; o F40 abaixo é a arte sobre esse layout |
 
 ## 3. Regras transversais (valem para toda fatia do bloco)
@@ -63,11 +63,11 @@ Elevar a qualidade visual do módulo Game (arena, heróis, combate, HUD) de "Kay
 - VFX ambiental (cliente, `GPUParticles3D`): cachoeiras de mana onde o rio toca a borda (N e S), brasas sobre o magma. Luzes locais: `OmniLight3D` laranja no magma (alcance 12 u), cianas/magentas nos cristais, tochas nos portões — contadas no orçamento do F38.
 - **Aceite:** cena de alinhamento com os novos assets; colisão/navmesh do F44 idênticos antes e depois (teste GUT de marcadores + 3 partidas offline com bot); rio sem costura; mato alto inconfundível com cristais/pinheiros; critério de sync 3/3; delta de frame time; captura para o roadmap; verificação visual do PI contra a imagem.
 
-### F41 / SPEC-041 — Arquitetura VFX + Cavaleiro + Arqueira (`game`)
+### F41 / SPEC-041 — Arquitetura VFX + Cavaleiro + Arqueiro (`game`)
 
 - `game/scenes/vfx/` + `scripts/vfx/`: `VfxPool` (pooling de partículas/decals/luzes efêmeras), `VfxSpawner` cliente que escuta sinais de combate; `OmniLight3D` efêmera 0.15–0.3 s; regra `is_fresh` (regra 2). Teste GUT da regra de spawn único.
 - Cavaleiro: trail do básico (ribbon 0.25 s), faíscas no impacto, linhas de velocidade na Investida + poeira no fim, Muralha com fresnel `(0.2, 0.6, 1.0, 0.7)` e favo sutil, Terremoto com `Decal` de rachadura (raio do GDB, 4 s fade), erupção de fragmentos e onda de choque com refração.
-- Arqueira (depende do F14, MVP2): flecha com `RibbonTrailMesh` 0.08 × 0.12 s **com interpolação visual desacoplada do estado de rede** (projétil ressimulado não pode ziguezaguear), Q com espiral emissiva 3.5 e pulso por alvo atravessado, E com 2 tufos de poeira + *ghost mesh* 0.2 s, R com indicador de área (raio do GDB, borda rotativa) + saraivada 3 s.
+- Arqueiro (depende do F14, MVP2): flecha com `RibbonTrailMesh` 0.08 × 0.12 s **com interpolação visual desacoplada do estado de rede** (projétil ressimulado não pode ziguezaguear), Q com espiral emissiva 3.5 e pulso por alvo atravessado, E com 2 tufos de poeira + *ghost mesh* 0.2 s, R com indicador de área (raio do GDB, borda rotativa) + saraivada 3 s.
 - **Aceite:** nenhuma VFX duplicada em ressimulação (teste GUT + inspeção em 100 ms / 2 % perda); servidor headless sem nós de VFX; critério de sync 3/3; delta de frame time; vídeo curto no roadmap.
 
 ### F42 / SPEC-042 — Vegetação (`game`, `shared`)

@@ -14,7 +14,7 @@ O PI quer ver o equipamento no herói e nos baús. O KayKit Adventurers (versão
 | Grupo | Peças base (forma) | Variantes de raridade | Total de malhas |
 |---|---|---|---|
 | Arma do Cavaleiro | espada (comum = `1H_Sword` do pack, como vem) | rara e épica derivadas no Blender (gema/fio colorido; guarda dourada + gema) | 2 novas |
-| Arma da Arqueira | arco (comum = arco atual do `ranger.glb`) | rara e épica derivadas | 2 novas |
+| Arma do Arqueiro | arco (comum = arco atual do `ranger.glb`) | rara e épica derivadas | 2 novas |
 | Conjunto Guarda (placa de metal) | elmo, peitoral (com ombreiras), par de botas | comum / rara / épica | 9 |
 | Conjunto Caçador (couro/capuz) | elmo, peitoral, par de botas | comum / rara / épica | 9 |
 
@@ -25,8 +25,8 @@ O PI quer ver o equipamento no herói e nos baús. O KayKit Adventurers (versão
 ## 3. Encaixe no herói
 
 - Peças **rígidas** presas a ossos por `BoneAttachment3D` (elmo → cabeça; peitoral → tronco; botas → cada pé/canela). Sem skinning novo.
-- O Cavaleiro e a Arqueira usam o rig do KayKit; o Code confirma os nomes de osso nos dois `.glb` antes de modelar. Se diferirem, um offset por herói num Resource.
-- Peça do pack que colide com a armadura (ex.: capacete do Cavaleiro, capuz da Arqueira) é escondida quando o slot correspondente está equipado, se for malha separada; se não for, a peça nova cobre a original sem atravessar na distância da câmera do jogo.
+- O Cavaleiro e o Arqueiro usam o rig do KayKit; o Code confirma os nomes de osso nos dois `.glb` antes de modelar. Se diferirem, um offset por herói num Resource.
+- Peça do pack que colide com a armadura (ex.: capacete do Cavaleiro, capuz do Arqueiro) é escondida quando o slot correspondente está equipado, se for malha separada; se não for, a peça nova cobre a original sem atravessar na distância da câmera do jogo.
 - Clipping nas animações (`Idle`, `Running_A/B`, ataques, `Death_A`): aceito se invisível na câmera do jogo (14 u, 45°) — critério visual do PI.
 
 ## 4. Troca no herói (cliente)

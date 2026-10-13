@@ -98,6 +98,6 @@ A partir das lições de netcode de jogos como *Battlerite* (onde skillshots pre
 
 ## 5. Recomendações e Próximos Passos para a Fatia Vertical
 
-1. **Testar Câmera no M1:** Testar a câmera de terceira pessoa contra a isométrica logo na implementação do Cavaleiro. Se a mira de projéteis (Arqueira) gerar perda de visão vertical, adotar a isométrica de *Battlerite* precocemente.
+1. **Testar Câmera no M1:** Testar a câmera de terceira pessoa contra a isométrica logo na implementação do Cavaleiro. Se a mira de projéteis (Arqueiro) gerar perda de visão vertical, adotar a isométrica de *Battlerite* precocemente.
 2. **Alertas da Fase 1:** Implementar pistas visuais claras no mapa (ex: holofotes hexagonais ou partículas no portal de saída da base) aos 3:00 minutos para alertar o surgimento do boss e preparar para a transição dos 5:00.
 3. **Métrica Anti-Snowball:** Monitorar a taxa de vitória do jogador que garante o boss aos 3:30 durante os playtests do Marco M4 (deve permanecer abaixo do teto de 75% estabelecido no PRD).

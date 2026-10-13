@@ -8,7 +8,7 @@
 
 | Slice | F / SPEC | Entrega | Fontes |
 |---|---|---|---|
-| 2.1 | F14 / SPEC-014 | Arqueira: projétil validado, Q/E/R | PRD §4.3; GDB §4.2 |
+| 2.1 | F14 / SPEC-014 | Arqueiro: projétil validado, Q/E/R | PRD §4.3; GDB §4.2 |
 | 2.2 | F15 / SPEC-015 | `MatchController` FSM, seleção de heróis, PvP fase 1, respawn, RPCs | PRD §3.2, §8.3; DV tela 2; `CONVENTION.md` §3 |
 | 2.3 | F16 / SPEC-016 | zona, dano, respawn, kills, morte súbita, vitória | PRD §3.4, §3.5; GDB §7 |
 | 2.4 | F17 / SPEC-017 | transição, HUD fase 2, vinheta | PRD §3.3; DV tela 4 |
@@ -59,7 +59,7 @@ Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabel
 | Tema | Decisão | Fatia |
 |---|---|---|
 | Espelho no pick | permitido — os dois podem escolher o mesmo herói | F15 |
-| Timeout do pick (R-PEND-04) | herói padrão do slot: P1 Cavaleiro, P2 Arqueira | F15 |
+| Timeout do pick (R-PEND-04) | herói padrão do slot: P1 Cavaleiro, P2 Arqueiro | F15 |
 | Monstros vivos aos 5:00 (R-PEND-06) | monstros comuns ficam na fase 2, sem respawn; o **Rei Esqueleto** existe até morrer ou até 5:00 — se vivo na transição, sai do mapa sem drop | F16, F20 |
 | Relógio da fase 2 | a transição de 5 s conta dentro da fase 2: `t_phase2` começa às 5:00; morte súbita às 9:00; colapso às 10:00 (GDB §7.1) | F16, F17 |
 | Colapso aos 10:00 | resolução imediata: maior HP% vence; desempate: mais kills na fase 2 → mais dano causado em heróis → sorteio pela seed da partida; os dois desconectados → `abandoned` (GDB §7.2) | F16 |

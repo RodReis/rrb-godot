@@ -6,6 +6,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 
 - Nada daqui entra em código antes do MVP4 concluído (PRD §1.3: "nada do roadmap entra antes do M4").
 - Bárbaro (Algoz), Bruxo de Fogo (Mago) e campos de canto saíram desta lista em 2026-10-11 por decisão do PI (ADR-0011): entram no MVP2.
+- Ladina (Algoz) e Engenheiro (classe nova) entraram em 2026-10-13 por decisão do PI (ADR-0013): marco MVP2.6. A "Ladina" do protótipo da seleção volta com dado real (F58).
 - Arte própria saiu desta lista em 2026-10-09 por decisão do PI (ADR-0005): entra em qualquer MVP quando a fatia precisar.
 - Item do design visual ou do benchmark que não está no PRD **não é requisito** — fica aqui ou em `RASTREABILIDADE.md` §5 até o PI decidir.
 - "Adiado" tem MVP ou fase de destino; "excluído" tem motivo.
@@ -19,6 +20,10 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Ajuste do Rei Esqueleto (knockback 2,5 u > alcance 2,2 u do Cavaleiro; HP 2.400 às 3:30) | ADR-0011 (análise apresentada ao PI) | PI escolheu só campos e baús novos | F30 (MVP4) | medição do F55 (nível do bot aos 3:30) ou soak do F19 mostrar boss ainda inviável, ou pedido do PI |
 | Queimadura (dano contínuo) no Bruxo de Fogo | ADR-0011 | mecânica nova no rollback; PI aprovou o kit sem | pós-MVP4 | pedido do PI |
 | Necromante e Golem do KayKit Skeletons Extra (pago) | ADR-0011 | PI escolheu não usar agora (golem atual + lobo no Blender) | pós-MVP4 | compra do pack Extra pelo PI |
+| Torreta do Engenheiro com HP (destrutível) ou com visão própria | ADR-0013 | mecânica nova (alvo que não é herói nem monstro, kill credit, bot que ataca estrutura); PI escolheu indestrutível, 6 s | pós-MVP4 | playtest M4 mostrar Torreta forte demais ou sem resposta |
+| Textura alternativa do Extra na Ladina; `Rogue` sem capuz; besta de 2 mãos | ADR-0013 | PI escolheu `Rogue_Hooded` com a cor original | pós-MVP4 | pedido do PI (skins) |
+| Druida e `BARBARIAN_LARGE` do Adventurers 2.0 Extra | ADR-0013 | não pedidos | pós-MVP4 | pedido do PI |
+| Garra do Engenheiro puxando monstro/boss; veneno ou sangramento na Ladina | ADR-0013 | monstro tem leash e IA própria; dano contínuo é mecânica nova no rollback | pós-MVP4 | pedido do PI |
 | Pontes nas pontas do rio e pontes de selva (5 travessias) | ADR-0009 | PI escolheu 3 rotas (TOP/MID/BOT) | MVP2 ou MVP4 | F19/[GATE] mostrar funil na MID |
 | Três portões por base (um por rota) | ADR-0009 / SPEC-046 §7 | 1 portão por base basta; regra e testes do F8 intactos | — | pedido do PI após playtest |
 | Cascatas do rio de mana (F40) | SPEC-046 §5 | rio em S não toca mais a borda | — | rio voltar a tocar a borda |
@@ -64,7 +69,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Telemetria netfox no Launcher (DV tela 8) | DV | Launcher não tem netfox; vive em `net_debug.tscn` do Game |
 | Protótipo 2D (starter) | PRD §8.6 | descartado na Tarefa 1 do M0 |
 | Ferramentas de "audit tracker" no cliente (`m4_audit_tracker.gd`) | DV §3.1 | cliente não é fonte de métrica; backend `telemetry/` |
-| Na tela de seleção (protótipo `docs/prd/telas/Seleção de Heróis/`): heróis Ladina, Maga Violeta e Esqueleto; dificuldade/nível do bot ("Platina I", "IA • Dificuldade Difícil"); servidor, ping, versão do Godot, nº da partida e nome do mapa; legenda do pack do modelo; "(BASE AZUL/VERMELHA)"; atalhos TAB "Ver Estatísticas" e ESC "Cancelar Busca"; rótulos de atributo que não existem no `HeroData` | F51 #132 (PI 2026-10-11) | sem regra no PRD/GDB: o jogo tem 4 heróis (ADR-0011), o bot não tem dificuldade, o time não tem cor e a seleção não tem estatística nem busca para cancelar; a tela mostra só dado real (`FRONTEND-LAUNCHER.md` §8.3) |
+| Na tela de seleção (protótipo `docs/prd/telas/Seleção de Heróis/`): heróis Maga Violeta e Esqueleto (a Ladina voltou pelo ADR-0013, F58); dificuldade/nível do bot ("Platina I", "IA • Dificuldade Difícil"); servidor, ping, versão do Godot, nº da partida e nome do mapa; legenda do pack do modelo; "(BASE AZUL/VERMELHA)"; atalhos TAB "Ver Estatísticas" e ESC "Cancelar Busca"; rótulos de atributo que não existem no `HeroData` | F51 #132 (PI 2026-10-11) | sem regra no PRD/GDB: o jogo tinha 4 heróis (ADR-0011; 6 com o MVP2.6, ADR-0013), o bot não tem dificuldade, o time não tem cor e a seleção não tem estatística nem busca para cancelar; a tela mostra só dado real (`FRONTEND-LAUNCHER.md` §8.3) |
 | Na tela de fim (protótipo `docs/prd/telas/Destaques da Tela de Fim de Partida/`): nota de desempenho ("S+ (MVP)", classificação "B"); XP de maestria do herói (barra, "+680 XP", "Nv. 11 em breve"); "Baú do conquistador rúnico"; conquista "Tático impecável"; "Drop Épico Conquistado" no Rei Esqueleto; "(BOT)" no nome do oponente; bônus do conjunto ("Set 3/3 • +15% HP"); "Servidor: SA-East-1 (18ms)"; "Log de combate & netfox"; "Tickrate"; "Seu Nexus foi destruído"; alternador vitória/derrota do topo e barra "Godot 4.7 build" (só preview) | F52 #133 (PI 2026-10-11) | sem regra no PRD/GDB: não há maestria, desempenho, conquista, baú de vitória nem nexus; o jogo não tem log de combate; servidor e tickrate não são dado de partida; a tela mostra só o `MatchStats` do F18 (`FRONTEND-LAUNCHER.md` §8.3) |
 
 ## Pendentes de classificação

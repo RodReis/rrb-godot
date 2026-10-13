@@ -15,7 +15,7 @@
 | 2.5.1 | F38 / SPEC-038 | iluminação e pós (`WorldEnvironment`, `Sun`, `LightmapGI`), warm-up de shaders, baseline do profiler, toggles em `settings.cfg` | ADR-0006; spec bloco visual §4 |
 | 2.5.2 | F39 / SPEC-039 | toon + outline por pós-import (heróis, monstros, cenário) | ADR-0006; spec §4 |
 | 2.5.3 | F40 / SPEC-040 | arte da ilha sobre o layout da SPEC-044: ilha + abismo, castelos modulares, rio de mana (malha única) e cachoeiras, cratera de magma, cristais, skybox cósmico, ilhotas de fundo, torres/balistas como enfeite; bevel/bake nos props; shaders de água, magma, cristal e sky | ADR-0005/0006/0007; SPEC-044; spec §4 |
-| 2.5.4 | F41 / SPEC-041 | arquitetura VFX (pool, `is_fresh`, sinal do `HitLedger`) + VFX do Cavaleiro e da Arqueira | ADR-0006; GDB §3–4; spec §4 |
+| 2.5.4 | F41 / SPEC-041 | arquitetura VFX (pool, `is_fresh`, sinal do `HitLedger`) + VFX do Cavaleiro e do Arqueiro | ADR-0006; GDB §3–4; spec §4 |
 | 2.5.5 | F42 / SPEC-042 | vegetação: grama `MultiMesh` com vento, distinta do mato alto | ADR-0006; CONVENTION §4.7; spec §4 |
 | 2.5.6 | F43 / SPEC-043 | HUD v2: ghost bar, ícones Q/E/R + badge, molduras, fontes (R-PEND-14), 3 pontos na seleção | ADR-0006; TOKENS v2; spec §4 |
 | 2.5.8 | F57 / SPEC-057 | HUD moderna fiel ao protótipo `docs/prd/telas/HUD Moderno/` (fases 1 e 2): vidro só na HUD, dock único, minimapa com baús/monstros, telemetria, engrenagem com Bestiário e switches de som, grade de atributos (decisão do PI 2026-10-12, implementada antes do [GATE] #69) | issue F57; TOKENS v2; protótipo |
@@ -24,7 +24,7 @@
 
 Issue-pai **[MVP2.5]** (número no `STATUS.md` §1). Ordem: **F45 #103 → F38 #93 → F39 #94 → F40 #95 → F41 #96 → F42 #97 → F43 #98**.
 
-Dependências (spec do bloco §5): F39←F38; F40←F39 e **F44** (layout da arena, MVP2); F41←F38 e **F14** (Arqueira, MVP2); F42←F40; F43←design system v2 (R-PEND-14). F45 é independente (só cliente). Nenhuma depende de fatia do MVP3. Os pré-requisitos F14 e F44 são do MVP2 e fecham antes.
+Dependências (spec do bloco §5): F39←F38; F40←F39 e **F44** (layout da arena, MVP2); F41←F38 e **F14** (Arqueiro, MVP2); F42←F40; F43←design system v2 (R-PEND-14). F45 é independente (só cliente). Nenhuma depende de fatia do MVP3. Os pré-requisitos F14 e F44 são do MVP2 e fecham antes.
 
 ## O que o MVP3 herda
 

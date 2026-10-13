@@ -17,7 +17,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | D3 | Fase 1 em mapa único: bases seguras + centro contestado | game |
 | D4 | Fase 2 com zona encolhendo + meta de kills; sem respawn crescente | game |
 | D5 | Monetização por sorteios/vales/loja/passe só na fase B | launcher/backend (futuro) |
-| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011) | game |
+| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011 — e para 6 no MVP2.6 — ADR-0013) | game |
 | D7 | Engine Godot 4.7, condicionada ao gate M0 | ambos |
 | D8 | GDScript (não C#) | ambos |
 | D9 | Assets KayKit (principal) + Quaternius (secundário), cena de alinhamento; ajustes e arte própria no Blender (ADR-0005) | shared |
@@ -39,6 +39,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0010](adr/0010-equipamento-visivel-e-dia-noite.md) | Equipamento visível (armas + armaduras próprias presas a ossos) e ciclo dia/noite pelo relógio (sentido pela seed, dia claro × noite do F40, lightmap sem sol); supera parcialmente ADR-0006 itens 3–4 e o clima fixo do F40 | aceito | 2026-10-11 |
 | [0011](adr/0011-quatro-herois-e-campos-de-canto.md) | Quatro heróis no MVP2 (Bárbaro/Algoz e Bruxo de Fogo/Mago, KayKit Adventurers 1.0) e campos de canto NO/SE (Golem de canto + 2 Lobos + 2 Baús Reforçados 50/50); boss não muda; F53–F55 antes do F51; supera parcialmente PRD §1.3/D6/§4.1 e SPEC-046 §2.7/§3 | aceito | 2026-10-11 |
 | [0012](adr/0012-arena-em-vale-sem-abismo.md) | Arena num vale: faixa externa só visual (floresta densa, encostas e cristas rochosas a ~70–90 u, neblina de distância), cascatas NO/SE viram riacho, ilhotas saem; F56 depois do F57 e antes do [GATE] do MVP2; supera parcialmente ADR-0007, ADR-0009/SPEC-046 (borda = abismo) e SPEC-040 | aceito | 2026-10-12 |
+| [0013](adr/0013-ladina-e-engenheiro-mvp2-6.md) | Ladina (Algoz, besta, `Rogue_Hooded`) e Engenheiro (classe nova, Adventurers 2.0 Extra) no marco MVP2.6; fumaça = moita temporária que não revela ao lançar; Torreta indestrutível 6 s contra heróis e monstros; nome "Arqueiro" | aceito | 2026-10-13 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 

@@ -187,7 +187,7 @@ Cada habilidade instanciará elementos em três camadas integradas:
   * *Partículas:* Erupção de fragmentos de pedra (`GPUParticles3D`) subindo 2.5m com gravidade e poeira densa.
   * *Onda de Choque:* Anel em expansão horizontal rápida (0.25s) com shader de distorção de refração de tela.
 
-#### Arqueira (Ranger — Ranged)
+#### Arqueiro (Ranger — Ranged)
 * **Ataque Básico (Disparo com Arco):**
   * *Projétil:* Flecha com rastro contínuo tênue (`RibbonTrailMesh`, largura 0.08m, vida útil 0.12s) para tornar a trajetória 100% legível na câmera de terceira pessoa.
   * *Impacto:* Faíscas e pequeno flash branco no alvo atingido.
@@ -196,7 +196,7 @@ Cada habilidade instanciará elementos em três camadas integradas:
   * *Passagem por Alvos:* Pulso de anel de vento em cada inimigo atravessado, marcando visualmente o decaimento de dano.
 * **E — Rolamento:**
   * *Poeira de Esquiva:* 2 tufos rápidos de poeira rente ao solo na direção oposta ao rolamento.
-  * *Rastro Fantasma (Ghost Mesh):* Duplicata translúcida do modelo da Arqueira com fade out rápido de 0.2s durante a janela de invulnerabilidade (0.3s).
+  * *Rastro Fantasma (Ghost Mesh):* Duplicata translúcida do modelo do Arqueiro com fade out rápido de 0.2s durante a janela de invulnerabilidade (0.3s).
 * **R — Chuva de Flechas (Ultimate):**
   * *Área Indicadora:* Círculo vermelho/âmbar no chão no raio de 4.0m com borda rotativa sutil.
   * *Saraivada:* Projéteis caindo verticalmente do céu em fluxo contínuo durante os 3.0s, intercalando pequenos flashes de impacto no chão.

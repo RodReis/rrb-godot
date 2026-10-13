@@ -17,7 +17,7 @@ O PI quer um Bruxo de fogo (ADR-0011). Ele cria a classe **Mago** (dano mágico 
 
 | Skill | Comportamento | Reuso esperado |
 |---|---|---|
-| **Básico — Bola de Fogo** | projétil 16 u/s, alcance 8 u, raio 0,4 u, 1,0 s; bloqueado pela Muralha | caminho do projétil da Arqueira (`arrow.gd`, validação no servidor, pooling compatível com o spawn do netfox) |
+| **Básico — Bola de Fogo** | projétil 16 u/s, alcance 8 u, raio 0,4 u, 1,0 s; bloqueado pela Muralha | caminho do projétil do Arqueiro (`arrow.gd`, validação no servidor, pooling compatível com o spawn do netfox) |
 | **Q — Explosão de Chamas** | projétil 16 u/s, alcance 9 u; explode no primeiro alvo atingido (herói ou monstro), na Muralha ou no fim do alcance; dano em área de raio 2,0 u, uma vez por alvo | mesmo projétil + área no ponto de explosão |
 | **E — Anel de Fogo** | área instantânea de raio 3,0 u em volta do Bruxo; empurra os atingidos 2,0 u para fora (radial) | empurrão como a Investida (`knockback_ticks`/`knockback_velocity` do alvo, aplicado no `_rollback_tick` do próprio alvo) |
 | **R — Meteoro** | marca área de raio 3,5 u em até 9 u (`cast_range`); cai 1,0 s depois; dano único em área | marcação e atraso como a Chuva de Flechas (F14), com 1 pulso; marcação visível pelas mesmas regras de visão da Chuva |
@@ -42,7 +42,7 @@ O PI quer um Bruxo de fogo (ADR-0011). Ele cria a classe **Mago** (dano mágico 
 
 1. GUT: `fire_wizard.tres` bate com o GDB §4.4 (nível 1 e 10, cooldowns, danos por rank).
 2. GUT/integração: Q explode no primeiro alvo e na Muralha; dano em área atinge todos no raio 2,0 u e ninguém fora; Anel empurra 2,0 u e para no rio/muro; Meteoro cai exatamente 1,0 s depois da marcação e acerta só quem está no raio 3,5 u naquele tick.
-3. 2 clientes contra servidor local a 100 ms (Docker, netem): Bruxo × Cavaleiro (Muralha bloqueando Bola de Fogo e Q), Bruxo × Arqueira, Bruxo × Bárbaro; sem `past the history limit`; 0 `Node not found`; projéteis sem `Reference tick missing` acima do medido no F14.
+3. 2 clientes contra servidor local a 100 ms (Docker, netem): Bruxo × Cavaleiro (Muralha bloqueando Bola de Fogo e Q), Bruxo × Arqueiro, Bruxo × Bárbaro; sem `past the history limit`; 0 `Node not found`; projéteis sem `Reference tick missing` acima do medido no F14.
 4. Treino offline `--bot` com o bot de Bruxo: usa Q/E/R (log) e completa a fase 1 sem travar (3 partidas).
 5. Frame time dentro do orçamento do ADR-0006 item 7 com os VFX de fogo ativos.
 6. Lint e CI verdes. Verificação visual do PI (modelo, animações, cajado nas 3 raridades, VFX de fogo) + screenshot e vídeo curto no roadmap.

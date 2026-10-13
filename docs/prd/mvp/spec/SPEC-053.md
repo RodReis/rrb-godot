@@ -29,14 +29,14 @@ O PI quer mais heróis na partida (ADR-0011). O Bárbaro preenche a classe **Alg
 ## 4. Visual (cliente)
 
 - Modelo `Barbarian.glb` do **KayKit Adventurers 1.0** (CC0, `github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0`), como vem, em `shared/assets/kaykit/adventurers/`; entrada no `shared/assets/LICENSES.md`. Escala 0,78 (mesma do Knight; conferir em `_alignment.tscn`).
-- O Code confirma que o rig e as animações do `Barbarian.glb` batem com os do `Knight.glb` (23 ossos, mesmos nomes) antes de reusar o `HeroVisual`; se faltar animação, monta como foi feito na Arqueira (`art/heroes/build_ranger.py`).
+- O Code confirma que o rig e as animações do `Barbarian.glb` batem com os do `Knight.glb` (23 ossos, mesmos nomes) antes de reusar o `HeroVisual`; se faltar animação, monta como foi feito no Arqueiro (`art/heroes/build_ranger.py`).
 - Animações mínimas: parado, correndo, básico, salto (Q), giro (E), Execução (R), dano, morte.
 - **Equipamento (SPEC-048, ADR-0011 item 3):** arma visível = machado — comum = `1H_Axe` (ou `2H_Axe`, à escolha do Code pela leitura na câmera) do pack como vem; rara e épica derivadas no Blender como as do F48; peitoral e botas do F48 com offset por herói. **Elmo não aparece** (capuz de urso fica sempre); o atributo do elmo vale normalmente. `ItemVisuals` registra a exceção e o teste do F48 passa a aceitar "sem peça de elmo" para este herói.
 - VFX (arquitetura do F41: pool, só cliente, só com `is_fresh`/sinal do `HitLedger`): rastro do machado, impacto do Salto, giro do Rodopio, golpe da Execução. Toon/outline pelo pós-import do F39.
 
 ## 5. Pick e bot
 
-- `PickRules`/seleção do F15: Bárbaro escolhível; espelho permitido; herói padrão no timeout não muda (P1 Cavaleiro, P2 Arqueira).
+- `PickRules`/seleção do F15: Bárbaro escolhível; espelho permitido; herói padrão no timeout não muda (P1 Cavaleiro, P2 Arqueiro).
 - Bot (`BotInput`/`bot_rules.gd`): joga de Bárbaro com a FSM atual. Uso mínimo de skills: Q quando o alvo está a ≤ 7 u e fora do alcance do básico; E quando há inimigo a ≤ 2,5 u; R quando disponível e alvo a ≤ 2,5 u. Limiares em `bot_profile.tres`, não em código.
 
 ## 6. Critério de aceite
@@ -44,7 +44,7 @@ O PI quer mais heróis na partida (ADR-0011). O Bárbaro preenche a classe **Alg
 1. GUT: `barbarian.tres` bate com o GDB §4.3 (atributos nível 1 e nível 10, cooldowns e danos por rank).
 2. GUT: fórmula da Execução (base + INT + ATK + 25 % do HP faltante) em casos de HP cheio, metade e 10 %.
 3. GUT/integração: Salto contra o rio e contra um muro para no obstáculo (0 travessias); Rodopio aplica exatamente 3 pulsos por alvo; básico bloqueado durante o giro.
-4. 2 clientes contra servidor local a 100 ms (Docker, netem): Bárbaro × Cavaleiro e Bárbaro × Arqueira, todas as skills; sem `past the history limit`; 0 `Node not found`.
+4. 2 clientes contra servidor local a 100 ms (Docker, netem): Bárbaro × Cavaleiro e Bárbaro × Arqueiro, todas as skills; sem `past the history limit`; 0 `Node not found`.
 5. Treino offline `--bot` com o bot de Bárbaro: o bot usa Q/E/R (log do servidor) e completa a fase 1 sem travar (3 partidas).
 6. Frame time dentro do orçamento do ADR-0006 item 7, medido contra o baseline do F38, com o Bárbaro equipado e os VFX ativos.
 7. Lint e CI verdes. Verificação visual do PI (modelo, animações, machado nas 3 raridades, peitoral/botas, VFX) + screenshot no roadmap.
