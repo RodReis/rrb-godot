@@ -392,7 +392,7 @@ O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
   - Drop: 50% Item Raro, 50% Item Comum. Sem épico, sem ouro/consumível. Total do mapa: **28 baús** (12 de base + 8 laterais + 4 reforçados + 4 raros). Baús não reabrem.
 - **Baús Raros (4 no centro contestado):**
   - Drop: 65% Item Raro, 25% Item Comum, 10% Item Épico.
-- **Regra de Substituição (decisão do PI em 2026-10-11, SPEC-047):** nada é automático. A tecla `F` segurada por $0.4\text{ s}$ troca o item **só quando ele é melhor para quem segura**: slot vazio, raridade maior, ou mesma raridade de outro conjunto (escolha lateral). Raridade menor ou item idêntico: sem troca. A regra é avaliada por herói no servidor; o item não aceito fica no baú para outro herói.
+- **Regra de Escolha (decisão do PI em 2026-10-13, ADR-0014 / F61; substitui a regra de substituição da SPEC-047):** nada é automático. `F` abre o baú e mostra **3 itens distintos** da raridade sorteada (o baú de cura aplica na abertura, sem menu; o baú do Rei Esqueleto mostra 3 épicos, arma inclusa). O jogador **escolhe 1 com o clique do mouse**, com a comparação contra o equipado à vista, e **pode escolher item pior**. O baú fica **reservado ao primeiro herói que o abriu** (`Esc` fecha sem pegar e `F` reabre o mesmo menu); levou 1, o baú fecha. Avaliado no servidor. Itens iguais para todas as classes; o item antigo some.
 
 ---
 

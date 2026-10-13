@@ -71,7 +71,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 
 ### 4.3 Itens
 - 4 slots: arma, elmo, peitoral, botas. Catálogo GDB §6.1.
-- Substituição: nada automático; `F` segurado 0,4 s só para item melhor para quem segura — slot vazio, raridade maior ou mesma raridade de outro conjunto; menor ou idêntico não troca; avaliado por herói no servidor, item recusado fica no baú (GDB §6.2; SPEC-047, PI 2026-10-11).
+- Escolha no baú: nada automático; `F` abre o baú e mostra 3 itens distintos da raridade sorteada, o clique escolhe 1 (pode ser pior que o equipado, com comparação à vista); baú reservado a quem abriu, fecha ao levar; servidor decide (GDB §6.2; ADR-0014 / F61, PI 2026-10-13, substitui a SPEC-047).
 - Bônus de conjunto 3/3: Guarda +15% HP máx e +10 DEF; Caçador +10% vel. ataque e +8% vel. movimento (GDB; ADR-0004 N1/N2).
 - Épico: drop garantido do boss; baú raro 10 % (GDB §6.2; confirmado pelo PI 2026-10-09).
 - Consumível de cura +120 HP (GDB §6.2, baú comum 30%) — único consumível da fatia.

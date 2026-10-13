@@ -102,6 +102,10 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-19 | Neblina de guerra: visão (raio 12 u) + explorado; servidor não replica o que está fora da visão; continua na fase 2 com a zona sempre visível | F37 (reusa o filtro do F32) | game | mantido — **revertido** de V-16 pelo PI em 2026-10-10 |
 | V-20 | Câmera: pilares e muros tapam o herói (oclusão) | card `planejado` sem MVP (#70); giro da câmera F45 ajuda | game | silhueta/transparência ainda a decidir pelo PI; o PI escolheu o giro 360° (F45) em 2026-10-10 |
 | V-22 | Câmera nunca mostra o vazio em volta da arena: arena num vale (faixa externa só visual com floresta, cristas e neblina), cascatas viram riacho, ilhotas saem | F56 (#150) | game, shared | mantido — requisito novo do PI em 2026-10-12 (ADR-0012), depois do F57 e antes do [GATE] do MVP2 |
+| V-23 | Centro da arena livre: sem os pilares de obsidiana da cratera | F60 (#164) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
+| V-24 | Baú: `F` abre menu com 3 itens, clique escolhe 1, baú reservado a quem abriu (substitui a regra de troca da SPEC-047) | F61 (#165) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
+| V-25 | Tecla `B` mostra a ficha do herói jogado (itens, atributos, habilidades com descrição), com aba Monstros | F62 (#166) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
+| V-26 | Água realista em movimento: rio, riacho (F63) e fonte de cura remodelada com água caindo (F64) | F63 (#167), F64 (#168) | game, shared | mantido — requisito novo do PI em 2026-10-13 (ADR-0014) |
 | V-18 | Tela "Arena & Mapa" no Launcher (DV tela 10): render da arena real + POIs + regras das 2 fases com números do GDB; arte conceito como meta visual da arena (decisão PI 2026-10-09) | F33 | launcher, shared | mantido (MVP3) |
 | V-11 | Mapa de controles §3.3 | `shared/core/input_actions.gd` | shared | mantido |
 | V-12 | `scripts/ui/m4_audit_tracker.gd` no cliente | backend `telemetry/` | — | transferido |

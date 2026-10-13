@@ -31,6 +31,11 @@
 | 2.21 | F55 / SPEC-055 | campos de canto NO/SE: Golem de canto + 2 Lobos + 2 Baús Reforçados (50/50 raro/comum); moita de lagoa movida; 35 monstros, 28 baús | ADR-0011; SPEC-055; GDB §5, §6.2 |
 | gate | `[GATE]` | homologação: online termina sempre; soak verde | PRD §9.1 |
 | 2.22 | F56 / SPEC-056 | arena num vale: faixa externa só visual (floresta densa, encostas, cristas rochosas, neblina de distância) para a câmera nunca mostrar o vazio; cascatas NO/SE viram riacho; ilhotas saem | ADR-0012; #150 |
+| 2.23 | F60 / SPEC-060 | centro livre: saem os 8 pilares de obsidiana da cratera e a colisão deles; magma, entradas e anel de monstros ficam | ADR-0014; #164 |
+| 2.24 | F61 / SPEC-061 | baú com menu: `F` abre, 3 itens distintos da raridade sorteada, clique escolhe 1 (pode ser pior, comparação à vista), baú reservado a quem abriu; cura sem menu; boss com 3 épicos; bot escolhe o melhor | ADR-0014; #165; GDB §6.2 |
+| 2.25 | F62 / SPEC-062 | tecla `B` = ficha do herói (preview, itens, atributos, 4 habilidades com descrição) com aba Monstros (bestiário atual) | ADR-0014; #166 |
+| 2.26 | F63 / SPEC-063 | água do rio e do riacho com shader (normal maps CC0 animados, fresnel, profundidade, espuma, reflexo); só visual | ADR-0014; #167 |
+| 2.27 | F64 / SPEC-064 | fonte de cura remodelada no Blender (pedra PBR CC0, bica), shader de água do F63 na bacia e partículas da água caindo; só visual | ADR-0014; #168 |
 
 ## Ordem de implementação (decisão do PI em 2026-10-10)
 
@@ -51,6 +56,8 @@
 **Decisão do PI em 2026-10-11 (ADR-0011):** Bárbaro (F53 #135), Bruxo de Fogo (F54 #136) e campos de canto (F55 #137) entram no MVP2 **depois do F50 e antes do F51**: **… → F50 → F53 → F54 → F55 → F51 → F52 → F19 → [GATE]**. A seleção (F51) nasce com 4 heróis; o soak (F19) cobre os 4. O Rei Esqueleto não muda (risco aceito pelo PI — ADR-0011, Consequências).
 
 **Pedido do PI em 2026-10-12 (ADR-0012):** F56 (arena num vale, sem abismo) entra **depois do [GATE]**. **Revisto pelo PI no mesmo dia:** F56 #150 vem logo depois do F57 #151 e **antes do [GATE]**: **… → F57 #151 → F56 #150 → [GATE] #69**; o gate homologa a arena já no vale; issue criada pelo Code por ordem do PI, o corpo da issue vale como spec.
+
+**Pedido do PI em 2026-10-13 (ADR-0014), depois do [GATE] #69 aprovado:** lote de ajustes no MVP2 **antes do MVP2.6 (#160) e do MVP3**: **F60 #164 → F61 #165 → F62 #166 → F63 #167 → F64 #168**. Issues criadas pelo Code por ordem do PI; o corpo de cada issue vale como spec.
 
 Motivo: o maior risco técnico herdado do MVP0 (replicação sob perda — tabela abaixo) está no F20; ele vem cedo, logo depois da FSM e da economia de campo (F36), para medir a replicação já com monstros nascendo e morrendo durante a partida. F32 e F37 (visão) vêm antes do soak (F19) para o bot já respeitar moita e neblina (invariante de honestidade). A numeração das Slices não muda.
 

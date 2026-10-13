@@ -40,6 +40,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0011](adr/0011-quatro-herois-e-campos-de-canto.md) | Quatro heróis no MVP2 (Bárbaro/Algoz e Bruxo de Fogo/Mago, KayKit Adventurers 1.0) e campos de canto NO/SE (Golem de canto + 2 Lobos + 2 Baús Reforçados 50/50); boss não muda; F53–F55 antes do F51; supera parcialmente PRD §1.3/D6/§4.1 e SPEC-046 §2.7/§3 | aceito | 2026-10-11 |
 | [0012](adr/0012-arena-em-vale-sem-abismo.md) | Arena num vale: faixa externa só visual (floresta densa, encostas e cristas rochosas a ~70–90 u, neblina de distância), cascatas NO/SE viram riacho, ilhotas saem; F56 depois do F57 e antes do [GATE] do MVP2; supera parcialmente ADR-0007, ADR-0009/SPEC-046 (borda = abismo) e SPEC-040 | aceito | 2026-10-12 |
 | [0013](adr/0013-ladina-e-engenheiro-mvp2-6.md) | Ladina (Algoz, besta, `Rogue_Hooded`) e Engenheiro (classe nova, Adventurers 2.0 Extra) no marco MVP2.6; fumaça = moita temporária que não revela ao lançar; Torreta indestrutível 6 s contra heróis e monstros; nome "Arqueiro" | aceito | 2026-10-13 |
+| [0014](adr/0014-ajustes-pos-gate-mvp2.md) | Ajustes do PI depois do [GATE] do MVP2, antes do MVP2.6/MVP3: centro sem pilares (F60), baú com menu de 3 itens por clique e reservado a quem abriu (F61), `B` = ficha do herói com aba Monstros (F62), água por shader (F63), fonte de cura remodelada (F64); supera parcialmente SPEC-047, GDB §6.2, SPEC-034/044 (pilares) | aceito | 2026-10-13 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 
