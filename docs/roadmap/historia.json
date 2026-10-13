@@ -161,7 +161,8 @@
         { "arquivo": "mvp2-f54-bruxo-cajado.webp", "legenda": "O cajado muda com a raridade (comum, raro com anéis azuis, épico com gola e ponta douradas). O chapéu de bruxo fica sempre: o elmo vale nos atributos, mas não aparece.", "tipo": "em-construcao" },
         { "arquivo": "mvp2-f51-selecao-herois.webp", "legenda": "A nova tela de escolha do herói: os quatro heróis com retrato, o escolhido à esquerda com papel, habilidades e atributos, e o oponente à direita, ainda escolhendo. O tempo corre no alto.", "tipo": "entregue" },
         { "arquivo": "mvp2-f55-campo-de-canto.webp", "legenda": "Novo campo nos cantos do mapa: o Golem de Pedra e dois lobos guardam baús reforçados. Basta um perceber o herói, ou levar uma flechada de longe, para o campo inteiro vir junto.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f52-fim-de-partida.webp", "legenda": "A nova tela de fim de partida, aqui numa derrota por eliminação na morte súbita: o motivo no alto, a duração e o modo, e os dois jogadores lado a lado com a comparação no meio. Quem está melhor em cada linha ganha a cor; o Rei Esqueleto e o conjunto de itens só ganham destaque para quem os conquistou.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f52-fim-de-partida.webp", "legenda": "A nova tela de fim de partida, aqui numa derrota por eliminação na morte súbita: o motivo no alto, a duração e o modo, e os dois jogadores lado a lado com a comparação no meio. Quem está melhor em cada linha ganha a cor; o Rei Esqueleto e o conjunto de itens só ganham destaque para quem os conquistou.", "tipo": "entregue" },
+        { "arquivo": "mvp2-gate-fase2-1x1.webp", "legenda": "A fase 2 de uma partida 1×1 online: placar de abates no alto, a zona fechando com o tempo que falta, o respawn e o minimapa com os dois times. É aqui que a partida termina sempre, por abates, morte súbita ou colapso da zona.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {
@@ -247,6 +248,7 @@
     "F42": "Grama baixa que balança ao vento",
     "F43": "Painel de jogo novo: molduras de metal, ícones e letras",
     "F57": "Painel de jogo moderno: vidro, bloco do herói e mapa com baús",
+    "F56": "O mapa num vale: floresta e montanhas em volta, sem ver o fim do mundo",
     "F45": "Câmera que gira em volta do herói",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
