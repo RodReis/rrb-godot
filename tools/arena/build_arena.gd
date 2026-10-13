@@ -33,7 +33,6 @@ func _initialize() -> void:
 	_build_lighting()
 	_build_floor()
 	_build_river()
-	_build_crater()
 	_build_border()
 	var walls := _body("Walls", GateRules.LAYER_WORLD)
 	for flip: float in [1.0, -1.0]:
@@ -219,23 +218,6 @@ func _prism(polygon: PackedVector2Array) -> ConvexPolygonShape3D:
 			points.append(Vector3(p.x, y, p.y))
 	shape.points = points
 	return shape
-
-
-func _build_crater() -> void:
-	var crater := _body("Crater", GateRules.LAYER_WORLD)
-	var shape := CylinderShape3D.new()
-	shape.radius = PILLAR_RADIUS
-	shape.height = PILLAR_HEIGHT
-	var i := 0
-	for entry: float in CRATER_ENTRIES:
-		for side: float in [-1.0, 1.0]:
-			var azimuth := entry + side * PILLAR_OFFSET_DEG
-			var at := _polar(azimuth, CRATER_RADIUS)
-			_shape(crater, shape, at + Vector3.UP * PILLAR_HEIGHT / 2)
-			# Base do asset em y = 0; yaw fixo = azimute (sem RNG, SPEC-034 §2).
-			var pillar := _asset(crater, RRB_ARENA + "obsidian_pillar.glb", "Pillar%d" % i)
-			pillar.transform = Transform3D(Basis(Vector3.UP, deg_to_rad(azimuth)), at)
-			i += 1
 
 
 ## 4 muros retos em |x| = 41 e |z| = 41 (SPEC-046 §1); o visual e a beira da ilha e a cortina
@@ -566,7 +548,7 @@ func _walkable_from(from: Vector2, walls: Array[Array]) -> Dictionary:
 ## cena montada (mesma geometria que o jogo carrega).
 func _corridor_violations() -> Array[String]:
 	var violations: Array[String] = []
-	var bodies: Array[String] = ["Walls", "River", "Crater", "TallGrass"]
+	var bodies: Array[String] = ["Walls", "River", "TallGrass"]
 	for body_name: String in bodies:
 		var body := _root.get_node_or_null(body_name)
 		if body == null:

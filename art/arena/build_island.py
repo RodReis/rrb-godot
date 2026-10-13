@@ -781,21 +781,7 @@ def build_lava():
     return obj
 
 
-# --- kit 2: cratera (pilar de obsidiana) ----------------------------------------------------
-
-
-def build_pillar():
-    kit = Kit("obsidian_pillar")
-    # Espira principal: cobre o cilindro de colisao r 1,4 x h 3,0 (8 lados, r 1,55).
-    kit.add(prism(0, 0, 0.0, 1.3, 1.55, 1.25, 8, phase=22.5, jitter=0.08, seed=1), CHARCOAL, (0.2, 0.45))
-    kit.add(prism(0, 0, 1.3, 2.5, 1.25, 0.8, 8, phase=22.5, jitter=0.1, seed=2), CHARCOAL, (0.3, 0.55))
-    kit.add(prism(0.15, -0.1, 2.5, 3.45, 0.8, 0.0, 8, phase=22.5, jitter=0.06, seed=3), STONE_DARK, (0.35, 0.65))
-    # Lascas em volta e veios de magma na base.
-    kit.add(prism(1.3, 0.6, 0.0, 1.5, 0.45, 0.0, 6, phase=10.0), CHARCOAL, (0.25, 0.5))
-    kit.add(prism(-1.1, -0.9, 0.0, 1.1, 0.4, 0.0, 6, phase=40.0), CHARCOAL, (0.25, 0.5))
-    kit.add(prism(0.2, 1.4, 0.0, 0.8, 0.35, 0.0, 5, phase=70.0), STONE_DARK, (0.3, 0.55))
-    kit.add(prism(0, 0, 0.3, 0.55, 1.58, 1.5, 8, phase=22.5), CHARCOAL, (0.3, 0.3), rune=MAGMA)
-    return build(kit)
+# --- kit 2: cratera — pilares de obsidiana removidos no F60 (ADR-0014); o magma fica no chassi.
 
 
 # --- kit 3: castelo -------------------------------------------------------------------------
@@ -1349,12 +1335,6 @@ def main():
     save("island_chassis")
     preview("island_chassis", [island, river, lava], top=True)
     preview("island_chassis_side", [island, river, lava])
-
-    reset_scene()
-    pillar = build_pillar()
-    export(pillar, "obsidian_pillar")
-    save("volcanic_crater")
-    preview("volcanic_crater", [pillar])
 
     reset_scene()
     castle = [build_wall("a"), build_wall("b"), build_tower("a"), build_tower("b"), build_gate("a"), build_gate("b"), build_door_leaf("l"), build_door_leaf("r")]

@@ -164,7 +164,8 @@
         { "arquivo": "mvp2-f52-fim-de-partida.webp", "legenda": "A nova tela de fim de partida, aqui numa derrota por eliminação na morte súbita: o motivo no alto, a duração e o modo, e os dois jogadores lado a lado com a comparação no meio. Quem está melhor em cada linha ganha a cor; o Rei Esqueleto e o conjunto de itens só ganham destaque para quem os conquistou.", "tipo": "entregue" },
         { "arquivo": "mvp2-gate-fase2-1x1.webp", "legenda": "A fase 2 de uma partida 1×1 online: placar de abates no alto, a zona fechando com o tempo que falta, o respawn e o minimapa com os dois times. É aqui que a partida termina sempre, por abates, morte súbita ou colapso da zona.", "tipo": "entregue" },
         { "arquivo": "mvp2-f56-vale-canto-no.webp", "legenda": "O canto do mapa visto pela câmera do jogo, de fora para dentro: onde antes só havia céu e vazio, agora a floresta continua em volta da arena. O mapa deixou de ser uma ilha no ar e virou um vale.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f56-vale-floresta.webp", "legenda": "Olhando para fora da borda do mapa: a floresta densa do vale, com a torre de vigia, as tochas e as moitas da beira em primeiro plano.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f56-vale-floresta.webp", "legenda": "Olhando para fora da borda do mapa: a floresta densa do vale, com a torre de vigia, as tochas e as moitas da beira em primeiro plano.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f60-centro-livre.webp", "legenda": "O centro do mapa mais aberto: os pilares de pedra em volta do lago de magma saíram, e agora dá para entrar e lutar na cratera por qualquer lado.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {
