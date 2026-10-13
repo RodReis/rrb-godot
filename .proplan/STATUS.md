@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-12
+updated: 2026-10-13
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -9,8 +9,7 @@ updated: 2026-10-12
 
 ### [MVP2] Partida em rede (#57)
 
-- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
-- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68)
+- [MVP2][SPEC-056][F56] Arena num vale: floresta e montanhas em volta, câmera nunca mostra o vazio (#150)
 
 ### [MVP3] Meta + deploy (#76)
 
@@ -36,18 +35,27 @@ _(vazio)_
 
 ## Em Andamento
 
-_(vazio)_
+### #99 (#99)
+
+- [MVP2.5][SPEC-057][F57] HUD moderna: painéis de vidro, dock único, minimapa com baús e monstros, engrenagem com som (#151)
+
+### [MVP2] Partida em rede (#57)
+
+- [MVP2][GATE] Homologação: 1x1 online termina sempre; soak de 50 partidas verde (#69)
 
 ## Feito
 
-_(vazio)_
+### Sem épico
+
+- [MVP2][SPEC-037][FIX] Concealment desliga o _process no cliente que conecta depois do load (sonda lê ? nos monstros) (#148)
 
 ## Finalizado
 
 ### [MVP2] Partida em rede (#57)
 
-- [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102, finalizado em: 2026-10-12)
+- [MVP2][SPEC-019][F19] Bot da fase 2 (Perseguir, Fugir da zona) e soak de 50 partidas bot × bot headless (#68, finalizado em: 2026-10-13)
 - [MVP2][FIX] Cliente loga ERROR a cada quadro depois que o servidor encerra a partida (#108, finalizado em: 2026-10-12)
+- [MVP2][FIX] Cliente fica sem tela e loga erro a cada quadro depois que o servidor encerra (#102, finalizado em: 2026-10-12)
 - [MVP2][SPEC-052][F52] Tela de vitória/derrota fiel ao protótipo novo, só com dados reais (#133, finalizado em: 2026-10-12)
 - [MVP2][SPEC-055][F55] Campos de canto: golem + 2 lobos + 2 baús reforçados na curva TOP/BOT (#137, finalizado em: 2026-10-12)
 - [MVP2][SPEC-051][F51] Tela de seleção de heróis fiel ao protótipo novo, só com dados reais (#132, finalizado em: 2026-10-12)
