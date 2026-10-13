@@ -18,7 +18,7 @@
 3. **Cascatas de enfeite NO/SE** viram **riacho**: caem num degrau curto e seguem rasas pela faixa externa até sumir na floresta/neblina. Só visual.
 4. **Ilhotas flutuantes de fundo saem.**
 5. Céu (`abyss_sky.tres`) e ciclo dia/noite (ADR-0010) ficam; a neblina de distância acompanha as chaves do dia/noite.
-6. Implementação pela fatia **F56 / SPEC-056** (Slice 2.22), **depois do [GATE] do MVP2 (#69)** — o gate homologa a arena atual.
+6. Implementação pela fatia **F56 / SPEC-056** (Slice 2.22), **depois do F57 (#151) e antes do [GATE] do MVP2 (#69)** — revisão do PI no mesmo dia; o gate homologa a arena já no vale.
 
 ## Alternativas rejeitadas
 
@@ -30,7 +30,7 @@
 | Penhascos e cânion sem vegetação | PI escolheu floresta + montanhas |
 | Remover as cascatas / desfiladeiro atrás do bastião | PI escolheu riacho |
 | Manter ilhotas no céu | sem abismo, rocha flutuando não faz sentido |
-| Fazer antes do [GATE] #69 | PI escolheu não misturar arte com a homologação |
+| Deixar para depois do [GATE] #69 | escolha inicial do PI, revista no mesmo dia: entra depois do F57 e antes do gate |
 
 ## Consequências
 

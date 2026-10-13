@@ -100,7 +100,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | V-17 | Mato alto que esconde (Astro Arena / Brawl Stars) | F7 (geometria), F32 (regra) | game | mantido — requisito novo aprovado pelo PI em 2026-10-09 |
 | V-19 | Neblina de guerra: visão (raio 12 u) + explorado; servidor não replica o que está fora da visão; continua na fase 2 com a zona sempre visível | F37 (reusa o filtro do F32) | game | mantido — **revertido** de V-16 pelo PI em 2026-10-10 |
 | V-20 | Câmera: pilares e muros tapam o herói (oclusão) | card `planejado` sem MVP (#70); giro da câmera F45 ajuda | game | silhueta/transparência ainda a decidir pelo PI; o PI escolheu o giro 360° (F45) em 2026-10-10 |
-| V-22 | Câmera nunca mostra o vazio em volta da arena: arena num vale (faixa externa só visual com floresta, cristas e neblina), cascatas viram riacho, ilhotas saem | F56 (#150) | game, shared | mantido — requisito novo do PI em 2026-10-12 (ADR-0012), depois do [GATE] do MVP2 |
+| V-22 | Câmera nunca mostra o vazio em volta da arena: arena num vale (faixa externa só visual com floresta, cristas e neblina), cascatas viram riacho, ilhotas saem | F56 (#150) | game, shared | mantido — requisito novo do PI em 2026-10-12 (ADR-0012), depois do F57 e antes do [GATE] do MVP2 |
 | V-18 | Tela "Arena & Mapa" no Launcher (DV tela 10): render da arena real + POIs + regras das 2 fases com números do GDB; arte conceito como meta visual da arena (decisão PI 2026-10-09) | F33 | launcher, shared | mantido (MVP3) |
 | V-11 | Mapa de controles §3.3 | `shared/core/input_actions.gd` | shared | mantido |
 | V-12 | `scripts/ui/m4_audit_tracker.gd` no cliente | backend `telemetry/` | — | transferido |
