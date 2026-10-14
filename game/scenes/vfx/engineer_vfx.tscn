@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/engineer_vfx.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/claw_hook.glb" id="2_claw"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_cable"]
+albedo_color = Color(0.32, 0.3, 0.28, 1)
+metallic = 0.6
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_cable"]
+material = SubResource("Mat_cable")
+size = Vector3(0.04, 0.04, 1)
+center_offset = Vector3(0, 0, -0.5)
+
+[node name="EngineerVfx" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Cable" type="MeshInstance3D" parent="."]
+visible = false
+cast_shadow = 0
+mesh = SubResource("BoxMesh_cable")
+
+[node name="ClawEnd" type="Node3D" parent="."]
+visible = false
+
+[node name="Model" parent="ClawEnd" instance=ExtResource("2_claw")]

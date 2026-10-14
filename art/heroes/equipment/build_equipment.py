@@ -2,7 +2,7 @@
 renderiza os icones em shared/ui/icons/items/ (SPEC-048, ADR-0005, ADR-0010).
 
 Pecas rigidas: cada objeto e modelado no espaco do modelo do heroi em pose de repouso (Z para
-cima, frente -Y; o rig do Knight, do Ranger, do Barbarian, do Mage e do Rogue e o mesmo) e se chama "<peca>__<osso>" com "." do
+cima, frente -Y; o rig do Knight, do Ranger, do Barbarian, do Mage, do Rogue e do Engineer e o mesmo) e se chama "<peca>__<osso>" com "." do
 osso trocado por "_" (o Godot nao aceita "." em nome de no). O HeroVisual prende cada objeto ao
 osso por BoneAttachment3D. Raridade = mesma forma, acabamento diferente: comum liso; raro com
 friso azul; epico com friso dourado e detalhe roxo (PATTERNS P6). Cores pelo atlas KayKit
@@ -29,11 +29,14 @@ RANGER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "ranger.glb")
 BARBARIAN = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Barbarian.glb")
 MAGE = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Mage.glb")
 ROGUE = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "rogue.glb")
+ENGINEER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "engineer.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
 
 TRIS_MIN, TRIS_MAX = 50, 800
+# Arma do pack acima disto (o shotgun tem 1.120) e reduzida no Blender, para sobrar orcamento ao enfeite.
+WEAPON_BASE_MAX = 700
 ICON_SIZE = 128
 # Token PURPLE (#A855F7) em sRGB; o material converte para linear.
 PURPLE_SRGB = (0.659, 0.333, 0.969)
@@ -291,6 +294,21 @@ def hunter_boots(name, rarity):
     return pieces
 
 
+# Peitoral do Engenheiro (F59): a mochila ocupa y 0.22-0.64 e z 0.35-1.26 nas costas; o anel inteiro
+# (raio 0.45, ate y 0.48) a atravessaria. Variante so da frente e dos lados: sem as faces do tras do
+# tronco (y acima de BACK_CUT_Y e |x| < BACK_CUT_X; as ombreiras ficam fora do corte).
+BACK_CUT_Y = 0.12
+BACK_CUT_X = 0.33
+
+
+def cut_back(pieces):
+    for p in pieces:
+        faces = [f for f in p.bm.faces
+                 if f.calc_center_median().y > BACK_CUT_Y and abs(f.calc_center_median().x) < BACK_CUT_X]
+        bmesh.ops.delete(p.bm, geom=faces, context="FACES")
+    return pieces
+
+
 ARMOR = {
     "guard_helm": guard_helm,
     "guard_chest": guard_chest,
@@ -318,7 +336,24 @@ def pack_weapon(path, mesh_name):
     mesh = src.data.copy()
     for o in imported:
         bpy.data.objects.remove(o, do_unlink=True)
-    return mesh, world
+    return decimated(mesh, WEAPON_BASE_MAX), world
+
+
+def decimated(mesh, limit):
+    """Mesma malha, reduzida por colapso ate `limit` triangulos (so se passar do limite)."""
+    mesh.calc_loop_triangles()
+    count = len(mesh.loop_triangles)
+    if count <= limit:
+        return mesh
+    holder = bpy.data.objects.new("decimate_holder", mesh)
+    bpy.context.scene.collection.objects.link(holder)
+    mod = holder.modifiers.new("decimate", "DECIMATE")
+    mod.ratio = limit / count
+    reduced = bpy.data.meshes.new_from_object(holder.evaluated_get(bpy.context.evaluated_depsgraph_get()))
+    bpy.data.objects.remove(holder, do_unlink=True)
+    for poly in reduced.polygons:
+        poly.use_smooth = False
+    return reduced
 
 
 def weapon_piece(name, bone, mesh, world, rarity, accents, atlas, epic):
@@ -429,6 +464,23 @@ def crossbow_accents(p, rarity):
     p.gem(EPIC, (0.0, -0.35, 0.22), (0.06, 0.07, 0.05))
 
 
+def shotgun_accents(p, rarity):
+    # Espaco local do shotgun (F59): cano em -Y (muzzle em y -1.15), coronha em +Y (ate 0.52, z -0.27
+    # a 0.08), bloco dos dois canos em y -1.15 a -0.60 (x +-0.23, z -0.10 a 0.26), forend em y -0.35
+    # (x +-0.23, topo z 0.31). Cima = +Z.
+    if rarity == 0:
+        return
+    trim = BLUE if rarity == 1 else GOLD
+    for y in ((-0.80,) if rarity == 1 else (-0.80, -0.68)):
+        p.box(trim, (0.0, y, 0.08), (0.50, 0.07, 0.40))  # anel nos canos
+    if rarity == 1:
+        p.gem(BLUE, (0.0, -0.35, 0.33), (0.07, 0.08, 0.05))  # pedra sobre o forend
+        return
+    p.box(GOLD, (0.0, 0.50, -0.10), (0.17, 0.07, 0.40))  # chapa dourada da coronha
+    p.box(GOLD, (0.0, -1.10, 0.17), (0.50, 0.06, 0.34))  # boca dourada
+    p.gem(EPIC, (0.0, -0.35, 0.34), (0.08, 0.09, 0.06))
+
+
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
@@ -437,6 +489,7 @@ WEAPONS = {
     "barbarian": (BARBARIAN, "2H_Axe", "handslot.r", axe_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
     "fire_wizard": (MAGE, "2H_Staff", "handslot.r", staff_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
     "rogue": (ROGUE, "crossbow_1handed", "handslot.r", crossbow_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
+    "engineer": (ENGINEER, "shotgun", "handslot.r", shotgun_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
 }
 
 # ---------------------------------------------------------------------------------------------
@@ -554,6 +607,16 @@ def main():
                 coll.objects.link(piece.build(atlas, epic))
             pieces.append((coll, name, name, None))
 
+    # Peitorais sem costas para o Engenheiro: mesmo id de item, peca propria (so cena; sem icone novo).
+    for group in ("guard_chest", "hunter_chest"):
+        for rarity in range(3):
+            name = "engineer_%s_t%d" % (group, rarity + 1)
+            coll = bpy.data.collections.new(name)
+            bpy.context.scene.collection.children.link(coll)
+            for piece in cut_back(ARMOR[group](name, rarity)):
+                coll.objects.link(piece.build(atlas, epic))
+            pieces.append((coll, name, None, None))
+
     for hero, (path, mesh_name, bone, accents, axis_local, view_local) in WEAPONS.items():
         mesh, world = pack_weapon(path, mesh_name)
         axis = (world.to_3x3() @ Vector(axis_local), world.to_3x3() @ Vector(view_local))
@@ -576,7 +639,8 @@ def main():
 
     cam = setup_render()
     for coll, _glb, icon, axis in pieces:
-        render_icon(cam, coll, os.path.join(ICONS, icon + ".png"), weapon_axes=axis)
+        if icon is not None:
+            render_icon(cam, coll, os.path.join(ICONS, icon + ".png"), weapon_axes=axis)
 
     for name, count in report:
         print("PIECE %-28s %4d tris" % (name, count))

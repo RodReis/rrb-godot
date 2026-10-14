@@ -10,6 +10,8 @@ extends RefCounted
 var damage: int = 0
 var source: Vector3 = Vector3.ZERO
 var push: Vector3 = Vector3.ZERO
+## Ticks do deslize do empurrao; 0 = o padrao (CombatRules.knockback_ticks). Garra Mecanica: 0,3 s.
+var push_ticks: int = 0
 var stun_ticks: int = 0
 var xp: int = 0
 var attacker_id: int = 0

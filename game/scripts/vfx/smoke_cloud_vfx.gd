@@ -35,7 +35,7 @@ var _puffs: Array[GPUParticles3D] = []
 func _ready() -> void:
 	for i: int in PUFF_MESHES.size():
 		var particles := get_node("Puffs%d" % i) as GPUParticles3D
-		particles.draw_pass_1 = _mesh_of(PUFF_MESHES[i])
+		particles.draw_pass_1 = mesh_of(PUFF_MESHES[i])
 		_puffs.append(particles)
 	super()
 
@@ -85,7 +85,7 @@ func _fade(age: float) -> void:
 		_bomb.position.y = bomb_hop * 4.0 * t * (1.0 - t)
 
 
-static func _mesh_of(scene: PackedScene) -> Mesh:
+static func mesh_of(scene: PackedScene) -> Mesh:
 	var instance := scene.instantiate()
 	var found := instance.find_children("*", "MeshInstance3D", true, false)
 	var mesh: Mesh = (found[0] as MeshInstance3D).mesh if not found.is_empty() else null

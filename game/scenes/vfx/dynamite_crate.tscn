@@ -1,0 +1,93 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/dynamite_crate_vfx.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/dynamite_crate.glb" id="2_crate"]
+[ext_resource type="Shader" path="res://scenes/vfx/area_indicator.gdshader" id="3_area"]
+
+[sub_resource type="ShaderMaterial" id="Mat_ring"]
+resource_local_to_scene = true
+shader = ExtResource("3_area")
+shader_parameter/fill_color = Color(1, 0.18, 0.12, 0.09)
+shader_parameter/rim_color = Color(1, 0.3, 0.2, 0.95)
+shader_parameter/rim_width = 0.05
+shader_parameter/dashes = 36.0
+shader_parameter/spin = 0.2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ring"]
+material = SubResource("Mat_ring")
+size = Vector2(2, 2)
+
+[sub_resource type="StandardMaterial3D" id="Mat_glow"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(1.6, 0.45, 0.25, 0.55)
+
+[sub_resource type="BoxMesh" id="BoxMesh_glow"]
+material = SubResource("Mat_glow")
+size = Vector3(0.66, 0.66, 0.6)
+center_offset = Vector3(0, 0.28, 0)
+
+[sub_resource type="Gradient" id="Gradient_spark"]
+offsets = PackedFloat32Array(0, 0.35, 1)
+colors = PackedColorArray(1, 1, 0.85, 1, 1, 0.62, 0.22, 1, 1, 0.3, 0.05, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_spark"]
+gradient = SubResource("Gradient_spark")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_spark"]
+direction = Vector3(0, 1, 0)
+spread = 70.0
+initial_velocity_min = 1.0
+initial_velocity_max = 2.8
+gravity = Vector3(0, -6, 0)
+scale_min = 0.6
+scale_max = 1.1
+color_ramp = SubResource("Ramp_spark")
+particle_flag_align_y = true
+
+[sub_resource type="StandardMaterial3D" id="Mat_spark"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(4, 2.6, 1.2, 1)
+billboard_mode = 2
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_spark"]
+material = SubResource("Mat_spark")
+size = Vector2(0.03, 0.18)
+
+[node name="DynamiteCrate" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 1.6
+light_seconds = 0.1
+fade_seconds = 0.05
+
+[node name="Ring" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.7, 0, 0, 0, 1, 0, 0, 0, 0.7, 0, 0.06, 0)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_ring")
+
+[node name="Crate" type="Node3D" parent="."]
+top_level = true
+
+[node name="Model" parent="Crate" instance=ExtResource("2_crate")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="Glow" type="MeshInstance3D" parent="Crate"]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+visible = false
+cast_shadow = 0
+mesh = SubResource("BoxMesh_glow")
+
+[node name="Fuse" type="GPUParticles3D" parent="Crate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.174, 1.1, 0)
+cast_shadow = 0
+amount = 14
+lifetime = 0.3
+local_coords = true
+visibility_aabb = AABB(-1, -1, -1, 2, 2, 2)
+process_material = SubResource("PPM_spark")
+draw_pass_1 = SubResource("QuadMesh_spark")

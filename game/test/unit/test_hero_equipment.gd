@@ -8,6 +8,7 @@ const RANGER: String = "res://scenes/heroes/ranger.tscn"
 const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
 const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
 const ROGUE: String = "res://scenes/heroes/rogue.tscn"
+const ENGINEER: String = "res://scenes/heroes/engineer.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -121,6 +122,20 @@ func test_ladina_usa_a_besta_e_nao_mostra_elmo() -> void:
 	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
 	_hero._refresh_attributes()
 	assert_eq(_hero.attributes.defense, 12.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
+
+
+func test_engenheiro_usa_o_bacamarte_peitoral_sem_costas_e_nao_mostra_elmo() -> void:
+	_bind(ENGINEER)
+	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t3_epic"])
+	assert_eq(_pieces("engineer_sword_t3_epic__handslot_r").size(), 1)
+	assert_false(_part("shotgun").visible, "bacamarte novo troca o do pack")
+	assert_eq(_pieces("guard_helm_*").size(), 0, "cabelo e oculos ficam (ADR-0013 item 7)")
+	assert_true(_part("Engineer_Goggles").visible)
+	assert_true(_part("Engineer_Backpack").visible, "o peitoral nao esconde a mochila")
+	assert_eq(_pieces("engineer_guard_chest_t3__*").size(), 1, "peitoral sem as costas")
+	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
+	_hero._refresh_attributes()
+	assert_eq(_hero.attributes.defense, 22.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
 
 
 func test_peca_em_repouso_fica_no_espaco_do_modelo() -> void:

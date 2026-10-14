@@ -32,6 +32,12 @@ extends Resource
 @export var smoke_range: float
 ## Ladina: Emboscada com o alvo a ate isto (mira a posicao atual dele).
 @export var ambush_range: float
+## Engenheiro (SPEC-059 §7): Garra Mecanica com o alvo alem do alcance do bacamarte e ate isto;
+## Torreta com o inimigo (heroi ou monstro farmado) a ate turret_range; Dinamite a ate
+## dynamite_range.
+@export var claw_range: float
+@export var turret_range: float
+@export var dynamite_range: float
 ## Fase 2 (F19): a menos disto da borda da zona (ou fora dela) o bot foge para dentro. Escolha do
 ## Code: nenhum documento fixa o valor; a zona encolhe ~0,15 u/s, 2 u sao ~13 s de folga.
 @export var zone_margin: float

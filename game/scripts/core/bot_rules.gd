@@ -10,6 +10,8 @@ enum State { FARM, LOOT, CONTEST, FIGHT, RETREAT, CHASE, FLEE_ZONE }
 
 ## O ponto de fuga fica a esta quantidade de margens da borda, para nao reentrar na faixa de fuga.
 const FLEE_DEPTH_MARGINS: float = 2.0
+## A Torreta do Engenheiro mira a meio caminho entre ele e o alvo.
+const HALFWAY: float = 0.5
 
 
 static func next_state(state: State, view: BotView, profile: BotProfile) -> State:
@@ -121,6 +123,23 @@ static func rogue_skills(distance: float, hp_pct: float, profile: BotProfile) ->
 		int(hp_pct < profile.smoke_hp_pct and distance <= profile.smoke_range),
 		int(distance <= profile.ambush_range),
 	)
+
+
+## Habilidades do Engenheiro (SPEC-059 §7) contra um alvo a [param distance]: Garra (x) com o alvo
+## fora do [param basic_range] e ate claw_range; Torreta (y) ate turret_range; Dinamite (z) ate
+## dynamite_range. 1 = usa (o Hero ainda confere recarga e rank).
+static func engineer_skills(distance: float, basic_range: float, profile: BotProfile) -> Vector3i:
+	return Vector3i(
+		int(distance > basic_range and distance <= profile.claw_range),
+		int(distance <= profile.turret_range),
+		int(distance <= profile.dynamite_range),
+	)
+
+
+## Distancia de mira (u) do bot de Engenheiro: a Dinamite cai no alvo; a Torreta, a meio caminho
+## entre o Engenheiro e o alvo (o Hero limita ao alcance de cada uma).
+static func engineer_aim_distance(distance: float, dynamite_ready: bool) -> float:
+	return distance if dynamite_ready else distance * HALFWAY
 
 
 ## Habilidade em que o bot gasta o proximo ponto: a primeira de R, Q, E abaixo do rank tipico do

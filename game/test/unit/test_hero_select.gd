@@ -16,8 +16,12 @@ const FULL_ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/barbarian.tres"),
 	preload("res://shared/data/heroes/fire_wizard.tres"),
 	preload("res://shared/data/heroes/rogue.tres"),
+	preload("res://shared/data/heroes/engineer.tres"),
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
+const ALL_SCENES: Array[StringName] = [
+	&"knight", &"ranger", &"barbarian", &"fire_wizard", &"rogue", &"engineer"
+]
 const RATE: int = 30
 const START: int = 1000
 const RIVAL: int = 22
@@ -148,10 +152,9 @@ func test_close_esconde() -> void:
 	assert_false(_screen.visible)
 
 
-func test_cinco_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
-	var all: Array[StringName] = [&"knight", &"ranger", &"barbarian", &"fire_wizard", &"rogue"]
-	var screen := _make_screen(FULL_ROSTER, all)
-	assert_eq(screen._choices.get_child_count(), 5)
+func test_seis_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
+	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
+	assert_eq(screen._choices.get_child_count(), 6)
 	_press(screen, KEY_4)
 	assert_eq(screen._player_name.text, "BRUXO DE FOGO")
 	assert_eq(screen._player_role.text, "MAGO")
@@ -160,12 +163,20 @@ func test_cinco_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
 
 
 func test_tecla_5_escolhe_a_ladina() -> void:
-	var all: Array[StringName] = [&"knight", &"ranger", &"barbarian", &"fire_wizard", &"rogue"]
-	var screen := _make_screen(FULL_ROSTER, all)
+	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
 	_press(screen, KEY_5)
 	assert_eq(screen._player_name.text, "LADINA")
 	assert_eq(screen._player_role.text, "ALGOZ")
 	assert_true(screen._cards[4]._tag.visible)
+
+
+func test_tecla_6_escolhe_o_engenheiro_com_os_dados_reais() -> void:
+	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
+	_press(screen, KEY_6)
+	assert_eq(screen._player_name.text, "ENGENHEIRO")
+	assert_eq(screen._player_role.text, "ENGENHEIRO")
+	assert_true(screen._cards[5]._tag.visible)
+	assert_false(screen._cards[4]._tag.visible)
 
 
 func test_modelo_so_do_heroi_com_cena() -> void:

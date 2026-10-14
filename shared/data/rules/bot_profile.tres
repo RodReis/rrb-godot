@@ -19,4 +19,7 @@ fan_range = 4.0
 smoke_hp_pct = 0.4
 smoke_range = 7.0
 ambush_range = 8.0
+claw_range = 7.0
+turret_range = 7.0
+dynamite_range = 6.0
 zone_margin = 2.0

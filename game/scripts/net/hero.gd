@@ -637,7 +637,11 @@ func _apply_hits(tick: int) -> void:
 			_die(effect)
 			continue
 		if not effect.push.is_zero_approx():
-			knockback_ticks = CombatRules.knockback_ticks(NetworkTime.tickrate)
+			knockback_ticks = (
+				effect.push_ticks
+				if effect.push_ticks > 0
+				else CombatRules.knockback_ticks(NetworkTime.tickrate)
+			)
 			knockback_velocity = effect.push * NetworkTime.tickrate / knockback_ticks
 		stun_ticks = maxi(stun_ticks, effect.stun_ticks)
 		if effect.slow_ticks > 0:

@@ -39,6 +39,12 @@ func combat_id() -> int:
 	return 0
 
 
+## O heroi [param _observer] ve este alvo (neblina F37 e mato F32); herois e monstros decidem.
+## Torreta do Engenheiro (F59): so atira em quem o Engenheiro ve.
+func seen_by(_observer: Hero) -> bool:
+	return true
+
+
 ## Raio da capsula do corpo (CollisionShape3D), para o acerto de projetil (F14).
 func body_radius() -> float:
 	if _body_radius < 0.0:

@@ -1,0 +1,94 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/engineer_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/engineer_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/engineer_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/engineer_r.svg" id="icon_r"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"engineer_basic"
+icon = ExtResource("icon_basic")
+display_name = "Bacamarte"
+description = "Tiro de bacamarte em cone de 40° e 4,5 u, instantâneo: acerta todos os inimigos no cone. A Muralha o trata como golpe corpo a corpo. Dano: 100% do ATQ em cada alvo."
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.2)
+attack_ratio = 1.0
+attack_range = 4.5
+arc_degrees = 40.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"engineer_q"
+icon = ExtResource("icon_q")
+display_name = "Garra Mecânica"
+description = "Lança uma garra (7 u) que para no primeiro inimigo; o herói atingido é puxado em 0,3 s até 2 u do Engenheiro. Monstro e chefe só tomam dano. A Muralha bloqueia. Dano: base do rank + 70% do ATQ."
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(11.0, 10.5, 10.0, 9.5, 9.0)
+base_amount = PackedFloat64Array(50.0, 80.0, 110.0, 140.0, 170.0)
+attack_ratio = 0.7
+attack_range = 7.0
+radius = 0.4
+speed = 20.0
+distance = 2.0
+duration = PackedFloat64Array(0.3)
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"engineer_e"
+icon = ExtResource("icon_e")
+display_name = "Torreta"
+description = "Instala uma torreta no ponto mirado (até 3 u) por 6 s: a cada 0,75 s atira no inimigo mais próximo a até 7 u que o Engenheiro vê. Indestrutível, uma por vez. Dano por disparo: base do rank + 15% do ATQ."
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(14.0)
+base_amount = PackedFloat64Array(14.0, 20.0, 26.0, 32.0, 38.0)
+attack_ratio = 0.15
+attack_range = 7.0
+cast_range = 3.0
+duration = PackedFloat64Array(6.0)
+pulse_count = 8
+pulse_interval = 0.75
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"engineer_r"
+icon = ExtResource("icon_r")
+display_name = "Caixa de Dinamite"
+description = "Posiciona uma caixa no ponto mirado (até 6 u); explode 1,5 s depois em raio de 4,5 u, ferindo e empurrando 3 u para fora. Dano: base do rank + 130% da INT + 60% do ATQ."
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(55.0, 46.0)
+base_amount = PackedFloat64Array(240.0, 380.0)
+attack_ratio = 0.6
+intelligence_ratio = 1.3
+radius = 4.5
+knockback = 3.0
+cast_range = 6.0
+duration = PackedFloat64Array(1.5)
+
+[resource]
+script = ExtResource("1_script")
+id = &"engineer"
+display_name = "Engenheiro"
+role = "Engenheiro"
+summary = "Dano em cone de perto com o bacamarte; puxa o adversário com a Garra e controla a área com a Torreta e a Dinamite."
+base_move_speed = 5.9
+base_hp = 520.0
+hp_per_level = 38.0
+base_defense = 22.0
+defense_per_level = 2.2
+base_attack = 46.0
+attack_per_level = 4.0
+base_intelligence = 18.0
+intelligence_per_level = 1.8
+base_agility = 12.0
+agility_per_level = 1.0
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")
