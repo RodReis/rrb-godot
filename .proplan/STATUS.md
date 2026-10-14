@@ -20,23 +20,17 @@ updated: 2026-10-14
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 - [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79)
 
-### Sem épico
-
-- Câmera: pilares e muros tapam o herói (oclusão) (#70)
-
 ## A Fazer
 
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
 
+## Em Andamento
+
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
 
 - [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163)
-
-## Em Andamento
-
-_(vazio)_
 
 ## Feito
 
@@ -131,6 +125,7 @@ _(vazio)_
 
 ### Sem épico
 
+- Câmera: pilares e muros tapam o herói (oclusão) (#70, finalizado em: 2026-10-14)
 - [MVP2][SPEC-037][FIX] Concealment desliga o _process no cliente que conecta depois do load (sonda lê ? nos monstros) (#148, finalizado em: 2026-10-13)
 - Câmera: girar em volta do herói com o botão direito segurado (#47, finalizado em: 2026-10-10)
 - [MVP1][FIX] Bot gira no lugar no centro depois que o boss morre e não há mais alvo (#52, finalizado em: 2026-10-10)
