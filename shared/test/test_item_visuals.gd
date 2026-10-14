@@ -1,8 +1,8 @@
 extends GutTest
 ## F48 (SPEC-048 §6 item 1): todo item do catalogo tem peca e icone para cada heroi; cada no
 ## de peca aponta para um osso que existe no rig do heroi e no slot certo; a peca do pack que o
-## slot substitui existe no modelo. Barbaro (F53) e Bruxo (F54), ADR-0011 item 3: elmo sem peca (o
-## capuz e o chapeu ficam), mas com icone.
+## slot substitui existe no modelo. Barbaro (F53), Bruxo (F54) e Ladina (F58), ADR-0011 item 3 e
+## ADR-0013 item 7: elmo sem peca (o capuz e o chapeu ficam), mas com icone.
 
 const CATALOG: String = "res://shared/data/items/catalog.tres"
 ## Heroi -> modelo (mesmo rig KayKit nos dois).
@@ -11,9 +11,10 @@ const MODELS: Dictionary[StringName, String] = {
 	&"ranger": "res://shared/assets/rrb/heroes/ranger.glb",
 	&"barbarian": "res://shared/assets/kaykit/adventurers/Barbarian.glb",
 	&"fire_wizard": "res://shared/assets/kaykit/adventurers/Mage.glb",
+	&"rogue": "res://shared/assets/rrb/heroes/rogue.glb",
 }
 ## Herois cujo elmo nao aparece (ADR-0011 item 3).
-const HELMLESS: Array[StringName] = [&"barbarian", &"fire_wizard"]
+const HELMLESS: Array[StringName] = [&"barbarian", &"fire_wizard", &"rogue"]
 ## Indice = ItemData.Slot: prefixos (separados por "|") dos ossos que as pecas do slot usam.
 const SLOT_BONES: Array[String] = ["handslot.", "head", "chest", "foot.|lowerleg."]
 

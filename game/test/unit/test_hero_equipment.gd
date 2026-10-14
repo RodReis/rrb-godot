@@ -7,6 +7,7 @@ const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const RANGER: String = "res://scenes/heroes/ranger.tscn"
 const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
 const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
+const ROGUE: String = "res://scenes/heroes/rogue.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -106,6 +107,20 @@ func test_bruxo_usa_o_cajado_e_nao_mostra_elmo() -> void:
 	assert_eq(_pieces("hunter_boots_t1__*").size(), 4)
 	_hero._refresh_attributes()
 	assert_eq(_hero.attributes.attack, 45.0 + 15.0 + 12.0 + 45.0, "o elmo vale sem aparecer")
+
+
+func test_ladina_usa_a_besta_e_nao_mostra_elmo() -> void:
+	_bind(ROGUE)
+	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t2"])
+	assert_eq(_pieces("rogue_sword_t2__handslot_r").size(), 1)
+	assert_false(_part("crossbow_1handed").visible, "besta nova troca a do pack")
+	assert_true(_part("dagger").visible, "a faca fica sempre (SPEC-058 §4)")
+	assert_eq(_pieces("guard_helm_*").size(), 0, "capuz fica (ADR-0013 item 7)")
+	assert_true(_part("RogueHooded_Head").visible)
+	assert_eq(_pieces("guard_chest_t3__*").size(), 1)
+	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
+	_hero._refresh_attributes()
+	assert_eq(_hero.attributes.defense, 12.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
 
 
 func test_peca_em_repouso_fica_no_espaco_do_modelo() -> void:
