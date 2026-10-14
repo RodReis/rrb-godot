@@ -11,6 +11,7 @@ const HEROES: Array[String] = [
 	"res://scenes/heroes/ranger.tscn",
 	"res://scenes/heroes/barbarian.tscn",
 	"res://scenes/heroes/fire_wizard.tscn",
+	"res://scenes/heroes/rogue.tscn",
 ]
 const SETS: Array[String] = ["guard", "hunter"]
 const SLOTS: Array[String] = ["helm", "chest", "boots"]

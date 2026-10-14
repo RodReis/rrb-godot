@@ -111,6 +111,18 @@ static func fire_wizard_skills(distance: float, profile: BotProfile) -> Vector3i
 	)
 
 
+## Habilidades da Ladina (SPEC-058 §7) contra um inimigo a [param distance], com [param hp_pct] do
+## HP: Rajada (x) ate fan_range; Bomba de Fumaca (y) para fugir, com HP abaixo de smoke_hp_pct e o
+## inimigo a ate smoke_range; Emboscada (z) ate ambush_range. 1 = usa (o Hero ainda confere
+## recarga e rank).
+static func rogue_skills(distance: float, hp_pct: float, profile: BotProfile) -> Vector3i:
+	return Vector3i(
+		int(distance <= profile.fan_range),
+		int(hp_pct < profile.smoke_hp_pct and distance <= profile.smoke_range),
+		int(distance <= profile.ambush_range),
+	)
+
+
 ## Recuo terminado (saiu de RETREAT) fica gasto ate o HP passar do limiar de novo.
 static func retreat_spent_after(
 	previous: State, current: State, hp_pct: float, spent: bool, profile: BotProfile

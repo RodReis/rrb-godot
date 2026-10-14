@@ -175,6 +175,26 @@ func test_perfil_do_bruxo_vem_da_spec_054() -> void:
 	assert_eq([_profile.blast_range, _profile.ring_range, _profile.meteor_range], [9.0, 3.0, 9.0])
 
 
+func test_limiares_da_ladina_no_perfil() -> void:
+	assert_eq(
+		[_profile.fan_range, _profile.smoke_hp_pct, _profile.smoke_range, _profile.ambush_range],
+		[4.0, 0.4, 7.0, 8.0]
+	)
+
+
+func test_ladina_rajada_ate_4_u_e_emboscada_ate_8_u() -> void:
+	assert_eq(BotRules.rogue_skills(3.5, 1.0, _profile), Vector3i(1, 0, 1))
+	assert_eq(BotRules.rogue_skills(6.0, 1.0, _profile), Vector3i(0, 0, 1), "so a Emboscada")
+	assert_eq(BotRules.rogue_skills(8.5, 1.0, _profile), Vector3i(0, 0, 0), "longe demais")
+
+
+func test_ladina_foge_na_fumaca_com_hp_baixo_e_inimigo_perto() -> void:
+	assert_eq(BotRules.rogue_skills(6.5, 0.35, _profile).y, 1)
+	assert_eq(BotRules.rogue_skills(6.5, 0.45, _profile).y, 0, "HP alto")
+	assert_eq(BotRules.rogue_skills(7.5, 0.35, _profile).y, 0, "inimigo longe")
+	assert_eq(BotRules.rogue_skills(INF, 0.1, _profile).y, 0, "sem inimigo a vista")
+
+
 func test_bruxo_lanca_q_e_meteoro_ate_9_u_e_anel_ate_3_u() -> void:
 	assert_eq(BotRules.fire_wizard_skills(8.5, _profile), Vector3i(1, 0, 1))
 	assert_eq(BotRules.fire_wizard_skills(9.5, _profile), Vector3i(0, 0, 0), "longe demais")

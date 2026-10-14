@@ -110,3 +110,16 @@ func _q_damage() -> int:
 
 func _r_amount() -> float:
 	return SkillRules.amount(_rogue.hero_data.skill_r, _rogue.ranks.z, _rogue.attributes)
+
+
+func _bot_brain(level: int = 6) -> BotInput:
+	_rogue = (load(ROGUE) as PackedScene).instantiate() as Rogue
+	_rogue.name = str(CASTER)
+	_rogue.team = GateRules.TEAM_B
+	_rogue.level = level
+	_rogue.is_bot = true
+	_rogue.get_node("Input").set_script(BotInput)
+	add_child_autofree(_rogue)
+	var brain := _rogue.input as BotInput
+	brain._hero = _rogue
+	return brain
