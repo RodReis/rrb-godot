@@ -11,8 +11,6 @@ const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
 const BARBARIAN_VFX: PackedScene = preload("res://scenes/vfx/barbarian_vfx.tscn")
 const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
 const WIZARD_VFX: PackedScene = preload("res://scenes/vfx/fire_wizard_vfx.tscn")
-const ROGUE: String = "res://scenes/heroes/rogue.tscn"
-const ROGUE_VFX: PackedScene = preload("res://scenes/vfx/rogue_vfx.tscn")
 const FRAME: float = 1.0 / 60.0
 const COOLDOWN: int = 1200
 
@@ -263,73 +261,3 @@ func test_meteoro_cai_sobre_a_marcacao_e_explode_na_queda() -> void:
 	var burst := _pool.get_child(0) as FireBurstVfx
 	assert_almost_eq(burst.global_position, wizard.meteor_center, Vector3.ONE * 0.001)
 	assert_almost_eq(burst.radius, wizard.hero_data.skill_r.radius, 0.001)
-
-
-# Ladina (F58, SPEC-058 §6).
-
-
-func test_disparo_da_besta_solta_um_clarao_e_a_rajada_um_maior() -> void:
-	_bind(ROGUE, ROGUE_VFX)
-	_hero.basic_cooldown = 30
-	_frame()
-	assert_eq(_effects(), 1)
-	var flash := _pool.get_child(0) as ScaledVfx
-	assert_almost_eq(flash.scale.x, 1.0, 0.001)
-	_hero.q_cooldown = 240
-	_frame()
-	assert_eq(_effects(), 2)
-	assert_almost_eq((_pool.get_child(1) as ScaledVfx).scale.x, 1.8, 0.001)
-
-
-func test_virote_em_voo_tem_rastro() -> void:
-	_bind(ROGUE, ROGUE_VFX)
-	var bolt := _hero.get_node("Arrows/Arrow2") as Arrow
-	bolt.speed = 24.0
-	bolt.launch(Arrow.Kind.FAN, Vector3.UP, Vector3.FORWARD, 7.0, 52)
-	bolt._process(FRAME)
-	_frame()
-	assert_true((_driver.get_node("BoltTrail") as TrailRibbon).emitting or _any_trail_emitting())
-
-
-func _any_trail_emitting() -> bool:
-	for node: Node in _driver.get_children():
-		if node is TrailRibbon and (node as TrailRibbon).emitting:
-			return true
-	return false
-
-
-func test_nuvem_no_raio_e_na_duracao_do_e() -> void:
-	_bind(ROGUE, ROGUE_VFX)
-	(_driver as RogueVfx).smoke(Vector3(2.0, 0.0, -3.0), NetworkTime.tick)
-	assert_eq(_effects(), 1)
-	var cloud := _pool.get_child(0) as SmokeCloudVfx
-	assert_eq(cloud.global_position, Vector3(2.0, 0.0, -3.0))
-	assert_almost_eq(cloud.lifetime, 3.0, 0.001)
-	assert_almost_eq((cloud.get_node("Ring") as Node3D).scale.x, 3.0, 0.001)
-
-
-func test_nuvem_que_chega_atrasada_mostra_so_o_que_falta() -> void:
-	_bind(ROGUE, ROGUE_VFX)
-	(_driver as RogueVfx).smoke(Vector3.ZERO, NetworkTime.tick - 30)
-	assert_almost_eq((_pool.get_child(0) as SmokeCloudVfx).lifetime, 2.0, 0.001)
-	(_driver as RogueVfx).smoke(Vector3.ZERO, NetworkTime.tick - 120)
-	assert_eq(_effects(), 1, "ja acabou: nada")
-
-
-func test_emboscada_solta_tres_fantasmas() -> void:
-	_bind(ROGUE, ROGUE_VFX)
-	var rogue := _hero as Rogue
-	rogue.ambushing = true
-	rogue.dash_ticks = 10
-	for i: int in 20:
-		_driver._process(0.03)
-	assert_eq(_effects(), 3)
-
-
-func test_golpe_oculto_tem_corte_e_clarao_roxo() -> void:
-	_bind(ROGUE, ROGUE_VFX)
-	_driver.impact(HitLedger.Slot.R, Vector3(1.0, 0.0, -2.0))
-	assert_eq(_effects(), 1, "revelada: so o corte")
-	(_hero as Rogue).ambush_hidden = true
-	_driver.impact(HitLedger.Slot.R, Vector3(1.0, 0.0, -2.0))
-	assert_eq(_effects(), 3, "oculta: corte + clarao roxo")

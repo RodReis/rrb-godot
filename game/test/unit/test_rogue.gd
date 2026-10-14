@@ -40,7 +40,9 @@ func test_rajada_dispara_tres_virotes_no_mesmo_tick() -> void:
 	for node: Node in _rogue.get_node("Arrows").get_children():
 		var arrow := node as Arrow
 		if arrow.is_active():
-			directions.append(snappedf(rad_to_deg(AHEAD.signed_angle_to(arrow.direction, Vector3.UP)), 0.01))
+			directions.append(
+				snappedf(rad_to_deg(AHEAD.signed_angle_to(arrow.direction, Vector3.UP)), 0.01)
+			)
 	directions.sort()
 	assert_eq(directions, [-12.0, 0.0, 12.0])
 

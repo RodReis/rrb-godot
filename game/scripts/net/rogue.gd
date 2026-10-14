@@ -10,7 +10,8 @@ extends ProjectileHero
 ## de rogue.tres; dano pelo ledger do alvo (Hero._hit). A nuvem chega ao cliente que nao ve a
 ## Ladina pelo ImpactRelay (smoked), nao pelo estado dela.
 
-## Servidor: nuvem lancada em [param center] no [param tick] (a ressimulacao repete; o relay filtra).
+## Servidor: nuvem lancada em [param center] no [param tick] (a ressimulacao repete; o relay
+## filtra).
 signal smoked(center: Vector3, tick: int)
 
 ## Folga do contato da Emboscada alem da soma dos raios dos corpos: a colisao para a capsula um

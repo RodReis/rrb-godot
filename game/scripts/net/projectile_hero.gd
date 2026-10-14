@@ -1,11 +1,11 @@
 class_name ProjectileHero
 extends Hero
-## Heroi que atira projeteis do pool Arrow (Arqueira F14, Bruxo de Fogo F54, Ladina F58). Os projeteis voam no
-## estado de rollback do heroi, entao o cliente preve o proprio disparo e o servidor decide o
-## acerto (CONVENTION §4.5). O projetil para no muro, pilar, rocha, portao que barra o heroi e na
-## Muralha ativa do inimigo, nao no rio (PI 2026-10-10). Voa na velocidade e no raio do basico (PI
-## 2026-10-10). A subclasse decide o que o toque faz (_arrow_struck) e o que acontece onde o voo
-## acaba (_arrow_stopped); dano em outro node pelo ledger do alvo (Hero._hit).
+## Heroi que atira projeteis do pool Arrow (Arqueira F14, Bruxo de Fogo F54, Ladina F58). Os
+## projeteis voam no estado de rollback do heroi, entao o cliente preve o proprio disparo e o
+## servidor decide o acerto (CONVENTION §4.5). O projetil para no muro, pilar, rocha, portao que
+## barra o heroi e na Muralha ativa do inimigo, nao no rio (PI 2026-10-10). Voa na velocidade e no
+## raio do basico (PI 2026-10-10). A subclasse decide o que o toque faz (_arrow_struck) e o que
+## acontece onde o voo acaba (_arrow_stopped); dano em outro node pelo ledger do alvo (Hero._hit).
 
 ## Altura do voo (u): o raio contra muro/pilar corre nessa altura. Geometria, nao balanceamento.
 const FLIGHT_HEIGHT: float = 1.0
