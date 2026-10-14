@@ -5,12 +5,12 @@
 [ext_resource type="Script" path="res://scripts/net/hero_visual.gd" id="3_visual"]
 [ext_resource type="Resource" path="res://shared/data/heroes/engineer.tres" id="4_data"]
 [ext_resource type="Resource" path="res://shared/data/rules/xp_table.tres" id="5_xp"]
-[ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/rogue.glb" id="6_model"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/engineer.glb" id="6_model"]
 [ext_resource type="Resource" path="res://shared/data/items/catalog.tres" id="7_catalog"]
 [ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
 [ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="8_rules"]
 [ext_resource type="Script" path="res://scripts/net/arrow.gd" id="9_arrow"]
-[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/rogue_bolt.glb" id="10_bolt_model"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/claw_hook.glb" id="10_claw_model"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
 radius = 0.4
@@ -62,5 +62,5 @@ top_level = true
 visible = false
 script = ExtResource("9_arrow")
 
-[node name="Model" parent="Arrows/Arrow0" instance=ExtResource("10_bolt_model")]
+[node name="Model" parent="Arrows/Arrow0" instance=ExtResource("10_claw_model")]
 transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, 0, 0, 0)
