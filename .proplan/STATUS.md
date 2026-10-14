@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-13
+updated: 2026-10-14
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -10,7 +10,6 @@ updated: 2026-10-13
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78)
-- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
 - [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85)
 - [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84)
@@ -27,21 +26,19 @@ updated: 2026-10-13
 
 ## A Fazer
 
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
+
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
 
 - [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163)
 - [MVP2.6][SPEC-058][F58] Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça, Emboscada, bot e VFX (#162)
 - [MVP2.6][INFRA] Roadmap público aceita o marco MVP2.6 (#161)
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-064][F64] Fonte de cura: remodelada no Blender, textura realista e água caindo (#168)
-
 ## Em Andamento
 
-### [MVP2] Partida em rede (#57)
-
-- [MVP2][SPEC-063][F63] Água do rio e do riacho com shader realista (#167)
+_(vazio)_
 
 ## Feito
 
@@ -51,6 +48,8 @@ _(vazio)_
 
 ### [MVP2] Partida em rede (#57)
 
+- [MVP2][SPEC-063][F63] Água do rio e do riacho com shader realista (#167, finalizado em: 2026-10-14)
+- [MVP2][SPEC-064][F64] Fonte de cura: remodelada no Blender, textura realista e água caindo (#168, finalizado em: 2026-10-14)
 - [MVP2][SPEC-062][F62] Tecla B: ficha do herói (itens, atributos, habilidades) com aba Monstros (#166, finalizado em: 2026-10-13)
 - [MVP2][SPEC-061][F61] Baú com menu: F abre, 3 itens, clique escolhe, baú reservado a quem abriu (#165, finalizado em: 2026-10-13)
 - [MVP2][SPEC-060][F60] Centro livre: remove os 8 pilares da cratera e mantém o magma (#164, finalizado em: 2026-10-13)
