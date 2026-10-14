@@ -169,7 +169,8 @@
         { "arquivo": "mvp2-f65-minimapa-claro.webp", "legenda": "O mapa que aparece no minimapa: a arena vista de cima, clara e colorida, com o rio, as pontes, as trilhas, as bases e o magma no centro. Antes o minimapa filmava a cena ao vivo e ficava escuro como ela; agora é sempre fácil de ler, até de noite.", "tipo": "entregue" },
         { "arquivo": "mvp2-f61-bau-com-menu.webp", "legenda": "O baú agora abre um menu com 3 itens: você vê o que cada um muda no seu herói (verde ganha, vermelho perde) e escolhe um com o mouse. O baú fica guardado para quem abriu.", "tipo": "entregue" },
         { "arquivo": "mvp2-f62-ficha-do-heroi.webp", "legenda": "A tecla B agora abre a ficha do seu herói: o modelo girando, nível, atributos, os itens que você carrega e as quatro habilidades explicadas, com o rank e a recarga de cada uma. O bestiário dos monstros continua na aba ao lado.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f63-agua-do-rio.webp", "legenda": "A água do rio ganhou vida: ondas que correm com a correnteza, transparência para ver o fundo no raso, reflexo do céu e espuma nas margens.", "tipo": "entregue" }
+        { "arquivo": "mvp2-f63-agua-do-rio.webp", "legenda": "A água do rio ganhou vida: ondas que correm com a correnteza, transparência para ver o fundo no raso, reflexo do céu e espuma nas margens.", "tipo": "entregue" },
+        { "arquivo": "mvp2-f64-fonte-de-cura.webp", "legenda": "A fonte de cura da base foi refeita: pedra de verdade, água com ondas e reflexo do céu na bacia e na taça, e a água caindo da taça com respingo. Continua curando no mesmo lugar e com o mesmo alcance.", "tipo": "entregue" }
       ]
     },
     "MVP2.5": {
