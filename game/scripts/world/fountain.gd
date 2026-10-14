@@ -3,6 +3,7 @@ extends Node3D
 ## Fonte de agua da base (PI 2026-10-10, #74): marca a area onde o heroi do time dono recupera
 ## vida na fase 1. Quem cura e o proprio Hero no _rollback_tick (FountainRules); aqui so o lugar,
 ## o time e o raio. Uma por base, no canto esquerdo (arena simetrica por rotacao de 180 graus).
+## Visual (F64): pedra e agua no modelo do Blender; a agua caindo (Spray) so em quem desenha.
 
 const GROUP: StringName = &"fountains"
 
@@ -13,6 +14,8 @@ const GROUP: StringName = &"fountains"
 
 func _ready() -> void:
 	add_to_group(GROUP)
+	if DisplayServer.get_name() == "headless":  # F64: servidor dedicado nao carrega as particulas
+		$Spray.free()
 
 
 ## [param point] dentro da area de cura e [param hero_team] e o dono.

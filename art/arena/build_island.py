@@ -182,6 +182,33 @@ def prism(cx, cz, y0, y1, r0, r1, n, phase=0.0, jitter=0.0, seed=0.0):
     return v, f
 
 
+def lathe(profile_ry, n, cx=0.0, cz=0.0):
+    """Perfil (raio, y) girado em n lados em torno do eixo y; raio 0 vira polo (um vertice)."""
+    v, f, rings = [], [], []
+    for r, y in profile_ry:
+        if r <= 0.0:
+            rings.append([len(v)] * n)
+            v.append((cx, y, cz))
+            continue
+        rings.append(list(range(len(v), len(v) + n)))
+        for i in range(n):
+            a = 2.0 * math.pi * i / n
+            v.append((cx + math.cos(a) * r, y, cz + math.sin(a) * r))
+    for lo, hi in zip(rings, rings[1:]):
+        for i in range(n):
+            j = (i + 1) % n
+            face = [lo[i], lo[j], hi[j], hi[i]]
+            face = [k for idx, k in enumerate(face) if k not in face[:idx]]  # polo: quad -> tri
+            f.append(tuple(face))
+    return v, f
+
+
+def disc(r, y, n, cx=0.0, cz=0.0):
+    """Disco horizontal de n lados (superficie de agua), normal para cima."""
+    v = [(cx + math.cos(2.0 * math.pi * i / n) * r, y, cz + math.sin(2.0 * math.pi * i / n) * r) for i in range(n)]
+    return v, [tuple(range(n - 1, -1, -1))]
+
+
 def extrude_profile(profile_zy, x0, x1):
     """Poligono no plano (z, y) extrudado ao longo de x (perfil de ponte)."""
     v = [(x0, y, z) for z, y in profile_zy] + [(x1, y, z) for z, y in profile_zy]
@@ -255,6 +282,19 @@ def trim_material():
     return mat
 
 
+def water_material():
+    """Agua da fonte (F64): material proprio ("fountain_water") que o import troca pelo shader do F63."""
+    if "fountain_water" in _materials:
+        return _materials["fountain_water"]
+    mat = bpy.data.materials.new("fountain_water")
+    mat.use_nodes = True
+    bsdf = mat.node_tree.nodes["Principled BSDF"]
+    bsdf.inputs["Base Color"].default_value = (0.16, 0.42, 0.42, 1.0)
+    bsdf.inputs["Roughness"].default_value = 0.05
+    _materials["fountain_water"] = mat
+    return mat
+
+
 def rune_material(color):
     key = "rune_%02x%02x%02x" % tuple(int(c * 255) for c in color)
     if key in _materials:
@@ -291,7 +331,12 @@ def build(kit, bevel=0.0):
         rune = kit.rune.get(poly.index)
         if rune is not None:
             if rune not in rune_slots:
-                mesh.materials.append(trim_material() if rune == "trim" else rune_material(rune))
+                if rune == "trim":
+                    mesh.materials.append(trim_material())
+                elif rune == "water":
+                    mesh.materials.append(water_material())
+                else:
+                    mesh.materials.append(rune_material(rune))
                 rune_slots[rune] = len(mesh.materials) - 1
             poly.material_index = rune_slots[rune]
         ys = [kit.verts[mesh.loops[l].vertex_index][1] for l in poly.loop_indices]
@@ -1325,6 +1370,9 @@ def main():
     if only == ["chest_reinforced"]:
         build_reinforced_chest_kit()
         return
+    if only == ["fountain"]:
+        build_fountain_kit()
+        return
 
     reset_scene()
     island = build_island()
@@ -1369,6 +1417,7 @@ def main():
     preview("props_crystals", props, spread=9.0)
 
     build_jungle_kit()
+    build_fountain_kit()
     print("[island] triangulos por asset:")
     for name, tris in TRIS.items():
         print("  %-18s %6d" % (name, tris))
@@ -1384,6 +1433,57 @@ def build_torch_post():
     kit.add(prism(0.42, 0, 2.05, 2.3, 0.1, 0.17, 6), CHARCOAL, (0.3, 0.5))
     kit.add(prism(0.42, 0, 2.28, 2.62, 0.12, 0.0, 6, jitter=0.03, seed=53), RED, (0.5, 0.5), rune=MAGMA)
     return build(kit)
+
+
+# Perfil (raio, y) da fonte de cura (F64): plinto, bacia com labio, piso, pilar, taca de cima com
+# a bica no centro. Bacia ate r 1,08 cobre a colisao do fountain.tscn (cilindro r 0,85).
+FOUNTAIN_PROFILE = (
+    (1.18, 0.0), (1.18, 0.12), (1.06, 0.16),  # plinto
+    (1.0, 0.16), (0.98, 0.5),  # parede da bacia
+    (1.08, 0.56), (1.08, 0.64), (1.0, 0.68),  # labio
+    (0.86, 0.68), (0.84, 0.6), (0.82, 0.32),  # borda e parede de dentro
+    (0.2, 0.3),  # fundo
+    (0.16, 0.38), (0.12, 0.92),  # pilar
+    (0.22, 1.0), (0.38, 1.06), (0.42, 1.14), (0.4, 1.19),  # taca: por baixo e borda
+    (0.33, 1.17), (0.12, 1.12),  # dentro da taca
+    (0.08, 1.14), (0.06, 1.36), (0.11, 1.4), (0.0, 1.52),  # bica e remate
+)
+FOUNTAIN_WATER = ((0.84, 0.58), (0.34, 1.15))  # (raio, y) da agua da bacia e da taca
+
+
+def build_fountain():
+    """Fonte de cura da base (F64, PI 2026-10-13): pedra (o import troca pelo castle_stone.tres,
+    PBR triplanar CC0) e agua em material proprio (o import troca pelo shader do F63). Origem no
+    chao, centro da bacia. A agua caindo sao particulas do fountain.tscn."""
+    kit = Kit("fountain")
+    kit.add(lathe(FOUNTAIN_PROFILE, 16), STONE, (0.3, 0.8))
+    for r, y in FOUNTAIN_WATER:
+        kit.add(disc(r, y, 16), STONE_BLUE, (0.5, 0.5), rune="water")
+    obj = build(kit)
+    # Agua: normal para cima e UV plano (x, z) para as ondas do shader correrem pela superficie.
+    mesh = obj.data
+    water = [i for i, m in enumerate(mesh.materials) if m.name == "fountain_water"][0]
+    uv = mesh.uv_layers["UVMap"]
+    for poly in mesh.polygons:
+        if poly.material_index != water:
+            continue
+        if poly.normal.z < 0.0:
+            poly.flip()
+        for l in poly.loop_indices:
+            co = mesh.vertices[mesh.loops[l].vertex_index].co
+            uv.data[l].uv = (co.x * 0.5 + 0.5, co.y * 0.5 + 0.5)
+    mesh.update()
+    return obj
+
+
+def build_fountain_kit():
+    """Fonte de cura (F64): fonte em art/arena/fountain.blend."""
+    reset_scene()
+    fountain = build_fountain()
+    export(fountain, "fountain")
+    save("fountain")
+    preview("fountain", [fountain])
+    print("  %-24s %6d" % (fountain.name, TRIS[fountain.name]))
 
 
 def build_reinforced_chest_kit():

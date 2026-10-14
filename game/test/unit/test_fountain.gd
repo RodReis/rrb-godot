@@ -110,3 +110,46 @@ func test_heroi_ve_a_fonte_aberta_so_na_fase_1() -> void:
 	assert_true(_hero.fountain_open, "PHASE1")
 	clock.update(START + 24 * RATE + 300 * RATE)
 	assert_false(_hero.fountain_open, "TRANSITION")
+
+
+## F64 (PI 2026-10-13): fonte remodelada no Blender (prop ate 800 triangulos), pedra PBR CC0 do
+## castelo e agua com o shader do F63; colisao igual (cilindro r 0,85 x h 1,2).
+func test_modelo_com_pedra_realista_e_agua_do_f63() -> void:
+	var scene := (load(FOUNTAIN) as PackedScene).instantiate()
+	var mesh := scene.get_node("Model").find_children("*", "MeshInstance3D")[0] as MeshInstance3D
+	var paths: Array[String] = []
+	var tris := 0
+	for surface: int in mesh.mesh.get_surface_count():
+		paths.append(mesh.get_active_material(surface).resource_path.get_file())
+		tris += (
+			(mesh.mesh.surface_get_arrays(surface)[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3
+		)
+	assert_eq(paths, ["castle_stone.tres", "fountain_water.tres"])
+	var water := mesh.get_active_material(1) as ShaderMaterial
+	assert_eq(water.shader.resource_path, "res://shared/shaders/arcane_river.gdshader")
+	assert_between(tris, 50, 800, "orcamento de prop (ADR-0006)")
+	var shape := scene.get_node("Body/Shape") as CollisionShape3D
+	var cylinder := shape.shape as CylinderShape3D
+	assert_almost_eq(cylinder.radius, 0.85, 0.001, "colisao igual")
+	assert_almost_eq(cylinder.height, 1.2, 0.001, "colisao igual")
+	scene.free()
+
+
+## F64: agua caindo da taca para a bacia e respingo no impacto (particulas).
+func test_agua_caindo_em_particulas() -> void:
+	var scene := (load(FOUNTAIN) as PackedScene).instantiate()
+	var names: Array[String] = []
+	for node: Node in scene.get_node("Spray").get_children():
+		assert_is(node, GPUParticles3D)
+		names.append(String(node.name))
+	assert_eq(names, ["Jet", "Overflow", "Splash"])
+	scene.free()
+
+
+## F64: servidor dedicado (headless) nao carrega as particulas; o modelo fica, como o resto da
+## arena (malha estatica do lightmap, test_arena_lighting).
+func test_headless_descarta_as_particulas() -> void:
+	assert_eq(DisplayServer.get_name(), "headless", "GUT roda headless (tools/test.ps1)")
+	assert_null(_fountain.get_node_or_null("Spray"))
+	assert_not_null(_fountain.get_node_or_null("Model"))
+	assert_not_null(_fountain.get_node_or_null("Body/Shape"))
