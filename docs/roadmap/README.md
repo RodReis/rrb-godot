@@ -29,6 +29,8 @@ Quando `docs/STATUS.md` e as Issues divergem, o gerador imprime `AVISO` e usa as
 
 Requer Node 18+, sem dependências. Saída: `docs/roadmap/index.html`, em torno de 1 MB com as imagens atuais. Avisos de imagem ausente, rótulo faltando ou divergência de estado aparecem no terminal. Todo `AVISO` deve ser resolvido ou explicado na PR.
 
+Teste do gerador (marcos decimais MVP2.5 e MVP2.6, ordem e fatias dentro do marco): `node --test tools/roadmap/build-roadmap.test.mjs`. Roda numa raiz falsa em temp; não toca o repositório. Ainda não está no CI.
+
 ## Capturas (aprovado pelo PI em 2026-10-09)
 
 O Code tira as capturas quando sobe servidor e clientes para a verificação visual de uma fatia e no `[GATE]` de cada MVP:
