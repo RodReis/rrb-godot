@@ -7,6 +7,8 @@ extends SceneTree
 ##   godot --path game --resolution 1920x1080 -s <repo>/tools/perf/frametime_probe.gd --
 ##     --offline --bot --autopilot=bot --seed=38 --out=<saida>
 ## --equip: os dois herois ficam com as 4 pecas epicas a medicao inteira (SPEC-048 §6 item 4).
+## --smoke: cada Ladina tem uma nuvem de fumaca ativa a medicao inteira (SPEC-058 §8 item 8): a
+## sonda reemite o evento da nuvem (ImpactRelay.smoke_shown) no lugar dela a cada SMOKE_SECONDS.
 ## Sai com 1 se os herois nao nascerem em SPAWN_TIMEOUT segundos.
 
 const MAIN: String = "res://scenes/main.tscn"
@@ -17,6 +19,8 @@ const SPAWN_TIMEOUT: float = 60.0
 const WARMUP_SECONDS: float = 5.0
 const MEASURE_SECONDS: float = 30.0
 const P99: float = 0.99
+## Nova nuvem antes de a anterior (3 s) acabar.
+const SMOKE_SECONDS: float = 2.5
 ## Itens do --equip, por HeroData.id (um conjunto por heroi, arma epica).
 const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"knight": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
@@ -33,6 +37,8 @@ var _phase: int = 0
 var _cpu_ms: PackedFloat64Array = []
 var _gpu_ms: PackedFloat64Array = []
 var _equip: bool = false
+var _smoke: bool = false
+var _smoke_wait: float = 0.0
 
 
 func _initialize() -> void:
@@ -41,6 +47,8 @@ func _initialize() -> void:
 			_out = arg.trim_prefix("--out=")
 		elif arg == "--equip":
 			_equip = true
+		elif arg == "--smoke":
+			_smoke = true
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	var main := (load(MAIN) as PackedScene).instantiate()
@@ -54,6 +62,11 @@ func _process(delta: float) -> bool:
 	_elapsed += delta
 	if _equip and _phase > 0:
 		_equip_heroes()  # todo quadro: o bot pode trocar item no bau
+	if _smoke and _phase > 0:
+		_smoke_wait -= delta
+		if _smoke_wait <= 0.0:
+			_smoke_wait = SMOKE_SECONDS
+			_smoke_rogues()
 	match _phase:
 		0:
 			if _players.get_child_count() >= HEROES:
@@ -93,6 +106,18 @@ func _equip_heroes() -> void:
 		hero.set(&"equipment", equipment)
 
 
+## Sem tipos do jogo (como _equip_heroes): o sinal e o tick saem pelo nome.
+func _smoke_rogues() -> void:
+	var relay := current_scene.get_node("ImpactRelay")
+	var tick: int = root.get_node("NetworkTime").get(&"tick")
+	for hero: Node in _players.get_children():
+		var data: Resource = hero.get(&"hero_data")
+		if data != null and data.get(&"id") == &"rogue":
+			relay.emit_signal(
+				&"smoke_shown", hero.name.to_int(), hero.get(&"global_position"), tick
+			)
+
+
 func _next_phase() -> void:
 	_phase += 1
 	_elapsed = 0.0
@@ -111,6 +136,7 @@ func _report() -> void:
 		"gpu_mean_ms": _mean(_gpu_ms),
 		"gpu_p99_ms": _percentile(_gpu_ms, P99),
 		"equip": _equip,
+		"smoke": _smoke,
 	}
 	var text := JSON.stringify(result, "  ")
 	print("[frametime] ", text)
