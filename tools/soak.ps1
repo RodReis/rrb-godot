@@ -10,9 +10,9 @@
   O relogio do netfox e o do sistema: uma partida leva ate ~10 min; use -Parallel (cada servidor
   usa ~0,3 nucleo e ~350 MB). Compativel com PowerShell 5.1 e 7.
 .PARAMETER Count
-  Partidas (padrao 50; com 5 herois sao 15 confrontos).
+  Partidas (padrao 50; com 6 herois sao 21 confrontos).
 .PARAMETER Require
-  Heroi que entra em todo confronto (soak de heroi novo: -Require rogue); vazio = todos os pares.
+  Heroi que entra em todo confronto (soak de heroi novo: -Require engineer); vazio = todos os pares.
 .PARAMETER Parallel
   Servidores ao mesmo tempo.
 .PARAMETER Seed
@@ -28,7 +28,7 @@
 param(
     [int]$Count = 50,
     [int]$Parallel = 6,
-    [string[]]$Heroes = @('knight', 'ranger', 'barbarian', 'fire_wizard', 'rogue'),
+    [string[]]$Heroes = @('knight', 'ranger', 'barbarian', 'fire_wizard', 'rogue', 'engineer'),
     [string]$Require = '',
     [int]$Seed = 1,
     [int]$BasePort = 7100,

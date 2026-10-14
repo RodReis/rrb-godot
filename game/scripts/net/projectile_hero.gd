@@ -30,7 +30,17 @@ var _no_exclusion: Array[RID] = []
 func _ready() -> void:
 	super()
 	for arrow: Arrow in _arrows:
-		arrow.speed = hero_data.basic_attack.speed
+		arrow.speed = _flight_speed()
+
+
+## Velocidade e raio de colisao de todos os projeteis do heroi (u/s, u): os do basico (PI
+## 2026-10-10). O Engenheiro (F59) nao tem projetil no basico e voa com a Garra Mecanica do Q.
+func _flight_speed() -> float:
+	return hero_data.basic_attack.speed
+
+
+func _flight_radius() -> float:
+	return hero_data.basic_attack.radius
 
 
 ## Muro, pilar ou portao entre o heroi e [param target] (o bot nao atira na parede).
@@ -108,15 +118,14 @@ func _arrow_stopped(_arrow: Arrow, _tick: int) -> void:
 
 ## Um tick de voo: toca, na ordem do caminho, quem o segmento do tick alcanca antes do bloqueio.
 func _advance(arrow: Arrow, tick: int) -> void:
-	var basic := hero_data.basic_attack
 	var step := RangerRules.flight_step(
-		basic.speed, arrow.max_range, arrow.traveled, NetworkTime.tickrate
+		_flight_speed(), arrow.max_range, arrow.traveled, NetworkTime.tickrate
 	)
 	var p0 := arrow.origin
 	var p1 := p0 + arrow.direction * step
 	var block := _block_fraction(p0, p1)
 	var reach := 1.0 if block == CombatRules.NO_HIT else block
-	_collect_hits(arrow, p0, p1, reach, basic.radius)
+	_collect_hits(arrow, p0, p1, reach, _flight_radius())
 	for i: int in _hit_targets.size():
 		var other := _hit_targets[i]
 		arrow.mark_hit(other.combat_id())
@@ -157,7 +166,7 @@ func _collect_hits(arrow: Arrow, p0: Vector3, p1: Vector3, reach: float, radius:
 ## pelo centro, a bola de 0,4 u tocaria o corpo no mesmo ponto em que cruza a Muralha (F54).
 func _block_fraction(p0: Vector3, p1: Vector3) -> float:
 	var block := _wall_fraction(p0, p1)
-	var lead := (p1 - p0).normalized() * hero_data.basic_attack.radius
+	var lead := (p1 - p0).normalized() * _flight_radius()
 	for other: Combatant in _targets:
 		var hero := other as Hero
 		if hero == null:
@@ -190,3 +199,16 @@ func _wall_fraction(p0: Vector3, p1: Vector3) -> float:
 			continue
 		return p0.distance_to(hit["position"]) / length
 	return CombatRules.NO_HIT
+
+
+## Servidor: fere os _targets a ate [param radius] de [param center]; [param knockback] > 0 empurra
+## para longe do centro (alvo no centro exato nao e empurrado).
+func _area_hit(
+	tick: int, slot: HitLedger.Slot, center: Vector3, radius: float, damage: int, knockback: float
+) -> void:
+	for other: Combatant in _targets:
+		if CombatRules.in_radius(center, other.global_position, radius):
+			var push := CombatRules.push_vector(other.global_position - center, knockback)
+			_hit(other, tick, slot, HitEffect.new(damage, center, push))
+		else:
+			_miss(other, tick, slot)

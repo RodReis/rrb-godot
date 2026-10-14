@@ -82,7 +82,7 @@ func _process(_delta: float) -> void:
 	_last_q = _hero.q_cooldown
 	_last_e = _hero.e_cooldown
 	_last_r = _hero.r_cooldown
-	if _hero.stun_ticks > 0:
+	if _hero.stun_ticks > 0 or _hero.knockback_ticks > 0:  # atordoado, empurrado ou puxado (F59)
 		_loop(stunned)
 	elif struck:
 		_once(strike)

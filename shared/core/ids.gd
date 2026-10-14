@@ -40,6 +40,7 @@ const ALL: Array[StringName] = [
 	&"wolf_t2",
 	&"golem_corner",
 	&"rogue",
+	&"engineer",
 ]
 
 

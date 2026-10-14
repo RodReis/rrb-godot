@@ -9,6 +9,9 @@ extends SceneTree
 ## --equip: os dois herois ficam com as 4 pecas epicas a medicao inteira (SPEC-048 §6 item 4).
 ## --smoke: cada Ladina tem uma nuvem de fumaca ativa a medicao inteira (SPEC-058 §8 item 8): a
 ## sonda reemite o evento da nuvem (ImpactRelay.smoke_shown) no lugar dela a cada SMOKE_SECONDS.
+## --engineer: cada Engenheiro tem Torreta atirando e Dinamite explodindo a medicao inteira
+## (SPEC-059 §8 item 8): a sonda reemite os eventos do ImpactRelay (deploy_shown, turret_shot_shown)
+## na posicao do heroi e do outro, nos compassos ENGINEER_*_SECONDS.
 ## Sai com 1 se os herois nao nascerem em SPAWN_TIMEOUT segundos.
 
 const MAIN: String = "res://scenes/main.tscn"
@@ -21,6 +24,11 @@ const MEASURE_SECONDS: float = 30.0
 const P99: float = 0.99
 ## Nova nuvem antes de a anterior (3 s) acabar.
 const SMOKE_SECONDS: float = 2.5
+## Compassos do --engineer (s): Torreta nova antes de a anterior (6 s) acabar, disparo a cada 0,75 s
+## e caixa de Dinamite a cada 3 s (pavio de 1,5 s, entao sempre ha uma no ar ou explodindo).
+const ENGINEER_TURRET_SECONDS: float = 5.5
+const ENGINEER_SHOT_SECONDS: float = 0.75
+const ENGINEER_CRATE_SECONDS: float = 3.0
 ## Itens do --equip, por HeroData.id (um conjunto por heroi, arma epica).
 const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"knight": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
@@ -28,6 +36,7 @@ const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"barbarian": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
 	&"fire_wizard": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"rogue": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
+	&"engineer": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 }
 
 var _out: String = "frametime"
@@ -39,6 +48,10 @@ var _gpu_ms: PackedFloat64Array = []
 var _equip: bool = false
 var _smoke: bool = false
 var _smoke_wait: float = 0.0
+var _engineer: bool = false
+var _turret_wait: float = 0.0
+var _shot_wait: float = 0.0
+var _crate_wait: float = 0.0
 
 
 func _initialize() -> void:
@@ -49,6 +62,8 @@ func _initialize() -> void:
 			_equip = true
 		elif arg == "--smoke":
 			_smoke = true
+		elif arg == "--engineer":
+			_engineer = true
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	var main := (load(MAIN) as PackedScene).instantiate()
@@ -67,6 +82,8 @@ func _process(delta: float) -> bool:
 		if _smoke_wait <= 0.0:
 			_smoke_wait = SMOKE_SECONDS
 			_smoke_rogues()
+	if _engineer and _phase > 0:
+		_engineer_effects(delta)
 	match _phase:
 		0:
 			if _players.get_child_count() >= HEROES:
@@ -161,3 +178,41 @@ static func _percentile(values: PackedFloat64Array, q: float) -> float:
 	var sorted := values.duplicate()
 	sorted.sort()
 	return sorted[mini(int(q * sorted.size()), sorted.size() - 1)]
+
+
+## Sem tipos do jogo (como _smoke_rogues): Torreta, disparos e caixa pelos sinais do relay. A
+## Torreta fica 2 u a frente do Engenheiro e atira no outro heroi; a caixa cai no outro heroi.
+func _engineer_effects(delta: float) -> void:
+	_turret_wait -= delta
+	_shot_wait -= delta
+	_crate_wait -= delta
+	var relay := current_scene.get_node("ImpactRelay")
+	var tick: int = root.get_node("NetworkTime").get(&"tick")
+	for hero: Node in _players.get_children():
+		var data: Resource = hero.get(&"hero_data")
+		if data == null or data.get(&"id") != &"engineer":
+			continue
+		var position: Vector3 = hero.get(&"global_position")
+		var other := _other_than(hero)
+		var target: Vector3 = other.get(&"global_position") if other != null else position
+		var turret := position + (target - position).normalized() * 2.0
+		var caster := hero.name.to_int()
+		if _turret_wait <= 0.0:
+			relay.emit_signal(&"deploy_shown", caster, 0, turret, tick)
+		if _shot_wait <= 0.0:
+			relay.emit_signal(&"turret_shot_shown", caster, turret, target)
+		if _crate_wait <= 0.0:
+			relay.emit_signal(&"deploy_shown", caster, 1, target, tick)
+	if _turret_wait <= 0.0:
+		_turret_wait = ENGINEER_TURRET_SECONDS
+	if _shot_wait <= 0.0:
+		_shot_wait = ENGINEER_SHOT_SECONDS
+	if _crate_wait <= 0.0:
+		_crate_wait = ENGINEER_CRATE_SECONDS
+
+
+func _other_than(hero: Node) -> Node:
+	for other: Node in _players.get_children():
+		if other != hero:
+			return other
+	return null

@@ -104,16 +104,3 @@ func _mark_meteor() -> void:
 	meteor_center = RangerRules.rain_center(global_position, forward(), distance, r.cast_range)
 	var delay := SkillData.at_rank(r.duration, ranks.z)
 	meteor_ticks = SkillRules.seconds_to_ticks(delay, NetworkTime.tickrate)
-
-
-## Servidor: fere os _targets a ate [param radius] de [param center]; [param knockback] > 0 empurra
-## para longe do centro (alvo no centro exato nao e empurrado).
-func _area_hit(
-	tick: int, slot: HitLedger.Slot, center: Vector3, radius: float, damage: int, knockback: float
-) -> void:
-	for other: Combatant in _targets:
-		if CombatRules.in_radius(center, other.global_position, radius):
-			var push := CombatRules.push_vector(other.global_position - center, knockback)
-			_hit(other, tick, slot, HitEffect.new(damage, center, push))
-		else:
-			_miss(other, tick, slot)

@@ -4,6 +4,7 @@ extends GutTest
 
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const ROGUE: String = "res://scenes/heroes/rogue.tscn"
+const ENGINEER: String = "res://scenes/heroes/engineer.tscn"
 const TICK: int = 40
 const DAMAGE: int = 10
 
@@ -104,3 +105,74 @@ func test_nuvem_do_proprio_time_chega_a_qualquer_distancia() -> void:
 	var rogue := _spawn("6", GateRules.TEAM_A, Vector3(0, 0, -30), ROGUE) as Rogue
 	rogue.smoked.emit(rogue.global_position, TICK)
 	assert_eq(_smokes["count"], 1)
+
+
+# Torreta e Caixa de Dinamite do Engenheiro (F59): chegam por evento, uma vez, a quem ve o ponto.
+
+
+func _watch_engineer(deploys: Dictionary, shots: Dictionary) -> void:
+	_relay.deploy_shown.connect(
+		func(caster: int, kind: int, center: Vector3, tick: int) -> void:
+			deploys["count"] += 1
+			deploys["last"] = [caster, kind, center, tick]
+	)
+	_relay.turret_shot_shown.connect(
+		func(caster: int, from: Vector3, at: Vector3) -> void:
+			shots["count"] += 1
+			shots["last"] = [caster, from, at]
+	)
+
+
+func test_torreta_no_raio_de_visao_chega_uma_vez() -> void:
+	var engineer := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -8), ENGINEER) as Engineer
+	var deploys := {"count": 0, "last": []}
+	_watch_engineer(deploys, {"count": 0, "last": []})
+	var spot := Vector3(0, 0, -10)
+	engineer.deployed.emit(Engineer.Deploy.TURRET, spot, TICK)
+	engineer.deployed.emit(Engineer.Deploy.TURRET, spot, TICK)
+	assert_eq(deploys["count"], 1, "ressimular nao repete")
+	assert_eq(deploys["last"], [6, Engineer.Deploy.TURRET, spot, TICK])
+
+
+func test_torreta_e_caixa_no_mesmo_tick_sao_dois_eventos() -> void:
+	var engineer := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -8), ENGINEER) as Engineer
+	var deploys := {"count": 0, "last": []}
+	_watch_engineer(deploys, {"count": 0, "last": []})
+	engineer.deployed.emit(Engineer.Deploy.TURRET, Vector3(0, 0, -10), TICK)
+	engineer.deployed.emit(Engineer.Deploy.CRATE, Vector3(0, 0, -12), TICK)
+	assert_eq(deploys["count"], 2)
+
+
+func test_torreta_fora_do_raio_de_visao_nao_chega() -> void:
+	var engineer := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -30), ENGINEER) as Engineer
+	var deploys := {"count": 0, "last": []}
+	var shots := {"count": 0, "last": []}
+	_watch_engineer(deploys, shots)
+	engineer.deployed.emit(Engineer.Deploy.TURRET, Vector3(0, 0, -30), TICK)
+	engineer.turret_fired.emit(Vector3(0, 0, -30), Vector3(0, 0, -34), TICK)
+	assert_eq(deploys["count"], 0)
+	assert_eq(shots["count"], 0)
+
+
+func test_torreta_do_proprio_time_chega_a_qualquer_distancia() -> void:
+	var engineer := _spawn("6", GateRules.TEAM_A, Vector3(0, 0, -30), ENGINEER) as Engineer
+	var deploys := {"count": 0, "last": []}
+	_watch_engineer(deploys, {"count": 0, "last": []})
+	engineer.deployed.emit(Engineer.Deploy.TURRET, Vector3(0, 0, -30), TICK)
+	assert_eq(deploys["count"], 1)
+
+
+func test_torreta_visivel_chega_mesmo_com_o_engenheiro_longe() -> void:
+	# O Engenheiro (adversario) esta a 30 u, fora do raio de visao; a Torreta, a 5 u: quem ve a
+	# Torreta recebe, porque o evento nao depende do estado do Engenheiro (que sumiu).
+	var engineer := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -30), ENGINEER) as Engineer
+	var deploys := {"count": 0, "last": []}
+	var shots := {"count": 0, "last": []}
+	_watch_engineer(deploys, shots)
+	var spot := Vector3(0, 0, -5)
+	engineer.deployed.emit(Engineer.Deploy.TURRET, spot, TICK)
+	engineer.turret_fired.emit(spot, Vector3(0, 0, -1), TICK + 1)
+	engineer.turret_fired.emit(spot, Vector3(0, 0, -1), TICK + 1)
+	assert_eq(deploys["count"], 1)
+	assert_eq(shots["count"], 1, "um disparo por tick")
+	assert_eq(shots["last"], [6, spot, Vector3(0, 0, -1)])

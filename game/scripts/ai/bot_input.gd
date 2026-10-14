@@ -219,7 +219,9 @@ func _contest(tick: int) -> void:
 ## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele). Barbaro pelos
 ## limiares do perfil (BotRules.barbarian_skills): o Salto cai no alvo (aim_distance). Bruxo
 ## pelos limiares do perfil (BotRules.fire_wizard_skills). Ladina pelos limiares do perfil
-## (BotRules.rogue_skills); a fumaca de fuga vale em qualquer estado (_smoke_escape).
+## (BotRules.rogue_skills); a fumaca de fuga vale em qualquer estado (_smoke_escape). Engenheiro
+## pelos limiares do perfil (BotRules.engineer_skills): Dinamite so com heroi e boss; a Torreta
+## tambem no farm; a mira da Dinamite e do alvo, a da Torreta e meio caminho.
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -234,6 +236,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var barbarian := _hero is Barbarian
 	var wizard := _hero is FireWizard
 	var rogue := _hero is Rogue
+	var engineer := _hero is Engineer
 	var use := Vector3i.ZERO
 	if barbarian:
 		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
@@ -246,6 +249,12 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		use = BotRules.rogue_skills(to.length(), 1.0, PROFILE)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1 and not blocked
+	elif engineer:  # Garra fora do cone; Dinamite no alvo; a Torreta tambem ajuda a farmar
+		use = BotRules.engineer_skills(to.length(), data.basic_attack.attack_range, PROFILE)
+		skill_q = skills and use.x == 1 and not blocked
+		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
+		skill_e = use.y == 1 and not skill_r and _skill_ready(SkillRules.SLOT_E)
+		aim_distance = BotRules.engineer_aim_distance(to.length(), skill_r)
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
@@ -256,11 +265,20 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_r = skills and use.z == 1
 	elif wizard:
 		skill_e = skills and use.y == 1
-	elif rogue:
+	elif rogue or engineer:
 		pass
 	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)
 		skill_r = skills
+
+
+## O Hero pode usar a habilidade [param slot] (SkillRules.SLOT_*): rank aprendido e recarga zerada.
+func _skill_ready(slot: int) -> bool:
+	var data := _hero.hero_data
+	var skills: Array[SkillData] = [data.skill_q, data.skill_e, data.skill_r]
+	var cooldowns := [_hero.q_cooldown, _hero.e_cooldown, _hero.r_cooldown]
+	var usable := SkillRules.can_use(skills[slot], _hero.ranks[slot], _hero.level)
+	return cooldowns[slot] == 0 and usable
 
 
 ## Recuando: golpeia o monstro ja no alcance do basico, sem parar de andar. O T1 da base

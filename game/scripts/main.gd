@@ -23,6 +23,7 @@ const ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/barbarian.tres"),
 	preload("res://shared/data/heroes/fire_wizard.tres"),
 	preload("res://shared/data/heroes/rogue.tres"),
+	preload("res://shared/data/heroes/engineer.tres"),
 ]
 ## Host so aceita conexao local, em porta escolhida pelo sistema.
 const HOST_BIND_IP: String = "127.0.0.1"

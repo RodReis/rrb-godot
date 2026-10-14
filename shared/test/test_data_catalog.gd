@@ -91,6 +91,14 @@ func test_papel_e_descricao_dos_herois() -> void:
 			"Algoz",
 			"Dano alto de perto com a besta, frágil; some na fumaça e entra com a Emboscada."
 		],
+		&"engineer":
+		[
+			"Engenheiro",
+			(
+				"Dano em cone de perto com o bacamarte; puxa o adversário com a Garra e controla "
+				+ "a área com a Torreta e a Dinamite."
+			)
+		],
 	}
 	for id: StringName in expected:
 		assert_eq(_hero(id).role, expected[id][0], "role de %s" % id)

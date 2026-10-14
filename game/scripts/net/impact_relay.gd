@@ -10,13 +10,25 @@ extends Node
 ## Fumaca da Ladina (F58, SPEC-058 §6): a nuvem chega por aqui, nao pelo estado da Ladina (ela some
 ## de quem esta fora da nuvem). Uma vez por lancamento, a quem tem o centro dela no raio de visao
 ## (F37) ou e do time dela; confiavel, porque perder a nuvem esconderia por 3 s a regra que vale.
+## Torreta e Caixa de Dinamite do Engenheiro (F59, SPEC-059 §3.1): mesmo caminho, porque o
+## Engenheiro some de quem o ve oculto e a Torreta nao. A instalacao chega confiavel
+## (deploy_shown); cada disparo da Torreta, nao (turret_shot_shown: perder um tracante so tira um
+## efeito).
 
 ## Cliente e host: o heroi [param attacker_id] acertou com [param slot] em [param at].
 signal impacted(attacker_id: int, slot: int, at: Vector3)
 ## Cliente e host: a Ladina [param caster_id] lancou a fumaca em [param center] no [param tick].
 signal smoke_shown(caster_id: int, center: Vector3, tick: int)
+## Cliente e host: o Engenheiro [param caster_id] posicionou [param kind] (Engineer.Deploy) em
+## [param center].
+signal deploy_shown(caster_id: int, kind: int, center: Vector3, tick: int)
+## Cliente e host: a Torreta do Engenheiro [param caster_id], em [param from], atirou em
+## [param at].
+signal turret_shot_shown(caster_id: int, from: Vector3, at: Vector3)
 
 const NODE_NAME: StringName = &"ImpactRelay"
+## Chave de "slot" do disparo da Torreta no ImpactLog (fora do HitLedger.Slot): um por tick.
+const TURRET_SHOT_KEY: int = 100
 ## Cliente: impactos recentes lembrados para contar repetidos (medicao).
 const RECENT_LIMIT: int = 256
 
@@ -27,6 +39,11 @@ static var repeated: int = 0
 ## Medicao: nuvens anunciadas (servidor) e recebidas (cliente).
 static var smokes_announced: int = 0
 static var smokes_received: int = 0
+## Medicao: instalacoes e disparos da Torreta/caixa, anunciados (servidor) e recebidos (cliente).
+static var deploys_announced: int = 0
+static var deploys_received: int = 0
+static var turret_shots_announced: int = 0
+static var turret_shots_received: int = 0
 
 ## Pai dos herois (Main/Players); definido antes de entrar na arvore.
 var players: Node
@@ -52,6 +69,10 @@ func _on_players_child_entered_tree(node: Node) -> void:
 	var rogue := node as Rogue
 	if rogue != null:
 		rogue.smoked.connect(_on_rogue_smoked.bind(rogue))
+	var engineer := node as Engineer
+	if engineer != null:
+		engineer.deployed.connect(_on_engineer_deployed.bind(engineer))
+		engineer.turret_fired.connect(_on_engineer_turret_fired.bind(engineer))
 
 
 ## O heroi do jogador [param peer] ve o ponto [param at] (time de [param caster] sempre ve).
@@ -77,6 +98,35 @@ func _on_rogue_smoked(center: Vector3, tick: int, rogue: Rogue) -> void:
 		smoke_shown.emit(rogue.peer_id, center, tick)
 
 
+func _on_engineer_deployed(
+	kind: Engineer.Deploy, center: Vector3, tick: int, engineer: Engineer
+) -> void:
+	if not multiplayer.is_server():
+		return
+	var slot := HitLedger.Slot.E if kind == Engineer.Deploy.TURRET else HitLedger.Slot.R
+	if not _announced.first(tick, engineer.peer_id, slot, 0):
+		return
+	deploys_announced += 1
+	for peer: int in multiplayer.get_peers():
+		if _sees_point(peer, center, engineer):
+			_show_deploy.rpc_id(peer, engineer.peer_id, kind, center, tick)
+	if _sees_point(multiplayer.get_unique_id(), center, engineer):
+		deploy_shown.emit(engineer.peer_id, kind, center, tick)
+
+
+func _on_engineer_turret_fired(from: Vector3, at: Vector3, tick: int, engineer: Engineer) -> void:
+	if not multiplayer.is_server():
+		return
+	if not _announced.first(tick, engineer.peer_id, TURRET_SHOT_KEY, 0):
+		return
+	turret_shots_announced += 1
+	for peer: int in multiplayer.get_peers():
+		if _sees_point(peer, from, engineer):
+			_show_turret_shot.rpc_id(peer, engineer.peer_id, from, at)
+	if _sees_point(multiplayer.get_unique_id(), from, engineer):
+		turret_shot_shown.emit(engineer.peer_id, from, at)
+
+
 func _on_hero_struck(target: Combatant, slot: HitLedger.Slot, tick: int, hero: Hero) -> void:
 	if not multiplayer.is_server():
 		return
@@ -97,6 +147,20 @@ func _on_hero_struck(target: Combatant, slot: HitLedger.Slot, tick: int, hero: H
 func _show_smoke(caster_id: int, center: Vector3, tick: int) -> void:
 	smokes_received += 1
 	smoke_shown.emit(caster_id, center, tick)
+
+
+## Servidor -> cliente: uma Torreta ou caixa que este jogador ve.
+@rpc("authority", "call_remote", "reliable")
+func _show_deploy(caster_id: int, kind: int, center: Vector3, tick: int) -> void:
+	deploys_received += 1
+	deploy_shown.emit(caster_id, kind, center, tick)
+
+
+## Servidor -> cliente: um disparo de Torreta que este jogador ve.
+@rpc("authority", "call_remote", "unreliable")
+func _show_turret_shot(caster_id: int, from: Vector3, at: Vector3) -> void:
+	turret_shots_received += 1
+	turret_shot_shown.emit(caster_id, from, at)
 
 
 ## Servidor -> cliente: um impacto que este jogador ve ([param tick] do golpe, para a medicao).
