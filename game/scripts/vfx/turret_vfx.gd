@@ -11,8 +11,13 @@ const POP_SECONDS: float = 0.25
 const SHRINK_SECONDS: float = 0.25
 ## Quanto o pop passa da escala 1 antes de assentar (ease-out-back).
 const POP_OVERSHOOT: float = 1.7
-## Distancia (u) do eixo da cabeca ate a boca do cano, onde o clarao nasce.
+## Altura da boca do cano acima do ponto da Torreta e distancia dela ao eixo da cabeca (u): onde o
+## clarao nasce.
+const MUZZLE_HEIGHT: float = 0.96
 const MUZZLE_REACH: float = 0.6
+## Escala minima do Model: escala 0 deixa a base singular e global_rotation/global_position dos
+## filhos viram NaN.
+const MIN_SCALE: float = 0.001
 ## Cabeca da Torreta na malha do pack (art/vfx/build_engineer_vfx.py).
 const GUN_NODE: StringName = &"turret_gun"
 ## Giro (graus) que leva o cano da cabeca do pack para a frente do heroi (-Z).
@@ -47,7 +52,7 @@ func _process(delta: float) -> void:
 	super(delta)
 	if not visible:
 		return
-	_model.scale = Vector3.ONE * _scale_at(_age)
+	_model.scale = Vector3.ONE * maxf(_scale_at(_age), MIN_SCALE)
 	if _age >= _total and not _end_played:
 		_end_played = true
 		_end_dust.restart()
@@ -78,8 +83,12 @@ func retire() -> void:
 func shoot(at: Vector3) -> void:
 	var flat := Vector3(at.x - global_position.x, 0.0, at.z - global_position.z)
 	if not flat.is_zero_approx():
-		_gun.global_rotation.y = atan2(-flat.x, -flat.z) + deg_to_rad(gun_yaw_offset_degrees)
-		_flash.global_position = _gun.global_position + flat.normalized() * MUZZLE_REACH
+		# Rotacao local (a Torreta nasce sem giro): global_rotation inverte a base do pai, e o Model
+		# de uma instancia reusada do pool ainda esta com escala 0 do fim da vida anterior (NaN).
+		_gun.rotation.y = atan2(-flat.x, -flat.z) + deg_to_rad(gun_yaw_offset_degrees)
+		_flash.global_position = (
+			global_position + Vector3.UP * MUZZLE_HEIGHT + flat.normalized() * MUZZLE_REACH
+		)
 	_flash.restart()
 
 

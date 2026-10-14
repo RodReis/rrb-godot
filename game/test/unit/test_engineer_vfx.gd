@@ -151,7 +151,7 @@ func test_torreta_pop_encolhe_e_gira_a_cabeca_para_o_tiro() -> void:
 	var turret := _last_effect() as TurretVfx
 	var model := turret.get_node("Model") as Node3D
 	turret._process(0.0)
-	assert_almost_eq(model.scale.x, 0.0, 0.001, "nasce em 0")
+	assert_lt(model.scale.x, 0.01, "nasce quase em 0 (nunca singular)")
 	turret._process(TurretVfx.POP_SECONDS)
 	assert_almost_eq(model.scale.x, 1.0, 0.001, "pop termina em 1")
 	_driver.turret_shot(Vector3.ZERO, Vector3(4, 0, 0), 100)
@@ -225,3 +225,21 @@ func test_poeira_e_clarao_da_torreta_nao_tocam_no_spawn() -> void:
 	assert_false((turret.get_node("EndDust") as GPUParticles3D).emitting)
 	assert_false((turret.get_node("Flash") as GPUParticles3D).emitting)
 	assert_true((turret.get_node("InstallDust") as GPUParticles3D).emitting)
+
+
+func test_torreta_reusada_do_pool_gira_a_cabeca_sem_nan() -> void:
+	_bind()
+	_driver.deployed(Engineer.Deploy.TURRET, Vector3.ZERO, _now())
+	var first := _last_effect() as TurretVfx
+	for i: int in 500:  # 6,25 s: a Torreta encolhe ate escala 0 e volta ao pool
+		first._process(0.0125)
+	assert_false(first.visible)
+	var model := first.get_node("Model") as Node3D
+	assert_lt(model.scale.x, 0.1, "fim da vida: quase 0")
+	_driver.deployed(Engineer.Deploy.TURRET, Vector3(2, 0, 0), _now())
+	assert_eq(_effects(), 1, "reusou a mesma instancia")
+	_driver.turret_shot(Vector3(2, 0, 0), Vector3(2, 0, -4), 100)  # antes do 1o quadro dela
+	var gun := model.find_child("turret_gun", true, false) as Node3D
+	assert_true(gun.global_position.is_finite())
+	assert_true(gun.global_transform.basis.x.is_finite())
+	assert_true((first.get_node("Flash") as Node3D).global_position.is_finite())
