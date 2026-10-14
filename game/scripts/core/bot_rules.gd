@@ -123,6 +123,21 @@ static func rogue_skills(distance: float, hp_pct: float, profile: BotProfile) ->
 	)
 
 
+## Habilidade em que o bot gasta o proximo ponto: a primeira de R, Q, E abaixo do rank tipico do
+## nivel ([param typical], GDB §3.2 — E1 no nivel 2); todas no tipico = R, Q, E na ordem. A
+## validade do ponto (nivel minimo, rank maximo) e do SkillRules.learn.
+static func learn_order(ranks: Vector3i, typical: Vector3i) -> PackedInt32Array:
+	var order := PackedInt32Array([SkillRules.SLOT_R, SkillRules.SLOT_Q, SkillRules.SLOT_E])
+	var behind := PackedInt32Array()
+	for slot: int in order:
+		if ranks[slot] < typical[slot]:
+			behind.append(slot)
+	for slot: int in order:
+		if not behind.has(slot):
+			behind.append(slot)
+	return behind
+
+
 ## Recuo terminado (saiu de RETREAT) fica gasto ate o HP passar do limiar de novo.
 static func retreat_spent_after(
 	previous: State, current: State, hp_pct: float, spent: bool, profile: BotProfile

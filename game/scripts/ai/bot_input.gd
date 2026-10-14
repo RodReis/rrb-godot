@@ -358,7 +358,8 @@ func _learn_points() -> void:
 	var skills: Array[SkillData] = [
 		_hero.hero_data.skill_q, _hero.hero_data.skill_e, _hero.hero_data.skill_r
 	]
-	for slot: int in [SkillRules.SLOT_R, SkillRules.SLOT_Q, SkillRules.SLOT_E]:
+	var typical := XpTable.typical_ranks(_hero.xp_curve, _hero.level)
+	for slot: int in BotRules.learn_order(_hero.ranks, typical):
 		if SkillRules.learn(_hero.ranks, slot, skills[slot], _hero.level) != _hero.ranks:
 			learn = slot
 			return
