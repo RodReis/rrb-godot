@@ -9,9 +9,8 @@
   .\tools\net-measure.ps1 -OutDir logs\c -DelayMs 200 -JitterMs 30 -LossPct 5   # cenario C
   Com -BothBots os dois clientes sao bots e se enfrentam no centro: um enxerga o outro sob a
   neblina, e o "remoto parado" deixa de ser 0/0 (gate do MVP2). -Heroes escolhe o heroi de cada
-  cliente jogado pelo bot e -Level o nivel inicial dos herois (confronto de heroi novo, SPEC-058 §8):
-  .	ools
-et-measure.ps1 -OutDir logs58 -DelayMs 100 -BothBots -Heroes rogue,knight -Level 6
+  cliente jogado pelo bot e -Level o nivel inicial dos herois (confronto de heroi novo, SPEC-058 item 8.5):
+  .\tools\net-measure.ps1 -OutDir logs\f58 -DelayMs 100 -BothBots -Heroes rogue,knight -Level 6 -StartTime 240
 #>
 param(
     [Parameter(Mandatory)][string]$OutDir,
@@ -22,7 +21,9 @@ param(
     [int]$Seed = 20,
     [switch]$BothBots,
     [string[]]$Heroes = @(),
-    [int]$Level = 0
+    [int]$Level = 0,
+    # Relogio ja comecando em S segundos (--time): confronto perto da fase 2, quando os bots se cacam.
+    [int]$StartTime = 0
 )
 $ErrorActionPreference = 'Continue'
 $repo = Split-Path -Parent $PSScriptRoot
@@ -33,7 +34,8 @@ $OutDir = (Resolve-Path $OutDir).Path
 $env:NETEM_DELAY_MS = if ($DelayMs -gt 0) { "$DelayMs" } else { '' }
 $env:NETEM_JITTER_MS = if ($JitterMs -gt 0) { "$JitterMs" } else { '' }
 $env:NETEM_LOSS_PCT = if ($LossPct -gt 0) { "$LossPct" } else { '' }
-$env:GAME_ARGS = "--probe --seed=$Seed" + $(if ($Level -gt 0) { " --level=$Level" } else { '' })
+$env:GAME_ARGS = "--probe --seed=$Seed" + $(if ($Level -gt 0) { " --level=$Level" } else { '' }) +
+    $(if ($StartTime -gt 0) { " --time=$StartTime" } else { '' })
 $clients = @()
 try {
     docker compose -f $compose up --build -d 2>&1 | Select-Object -Last 3
