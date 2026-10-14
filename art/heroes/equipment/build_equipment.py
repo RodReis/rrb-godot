@@ -2,7 +2,7 @@
 renderiza os icones em shared/ui/icons/items/ (SPEC-048, ADR-0005, ADR-0010).
 
 Pecas rigidas: cada objeto e modelado no espaco do modelo do heroi em pose de repouso (Z para
-cima, frente -Y; o rig do Knight, do Ranger, do Barbarian e do Mage e o mesmo) e se chama "<peca>__<osso>" com "." do
+cima, frente -Y; o rig do Knight, do Ranger, do Barbarian, do Mage e do Rogue e o mesmo) e se chama "<peca>__<osso>" com "." do
 osso trocado por "_" (o Godot nao aceita "." em nome de no). O HeroVisual prende cada objeto ao
 osso por BoneAttachment3D. Raridade = mesma forma, acabamento diferente: comum liso; raro com
 friso azul; epico com friso dourado e detalhe roxo (PATTERNS P6). Cores pelo atlas KayKit
@@ -28,6 +28,7 @@ KNIGHT = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Knight
 RANGER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "ranger.glb")
 BARBARIAN = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Barbarian.glb")
 MAGE = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Mage.glb")
+ROGUE = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "rogue.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
@@ -410,6 +411,24 @@ def staff_accents(p, rarity):
     p.gem(EPIC, (0.0, -0.14, 0.59), (0.06, 0.05, 0.07))
 
 
+def crossbow_accents(p, rarity):
+    # Espaco local do crossbow_1handed (F58): arco em -Y (bracos +-0.45 em X, y ~-0.62, z 0.02-0.19),
+    # ponta em y -0.94, coronha ate +0.28 com a empunhadura descendo em -Z (y 0 a 0.2).
+    if rarity == 0:
+        return
+    tip_cell = BLUE if rarity == 1 else GOLD
+    for side in (-1.0, 1.0):
+        m = Matrix.Translation((side * 0.47, -0.62, 0.06)) @ Matrix.Rotation(math.radians(-90.0 * side), 4, "Y")
+        r = bmesh.ops.create_cone(p.bm, cap_ends=True, segments=6, radius1=0.05, radius2=0.0, depth=0.12, matrix=m)
+        p.add(r["verts"], tip_cell)
+    if rarity == 1:
+        p.gem(BLUE, (0.0, -0.30, 0.17), (0.05, 0.06, 0.04))  # pedra sobre a coronha
+        return
+    p.box(GOLD, (0.0, -0.35, 0.09), (0.30, 0.10, 0.22))  # cinta dourada na coronha
+    p.box(GOLD, (0.0, -0.92, 0.06), (0.20, 0.06, 0.12))  # ponteira dourada
+    p.gem(EPIC, (0.0, -0.35, 0.22), (0.06, 0.07, 0.05))
+
+
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
@@ -417,6 +436,7 @@ WEAPONS = {
     "ranger": (RANGER, "bow_withString", "handslot.l", bow_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
     "barbarian": (BARBARIAN, "2H_Axe", "handslot.r", axe_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
     "fire_wizard": (MAGE, "2H_Staff", "handslot.r", staff_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
+    "rogue": (ROGUE, "crossbow_1handed", "handslot.r", crossbow_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
 }
 
 # ---------------------------------------------------------------------------------------------

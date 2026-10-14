@@ -86,6 +86,11 @@ func test_papel_e_descricao_dos_herois() -> void:
 			"Mago",
 			"Dano mágico em área à distância, frágil; afasta quem chega perto com o Anel de Fogo."
 		],
+		&"rogue":
+		[
+			"Algoz",
+			"Dano alto de perto com a besta, frágil; some na fumaça e entra com a Emboscada."
+		],
 	}
 	for id: StringName in expected:
 		assert_eq(_hero(id).role, expected[id][0], "role de %s" % id)

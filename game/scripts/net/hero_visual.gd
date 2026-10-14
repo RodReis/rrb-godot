@@ -17,9 +17,14 @@ extends Node
 @export var basic_attack: StringName = &"1H_Melee_Attack_Slice_Horizontal"
 ## Vazio = o Q nao tem animacao propria (Investida usa a de avanco).
 @export var skill_q: StringName = &""
+## Velocidade da animacao do Q (a Rajada da Ladina cabe a 1H_Ranged_Shooting na janela do disparo).
+@export var skill_q_speed: float = 1.0
 ## Vazio = o E nao tem animacao propria (Muralha usa a de bloqueio; Rolamento, a de avanco).
 @export var skill_e: StringName = &""
+## Vazio = o R nao tem animacao propria (Emboscada usa a de avanco e depois a de strike).
 @export var skill_r: StringName = &"1H_Melee_Attack_Chop"
+## Golpe no fim do avanco (Hero.dash_strike_ticks: Emboscada da Ladina); vazio = nenhum.
+@export var strike: StringName = &""
 ## Laco enquanto o heroi canaliza (Hero.is_channeling: Rodopio do Barbaro).
 @export var channel: StringName = &""
 @export var death: StringName = &"Death_A"
@@ -33,6 +38,7 @@ var _last_basic: int = 0
 var _last_q: int = 0
 var _last_e: int = 0
 var _last_r: int = 0
+var _last_strike: int = 0
 var _fallen: bool = false
 var _items: ItemVisuals
 var _skeleton: Skeleton3D
@@ -66,7 +72,10 @@ func _process(_delta: float) -> void:
 		return
 	_fallen = false
 	var started_basic := _hero.basic_cooldown > _last_basic
-	var started_r := _hero.r_cooldown > _last_r
+	var started_r := _hero.r_cooldown > _last_r and skill_r != &""
+	var strike_ticks := _hero.dash_strike_ticks()
+	var struck := strike_ticks > _last_strike and strike != &""
+	_last_strike = strike_ticks
 	var started_q := _hero.q_cooldown > _last_q and skill_q != &""
 	var started_e := _hero.e_cooldown > _last_e and skill_e != &""
 	_last_basic = _hero.basic_cooldown
@@ -75,6 +84,8 @@ func _process(_delta: float) -> void:
 	_last_r = _hero.r_cooldown
 	if _hero.stun_ticks > 0:
 		_loop(stunned)
+	elif struck:
+		_once(strike)
 	elif _hero.dash_ticks > 0:
 		_loop(dash, dash_play_speed)
 	elif started_r:
@@ -82,7 +93,7 @@ func _process(_delta: float) -> void:
 	elif _hero.is_channeling() and _player.current_animation != skill_r:
 		_loop(channel)
 	elif started_q:
-		_once(skill_q)
+		_once(skill_q, skill_q_speed)
 	elif started_e:
 		_once(skill_e)
 	elif started_basic:
@@ -154,9 +165,9 @@ func _loop(animation: StringName, speed: float = 1.0) -> void:
 		_player.play(animation, -1.0, speed)
 
 
-func _once(animation: StringName) -> void:
+func _once(animation: StringName, speed: float = 1.0) -> void:
 	_one_shot = true
-	_player.play(animation)
+	_player.play(animation, -1.0, speed)
 
 
 func _on_player_animation_finished(_animation: StringName) -> void:

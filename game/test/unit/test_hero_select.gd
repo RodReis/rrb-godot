@@ -15,6 +15,7 @@ const FULL_ROSTER: Array[HeroData] = [
 	ROSTER[1],
 	preload("res://shared/data/heroes/barbarian.tres"),
 	preload("res://shared/data/heroes/fire_wizard.tres"),
+	preload("res://shared/data/heroes/rogue.tres"),
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 const RATE: int = 30
@@ -147,15 +148,24 @@ func test_close_esconde() -> void:
 	assert_false(_screen.visible)
 
 
-func test_quatro_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
-	var all: Array[StringName] = [&"knight", &"ranger", &"barbarian", &"fire_wizard"]
+func test_cinco_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
+	var all: Array[StringName] = [&"knight", &"ranger", &"barbarian", &"fire_wizard", &"rogue"]
 	var screen := _make_screen(FULL_ROSTER, all)
-	assert_eq(screen._choices.get_child_count(), 4)
+	assert_eq(screen._choices.get_child_count(), 5)
 	_press(screen, KEY_4)
 	assert_eq(screen._player_name.text, "BRUXO DE FOGO")
 	assert_eq(screen._player_role.text, "MAGO")
 	assert_true(screen._cards[3]._tag.visible)
 	assert_false(screen._cards[0]._tag.visible)
+
+
+func test_tecla_5_escolhe_a_ladina() -> void:
+	var all: Array[StringName] = [&"knight", &"ranger", &"barbarian", &"fire_wizard", &"rogue"]
+	var screen := _make_screen(FULL_ROSTER, all)
+	_press(screen, KEY_5)
+	assert_eq(screen._player_name.text, "LADINA")
+	assert_eq(screen._player_role.text, "ALGOZ")
+	assert_true(screen._cards[4]._tag.visible)
 
 
 func test_modelo_so_do_heroi_com_cena() -> void:

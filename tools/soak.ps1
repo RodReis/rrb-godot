@@ -10,7 +10,9 @@
   O relogio do netfox e o do sistema: uma partida leva ate ~10 min; use -Parallel (cada servidor
   usa ~0,3 nucleo e ~350 MB). Compativel com PowerShell 5.1 e 7.
 .PARAMETER Count
-  Partidas (padrao 50 = 10 confrontos x 5 rodadas).
+  Partidas (padrao 50; com 5 herois sao 15 confrontos).
+.PARAMETER Require
+  Heroi que entra em todo confronto (soak de heroi novo: -Require rogue); vazio = todos os pares.
 .PARAMETER Parallel
   Servidores ao mesmo tempo.
 .PARAMETER Seed
@@ -26,7 +28,8 @@
 param(
     [int]$Count = 50,
     [int]$Parallel = 6,
-    [string[]]$Heroes = @('knight', 'ranger', 'barbarian', 'fire_wizard'),
+    [string[]]$Heroes = @('knight', 'ranger', 'barbarian', 'fire_wizard', 'rogue'),
+    [string]$Require = '',
     [int]$Seed = 1,
     [int]$BasePort = 7100,
     [int]$StartTime = 0,
@@ -61,7 +64,10 @@ if (-not $SkipImport) { & $cli --headless --path $game --import 2>&1 | Out-Null 
 # Confrontos: todos os pares (i <= j) dos herois, na ordem; a partida k pega o par k % n.
 $pairs = @()
 for ($i = 0; $i -lt $Heroes.Count; $i++) {
-    for ($j = $i; $j -lt $Heroes.Count; $j++) { $pairs += , @($Heroes[$i], $Heroes[$j]) }
+    for ($j = $i; $j -lt $Heroes.Count; $j++) {
+        if ($Require -and $Heroes[$i] -ne $Require -and $Heroes[$j] -ne $Require) { continue }
+        $pairs += , @($Heroes[$i], $Heroes[$j])
+    }
 }
 $plan = @()
 for ($k = 0; $k -lt $Count; $k++) {

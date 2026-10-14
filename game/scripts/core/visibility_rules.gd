@@ -9,6 +9,8 @@ extends RefCounted
 const GROUP: StringName = &"tall_grass"
 ## Fora de toda moita.
 const NO_GRASS: int = -1
+## Fora de toda nuvem de fumaca (mascara de bits, um por Ladina).
+const NO_SMOKE: int = 0
 ## Meia aresta da caixa unitaria de grass_box.
 const HALF: float = 0.5
 
@@ -35,14 +37,37 @@ static func is_hidden(grass: int, observer_grass: int, reveal_ticks: int) -> boo
 	return grass != NO_GRASS and grass != observer_grass and reveal_ticks <= 0
 
 
+## Fumaca da Ladina (F58, ADR-0013): a nuvem de [param center] e [param radius] cobre
+## [param point], no plano (a altura nao conta, como na moita).
+static func smoke_covers(center: Vector3, point: Vector3, radius: float) -> bool:
+	return CombatRules.in_radius(center, point, radius)
+
+
+## Bit da nuvem [param index] na mascara de fumaca de um ponto.
+static func smoke_bit(index: int) -> int:
+	return 1 << index
+
+
+## Como is_hidden com moita e fumaca: cada lado e (moita, mascara de nuvens) em um Vector2i. A nuvem
+## vale como moita; quem esta dentro de uma moita e de uma nuvem conta nas duas (decisao do PI em
+## 2026-10-13): some para quem nao esta em nenhuma delas, e quem esta em qualquer uma o ve.
+static func is_hidden_in(zones: Vector2i, observer_zones: Vector2i, reveal_ticks: int) -> bool:
+	var in_grass := zones.x != NO_GRASS
+	var covered := in_grass or zones.y != NO_SMOKE
+	var shares := (in_grass and zones.x == observer_zones.x) or (zones.y & observer_zones.y) != 0
+	return covered and not shares and reveal_ticks <= 0
+
+
 static func reveal_ticks(rules: MatchRules, tickrate: int) -> int:
 	return SkillRules.seconds_to_ticks(rules.grass_reveal_time, tickrate)
 
 
 ## Atacou ou usou skill no tick: alguma recarga (basico, Q, E, R) subiu. O Rolamento zera o
-## basico, mas sobe a do E.
-static func acted(before: Vector4i, after: Vector4i) -> bool:
-	return after.x > before.x or after.y > before.y or after.z > before.z or after.w > before.w
+## basico, mas sobe a do E. [param counts_e] falso: a subida do E nao conta (lancar a Bomba de
+## Fumaca nao revela a Ladina, ADR-0013); basico, Q e R contam normalmente.
+static func acted(before: Vector4i, after: Vector4i, counts_e: bool = true) -> bool:
+	var e_up := counts_e and after.z > before.z
+	return after.x > before.x or after.y > before.y or e_up or after.w > before.w
 
 
 ## Cliente: o heroi remoto aparece se o servidor nao o esconde deste peer e ja chegou estado

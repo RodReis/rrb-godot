@@ -196,6 +196,17 @@
         { "arquivo": "mvp2.5-f57-hud-moderna.webp", "legenda": "O painel de jogo ficou mais leve: vidro escuro com borda dourada, tudo do herói num bloco só embaixo (atributos, nível, vida, experiência, equipamento e habilidades) e o mapa no canto, mostrando os baús fechados e os monstros à vista. A engrenagem abre o bestiário e liga ou desliga o som do jogo e o aviso do chefão. Quando sobra ponto de habilidade, o botão avisa o atalho para aprender.", "tipo": "entregue" }
       ]
     },
+    "MVP2.6": {
+      "titulo": "Mais dois heróis",
+      "pergunta": "Dá para entrar com dois heróis novos, com jeitos novos de jogar, sem quebrar a partida em rede?",
+      "narrativa": [
+        "Chegam a Ladina e o Engenheiro. A Ladina luta de perto com uma besta de uma mão: dispara três virotes em leque, some numa nuvem de fumaça que esconde quem está dentro como o mato alto e salta sobre o inimigo com uma faca, batendo mais forte se ninguém a via. Cada herói novo passa pelo mesmo teste dos outros: partidas em rede com atraso simulado, cinquenta partidas entre bots e o tempo de quadro medido."
+      ],
+      "imagens": [
+        { "arquivo": "mvp2.6-f58-ladina-fumaca.webp", "legenda": "A Ladina solta uma Bomba de Fumaça no pátio da base: a nuvem de 3 metros dura 3 segundos e esconde quem está dentro de quem está fora, como o mato alto. Lançar a bomba não entrega a posição dela.", "tipo": "entregue" },
+        { "arquivo": "mvp2.6-f58-ladina-emboscada.webp", "legenda": "Da fumaça, a Ladina avança 8 metros na Emboscada, deixando rastros de sombra, e crava a faca no primeiro inimigo que encontra. Se ninguém a via ao usar, o golpe bate 30% mais forte.", "tipo": "entregue" }
+      ]
+    },
     "MVP3": {
       "titulo": "Jogar com os amigos",
       "pergunta": "Dois amigos conseguem jogar pela internet sem o desenvolvedor ajudar?",
@@ -255,6 +266,7 @@
     "F41": "Efeitos visuais dos golpes do Cavaleiro e da Arqueira",
     "F42": "Grama baixa que balança ao vento",
     "F43": "Painel de jogo novo: molduras de metal, ícones e letras",
+    "F58": "Ladina, a quinta heroína: besta, fumaça e emboscada",
     "F57": "Painel de jogo moderno: vidro, bloco do herói e mapa com baús",
     "F56": "O mapa num vale: floresta e montanhas em volta, sem ver o fim do mundo",
     "F60": "Centro do mapa mais aberto, sem os pilares em volta do magma",

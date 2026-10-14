@@ -88,6 +88,15 @@ func think(tick: int) -> void:
 			_flee_zone(tick)
 		_:
 			_farm(tick)
+	_smoke_escape(view, enemy)
+
+
+## Ladina: Bomba de Fumaca para fugir do heroi que o bot ve, com HP baixo (SPEC-058 §7).
+func _smoke_escape(view: BotView, enemy: Hero) -> void:
+	if not _hero is Rogue or enemy == null:
+		return
+	if BotRules.rogue_skills(view.enemy_distance, view.hp_pct, PROFILE).y == 1:
+		skill_e = true
 
 
 func _reset() -> void:
@@ -209,7 +218,8 @@ func _contest(tick: int) -> void:
 ## recarga): Q de projetil (Arqueira) ja no alcance dele, em linha com a mira; E que nao e avanco
 ## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele). Barbaro pelos
 ## limiares do perfil (BotRules.barbarian_skills): o Salto cai no alvo (aim_distance). Bruxo
-## pelos limiares do perfil (BotRules.fire_wizard_skills).
+## pelos limiares do perfil (BotRules.fire_wizard_skills). Ladina pelos limiares do perfil
+## (BotRules.rogue_skills); a fumaca de fuga vale em qualquer estado (_smoke_escape).
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -223,6 +233,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	skill_q = skill_q and not blocked
 	var barbarian := _hero is Barbarian
 	var wizard := _hero is FireWizard
+	var rogue := _hero is Rogue
 	var use := Vector3i.ZERO
 	if barbarian:
 		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
@@ -231,6 +242,10 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		use = BotRules.fire_wizard_skills(to.length(), PROFILE)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1
+	elif rogue:  # Emboscada na direcao do alvo; a fumaca de fuga fica no _smoke_escape
+		use = BotRules.rogue_skills(to.length(), 1.0, PROFILE)
+		skill_q = skills and use.x == 1 and not blocked
+		skill_r = skills and use.z == 1 and not blocked
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
@@ -241,6 +256,8 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_r = skills and use.z == 1
 	elif wizard:
 		skill_e = skills and use.y == 1
+	elif rogue:
+		pass
 	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)
 		skill_r = skills
@@ -341,7 +358,8 @@ func _learn_points() -> void:
 	var skills: Array[SkillData] = [
 		_hero.hero_data.skill_q, _hero.hero_data.skill_e, _hero.hero_data.skill_r
 	]
-	for slot: int in [SkillRules.SLOT_R, SkillRules.SLOT_Q, SkillRules.SLOT_E]:
+	var typical := XpTable.typical_ranks(_hero.xp_curve, _hero.level)
+	for slot: int in BotRules.learn_order(_hero.ranks, typical):
 		if SkillRules.learn(_hero.ranks, slot, skills[slot], _hero.level) != _hero.ranks:
 			learn = slot
 			return

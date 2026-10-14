@@ -44,6 +44,12 @@ extends Resource
 @export var pierce_decay: float
 @export var pierce_min: float
 @export var resets_basic_attack: bool
+## Projeteis lancados juntos e abertura entre eles em graus (Rajada em Leque da Ladina: 3, a
+## -12/0/+12).
+@export var projectile_count: int
+@export var spread_degrees: float
+## Fator do dano se a Ladina estava oculta no tick do uso (Emboscada).
+@export var ambush_multiplier: float
 
 
 ## Valor de [param values] no [param rank] (1..). Vazio = 0; rank alem do array = ultimo.

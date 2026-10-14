@@ -111,6 +111,33 @@ static func fire_wizard_skills(distance: float, profile: BotProfile) -> Vector3i
 	)
 
 
+## Habilidades da Ladina (SPEC-058 §7) contra um inimigo a [param distance], com [param hp_pct] do
+## HP: Rajada (x) ate fan_range; Bomba de Fumaca (y) para fugir, com HP abaixo de smoke_hp_pct e o
+## inimigo a ate smoke_range; Emboscada (z) ate ambush_range. 1 = usa (o Hero ainda confere
+## recarga e rank).
+static func rogue_skills(distance: float, hp_pct: float, profile: BotProfile) -> Vector3i:
+	return Vector3i(
+		int(distance <= profile.fan_range),
+		int(hp_pct < profile.smoke_hp_pct and distance <= profile.smoke_range),
+		int(distance <= profile.ambush_range),
+	)
+
+
+## Habilidade em que o bot gasta o proximo ponto: a primeira de R, Q, E abaixo do rank tipico do
+## nivel ([param typical], GDB §3.2 — E1 no nivel 2); todas no tipico = R, Q, E na ordem. A
+## validade do ponto (nivel minimo, rank maximo) e do SkillRules.learn.
+static func learn_order(ranks: Vector3i, typical: Vector3i) -> PackedInt32Array:
+	var order := PackedInt32Array([SkillRules.SLOT_R, SkillRules.SLOT_Q, SkillRules.SLOT_E])
+	var behind := PackedInt32Array()
+	for slot: int in order:
+		if ranks[slot] < typical[slot]:
+			behind.append(slot)
+	for slot: int in order:
+		if not behind.has(slot):
+			behind.append(slot)
+	return behind
+
+
 ## Recuo terminado (saiu de RETREAT) fica gasto ate o HP passar do limiar de novo.
 static func retreat_spent_after(
 	previous: State, current: State, hp_pct: float, spent: bool, profile: BotProfile

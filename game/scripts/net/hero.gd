@@ -25,6 +25,8 @@ extends Combatant
 ## Concealment; no cliente o heroi escondido fica invisivel e sem colisao.
 ## Neblina de guerra (F37): o adversario so ve o heroi no raio de visao dele e fora do mato
 ## (seen_by, VisionRules); o VisionDirector decide por tick e o Concealment filtra.
+## Fumaca da Ladina (F58, ADR-0013): a nuvem vale como moita (zones_at); quem solta fumaca se
+## registra em _smoke_casters, e o indice dele e o bit da nuvem.
 ## VFX (F41): cada golpe registrado no ledger do alvo sai em struck (servidor); o ImpactRelay
 ## anuncia uma vez aos clientes. O heroi nao tem no de VFX: o cliente cria os efeitos (VfxSpawner).
 
@@ -41,6 +43,11 @@ const SCENE_PATH: String = "res://scenes/heroes/%s.tscn"
 ## pulsos nem com estado atrasado; nos ultimos ZONE_FADE_SECONDS a vinheta some aos poucos.
 const ZONE_FLAG_SECONDS: float = 1.5
 const ZONE_FADE_SECONDS: float = 0.5
+## Fora de toda moita e de toda nuvem.
+const NO_ZONES: Vector2i = Vector2i(VisibilityRules.NO_GRASS, VisibilityRules.NO_SMOKE)
+
+## Herois que soltam fumaca (Ladina) na arvore; o indice e o bit da nuvem (VisibilityRules).
+static var _smoke_casters: Array[Hero] = []
 
 @export var hero_data: HeroData
 @export var xp_curve: XpCurve
@@ -254,7 +261,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 		return
 	var cooldowns := _cooldowns()
 	_use_skills(tick)
-	if VisibilityRules.acted(cooldowns, _cooldowns()):
+	if VisibilityRules.acted(cooldowns, _cooldowns(), _reveals_on_e()):
 		reveal_ticks = VisibilityRules.reveal_ticks(match_rules, NetworkTime.tickrate)
 
 
@@ -323,11 +330,30 @@ func damage_taken() -> int:
 func hidden_from(observer: Node3D) -> bool:
 	if observer == self or (observer is Hero and (observer as Hero).team == team):
 		return false
-	var seen_from := VisibilityRules.NO_GRASS
+	var seen_from := NO_ZONES
 	if observer != null:
-		seen_from = VisibilityRules.grass_at(observer.global_position, _grass)
-	var grass := VisibilityRules.grass_at(global_position, _grass)
-	return VisibilityRules.is_hidden(grass, seen_from, reveal_ticks)
+		seen_from = zones_at(observer.global_position)
+	return VisibilityRules.is_hidden_in(zones_at(global_position), seen_from, reveal_ticks)
+
+
+## Moita (x, VisibilityRules.grass_at) e nuvens de fumaca (bits em y) que cobrem [param point].
+func zones_at(point: Vector3) -> Vector2i:
+	var smoke := VisibilityRules.NO_SMOKE
+	for i: int in _smoke_casters.size():
+		if _smoke_casters[i].smoke_covers(point):
+			smoke |= VisibilityRules.smoke_bit(i)
+	return Vector2i(VisibilityRules.grass_at(point, _grass), smoke)
+
+
+## A nuvem de fumaca deste heroi cobre [param _point] (so a Ladina solta fumaca).
+func smoke_covers(_point: Vector3) -> bool:
+	return false
+
+
+## Golpe no fim do avanco (Emboscada da Ladina): ticks restantes do golpe (sobe ao acertar), para o
+## HeroVisual e o VFX; 0 = nenhum.
+func dash_strike_ticks() -> int:
+	return 0
 
 
 ## O jogador deste processo ve o heroi (neblina e mato; HUD e minimapa).
@@ -514,6 +540,11 @@ func _while_dashing(_tick: int) -> void:
 ## Efeitos ja lancados que seguem a cada tick, inclusive morto (projeteis, Chuva, Meteoro).
 func _simulate_effects(_tick: int) -> void:
 	pass
+
+
+## Usar o E revela no mato (VisibilityRules.acted); a Bomba de Fumaca da Ladina nao (ADR-0013).
+func _reveals_on_e() -> bool:
+	return true
 
 
 ## Propriedades de estado de rollback alem das do Hero (caminhos relativos a este node).

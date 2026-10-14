@@ -12,7 +12,7 @@ extends SceneTree
 const SCENE: String = "res://scenes/ui/match_end.tscn"
 const CONTROLLER: String = "res://scripts/match/match_controller.gd"
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
-const HEROES: Array[String] = ["knight", "ranger", "barbarian", "fire_wizard"]
+const HEROES: Array[String] = ["knight", "ranger", "barbarian", "fire_wizard", "rogue"]
 const ME: int = 11
 const THEM: int = 22
 ## Segundos esperados depois de present(), para a animacao de entrada terminar.

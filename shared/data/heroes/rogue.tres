@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/rogue_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/rogue_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/rogue_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/rogue_r.svg" id="icon_r"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"rogue_basic"
+icon = ExtResource("icon_basic")
+display_name = "Virote"
+description = "Virote de besta com alcance de 7 u; a Muralha bloqueia. Dano: 100% do ATQ."
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.0)
+attack_ratio = 1.0
+attack_range = 7.0
+radius = 0.3
+speed = 24.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"rogue_q"
+icon = ExtResource("icon_q")
+display_name = "Rajada em Leque"
+description = "Três virotes de uma vez, a -12°, 0° e +12° da mira; cada um para no primeiro alvo (de perto, os três acertam o mesmo). Dano por virote: base do rank + 40% do ATQ."
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(8.0, 7.5, 7.0, 6.5, 6.0)
+base_amount = PackedFloat64Array(30.0, 45.0, 60.0, 75.0, 90.0)
+attack_ratio = 0.4
+attack_range = 7.0
+radius = 0.3
+speed = 24.0
+projectile_count = 3
+spread_degrees = 12.0
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"rogue_e"
+icon = ExtResource("icon_e")
+display_name = "Bomba de Fumaça"
+description = "Nuvem de 3 u em volta da Ladina por 3 s: quem está dentro some para quem está fora. Lançar a bomba não revela a Ladina. Sem dano."
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(14.0, 13.0, 12.0, 11.0, 10.0)
+radius = 3.0
+duration = PackedFloat64Array(3.0)
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"rogue_r"
+icon = ExtResource("icon_r")
+display_name = "Emboscada"
+description = "Avança 8 u até o primeiro inimigo ou obstáculo e o golpeia com a faca. Dano: base do rank + 120% da INT + 60% do ATQ; x1,3 se a Ladina estava oculta ao usar."
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(50.0, 42.0)
+base_amount = PackedFloat64Array(220.0, 340.0)
+attack_ratio = 0.6
+intelligence_ratio = 1.2
+speed = 24.0
+distance = 8.0
+ambush_multiplier = 1.3
+
+[resource]
+script = ExtResource("1_script")
+id = &"rogue"
+display_name = "Ladina"
+role = "Algoz"
+summary = "Dano alto de perto com a besta, frágil; some na fumaça e entra com a Emboscada."
+base_move_speed = 6.3
+base_hp = 400.0
+hp_per_level = 30.0
+base_defense = 12.0
+defense_per_level = 1.3
+base_attack = 54.0
+attack_per_level = 4.8
+base_intelligence = 12.0
+intelligence_per_level = 1.2
+base_agility = 28.0
+agility_per_level = 2.4
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")
