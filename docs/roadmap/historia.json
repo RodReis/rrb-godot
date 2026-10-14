@@ -200,11 +200,14 @@
       "titulo": "Mais dois heróis",
       "pergunta": "Dá para entrar com dois heróis novos, com jeitos novos de jogar, sem quebrar a partida em rede?",
       "narrativa": [
-        "Chegam a Ladina e o Engenheiro. A Ladina luta de perto com uma besta de uma mão: dispara três virotes em leque, some numa nuvem de fumaça que esconde quem está dentro como o mato alto e salta sobre o inimigo com uma faca, batendo mais forte se ninguém a via. Cada herói novo passa pelo mesmo teste dos outros: partidas em rede com atraso simulado, cinquenta partidas entre bots e o tempo de quadro medido."
+        "Chegam a Ladina e o Engenheiro. A Ladina luta de perto com uma besta de uma mão: dispara três virotes em leque, some numa nuvem de fumaça que esconde quem está dentro como o mato alto e salta sobre o inimigo com uma faca, batendo mais forte se ninguém a via.",
+        "O Engenheiro é uma classe nova: atira de perto com um bacamarte que acerta todo mundo num cone, puxa o adversário com uma garra presa a um cabo, instala uma torreta que atira sozinha por seis segundos e joga uma caixa de dinamite que explode e empurra quem estiver em volta. Cada herói novo passa pelo mesmo teste dos outros: partidas em rede com atraso simulado, cinquenta partidas entre bots e o tempo de quadro medido."
       ],
       "imagens": [
         { "arquivo": "mvp2.6-f58-ladina-fumaca.webp", "legenda": "A Ladina solta uma Bomba de Fumaça no pátio da base: a nuvem de 3 metros dura 3 segundos e esconde quem está dentro de quem está fora, como o mato alto. Lançar a bomba não entrega a posição dela.", "tipo": "entregue" },
-        { "arquivo": "mvp2.6-f58-ladina-emboscada.webp", "legenda": "Da fumaça, a Ladina avança 8 metros na Emboscada, deixando rastros de sombra, e crava a faca no primeiro inimigo que encontra. Se ninguém a via ao usar, o golpe bate 30% mais forte.", "tipo": "entregue" }
+        { "arquivo": "mvp2.6-f58-ladina-emboscada.webp", "legenda": "Da fumaça, a Ladina avança 8 metros na Emboscada, deixando rastros de sombra, e crava a faca no primeiro inimigo que encontra. Se ninguém a via ao usar, o golpe bate 30% mais forte.", "tipo": "entregue" },
+        { "arquivo": "mvp2.6-f59-engenheiro-torreta.webp", "legenda": "O Engenheiro instala uma Torreta ao seu lado: ela fica 6 segundos e atira a cada 0,75 segundo no inimigo mais perto, mas só em quem o próprio Engenheiro está vendo. Quem a vê de fora vê só enquanto ela estiver dentro do campo de visão.", "tipo": "entregue" },
+        { "arquivo": "mvp2.6-f59-engenheiro-dinamite.webp", "legenda": "A Caixa de Dinamite voa em arco até o ponto mirado e o círculo vermelho cresce durante o pavio de 1,5 segundo. Na explosão, todo mundo no raio de 4,5 metros leva dano e é empurrado 3 metros para fora.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -267,6 +270,7 @@
     "F42": "Grama baixa que balança ao vento",
     "F43": "Painel de jogo novo: molduras de metal, ícones e letras",
     "F58": "Ladina, a quinta heroína: besta, fumaça e emboscada",
+    "F59": "Engenheiro, o sexto herói: bacamarte, garra, torreta e dinamite",
     "F57": "Painel de jogo moderno: vidro, bloco do herói e mapa com baús",
     "F56": "O mapa num vale: floresta e montanhas em volta, sem ver o fim do mundo",
     "F60": "Centro do mapa mais aberto, sem os pilares em volta do magma",

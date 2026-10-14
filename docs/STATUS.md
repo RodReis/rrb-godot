@@ -97,7 +97,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F57 / SPEC-057 | MVP2.5 | game, shared | Slice 2.5.8 — HUD moderna fiel ao protótipo (`docs/prd/telas/HUD Moderno/`): painéis de vidro só na HUD, dock único, minimapa no canto inferior direito com baús e monstros, telemetria FPS·PING·TICK, engrenagem com Bestiário e 2 switches de som, grade de atributos; fases 1 e 2 (decisão do PI 2026-10-12) | done (#151) |
 | [INFRA] | MVP2.6 | infra | Roadmap público aceita o marco `MVP2.6` (sem F/SPEC) — antes do F58 | done (#161) |
 | F58 / SPEC-058 | MVP2.6 | game, shared | Slice 2.6.1 — Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça (moita temporária), Emboscada; besta visível; bot; VFX (ADR-0013) | done (#162) |
-| F59 / SPEC-059 | MVP2.6 | game, shared | Slice 2.6.2 — Engenheiro (classe Engenheiro): Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite; bacamarte visível; bot; VFX (ADR-0013) | backlog (#163) |
+| F59 / SPEC-059 | MVP2.6 | game, shared | Slice 2.6.2 — Engenheiro (classe Engenheiro): Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite; bacamarte visível; bot; VFX (ADR-0013) | done (#163) |
 | F60 / SPEC-060 | MVP2 | game, shared | Slice 2.23 — Centro livre: saem os 8 pilares de obsidiana da cratera; magma fica (ADR-0014) | done (#164) |
 | F61 / SPEC-061 | MVP2 | game, shared | Slice 2.24 — Baú com menu: `F` abre, 3 itens, clique escolhe, baú reservado a quem abriu; bot escolhe o melhor (ADR-0014) | done (#165) |
 | F62 / SPEC-062 | MVP2 | game, shared | Slice 2.25 — Tecla `B`: ficha do herói (itens, atributos, habilidades com descrição) com aba Monstros (ADR-0014) | done (#166) |
