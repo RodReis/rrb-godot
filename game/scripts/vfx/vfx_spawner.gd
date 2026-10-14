@@ -77,7 +77,9 @@ func _on_relay_deploy_shown(caster_id: int, kind: int, center: Vector3, tick: in
 		(driver as EngineerVfx).deployed(kind, center, tick)
 
 
-func _on_relay_turret_shot_shown(caster_id: int, from: Vector3, at: Vector3) -> void:
+func _on_relay_turret_shot_shown(
+	caster_id: int, from: Vector3, at: Vector3, ticks_left: int
+) -> void:
 	var driver: Object = _drivers.get(caster_id)
 	if is_instance_valid(driver) and driver is EngineerVfx:
-		(driver as EngineerVfx).turret_shot(from, at)
+		(driver as EngineerVfx).turret_shot(from, at, ticks_left)

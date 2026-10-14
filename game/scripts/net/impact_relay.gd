@@ -23,8 +23,9 @@ signal smoke_shown(caster_id: int, center: Vector3, tick: int)
 ## [param center].
 signal deploy_shown(caster_id: int, kind: int, center: Vector3, tick: int)
 ## Cliente e host: a Torreta do Engenheiro [param caster_id], em [param from], atirou em
-## [param at].
-signal turret_shot_shown(caster_id: int, from: Vector3, at: Vector3)
+## [param at]; [param ticks_left] = o que falta da Torreta (quem entra na visao depois da instalacao
+## a monta pelo primeiro tiro que ve).
+signal turret_shot_shown(caster_id: int, from: Vector3, at: Vector3, ticks_left: int)
 
 const NODE_NAME: StringName = &"ImpactRelay"
 ## Chave de "slot" do disparo da Torreta no ImpactLog (fora do HitLedger.Slot): um por tick.
@@ -122,9 +123,9 @@ func _on_engineer_turret_fired(from: Vector3, at: Vector3, tick: int, engineer: 
 	turret_shots_announced += 1
 	for peer: int in multiplayer.get_peers():
 		if _sees_point(peer, from, engineer):
-			_show_turret_shot.rpc_id(peer, engineer.peer_id, from, at)
+			_show_turret_shot.rpc_id(peer, engineer.peer_id, from, at, engineer.turret_ticks)
 	if _sees_point(multiplayer.get_unique_id(), from, engineer):
-		turret_shot_shown.emit(engineer.peer_id, from, at)
+		turret_shot_shown.emit(engineer.peer_id, from, at, engineer.turret_ticks)
 
 
 func _on_hero_struck(target: Combatant, slot: HitLedger.Slot, tick: int, hero: Hero) -> void:
@@ -158,9 +159,9 @@ func _show_deploy(caster_id: int, kind: int, center: Vector3, tick: int) -> void
 
 ## Servidor -> cliente: um disparo de Torreta que este jogador ve.
 @rpc("authority", "call_remote", "unreliable")
-func _show_turret_shot(caster_id: int, from: Vector3, at: Vector3) -> void:
+func _show_turret_shot(caster_id: int, from: Vector3, at: Vector3, ticks_left: int) -> void:
 	turret_shots_received += 1
-	turret_shot_shown.emit(caster_id, from, at)
+	turret_shot_shown.emit(caster_id, from, at, ticks_left)
 
 
 ## Servidor -> cliente: um impacto que este jogador ve ([param tick] do golpe, para a medicao).

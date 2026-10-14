@@ -154,7 +154,7 @@ func test_torreta_pop_encolhe_e_gira_a_cabeca_para_o_tiro() -> void:
 	assert_almost_eq(model.scale.x, 0.0, 0.001, "nasce em 0")
 	turret._process(TurretVfx.POP_SECONDS)
 	assert_almost_eq(model.scale.x, 1.0, 0.001, "pop termina em 1")
-	_driver.turret_shot(Vector3.ZERO, Vector3(4, 0, 0))
+	_driver.turret_shot(Vector3.ZERO, Vector3(4, 0, 0), 100)
 	var gun := model.find_child("turret_gun", true, false) as Node3D
 	# O cano do pack aponta para +Z: virado para +X, o yaw do no e 90 graus.
 	assert_almost_eq(gun.global_rotation.y, deg_to_rad(90.0), 0.01)
@@ -164,7 +164,7 @@ func test_tiro_da_torreta_solta_tracante_do_cano_ao_alvo() -> void:
 	_bind()
 	_driver.deployed(Engineer.Deploy.TURRET, Vector3.ZERO, _now())
 	var before := _effects()
-	_driver.turret_shot(Vector3.ZERO, Vector3(0, 0, -5))
+	_driver.turret_shot(Vector3.ZERO, Vector3(0, 0, -5), 100)
 	assert_eq(_effects(), before + 1)
 	var tracer := _last_effect() as TurretTracerVfx
 	assert_not_null(tracer)
@@ -192,3 +192,36 @@ func test_caixa_atrasada_ou_vencida() -> void:
 	_bind()
 	_driver.deployed(Engineer.Deploy.CRATE, Vector3.ZERO, _now() - 3 * NetworkTime.tickrate)
 	assert_eq(_effects(), 0, "o pavio de 1,5 s ja acabou")
+
+
+func test_quem_ve_a_torreta_so_pelo_tiro_a_monta_com_o_tempo_que_falta() -> void:
+	_bind()
+	_driver.turret_shot(Vector3(1, 0, 1), Vector3(1, 0, -4), 90)
+	var turret: TurretVfx = null
+	for node: Node in _pool.get_children():
+		if node is TurretVfx:
+			turret = node
+	assert_not_null(turret, "montada a partir do tiro")
+	assert_almost_eq(turret.global_position, Vector3(1, 0, 1), Vector3.ONE * 0.001)
+	assert_almost_eq(turret.lifetime, 3.0 + TurretVfx.SHRINK_SECONDS, 0.001)
+	_driver.turret_shot(Vector3(1, 0, 1), Vector3(1, 0, -4), 67)
+	var turrets := 0
+	for node: Node in _pool.get_children():
+		turrets += 1 if node is TurretVfx else 0
+	assert_eq(turrets, 1, "o 2o tiro usa a mesma Torreta")
+
+
+func test_torreta_acabando_sem_tempo_nao_e_montada_pelo_tiro() -> void:
+	_bind()
+	_driver.turret_shot(Vector3.ZERO, Vector3(0, 0, -4), 0)
+	for node: Node in _pool.get_children():
+		assert_false(node is TurretVfx)
+
+
+func test_poeira_e_clarao_da_torreta_nao_tocam_no_spawn() -> void:
+	_bind()
+	_driver.deployed(Engineer.Deploy.TURRET, Vector3.ZERO, _now())
+	var turret := _last_effect() as TurretVfx
+	assert_false((turret.get_node("EndDust") as GPUParticles3D).emitting)
+	assert_false((turret.get_node("Flash") as GPUParticles3D).emitting)
+	assert_true((turret.get_node("InstallDust") as GPUParticles3D).emitting)

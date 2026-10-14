@@ -200,7 +200,7 @@ func _engineer_effects(delta: float) -> void:
 		if _turret_wait <= 0.0:
 			relay.emit_signal(&"deploy_shown", caster, 0, turret, tick)
 		if _shot_wait <= 0.0:
-			relay.emit_signal(&"turret_shot_shown", caster, turret, target)
+			relay.emit_signal(&"turret_shot_shown", caster, turret, target, 100)
 		if _crate_wait <= 0.0:
 			relay.emit_signal(&"deploy_shown", caster, 1, target, tick)
 	if _turret_wait <= 0.0:

@@ -49,8 +49,15 @@ func deployed(kind: int, center: Vector3, tick: int) -> void:
 		_throw_crate(center, tick)
 
 
-## A Torreta atirou em [param at] (ImpactRelay): cabeca gira, clarao e tracante reto.
-func turret_shot(from: Vector3, at: Vector3) -> void:
+## A Torreta atirou em [param at] (ImpactRelay): cabeca gira, clarao e tracante reto. Quem so
+## passou a ver a Torreta agora (nao recebeu a instalacao) a monta por este tiro, com os
+## [param ticks_left] que faltam.
+func turret_shot(from: Vector3, at: Vector3, ticks_left: int) -> void:
+	if _turret == null or not _turret.is_up_for(hero.peer_id):
+		var left := float(ticks_left) / NetworkTime.tickrate
+		if left > 0.0:
+			_turret = pool.spawn(TURRET, Transform3D(Basis.IDENTITY, from)) as TurretVfx
+			_turret.last(left, hero.peer_id)
 	if _turret != null and _turret.is_up_for(hero.peer_id):
 		_turret.shoot(at)
 	var muzzle := from + Vector3.UP * TURRET_MUZZLE_HEIGHT

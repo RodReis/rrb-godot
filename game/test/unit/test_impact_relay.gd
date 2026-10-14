@@ -117,9 +117,9 @@ func _watch_engineer(deploys: Dictionary, shots: Dictionary) -> void:
 			deploys["last"] = [caster, kind, center, tick]
 	)
 	_relay.turret_shot_shown.connect(
-		func(caster: int, from: Vector3, at: Vector3) -> void:
+		func(caster: int, from: Vector3, at: Vector3, left: int) -> void:
 			shots["count"] += 1
-			shots["last"] = [caster, from, at]
+			shots["last"] = [caster, from, at, left]
 	)
 
 
@@ -175,4 +175,4 @@ func test_torreta_visivel_chega_mesmo_com_o_engenheiro_longe() -> void:
 	engineer.turret_fired.emit(spot, Vector3(0, 0, -1), TICK + 1)
 	assert_eq(deploys["count"], 1)
 	assert_eq(shots["count"], 1, "um disparo por tick")
-	assert_eq(shots["last"], [6, spot, Vector3(0, 0, -1)])
+	assert_eq(shots["last"], [6, spot, Vector3(0, 0, -1), engineer.turret_ticks])

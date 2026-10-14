@@ -36,6 +36,13 @@ func _ready() -> void:
 	_gun = _model.find_child(GUN_NODE, true, false) as Node3D
 
 
+## Fim de vida e clarao tocam so quando o servidor manda (fim da duracao, tiro), nao no play.
+func _collect() -> void:
+	super()
+	_particles.erase(_end_dust)
+	_particles.erase(_flash)
+
+
 func _process(delta: float) -> void:
 	super(delta)
 	if not visible:
