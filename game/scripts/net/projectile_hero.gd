@@ -1,6 +1,6 @@
 class_name ProjectileHero
 extends Hero
-## Heroi que atira projeteis do pool Arrow (Arqueira F14, Bruxo de Fogo F54). Os projeteis voam no
+## Heroi que atira projeteis do pool Arrow (Arqueira F14, Bruxo de Fogo F54, Ladina F58). Os projeteis voam no
 ## estado de rollback do heroi, entao o cliente preve o proprio disparo e o servidor decide o
 ## acerto (CONVENTION §4.5). O projetil para no muro, pilar, rocha, portao que barra o heroi e na
 ## Muralha ativa do inimigo, nao no rio (PI 2026-10-10). Voa na velocidade e no raio do basico (PI
@@ -58,8 +58,11 @@ func _arrows_flying() -> bool:
 	return false
 
 
-## Ocupa um slot livre do pool; cheio, reaproveita o projetil que mais voou.
-func _shoot(kind: Arrow.Kind, max_range: float, damage: int) -> void:
+## Ocupa um slot livre do pool; cheio, reaproveita o projetil que mais voou. [param direction]
+## nula = para a frente.
+func _shoot(
+	kind: Arrow.Kind, max_range: float, damage: int, direction: Vector3 = Vector3.ZERO
+) -> void:
 	var slot: Arrow = null
 	for arrow: Arrow in _arrows:
 		if not arrow.is_active():
@@ -68,7 +71,8 @@ func _shoot(kind: Arrow.Kind, max_range: float, damage: int) -> void:
 		if slot == null or arrow.traveled > slot.traveled:
 			slot = arrow
 	var from := global_position + Vector3.UP * FLIGHT_HEIGHT
-	slot.launch(kind, from, CombatRules.push_vector(forward(), 1.0), max_range, damage)
+	var aim := forward() if direction.is_zero_approx() else direction
+	slot.launch(kind, from, CombatRules.push_vector(aim, 1.0), max_range, damage)
 
 
 ## Servidor: alvo heroi que nenhum projetil atingiu neste tick tem o golpe desfeito (ressimulacao
