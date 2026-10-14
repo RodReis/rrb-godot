@@ -31,7 +31,7 @@ const LABEL_SIZE: int = 28
 const LABEL_OFFSET: Vector3 = Vector3(0.0, 0.15, 1.1)
 const LOCAL_PEER: String = "1"
 ## Uma linha por heroi e conjunto.
-const ROWS: int = 8
+const ROWS: int = 10
 
 var _heroes: Array[Hero] = []
 var _turning: bool = false
