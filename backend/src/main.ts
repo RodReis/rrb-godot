@@ -5,6 +5,7 @@ import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { loadConfig } from './config';
 import { Database } from './db/database';
+import { OrchestratorService } from './orchestrator/orchestrator.service';
 
 async function bootstrap(): Promise<void> {
   const config = loadConfig();
@@ -17,6 +18,8 @@ async function bootstrap(): Promise<void> {
   app.enableShutdownHooks();
   // ponytail: migra no boot (uma instância só, Coolify); job separado se houver réplicas.
   await app.get(Database).migrate();
+  // Remove containers e partidas de execuções anteriores e pré-aquece o pool (não derruba o boot se o Docker faltar).
+  await app.get(OrchestratorService).warm();
   await app.listen(config.PORT);
 }
 

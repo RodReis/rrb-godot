@@ -44,6 +44,7 @@ services:
     environment:
       DATABASE_URL: postgres://rrb:rrb@postgres:5432/rrb
       JWT_SECRET: "${JWT_SECRET:-dev-local-apenas-nao-usar-em-producao-0123}"
+      INTERNAL_SECRET: "${INTERNAL_SECRET:-dev-interno-apenas-nao-usar-em-producao-01}"
       PORT: "3000"
     depends_on:
       postgres:
