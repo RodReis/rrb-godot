@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-14
+updated: 2026-10-15
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -28,9 +28,7 @@ updated: 2026-10-14
 
 ## Em Andamento
 
-### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
-
-- [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163)
+_(vazio)_
 
 ## Feito
 
@@ -40,6 +38,7 @@ _(vazio)_
 
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
 
+- [MVP2.6][SPEC-059][F59] Engenheiro: Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, bot e VFX (#163, finalizado em: 2026-10-15)
 - [MVP2.6][SPEC-058][F58] Ladina (Algoz): Virote, Rajada em Leque, Bomba de Fumaça, Emboscada, bot e VFX (#162, finalizado em: 2026-10-14)
 - [MVP2.6][INFRA] Roadmap público aceita o marco MVP2.6 (#161, finalizado em: 2026-10-14)
 
