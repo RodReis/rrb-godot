@@ -3,7 +3,8 @@ extends Control
 ## Raiz do Launcher (ARCHITECTURE-LAUNCHER §3.1): barra superior, pilha de telas, rodape e os
 ## overlays globais (toast, modal, carregando, partida em andamento). Le o settings.cfg no boot e
 ## aplica video e audio no proprio Launcher. Dono dos servicos (ApiClient, AuthService,
-## QueueService, HistoryService, GameProcess): sem sessao abre no Login; com sessao o Lobby e a
+## QueueService, HistoryService, ProfileService, GameProcess): sem sessao abre no Login; com
+## sessao busca a conta e, sem nickname (1o login, F35), abre o Perfil antes do Lobby; o Lobby e a
 ## raiz; 401 sem renovacao volta ao Login. Fila pareada -> lanca o Game; saida do Game pela
 ## tabela do §5.2 (codigo 0 de partida online abre o Historico). Telas emitem; quem navega e
 ## confirma e o App.
@@ -20,10 +21,12 @@ var settings: SettingsStore = SettingsStore.new()
 var api: ApiClient = ApiClient.new()
 var auth: AuthService = AuthService.new(api)
 var history: HistoryService = HistoryService.new(api)
+var profile: ProfileService = ProfileService.new(api)
+var avatars: AvatarStore = AvatarStore.new()
 var catalog: CatalogService = CatalogService.new()
 var queue: QueueService = QueueService.new()
 var game: GameProcess = GameProcess.new()
-## E-mail da sessao aberta (cartao "Sua conta" do lobby); vazio sem sessao.
+## E-mail da sessao aberta (cartao "Sua conta" do lobby), o do backend; vazio sem sessao.
 var account_email: String = ""
 
 var _bar: AppBar = AppBar.new()
@@ -63,6 +66,7 @@ func _ready() -> void:
 	_stack.screen_changed.connect(_on_stack_screen_changed)
 	_bar.navigate_requested.connect(_on_bar_navigate_requested)
 	_bar.quit_requested.connect(_on_bar_quit_requested)
+	_bar.profile_requested.connect(_on_bar_profile_requested)
 	api.unauthorized.connect(_on_api_unauthorized)
 	# Diferido: a tela mostra "pareado" antes; so entao o App abre o Game (ou mostra o erro).
 	queue.matched.connect(_on_queue_matched, CONNECT_DEFERRED)
@@ -195,6 +199,8 @@ func _logout() -> void:
 		await queue.leave()
 	queue.reset()
 	history.clear()
+	profile.clear()
+	_bar.clear_profile()
 	auth.logout()
 	account_email = ""
 	_stack.reset(Router.LOGIN)
@@ -209,8 +215,16 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 	var login := screen as LoginScreen
 	if login != null:
 		login.bind(auth)
-		login.authenticated.connect(_on_login_authenticated.bind(login))
+		login.authenticated.connect(_on_login_authenticated)
 		login.practice_requested.connect(_start_practice)
+	var profile_screen := screen as ProfileScreen
+	if profile_screen != null:
+		var mode := (
+			ProfileScreen.Mode.SETUP if profile.needs_nickname() else ProfileScreen.Mode.EDIT
+		)
+		profile_screen.bind(profile, avatars, catalog, mode)
+		profile_screen.completed.connect(_on_profile_completed)
+		profile_screen.avatar_changed.connect(_on_profile_screen_avatar_changed)
 	var history_screen := screen as HistoryScreen
 	if history_screen != null:
 		history_screen.bind(history)
@@ -233,13 +247,69 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 
 func _on_stack_screen_changed(route: StringName) -> void:
 	_bar.set_current(route)
-	_bar.set_nav_visible(route != Router.LOGIN)
+	# Sem sessao (Login) e antes do 1o nickname nao ha para onde ir alem do que a tela oferece.
+	var gated := route == Router.LOGIN or (route == Router.PROFILE and profile.needs_nickname())
+	_bar.set_nav_visible(not gated)
 	_refresh_footer()
 
 
-func _on_login_authenticated(login: LoginScreen) -> void:
-	account_email = login.email_field().text.strip_edges()
+## Login ok: busca a conta (o backend diz se falta o nickname). Conta sem nickname abre o Perfil
+## antes do lobby (F35); sem a conta nao ha o que abrir e o Login segue na tela.
+func _on_login_authenticated() -> void:
+	show_loading(tr("Carregando sua conta…"))
+	var loaded := await profile.fetch()
+	hide_loading()
+	if not auth.is_logged_in():
+		return  # 401 sem renovacao: _on_api_unauthorized ja avisou e voltou ao Login
+	if not loaded:
+		auth.logout()
+		show_toast(tr("Não foi possível carregar sua conta. Tente de novo."), Toast.Kind.ERROR)
+		return
+	account_email = profile.profile.email
+	if profile.needs_nickname():
+		_stack.reset(Router.PROFILE)
+	else:
+		_open_lobby()
+
+
+func _open_lobby() -> void:
 	_stack.reset(Router.LOBBY)
+	_refresh_profile_chip()
+
+
+## Nickname definido no 1o login: segue para o lobby.
+func _on_profile_completed() -> void:
+	_open_lobby()
+
+
+## Chip do cabecalho: #nickname e avatar local; o V-D vem do historico (sem ele a linha some).
+func _refresh_profile_chip() -> void:
+	if profile.profile == null or profile.needs_nickname():
+		_bar.clear_profile()
+		return
+	_bar.set_profile(profile.profile.nickname, avatars.texture(profile.profile.id))
+	_refresh_record()
+
+
+func _on_profile_screen_avatar_changed() -> void:
+	_refresh_profile_chip()
+
+
+func _refresh_record() -> void:
+	if profile.profile == null or profile.needs_nickname():
+		return  # sem sessao nem conta nao ha V-D para mostrar (e nada de buscar sem token)
+	var loaded := await history.fetch()
+	if profile.profile == null or profile.needs_nickname():
+		return  # saiu da conta enquanto a busca voltava
+	if loaded:
+		_bar.set_profile_record(history.history.totals.wins, history.history.totals.losses)
+	else:
+		_bar.clear_profile_record()  # nao deixa V-D velho como se fosse atual
+
+
+func _on_bar_profile_requested() -> void:
+	if _stack.current_route() != Router.PROFILE and not _stack.locked:
+		_stack.push(Router.PROFILE)
 
 
 ## Menu do topo: LOBBY volta a raiz (desempilha); as demais telas empilham.
@@ -280,6 +350,8 @@ func _on_bar_quit_requested() -> void:
 func _on_api_unauthorized() -> void:
 	queue.reset()
 	history.clear()
+	profile.clear()
+	_bar.clear_profile()
 	show_toast(tr("Sua sessão expirou. Entre de novo."), Toast.Kind.WARN)
 	account_email = ""
 	_stack.reset(Router.LOGIN)
@@ -352,6 +424,7 @@ func _refresh_history() -> void:
 	history.clear()
 	if _stack.current_route() == Router.HISTORY:
 		_stack.replace(Router.HISTORY)
+	_refresh_record()
 
 
 func _on_match_end_requested() -> void:

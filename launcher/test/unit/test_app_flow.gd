@@ -8,6 +8,12 @@ extends GutTest
 const SCENE: PackedScene = preload("res://scenes/app.tscn")
 const MATCH: String = "0b7e9f00-1111-4222-8333-444455556666"
 const TOKENS: Dictionary = {"accessToken": "acesso", "refreshToken": "refresh"}
+const ME: Dictionary = {
+	"id": "9c2d1a77-aaaa-4bbb-8ccc-ddddeeeeffff",
+	"email": "duelista@rrb.dev",
+	"nickname": "RodReis",
+	"createdAt": "2026-10-15T12:00:00.000Z",
+}
 
 var _app: App
 var _api: FakeApiClient
@@ -20,16 +26,20 @@ func before_each() -> void:
 	_app.api = _api
 	_app.auth = AuthService.new(_api)
 	_app.history = HistoryService.new(_api)
+	_app.profile = ProfileService.new(_api)
+	_app.avatars = AvatarStore.new("user://test_app_avatars/")
 	add_child_autofree(_app)
 	await wait_process_frames(1)
 
 
 func _enter_lobby() -> LobbyScreen:
 	_api.reply("POST /auth/login", 200, TOKENS)
+	_api.reply("GET /users/me", 200, ME)
 	var login := _app.stack().current() as LoginScreen
 	login.email_field().text = "duelista@rrb.dev"
 	login.password_field().text = "senha1234"
 	await login.submit()
+	await wait_process_frames(1)
 	return _app.stack().current() as LobbyScreen
 
 
@@ -150,6 +160,7 @@ func test_fim_normal_de_partida_online_abre_o_historico() -> void:
 
 func test_fim_normal_descarta_o_cache_para_a_partida_nova_aparecer() -> void:
 	await _enter_lobby()
+	var base := _api.calls.count("GET /matches?mine=1")  # o chip do cabecalho busca o V-D (F35)
 	var stale := {"totals": {"wins": 0, "losses": 0}, "matches": []}
 	_api.reply("GET /matches?mine=1", 200, stale)
 	await _app.history.fetch()
@@ -157,15 +168,16 @@ func test_fim_normal_descarta_o_cache_para_a_partida_nova_aparecer() -> void:
 	_app.set(&"_match_id", MATCH)
 	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
 	await wait_process_frames(2)
-	assert_eq(_api.calls.count("GET /matches?mine=1"), 2)
+	assert_eq(_api.calls.count("GET /matches?mine=1"), base + 2)
 
 
 func test_fim_normal_do_treino_volta_ao_lobby_sem_historico() -> void:
 	await _enter_lobby()
+	var base := _api.calls.count("GET /matches?mine=1")  # o chip do cabecalho busca o V-D (F35)
 	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
 	await wait_process_frames(2)
 	assert_eq(_app.stack().current_route(), Router.LOBBY)
-	assert_false(_api.calls.has("GET /matches?mine=1"))
+	assert_eq(_api.calls.count("GET /matches?mine=1"), base, "treino nao grava partida: nada novo")
 
 
 func test_resultado_nao_reportado_avisa_e_fica_no_lobby() -> void:
@@ -306,6 +318,7 @@ func test_saida_com_erro_de_partida_online_tambem_descarta_o_cache() -> void:
 
 func test_fim_de_partida_com_o_historico_ja_aberto_busca_de_novo() -> void:
 	await _enter_lobby()
+	var base := _api.calls.count("GET /matches?mine=1")  # o chip do cabecalho busca o V-D (F35)
 	var empty := {"totals": {"wins": 0, "losses": 0}, "matches": []}
 	_api.reply("GET /matches?mine=1", 200, empty)
 	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
@@ -318,4 +331,4 @@ func test_fim_de_partida_com_o_historico_ja_aberto_busca_de_novo() -> void:
 	await wait_process_frames(2)
 	assert_eq(_app.stack().current_route(), Router.HISTORY)
 	assert_ne(_app.stack().current(), old_screen, "tela nova, com dado novo")
-	assert_eq(_api.calls.count("GET /matches?mine=1"), 2)
+	assert_eq(_api.calls.count("GET /matches?mine=1"), base + 2)

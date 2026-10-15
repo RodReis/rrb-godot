@@ -34,3 +34,8 @@ func clear_error() -> void:
 
 func has_error() -> bool:
 	return _error.visible
+
+
+## Texto da mensagem de erro; "" sem erro.
+func error_text() -> String:
+	return _error.text if _error.visible else ""

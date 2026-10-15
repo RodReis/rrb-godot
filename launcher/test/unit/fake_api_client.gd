@@ -7,6 +7,7 @@ extends ApiClient
 const METHOD_NAMES: Dictionary[HTTPClient.Method, String] = {
 	HTTPClient.METHOD_GET: "GET",
 	HTTPClient.METHOD_POST: "POST",
+	HTTPClient.METHOD_PUT: "PUT",
 	HTTPClient.METHOD_DELETE: "DELETE",
 }
 

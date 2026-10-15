@@ -16,12 +16,16 @@ extends SceneTree
 ## weapons|<id do conjunto> e --query (Forja); --build=<heroi>:<nivel>:<item>,<item> poe o build no
 ## simulador; --scroll=<px> rola o corpo (999999 = ate o fim); --catalog=broken mostra o erro.
 ## F33: --route=arena_map; --poi=<id> escolhe o ponto de interesse (base_a, crater, tall_grass...).
+## F35: --route=profile --state=setup|invalid|taken|offline|saving|avatar|upload_error|edit poe o
+## Perfil num estado (ApiClient falso, avatares em user://capture_avatars/); --route=lobby com
+## --nick=<nome> [--avatar=hero:knight] [--record=14:6] mostra o chip do cabecalho.
 
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_SIZE: Vector2i = Vector2i(1920, 1080)
 ## Frames ate fontes, fade de entrada e layout assentarem.
 const SETTLE_FRAMES: int = 45
 const FPS_SECONDS: float = 3.0
+
 ## Dados de exemplo do Historico (so desta captura): destaque, derrota, vitoria e interrompida.
 const HISTORY_CALL: String = "GET /matches?mine=1"
 const HISTORY_SAMPLE: Dictionary = {
@@ -43,7 +47,7 @@ const HISTORY_SAMPLE: Dictionary = {
 				"bossKill": true,
 				"setActive": "hunter"
 			},
-			"opponent": {"heroId": "knight", "kills": 3, "finalLevel": 9},
+			"opponent": {"heroId": "knight", "nickname": "RodReis", "kills": 3, "finalLevel": 9},
 		},
 		{
 			"matchId": "0b7e9f00-1111-4222-8333-000000000002",
@@ -60,7 +64,8 @@ const HISTORY_SAMPLE: Dictionary = {
 				"bossKill": false,
 				"setActive": null
 			},
-			"opponent": {"heroId": "ranger", "kills": 5, "finalLevel": 10},
+			"opponent":
+			{"heroId": "ranger", "nickname": "Arqueira_01", "kills": 5, "finalLevel": 10},
 		},
 		{
 			"matchId": "0b7e9f00-1111-4222-8333-000000000003",
@@ -77,7 +82,7 @@ const HISTORY_SAMPLE: Dictionary = {
 				"bossKill": false,
 				"setActive": null
 			},
-			"opponent": {"heroId": "barbarian", "kills": 1, "finalLevel": 7},
+			"opponent": {"heroId": "barbarian", "nickname": null, "kills": 1, "finalLevel": 7},
 		},
 		{
 			"matchId": "0b7e9f00-1111-4222-8333-000000000004",
@@ -94,7 +99,7 @@ const HISTORY_SAMPLE: Dictionary = {
 				"bossKill": false,
 				"setActive": null
 			},
-			"opponent": {"heroId": null, "kills": 0, "finalLevel": 0},
+			"opponent": {"heroId": null, "nickname": null, "kills": 0, "finalLevel": 0},
 		},
 		{
 			"matchId": "0b7e9f00-1111-4222-8333-000000000005",
@@ -111,10 +116,15 @@ const HISTORY_SAMPLE: Dictionary = {
 				"bossKill": true,
 				"setActive": null
 			},
-			"opponent": {"heroId": "engineer", "kills": 3, "finalLevel": 9},
+			"opponent": {"heroId": "engineer", "nickname": null, "kills": 3, "finalLevel": 9},
 		},
 	],
 }
+## Conta de exemplo do Perfil (so desta captura).
+const PROFILE_USER: String = "9c2d1a77-aaaa-4bbb-8ccc-ddddeeeeffff"
+const CAPTURE_AVATARS: String = "user://capture_avatars/"
+
+var _profile_api: FakeApiClient
 
 
 func _initialize() -> void:
@@ -135,12 +145,17 @@ func _capture() -> void:
 	if args.has("history"):
 		_fake_history(app as App, args["history"])
 		args["route"] = "history"
+	if args.has("nick") or args.get("route", "") == "profile":
+		_fake_profile(app as App, args)
 	if args.get("catalog", "") == "broken":
 		(app as App).catalog = BrokenCatalog.new()
 	if args.has("route"):
 		(app as App).account_email = args.get("email", "duelista@exemplo.com")
 		(app as App).stack().reset(StringName(args["route"]))
+	if args.get("route", "") == "lobby" and args.has("nick"):
+		(app as App).call("_refresh_profile_chip")
 	await _set_state(app as App, args.get("state", ""))
+	await _profile_state(app as App, args.get("state", ""))
 	if args.has("overlay"):
 		(app as App).match_overlay().open(false)
 	if args.has("filter"):
@@ -174,6 +189,72 @@ func _capture() -> void:
 	var err := image.save_png(out)
 	print("[capture] %s %s (%s)" % [out, image.get_size(), error_string(err)])
 	quit(err)
+
+
+## F35: conta de exemplo no ProfileService (ApiClient falso: nada vai ao backend) e avatares em
+## user://capture_avatars/ (nao mexe nos do jogador). Rota profile: sem --nick = 1o login (SETUP).
+func _fake_profile(app: App, args: Dictionary) -> void:
+	var api := FakeApiClient.new()
+	app.add_child(api)
+	api.reply(HISTORY_CALL, 200, _record_history(args.get("record", "")))
+	app.profile = ProfileService.new(api)
+	app.history = HistoryService.new(api)
+	app.avatars = AvatarStore.new(CAPTURE_AVATARS)
+	if DirAccess.dir_exists_absolute(CAPTURE_AVATARS):  # cada captura parte do zero
+		for file: String in DirAccess.get_files_at(CAPTURE_AVATARS):
+			DirAccess.remove_absolute(CAPTURE_AVATARS + file)
+	var nickname: Variant = args.get("nick", null)
+	if args.get("state", "") == "edit" and nickname == null:
+		nickname = "RodReis"
+	app.profile.profile = (
+		UserProfile
+		. from_dict(
+			{
+				"id": PROFILE_USER,
+				"email": "duelista@exemplo.com",
+				"nickname": nickname,
+				"createdAt": "2026-10-15T12:00:00.000Z",
+			}
+		)
+	)
+	if args.has("avatar"):
+		app.avatars.use_preset(PROFILE_USER, args["avatar"])
+	_profile_api = api
+
+
+## "14:6" -> historico so com os totais (V-D do chip); vazio = sem historico (a linha some).
+func _record_history(record: String) -> Dictionary:
+	var parts := record.split(":")
+	if parts.size() != 2:
+		return {"totals": {"wins": 0, "losses": 0}, "matches": []}
+	return {"totals": {"wins": int(parts[0]), "losses": int(parts[1])}, "matches": []}
+
+
+## F35: estados do Perfil (so desta captura).
+func _profile_state(app: App, state: String) -> void:
+	var found := app.find_children("*", "ProfileScreen", true, false)
+	if found.is_empty():
+		return
+	var screen := found[0] as ProfileScreen
+	match state:
+		"invalid":
+			screen.nickname_field().text = "ab"
+			await screen.submit()
+		"taken":
+			screen.nickname_field().text = "RodReis"
+			_profile_api.reply("PUT /users/me/nickname", 409, {"code": "NICKNAME_TAKEN"})
+			await screen.submit()
+		"offline":
+			screen.nickname_field().text = "RodReis"
+			await screen.submit()
+		"saving":
+			screen.nickname_field().text = "RodReis"
+			screen.call("_set_busy", true)
+		"avatar":
+			screen.nickname_field().text = "RodReis"
+			screen.select_preset("hero:ranger")
+		"upload_error":
+			screen.load_avatar_file("res://project.godot")
 
 
 ## Troca o servico do Historico por um ApiClient falso (nao fala com o backend).

@@ -7,6 +7,7 @@ extends RefCounted
 var hero_id: String = ""
 var kills: int = 0
 var final_level: int = 0
+var nickname: String = ""
 
 
 static func from_dict(raw: Variant) -> MatchOpponent:
@@ -36,4 +37,10 @@ static func from_dict(raw: Variant) -> MatchOpponent:
 	):
 		return null
 	model.final_level = int(data["finalLevel"])
+	if not data.has("nickname"):
+		return null
+	if data["nickname"] != null:
+		if not data["nickname"] is String:
+			return null
+		model.nickname = data["nickname"]
 	return model
