@@ -14,8 +14,15 @@ extends Node3D
 ## VFX de combate (F41): o ImpactRelay leva o impacto do servidor aos clientes; o VfxSpawner so
 ## nasce em quem desenha (nunca no servidor headless). Ciclo dia/noite (F49): o DayNight tambem so
 ## nasce em quem desenha; o sentido sai da seed no servidor (--daynight forca) e vai por RPC.
+## Online (F23): o cliente apresenta o --token no handshake (PeerAuth); o servidor dedicado so deixa
+## entrar quem o backend validou, manda heartbeat e reporta o resultado no fim (ServerSession),
+## saindo com os codigos de ExitCodes. Sem backend so com --no-backend (dev).
 
 const MAX_PLAYERS: int = 2
+## Conexoes do ENet no servidor. Maior que os jogadores: peer ainda no handshake de autenticacao
+## ocupa uma, e com so 2 dois peers pendurados trancariam a partida; quem decide quem joga e o
+## token (MAX_PLAYERS vagas no MatchController).
+const MAX_CONNECTIONS: int = 32
 ## Herois da selecao; sem cena (Hero.SCENE_PATH) aparece indisponivel.
 const ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/knight.tres"),
@@ -57,6 +64,10 @@ var _bot_hero: StringName = &""
 var _bot_pilot: bool = false
 ## Servidor dedicado: encerra o processo no fim da partida.
 var _dedicated: bool = false
+## Servidor dedicado: elo com o backend (auth, heartbeat, resultado).
+var _server: ServerSession
+## Cliente online: match_token apresentado ao servidor (--token); nunca vai para o log.
+var _token: String = ""
 ## Navmesh de cada bot, por time (so no servidor com --bot ou --bots).
 var _navs: Dictionary[int, ArenaNav] = {}
 ## Cliente: erro de servidor perdido (#102); null no servidor dedicado.
@@ -125,6 +136,7 @@ func _ready() -> void:
 	_bot_heroes = args["bot_heroes"]
 	_bot_hero = args["bot_hero"]
 	_bot_pilot = args["bot_pilot"]
+	_token = args["token"]
 	if args["probe"]:
 		var probe := NetProbe.new()
 		probe.players = players
@@ -139,6 +151,8 @@ func _ready() -> void:
 			_join(multiplayer.get_unique_id())
 	elif dedicated:
 		_dedicated = true
+		if not _start_session(args["no_backend"]):
+			return
 		start_server(args["port"])
 	elif args["host"] != "":
 		start_client(args["host"], args["port"])
@@ -199,7 +213,7 @@ func _warm_shaders() -> void:
 func start_server(port: int, bind_ip: String = "*") -> bool:
 	var peer := ENetMultiplayerPeer.new()
 	peer.set_bind_ip(bind_ip)
-	var err := peer.create_server(port, MAX_PLAYERS)
+	var err := peer.create_server(port, MAX_CONNECTIONS)
 	if err != OK:
 		push_error("[server] falha ao abrir porta %d: %s" % [port, error_string(err)])
 		get_tree().quit(1)
@@ -211,7 +225,10 @@ func start_server(port: int, bind_ip: String = "*") -> bool:
 	status_label.text = "servidor na porta %d" % port
 	print("[server] escutando em %s:%d" % [bind_ip, peer.host.get_local_port()])
 	match_controller.available_heroes = _available_heroes()
-	match_controller.open(NetworkTime.tick, NetworkTime.tickrate)
+	if _server == null or not _server.is_online():
+		# Online, o lobby (e o prazo de espera dele) so abre com o primeiro peer admitido: o
+		# container fica ocioso no pool ate a partida ser atribuida.
+		match_controller.open(NetworkTime.tick, NetworkTime.tickrate)
 	if _wants_bots:
 		match_controller.join(BOT_ID_TEAM_A, GateRules.TEAM_A, true, NetworkTime.tick)
 	if _wants_bot or _wants_bots:
@@ -219,7 +236,46 @@ func start_server(port: int, bind_ip: String = "*") -> bool:
 	return true
 
 
+## Servidor dedicado: monta o elo com o backend e o handshake de autenticacao, antes de abrir a
+## porta. Falso (processo sai com ExitCodes.ARGUMENTS) se faltar BACKEND_URL/INTERNAL_SECRET e nao
+## for --no-backend: servidor sem backend aceitaria qualquer peer.
+func _start_session(no_backend: bool) -> bool:
+	_server = ServerSession.new()
+	_server.name = "ServerSession"
+	add_child(_server)
+	var api: BackendApi = null
+	if no_backend and ServerSession.has_backend_environment():
+		# Container de producao sempre tem as duas variaveis; um --no-backend ali seria engano.
+		push_error("[server] --no-backend com BACKEND_URL/INTERNAL_SECRET definidos: recusado")
+		get_tree().quit(ExitCodes.ARGUMENTS)
+		return false
+	if not no_backend:
+		api = ServerSession.backend_from_environment(_server)
+		if api == null:
+			push_error(
+				(
+					"[server] defina %s e %s (ou --no-backend, so para dev)"
+					% [ServerSession.ENV_URL, ServerSession.ENV_SECRET]
+				)
+			)
+			get_tree().quit(ExitCodes.ARGUMENTS)
+			return false
+	else:
+		push_warning("[server] --no-backend: qualquer peer entra e o resultado nao e reportado")
+	_server.setup(api)
+	var auth := PeerAuth.new()
+	auth.name = "PeerAuth"
+	add_child(auth)
+	auth.serve(_server.admit, _server.auth.release)
+	return true
+
+
 func start_client(host: String, port: int) -> void:
+	var auth := PeerAuth.new()
+	auth.name = "PeerAuth"
+	add_child(auth)
+	auth.denied.connect(_on_auth_denied)
+	auth.join(_token)
 	var peer := ENetMultiplayerPeer.new()
 	var err := peer.create_client(host, port)
 	if err != OK:
@@ -245,6 +301,8 @@ func _on_connect_pressed() -> void:
 
 func _on_peer_connected(id: int) -> void:
 	print("[server] peer %d conectou" % id)
+	if not match_controller.is_open():
+		match_controller.open(NetworkTime.tick, NetworkTime.tickrate)
 	_join(id)
 
 
@@ -343,6 +401,8 @@ func _hero_spawn(team: int) -> Transform3D:
 ## Servidor: o heroi fica na partida, parado, e continua sofrendo dano (ARCHITECTURE-GAME §6).
 func _on_peer_disconnected(id: int) -> void:
 	print("[server] peer %d saiu" % id)
+	if _server != null:
+		_server.auth.release(id)
 	match_controller.leave(id, NetworkTime.tick)
 	var hero := players.get_node_or_null(str(id)) as Hero
 	if hero != null:
@@ -417,8 +477,9 @@ func _pilot_pick() -> void:
 		hero_select.lock_in()
 
 
-## Servidor dedicado: partida encerrada encerra o processo com codigo 0 (ARCHITECTURE-GAME §3.7,
-## §6).
+## Servidor dedicado: partida encerrada reporta o resultado ao backend e encerra o processo com o
+## codigo de ExitCodes (0 se reportou ou sem backend; 3 se o resultado nao chegou; ARCHITECTURE-GAME
+## §3.7, §6).
 func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: int) -> void:
 	print(
 		(
@@ -430,8 +491,9 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 		# Uma linha em JSON para o tools/soak.ps1 (F19) ler sem depender da prosa acima.
 		var summary := {"winner": winner, "reason": reason, "tick": tick, "stats": stats.to_dict()}
 		print("[soak] ", JSON.stringify(summary))
+		var code := await _server.report(winner, reason, stats, match_controller.match_seed)
 		await get_tree().create_timer(EXIT_DELAY_SECONDS).timeout
-		get_tree().quit(0)
+		get_tree().quit(code)
 
 
 ## "Jogar novamente" e "Voltar": o Game nao tem fila; o processo acaba e o Launcher decide.
@@ -470,6 +532,13 @@ func _on_server_disconnected() -> void:
 		match_end.process_mode = Node.PROCESS_MODE_ALWAYS
 		return
 	_connection_lost.present()
+
+
+## Cliente: o servidor nao aceitou o token (ou nao pode decidir); sai com o codigo que o
+## Launcher entende (ARCHITECTURE-LAUNCHER §5.2).
+func _on_auth_denied(exit_code: int) -> void:
+	push_error("[client] servidor recusou a entrada (codigo de saida %d)" % exit_code)
+	get_tree().quit(exit_code)
 
 
 func _on_connection_lost_exit_requested() -> void:

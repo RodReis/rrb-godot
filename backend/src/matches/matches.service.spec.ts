@@ -53,19 +53,24 @@ describe('MatchesService', () => {
   let orchestrator: { release: jest.Mock };
   let service: MatchesService;
 
-  /** Cria uma partida `assigned` como o orquestrador faria. */
-  async function assigned(matchId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'): Promise<{ id: string; token: string }> {
-    const token = await tokens.sign(matchId, [A, B]);
+  /** Cria uma partida `assigned` como o orquestrador faria: um token por jogador (`token` é o do A). */
+  async function assigned(
+    matchId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+  ): Promise<{ id: string; token: string; tokenB: string }> {
+    const token = await tokens.sign(matchId, [A, B], A);
+    const tokenB = await tokens.sign(matchId, [A, B], B);
     await repo.createAssigned({
       id: matchId,
-      playerIds: [A, B],
+      players: [
+        { userId: A, tokenHash: MatchTokenService.hash(token) },
+        { userId: B, tokenHash: MatchTokenService.hash(tokenB) },
+      ],
       serverHost: '127.0.0.1',
       serverPort: 7000,
-      tokenHash: MatchTokenService.hash(token),
       seed: 42,
       now: clock.now(),
     });
-    return { id: matchId, token };
+    return { id: matchId, token, tokenB };
   }
 
   beforeEach(() => {
@@ -77,23 +82,25 @@ describe('MatchesService', () => {
   });
 
   describe('validate', () => {
-    it('token válido: assigned → running, devolve seed e jogadores; chamar de novo é idempotente', async () => {
+    it('token válido: assigned → running, devolve a conta dona, seed e jogadores; chamar de novo é idempotente', async () => {
       const { id, token } = await assigned();
 
       const first = await service.validate(id, token);
       const second = await service.validate(id, token);
 
-      expect(first).toEqual({ matchId: id, playerIds: [A, B], seed: 42 });
+      expect(first).toEqual({ matchId: id, userId: A, playerIds: [A, B], seed: 42 });
       expect(second).toEqual(first);
       expect(repo.rows.get(id)).toMatchObject({ status: 'running', startedAt: clock.now() });
     });
 
-    it('os dois peers chegando juntos: ambos recebem 200 (o que perdeu a corrida do markRunning também vale)', async () => {
-      const { id, token } = await assigned();
+    it('os dois peers chegando juntos: ambos recebem 200, cada um com a sua conta (quem perdeu a corrida do markRunning também vale)', async () => {
+      const { id, token, tokenB } = await assigned();
 
-      const results = await Promise.all([service.validate(id, token), service.validate(id, token)]);
+      const [first, second] = await Promise.all([service.validate(id, token), service.validate(id, tokenB)]);
 
-      expect(results[1]).toEqual(results[0]);
+      expect(first.userId).toBe(A);
+      expect(second.userId).toBe(B);
+      expect({ ...second, userId: A }).toEqual(first);
       expect(repo.rows.get(id)?.status).toBe('running');
     });
 
@@ -108,7 +115,7 @@ describe('MatchesService', () => {
     it('token válido mas diferente do emitido (hash não bate) → TOKEN_INVALID', async () => {
       const { id, token } = await assigned();
       const forged = await new JwtService({ secret: SECRET }).signAsync(
-        { typ: 'match', match_id: id, player_ids: [A, B], iat: Math.floor(Date.now() / 1000) - 30 },
+        { typ: 'match', sub: A, match_id: id, player_ids: [A, B], iat: Math.floor(Date.now() / 1000) - 30 },
         { expiresIn: 120 },
       ); // mesma partida, assinatura válida, mas não é o token que o orquestrador emitiu
 
@@ -116,10 +123,18 @@ describe('MatchesService', () => {
       expect(await code(service.validate(id, forged))).toBe('TOKEN_INVALID');
     });
 
+    it('token assinado para quem não está na partida (assinatura e match_id válidos) → TOKEN_INVALID', async () => {
+      const { id } = await assigned();
+      const outsider = await tokens.sign(id, [A, B], OUTSIDER);
+
+      expect(await code(service.validate(id, outsider))).toBe('TOKEN_INVALID');
+      expect(repo.rows.get(id)?.status).toBe('assigned');
+    });
+
     it('token expirado → TOKEN_EXPIRED e a partida continua assigned', async () => {
       const { id } = await assigned();
       const expired = await new JwtService({ secret: SECRET }).signAsync(
-        { typ: 'match', match_id: id, player_ids: [A, B] },
+        { typ: 'match', sub: A, match_id: id, player_ids: [A, B] },
         { expiresIn: -5 },
       );
 
@@ -129,7 +144,7 @@ describe('MatchesService', () => {
 
     it('partida inexistente → 404 MATCH_NOT_FOUND', async () => {
       const ghost = '99999999-9999-4999-8999-999999999999';
-      const token = await tokens.sign(ghost, [A, B]);
+      const token = await tokens.sign(ghost, [A, B], A);
 
       expect(await code(service.validate(ghost, token))).toBe('MATCH_NOT_FOUND');
     });

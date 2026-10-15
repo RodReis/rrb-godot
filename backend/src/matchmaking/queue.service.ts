@@ -67,7 +67,7 @@ export class QueueService {
     if (ticket.status !== 'matched' || !ticket.matchId) return { status: 'cancelled', elapsedS };
     const match = await this.matches.findById(ticket.matchId);
     if (!match || match.status === 'aborted') return { status: 'cancelled', elapsedS };
-    const assignment = this.orchestrator.assignmentFor(match.id);
+    const assignment = this.orchestrator.assignmentFor(match.id, userId);
     return assignment ? { status: 'matched', elapsedS, assignment } : { status: 'matched', elapsedS };
   }
 

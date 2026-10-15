@@ -10,8 +10,10 @@ const count = z.number().int().min(0).max(MAX_COUNT);
 export const ValidateSchema = z.object({ token: z.string().min(1).max(MAX_TOKEN_LENGTH) });
 export class ValidateDto extends createZodDto(ValidateSchema) {}
 
+/** `userId`: a conta dona do token apresentado (cada jogador tem o seu, §4.2). */
 const ValidatedMatchSchema = z.object({
   matchId: z.uuid(),
+  userId: z.uuid(),
   playerIds: z.array(z.uuid()),
   seed: z.number().int(),
 });

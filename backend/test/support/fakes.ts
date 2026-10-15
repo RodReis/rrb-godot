@@ -52,6 +52,7 @@ export class FakeContainerRuntime extends ContainerRuntime {
 export class InMemoryMatchesRepository extends MatchesRepository {
   readonly rows = new Map<string, Match>();
   readonly players = new Map<string, Map<string, Record<string, unknown>>>();
+  private readonly tokenHashes = new Map<string, string>();
 
   async createAssigned(match: NewMatch): Promise<void> {
     this.rows.set(match.id, {
@@ -59,7 +60,6 @@ export class InMemoryMatchesRepository extends MatchesRepository {
       status: 'assigned',
       serverHost: match.serverHost,
       serverPort: match.serverPort,
-      tokenHash: match.tokenHash,
       seed: match.seed,
       createdAt: match.now,
       startedAt: null,
@@ -69,7 +69,8 @@ export class InMemoryMatchesRepository extends MatchesRepository {
       endReason: null,
       durationS: null,
     });
-    this.players.set(match.id, new Map(match.playerIds.map((id) => [id, {}])));
+    this.players.set(match.id, new Map(match.players.map(({ userId }) => [userId, {}])));
+    for (const { userId, tokenHash } of match.players) this.tokenHashes.set(`${match.id}:${userId}`, tokenHash);
   }
 
   async findById(id: string): Promise<Match | null> {
@@ -78,6 +79,10 @@ export class InMemoryMatchesRepository extends MatchesRepository {
 
   async playerIds(matchId: string): Promise<string[]> {
     return [...(this.players.get(matchId)?.keys() ?? [])];
+  }
+
+  async playerTokenHash(matchId: string, userId: string): Promise<string | null> {
+    return this.tokenHashes.get(`${matchId}:${userId}`) ?? null;
   }
 
   async userHasActiveMatch(userId: string): Promise<boolean> {

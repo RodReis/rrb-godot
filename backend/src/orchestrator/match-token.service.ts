@@ -4,9 +4,13 @@ import { JwtService } from '@nestjs/jwt';
 import { APP_CONFIG } from '../common/app-config';
 import type { AppConfig } from '../config';
 
-/** Token de partida (§4.2 passo 3). `typ: 'match'` o separa dos tokens de usuário (`JwtGuard` exige `access`). */
+/**
+ * Token de partida (§4.2 passo 3), um por jogador: `sub` é a conta dona dele, e é assim que o game
+ * server sabe qual peer é qual conta. `typ: 'match'` o separa dos tokens de usuário (`JwtGuard` exige `access`).
+ */
 export interface MatchTokenPayload {
   typ: 'match';
+  sub: string;
   match_id: string;
   player_ids: string[];
 }
@@ -18,8 +22,8 @@ export class MatchTokenService {
     @Inject(APP_CONFIG) private readonly config: AppConfig,
   ) {}
 
-  sign(matchId: string, playerIds: string[]): Promise<string> {
-    const payload: MatchTokenPayload = { typ: 'match', match_id: matchId, player_ids: playerIds };
+  sign(matchId: string, playerIds: string[], userId: string): Promise<string> {
+    const payload: MatchTokenPayload = { typ: 'match', sub: userId, match_id: matchId, player_ids: playerIds };
     return this.jwt.signAsync(payload, { expiresIn: this.config.MATCH_TOKEN_TTL_S });
   }
 
@@ -27,7 +31,7 @@ export class MatchTokenService {
   async verify(token: string): Promise<MatchTokenPayload> {
     try {
       const payload = await this.jwt.verifyAsync<MatchTokenPayload>(token);
-      if (payload.typ === 'match') return payload;
+      if (payload.typ === 'match' && typeof payload.sub === 'string') return payload;
     } catch (error) {
       if ((error as { name?: string }).name === 'TokenExpiredError') {
         throw new UnauthorizedException({ code: 'TOKEN_EXPIRED', message: 'Token de partida expirado' });

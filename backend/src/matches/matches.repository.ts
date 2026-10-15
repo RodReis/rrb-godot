@@ -3,12 +3,17 @@ import { and, eq, inArray, lt } from 'drizzle-orm';
 import { Match, matches, matchPlayers } from '../../drizzle/schema';
 import { Database } from '../db/database';
 
+export interface NewPlayer {
+  userId: string;
+  /** Hash do token DESTE jogador (§4.3): vazar `match_players` não vaza token utilizável. */
+  tokenHash: string;
+}
+
 export interface NewMatch {
   id: string;
-  playerIds: string[];
+  players: NewPlayer[];
   serverHost: string;
   serverPort: number;
-  tokenHash: string;
   seed: number;
   now: Date;
 }
@@ -44,6 +49,8 @@ export abstract class MatchesRepository {
   abstract createAssigned(match: NewMatch): Promise<void>;
   abstract findById(id: string): Promise<Match | null>;
   abstract playerIds(matchId: string): Promise<string[]>;
+  /** `null` = a conta não está na partida. */
+  abstract playerTokenHash(matchId: string, userId: string): Promise<string | null>;
   /** Conta em `assigned` ou `running` (I8 vale também para a partida em curso). */
   abstract userHasActiveMatch(userId: string): Promise<boolean>;
   abstract markRunning(id: string, now: Date): Promise<boolean>;
@@ -68,13 +75,12 @@ export class DrizzleMatchesRepository extends MatchesRepository {
         id: match.id,
         serverHost: match.serverHost,
         serverPort: match.serverPort,
-        tokenHash: match.tokenHash,
         seed: match.seed,
         createdAt: match.now,
       });
       await tx
         .insert(matchPlayers)
-        .values(match.playerIds.map((userId) => ({ matchId: match.id, userId })));
+        .values(match.players.map(({ userId, tokenHash }) => ({ matchId: match.id, userId, tokenHash })));
     });
   }
 
@@ -89,6 +95,14 @@ export class DrizzleMatchesRepository extends MatchesRepository {
       .from(matchPlayers)
       .where(eq(matchPlayers.matchId, matchId));
     return rows.map((row) => row.userId);
+  }
+
+  async playerTokenHash(matchId: string, userId: string): Promise<string | null> {
+    const [row] = await this.database.db
+      .select({ tokenHash: matchPlayers.tokenHash })
+      .from(matchPlayers)
+      .where(and(eq(matchPlayers.matchId, matchId), eq(matchPlayers.userId, userId)));
+    return row?.tokenHash ?? null;
   }
 
   async userHasActiveMatch(userId: string): Promise<boolean> {

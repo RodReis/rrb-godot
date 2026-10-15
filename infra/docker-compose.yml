@@ -12,7 +12,9 @@ services:
       NETEM_DELAY_MS: "${NETEM_DELAY_MS:-}"
       NETEM_JITTER_MS: "${NETEM_JITTER_MS:-}"
       NETEM_LOSS_PCT: "${NETEM_LOSS_PCT:-}"
-      GAME_ARGS: "${GAME_ARGS:-}"
+      # Servidor de dev, sem backend (F23): qualquer peer entra e o resultado nao e reportado. O
+      # orquestrador do backend sobe a imagem sem isto e com BACKEND_URL/INTERNAL_SECRET.
+      GAME_ARGS: "--no-backend ${GAME_ARGS:-}"
 
   # Backend local (dev/e2e) — perfil próprio para não subir junto com o gameserver:
   #   docker compose -f infra/docker-compose.yml --profile backend up -d postgres   (só o banco, e2e)

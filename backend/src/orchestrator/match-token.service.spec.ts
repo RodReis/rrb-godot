@@ -22,21 +22,29 @@ describe('MatchTokenService', () => {
     tokens = new MatchTokenService(jwt, { MATCH_TOKEN_TTL_S: 120 } as AppConfig);
   });
 
-  it('carrega match_id e player_ids e expira em 2 min', async () => {
-    const token = await tokens.sign(MATCH_ID, PLAYERS);
+  it('carrega match_id, player_ids e a conta dona (sub) e expira em 2 min', async () => {
+    const token = await tokens.sign(MATCH_ID, PLAYERS, PLAYERS[1]!);
 
     const payload = jwt.decode<{ iat: number; exp: number }>(token);
     expect(payload.exp - payload.iat).toBe(120);
     await expect(tokens.verify(token)).resolves.toMatchObject({
       typ: 'match',
+      sub: PLAYERS[1],
       match_id: MATCH_ID,
       player_ids: PLAYERS,
     });
   });
 
+  it('cada jogador tem o seu token (hash distinto na mesma partida)', async () => {
+    const a = await tokens.sign(MATCH_ID, PLAYERS, PLAYERS[0]!);
+    const b = await tokens.sign(MATCH_ID, PLAYERS, PLAYERS[1]!);
+
+    expect(MatchTokenService.hash(a)).not.toBe(MatchTokenService.hash(b));
+  });
+
   it('token vencido → TOKEN_EXPIRED', async () => {
     const expired = await jwt.signAsync(
-      { typ: 'match', match_id: MATCH_ID, player_ids: PLAYERS },
+      { typ: 'match', sub: PLAYERS[0], match_id: MATCH_ID, player_ids: PLAYERS },
       { expiresIn: -10 },
     );
     expect(await rejectionCode(tokens.verify(expired))).toBe('TOKEN_EXPIRED');
@@ -45,19 +53,22 @@ describe('MatchTokenService', () => {
   it('assinatura de outro segredo, lixo e token de usuário → TOKEN_INVALID', async () => {
     const foreign = await new JwtService({ secret: 'outro-segredo-com-pelo-menos-32-caracteres' }).signAsync({
       typ: 'match',
+      sub: PLAYERS[0],
       match_id: MATCH_ID,
       player_ids: PLAYERS,
     });
     const access = await jwt.signAsync({ sub: PLAYERS[0], typ: 'access' }, { expiresIn: '15m' });
+    const semDono = await jwt.signAsync({ typ: 'match', match_id: MATCH_ID, player_ids: PLAYERS });
 
     expect(await rejectionCode(tokens.verify(foreign))).toBe('TOKEN_INVALID');
     expect(await rejectionCode(tokens.verify('nao-e-um-jwt'))).toBe('TOKEN_INVALID');
     expect(await rejectionCode(tokens.verify(access))).toBe('TOKEN_INVALID');
+    expect(await rejectionCode(tokens.verify(semDono))).toBe('TOKEN_INVALID');
   });
 
   it('hash é sha256 hex estável e distinto por token', async () => {
-    const a = await tokens.sign(MATCH_ID, PLAYERS);
-    const b = await tokens.sign('44444444-4444-4444-8444-444444444444', PLAYERS);
+    const a = await tokens.sign(MATCH_ID, PLAYERS, PLAYERS[0]!);
+    const b = await tokens.sign('44444444-4444-4444-8444-444444444444', PLAYERS, PLAYERS[0]!);
 
     expect(MatchTokenService.hash(a)).toMatch(/^[0-9a-f]{64}$/);
     expect(MatchTokenService.hash(a)).toBe(MatchTokenService.hash(a));

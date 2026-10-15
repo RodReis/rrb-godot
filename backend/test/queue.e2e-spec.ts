@@ -35,7 +35,9 @@ interface User {
 
 interface Paired {
   matchId: string;
+  /** Token do primeiro jogador; `tokenB` é o do segundo (um por jogador, §4.2). */
   token: string;
+  tokenB: string;
   ticketA: string;
   ticketB: string;
 }
@@ -91,13 +93,14 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
     request(server()).get(`/queue/${ticket}`).set('Authorization', user.auth);
   const internal = (path: string) => request(server()).post(`/internal/matches/${path}`).set(SECRET_HEADER, INTERNAL_SECRET);
 
-  /** Dois jogadores entram na fila, são pareados e o primeiro lê o assignment. */
+  /** Dois jogadores entram na fila, são pareados e cada um lê o seu assignment. */
   async function pairUp(a: User, b: User): Promise<Paired> {
     const ticketA = ((await join(a)).body as { id: string }).id;
     const ticketB = ((await join(b)).body as { id: string }).id;
-    const { assignment } = (await poll(a, ticketA)).body as { assignment: { token: string } };
-    const { match_id: matchId } = jwt.decode<{ match_id: string }>(assignment.token);
-    return { matchId, token: assignment.token, ticketA, ticketB };
+    const forA = (await poll(a, ticketA)).body as { assignment: { token: string } };
+    const forB = (await poll(b, ticketB)).body as { assignment: { token: string } };
+    const { match_id: matchId } = jwt.decode<{ match_id: string }>(forA.assignment.token);
+    return { matchId, token: forA.assignment.token, tokenB: forB.assignment.token, ticketA, ticketB };
   }
 
   beforeEach(async () => {
@@ -122,7 +125,7 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
       expect(polled.body).toEqual({ status: 'searching', elapsedS: 0 });
     });
 
-    it('dois tickets formam par e os dois recebem o MESMO assignment', async () => {
+    it('dois tickets formam par: mesmo servidor, um token por jogador (sub = a conta)', async () => {
       const [a, b] = users as [User, User];
       const { ticketA, ticketB } = await pairUp(a, b);
 
@@ -133,23 +136,37 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
         status: 'matched',
         assignment: { host: 'jogo.exemplo.com', port: 7000, token: expect.any(String) },
       });
-      expect(forB.body).toEqual(forA.body);
+      expect(forB.body).toMatchObject({
+        status: 'matched',
+        assignment: { host: 'jogo.exemplo.com', port: 7000, token: expect.any(String) },
+      });
+      const tokenA = (forA.body as { assignment: { token: string } }).assignment.token;
+      const tokenB = (forB.body as { assignment: { token: string } }).assignment.token;
+      expect(tokenB).not.toBe(tokenA);
+      expect(jwt.decode<{ sub: string }>(tokenA).sub).toBe(a.id);
+      expect(jwt.decode<{ sub: string }>(tokenB).sub).toBe(b.id);
     });
 
-    it('banco: matches(assigned) com hash do token (nunca o token) e match_players dos dois', async () => {
+    it('banco: matches(assigned) e match_players dos dois com o hash do token de cada um (nunca o token)', async () => {
       const [a, b] = users as [User, User];
-      const { matchId, token } = await pairUp(a, b);
+      const { matchId, token, tokenB } = await pairUp(a, b);
 
-      const [match] = await rows<{ status: string; server_port: number; token_hash: string }>(
-        'SELECT status, server_port, token_hash FROM matches WHERE id = $1',
+      const [match] = await rows<{ status: string; server_port: number }>(
+        'SELECT status, server_port FROM matches WHERE id = $1',
         [matchId],
       );
-      const players = await rows<{ user_id: string }>('SELECT user_id FROM match_players WHERE match_id = $1', [matchId]);
+      const players = await rows<{ user_id: string; token_hash: string }>(
+        'SELECT user_id, token_hash FROM match_players WHERE match_id = $1',
+        [matchId],
+      );
 
       expect(match).toMatchObject({ status: 'assigned', server_port: 7000 });
-      expect(match?.token_hash).toMatch(/^[0-9a-f]{64}$/);
-      expect(match?.token_hash).not.toContain(token);
       expect(players.map((p) => p.user_id).sort()).toEqual([a.id, b.id].sort());
+      for (const player of players) {
+        expect(player.token_hash).toMatch(/^[0-9a-f]{64}$/);
+        expect([token, tokenB].some((t) => player.token_hash.includes(t))).toBe(false);
+      }
+      expect(new Set(players.map((p) => p.token_hash)).size).toBe(2);
     });
 
     it('I8: segundo ticket da mesma conta → 409 ALREADY_QUEUED', async () => {
@@ -193,7 +210,7 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
       expect(forC.status).toBe('matched');
       expect(second.player_ids).toEqual([c.id, d.id]);
       expect(second.match_id).not.toBe(first.matchId);
-      expect(forD.assignment.token).toBe(forC.assignment.token);
+      expect(jwt.decode<{ match_id: string }>(forD.assignment.token).match_id).toBe(second.match_id);
     });
 
     it('DELETE /queue/:ticket cancela; depois dele o GET diz cancelled e o ticket não pareia', async () => {
@@ -295,16 +312,16 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
       expect(res.status).toBe(401);
     });
 
-    it('validate com o token do assignment: assigned → running, devolve seed e jogadores', async () => {
+    it('validate com o token de cada jogador: assigned → running, devolve a conta, seed e jogadores', async () => {
       const [a, b] = users as [User, User];
-      const { matchId, token } = await pairUp(a, b);
+      const { matchId, token, tokenB } = await pairUp(a, b);
 
       const res = await internal(`${matchId}/validate`).send({ token });
-      const again = await internal(`${matchId}/validate`).send({ token }); // o segundo peer
+      const again = await internal(`${matchId}/validate`).send({ token: tokenB }); // o segundo peer
 
       expect(res.status).toBe(200);
-      expect(res.body).toEqual({ matchId, playerIds: [a.id, b.id], seed: expect.any(Number) });
-      expect(again.body).toEqual(res.body);
+      expect(res.body).toEqual({ matchId, userId: a.id, playerIds: [a.id, b.id], seed: expect.any(Number) });
+      expect(again.body).toEqual({ ...(res.body as object), userId: b.id });
       const [match] = await rows<{ status: string; started_at: Date }>(
         'SELECT status, started_at FROM matches WHERE id = $1',
         [matchId],

@@ -10,6 +10,9 @@ extends RefCounted
 ## --bots: as duas vagas sao bots no servidor, sem cliente (soak bot x bot, F19; fora do contrato
 ## com o Launcher). --bot-heroes=<time A>,<time B>: o heroi de cada bot; so vale com dois ids,
 ## senao o padrao do slot.
+## --token=<match_token>: o cliente online apresenta o token da partida ao servidor (contrato com
+## o Launcher, ARCHITECTURE-LAUNCHER §5.2). --no-backend: servidor dedicado de dev, sem backend:
+## admite qualquer peer e nao reporta resultado (fora do contrato com o Launcher).
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
@@ -44,6 +47,8 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"bot_heroes": [] as Array[StringName],
 		"bot_pilot": false,
 		"probe": false,
+		"token": "",
+		"no_backend": false,
 	}
 	for arg: String in args:
 		if arg == "--server":
@@ -64,6 +69,10 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["bot_pilot"] = true
 		elif arg == "--probe":
 			result["probe"] = true
+		elif arg == "--no-backend":
+			result["no_backend"] = true
+		elif arg.begins_with("--token="):
+			result["token"] = arg.trim_prefix("--token=")
 		elif arg.begins_with("--level="):
 			result["level"] = _level_or_default(arg.trim_prefix("--level="))
 		elif arg.begins_with("--seed="):

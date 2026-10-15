@@ -15,6 +15,13 @@
       "when": 1792060304823,
       "tag": "0001_create_matchmaking",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792066434342,
+      "tag": "0002_token_por_jogador",
+      "breakpoints": true
     }
   ]
 }

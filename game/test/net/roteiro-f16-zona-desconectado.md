@@ -6,7 +6,7 @@ Risco herdado do MVP0 (`MVP-2.md`): com `enable_prediction=false` o netfox para 
 
 ```powershell
 $cli = $env:GODOT_PATH -replace '\.exe$','_console.exe'
-& $cli --headless --path game --log-file <pasta>\server.log -- --server --port=7000 --seed=16 --time=500
+& $cli --headless --path game --log-file <pasta>\server.log -- --server --no-backend --port=7000 --seed=16 --time=500
 .\tools\run-clients.ps1 -Autopilot -LogDir <pasta>
 # heróis nascem (~25 s de seleção); fechar o processo do 2º cliente
 ```
