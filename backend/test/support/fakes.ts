@@ -1,7 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import type { Match, QueueTicket } from '../../drizzle/schema';
 import { Clock } from '../../src/common/clock';
-import { MatchesRepository, MatchResult, NewMatch } from '../../src/matches/matches.repository';
+import {
+  HistoryEntry,
+  MatchesRepository,
+  MatchResult,
+  NewMatch,
+  WinLossRecord,
+} from '../../src/matches/matches.repository';
 import { QueueRepository } from '../../src/matchmaking/queue.repository';
 import { ContainerRuntime } from '../../src/orchestrator/container-runtime';
 
@@ -135,6 +141,49 @@ export class InMemoryMatchesRepository extends MatchesRepository {
       }
     }
     return count;
+  }
+
+  async historyOf(userId: string, limit: number): Promise<HistoryEntry[]> {
+    return this.terminalOf(userId)
+      .sort((a, b) => b.playedAt.getTime() - a.playedAt.getTime())
+      .slice(0, limit);
+  }
+
+  async recordOf(userId: string): Promise<WinLossRecord> {
+    const finished = this.terminalOf(userId).filter((entry) => entry.status === 'finished');
+    return {
+      wins: finished.filter((entry) => entry.winnerUserId === userId).length,
+      losses: finished.filter((entry) => entry.winnerUserId !== null && entry.winnerUserId !== userId).length,
+    };
+  }
+
+  private terminalOf(userId: string): HistoryEntry[] {
+    const side = (stats: Record<string, unknown> | undefined): HistoryEntry['me'] => ({
+      heroId: (stats?.heroId as string | undefined) ?? null,
+      kills: (stats?.kills as number | undefined) ?? 0,
+      deaths: (stats?.deaths as number | undefined) ?? 0,
+      finalLevel: (stats?.finalLevel as number | undefined) ?? 0,
+      bossKill: (stats?.bossKill as boolean | undefined) ?? false,
+      setActive: (stats?.setActive as string | null | undefined) ?? null,
+    });
+    const entries: HistoryEntry[] = [];
+    for (const match of this.rows.values()) {
+      const players = this.players.get(match.id);
+      if (!players?.has(userId) || (match.status !== 'finished' && match.status !== 'aborted')) continue;
+      const otherId = [...players.keys()].find((id) => id !== userId);
+      const other = otherId ? side(players.get(otherId)) : null;
+      entries.push({
+        matchId: match.id,
+        status: match.status,
+        playedAt: match.endedAt ?? match.createdAt,
+        endReason: match.endReason,
+        durationS: match.durationS,
+        winnerUserId: match.winnerUserId,
+        me: side(players.get(userId)),
+        opponent: other && { heroId: other.heroId, kills: other.kills, finalLevel: other.finalLevel },
+      });
+    }
+    return entries;
   }
 
   private transition(id: string, from: Match['status'][], patch: Partial<Match>): boolean {

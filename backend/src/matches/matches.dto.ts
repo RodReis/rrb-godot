@@ -43,3 +43,32 @@ export const MatchResultSchema = z.object({
   players: z.array(PlayerResultSchema).max(2),
 });
 export class MatchResultDto extends createZodDto(MatchResultSchema) {}
+
+/** `GET /matches?mine=1`: só a própria conta (JWT); `mine` obrigatório deixa o contrato explícito. */
+export class MineQueryDto extends createZodDto(z.object({ mine: z.literal('1') })) {}
+
+const HistorySideSchema = z.object({
+  heroId: z.string().nullable(),
+  kills: count,
+  finalLevel: count,
+});
+
+/** Só o lado do oponente que a tela mostra: herói, kills e nível. Nunca id, e-mail ou token. */
+const HistoryMatchSchema = z.object({
+  matchId: z.uuid(),
+  result: z.enum(['win', 'loss', 'interrupted']),
+  playedAt: z.iso.datetime(),
+  endReason: z.string().nullable(),
+  durationS: count.nullable(),
+  me: HistorySideSchema.extend({
+    deaths: count,
+    bossKill: z.boolean(),
+    setActive: z.string().nullable(),
+  }),
+  opponent: HistorySideSchema,
+});
+const MatchHistorySchema = z.object({
+  totals: z.object({ wins: count, losses: count }),
+  matches: z.array(HistoryMatchSchema),
+});
+export class MatchHistoryDto extends createZodDto(MatchHistorySchema) {}

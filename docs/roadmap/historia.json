@@ -231,6 +231,11 @@
           "arquivo": "mvp3-f25-lobby.webp",
           "legenda": "O lobby com o Cavaleiro no pedestal, em 3D. Um clique em Buscar partida entra na fila; quando aparece um oponente, o launcher abre o jogo sozinho e volta para cá no fim.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f26-historico.webp",
+          "legenda": "O histórico de duelos: cada partida mostra quem venceu, os heróis dos dois lados, o placar de abates, o nível final e a duração. A mais recente ganha destaque; partida que caiu no meio aparece como interrompida.",
+          "tipo": "entregue"
         }
       ]
     },

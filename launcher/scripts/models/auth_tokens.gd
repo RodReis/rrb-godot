@@ -1,7 +1,8 @@
 # GERADO por tools/launcher/gen_models.mjs a partir de backend/openapi.json. Nao editar.
 class_name AuthTokens
 extends RefCounted
-## AuthTokensDto do backend. from_dict devolve null se o JSON nao bater com o contrato.
+## AuthTokensDto do backend.
+## from_dict devolve null se o JSON nao bater com o contrato.
 
 var access_token: String = ""
 var refresh_token: String = ""

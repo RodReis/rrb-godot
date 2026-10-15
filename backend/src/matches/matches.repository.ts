@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { and, eq, inArray, lt } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNotNull, lt, ne, sql } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import { Match, matches, matchPlayers } from '../../drizzle/schema';
 import { Database } from '../db/database';
 
@@ -42,7 +43,32 @@ export interface MatchResult {
   players: PlayerResult[];
 }
 
+/** Lado de uma conta numa partida terminada. `heroId` nulo = a partida acabou sem estatística (abortada). */
+export interface HistorySide {
+  heroId: string | null;
+  kills: number;
+  finalLevel: number;
+}
+
+/** Uma partida terminada vista por uma conta. O oponente é só o lado dele: sem id, e-mail nem token. */
+export interface HistoryEntry {
+  matchId: string;
+  status: 'finished' | 'aborted';
+  playedAt: Date;
+  endReason: string | null;
+  durationS: number | null;
+  winnerUserId: string | null;
+  me: HistorySide & { deaths: number; bossKill: boolean; setActive: string | null };
+  opponent: HistorySide | null;
+}
+
+export interface WinLossRecord {
+  wins: number;
+  losses: number;
+}
+
 const ACTIVE = ['assigned', 'running'] as const;
+const TERMINAL = ['finished', 'aborted'] as const;
 
 /** Todas as transições são condicionais ao estado de origem: `false` = a partida já estava em outro estado. */
 export abstract class MatchesRepository {
@@ -61,6 +87,10 @@ export abstract class MatchesRepository {
   abstract findRunningWithHeartbeatBefore(heartbeatBefore: Date): Promise<Match[]>;
   /** Boot do backend: os containers sumiram, então nenhuma partida ativa continua. */
   abstract abortAllActive(reason: string, now: Date): Promise<number>;
+  /** Partidas terminadas (finished/aborted) da conta, a mais recente primeiro. */
+  abstract historyOf(userId: string, limit: number): Promise<HistoryEntry[]>;
+  /** Vitórias e derrotas da conta em TODAS as partidas terminadas (aborted e sem vencedor não contam). */
+  abstract recordOf(userId: string): Promise<WinLossRecord>;
 }
 
 @Injectable()
@@ -187,5 +217,59 @@ export class DrizzleMatchesRepository extends MatchesRepository {
       .where(inArray(matches.status, [...ACTIVE]))
       .returning({ id: matches.id });
     return rows.length;
+  }
+
+  async historyOf(userId: string, limit: number): Promise<HistoryEntry[]> {
+    const mine = alias(matchPlayers, 'mine');
+    const theirs = alias(matchPlayers, 'theirs');
+    const rows = await this.database.db
+      .select({
+        matchId: matches.id,
+        status: matches.status,
+        createdAt: matches.createdAt,
+        endedAt: matches.endedAt,
+        endReason: matches.endReason,
+        durationS: matches.durationS,
+        winnerUserId: matches.winnerUserId,
+        mine: {
+          heroId: mine.heroId,
+          kills: mine.kills,
+          deaths: mine.deaths,
+          finalLevel: mine.finalLevel,
+          bossKill: mine.bossKill,
+          setActive: mine.setActive,
+        },
+        // O id do oponente nem sai do banco: só o que a tela mostra.
+        theirs: { heroId: theirs.heroId, kills: theirs.kills, finalLevel: theirs.finalLevel },
+        hasOpponent: isNotNull(theirs.matchId),
+      })
+      .from(mine)
+      .innerJoin(matches, eq(matches.id, mine.matchId))
+      .leftJoin(theirs, and(eq(theirs.matchId, mine.matchId), ne(theirs.userId, mine.userId)))
+      .where(and(eq(mine.userId, userId), inArray(matches.status, [...TERMINAL])))
+      .orderBy(desc(sql`coalesce(${matches.endedAt}, ${matches.createdAt})`), desc(matches.id))
+      .limit(limit);
+    return rows.map((row) => ({
+      matchId: row.matchId,
+      status: row.status as HistoryEntry['status'],
+      playedAt: row.endedAt ?? row.createdAt,
+      endReason: row.endReason,
+      durationS: row.durationS,
+      winnerUserId: row.winnerUserId,
+      me: row.mine,
+      opponent: row.hasOpponent ? row.theirs : null,
+    }));
+  }
+
+  async recordOf(userId: string): Promise<WinLossRecord> {
+    const [row] = await this.database.db
+      .select({
+        wins: sql<number>`count(*) filter (where ${matches.winnerUserId} = ${userId})::int`,
+        losses: sql<number>`count(*) filter (where ${matches.winnerUserId} is not null and ${matches.winnerUserId} <> ${userId})::int`,
+      })
+      .from(matchPlayers)
+      .innerJoin(matches, eq(matches.id, matchPlayers.matchId))
+      .where(and(eq(matchPlayers.userId, userId), eq(matches.status, 'finished')));
+    return { wins: row?.wins ?? 0, losses: row?.losses ?? 0 };
   }
 }

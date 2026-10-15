@@ -1,7 +1,8 @@
 # GERADO por tools/launcher/gen_models.mjs a partir de backend/openapi.json. Nao editar.
 class_name UserProfile
 extends RefCounted
-## UserProfileDto do backend. from_dict devolve null se o JSON nao bater com o contrato.
+## UserProfileDto do backend.
+## from_dict devolve null se o JSON nao bater com o contrato.
 
 var id: String = ""
 var email: String = ""

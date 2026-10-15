@@ -5,6 +5,7 @@ extends RefCounted
 
 const LOGIN: StringName = &"login"
 const LOBBY: StringName = &"lobby"
+const HISTORY: StringName = &"history"
 const SETTINGS: StringName = &"settings"
 ## Galeria do design system (prova visual dos componentes): so por --gallery, fora do menu.
 const GALLERY: StringName = &"gallery"
@@ -13,11 +14,14 @@ const HOME: StringName = LOBBY
 const ROUTES: Dictionary[StringName, String] = {
 	LOGIN: "res://scenes/screens/login.tscn",
 	LOBBY: "res://scenes/screens/lobby.tscn",
+	HISTORY: "res://scenes/screens/history.tscn",
 	SETTINGS: "res://scenes/screens/settings.tscn",
 	GALLERY: "res://shared/ui/components/_gallery.tscn",
 }
-## Menu da barra superior, na ordem: rota -> rotulo (Herois e Historico do prototipo: F27/F26).
-const NAV: Dictionary[StringName, String] = {LOBBY: "LOBBY", SETTINGS: "AJUSTES"}
+## Menu da barra superior, na ordem: rota -> rotulo (Herois e Guia & Bestiario do prototipo: F27).
+const NAV: Dictionary[StringName, String] = {
+	LOBBY: "LOBBY", HISTORY: "HISTÓRICO", SETTINGS: "AJUSTES"
+}
 
 
 static func has_route(route: StringName) -> bool:

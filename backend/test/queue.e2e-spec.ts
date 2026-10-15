@@ -514,6 +514,126 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
     });
   });
 
+  describe('GET /matches?mine=1 (histórico)', () => {
+    const stats = (userId: string, heroId: string, kills: number, level: number) => ({
+      userId,
+      heroId,
+      kills,
+      deaths: 1,
+      finalLevel: level,
+      damageDealt: 100,
+      damageTaken: 90,
+      monstersKilled: 3,
+      chestsOpened: 1,
+      bossKill: false,
+    });
+    const history = (user: User, query = '?mine=1') =>
+      request(server()).get(`/matches${query}`).set('Authorization', user.auth);
+
+    /** Pareia, valida e fecha a partida: `winner` ganha por 5 × 2. */
+    async function play(a: User, b: User, winner: User): Promise<string> {
+      const { matchId, token } = await pairUp(a, b);
+      await internal(`${matchId}/validate`).send({ token });
+      await internal(`${matchId}/result`).send({
+        winnerUserId: winner.id,
+        endReason: 'kill_goal',
+        durationS: 512,
+        players: [
+          stats(a.id, 'arqueiro', winner === a ? 5 : 2, 9),
+          stats(b.id, 'cavaleiro', winner === b ? 5 : 2, 8),
+        ],
+      });
+      await app.get(OrchestratorService).settle();
+      clock.advance(1000);
+      return matchId;
+    }
+
+    it('lista só as partidas da conta autenticada, com o herói do oponente e os totais V–D', async () => {
+      const [a, b, c, d] = users as [User, User, User, User];
+      const first = await play(a, b, a);
+      const second = await play(a, b, b);
+      await play(c, d, c); // partida de outras contas
+
+      const res = await history(a);
+
+      expect(res.status).toBe(200);
+      const body = res.body as { totals: unknown; matches: { matchId: string; result: string }[] };
+      expect(body.totals).toEqual({ wins: 1, losses: 1 });
+      expect(body.matches.map((m) => [m.matchId, m.result])).toEqual([
+        [second, 'loss'],
+        [first, 'win'],
+      ]);
+      expect(body.matches[1]).toMatchObject({
+        endReason: 'kill_goal',
+        durationS: 512,
+        me: { heroId: 'arqueiro', kills: 5, finalLevel: 9 },
+        opponent: { heroId: 'cavaleiro', kills: 2, finalLevel: 8 },
+      });
+    });
+
+    it('sem vazamento: nada de id, e-mail ou token de outra conta na resposta', async () => {
+      const [a, b, c] = users as [User, User, User];
+      await play(a, b, a);
+
+      const raw = (await history(a)).text;
+      const outsider = await history(c);
+
+      expect(raw).not.toContain(b.id);
+      expect(raw).not.toContain('jogador2@rrb.dev');
+      expect(raw).not.toMatch(/userId|user_id|email|token/i);
+      expect(outsider.body).toEqual({ totals: { wins: 0, losses: 0 }, matches: [] });
+    });
+
+    it('partida abortada aparece como interrupted; a em andamento não aparece', async () => {
+      const [a, b, c, d] = users as [User, User, User, User];
+      const { matchId } = await pairUp(a, b);
+      await request(server()).post(`/matches/${matchId}/abandon`).set('Authorization', a.auth);
+      await app.get(OrchestratorService).settle();
+      await pairUp(c, d); // assigned: ainda não terminou
+
+      const aborted = (await history(a)).body as { matches: { result: string; me: { heroId: unknown } }[] };
+      const open = (await history(c)).body as { matches: unknown[] };
+
+      expect(aborted.matches).toMatchObject([{ result: 'interrupted', endReason: 'abandoned', me: { heroId: null } }]);
+      expect(open.matches).toEqual([]);
+    });
+
+    it('sem login → 401; sem mine=1 → 400', async () => {
+      const [a] = users as [User];
+
+      const anonymous = await request(server()).get('/matches?mine=1');
+      const missing = await history(a, '');
+
+      expect(anonymous.status).toBe(401);
+      expect(missing.status).toBe(400);
+    });
+
+    it('mine repetido, em lista ou com userId extra: só vale mine=1 e o dono é o do JWT', async () => {
+      const [a, b] = users as [User, User];
+      await play(a, b, a);
+
+      const twice = await history(a, '?mine=1&mine=1');
+      const list = await history(a, '?mine[]=1');
+      const spoofed = await history(b, `?mine=1&userId=${a.id}`);
+
+      expect([twice.status, list.status]).toEqual([400, 400]);
+      expect(spoofed.status).toBe(200);
+      expect((spoofed.body as { matches: { me: { heroId: string } }[] }).matches[0]?.me.heroId).toBe('cavaleiro');
+    });
+
+    it('o polling do histórico não gasta o limite de entrar na fila', async () => {
+      await app.close();
+      await createApp({ QUEUE_RATE_LIMIT: 2 });
+      users = await Promise.all([1, 2, 3, 4].map(register));
+      const [a] = users as [User];
+
+      const reads = await Promise.all(Array.from({ length: 6 }, () => history(a)));
+
+      expect(reads.every((res) => res.status === 200)).toBe(true);
+      expect((await join(a)).status).toBe(201);
+    });
+  });
+
   describe('rate limit', () => {
     it('POST /queue estoura o limite → 429; o polling do GET não é limitado', async () => {
       await app.close();

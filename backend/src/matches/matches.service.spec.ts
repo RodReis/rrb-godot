@@ -316,4 +316,97 @@ describe('MatchesService', () => {
       expect(repo.rows.get(second.id)?.status).toBe('aborted');
     });
   });
+  describe('history', () => {
+    const C = '44444444-4444-4444-8444-444444444444';
+
+    /** Partida A × B terminada: A vence por 5 × 2, heróis diferentes. */
+    async function finished(matchId: string, winner: string | null = A): Promise<void> {
+      const { id, token } = await assigned(matchId);
+      await service.validate(id, token);
+      await service.result(id, {
+        winnerUserId: winner,
+        endReason: winner ? 'kill_goal' : 'abandoned',
+        durationS: 512,
+        players: [
+          { ...statsFor(A), heroId: 'arqueiro', kills: 5, finalLevel: 9, bossKill: true, setActive: 'cacador' },
+          { ...statsFor(B), heroId: 'cavaleiro', kills: 2, finalLevel: 8 },
+        ],
+      });
+      clock.advance(60_000);
+    }
+
+    it('vê a partida do próprio lado: resultado, herói, kills, nível e o herói do oponente', async () => {
+      await finished('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+
+      const asA = await service.history(A);
+      const asB = await service.history(B);
+
+      expect(asA.matches).toEqual([
+        {
+          matchId: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+          result: 'win',
+          playedAt: '2026-01-01T12:00:00.000Z',
+          endReason: 'kill_goal',
+          durationS: 512,
+          me: { heroId: 'arqueiro', kills: 5, deaths: 1, finalLevel: 9, bossKill: true, setActive: 'cacador' },
+          opponent: { heroId: 'cavaleiro', kills: 2, finalLevel: 8 },
+        },
+      ]);
+      expect(asB.matches[0]).toMatchObject({
+        result: 'loss',
+        me: { heroId: 'cavaleiro', kills: 2 },
+        opponent: { heroId: 'arqueiro', kills: 5, finalLevel: 9 },
+      });
+      expect(asA.totals).toEqual({ wins: 1, losses: 0 });
+      expect(asB.totals).toEqual({ wins: 0, losses: 1 });
+    });
+
+    it('nunca devolve id, e-mail ou token de outra conta (só o herói do oponente)', async () => {
+      await finished('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+
+      const json = JSON.stringify(await service.history(A));
+
+      expect(json).not.toContain(B);
+      expect(json).not.toMatch(/userId|user_id|email|token/i);
+    });
+
+    it('conta fora da partida não vê nada; partida em andamento não entra', async () => {
+      await finished('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+      await assigned('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb');
+
+      expect(await service.history(C)).toEqual({ totals: { wins: 0, losses: 0 }, matches: [] });
+      expect((await service.history(A)).matches).toHaveLength(1);
+    });
+
+    it('partida abortada e partida sem vencedor (abandoned) viram "interrupted" e não contam V–D', async () => {
+      await finished('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa', null);
+      const { id } = await assigned('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb');
+      clock.advance(121_000);
+      await service.sweep();
+
+      const history = await service.history(A);
+
+      expect(history.matches.map((m) => m.result)).toEqual(['interrupted', 'interrupted']);
+      expect(history.matches[0]).toMatchObject({
+        matchId: id,
+        endReason: 'token_expired',
+        durationS: null,
+        me: { heroId: null, kills: 0 },
+        opponent: { heroId: null, kills: 0, finalLevel: 0 },
+      });
+      expect(history.totals).toEqual({ wins: 0, losses: 0 });
+    });
+
+    it('mais recente primeiro, limitada às últimas 50; os totais contam todas', async () => {
+      for (let i = 0; i < 52; i++) {
+        await finished(`aaaaaaaa-aaaa-4aaa-8aaa-${String(i).padStart(12, '0')}`, i % 2 === 0 ? A : B);
+      }
+
+      const history = await service.history(A);
+
+      expect(history.matches).toHaveLength(50);
+      expect(history.matches[0]?.matchId).toBe('aaaaaaaa-aaaa-4aaa-8aaa-000000000051');
+      expect(history.totals).toEqual({ wins: 26, losses: 26 });
+    });
+  });
 });

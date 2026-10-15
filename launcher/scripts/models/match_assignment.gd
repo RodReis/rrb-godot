@@ -1,7 +1,8 @@
 # GERADO por tools/launcher/gen_models.mjs a partir de backend/openapi.json. Nao editar.
 class_name MatchAssignment
 extends RefCounted
-## TicketStatusDto.assignment do backend. from_dict devolve null se o JSON nao bater com o contrato.
+## TicketStatusDto.assignment do backend.
+## from_dict devolve null se o JSON nao bater com o contrato.
 
 var host: String = ""
 var port: int = 0

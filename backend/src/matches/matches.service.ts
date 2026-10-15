@@ -14,13 +14,40 @@ import { Clock } from '../common/clock';
 import type { AppConfig } from '../config';
 import { MatchTokenService } from '../orchestrator/match-token.service';
 import { OrchestratorService } from '../orchestrator/orchestrator.service';
-import { MatchesRepository, MatchResult } from './matches.repository';
+import { HistoryEntry, MatchesRepository, MatchResult } from './matches.repository';
 
 export interface ValidatedMatch {
   matchId: string;
   userId: string;
   playerIds: string[];
   seed: number;
+}
+
+/** Quantas partidas o histórico devolve (as mais recentes); os totais V–D contam todas. */
+export const HISTORY_LIMIT = 50;
+
+export type HistoryResult = 'win' | 'loss' | 'interrupted';
+
+/** Uma partida do histórico da própria conta (`GET /matches?mine=1`). */
+export interface HistoryMatch {
+  matchId: string;
+  result: HistoryResult;
+  playedAt: string;
+  endReason: string | null;
+  durationS: number | null;
+  me: HistoryEntry['me'];
+  opponent: { heroId: string | null; kills: number; finalLevel: number };
+}
+
+export interface MatchHistory {
+  totals: { wins: number; losses: number };
+  matches: HistoryMatch[];
+}
+
+/** Abortada ou sem vencedor (`abandoned`: ninguém conectado) = "partida interrompida". */
+function resultFor(entry: HistoryEntry, userId: string): HistoryResult {
+  if (entry.status !== 'finished' || entry.winnerUserId === null) return 'interrupted';
+  return entry.winnerUserId === userId ? 'win' : 'loss';
 }
 
 const notFound = (): NotFoundException =>
@@ -67,6 +94,26 @@ export class MatchesService {
     await this.assertResultMatchesPlayers(matchId, result);
     if (!(await this.repo.finish(matchId, result, this.clock.now()))) throw this.notRunning();
     await this.orchestrator.release(matchId);
+  }
+
+  /** Launcher: histórico da própria conta, com o herói do oponente (§4.2 passo 8, CONVENTION §4.8). */
+  async history(userId: string): Promise<MatchHistory> {
+    const [entries, totals] = await Promise.all([
+      this.repo.historyOf(userId, HISTORY_LIMIT),
+      this.repo.recordOf(userId),
+    ]);
+    return {
+      totals,
+      matches: entries.map((entry) => ({
+        matchId: entry.matchId,
+        result: resultFor(entry, userId),
+        playedAt: entry.playedAt.toISOString(),
+        endReason: entry.endReason,
+        durationS: entry.durationS,
+        me: entry.me,
+        opponent: entry.opponent ?? { heroId: null, kills: 0, finalLevel: 0 },
+      })),
+    };
   }
 
   /** Launcher: executável do Game ausente (§6). Só vale antes de a partida começar. */
