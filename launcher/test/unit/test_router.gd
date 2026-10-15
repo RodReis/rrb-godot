@@ -20,6 +20,17 @@ func test_menu_so_aponta_para_rotas_existentes() -> void:
 		assert_true(Router.has_route(route), route)
 
 
+func test_menu_tem_o_guia_e_bestiario() -> void:
+	assert_true(Router.NAV.has(Router.BESTIARY))
+	assert_false(Router.NAV.has(Router.FORGE), "a Forja e aba do Guia, nao item do menu")
+
+
+func test_forja_destaca_o_item_do_guia_e_bestiario() -> void:
+	assert_eq(Router.nav_route(Router.FORGE), Router.BESTIARY)
+	assert_eq(Router.nav_route(Router.HISTORY), Router.HISTORY)
+	assert_eq(Router.nav_route(Router.BESTIARY), Router.BESTIARY)
+
+
 func test_tela_inicial_existe() -> void:
 	assert_true(Router.has_route(Router.HOME))
 

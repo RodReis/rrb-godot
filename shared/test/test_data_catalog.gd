@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## Confere os .tres de shared/data contra o GDB (ADR-0004) e contra a tabela de Ids.
 
@@ -72,6 +73,15 @@ func test_todo_heroi_item_e_monstro_tem_id_na_tabela() -> void:
 			assert_eq(res.get(&"id"), file_id, "id difere do nome do arquivo")
 			assert_ne(Ids.to_int(file_id), -1, "sem id em Ids: %s" % file_id)
 	assert_eq(Ids.ALL.size(), expected, "Ids.ALL tem id sem .tres")
+
+
+## Especie do card do Bestiario do Launcher (F27): so o golem de canto aponta para o golem.
+func test_variante_de_monstro_aponta_para_a_especie() -> void:
+	for file_id: StringName in _by_id:
+		var res: Resource = _by_id[file_id]
+		if res is MonsterData:
+			var expected := &"golem_t3" if file_id == &"golem_corner" else &""
+			assert_eq((res as MonsterData).species, expected, String(file_id))
 
 
 ## Classe do PRD §4.1 e "Papel" do GDB §4 (selecao de herois, F51; PI 2026-10-12).

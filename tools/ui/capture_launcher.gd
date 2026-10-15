@@ -12,6 +12,9 @@ extends SceneTree
 ## ApiClient falso com dados de exemplo (so da captura; o produto mostra so dado do backend) e
 ## abre a rota history; --filter=wins|losses escolhe o filtro. Com --login=<email>:<senha> (e
 ## --api=<url>) entra na conta no backend de verdade antes de abrir a rota: captura com dado real.
+## F27: --route=bestiary|forge; --tier=t1|t2|t3|boss e --query=<texto> (Bestiario); --section=
+## weapons|<id do conjunto> e --query (Forja); --build=<heroi>:<nivel>:<item>,<item> poe o build no
+## simulador; --scroll=<px> rola o corpo (999999 = ate o fim); --catalog=broken mostra o erro.
 
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_SIZE: Vector2i = Vector2i(1920, 1080)
@@ -131,6 +134,8 @@ func _capture() -> void:
 	if args.has("history"):
 		_fake_history(app as App, args["history"])
 		args["route"] = "history"
+	if args.get("catalog", "") == "broken":
+		(app as App).catalog = BrokenCatalog.new()
 	if args.has("route"):
 		(app as App).account_email = args.get("email", "duelista@exemplo.com")
 		(app as App).stack().reset(StringName(args["route"]))
@@ -144,6 +149,7 @@ func _capture() -> void:
 				"wins": HistoryScreen.Filter.WINS, "losses": HistoryScreen.Filter.LOSSES
 			}
 			(history_screen[0] as HistoryScreen).select_filter(filters[args["filter"]])
+	await _compendium(app as App, args)
 	if args.has("tab"):
 		var screen := app.find_children("*", "SettingsScreen", true, false)
 		if not screen.is_empty():
@@ -193,6 +199,17 @@ func _many(count: int) -> Dictionary:
 	return {"totals": {"wins": count / 2, "losses": count / 4}, "matches": matches}
 
 
+## Catalogo que nao carrega: o estado de erro do Compendio (so desta captura).
+class BrokenCatalog:
+	extends CatalogService
+
+	func load_all() -> void:
+		pass
+
+	func is_loaded() -> bool:
+		return false
+
+
 ## ApiClient que nunca responde: segura a tela em "carregando".
 class HangingApi:
 	extends FakeApiClient
@@ -204,6 +221,49 @@ class HangingApi:
 	) -> ApiClient.Response:
 		await never
 		return null
+
+
+## F27: filtros, busca, build do simulador e rolagem do Compendio (so desta captura).
+func _compendium(app: App, args: Dictionary) -> void:
+	var bestiary := app.find_children("*", "BestiaryScreen", true, false)
+	var forge := app.find_children("*", "ForgeScreen", true, false)
+	if not bestiary.is_empty():
+		var screen := bestiary[0] as BestiaryScreen
+		var tiers := {
+			"t1": BestiaryScreen.TierFilter.T1,
+			"t2": BestiaryScreen.TierFilter.T2,
+			"t3": BestiaryScreen.TierFilter.T3,
+			"boss": BestiaryScreen.TierFilter.BOSS,
+		}
+		if args.has("tier"):
+			screen.select_filter(tiers[args["tier"]])
+		if args.has("query"):
+			screen.search_field().text = args["query"]
+			screen.search_field().text_changed.emit(args["query"])
+	if not forge.is_empty():
+		var screen := forge[0] as ForgeScreen
+		if args.has("section"):
+			if args["section"] == "weapons":
+				screen.select_filter(ForgeScreen.Section.WEAPONS)
+			else:
+				screen.select_filter(ForgeScreen.Section.SET, StringName(args["section"]))
+		if args.has("query"):
+			screen.search_field().text = args["query"]
+			screen.search_field().text_changed.emit(args["query"])
+		if args.has("build"):
+			var parts: PackedStringArray = args["build"].split(":")
+			screen.simulator.select_hero(StringName(parts[0]))
+			screen.simulator.set_level(int(parts[1]))
+			for item_id: String in parts[2].split(","):
+				var item := screen.catalog.item(StringName(item_id))
+				screen.simulator.choose(item.slot, item)
+	var compendium := (
+		(bestiary + forge)[0] as CompendiumScreen if not (bestiary + forge).is_empty() else null
+	)
+	if compendium != null and args.has("scroll"):
+		await process_frame
+		await process_frame
+		compendium.scroll_to(int(args["scroll"]))
 
 
 func _set_state(app: App, state: String) -> void:

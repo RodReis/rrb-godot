@@ -224,6 +224,7 @@ static func add(theme: Theme) -> void:
 	_controls(theme)
 	_auth_and_lobby(theme)
 	_history(theme)
+	CompendiumTheme.add(theme)
 
 
 ## Espacamento entre filhos por token (componente nao usa override, COMPONENTS regra 4):

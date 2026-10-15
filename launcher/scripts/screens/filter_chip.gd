@@ -6,6 +6,8 @@ extends Button
 ## o tamanho minimo vem dele (custom_minimum_size: o Button calcula o proprio minimo por nativo e
 ## ignora _get_minimum_size).
 
+## set_count com isto esconde a caixa da contagem.
+const NO_COUNT: int = -1
 const ICON_INACTIVE_DEFAULT: StringName = &"LnIconSmGold"
 const ICON_ACTIVE: StringName = &"LnIconSmOn"
 const LABEL_INACTIVE: StringName = &"LnFilterLabel"
@@ -66,6 +68,10 @@ func count_text() -> String:
 
 func label_text() -> String:
 	return _label.text
+
+
+func set_label_text(text: String) -> void:
+	_label.text = text
 
 
 func refresh() -> void:
