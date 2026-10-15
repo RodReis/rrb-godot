@@ -22,9 +22,7 @@ updated: 2026-10-15
 
 ## A Fazer
 
-### [MVP3] Meta + deploy (#76)
-
-- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77)
+_(vazio)_
 
 ## Em Andamento
 
@@ -35,6 +33,10 @@ _(vazio)_
 _(vazio)_
 
 ## Finalizado
+
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77, finalizado em: 2026-10-15)
 
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
 
