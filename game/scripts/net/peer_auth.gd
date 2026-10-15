@@ -12,6 +12,10 @@ signal denied(exit_code: int)
 
 ## O padrao do Godot (3 s) nao cobre a ida ao backend.
 const AUTH_TIMEOUT_SECONDS: float = 10.0
+## Servidor: depois de responder a recusa, espera isto antes de largar o peer. Sem a espera, uma
+## recusa imediata (token malformado, sem ida ao backend) larga o peer antes da resposta sair, e o
+## cliente nao distingue recusa de queda (sairia com 4 em vez de 2).
+const DENY_GRACE_SECONDS: float = 0.25
 
 var _scene: SceneMultiplayer
 ## Servidor: coroutine func(peer: int, token: String) -> String (um AuthReply).
@@ -46,6 +50,7 @@ func _on_server_data(peer: int, data: PackedByteArray) -> void:
 		_scene.complete_auth(peer)
 	else:
 		print("[auth] peer %d recusado (%s)" % [peer, reply])
+		await get_tree().create_timer(DENY_GRACE_SECONDS).timeout
 		_scene.disconnect_peer(peer)
 
 
