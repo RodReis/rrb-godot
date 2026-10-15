@@ -1,15 +1,27 @@
 class_name App
 extends Control
 ## Raiz do Launcher (ARCHITECTURE-LAUNCHER §3.1): barra superior, pilha de telas, rodape e os
-## overlays globais (toast, modal, carregando). Le o settings.cfg no boot e aplica video e audio no
-## proprio Launcher; reaplica a cada gravacao. Telas emitem; quem navega e confirma e o App.
+## overlays globais (toast, modal, carregando, partida em andamento). Le o settings.cfg no boot e
+## aplica video e audio no proprio Launcher. Dono dos servicos (ApiClient, AuthService,
+## QueueService, GameProcess): sem sessao abre no Login; com sessao o Lobby e a raiz; 401 sem
+## renovacao volta ao Login. Fila pareada -> lanca o Game; saida do Game pela tabela do §5.2.
+## Telas emitem; quem navega e confirma e o App.
 ## --gallery (depois do --) abre a galeria do design system, a prova visual dos componentes.
 
 const GALLERY_ARG: String = "--gallery"
 ## Toast no canto inferior direito, acima do rodape.
 const TOAST_WIDTH: float = 360.0
+## Status e ping do backend (GET /health) a cada 10 s.
+const HEALTH_SECONDS: float = 10.0
+const OFFLINE_ARGS: PackedStringArray = ["--offline", "--bot"]
 
 var settings: SettingsStore = SettingsStore.new()
+var api: ApiClient = ApiClient.new()
+var auth: AuthService = AuthService.new(api)
+var queue: QueueService = QueueService.new()
+var game: GameProcess = GameProcess.new()
+## E-mail da sessao aberta (cartao "Sua conta" do lobby); vazio sem sessao.
+var account_email: String = ""
 
 var _bar: AppBar = AppBar.new()
 var _stack: ScreenStack = ScreenStack.new()
@@ -18,20 +30,43 @@ var _toast: Toast = Toast.new()
 var _modal: ModalDialog = ModalDialog.new()
 var _loading: Control = Control.new()
 var _loading_box: StateBox = StateBox.new()
+var _match: MatchOverlay = MatchOverlay.new()
+var _health: Timer = Timer.new()
+var _online: bool = false
+## A primeira checagem do backend ja voltou?
+var _checked: bool = false
+var _ping_ms: int = AppBar.UNKNOWN_PING
+## Partida online aberta (para o abandon se o Game nao abrir); vazio = treino ou nada.
+var _match_id: String = ""
 
 
 func _ready() -> void:
 	settings.load_values()
 	_apply(settings.values)
 	settings.saved.connect(_apply)
+	api.base_url = ApiClient.base_url_from(OS.get_cmdline_user_args())
+	add_child(api)
+	queue.api = api
+	add_child(queue)
+	add_child(game)
 	_build()
 	_stack.scenes = Router.scenes()
 	_stack.screen_pushed.connect(_on_stack_screen_pushed)
 	_stack.screen_changed.connect(_on_stack_screen_changed)
 	_bar.navigate_requested.connect(_on_bar_navigate_requested)
 	_bar.quit_requested.connect(_on_bar_quit_requested)
+	api.unauthorized.connect(_on_api_unauthorized)
+	# Diferido: a tela mostra "pareado" antes; so entao o App abre o Game (ou mostra o erro).
+	queue.matched.connect(_on_queue_matched, CONNECT_DEFERRED)
+	game.exited.connect(_on_game_exited)
+	_match.end_requested.connect(_on_match_end_requested)
+	_health.wait_time = HEALTH_SECONDS
+	_health.timeout.connect(check_backend)
+	add_child(_health)
+	_health.start()
+	check_backend()
 	var gallery := GALLERY_ARG in OS.get_cmdline_user_args()
-	_stack.push(Router.GALLERY if gallery else Router.HOME)
+	_stack.push(Router.GALLERY if gallery else Router.LOGIN)
 
 
 func show_toast(text: String, kind: Toast.Kind = Toast.Kind.INFO) -> void:
@@ -43,7 +78,7 @@ func confirm(title: String, body: String, actions: Array[DialogAction]) -> int:
 	return await _modal.open(title, body, actions)
 
 
-## Bloqueia a tela com o spinner (login, fila; F25+).
+## Bloqueia a tela com o spinner.
 func show_loading(message: String = "") -> void:
 	_loading.visible = true
 	_stack.locked = true
@@ -52,8 +87,41 @@ func show_loading(message: String = "") -> void:
 
 func hide_loading() -> void:
 	_loading.visible = false
-	_stack.locked = false
+	_stack.locked = _match.visible
 	_loading_box.set_state(StateBox.State.IDLE)
+
+
+func stack() -> ScreenStack:
+	return _stack
+
+
+func match_overlay() -> MatchOverlay:
+	return _match
+
+
+## GET /health: online e ping em ms na barra, no rodape e no console do lobby (V-01b).
+func check_backend() -> void:
+	var started := Time.get_ticks_msec()
+	var response: ApiClient.Response = await api.request(
+		HTTPClient.METHOD_GET, "/health", null, false
+	)
+	_online = response.ok()
+	_checked = true
+	_ping_ms = Time.get_ticks_msec() - started if _online else AppBar.UNKNOWN_PING
+	_bar.set_backend_status(_online, _ping_ms if _online else 0)
+	var lobby := _stack.current() as LobbyScreen
+	if lobby != null:
+		lobby.set_backend_status(_online, _ping_ms, _checked)
+	_refresh_footer()
+
+
+## Lanca o Game; true se abriu (mostra o overlay e trava a navegacao).
+func launch_game(game_args: PackedStringArray, practice: bool) -> bool:
+	if game.launch(game_args) < 0:
+		return false
+	_match.open(practice)
+	_stack.locked = true
+	return true
 
 
 func _build() -> void:
@@ -64,7 +132,6 @@ func _build() -> void:
 	page.add_child(_bar)
 	_stack.size_flags_vertical = SIZE_EXPAND_FILL
 	page.add_child(_stack)
-	_footer.bind([], "", AppBar.BRAND)
 	page.add_child(_footer)
 	_toast.theme_type_variation = &"LnToast"
 	_toast.message_variation = &"LnBody"
@@ -84,6 +151,7 @@ func _build() -> void:
 	_loading_box.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	_loading.add_child(_loading_box)
 	add_child(_loading)
+	add_child(_match)
 	add_child(_modal)
 
 
@@ -92,25 +160,66 @@ func _apply(values: Dictionary) -> void:
 	SettingsApplier.apply_audio(values)
 
 
+func _refresh_footer() -> void:
+	var hints: Array[HotkeyHint] = []
+	if _stack.depth() > 1:
+		hints.append(HotkeyHint.make("ESC", tr("Voltar")))
+	var status := tr("SERVIDOR %s") % _bar.backend_status_text().strip_edges()
+	_footer.bind(hints, status, AppBar.BRAND)
+
+
+func _start_practice() -> void:
+	_match_id = ""
+	if not launch_game(OFFLINE_ARGS, true):
+		show_toast(tr("Instalação incompleta: o jogo não foi encontrado."), Toast.Kind.ERROR)
+
+
+func _logout() -> void:
+	if queue.is_searching():
+		await queue.leave()
+	auth.logout()
+	account_email = ""
+	_stack.reset(Router.LOGIN)
+
+
 func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 	var settings_screen := screen as SettingsScreen
-	if settings_screen == null:
-		return
-	settings_screen.bind(settings)
-	settings_screen.reset_requested.connect(_on_settings_reset_requested.bind(settings_screen))
-	settings_screen.save_failed.connect(show_toast.bind(Toast.Kind.ERROR))
+	if settings_screen != null:
+		settings_screen.bind(settings)
+		settings_screen.reset_requested.connect(_on_settings_reset_requested.bind(settings_screen))
+		settings_screen.save_failed.connect(show_toast.bind(Toast.Kind.ERROR))
+	var login := screen as LoginScreen
+	if login != null:
+		login.bind(auth)
+		login.authenticated.connect(_on_login_authenticated.bind(login))
+		login.practice_requested.connect(_start_practice)
+	var lobby := screen as LobbyScreen
+	if lobby != null:
+		lobby.bind(queue, account_email)
+		lobby.set_backend_status(_online, _ping_ms, _checked)
+		lobby.practice_requested.connect(_start_practice)
+		lobby.settings_requested.connect(_stack.push.bind(Router.SETTINGS))
+		lobby.logout_requested.connect(_logout)
 
 
 func _on_stack_screen_changed(route: StringName) -> void:
 	_bar.set_current(route)
-	var hints: Array[HotkeyHint] = []
-	if _stack.depth() > 1:
-		hints.append(HotkeyHint.make("ESC", tr("Voltar")))
-	_footer.bind(hints, "", AppBar.BRAND)
+	_bar.set_nav_visible(route != Router.LOGIN)
+	_refresh_footer()
 
 
+func _on_login_authenticated(login: LoginScreen) -> void:
+	account_email = login.email_field().text.strip_edges()
+	_stack.reset(Router.LOBBY)
+
+
+## Menu do topo: LOBBY volta a raiz (desempilha); as demais telas empilham.
 func _on_bar_navigate_requested(route: StringName) -> void:
-	_stack.push(route)
+	if route != Router.LOBBY:
+		_stack.push(route)
+		return
+	while _stack.depth() > 1 and _stack.current_route() != Router.LOBBY:
+		_stack.pop()
 
 
 func _on_bar_quit_requested() -> void:
@@ -119,7 +228,69 @@ func _on_bar_quit_requested() -> void:
 		DialogAction.make(tr("SAIR DO JOGO"), DialogAction.Kind.DANGER),
 	]
 	if await confirm(tr("Sair do jogo?"), tr("O Launcher será fechado."), actions) == 1:
+		if queue.is_searching():
+			await queue.leave()
 		get_tree().quit()
+
+
+## Sessao expirada sem renovacao (§3.3): volta ao Login com aviso.
+func _on_api_unauthorized() -> void:
+	show_toast(tr("Sua sessão expirou. Entre de novo."), Toast.Kind.WARN)
+	account_email = ""
+	_stack.reset(Router.LOGIN)
+
+
+## Pareado: abre o Game com o servidor e o token; sem executavel, abandona a partida (§6).
+func _on_queue_matched(match_id: String, assignment: MatchAssignment) -> void:
+	_match_id = match_id
+	var args := PackedStringArray(
+		[
+			"--connect=%s:%d" % [assignment.host, assignment.port],
+			"--token=%s" % assignment.token,
+		]
+	)
+	if launch_game(args, false):
+		return
+	await api.request(HTTPClient.METHOD_POST, "/matches/%s/abandon" % match_id)
+	_match_id = ""
+	var lobby := _stack.current() as LobbyScreen
+	if lobby != null:
+		lobby.show_error(tr("Instalação incompleta: o jogo não foi encontrado."))
+
+
+## Fim do Game: tabela do §5.2. Ate o historico existir (F26), o codigo 0 volta ao lobby.
+func _on_game_exited(code: int) -> void:
+	_match.close()
+	_stack.locked = false
+	var online := not _match_id.is_empty()
+	_match_id = ""
+	var lobby := _stack.current() as LobbyScreen
+	if lobby != null:
+		lobby.reset_queue()
+	var outcome := GameProcess.outcome(code)
+	if outcome.kind == GameProcess.Kind.NORMAL:
+		return
+	if outcome.offer_queue and online and lobby != null:
+		var actions: Array[DialogAction] = [
+			DialogAction.make(tr("AGORA NÃO")),
+			DialogAction.make(tr("ENTRAR NA FILA")),
+		]
+		var body := tr(outcome.message) + " " + tr("Quer entrar na fila de novo?")
+		if await confirm(tr("Partida não iniciada"), body, actions) == 1:
+			lobby.toggle_queue()
+		return
+	var kind := Toast.Kind.WARN if outcome.kind == GameProcess.Kind.WARNING else Toast.Kind.ERROR
+	show_toast(tr(outcome.message), kind)
+
+
+func _on_match_end_requested() -> void:
+	var actions: Array[DialogAction] = [
+		DialogAction.make(tr("CONTINUAR JOGANDO")),
+		DialogAction.make(tr("ENCERRAR"), DialogAction.Kind.DANGER),
+	]
+	var body := tr("O jogo será fechado agora.")
+	if await confirm(tr("Encerrar o jogo?"), body, actions) == 1:
+		game.kill()
 
 
 func _on_settings_reset_requested(screen: SettingsScreen) -> void:
