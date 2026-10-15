@@ -18,6 +18,7 @@ import { MatchesRepository, MatchResult } from './matches.repository';
 
 export interface ValidatedMatch {
   matchId: string;
+  userId: string;
   playerIds: string[];
   seed: number;
 }
@@ -38,12 +39,13 @@ export class MatchesService {
     @Inject(APP_CONFIG) private readonly config: AppConfig,
   ) {}
 
-  /** Game server confere o token de um peer. O mesmo token vale para os dois jogadores (assignment igual). */
+  /** Game server confere o token de um peer; cada jogador tem o seu e `userId` diz de quem é. */
   async validate(matchId: string, token: string): Promise<ValidatedMatch> {
     const payload = await this.tokens.verify(token);
     const match = await this.repo.findById(matchId);
     if (!match) throw notFound();
-    if (payload.match_id !== matchId || MatchTokenService.hash(token) !== match.tokenHash) {
+    const issuedHash = await this.repo.playerTokenHash(matchId, payload.sub);
+    if (payload.match_id !== matchId || MatchTokenService.hash(token) !== issuedHash) {
       throw new UnauthorizedException({ code: 'TOKEN_INVALID', message: 'Token de partida inválido' });
     }
     // O segundo peer pode chegar junto com o primeiro: se `markRunning` perdeu a corrida, a partida
@@ -51,7 +53,7 @@ export class MatchesService {
     if (match.status === 'assigned') await this.repo.markRunning(matchId, this.clock.now());
     const current = match.status === 'assigned' ? await this.repo.findById(matchId) : match;
     if (current?.status !== 'running') throw this.notActive();
-    return { matchId, playerIds: payload.player_ids, seed: match.seed };
+    return { matchId, userId: payload.sub, playerIds: payload.player_ids, seed: match.seed };
   }
 
   async heartbeat(matchId: string): Promise<void> {

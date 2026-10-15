@@ -16,9 +16,10 @@ export interface MatchAssignment {
   token: string;
 }
 
+/** Um token por jogador (§4.2): `assignments` é indexado pelo id da conta. */
 export interface AssignedMatch {
   matchId: string;
-  assignment: MatchAssignment;
+  assignments: Record<string, MatchAssignment>;
 }
 
 interface Slot {
@@ -44,7 +45,7 @@ const MAX_PORT_ATTEMPTS = 3;
 export class OrchestratorService {
   private readonly logger = new Logger(OrchestratorService.name);
   private readonly slots = new Map<number, Slot>();
-  private readonly assignments = new Map<string, MatchAssignment>();
+  private readonly assignments = new Map<string, Map<string, MatchAssignment>>();
   private readonly mutex = new Mutex();
   private background: Promise<void> = Promise.resolve();
 
@@ -91,21 +92,24 @@ export class OrchestratorService {
       const matchId = randomUUID();
       const host = this.config.GAMESERVER_PUBLIC_HOST;
       try {
-        const token = await this.tokens.sign(matchId, playerIds);
+        const issued = await Promise.all(
+          playerIds.map(async (userId) => ({ userId, token: await this.tokens.sign(matchId, playerIds, userId) })),
+        );
         await this.matches.createAssigned({
           id: matchId,
-          playerIds,
+          players: issued.map(({ userId, token }) => ({ userId, tokenHash: MatchTokenService.hash(token) })),
           serverHost: host,
           serverPort: slot.port,
-          tokenHash: MatchTokenService.hash(token),
           seed: randomInt(SEED_BOUND),
           now: this.clock.now(),
         });
         slot.matchId = matchId;
-        const assignment: MatchAssignment = { host, port: slot.port, token };
-        this.assignments.set(matchId, assignment);
+        const assignments = new Map(
+          issued.map(({ userId, token }) => [userId, { host, port: slot.port, token }] as const),
+        );
+        this.assignments.set(matchId, assignments);
         this.replenishInBackground();
-        return { matchId, assignment };
+        return { matchId, assignments: Object.fromEntries(assignments) };
       } catch (error) {
         await this.discard(slot);
         this.replenishInBackground();
@@ -115,11 +119,11 @@ export class OrchestratorService {
   }
 
   /**
-   * O token só existe em memória (o banco guarda o hash) e fica até a partida terminar: o segundo
+   * Os tokens só existem em memória (o banco guarda o hash) e ficam até a partida terminar: o segundo
    * jogador pode consultar o ticket depois que o primeiro já conectou. O JWT expira por conta própria.
    */
-  assignmentFor(matchId: string): MatchAssignment | undefined {
-    return this.assignments.get(matchId);
+  assignmentFor(matchId: string, userId: string): MatchAssignment | undefined {
+    return this.assignments.get(matchId)?.get(userId);
   }
 
   /** Fim da partida (`finished` ou `aborted`): descarta o container e repõe o pool se faltar. */

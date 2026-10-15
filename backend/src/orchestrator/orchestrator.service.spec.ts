@@ -39,10 +39,9 @@ describe('OrchestratorService', () => {
     it('limpa containers antigos, aborta partidas órfãs e sobe POOL_SIZE nas primeiras portas', async () => {
       await matches.createAssigned({
         id: 'antiga',
-        playerIds: PLAYERS,
+        players: PLAYERS.map((userId) => ({ userId, tokenHash: 'h' })),
         serverHost: 'x',
         serverPort: 7000,
-        tokenHash: 'h',
         seed: 1,
         now: new Date(),
       });
@@ -57,10 +56,9 @@ describe('OrchestratorService', () => {
     it('aborta as partidas órfãs mesmo se limpar os containers falhar', async () => {
       await matches.createAssigned({
         id: 'antiga',
-        playerIds: PLAYERS,
+        players: PLAYERS.map((userId) => ({ userId, tokenHash: 'h' })),
         serverHost: 'x',
         serverPort: 7000,
-        tokenHash: 'h',
         seed: 1,
         now: new Date(),
       });
@@ -80,22 +78,30 @@ describe('OrchestratorService', () => {
   });
 
   describe('assign', () => {
-    it('usa um container ocioso: grava matches(assigned) e devolve host, porta e token válido', async () => {
+    it('usa um container ocioso: grava matches(assigned) e devolve host, porta e um token válido por jogador', async () => {
       await orchestrator.warm();
 
       const assigned = await orchestrator.assign(PLAYERS);
 
       expect(assigned).not.toBeNull();
-      const { matchId, assignment } = assigned!;
-      expect(assignment).toMatchObject({ host: 'jogo.exemplo.com', port: 7000 });
+      const { matchId, assignments } = assigned!;
+      const first = assignments[PLAYERS[0]!]!;
+      const second = assignments[PLAYERS[1]!]!;
+      expect(first).toMatchObject({ host: 'jogo.exemplo.com', port: 7000 });
+      expect(second).toMatchObject({ host: 'jogo.exemplo.com', port: 7000 });
+      expect(first.token).not.toBe(second.token);
       expect(runtime.started).toEqual([7000, 7001]); // nenhum container novo antes de repor
       const row = matches.rows.get(matchId)!;
       expect(row).toMatchObject({ status: 'assigned', serverHost: 'jogo.exemplo.com', serverPort: 7000 });
-      expect(row.tokenHash).toBe(MatchTokenService.hash(assignment.token));
-      await expect(tokens.verify(assignment.token)).resolves.toMatchObject({
-        match_id: matchId,
-        player_ids: PLAYERS,
-      });
+      for (const userId of PLAYERS) {
+        const { token } = assignments[userId]!;
+        expect(await matches.playerTokenHash(matchId, userId)).toBe(MatchTokenService.hash(token));
+        await expect(tokens.verify(token)).resolves.toMatchObject({
+          sub: userId,
+          match_id: matchId,
+          player_ids: PLAYERS,
+        });
+      }
       expect(await matches.playerIds(matchId)).toEqual(PLAYERS);
     });
 
@@ -115,8 +121,8 @@ describe('OrchestratorService', () => {
       const second = await orchestrator.assign(['c', 'd']);
       const third = await orchestrator.assign(['e', 'f']);
 
-      expect(first?.assignment.port).toBe(7000);
-      expect(second?.assignment.port).toBe(7001);
+      expect(first?.assignments['a']?.port).toBe(7000);
+      expect(second?.assignments['c']?.port).toBe(7001);
       expect(third).toBeNull();
     });
 
@@ -126,7 +132,7 @@ describe('OrchestratorService', () => {
 
       const assigned = await orchestrator.assign(PLAYERS);
 
-      expect(assigned?.assignment.port).toBe(7001);
+      expect(assigned?.assignments['u1']?.port).toBe(7001);
     });
 
     it('respeita a faixa de portas mesmo com POOL_MAX maior que ela', async () => {
@@ -159,13 +165,13 @@ describe('OrchestratorService', () => {
       await orchestrator.settle();
       await orchestrator.assign(['c', 'd']); // c2 ocupado; POOL_MAX=3 impede repor
       await orchestrator.settle();
-      expect(orchestrator.assignmentFor(first.matchId)).toBeDefined();
+      expect(orchestrator.assignmentFor(first.matchId, 'a')).toBeDefined();
       expect(runtime.started).toEqual([7000, 7001, 7002]);
 
       await orchestrator.release(first.matchId);
       await orchestrator.settle();
 
-      expect(orchestrator.assignmentFor(first.matchId)).toBeUndefined();
+      expect(orchestrator.assignmentFor(first.matchId, 'a')).toBeUndefined();
       expect(runtime.removed).toEqual(['container-1']);
       expect(runtime.started).toEqual([7000, 7001, 7002, 7000]); // volta na porta mais baixa livre
     });

@@ -14,7 +14,7 @@ const D = 'user-d';
 class FakeOrchestrator {
   hasCapacity = true;
   readonly assigned: string[][] = [];
-  private readonly assignments = new Map<string, MatchAssignment>();
+  private readonly assignments = new Map<string, Map<string, MatchAssignment>>();
 
   constructor(
     private readonly matches: InMemoryMatchesRepository,
@@ -27,20 +27,24 @@ class FakeOrchestrator {
     this.assigned.push(playerIds);
     await this.matches.createAssigned({
       id: matchId,
-      playerIds,
+      players: playerIds.map((userId) => ({ userId, tokenHash: 'x' })),
       serverHost: 'h',
       serverPort: 7000,
-      tokenHash: 'x',
       seed: 1,
       now: this.clock.now(),
     });
-    const assignment = { host: 'h', port: 7000 + this.assigned.length, token: `token-${matchId}` };
-    this.assignments.set(matchId, assignment);
-    return { matchId, assignment };
+    const assignments = new Map(
+      playerIds.map((userId) => [
+        userId,
+        { host: 'h', port: 7000 + this.assigned.length, token: `token-${matchId}-${userId}` },
+      ]),
+    );
+    this.assignments.set(matchId, assignments);
+    return { matchId, assignments: Object.fromEntries(assignments) };
   }
 
-  assignmentFor(matchId: string): MatchAssignment | undefined {
-    return this.assignments.get(matchId);
+  assignmentFor(matchId: string, userId: string): MatchAssignment | undefined {
+    return this.assignments.get(matchId)?.get(userId);
   }
 
   drop(matchId: string): void {
@@ -210,7 +214,7 @@ describe('QueueService', () => {
       expect(await service.status(A, a.id)).toEqual({ status: 'searching', elapsedS: 5 });
     });
 
-    it('matched → os dois jogadores recebem o mesmo assignment', async () => {
+    it('matched → os dois jogadores recebem o mesmo servidor, cada um com o seu token', async () => {
       const a = await service.join(A);
       const b = await service.join(B);
 
@@ -219,9 +223,12 @@ describe('QueueService', () => {
 
       expect(forA).toMatchObject({
         status: 'matched',
-        assignment: { host: 'h', port: 7001, token: 'token-match-1' },
+        assignment: { host: 'h', port: 7001, token: `token-match-1-${A}` },
       });
-      expect(forB).toEqual(forA);
+      expect(forB).toMatchObject({
+        status: 'matched',
+        assignment: { host: 'h', port: 7001, token: `token-match-1-${B}` },
+      });
     });
 
     it('matched com a partida já em andamento e sem assignment em memória → matched sem assignment', async () => {

@@ -36,7 +36,6 @@ export const matches = pgTable('matches', {
   status: matchStatus('status').notNull().default('assigned'),
   serverHost: text('server_host').notNull(),
   serverPort: integer('server_port').notNull(),
-  tokenHash: text('token_hash').notNull(),
   seed: integer('seed').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   startedAt: timestamp('started_at', { withTimezone: true }),
@@ -53,6 +52,8 @@ export type Match = typeof matches.$inferSelect;
 /**
  * Participantes da partida. As linhas nascem na atribuição (para saber quem pode
  * abandonar e quem o resultado pode citar) e as estatísticas entram no `result`.
+ * `tokenHash`: hash do token de partida DESTE jogador (um por jogador, §4.2) — é ele que prova
+ * ao game server qual peer é qual conta.
  */
 export const matchPlayers = pgTable(
   'match_players',
@@ -63,6 +64,7 @@ export const matchPlayers = pgTable(
     userId: uuid('user_id')
       .notNull()
       .references(() => users.id),
+    tokenHash: text('token_hash').notNull(),
     heroId: text('hero_id'),
     kills: integer('kills').notNull().default(0),
     deaths: integer('deaths').notNull().default(0),
