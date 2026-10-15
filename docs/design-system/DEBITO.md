@@ -14,7 +14,7 @@ O que está fora do contrato **de propósito**, com dono e gatilho. Débito sem 
 | ~~DS-07~~ | **Fechado no F65 (#170, 2026-10-13):** o `Minimap` desenha uma imagem pronta do mapa em `_draw`, sem `SubViewport`. Era: `Minimap` da fase 1 por `SubViewport` (câmera ortográfica) pode custar FPS | mais simples que desenhar; medir | Code | `TIME_FPS` < 60 em partida → trocar por `_draw` como o `ZoneRadar`. Medido 2026-10-09 (F13, offline + bot, sem vsync): ~600–670 fps com o minimapa, ~570–620 sem — custo não mensurável nesta máquina |
 | DS-08 | `ScoreBanner`, `ZoneRadar`, `Minimap`, `LatencyPlot` só existem a partir do MVP2/M0 — galeria incompleta até lá | ordem de implementação | Code | fechar com as fatias F13/F17 |
 | DS-09 | Textos em `tr()` sem arquivo de tradução | só pt-BR na fatia (PRD §12) | — | localização entrar no roadmap |
-| DS-10 | Sem som de UI definido (DV cita "lâmina/madeira") | assets de áudio não escolhidos | PI | antes de F24 |
+| DS-10 | Sem som de UI definido (DV cita "lâmina/madeira") | assets de áudio não escolhidos; o F24 saiu sem som de UI | PI | antes de F24 (vencido: F24 entregue sem som) |
 
 ## Quitado
 

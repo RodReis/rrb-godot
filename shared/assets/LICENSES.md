@@ -31,7 +31,7 @@ Cada pasta de pack guarda o `LICENSE.txt` original. Crédito não obrigatório: 
 **Crédito (CC-BY), só no roadmap:** desde o F55 o Golem do jogo é arte própria; as capturas antigas do roadmap ainda mostram o modelo abaixo, por isso o crédito fica em `docs/roadmap/historia.json`. Golem de Pedra baseado em "Lava Golem" de vladimirmejia (blendswap.com/blend/6023), CC-BY 3.0 — modificado (escala, faces planas, cores).
 
 - Roadmap público: feito (`docs/roadmap/historia.json` → `creditos`, F9).
-- Créditos do jogo: **pendente** — ainda não há tela de créditos; entra na primeira que existir (registrado no F24 em `docs/DEVELOPMENT.md`, fatia a confirmar pelo Cowork). Build distribuída sem esse crédito descumpre a licença.
+- Créditos do jogo: aba **Créditos** de Configurações no Launcher (F24, `launcher/scripts/screens/credits_view.gd`): packs desta tabela, fontes e ícones (`shared/ui/theme/fonts/`), netfox e o Godot (licença e componentes de terceiros pelo `Engine`). O Golem CC-BY não entra: saiu do jogo no F55.
 
 ## Escalas de referência (`_alignment.tscn`)
 
