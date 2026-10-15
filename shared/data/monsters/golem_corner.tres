@@ -6,6 +6,7 @@
 script = ExtResource("1_script")
 id = &"golem_corner"
 display_name = "Golem de Pedra (canto)"
+species = &"golem_t3"
 tier = 2
 count = 2
 hp = 680.0

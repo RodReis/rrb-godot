@@ -20,6 +20,7 @@ var settings: SettingsStore = SettingsStore.new()
 var api: ApiClient = ApiClient.new()
 var auth: AuthService = AuthService.new(api)
 var history: HistoryService = HistoryService.new(api)
+var catalog: CatalogService = CatalogService.new()
 var queue: QueueService = QueueService.new()
 var game: GameProcess = GameProcess.new()
 ## E-mail da sessao aberta (cartao "Sua conta" do lobby); vazio sem sessao.
@@ -48,6 +49,7 @@ func _ready() -> void:
 	settings.load_values()
 	_apply(settings.values)
 	settings.saved.connect(_apply)
+	catalog.load_all()
 	api.base_url = ApiClient.base_url_from(
 		OS.get_cmdline_user_args(), ApiClient.embedded_base_url()
 	)
@@ -212,6 +214,10 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 	var history_screen := screen as HistoryScreen
 	if history_screen != null:
 		history_screen.bind(history)
+	var compendium := screen as CompendiumScreen
+	if compendium != null:
+		compendium.bind(catalog)
+		compendium.navigate_requested.connect(_on_compendium_navigate_requested)
 	var lobby := screen as LobbyScreen
 	if lobby != null:
 		lobby.bind(queue, account_email)
@@ -235,10 +241,24 @@ func _on_login_authenticated(login: LoginScreen) -> void:
 ## Menu do topo: LOBBY volta a raiz (desempilha); as demais telas empilham.
 func _on_bar_navigate_requested(route: StringName) -> void:
 	if route != Router.LOBBY:
-		_stack.push(route)
+		# Mesmo item do menu em outra aba (Forja -> Guia & Bestiario): troca, nao empilha.
+		if _stack.current_route() == route:
+			return
+		if Router.nav_route(_stack.current_route()) == route:
+			_stack.replace(route)
+		else:
+			_stack.push(route)
 		return
 	while _stack.depth() > 1 and _stack.current_route() != Router.LOBBY:
 		_stack.pop()
+
+
+## Abas do compendio trocam a tela do topo (Esc continua voltando ao que havia antes).
+func _on_compendium_navigate_requested(route: StringName) -> void:
+	if route == Router.LOBBY:
+		_on_bar_navigate_requested(route)
+	else:
+		_stack.replace(route)
 
 
 func _on_bar_quit_requested() -> void:

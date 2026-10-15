@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## F25: fluxo do App (ARCHITECTURE-LAUNCHER §3.4, §5.2, §6) com ApiClient falso: abre no Login,
 ## entra no Lobby, sessao expirada volta ao Login, pareado sem executavel abandona a partida e
@@ -187,6 +188,54 @@ func test_menu_do_topo_abre_o_historico() -> void:
 	bar.navigate_requested.emit(Router.HISTORY)
 	await wait_process_frames(2)
 	assert_eq(_app.stack().current_route(), Router.HISTORY)
+
+
+func test_menu_do_topo_abre_o_guia_com_o_catalogo() -> void:
+	await _enter_lobby()
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	bar.navigate_requested.emit(Router.BESTIARY)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.BESTIARY)
+	var screen := _app.stack().current() as BestiaryScreen
+	assert_eq(screen.state(), StateBox.State.READY)
+	assert_eq(screen.cards().size(), 6)
+
+
+func test_aba_da_forja_troca_a_tela_sem_empilhar() -> void:
+	await _enter_lobby()
+	_app.stack().push(Router.BESTIARY)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().depth(), 2)
+	(_app.stack().current() as BestiaryScreen).navigate_requested.emit(Router.FORGE)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.FORGE)
+	assert_eq(_app.stack().depth(), 2, "troca a do topo")
+	assert_eq((_app.stack().current() as ForgeScreen).state(), StateBox.State.READY)
+
+
+func test_item_do_menu_na_forja_troca_para_o_guia_e_o_mesmo_item_nao_recria() -> void:
+	await _enter_lobby()
+	_app.stack().push(Router.FORGE)
+	await wait_process_frames(2)
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	bar.navigate_requested.emit(Router.BESTIARY)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.BESTIARY)
+	assert_eq(_app.stack().depth(), 2)
+	var screen := _app.stack().current()
+	bar.navigate_requested.emit(Router.BESTIARY)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current(), screen, "clicar no item ativo nao recria a tela")
+
+
+func test_faixa_final_da_forja_volta_ao_lobby() -> void:
+	await _enter_lobby()
+	_app.stack().push(Router.FORGE)
+	await wait_process_frames(2)
+	(_app.stack().current() as ForgeScreen).navigate_requested.emit(Router.LOBBY)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.LOBBY)
+	assert_eq(_app.stack().depth(), 1)
 
 
 func test_sair_da_conta_descarta_o_historico() -> void:

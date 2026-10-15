@@ -99,6 +99,13 @@ func add_glow(
 	queue_redraw()
 
 
+## Sobretitulo pequeno do prototipo do Compendio (mono 11 px e icone de 16 px) no lugar do
+## headline-sm do Historico.
+func use_compact_kicker() -> void:
+	_kicker.theme_type_variation = &"LnNumGold"
+	_icon.theme_type_variation = &"LnIconSmGold"
+
+
 func show_bottom_slot(slot_visible: bool = true) -> void:
 	bottom_slot.visible = slot_visible
 

@@ -119,8 +119,9 @@ func backend_status_text() -> String:
 
 ## Destaca o item do menu da rota da tela atual (nenhum, se a rota nao esta no menu).
 func set_current(route: StringName) -> void:
+	var current := Router.nav_route(route)
 	for item: StringName in _nav:
-		_nav[item].set_pressed_no_signal(item == route)
+		_nav[item].set_pressed_no_signal(item == current)
 
 
 ## Chip "SERVIDOR ONLINE | 24 ms" (bg-low rounded-xl, mono 11).

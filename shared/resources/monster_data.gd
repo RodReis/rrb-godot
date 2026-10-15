@@ -6,6 +6,9 @@ enum Tier { T1, T2, T3, BOSS }
 
 @export var id: StringName
 @export var display_name: String
+## Especie do card do Bestiario do Launcher; vazio = o proprio id. A variante (golem de canto)
+## aponta para o id da especie e divide o card com ela.
+@export var species: StringName
 @export var tier: Tier
 ## Quantidade por partida (todas as bases e o centro somados).
 @export var count: int
