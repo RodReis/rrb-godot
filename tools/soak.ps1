@@ -87,7 +87,7 @@ function Start-Match($m) {
     $log = Join-Path $Out ('match-{0:D2}.log' -f $m.Index)
     $err = "$log.err"
     $argList = @(
-        '--headless', '--path', "`"$game`"", '--', '--server', '--bots',
+        '--headless', '--path', "`"$game`"", '--', '--server', '--no-backend', '--bots',
         "--bot-heroes=$($m.HeroA),$($m.HeroB)", "--port=$($m.Port)", "--seed=$($m.Seed)",
         "--time=$StartTime"
     )

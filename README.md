@@ -25,4 +25,5 @@ docs/      PRD, planos, ADRs
 | 2 clientes (2º em autopilot) | `.\tools\run-clients.ps1 -Autopilot` |
 
 Controles: WASD move, mouse mira, botão esquerdo ataca.
-Argumentos do jogo (depois de `--`): `--server`, `--port=7000`, `--connect=host:porta`, `--autopilot`.
+Argumentos do jogo (depois de `--`): `--server`, `--port=7000`, `--connect=host:porta`, `--token=<match_token>`, `--autopilot`.
+Servidor dedicado de dev: `--no-backend` (sem ele exige `BACKEND_URL` e `INTERNAL_SECRET` e só aceita cliente com token de partida).

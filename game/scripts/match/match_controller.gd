@@ -86,6 +86,11 @@ func open(tick: int, tickrate: int) -> void:
 	deadline_tick = tick + _ticks(rules.lobby_wait_timeout)
 
 
+## O lobby ja abriu (open). Servidor online so abre quando o primeiro peer e admitido.
+func is_open() -> bool:
+	return _open
+
+
 func seats() -> Array[Seat]:
 	return _seats
 
