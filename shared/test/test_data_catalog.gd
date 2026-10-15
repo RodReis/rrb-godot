@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## Confere os .tres de shared/data contra o GDB (ADR-0004) e contra a tabela de Ids.
 
