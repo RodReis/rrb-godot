@@ -1,0 +1,118 @@
+extends SceneTree
+## Renderiza o retrato 1:1 de cada heroi (FRONTEND-LAUNCHER §8.3 regra 3: a imagem gerada do
+## prototipo do Historico da lugar a um render dos assets reais, ADR-0005) para
+## shared/assets/ui/heroes/<id>.png. Mesmo modelo e pecas escondidas do Game (game/scenes/heroes/),
+## em idle, enquadrado do peito para cima sobre o fundo BG_LOW. Precisa de janela (nao headless):
+##   godot --path launcher -s <repo>/tools/ui/render_hero_portraits.gd
+## Saida 2x o maior uso (retrato de 64 px do destaque): 128 x 128.
+
+const OUT_DIR: String = "res://shared/assets/ui/heroes/"
+const SIZE: Vector2i = Vector2i(128, 128)
+const WARMUP_FRAMES: int = 20
+const IDLE: StringName = &"Idle"
+## Instante da animacao idle usado como pose (s).
+const POSE_TIME: float = 0.4
+## id -> [cena, pecas escondidas] (as mesmas de game/scenes/heroes/<id>.tscn).
+const HEROES: Dictionary[String, Array] = {
+	"knight":
+	[
+		"res://shared/assets/kaykit/adventurers/Knight.glb",
+		[&"1H_Sword_Offhand", &"2H_Sword", &"Rectangle_Shield", &"Round_Shield", &"Spike_Shield"]
+	],
+	"ranger": ["res://shared/assets/rrb/heroes/ranger.glb", []],
+	"barbarian":
+	[
+		"res://shared/assets/kaykit/adventurers/Barbarian.glb",
+		[&"1H_Axe", &"1H_Axe_Offhand", &"Barbarian_Round_Shield", &"Mug"]
+	],
+	"fire_wizard":
+	[
+		"res://shared/assets/kaykit/adventurers/Mage.glb",
+		[&"1H_Wand", &"Spellbook", &"Spellbook_open"]
+	],
+	"rogue": ["res://shared/assets/rrb/heroes/rogue.glb", []],
+	"engineer": ["res://shared/assets/rrb/heroes/engineer.glb", []],
+}
+const BACKDROP: Color = Color(0.075, 0.106, 0.180)
+const AMBIENT: Color = Color(0.55, 0.62, 0.85)
+const KEY_LIGHT: Color = Color(1.0, 0.86, 0.68)
+const RIM_LIGHT: Color = Color(0.55, 0.72, 1.0)
+const CAMERA_EYE: Vector3 = Vector3(0.0, 1.62, 3.1)
+const CAMERA_TARGET: Vector3 = Vector3(0.0, 1.38, 0.0)
+const CAMERA_FOV: float = 26.0
+
+
+func _initialize() -> void:
+	_run.call_deferred()
+
+
+func _run() -> void:
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	var failed := false
+	for hero_id: String in HEROES:
+		if not await _render(hero_id):
+			failed = true
+	quit(1 if failed else 0)
+
+
+func _render(hero_id: String) -> bool:
+	var spec: Array = HEROES[hero_id]
+	var viewport := SubViewport.new()
+	viewport.size = SIZE
+	viewport.msaa_3d = Viewport.MSAA_4X
+	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	root.add_child(viewport)
+	var world := Node3D.new()
+	viewport.add_child(world)
+	world.add_child(_environment())
+	var model := (load(spec[0]) as PackedScene).instantiate() as Node3D
+	world.add_child(model)
+	for part: StringName in spec[1]:
+		var node := model.find_child(part) as Node3D
+		if node != null:
+			node.hide()
+	var player := model.find_child("AnimationPlayer") as AnimationPlayer
+	if player != null and player.has_animation(IDLE):
+		player.play(IDLE)
+		player.seek(POSE_TIME, true)
+		player.pause()
+	_lights(world)
+	var camera := Camera3D.new()
+	camera.fov = CAMERA_FOV
+	world.add_child(camera)
+	camera.look_at_from_position(CAMERA_EYE, CAMERA_TARGET)
+	camera.current = true
+	for i: int in WARMUP_FRAMES:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	var image := viewport.get_texture().get_image()
+	var path := "%s%s.png" % [OUT_DIR, hero_id]
+	var err := image.save_png(path)
+	print("[portrait] %s %s (%s)" % [path, image.get_size(), error_string(err)])
+	viewport.queue_free()
+	return err == OK
+
+
+func _environment() -> WorldEnvironment:
+	var env := Environment.new()
+	env.background_mode = Environment.BG_COLOR
+	env.background_color = BACKDROP
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = AMBIENT
+	env.ambient_light_energy = 0.55
+	var holder := WorldEnvironment.new()
+	holder.environment = env
+	return holder
+
+
+func _lights(world: Node3D) -> void:
+	var key := DirectionalLight3D.new()
+	key.light_color = KEY_LIGHT
+	key.light_energy = 1.4
+	world.add_child(key)
+	key.look_at_from_position(Vector3(-2.0, 3.0, 3.0), Vector3(0.0, 1.2, 0.0))
+	var rim := DirectionalLight3D.new()
+	rim.light_color = RIM_LIGHT
+	rim.light_energy = 0.9
+	world.add_child(rim)
+	rim.look_at_from_position(Vector3(2.5, 2.5, -2.5), Vector3(0.0, 1.2, 0.0))

@@ -55,6 +55,15 @@ const SELECTION_ALPHA: float = 0.4
 ## py-0.5 dos selos.
 const BADGE_PAD_Y: int = 2
 
+## Historico (F26): faixa lateral do cartao (w-1.5), placar a 50 % (bg-lowest/50), py do selo de
+## resultado (comum py-0.5, destaque py-1) e px dos contadores dos filtros (px-1.5).
+const MATCH_STRIPE: int = 6
+const ALPHA_BOARD: float = 0.5
+const RESULT_PAD_Y: int = 2
+const RESULT_PAD_Y_LG: int = 4
+const COUNT_PAD_X: int = 6
+const ICON_CARD: int = 16
+
 ## Sufixo -> espacamento dos tipos LnHGap*/LnVGap* (TOKENS §3).
 const GAPS: Array[Array] = [
 	["None", 0],
@@ -168,6 +177,34 @@ const LABELS: Dictionary[StringName, Array] = {
 	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_LG, &"GOLD"],
 	&"LnIconOnGold":
 	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_XL, &"ON_PRIMARY"],
+	# Historico (F26): rotulo do filtro (inativo, hover, ativo) e icones de 16 px dos cartoes.
+	&"LnFilterLabel":
+	[
+		UiTokens.FONT_LN_DISPLAY_PATH,
+		UiTokens.WEIGHT_SEMIBOLD,
+		UiTokens.TYPE_LN_HEADLINE_SM,
+		&"TEXT_MUTED"
+	],
+	&"LnFilterLabelHover":
+	[
+		UiTokens.FONT_LN_DISPLAY_PATH,
+		UiTokens.WEIGHT_SEMIBOLD,
+		UiTokens.TYPE_LN_HEADLINE_SM,
+		&"TEXT"
+	],
+	&"LnFilterLabelOn":
+	[
+		UiTokens.FONT_LN_DISPLAY_PATH,
+		UiTokens.WEIGHT_SEMIBOLD,
+		UiTokens.TYPE_LN_HEADLINE_SM,
+		&"ON_GOLD"
+	],
+	&"LnNumError":
+	[UiTokens.FONT_LN_MONO_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_NUM, &"ERROR"],
+	&"LnIconSmGold": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, ICON_CARD, &"GOLD_BRIGHT"],
+	&"LnIconSmError": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, ICON_CARD, &"ERROR"],
+	&"LnIconSmOn": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, ICON_CARD, &"ON_GOLD"],
+	&"LnIconSmCyan": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, ICON_CARD, &"CYAN"],
 }
 ## Variacoes que ganham tracking (uppercase tracking-wide do prototipo).
 const TRACKED: Array[StringName] = [
@@ -186,6 +223,7 @@ static func add(theme: Theme) -> void:
 	_keys(theme)
 	_controls(theme)
 	_auth_and_lobby(theme)
+	_history(theme)
 
 
 ## Espacamento entre filhos por token (componente nao usa override, COMPONENTS regra 4):
@@ -550,6 +588,116 @@ static func _auth_and_lobby(theme: Theme) -> void:
 		theme.set_stylebox(&"panel", dot[0], _box(dot[1], DOT_RADIUS))
 	_buttons_f25(theme, display)
 	_input(theme, body)
+
+
+## Historico (F26, prototipo "Historico de Partidas - Duelos"): cartao de duelo com faixa lateral
+## (vitoria GOLD_BRIGHT, derrota ERROR, interrompida TEXT_OUTLINE), selo de resultado, placar,
+## moldura de retrato, etiquetas de nivel e papel, filtros e a faixa de rodape.
+static func _history(theme: Theme) -> void:
+	var display := font(UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_SEMIBOLD)
+	var mono := font(UiTokens.FONT_LN_MONO_PATH, UiTokens.WEIGHT_BOLD)
+	# [sufixo, faixa, fundo do selo, texto do selo]
+	var outcomes: Array[Array] = [
+		["Win", UiTokens.GOLD_BRIGHT, UiTokens.GOLD, UiTokens.ON_GOLD],
+		["Loss", UiTokens.ERROR, UiTokens.ERROR_BG, UiTokens.ON_ERROR_CONTAINER],
+		["None", UiTokens.TEXT_OUTLINE, UiTokens.BG_HIGHEST, UiTokens.TEXT_MUTED],
+	]
+	# [sufixo, respiro do cartao, py do selo]: comum (p-md) e destaque (p-lg).
+	var sizes: Array[Array] = [
+		["", UiTokens.SPACE_MD, RESULT_PAD_Y], ["Lg", UiTokens.SPACE_LG, RESULT_PAD_Y_LG]
+	]
+	for outcome: Array in outcomes:
+		for size: Array in sizes:
+			var card := _box(UiTokens.BG_LOW, UiTokens.RADIUS_MD)
+			card.border_color = outcome[1]
+			card.border_width_left = MATCH_STRIPE
+			_shadow(card, SHADOW_CARD, SHADOW_BLUR_CARD, SHADOW_OFFSET)
+			card.set_content_margin_all(size[1])
+			_panel(theme, StringName("LnMatchCard%s%s" % [outcome[0], size[0]]), card)
+			var tag := StringName("LnResult%s%s" % [outcome[0], size[0]])
+			_label_box(theme, tag, outcome[2], outcome[3], display, size[2], UiTokens.SPACE_SM)
+	var board := _box(Color(UiTokens.BG_LOWEST, ALPHA_BOARD), UiTokens.RADIUS_MD)
+	board.set_content_margin_all(UiTokens.SPACE_MD)
+	_panel(theme, &"LnMatchBoard", board)
+	var chip := _box(UiTokens.BG_LOWEST, UiTokens.RADIUS_SM)
+	chip.content_margin_left = UiTokens.SPACE_SM
+	chip.content_margin_right = UiTokens.SPACE_SM
+	chip.content_margin_top = UiTokens.SPACE_XS
+	chip.content_margin_bottom = UiTokens.SPACE_XS
+	_panel(theme, &"LnChipLowest", chip)
+	var orb := _box(UiTokens.BG_HIGHEST, UiTokens.RADIUS_MD)
+	orb.content_margin_left = UiTokens.SPACE_MD
+	orb.content_margin_right = UiTokens.SPACE_MD
+	orb.content_margin_top = UiTokens.SPACE_SM
+	orb.content_margin_bottom = UiTokens.SPACE_SM
+	_shadow(orb, SHADOW_CARD, SHADOW_BLUR_SM, SHADOW_OFFSET_SM)
+	_panel(theme, &"LnScoreChip", orb)
+	_panel(theme, &"LnPortrait", _box(Color(UiTokens.BG_PANEL, 1.0), UiTokens.RADIUS_MD))
+	var badge := _box(Color(UiTokens.BG_LOWEST, ALPHA_SOFT), UiTokens.RADIUS_SM)
+	badge.content_margin_left = UiTokens.SPACE_MD
+	badge.content_margin_right = UiTokens.SPACE_MD
+	badge.content_margin_top = UiTokens.SPACE_SM
+	badge.content_margin_bottom = UiTokens.SPACE_SM
+	_shadow(badge, SHADOW_CARD, SHADOW_BLUR_SM, SHADOW_OFFSET_SM)
+	_panel(theme, &"LnSeasonBadge", badge)
+	var strip := _box(UiTokens.BG_LOW, UiTokens.RADIUS_MD)
+	strip.content_margin_left = UiTokens.SPACE_MD
+	strip.content_margin_right = UiTokens.SPACE_MD
+	strip.content_margin_top = UiTokens.SPACE_SM
+	strip.content_margin_bottom = UiTokens.SPACE_SM
+	_panel(theme, &"LnStrip", strip)
+	# Etiqueta de nivel no canto do retrato (rounded-tl, px-1, mono 11).
+	for tag: Array in [
+		[&"LnTagLevelMe", UiTokens.GOLD_BRIGHT, UiTokens.ON_PRIMARY],
+		[&"LnTagLevelRival", UiTokens.BG_HIGHEST, UiTokens.TEXT],
+	]:
+		_label_box(theme, tag[0], tag[1], tag[2], mono, 0, UiTokens.SPACE_XS)
+		theme.set_font_size(&"font_size", tag[0], UiTokens.TYPE_LN_NUM)
+		var corner := theme.get_stylebox(&"normal", tag[0]) as StyleBoxFlat
+		corner.set_corner_radius_all(0)
+		corner.corner_radius_top_left = UiTokens.RADIUS_SM
+	_badge(theme, &"LnBadgeRoleMe", Color(UiTokens.GOLD_BRIGHT, 0.2), UiTokens.GOLD_BRIGHT, mono)
+	_badge(theme, &"LnBadgeRoleRival", UiTokens.BG_HIGHEST, UiTokens.TEXT_MUTED, mono)
+	_badge(theme, &"LnCountOn", Color(UiTokens.ON_GOLD, 0.2), UiTokens.ON_GOLD, mono)
+	_badge(theme, &"LnCount", UiTokens.BG_LOWEST, UiTokens.TEXT_MUTED, mono)
+	for count: StringName in [&"LnCountOn", &"LnCount"]:
+		var count_box := theme.get_stylebox(&"normal", count) as StyleBoxFlat
+		count_box.content_margin_left = COUNT_PAD_X
+		count_box.content_margin_right = COUNT_PAD_X
+	# Filtro (toggle): inativo BG_PANEL, hover BG_CARD, ativo GOLD sem brilho (shadow-md).
+	var filter := _box(Color(UiTokens.BG_PANEL, 1.0), UiTokens.RADIUS_SM)
+	filter.content_margin_left = UiTokens.SPACE_MD
+	filter.content_margin_right = UiTokens.SPACE_MD
+	filter.content_margin_top = UiTokens.SPACE_XS
+	filter.content_margin_bottom = UiTokens.SPACE_XS
+	var filter_on := _fill(filter, UiTokens.GOLD)
+	_shadow(filter_on, SHADOW_CARD, SHADOW_BLUR_SM, SHADOW_OFFSET_SM)
+	var filter_boxes: Array = [filter, _fill(filter, UiTokens.BG_CARD), filter_on, filter_on]
+	_button(theme, &"LnFilter", filter_boxes, display)
+	_button_colors(theme, &"LnFilter", UiTokens.TEXT_MUTED, UiTokens.TEXT, UiTokens.ON_GOLD)
+
+
+## Label com fundo e fonte propria (selo de resultado, etiqueta de nivel).
+static func _label_box(
+	theme: Theme,
+	type: StringName,
+	fill: Color,
+	text: Color,
+	text_font: Font,
+	pad_y: int,
+	pad_x: int
+) -> void:
+	var box := _box(fill, UiTokens.RADIUS_XS)
+	box.content_margin_left = pad_x
+	box.content_margin_right = pad_x
+	box.content_margin_top = pad_y
+	box.content_margin_bottom = pad_y
+	theme.set_type_variation(type, &"Label")
+	theme.set_stylebox(&"normal", type, box)
+	theme.set_font(&"font", type, text_font)
+	theme.set_font_size(&"font_size", type, UiTokens.TYPE_LN_HEADLINE_SM)
+	theme.set_color(&"font_color", type, text)
+	theme.set_constant(&"outline_size", type, 0)
 
 
 static func _buttons_f25(theme: Theme, display: Font) -> void:

@@ -1,7 +1,8 @@
 extends GutTest
 ## F25: fluxo do App (ARCHITECTURE-LAUNCHER §3.4, §5.2, §6) com ApiClient falso: abre no Login,
 ## entra no Lobby, sessao expirada volta ao Login, pareado sem executavel abandona a partida e
-## mostra o erro, saida do Game fecha o overlay e trata o codigo, sair da conta.
+## mostra o erro, saida do Game fecha o overlay e trata o codigo, sair da conta. F26: o fim normal
+## de uma partida online abre o Historico; treino e codigo 3 nao.
 
 const SCENE: PackedScene = preload("res://scenes/app.tscn")
 const MATCH: String = "0b7e9f00-1111-4222-8333-444455556666"
@@ -17,6 +18,7 @@ func before_each() -> void:
 	_app.api.free()
 	_app.api = _api
 	_app.auth = AuthService.new(_api)
+	_app.history = HistoryService.new(_api)
 	add_child_autofree(_app)
 	await wait_process_frames(1)
 
@@ -132,3 +134,74 @@ func test_status_do_backend_vem_do_health() -> void:
 	await _app.check_backend()
 	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
 	assert_string_contains(bar.backend_status_text(), "ONLINE")
+
+
+func test_fim_normal_de_partida_online_abre_o_historico() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, {"totals": {"wins": 0, "losses": 0}, "matches": []})
+	_app.set(&"_match_id", MATCH)  # partida online aberta (o launch real nao existe no teste)
+	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.HISTORY)
+	assert_eq(_app.stack().depth(), 2, "o lobby continua embaixo")
+	assert_true(_api.calls.has("GET /matches?mine=1"))
+
+
+func test_fim_normal_descarta_o_cache_para_a_partida_nova_aparecer() -> void:
+	await _enter_lobby()
+	var stale := {"totals": {"wins": 0, "losses": 0}, "matches": []}
+	_api.reply("GET /matches?mine=1", 200, stale)
+	await _app.history.fetch()
+	_api.reply("GET /matches?mine=1", 200, stale)
+	_app.set(&"_match_id", MATCH)
+	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
+	await wait_process_frames(2)
+	assert_eq(_api.calls.count("GET /matches?mine=1"), 2)
+
+
+func test_fim_normal_do_treino_volta_ao_lobby_sem_historico() -> void:
+	await _enter_lobby()
+	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.LOBBY)
+	assert_false(_api.calls.has("GET /matches?mine=1"))
+
+
+func test_resultado_nao_reportado_avisa_e_fica_no_lobby() -> void:
+	await _enter_lobby()
+	_app.set(&"_match_id", MATCH)
+	_app.game.exited.emit(GameProcess.EXIT_RESULT_NOT_REPORTED)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.LOBBY)
+	var toast := _app.find_children("*", "Toast", true, false)[0] as Toast
+	var texts := toast.find_children("*", "Label", true, false).map(
+		func(label: Label) -> String: return label.text
+	)
+	assert_true(texts.any(func(text: String) -> bool: return text.contains("pode demorar")))
+
+
+func test_menu_do_topo_abre_o_historico() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, {"totals": {"wins": 0, "losses": 0}, "matches": []})
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	bar.navigate_requested.emit(Router.HISTORY)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.HISTORY)
+
+
+func test_sair_da_conta_descarta_o_historico() -> void:
+	var lobby := await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, {"totals": {"wins": 1, "losses": 0}, "matches": []})
+	await _app.history.fetch()
+	assert_not_null(_app.history.history)
+	lobby.logout_requested.emit()
+	await wait_process_frames(1)
+	assert_null(_app.history.history)
+
+
+func test_sessao_expirada_descarta_o_historico() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, {"totals": {"wins": 1, "losses": 0}, "matches": []})
+	await _app.history.fetch()
+	_api.unauthorized.emit()
+	assert_null(_app.history.history)

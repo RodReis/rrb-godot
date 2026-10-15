@@ -35,6 +35,9 @@ const ON_ERROR: Color = Color(0.412, 0.0, 0.020)  # on-error #690005
 const ON_PRIMARY: Color = Color(0.278, 0.165, 0.0)  # on-primary #472A00 (texto sobre GOLD_BRIGHT)
 const GOLD_SHADE: Color = Color(0.576, 0.337, 0.0)  # borda 3D do CTA da fila #935600
 const TEXT_OUTLINE: Color = Color(0.627, 0.557, 0.478)  # outline #A08E7A (rotulo apagado)
+# Historico (F26).
+# on-error-container #FFDAD6 (texto do selo DERROTA)
+const ON_ERROR_CONTAINER: Color = Color(1.0, 0.855, 0.839)
 
 ## Nome do token -> cor; o Theme guarda cada uma no tipo Global com o mesmo nome.
 const COLORS: Dictionary[StringName, Color] = {
@@ -67,6 +70,7 @@ const COLORS: Dictionary[StringName, Color] = {
 	&"ON_PRIMARY": ON_PRIMARY,
 	&"GOLD_SHADE": GOLD_SHADE,
 	&"TEXT_OUTLINE": TEXT_OUTLINE,
+	&"ON_ERROR_CONTAINER": ON_ERROR_CONTAINER,
 }
 
 # Tipografia (TOKENS §2): tamanho em px @1080p e peso OpenType (wght) da fonte variavel.

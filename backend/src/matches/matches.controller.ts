@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -15,8 +15,8 @@ import type { AuthenticatedRequest } from '../common/jwt.guard';
 import { JwtGuard } from '../common/jwt.guard';
 import { InternalGuard } from '../common/internal.guard';
 import { ParseUuidPipe } from '../common/parse-uuid.pipe';
-import { MatchResultDto, ValidatedMatchDto, ValidateDto } from './matches.dto';
-import { MatchesService, ValidatedMatch } from './matches.service';
+import { MatchHistoryDto, MatchResultDto, MineQueryDto, ValidatedMatchDto, ValidateDto } from './matches.dto';
+import { MatchesService, MatchHistory, ValidatedMatch } from './matches.service';
 
 const MATCH_NOT_FOUND = 'MATCH_NOT_FOUND';
 const matchId = (): ParseUuidPipe => new ParseUuidPipe(MATCH_NOT_FOUND);
@@ -66,6 +66,18 @@ export class InternalMatchesController {
 @Controller('matches')
 export class MatchesController {
   constructor(private readonly matches: MatchesService) {}
+
+  /** Histórico da própria conta (§4.2 passo 8): as últimas partidas terminadas e os totais V–D. */
+  // Leitura: não divide o balde `queue` (10/min) com entrar na fila e abandonar.
+  @Get()
+  @SkipThrottle({ queue: true })
+  @ApiOkResponse({ type: MatchHistoryDto })
+  @ApiBadRequestResponse({ description: 'VALIDATION_FAILED (falta mine=1)' })
+  // `query` só existe para o pipe do zod exigir `mine=1`.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  history(@Req() req: AuthenticatedRequest, @Query() query: MineQueryDto): Promise<MatchHistory> {
+    return this.matches.history(req.userId);
+  }
 
   /** Launcher: "instalação incompleta" (§6) — libera o container sem esperar o token vencer. */
   @Post(':id/abandon')

@@ -282,6 +282,50 @@
         ]
       }
     },
+    "/matches": {
+      "get": {
+        "operationId": "MatchesController_history",
+        "parameters": [
+          {
+            "name": "mine",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchHistoryDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED (falta mine=1)"
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "matches"
+        ]
+      }
+    },
     "/matches/{id}/abandon": {
       "post": {
         "operationId": "MatchesController_abandon",
@@ -659,6 +703,150 @@
         "required": [
           "status",
           "elapsedS"
+        ]
+      },
+      "MatchHistoryDto": {
+        "type": "object",
+        "properties": {
+          "totals": {
+            "type": "object",
+            "properties": {
+              "wins": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              },
+              "losses": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            },
+            "required": [
+              "wins",
+              "losses"
+            ]
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "matchId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "result": {
+                  "type": "string",
+                  "enum": [
+                    "win",
+                    "loss",
+                    "interrupted"
+                  ]
+                },
+                "playedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "endReason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "durationS": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647,
+                  "nullable": true
+                },
+                "me": {
+                  "type": "object",
+                  "properties": {
+                    "heroId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "kills": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "finalLevel": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "deaths": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "bossKill": {
+                      "type": "boolean"
+                    },
+                    "setActive": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "heroId",
+                    "kills",
+                    "finalLevel",
+                    "deaths",
+                    "bossKill",
+                    "setActive"
+                  ]
+                },
+                "opponent": {
+                  "type": "object",
+                  "properties": {
+                    "heroId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "kills": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    },
+                    "finalLevel": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    }
+                  },
+                  "required": [
+                    "heroId",
+                    "kills",
+                    "finalLevel"
+                  ]
+                }
+              },
+              "required": [
+                "matchId",
+                "result",
+                "playedAt",
+                "endReason",
+                "durationS",
+                "me",
+                "opponent"
+              ]
+            }
+          }
+        },
+        "required": [
+          "totals",
+          "matches"
         ]
       },
       "ValidateDto": {

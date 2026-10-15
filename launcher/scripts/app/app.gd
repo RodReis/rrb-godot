@@ -3,9 +3,10 @@ extends Control
 ## Raiz do Launcher (ARCHITECTURE-LAUNCHER §3.1): barra superior, pilha de telas, rodape e os
 ## overlays globais (toast, modal, carregando, partida em andamento). Le o settings.cfg no boot e
 ## aplica video e audio no proprio Launcher. Dono dos servicos (ApiClient, AuthService,
-## QueueService, GameProcess): sem sessao abre no Login; com sessao o Lobby e a raiz; 401 sem
-## renovacao volta ao Login. Fila pareada -> lanca o Game; saida do Game pela tabela do §5.2.
-## Telas emitem; quem navega e confirma e o App.
+## QueueService, HistoryService, GameProcess): sem sessao abre no Login; com sessao o Lobby e a
+## raiz; 401 sem renovacao volta ao Login. Fila pareada -> lanca o Game; saida do Game pela
+## tabela do §5.2 (codigo 0 de partida online abre o Historico). Telas emitem; quem navega e
+## confirma e o App.
 ## --gallery (depois do --) abre a galeria do design system, a prova visual dos componentes.
 
 const GALLERY_ARG: String = "--gallery"
@@ -18,6 +19,7 @@ const OFFLINE_ARGS: PackedStringArray = ["--offline", "--bot"]
 var settings: SettingsStore = SettingsStore.new()
 var api: ApiClient = ApiClient.new()
 var auth: AuthService = AuthService.new(api)
+var history: HistoryService = HistoryService.new(api)
 var queue: QueueService = QueueService.new()
 var game: GameProcess = GameProcess.new()
 ## E-mail da sessao aberta (cartao "Sua conta" do lobby); vazio sem sessao.
@@ -190,6 +192,7 @@ func _logout() -> void:
 	if queue.is_searching():
 		await queue.leave()
 	queue.reset()
+	history.clear()
 	auth.logout()
 	account_email = ""
 	_stack.reset(Router.LOGIN)
@@ -206,6 +209,9 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 		login.bind(auth)
 		login.authenticated.connect(_on_login_authenticated.bind(login))
 		login.practice_requested.connect(_start_practice)
+	var history_screen := screen as HistoryScreen
+	if history_screen != null:
+		history_screen.bind(history)
 	var lobby := screen as LobbyScreen
 	if lobby != null:
 		lobby.bind(queue, account_email)
@@ -249,6 +255,7 @@ func _on_bar_quit_requested() -> void:
 ## Sessao expirada sem renovacao (§3.3): volta ao Login com aviso.
 func _on_api_unauthorized() -> void:
 	queue.reset()
+	history.clear()
 	show_toast(tr("Sua sessão expirou. Entre de novo."), Toast.Kind.WARN)
 	account_email = ""
 	_stack.reset(Router.LOGIN)
@@ -281,7 +288,8 @@ func _show_lobby_error(message: String) -> void:
 		lobby.show_error(message)
 
 
-## Fim do Game: tabela do §5.2. Ate o historico existir (F26), o codigo 0 volta ao lobby.
+## Fim do Game: tabela do §5.2. Codigo 0 de partida online abre o Historico (cache descartado:
+## a partida nova tem de aparecer); o treino contra o bot nao grava partida, volta ao lobby.
 func _on_game_exited(code: int) -> void:
 	_match.close()
 	_stack.locked = false
@@ -296,6 +304,9 @@ func _on_game_exited(code: int) -> void:
 		show_toast(tr("Jogo encerrado."))
 		return
 	if outcome.kind == GameProcess.Kind.NORMAL:
+		if online:
+			history.clear()
+			_stack.push(Router.HISTORY)
 		return
 	if outcome.offer_queue and online and lobby != null:
 		var actions: Array[DialogAction] = [

@@ -1,7 +1,8 @@
 # GERADO por tools/launcher/gen_models.mjs a partir de backend/openapi.json. Nao editar.
 class_name TicketStatus
 extends RefCounted
-## TicketStatusDto do backend. from_dict devolve null se o JSON nao bater com o contrato.
+## TicketStatusDto do backend.
+## from_dict devolve null se o JSON nao bater com o contrato.
 
 var status: String = ""
 var elapsed_s: int = 0

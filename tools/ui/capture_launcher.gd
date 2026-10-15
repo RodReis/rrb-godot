@@ -8,12 +8,109 @@ extends SceneTree
 ## F25: --route abre a rota como raiz (lobby com a conta --email=); --state poe a tela num estado:
 ## Login register | loading | error (envia sem backend) | field_error; Lobby joining | searching |
 ## matched | error. --overlay abre o "Partida em andamento".
+## F26: --history=ready|many|empty|error|offline|loading troca o servico do Historico por um
+## ApiClient falso com dados de exemplo (so da captura; o produto mostra so dado do backend) e
+## abre a rota history; --filter=wins|losses escolhe o filtro. Com --login=<email>:<senha> (e
+## --api=<url>) entra na conta no backend de verdade antes de abrir a rota: captura com dado real.
 
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_SIZE: Vector2i = Vector2i(1920, 1080)
 ## Frames ate fontes, fade de entrada e layout assentarem.
 const SETTLE_FRAMES: int = 45
 const FPS_SECONDS: float = 3.0
+## Dados de exemplo do Historico (so desta captura): destaque, derrota, vitoria e interrompida.
+const HISTORY_CALL: String = "GET /matches?mine=1"
+const HISTORY_SAMPLE: Dictionary = {
+	"totals": {"wins": 4, "losses": 2},
+	"matches":
+	[
+		{
+			"matchId": "0b7e9f00-1111-4222-8333-000000000001",
+			"result": "win",
+			"playedAt": "2026-10-15T15:10:00.000Z",
+			"endReason": "kill_goal",
+			"durationS": 522,
+			"me":
+			{
+				"heroId": "ranger",
+				"kills": 5,
+				"finalLevel": 10,
+				"deaths": 3,
+				"bossKill": true,
+				"setActive": "hunter"
+			},
+			"opponent": {"heroId": "knight", "kills": 3, "finalLevel": 9},
+		},
+		{
+			"matchId": "0b7e9f00-1111-4222-8333-000000000002",
+			"result": "loss",
+			"playedAt": "2026-10-15T13:02:00.000Z",
+			"endReason": "collapse_hp",
+			"durationS": 555,
+			"me":
+			{
+				"heroId": "knight",
+				"kills": 3,
+				"finalLevel": 9,
+				"deaths": 5,
+				"bossKill": false,
+				"setActive": null
+			},
+			"opponent": {"heroId": "ranger", "kills": 5, "finalLevel": 10},
+		},
+		{
+			"matchId": "0b7e9f00-1111-4222-8333-000000000003",
+			"result": "win",
+			"playedAt": "2026-10-15T10:40:00.000Z",
+			"endReason": "kill_goal",
+			"durationS": 410,
+			"me":
+			{
+				"heroId": "fire_wizard",
+				"kills": 5,
+				"finalLevel": 10,
+				"deaths": 1,
+				"bossKill": false,
+				"setActive": null
+			},
+			"opponent": {"heroId": "barbarian", "kills": 1, "finalLevel": 7},
+		},
+		{
+			"matchId": "0b7e9f00-1111-4222-8333-000000000004",
+			"result": "interrupted",
+			"playedAt": "2026-10-14T21:15:00.000Z",
+			"endReason": "heartbeat_lost",
+			"durationS": null,
+			"me":
+			{
+				"heroId": null,
+				"kills": 0,
+				"finalLevel": 0,
+				"deaths": 0,
+				"bossKill": false,
+				"setActive": null
+			},
+			"opponent": {"heroId": null, "kills": 0, "finalLevel": 0},
+		},
+		{
+			"matchId": "0b7e9f00-1111-4222-8333-000000000005",
+			"result": "win",
+			"playedAt": "2026-10-14T20:01:00.000Z",
+			"endReason": "collapse_kills",
+			"durationS": 598,
+			"me":
+			{
+				"heroId": "rogue",
+				"kills": 4,
+				"finalLevel": 9,
+				"deaths": 4,
+				"bossKill": true,
+				"setActive": null
+			},
+			"opponent": {"heroId": "engineer", "kills": 3, "finalLevel": 9},
+		},
+	],
+}
 
 
 func _initialize() -> void:
@@ -26,12 +123,27 @@ func _capture() -> void:
 	root.add_child(app)
 	await process_frame
 	root.size = _size(args.get("size", ""))
+	if args.has("login"):
+		var credentials: PackedStringArray = args["login"].split(":", true, 1)
+		var result := await (app as App).auth.login(credentials[0], credentials[1])
+		print("[capture] login %s: %s" % [credentials[0], result.ok])
+		args["email"] = credentials[0]
+	if args.has("history"):
+		_fake_history(app as App, args["history"])
+		args["route"] = "history"
 	if args.has("route"):
 		(app as App).account_email = args.get("email", "duelista@exemplo.com")
 		(app as App).stack().reset(StringName(args["route"]))
 	await _set_state(app as App, args.get("state", ""))
 	if args.has("overlay"):
 		(app as App).match_overlay().open(false)
+	if args.has("filter"):
+		var history_screen := app.find_children("*", "HistoryScreen", true, false)
+		if not history_screen.is_empty():
+			var filters: Dictionary = {
+				"wins": HistoryScreen.Filter.WINS, "losses": HistoryScreen.Filter.LOSSES
+			}
+			(history_screen[0] as HistoryScreen).select_filter(filters[args["filter"]])
 	if args.has("tab"):
 		var screen := app.find_children("*", "SettingsScreen", true, false)
 		if not screen.is_empty():
@@ -54,6 +166,44 @@ func _capture() -> void:
 	var err := image.save_png(out)
 	print("[capture] %s %s (%s)" % [out, image.get_size(), error_string(err)])
 	quit(err)
+
+
+## Troca o servico do Historico por um ApiClient falso (nao fala com o backend).
+func _fake_history(app: App, mode: String) -> void:
+	var api := FakeApiClient.new() if mode != "loading" else HangingApi.new()
+	app.add_child(api)
+	match mode:
+		"ready":
+			api.reply(HISTORY_CALL, 200, HISTORY_SAMPLE)
+		"many":
+			api.reply(HISTORY_CALL, 200, _many(50))
+		"empty":
+			api.reply(HISTORY_CALL, 200, {"totals": {"wins": 0, "losses": 0}, "matches": []})
+		"error":
+			api.reply(HISTORY_CALL, 500, {"statusCode": 500, "code": "INTERNAL_ERROR"})
+	app.history = HistoryService.new(api)
+
+
+## `count` partidas repetindo o exemplo (prova de desempenho do feed cheio, FRONTEND §4).
+func _many(count: int) -> Dictionary:
+	var matches: Array = []
+	var sample: Array = HISTORY_SAMPLE["matches"]
+	for i: int in count:
+		matches.append(sample[i % sample.size()])
+	return {"totals": {"wins": count / 2, "losses": count / 4}, "matches": matches}
+
+
+## ApiClient que nunca responde: segura a tela em "carregando".
+class HangingApi:
+	extends FakeApiClient
+
+	signal never
+
+	func _send(
+		_method: HTTPClient.Method, _path: String, _body: Variant, _authed: bool
+	) -> ApiClient.Response:
+		await never
+		return null
 
 
 func _set_state(app: App, state: String) -> void:
