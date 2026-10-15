@@ -11,7 +11,6 @@ const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6]
 const STAT_NAMES: Array[String] = [
 	"HP (Vida)", "DEF (Defesa)", "ATK (Ataque)", "INT (Inteligência)", "AGI (Agilidade)"
 ]
-const SKILL_KEYS: Array[String] = ["Q", "E", "R"]
 const MSEC_PER_SECOND: float = 1000.0
 ## Barra de atributo (h-3 do prototipo).
 const BAR_HEIGHT: float = 14.0
@@ -229,8 +228,10 @@ func _build_choices() -> void:
 
 ## Celulas Q/E/R: tecla em badge, nome e recarga; o R em dourado (ultimate).
 func _build_skills() -> void:
-	for key: String in SKILL_KEYS:
-		var ultimate := key == SKILL_KEYS[-1]
+	var keys := InputActions.skill_labels()
+	for i: int in keys.size():
+		var key := keys[i]
+		var ultimate := i == keys.size() - 1
 		var cell := PanelContainer.new()
 		cell.theme_type_variation = &"HeroGoldSkill" if ultimate else &"HeroAllySkill"
 		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL

@@ -92,3 +92,14 @@ func test_avisa_a_rota_a_cada_troca() -> void:
 	_stack.pop()
 	assert_signal_emit_count(_stack, "screen_changed", 3)
 	assert_signal_emitted_with_parameters(_stack, "screen_changed", [&"a"])
+
+
+func test_travada_esc_nao_desempilha() -> void:
+	_stack.push(&"a")
+	_stack.push(&"b")
+	_stack.locked = true
+	var esc := InputEventAction.new()
+	esc.action = &"ui_cancel"
+	esc.pressed = true
+	_stack._unhandled_input(esc)
+	assert_eq(_stack.depth(), 2)

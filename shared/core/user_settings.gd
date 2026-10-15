@@ -135,10 +135,10 @@ static func keycode(values: Dictionary, action: StringName) -> Key:
 
 
 ## Copia de values com a tecla na acao; se outra acao usava a tecla, ela fica com a antiga
-## (troca, sem conflito). Acao nao remapeavel ou tecla reservada: copia sem mudanca.
+## (troca, sem conflito). Acao nao remapeavel, tecla reservada ou sem codigo: copia sem mudanca.
 static func rebind(values: Dictionary, action: StringName, key: Key) -> Dictionary:
 	var copy := values.duplicate(true)
-	if action not in BINDABLE or key in RESERVED_KEYS:
+	if action not in BINDABLE or key in RESERVED_KEYS or key == KEY_NONE:
 		return copy
 	var controls: Dictionary = copy[CONTROLS]
 	var old: String = controls[String(action)]

@@ -66,16 +66,21 @@ func set_state(new_state: State, message: String = "") -> void:
 	_stop_spin()
 	_overlay.visible = new_state in [State.EMPTY, State.ERROR]
 	if new_state == State.LOADING and is_inside_tree():
-		var request := _request
-		await get_tree().create_timer(LOADING_DELAY).timeout
-		if request == _request:
-			_overlay.visible = true
-			_start_spin()
+		# Tween morre com o no: tela fechada antes dos 150 ms nao retoma nada.
+		var delay := create_tween()
+		delay.tween_interval(LOADING_DELAY)
+		delay.tween_callback(_show_spinner.bind(_request))
 
 
 ## O spinner esta na tela (LOADING depois do atraso)?
 func is_spinning() -> bool:
 	return _overlay.visible and state == State.LOADING
+
+
+func _show_spinner(request: int) -> void:
+	if request == _request:
+		_overlay.visible = true
+		_start_spin()
 
 
 func _start_spin() -> void:

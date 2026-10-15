@@ -10,13 +10,15 @@ signal screen_pushed(route: StringName, screen: Control)
 
 ## Rota -> cena. O App preenche com Router.scenes(); o teste injeta cenas minimas.
 var scenes: Dictionary[StringName, PackedScene] = {}
+## Travada (carregando global do App): Esc nao desempilha.
+var locked: bool = false
 
 var _screens: Array[Control] = []
 var _routes: Array[StringName] = []
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed(&"ui_cancel") and pop():
+	if not locked and event.is_action_pressed(&"ui_cancel") and pop():
 		if is_inside_tree():
 			get_viewport().set_input_as_handled()
 

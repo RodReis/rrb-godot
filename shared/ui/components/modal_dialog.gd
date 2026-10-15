@@ -45,7 +45,10 @@ func _init() -> void:
 	column.add_child(_actions)
 
 
+## Ja aberto: devolve CANCELLED na hora (um segundo open nao rouba a resposta do primeiro).
 func open(title: String, body: String, actions: Array[DialogAction]) -> int:
+	if visible:
+		return CANCELLED
 	_title.text = title
 	_body.text = body
 	for child: Node in _actions.get_children():
@@ -57,6 +60,7 @@ func open(title: String, body: String, actions: Array[DialogAction]) -> int:
 		button.text = actions[i].label
 		button.pressed.connect(closed.emit.bind(i))
 		_actions.add_child(button)
+	_trap_focus()
 	visible = true
 	modulate.a = 0.0
 	create_tween().tween_property(self, ^"modulate:a", 1.0, UiTokens.DUR_FAST)
@@ -75,6 +79,20 @@ func buttons() -> Array[Button]:
 	for child: Node in _actions.get_children():
 		list.append(child as Button)
 	return list
+
+
+## Tab e setas giram so entre os botoes: o foco nao sai para a tela de baixo.
+func _trap_focus() -> void:
+	var list := buttons()
+	for i: int in list.size():
+		var next := list[(i + 1) % list.size()].get_path()
+		var previous := list[(i - 1 + list.size()) % list.size()].get_path()
+		list[i].focus_next = next
+		list[i].focus_previous = previous
+		list[i].focus_neighbor_right = next
+		list[i].focus_neighbor_left = previous
+		list[i].focus_neighbor_top = list[i].get_path()
+		list[i].focus_neighbor_bottom = list[i].get_path()
 
 
 func _unhandled_input(event: InputEvent) -> void:

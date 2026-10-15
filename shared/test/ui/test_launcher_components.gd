@@ -130,3 +130,16 @@ func _press_later(dialog: ModalDialog, index: int) -> void:
 func _find_button(root: Node) -> Button:
 	var found := root.find_children("*", "Button", true, false)
 	return found[0] as Button if not found.is_empty() else null
+
+
+func test_modal_aberto_recusa_segundo_open() -> void:
+	var dialog: ModalDialog = add_child_autofree(ModalDialog.new())
+	var actions: Array[DialogAction] = [DialogAction.make("Ok")]
+	var second := {}
+	var reopen := func() -> void:
+		second["index"] = await dialog.open("Outro", "", actions)
+		dialog.buttons()[0].pressed.emit()
+	reopen.call_deferred()
+	var index := await dialog.open("Primeiro", "", actions)
+	assert_eq(second["index"], ModalDialog.CANCELLED)
+	assert_eq(index, 0)

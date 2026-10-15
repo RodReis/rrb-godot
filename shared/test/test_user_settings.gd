@@ -138,3 +138,8 @@ func test_rebind_de_acao_nao_remapeavel_nao_muda_nada() -> void:
 func test_esc_nao_pode_ser_atribuido() -> void:
 	var before := UserSettings.defaults()
 	assert_eq(UserSettings.rebind(before, InputActions.SKILL_Q, KEY_ESCAPE), before)
+
+
+func test_tecla_sem_codigo_nao_e_atribuida() -> void:
+	var before := UserSettings.defaults()
+	assert_eq(UserSettings.rebind(before, InputActions.SKILL_Q, KEY_NONE), before)

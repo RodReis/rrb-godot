@@ -69,6 +69,8 @@ var _tab: Tab = Tab.CONTROLS
 var _tabs: Array[Button] = []
 var _keycaps: Dictionary[StringName, Button] = {}
 var _listening: StringName = &""
+## Tecla cuja escuta o ultimo clique cancelou (o toggle dela nao reabre a escuta).
+var _cancelled_by_click: StringName = &""
 var _header: ScreenHeader = ScreenHeader.new()
 ## Corpo: os cards ou os creditos; so a aba visivel define a altura (a barra vem logo abaixo).
 var _body: MarginContainer = MarginContainer.new()
@@ -111,6 +113,7 @@ func _input(event: InputEvent) -> void:
 			_draft = UserSettings.rebind(_draft, _listening, key.physical_keycode)
 		_stop_listening()
 	elif event is InputEventMouseButton and (event as InputEventMouseButton).pressed:
+		_cancelled_by_click = _listening
 		_stop_listening()
 
 
@@ -493,8 +496,14 @@ func _key_text(action: StringName) -> String:
 	return KEY_NAMES[key] if KEY_NAMES.has(key) else key.to_upper()
 
 
+## Clicar de novo na tecla que esta escutando cancela (o clique do mouse ja parou a escuta no
+## press; o toggle chega no release com _listening vazio, entao a tecla lembra quem cancelou).
 func _start_listening(action: StringName) -> void:
+	var was_listening := _listening == action or _cancelled_by_click == action
+	_cancelled_by_click = &""
 	_stop_listening()
+	if was_listening:
+		return
 	_listening = action
 	var keycap := _keycaps[action]
 	keycap.set_pressed_no_signal(true)

@@ -83,7 +83,8 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           if [ ! -d launcher ]; then echo "launcher/ ainda não existe"; exit 0; fi
-          if grep -rnE 'netfox|ENetMultiplayerPeer|res://scenes/arena' launcher \
+          # Referencia de codigo, nao texto: o credito do netfox (aba Creditos, F24) cita o nome.
+          if grep -rnE 'addons/netfox|Network(Time|Rollback|Events|Performance)|RollbackSynchronizer|StateSynchronizer|BaseNetInput|ENetMultiplayerPeer|res://scenes/arena' launcher \
               --exclude-dir=shared --exclude-dir=.godot; then
             echo "FALHA: launcher/ referencia o Game (I9)"; exit 1
           fi

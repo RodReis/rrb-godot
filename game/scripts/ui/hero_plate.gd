@@ -7,8 +7,8 @@ extends Control
 ## nunca decide regra; a HUD dona chama update() no proprio _process.
 
 ## Indice = slot do SkillButton: basico, Q, E, R.
-const SKILL_KEYS: Array[String] = ["RMB", "Q", "E", "R"]
-const LEARN_KEYS: Array[String] = ["Ctrl+Q", "Ctrl+E", "Ctrl+R"]
+## Ataque basico no botao direito (SPEC-045 §2); Q/E/R vem do InputMap (remapeavel, F24).
+const BASIC_KEY: String = "RMB"
 ## Switches da engrenagem (decisao do PI 2026-10-12): tudo, ou so o jingle do chefao (barramento
 ## do default_bus_layout.tres). Valem so na sessao (FORA-DE-ESCOPO: gravar no settings.cfg).
 const BUS_GAME: StringName = &"Master"
@@ -60,11 +60,13 @@ func _ready() -> void:
 	_buttons = [%Basic, %SkillQ, %SkillE, %SkillR]
 	_learn_badges = [%LearnQ, %LearnE, %LearnR]
 	_slots = [%Weapon, %Helm, %Chest, %Boots]
-	for i: int in _buttons.size():
-		_buttons[i].hotkey = SKILL_KEYS[i]
+	var skill_keys := InputActions.skill_labels()
+	_buttons[0].hotkey = BASIC_KEY
 	for i: int in _learn_badges.size():
-		_learn_badges[i].key = LEARN_KEYS[i]
-		_buttons[i + 1].learn_key = LEARN_KEYS[i]
+		var learn_key := "Ctrl+%s" % skill_keys[i]
+		_buttons[i + 1].hotkey = skill_keys[i]
+		_learn_badges[i].key = learn_key
+		_buttons[i + 1].learn_key = learn_key
 	_gear_menu.visible = false
 	_gear_button.pressed.connect(_on_gear_button_pressed)
 	_bestiary_button.pressed.connect(_on_bestiary_button_pressed)
@@ -174,7 +176,11 @@ func _update_skills() -> void:
 func _notify_free_point() -> void:
 	if SkillRules.free_points(_hero.level, _hero.ranks) <= 0:
 		return
-	var text := tr("NÍVEL %d! Ponto de habilidade: aprenda com Ctrl+Q/E/R") % _hero.level
+	var keys := InputActions.skill_labels()
+	var text := (
+		tr("NÍVEL %d! Ponto de habilidade: aprenda com Ctrl+%s/%s/%s")
+		% [_hero.level, keys[0], keys[1], keys[2]]
+	)
 	_toast.show_message(text, Toast.Kind.INFO)
 
 

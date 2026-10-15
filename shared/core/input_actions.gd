@@ -117,3 +117,19 @@ static func ensure() -> void:
 			var button := InputEventJoypadButton.new()
 			button.button_index = JOY_BUTTONS[action]
 			InputMap.action_add_event(action, button)
+
+
+## Texto da tecla da acao no InputMap (ja remapeado pelo settings.cfg, F24): a HUD mostra a
+## tecla de verdade. Sem tecla registrada, a padrao de KEYS.
+static func key_label(action: StringName) -> String:
+	if InputMap.has_action(action):
+		for event: InputEvent in InputMap.action_get_events(action):
+			var key := event as InputEventKey
+			if key != null and not key.ctrl_pressed:
+				return OS.get_keycode_string(key.physical_keycode)
+	return OS.get_keycode_string(KEYS.get(action, KEY_NONE))
+
+
+## Teclas de Q, E e R na ordem dos slots (SkillRules.SLOT_*).
+static func skill_labels() -> Array[String]:
+	return [key_label(SKILL_Q), key_label(SKILL_E), key_label(SKILL_R)]

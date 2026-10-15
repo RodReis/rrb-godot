@@ -46,11 +46,13 @@ func confirm(title: String, body: String, actions: Array[DialogAction]) -> int:
 ## Bloqueia a tela com o spinner (login, fila; F25+).
 func show_loading(message: String = "") -> void:
 	_loading.visible = true
+	_stack.locked = true
 	_loading_box.set_state(StateBox.State.LOADING, message)
 
 
 func hide_loading() -> void:
 	_loading.visible = false
+	_stack.locked = false
 	_loading_box.set_state(StateBox.State.IDLE)
 
 

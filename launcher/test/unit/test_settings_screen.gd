@@ -80,3 +80,15 @@ func test_aba_creditos_mostra_os_creditos() -> void:
 
 func test_creditos_trazem_a_licenca_do_godot() -> void:
 	assert_string_contains(CreditsView.license_text(), "Godot Engine")
+
+
+func test_clicar_de_novo_na_tecla_cancela_a_escuta() -> void:
+	var keycap := _keycap("Q")
+	keycap.pressed.emit()
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	_screen._input(click)
+	keycap.pressed.emit()  # o toggle chega no release
+	_screen._input(_key(KEY_Z))
+	assert_eq(UserSettings.keycode(_screen.draft(), InputActions.SKILL_Q), KEY_Q)

@@ -39,6 +39,7 @@ const SCROLL_W: int = 6
 
 ## Sufixo -> espacamento dos tipos LnHGap*/LnVGap* (TOKENS §3).
 const GAPS: Array[Array] = [
+	["None", 0],
 	["Xs", UiTokens.SPACE_XS],
 	["Sm", UiTokens.SPACE_SM],
 	["Md", UiTokens.SPACE_MD],

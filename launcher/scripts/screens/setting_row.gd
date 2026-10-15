@@ -20,7 +20,7 @@ func _init(label: String = "", sub: String = "", label_type: StringName = &"LnBo
 	var texts := VBoxContainer.new()
 	texts.size_flags_horizontal = SIZE_EXPAND_FILL
 	texts.alignment = BoxContainer.ALIGNMENT_CENTER
-	texts.add_theme_constant_override(&"separation", 0)
+	texts.theme_type_variation = &"LnVGapNone"
 	row.add_child(texts)
 	_label.theme_type_variation = label_type
 	_label.text = label
