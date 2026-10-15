@@ -46,7 +46,9 @@ func _ready() -> void:
 	settings.load_values()
 	_apply(settings.values)
 	settings.saved.connect(_apply)
-	api.base_url = ApiClient.base_url_from(OS.get_cmdline_user_args())
+	api.base_url = ApiClient.base_url_from(
+		OS.get_cmdline_user_args(), ApiClient.embedded_base_url()
+	)
 	add_child(api)
 	queue.api = api
 	add_child(queue)

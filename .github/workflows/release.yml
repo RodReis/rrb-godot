@@ -1,0 +1,85 @@
+name: release
+
+# Publica o pacote portatil (ZIP) num GitHub Release ao empurrar uma tag v* (GITHUB.md §8).
+# A tag e anotada, criada na main com CI verde — este workflow nao reverifica isso.
+# Antes da primeira tag: Settings > Variables > RRB_API_URL = URL publica do backend (https://...).
+
+on:
+  push:
+    tags: ['v*']
+  # Ensaio manual: gera o ZIP e o anexa ao run como artefato, sem criar Release.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: 4.7.2
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: URL do backend configurada
+        env:
+          RRB_API_URL: ${{ vars.RRB_API_URL }}
+        run: |
+          if [ -z "$RRB_API_URL" ]; then
+            echo "::error::Defina a variavel de repositorio RRB_API_URL (URL publica do backend)."
+            exit 1
+          fi
+
+      - uses: ./.github/actions/godot
+        with:
+          version: ${{ env.GODOT_VERSION }}
+
+      # Cliente Windows exportado a partir do Linux: so o template windows_release_x86_64 e preciso.
+      - name: Export templates (Windows)
+        run: |
+          dir="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dir"
+          curl -fsSL -o /tmp/tpl.tpz \
+            "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q /tmp/tpl.tpz 'templates/version.txt' 'templates/windows_release_x86_64.exe' -d /tmp/tpl
+          mv /tmp/tpl/templates/* "$dir/"
+
+      - name: Gerar o ZIP
+        shell: pwsh
+        env:
+          RRB_API_URL: ${{ vars.RRB_API_URL }}
+          # Nome de tag e entrada nao confiavel: vai por variavel de ambiente, nunca no texto do script.
+          RRB_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}
+        run: ./tools/build-package.ps1 -ApiUrl $env:RRB_API_URL -Version $env:RRB_VERSION
+
+      - name: Anexar o ZIP (ensaio)
+        if: github.ref_type != 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rrb-arena-dev-win64
+          path: build/rrb-arena-dev-win64.zip
+          retention-days: 3
+
+      - name: Publicar o Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          cat > /tmp/notes.md <<'NOTES'
+          ## Como instalar
+          1. Baixe `rrb-arena-*-win64.zip` e **extraia tudo** para uma pasta.
+          2. Abra `launcher.exe`, crie a conta, entre na fila e jogue.
+
+          **Aviso do Windows (SmartScreen):** o executável não tem assinatura de código, então aparece
+          "O Windows protegeu seu computador". Clique em **Mais informações** e depois em
+          **Executar assim mesmo**.
+
+          Não mova nem renomeie a pasta `game`: o Launcher procura o jogo em `game\game.exe`.
+
+          ## O que mudou
+          NOTES
+          gh release create "$TAG" "build/rrb-arena-${TAG}-win64.zip" \
+            --title "$TAG" --notes-file /tmp/notes.md --generate-notes --prerelease

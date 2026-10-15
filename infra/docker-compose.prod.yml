@@ -1,0 +1,76 @@
+# Producao no VPS com Coolify (F28, PRD §8.2). Recurso "Docker Compose" do Coolify apontando para
+# este arquivo. Todo valor sensivel vem das variaveis do Coolify (lista em infra/.env.example);
+# o repo e publico, nada de segredo aqui.
+#
+# - backend: dominio publico e TLS ficam no proxy do Coolify (aponte o dominio para o servico
+#   `backend`, porta 3000). Sobe os game servers pelo socket Docker do host (orquestrador, §4.2).
+# - gameserver-image: so constroi a imagem rrb-gameserver:latest; quem sobe os containers e o
+#   orquestrador, 1 por partida, cada um com 1 porta UDP da faixa 7000–7020 publicada no host.
+# - Firewall do VPS: liberar UDP 7000–7020 (e o proxy do Coolify em 80/443).
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rrb
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no Coolify}
+      POSTGRES_DB: rrb
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rrb -d rrb"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  backend:
+    build:
+      context: ../backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      gameserver-image:
+        condition: service_completed_successfully
+    environment:
+      # POSTGRES_PASSWORD so com caracteres seguros em URL (use hex/alfanumerico).
+      DATABASE_URL: postgres://rrb:${POSTGRES_PASSWORD}@postgres:5432/rrb
+      JWT_SECRET: ${JWT_SECRET:?defina JWT_SECRET no Coolify}
+      INTERNAL_SECRET: ${INTERNAL_SECRET:?defina INTERNAL_SECRET no Coolify}
+      PORT: "3000"
+      # Coolify/Traefik = 1 salto: o rate limit enxerga o IP real do jogador.
+      TRUST_PROXY_HOPS: "1"
+      POOL_SIZE: ${POOL_SIZE:-2}
+      POOL_MAX: ${POOL_MAX:-10}
+      GAME_PORT_MIN: "7000"
+      GAME_PORT_MAX: "7020"
+      GAMESERVER_IMAGE: rrb-gameserver:latest
+      # IP/dominio do VPS que o Launcher recebe no MatchAssignment (UDP direto, sem proxy).
+      GAMESERVER_PUBLIC_HOST: ${GAMESERVER_PUBLIC_HOST:?defina GAMESERVER_PUBLIC_HOST no Coolify}
+      # Os game servers entram na rede do compose e falam com o backend pelo nome do servico.
+      GAMESERVER_NETWORK: rrb-net
+      GAMESERVER_BACKEND_URL: http://backend:3000
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    # O processo roda como `node`; o socket pertence ao grupo docker do host (getent group docker).
+    group_add:
+      - "${DOCKER_GID:-999}"
+    expose:
+      - "3000"
+
+  gameserver-image:
+    build:
+      context: ..
+      dockerfile: infra/gameserver/Dockerfile
+    image: rrb-gameserver:latest
+    entrypoint: ["/bin/true"]
+    restart: "no"
+
+volumes:
+  postgres-data:
+
+networks:
+  default:
+    name: rrb-net

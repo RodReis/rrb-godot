@@ -2,7 +2,8 @@
 .godot
 game/.godot
 docs
-tools
+tools/*
+!tools/export
 build
 game/shared
 launcher/shared

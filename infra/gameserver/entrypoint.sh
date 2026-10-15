@@ -19,4 +19,4 @@ fi
 
 # GAME_ARGS: argumentos extras do jogo, separados por espaco (ex.: "--probe --seed=20").
 # shellcheck disable=SC2086
-exec godot --headless --path /game -- --server "--port=${PORT:-7000}" ${GAME_ARGS:-}
+exec /game/game.x86_64 --headless -- --server "--port=${PORT:-7000}" ${GAME_ARGS:-}
