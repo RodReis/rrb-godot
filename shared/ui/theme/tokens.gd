@@ -20,6 +20,17 @@ const BORDER: Color = Color(0.325, 0.267, 0.204)
 const RARITY_COMMON: Color = Color(0.580, 0.639, 0.722)
 const RARITY_RARE: Color = Color(0.231, 0.510, 0.965)
 const RARITY_EPIC: Color = PURPLE
+# Launcher (F24): cores dos prototipos de docs/prd/telas/ que a HUD nao usa (nome Tailwind ao lado).
+const BG_LOWEST: Color = Color(0.024, 0.055, 0.125)  # surface-container-lowest #060E20
+const BG_LOW: Color = Color(0.075, 0.106, 0.180)  # surface-container-low #131B2E
+const BG_HIGHEST: Color = Color(0.176, 0.204, 0.286)  # surface-container-highest #2D3449
+const BG_BRIGHT: Color = Color(0.192, 0.224, 0.302)  # surface-bright #31394D
+const ON_GOLD: Color = Color(0.380, 0.231, 0.0)  # on-primary-container #613B00
+const GOLD_EDGE: Color = Color(0.471, 0.208, 0.059)  # borda 3D do botao primario #78350F
+const ON_CYAN: Color = Color(0.0, 0.200, 0.318)  # on-secondary #003351
+const ERROR: Color = Color(1.0, 0.706, 0.671)  # error #FFB4AB
+const ERROR_BG: Color = Color(0.576, 0.0, 0.039)  # error-container #93000A
+const ON_ERROR: Color = Color(0.412, 0.0, 0.020)  # on-error #690005
 
 ## Nome do token -> cor; o Theme guarda cada uma no tipo Global com o mesmo nome.
 const COLORS: Dictionary[StringName, Color] = {
@@ -39,6 +50,16 @@ const COLORS: Dictionary[StringName, Color] = {
 	&"RARITY_COMMON": RARITY_COMMON,
 	&"RARITY_RARE": RARITY_RARE,
 	&"RARITY_EPIC": RARITY_EPIC,
+	&"BG_LOWEST": BG_LOWEST,
+	&"BG_LOW": BG_LOW,
+	&"BG_HIGHEST": BG_HIGHEST,
+	&"BG_BRIGHT": BG_BRIGHT,
+	&"ON_GOLD": ON_GOLD,
+	&"GOLD_EDGE": GOLD_EDGE,
+	&"ON_CYAN": ON_CYAN,
+	&"ERROR": ERROR,
+	&"ERROR_BG": ERROR_BG,
+	&"ON_ERROR": ON_ERROR,
 }
 
 # Tipografia (TOKENS §2): tamanho em px @1080p e peso OpenType (wght) da fonte variavel.
@@ -61,6 +82,23 @@ const TYPE_END_VALUE: int = 20
 const OUTLINE: Color = Color(0.0, 0.0, 0.0)
 const OUTLINE_W: int = 1
 const OUTLINE_W_LARGE: int = 2
+## Launcher (F24, decisao do PI em 2026-10-15): familias dos prototipos de docs/prd/telas/, com os
+## icones do Material Symbols como fallback (UiIcons). Tamanhos e pesos do Tailwind do prototipo.
+const FONT_LN_DISPLAY_PATH: String = "res://shared/ui/theme/fonts/font_launcher_display.ttf"
+const FONT_LN_BODY_PATH: String = "res://shared/ui/theme/fonts/font_launcher_body.ttf"
+const FONT_LN_MONO_PATH: String = "res://shared/ui/theme/fonts/font_launcher_mono.ttf"
+const FONT_ICONS_PATH: String = "res://shared/ui/theme/fonts/font_icons.ttf"
+const WEIGHT_REGULAR: int = 400
+const TYPE_LN_HEADLINE_LG: int = 32  # headline-lg: titulo da tela
+const TYPE_LN_HEADLINE_SM: int = 18  # headline-sm: titulo de card, botao, aba
+const TYPE_LN_BODY: int = 14  # body-md
+const TYPE_LN_BODY_SM: int = 12  # body-sm
+const TYPE_LN_NUM: int = 11  # label-numeric-sm e hotkey-cap
+## Icones do prototipo (text-[Npx]).
+const ICON_SM: int = 18
+const ICON_MD: int = 20
+const ICON_LG: int = 22
+const ICON_XL: int = 28
 
 # Espacamento e tamanhos em px @1080p (TOKENS §3).
 const SPACE_XS: int = 4
@@ -69,6 +107,10 @@ const SPACE_MD: int = 12
 const SPACE_LG: int = 20
 const SPACE_XL: int = 30
 const SPACE_SCREEN: int = 40
+## Margem de tela do Launcher (px-margin do prototipo, 1 rem).
+const SPACE_MARGIN: int = 16
+## rounded do prototipo do Launcher (0,125 rem): linhas, chips e teclas.
+const RADIUS_XS: int = 2
 const RADIUS_SM: int = 4
 const RADIUS_MD: int = 8
 const RADIUS_LG: int = 16

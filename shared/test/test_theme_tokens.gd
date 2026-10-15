@@ -257,3 +257,42 @@ func test_match_end_variations() -> void:
 	assert_color(_flat(&"normal", &"ButtonEndDanger").bg_color, ThemeBuilder.END_DANGER)
 	assert_color(_flat(&"hover", &"ButtonEnd").border_color, UiTokens.GOLD)
 	assert_eq(_flat(&"normal", &"ButtonEndPrimary").corner_radius_top_left, UiTokens.RADIUS_BUTTON)
+
+
+# Launcher (F24, TOKENS §7): tipos Ln* com as fontes dos prototipos e os icones de fallback.
+func test_launcher_labels_have_prototype_fonts_and_no_outline() -> void:
+	for type: StringName in LauncherTheme.LABELS:
+		var spec: Array = LauncherTheme.LABELS[type]
+		assert_eq(_theme.get_type_variation_base(type), &"Label", type)
+		assert_eq(_theme.get_font_size(&"font_size", type), spec[2], type)
+		assert_color(_theme.get_color(&"font_color", type), UiTokens.COLORS[spec[3]])
+		assert_eq(_theme.get_constant(&"outline_size", type), 0, type)
+		var font := _theme.get_font(&"font", type) as FontVariation
+		assert_eq(font.base_font.resource_path, spec[0], type)
+
+
+func test_launcher_fonts_fall_back_to_icons() -> void:
+	var font := _theme.get_font(&"font", &"LnBody") as FontVariation
+	assert_eq(font.fallbacks.size(), 1)
+	assert_eq(font.fallbacks[0].resource_path, UiTokens.FONT_ICONS_PATH)
+	assert_true(font.has_char(UiIcons.SAVE.unicode_at(0)), "glifo pelo fallback")
+
+
+func test_launcher_gaps_and_screen_margin() -> void:
+	for gap: Array in LauncherTheme.GAPS:
+		assert_eq(_theme.get_constant(&"separation", StringName("LnHGap" + gap[0])), gap[1])
+		assert_eq(_theme.get_constant(&"separation", StringName("LnVGap" + gap[0])), gap[1])
+	assert_eq(_theme.get_constant(&"margin_left", &"LnScreenMargin"), UiTokens.SPACE_MARGIN)
+	assert_eq(_theme.get_constant(&"margin_top", &"LnScreenMargin"), UiTokens.SPACE_LG)
+
+
+func test_launcher_tab_primary_and_key_states() -> void:
+	assert_color(_flat(&"pressed", &"LnTab").bg_color, UiTokens.GOLD)
+	assert_color(_theme.get_color(&"font_pressed_color", &"LnTab"), UiTokens.ON_GOLD)
+	var primary := _flat(&"normal", &"LnButtonPrimary")
+	assert_color(primary.bg_color, UiTokens.GOLD)
+	assert_eq(primary.border_width_bottom, LauncherTheme.PRIMARY_EDGE)
+	assert_color(_flat(&"pressed", &"LnKey").bg_color, UiTokens.GOLD)
+	assert_color(_flat(&"normal", &"LnKeyUltimate").bg_color, UiTokens.GOLD)
+	assert_color(_flat(&"panel", &"LnCard").bg_color, UiTokens.BG_LOW)
+	assert_not_null(_theme.get_icon(&"checked", &"LnSwitch"))

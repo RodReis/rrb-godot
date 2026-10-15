@@ -33,8 +33,13 @@ const GHOST_MAX_HP: float = 600.0
 
 ## Secoes na coluna esquerda; as seguintes vao para a direita.
 const LEFT_SECTIONS: int = 5
+## Launcher (F24): tamanho de cada exemplo de StateBox e largura dos blocos de tela.
+const STATE_SIZE: Vector2 = Vector2(200, 120)
+const SCREEN_BLOCK_WIDTH: float = 760.0
 
 var _sections: int = 0
+## Bloco do topo: tipos Ln* e componentes do Launcher (F24).
+var _launcher: VBoxContainer = VBoxContainer.new()
 
 @onready var _left: VBoxContainer = %Left
 @onready var _right: VBoxContainer = %Right
@@ -53,6 +58,20 @@ func _ready() -> void:
 	_catalog()
 	_scores()
 	_radars()
+	# Launcher no topo, largura cheia; as duas colunas da HUD embaixo.
+	var columns := _left.get_parent()
+	var margin := columns.get_parent()
+	margin.remove_child(columns)
+	var stack := VBoxContainer.new()
+	margin.add_child(stack)
+	stack.add_child(_launcher)
+	stack.add_child(columns)
+	_launcher_typography()
+	_launcher_buttons()
+	_launcher_controls()
+	_launcher_panels()
+	_launcher_chrome()
+	_launcher_states()
 
 
 func _typography() -> void:
@@ -267,6 +286,161 @@ func _radars() -> void:
 		radar.set_players(players, colors)
 
 
+func _launcher_typography() -> void:
+	var row := _row("Launcher · tipografia (Space Grotesk, Outfit, JetBrains Mono)", _launcher)
+	for type: StringName in LauncherTheme.LABELS:
+		if String(type).begins_with("LnIcon"):
+			continue
+		var label := Label.new()
+		label.theme_type_variation = type
+		label.text = "1920 x 1080" if String(type).begins_with("LnNum") else "Configurações"
+		_add(row, label, type)
+	var icons := _row("Launcher · ícones (Material Symbols, UiIcons)", _launcher)
+	var glyphs := (UiIcons as Script).get_script_constant_map()
+	for constant: String in glyphs:
+		var glyph := Label.new()
+		glyph.theme_type_variation = &"LnIconTitle"
+		glyph.text = glyphs[constant]
+		_add(icons, glyph, constant.to_lower())
+
+
+func _launcher_buttons() -> void:
+	var row := _row("Launcher · botões (Tab mostra o foco)", _launcher)
+	var samples: Array[Array] = [
+		[&"LnTab", "AJUSTES", false],
+		[&"LnTab", "ATIVA", true],
+		[&"LnButton", "%s  RESTAURAR PADRÕES" % UiIcons.RESTART_ALT, false],
+		[&"LnButtonPrimary", "%s  SALVAR & APLICAR" % UiIcons.SAVE, false],
+		[&"LnButtonDanger", "SAIR DO JOGO", false],
+		[&"LnIconButton", UiIcons.SETTINGS, false],
+		[&"LnIconButtonDanger", UiIcons.POWER_SETTINGS_NEW, false],
+		[&"LnSegment", "144", true],
+		[&"LnSegment", "60", false],
+		[&"LnKey", "W", false],
+		[&"LnKey", "…", true],
+		[&"LnKeyCyan", "ESPAÇO", false],
+		[&"LnKeyUltimate", "R", false],
+	]
+	for sample: Array in samples:
+		var button := Button.new()
+		button.theme_type_variation = sample[0]
+		button.text = sample[1]
+		button.toggle_mode = sample[2]
+		button.button_pressed = sample[2]
+		_add(row, button, sample[0])
+	var disabled := Button.new()
+	disabled.theme_type_variation = &"LnButton"
+	disabled.text = "DESABILITADO"
+	disabled.disabled = true
+	_add(row, disabled, "LnButton disabled")
+	var key := Label.new()
+	key.theme_type_variation = &"LnKeyLabel"
+	key.text = "M2 (DIR)"
+	_add(row, key, "LnKeyLabel")
+
+
+func _launcher_controls() -> void:
+	var row := _row("Launcher · switch, slider, lista", _launcher)
+	for sample: Array in [[true, false], [false, false], [true, true]]:
+		var toggle := CheckButton.new()
+		toggle.theme_type_variation = &"LnSwitch"
+		toggle.button_pressed = sample[0]
+		toggle.disabled = sample[1]
+		_add(row, toggle, "LnSwitch%s" % (" disabled" if sample[1] else ""))
+	var slider := HSlider.new()
+	slider.theme_type_variation = &"LnSlider"
+	slider.custom_minimum_size.x = CARD_SIZE.x
+	slider.value = 45.0
+	_add(row, slider, "LnSlider")
+	var picker := OptionButton.new()
+	picker.theme_type_variation = &"LnOption"
+	picker.get_popup().theme_type_variation = &"LnPopup"
+	for text: String in ["1280 x 720", "1920 x 1080"]:
+		picker.add_item(text)
+	_add(row, picker, "LnOption + LnPopup")
+
+
+func _launcher_panels() -> void:
+	var row := _row("Launcher · painéis", _launcher)
+	for type: StringName in [
+		&"LnCard", &"LnCardRaised", &"LnRibbon", &"LnRow", &"LnRowHover", &"LnWell", &"LnModal"
+	]:
+		var panel := PanelContainer.new()
+		panel.theme_type_variation = type
+		panel.custom_minimum_size = CARD_SIZE
+		var label := Label.new()
+		label.theme_type_variation = &"LnBody"
+		label.text = "Card"
+		panel.add_child(label)
+		_add(row, panel, type)
+	var chip := PanelContainer.new()
+	chip.theme_type_variation = &"LnChip"
+	var chip_text := Label.new()
+	chip_text.theme_type_variation = &"LnNumCyan"
+	chip_text.text = "FORWARD+"
+	chip.add_child(chip_text)
+	_add(row, chip, "LnChip")
+	var box := PanelContainer.new()
+	box.theme_type_variation = &"LnIconBox"
+	var glyph := Label.new()
+	glyph.theme_type_variation = &"LnIconGold"
+	glyph.text = UiIcons.SPORTS_ESPORTS
+	box.add_child(glyph)
+	_add(row, box, "LnIconBox")
+
+
+func _launcher_chrome() -> void:
+	var row := _row("ScreenHeader · ScreenFooter · FormRow · ModalDialog", _launcher)
+	var header := ScreenHeader.new()
+	header.custom_minimum_size.x = SCREEN_BLOCK_WIDTH
+	_add(row, header, "ScreenHeader (com voltar)")
+	header.bind("Configurações do jogo", true, "Painel técnico", UiIcons.TUNE, "Descrição curta.")
+	var tab := Button.new()
+	tab.theme_type_variation = &"LnTab"
+	tab.text = "ABA"
+	header.right_slot.add_child(tab)
+	var footer := ScreenFooter.new()
+	footer.custom_minimum_size.x = SCREEN_BLOCK_WIDTH
+	_add(row, footer, "ScreenFooter")
+	var hints: Array[HotkeyHint] = [HotkeyHint.make("ESC", "Voltar")]
+	footer.bind(hints, "status", "ARENA 1V1")
+	for error: String in ["", "E-mail inválido"]:
+		var form := FormRow.new()
+		form.custom_minimum_size.x = CARD_SIZE.x * 1.5
+		form.bind("E-mail")
+		form.add_child(LineEdit.new())
+		if not error.is_empty():
+			form.set_error(error)
+		_add(row, form, "FormRow %s" % ("error" if form.has_error() else "normal"))
+	var open := Button.new()
+	open.theme_type_variation = &"LnButton"
+	open.text = "ABRIR MODAL"
+	_add(row, open, "ModalDialog")
+	var dialog := ModalDialog.new()
+	add_child(dialog)
+	var actions: Array[DialogAction] = [
+		DialogAction.make("CANCELAR"), DialogAction.make("SAIR", DialogAction.Kind.DANGER)
+	]
+	open.pressed.connect(func() -> void: dialog.open("Sair do jogo?", "Exemplo.", actions))
+
+
+func _launcher_states() -> void:
+	var row := _row("StateBox (5 estados)", _launcher)
+	var messages: Array[String] = ["", "", "", "Nenhuma partida ainda", "Servidor fora do ar"]
+	for state: int in StateBox.State.values():
+		var panel := PanelContainer.new()
+		panel.theme_type_variation = &"LnCard"
+		var box := StateBox.new()
+		box.custom_minimum_size = STATE_SIZE
+		var content := Label.new()
+		content.theme_type_variation = &"LnBody"
+		content.text = "Conteúdo pronto"
+		box.add_child(content)
+		panel.add_child(box)
+		_add(row, panel, _name(StateBox.State, state))
+		box.set_state(state, messages[state])
+
+
 func _card(variant: PanelCard.Surface, accent: PanelCard.Accent) -> PanelCard:
 	var card := PanelCard.new()
 	card.variant = variant
@@ -278,10 +452,12 @@ func _card(variant: PanelCard.Surface, accent: PanelCard.Accent) -> PanelCard:
 	return card
 
 
-## Linha com titulo, ja na arvore.
-func _row(title: String) -> HFlowContainer:
-	var column := _left if _sections < LEFT_SECTIONS else _right
-	_sections += 1
+## Linha com titulo, ja na arvore; sem coluna, a esquerda ate LEFT_SECTIONS e depois a direita.
+func _row(title: String, target: VBoxContainer = null) -> HFlowContainer:
+	var column := target
+	if column == null:
+		column = _left if _sections < LEFT_SECTIONS else _right
+		_sections += 1
 	var label := Label.new()
 	label.theme_type_variation = &"LabelH2"
 	label.text = title

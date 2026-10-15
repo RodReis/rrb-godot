@@ -10,6 +10,12 @@ enum Kind { INFO, SUCCESS, WARN, ERROR }
 const KIND_ACCENTS: Array[Accent] = [Accent.NONE, Accent.GREEN, Accent.GOLD, Accent.RED]
 const DEFAULT_DURATION: float = 3.0
 
+## Variacao do texto (o Launcher usa LnBody, sem o contorno da HUD).
+@export var message_variation: StringName = &"":
+	set(value):
+		message_variation = value
+		_message.theme_type_variation = value
+
 var kind: Kind = Kind.INFO
 
 var _message: Label = Label.new()
