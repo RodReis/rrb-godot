@@ -21,4 +21,10 @@ describe('loadConfig', () => {
     expect(() => loadConfig({ ...base, INTERNAL_SECRET: undefined })).toThrow();
     expect(() => loadConfig({ ...base, INTERNAL_SECRET: 'curto' })).toThrow();
   });
+
+  it('GAMESERVER_NETWORK é opcional: vazio = rede padrão do Docker; preenchido entra no config', () => {
+    expect(loadConfig(base).GAMESERVER_NETWORK).toBeUndefined();
+    expect(loadConfig({ ...base, GAMESERVER_NETWORK: 'rrb-net' }).GAMESERVER_NETWORK).toBe('rrb-net');
+    expect(loadConfig({ ...base, GAMESERVER_NETWORK: '' }).GAMESERVER_NETWORK).toBeUndefined();
+  });
 });

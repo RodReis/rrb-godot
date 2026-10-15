@@ -17,9 +17,11 @@ const NO_RESPONSE: int = 0
 const OFFLINE: String = "OFFLINE"
 const HTTP_ERROR: String = "HTTP_ERROR"
 const TIMEOUT_SECONDS: float = 10.0
-## Backend local de dev (compose, porta 3000). O pacote do F28 passa --api=<url publica>.
+## Backend local de dev (compose, porta 3000).
 const DEFAULT_BASE_URL: String = "http://127.0.0.1:3000"
 const BASE_URL_ARG: String = "--api="
+## Gerado por tools/build-package.ps1 (fora do git) com a URL publica do backend; so no pacote.
+const BUILD_CONFIG_PATH: String = "res://build_config.cfg"
 const STATUS_UNAUTHORIZED: int = 401
 const STATUS_OK_MIN: int = 200
 const STATUS_OK_MAX: int = 299
@@ -53,12 +55,23 @@ class Response:
 		return HTTP_ERROR
 
 
-## URL do backend: --api=<url> (depois do --) ou o padrao de dev; sem barra no fim.
-static func base_url_from(user_args: PackedStringArray) -> String:
+## URL do backend: --api=<url> (depois do --) ou, sem ele, `fallback`; sem barra no fim.
+static func base_url_from(
+	user_args: PackedStringArray, fallback: String = DEFAULT_BASE_URL
+) -> String:
 	for arg: String in user_args:
 		if arg.begins_with(BASE_URL_ARG):
 			return arg.trim_prefix(BASE_URL_ARG).trim_suffix("/")
-	return DEFAULT_BASE_URL
+	return fallback
+
+
+## URL embutida no pacote ([backend] url); sem o arquivo (dev), o padrao de dev.
+static func embedded_base_url(path: String = BUILD_CONFIG_PATH) -> String:
+	var cfg := ConfigFile.new()
+	if cfg.load(path) != OK:
+		return DEFAULT_BASE_URL
+	var url: String = str(cfg.get_value("backend", "url", DEFAULT_BASE_URL))
+	return url.trim_suffix("/") if not url.is_empty() else DEFAULT_BASE_URL
 
 
 func set_tokens(tokens: AuthTokens) -> void:

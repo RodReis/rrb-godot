@@ -33,6 +33,11 @@ const EnvSchema = z
   GAMESERVER_PUBLIC_HOST: z.string().min(1).default('127.0.0.1'),
   /** URL do backend vista de dentro do container do game server (endpoints `/internal/*`). */
   GAMESERVER_BACKEND_URL: z.string().min(1).default('http://host.docker.internal:3000'),
+  /** Rede Docker em que os game servers entram (produção: a do compose, para chegar em `http://backend:3000`). Vazio = padrão. */
+  GAMESERVER_NETWORK: z
+    .string()
+    .optional()
+    .transform((value) => (value ? value : undefined)),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   })
   .refine((env) => env.INTERNAL_SECRET !== env.JWT_SECRET, {

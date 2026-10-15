@@ -32,6 +32,7 @@ export class DockerRuntime extends ContainerRuntime {
       ExposedPorts: { [`${CONTAINER_PORT}/udp`]: {} },
       HostConfig: {
         PortBindings: { [`${CONTAINER_PORT}/udp`]: [{ HostPort: String(hostPort) }] },
+        ...(this.config.GAMESERVER_NETWORK ? { NetworkMode: this.config.GAMESERVER_NETWORK } : {}),
         ExtraHosts: ['host.docker.internal:host-gateway'],
         // O servidor recebe UDP da internet: sem capabilities, sem escalada e com teto de processos.
         CapDrop: ['ALL'],

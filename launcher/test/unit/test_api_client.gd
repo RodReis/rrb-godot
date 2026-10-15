@@ -105,3 +105,20 @@ func test_url_do_backend_vem_do_argumento() -> void:
 	var args := PackedStringArray(["--api=http://10.0.0.5:3000/"])
 	assert_eq(ApiClient.base_url_from(args), "http://10.0.0.5:3000")
 	assert_eq(ApiClient.base_url_from(PackedStringArray()), ApiClient.DEFAULT_BASE_URL)
+
+
+func test_url_embutida_no_pacote_vale_sem_argumento() -> void:
+	var cfg_path := "user://test_build_config.cfg"
+	var cfg := ConfigFile.new()
+	cfg.set_value("backend", "url", "https://api.exemplo.com/")
+	cfg.save(cfg_path)
+	var embedded := ApiClient.embedded_base_url(cfg_path)
+	assert_eq(embedded, "https://api.exemplo.com")
+	assert_eq(ApiClient.base_url_from(PackedStringArray(), embedded), "https://api.exemplo.com")
+	var args := PackedStringArray(["--api=http://10.0.0.5:3000"])
+	assert_eq(ApiClient.base_url_from(args, embedded), "http://10.0.0.5:3000")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(cfg_path))
+
+
+func test_sem_config_embutida_usa_o_padrao_de_dev() -> void:
+	assert_eq(ApiClient.embedded_base_url("user://nao_existe.cfg"), ApiClient.DEFAULT_BASE_URL)

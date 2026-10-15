@@ -39,3 +39,6 @@ Thumbs.db
 
 # Relatorio do soak (tools/soak.ps1)
 soak-report/
+
+# URL do backend embutida no pacote (tools/build-package.ps1)
+/launcher/build_config.cfg

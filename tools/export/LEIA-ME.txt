@@ -1,0 +1,12 @@
+ARENA 1V1 — pacote portatil (Windows 64 bits)
+
+1. Extraia o ZIP inteiro para uma pasta (nao rode de dentro do ZIP).
+2. De dois cliques em launcher.exe.
+3. Crie sua conta, entre na fila e jogue.
+
+Aviso do Windows (SmartScreen)
+O executavel nao tem assinatura de codigo, entao o Windows mostra "O Windows protegeu seu
+computador". Clique em "Mais informacoes" e depois em "Executar assim mesmo".
+
+Nao mova nem renomeie a pasta "game": o Launcher procura o jogo em game\game.exe.
+Creditos e licencas dos recursos de terceiros: Launcher > Configuracoes > Creditos.
