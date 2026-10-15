@@ -17,10 +17,11 @@ const QueueTicketSchema = z.object({
 export class QueueTicketDto extends createZodDto(QueueTicketSchema) {}
 export type QueueTicketBody = z.infer<typeof QueueTicketSchema>;
 
-/** `assignment` só vem em `matched`, enquanto a partida existe. */
+/** `matchId` vem em `matched` (para o `abandon`); `assignment`, enquanto a partida existe. */
 const TicketStatusSchema = z.object({
   status: z.enum(['searching', 'matched', 'cancelled']),
   elapsedS: z.number().int().min(0),
+  matchId: z.uuid().optional(),
   assignment: MatchAssignmentSchema.optional(),
 });
 export class TicketStatusDto extends createZodDto(TicketStatusSchema) {}

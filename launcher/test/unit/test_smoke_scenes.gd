@@ -27,9 +27,9 @@ func test_toda_cena_instancia() -> void:
 		assert_true(is_instance_valid(node), path)
 
 
-func test_app_abre_na_tela_inicial() -> void:
+func test_app_abre_no_login() -> void:
 	var app: App = add_child_autofree(load("res://scenes/app.tscn").instantiate())
 	await wait_process_frames(2)
 	var stack := app.find_children("*", "ScreenStack", true, false)
 	assert_eq(stack.size(), 1)
-	assert_eq((stack[0] as ScreenStack).current_route(), Router.HOME)
+	assert_eq((stack[0] as ScreenStack).current_route(), Router.LOGIN, "sem sessao abre no Login")

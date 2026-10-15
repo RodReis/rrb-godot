@@ -221,6 +221,16 @@
           "arquivo": "mvp3-f24-configuracoes.webp",
           "legenda": "O launcher ganhou a tela de configurações: teclas que se trocam com um clique, sensibilidade da câmera, resolução, limite de quadros e os efeitos visuais da arena, volume geral e dos alertas. Uma aba de créditos lista quem fez a arte, as fontes e o motor.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f25-login.webp",
+          "legenda": "A porta de entrada: criar conta ou entrar com e-mail e senha. Quem só quer treinar contra o bot entra direto, sem conta e sem internet.",
+          "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f25-lobby.webp",
+          "legenda": "O lobby com o Cavaleiro no pedestal, em 3D. Um clique em Buscar partida entra na fila; quando aparece um oponente, o launcher abre o jogo sozinho e volta para cá no fim.",
+          "tipo": "entregue"
         }
       ]
     },

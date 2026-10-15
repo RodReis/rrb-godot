@@ -223,10 +223,12 @@ describe('QueueService', () => {
 
       expect(forA).toMatchObject({
         status: 'matched',
+        matchId: 'match-1',
         assignment: { host: 'h', port: 7001, token: `token-match-1-${A}` },
       });
       expect(forB).toMatchObject({
         status: 'matched',
+        matchId: 'match-1',
         assignment: { host: 'h', port: 7001, token: `token-match-1-${B}` },
       });
     });
@@ -237,7 +239,7 @@ describe('QueueService', () => {
       await matches.markRunning('match-1', clock.now());
       orchestrator.drop('match-1');
 
-      expect(await service.status(A, a.id)).toEqual({ status: 'matched', elapsedS: 0 });
+      expect(await service.status(A, a.id)).toEqual({ status: 'matched', elapsedS: 0, matchId: 'match-1' });
     });
 
     it('matched mas a partida foi abortada → cancelled', async () => {

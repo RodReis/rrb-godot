@@ -2,9 +2,12 @@ extends SceneTree
 ## Captura do Launcher para a prova por tela (FRONTEND-LAUNCHER §6, itens 1 e 6): sobe o App,
 ## espera a tela assentar e salva um PNG do tamanho pedido. Precisa de janela (nao headless).
 ##   godot --path launcher -s <repo>/tools/ui/capture_launcher.gd -- --out=<png> [--size=1920x1080]
-##     [--tab=<0..3>] [--gallery] [--modal] [--fps]
+##     [--tab=<0..3>] [--gallery] [--modal] [--fps] [--route=<rota>] [--state=<estado>] [--overlay]
 ## --tab escolhe a aba de Configuracoes; --gallery abre a galeria; --modal abre o "Restaurar
 ## padroes?" por cima; --fps desliga o vsync e imprime o FPS medio de FPS_SECONDS (§4).
+## F25: --route abre a rota como raiz (lobby com a conta --email=); --state poe a tela num estado:
+## Login register | loading | error (envia sem backend) | field_error; Lobby joining | searching |
+## matched | error. --overlay abre o "Partida em andamento".
 
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_SIZE: Vector2i = Vector2i(1920, 1080)
@@ -23,6 +26,12 @@ func _capture() -> void:
 	root.add_child(app)
 	await process_frame
 	root.size = _size(args.get("size", ""))
+	if args.has("route"):
+		(app as App).account_email = args.get("email", "duelista@exemplo.com")
+		(app as App).stack().reset(StringName(args["route"]))
+	await _set_state(app as App, args.get("state", ""))
+	if args.has("overlay"):
+		(app as App).match_overlay().open(false)
 	if args.has("tab"):
 		var screen := app.find_children("*", "SettingsScreen", true, false)
 		if not screen.is_empty():
@@ -45,6 +54,35 @@ func _capture() -> void:
 	var err := image.save_png(out)
 	print("[capture] %s %s (%s)" % [out, image.get_size(), error_string(err)])
 	quit(err)
+
+
+func _set_state(app: App, state: String) -> void:
+	var login := app.stack().current() as LoginScreen
+	var lobby := app.stack().current() as LobbyScreen
+	match state:
+		"register":
+			login.select_mode(LoginScreen.Mode.REGISTER)
+		"loading":
+			login.email_field().text = "duelista@exemplo.com"
+			login.password_field().text = "senha1234"
+			login.call("_set_busy", true)
+		"error":
+			login.email_field().text = "duelista@exemplo.com"
+			login.password_field().text = "senha1234"
+			await login.submit()
+		"field_error":
+			login.select_mode(LoginScreen.Mode.REGISTER)
+			login.email_field().text = "duelista@exemplo.com"
+			login.password_field().text = "fraca"
+			await login.submit()
+		"joining":
+			lobby.call("_show_state", LobbyScreen.QueueState.JOINING)
+		"searching":
+			app.queue.searching.emit(83)
+		"matched":
+			lobby.call("_on_queue_matched")
+		"queue_error":
+			lobby.call("_on_queue_failed", ApiClient.OFFLINE)
 
 
 func _args() -> Dictionary:

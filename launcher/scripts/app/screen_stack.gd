@@ -61,6 +61,13 @@ func replace(route: StringName) -> Control:
 	return push(route)
 
 
+## Esvazia a pilha e abre a rota como raiz (entrar no lobby, sessao expirada -> login).
+func reset(route: StringName) -> Control:
+	while not _screens.is_empty():
+		_drop_top()
+	return push(route)
+
+
 func current() -> Control:
 	return null if _screens.is_empty() else _screens.back()
 

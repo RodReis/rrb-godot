@@ -41,6 +41,12 @@ describe('auth e users (e2e)', () => {
     await app.close();
   });
 
+  it('GET /health sem token → 200 { status: ok } (status e ping do rodapé do Launcher)', async () => {
+    const res = await request(app.getHttpServer()).get('/health');
+    expect(res.status).toBe(200);
+    expect(res.body).toEqual({ status: 'ok' });
+  });
+
   it('POST /auth/register cria conta e devolve tokens (201)', async () => {
     const res = await request(app.getHttpServer()).post('/auth/register').send(credentials);
     expect(res.status).toBe(201);

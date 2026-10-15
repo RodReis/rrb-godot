@@ -31,6 +31,10 @@ const ON_CYAN: Color = Color(0.0, 0.200, 0.318)  # on-secondary #003351
 const ERROR: Color = Color(1.0, 0.706, 0.671)  # error #FFB4AB
 const ERROR_BG: Color = Color(0.576, 0.0, 0.039)  # error-container #93000A
 const ON_ERROR: Color = Color(0.412, 0.0, 0.020)  # on-error #690005
+# Login e Lobby (F25).
+const ON_PRIMARY: Color = Color(0.278, 0.165, 0.0)  # on-primary #472A00 (texto sobre GOLD_BRIGHT)
+const GOLD_SHADE: Color = Color(0.576, 0.337, 0.0)  # borda 3D do CTA da fila #935600
+const TEXT_OUTLINE: Color = Color(0.627, 0.557, 0.478)  # outline #A08E7A (rotulo apagado)
 
 ## Nome do token -> cor; o Theme guarda cada uma no tipo Global com o mesmo nome.
 const COLORS: Dictionary[StringName, Color] = {
@@ -60,6 +64,9 @@ const COLORS: Dictionary[StringName, Color] = {
 	&"ERROR": ERROR,
 	&"ERROR_BG": ERROR_BG,
 	&"ON_ERROR": ON_ERROR,
+	&"ON_PRIMARY": ON_PRIMARY,
+	&"GOLD_SHADE": GOLD_SHADE,
+	&"TEXT_OUTLINE": TEXT_OUTLINE,
 }
 
 # Tipografia (TOKENS §2): tamanho em px @1080p e peso OpenType (wght) da fonte variavel.
@@ -89,11 +96,15 @@ const FONT_LN_BODY_PATH: String = "res://shared/ui/theme/fonts/font_launcher_bod
 const FONT_LN_MONO_PATH: String = "res://shared/ui/theme/fonts/font_launcher_mono.ttf"
 const FONT_ICONS_PATH: String = "res://shared/ui/theme/fonts/font_icons.ttf"
 const WEIGHT_REGULAR: int = 400
+const TYPE_LN_DISPLAY: int = 56  # display-hero: marca no Login (F25)
 const TYPE_LN_HEADLINE_LG: int = 32  # headline-lg: titulo da tela
+const TYPE_LN_HEADLINE_MD: int = 22  # headline-md: botao de envio, nome do heroi (F25)
 const TYPE_LN_HEADLINE_SM: int = 18  # headline-sm: titulo de card, botao, aba
+const TYPE_LN_BODY_LG: int = 16  # body-lg (F25)
 const TYPE_LN_BODY: int = 14  # body-md
 const TYPE_LN_BODY_SM: int = 12  # body-sm
 const TYPE_LN_NUM: int = 11  # label-numeric-sm e hotkey-cap
+const TYPE_LN_NUM_MD: int = 14  # label-numeric-md (F25)
 ## Icones do prototipo (text-[Npx]).
 const ICON_SM: int = 18
 const ICON_MD: int = 20
