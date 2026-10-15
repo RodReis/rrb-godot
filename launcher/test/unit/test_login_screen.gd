@@ -51,6 +51,10 @@ func test_backend_fora_mostra_a_faixa_de_erro() -> void:
 func test_cadastro_mostra_a_regra_e_troca_o_botao() -> void:
 	_login.select_mode(LoginScreen.Mode.REGISTER)
 	assert_string_contains(_login.submit_button().text, "FORJAR NOVA CONTA")
+	var tabs := _login.find_children("*", "Button", true, false).filter(
+		func(button: Button) -> bool: return button.toggle_mode
+	)
+	assert_eq(tabs.map(func(tab: Button) -> bool: return tab.button_pressed), [false, true])
 	var rule := _login.find_children("*", "Label", true, false).filter(
 		func(label: Label) -> bool: return label.text.contains("Mínimo de 8")
 	)

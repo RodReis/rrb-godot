@@ -73,7 +73,8 @@ func bind(auth: AuthService) -> void:
 
 func select_mode(mode: Mode) -> void:
 	_mode = mode
-	_tabs[mode].set_pressed_no_signal(true)
+	for tab: Mode in [Mode.LOGIN, Mode.REGISTER]:
+		_tabs[tab].set_pressed_no_signal(tab == mode)
 	var register := mode == Mode.REGISTER
 	_rule.visible = register
 	_restore_submit_text()
@@ -104,6 +105,7 @@ func submit() -> void:
 			_email.line_edit.grab_focus()
 		AuthService.Field.PASSWORD:
 			_password_row.set_error(result.message)
+			_rule.visible = false  # o erro ja diz a regra
 			_password.line_edit.grab_focus()
 		_:
 			_banner_text.text = "%s  %s" % [UiIcons.ERROR, result.message]
@@ -288,6 +290,7 @@ func _restore_submit_text() -> void:
 
 
 func _clear_errors() -> void:
+	_rule.visible = _mode == Mode.REGISTER
 	_banner.visible = false
 	_email_row.clear_error()
 	_password_row.clear_error()

@@ -38,6 +38,8 @@ var _checked: bool = false
 var _ping_ms: int = AppBar.UNKNOWN_PING
 ## Partida online aberta (para o abandon se o Game nao abrir); vazio = treino ou nada.
 var _match_id: String = ""
+## O jogador encerrou o Game pelo overlay: sai como 4 (§5.2), mas o aviso nao e de erro.
+var _ended_by_player: bool = false
 
 
 func _ready() -> void:
@@ -268,6 +270,10 @@ func _on_game_exited(code: int) -> void:
 	if lobby != null:
 		lobby.reset_queue()
 	var outcome := GameProcess.outcome(code)
+	if _ended_by_player:
+		_ended_by_player = false
+		show_toast(tr("Jogo encerrado."))
+		return
 	if outcome.kind == GameProcess.Kind.NORMAL:
 		return
 	if outcome.offer_queue and online and lobby != null:
@@ -290,6 +296,7 @@ func _on_match_end_requested() -> void:
 	]
 	var body := tr("O jogo será fechado agora.")
 	if await confirm(tr("Encerrar o jogo?"), body, actions) == 1:
+		_ended_by_player = true
 		game.kill()
 
 

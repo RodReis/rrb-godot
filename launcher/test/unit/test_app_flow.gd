@@ -71,6 +71,24 @@ func test_saida_do_game_fecha_o_overlay_e_destrava() -> void:
 	assert_eq(lobby.queue_state(), LobbyScreen.QueueState.IDLE)
 
 
+func test_encerrar_pelo_overlay_pede_confirmacao_e_nao_acusa_erro() -> void:
+	await _enter_lobby()
+	_app.match_overlay().open(false)
+	_app.match_overlay().end_requested.emit()
+	await wait_process_frames(2)
+	var modal := _app.find_children("*", "ModalDialog", true, false)[0] as ModalDialog
+	assert_true(modal.visible, "confirma antes de matar o processo")
+	modal.buttons()[1].pressed.emit()
+	await wait_process_frames(2)
+	_app.game.exited.emit(GameProcess.KILLED)
+	var toast := _app.find_children("*", "Toast", true, false)[0] as Toast
+	var texts := toast.find_children("*", "Label", true, false).map(
+		func(label: Label) -> String: return label.text
+	)
+	assert_true(texts.has("Jogo encerrado."), str(texts))
+	assert_false(_app.match_overlay().visible)
+
+
 func test_sair_da_conta_volta_ao_login() -> void:
 	var lobby := await _enter_lobby()
 	lobby.logout_requested.emit()
