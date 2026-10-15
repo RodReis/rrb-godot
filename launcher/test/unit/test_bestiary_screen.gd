@@ -192,3 +192,11 @@ func test_voltar_so_com_pilha() -> void:
 	assert_false((back[0] as Button).visible)
 	_screen.can_go_back = true
 	assert_true((back[0] as Button).visible)
+
+
+func test_diretrizes_e_pilula_nao_engolem_a_roda_do_mouse() -> void:
+	var scroll := _screen.find_children("*", "ScrollContainer", true, false)[0] as ScrollContainer
+	for node: Node in scroll.find_children("*", "Control", true, false):
+		if node is ScrollBar:
+			continue
+		assert_ne((node as Control).mouse_filter, Control.MOUSE_FILTER_STOP, str(node.get_path()))

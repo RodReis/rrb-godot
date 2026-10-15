@@ -86,14 +86,22 @@ func _ribbon_cells() -> Array[Array]:
 	var pieces := catalog.set_bonuses[0].pieces_required
 	return [
 		[tr("Equipamentos"), "%02d" % catalog.items.size(), tr("itens"), &"LnNumLgGold"],
-		[
-			tr("Conjuntos"),
-			"%02d" % catalog.set_bonuses.size(),
-			"%d/%d" % [pieces, pieces],
-			&"LnNumLgCyan"
-		],
+		[tr("Conjuntos"), "%02d" % catalog.set_bonuses.size(), _pieces_ratio(), &"LnNumLgCyan"],
 		[tr("Tiers de raridade"), "%02d" % ItemData.RARITY_NAMES.size(), "", &"LnNumLgError"],
 	]
+
+
+## "3" ou "3 e 4": as pecas que ativam os conjuntos do catalogo.
+func _pieces_list() -> String:
+	return " e ".join(PackedStringArray(Array(catalog.set_piece_counts()).map(str)))
+
+
+## "3/3" (cada conjunto completo): um par por quantidade distinta.
+func _pieces_ratio() -> String:
+	var pairs := PackedStringArray()
+	for count: int in catalog.set_piece_counts():
+		pairs.append("%d/%d" % [count, count])
+	return " · ".join(pairs)
 
 
 func _build_body(content: VBoxContainer) -> void:
@@ -134,7 +142,7 @@ func _rule_cards() -> HBoxContainer:
 			)
 			% ", ".join(PackedStringArray(slots.map(func(name: String) -> String: return tr(name))))
 		),
-		tr("%d peças do mesmo conjunto ativam o bônus de conjunto") % pieces
+		tr("%s peças do mesmo conjunto ativam o bônus de conjunto") % _pieces_list()
 	)
 	row.add_child(first)
 	var second := RuleCard.new()
@@ -253,7 +261,7 @@ func _sets() -> VBoxContainer:
 		_section_title(
 			UiIcons.SHIELD_WITH_HEART,
 			tr("Conjuntos de armadura especializada"),
-			tr("%d peças por conjunto = bônus passivo máximo") % pieces
+			tr("%s peças por conjunto = bônus passivo máximo") % _pieces_list()
 		)
 	)
 	_sets_row = HBoxContainer.new()

@@ -236,6 +236,11 @@
           "arquivo": "mvp3-f26-historico.webp",
           "legenda": "O histórico de duelos: cada partida mostra quem venceu, os heróis dos dois lados, o placar de abates, o nível final e a duração. A mais recente ganha destaque; partida que caiu no meio aparece como interrompida.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f27-bestiario-forja.webp",
+          "legenda": "O guia do launcher: as seis criaturas da arena com vida, dano, cadência e o que cada uma solta, e a Forja, onde se monta um herói com até quatro itens e se vê na hora a vida, a defesa e a proteção que ele terá — com a mesma conta do jogo.",
+          "tipo": "entregue"
         }
       ]
     },

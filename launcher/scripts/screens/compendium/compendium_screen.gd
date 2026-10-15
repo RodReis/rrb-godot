@@ -108,6 +108,7 @@ func refresh() -> void:
 		_build_tabs_labels()
 		_build_filters(_filters)
 		_build_body(_body)
+		_let_wheel_through(_body)
 	_state.set_state(StateBox.State.READY)
 
 
@@ -253,6 +254,16 @@ func _build_ribbon() -> void:
 		value_row.add_child(unit)
 		box.add_child(value_row)
 		row.add_child(box)
+
+
+## Painel, botao e campo do corpo com STOP engolem a roda do mouse antes da rolagem: passam a
+## PASS (recebem o clique e deixam o evento subir ate o ScrollContainer).
+func _let_wheel_through(root: Node) -> void:
+	for child: Node in root.get_children():
+		var control := child as Control
+		if control != null and control.mouse_filter == Control.MOUSE_FILTER_STOP:
+			control.mouse_filter = Control.MOUSE_FILTER_PASS
+		_let_wheel_through(child)
 
 
 func _on_tab_pressed(tab: Tab) -> void:

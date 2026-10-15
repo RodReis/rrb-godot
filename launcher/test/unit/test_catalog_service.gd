@@ -89,3 +89,26 @@ func test_especies_ordenadas_por_tier_e_chefe_por_ultimo() -> void:
 
 func test_chefe_surge_no_tempo_das_regras() -> void:
 	assert_eq(_catalog.match_rules.boss_spawn_time, 210.0)
+
+
+func test_ordem_das_especies_e_estavel_no_mesmo_tier() -> void:
+	var names := PackedStringArray()
+	for group: MonsterSpecies in _catalog.monster_species():
+		names.append(String(group.id))
+	assert_eq(
+		names,
+		PackedStringArray(
+			[
+				"skeleton_t1",
+				"skeleton_mage_t2",
+				"skeleton_warrior_t2",
+				"wolf_t2",
+				"golem_t3",
+				"skeleton_king_boss",
+			]
+		)
+	)
+
+
+func test_pecas_que_ativam_os_conjuntos() -> void:
+	assert_eq(_catalog.set_piece_counts(), PackedInt32Array([3]))

@@ -5,8 +5,8 @@ extends PanelContainer
 ## passiva (se houver) e onde a arma aparece, com as chances de MatchRules. As tres armas sao a
 ## mesma para todos os herois (GDB §6.2); so o modelo 3D muda com a classe.
 
-const IMAGE_HEIGHT: float = 128.0
-const ICON_SIZE: Vector2 = Vector2(96, 96)
+const IMAGE_HEIGHT: float = 152.0
+const ICON_SIZE: Vector2 = Vector2(120, 120)
 ## Indice = ItemData.Rarity.
 const TIER_BADGES: Array[StringName] = [&"LnCpBadgeT1", &"LnCpBadgeT2", &"LnCpBadgeT3"]
 

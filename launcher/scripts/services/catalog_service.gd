@@ -67,6 +67,16 @@ func monster(id: StringName) -> MonsterData:
 	return null
 
 
+## Quantas pecas ativam cada conjunto, sem repetir e em ordem (ex.: [3]).
+func set_piece_counts() -> PackedInt32Array:
+	var counts := PackedInt32Array()
+	for bonus: SetBonusData in set_bonuses:
+		if not counts.has(bonus.pieces_required):
+			counts.append(bonus.pieces_required)
+	counts.sort()
+	return counts
+
+
 ## O chefe da arena (tier BOSS); o ultimo monstro se nenhum for chefe.
 func boss() -> MonsterData:
 	for data: MonsterData in monsters:
@@ -117,8 +127,12 @@ func monster_species() -> Array[MonsterSpecies]:
 			by_id[key] = group
 			ordered.append(group)
 		by_id[key].add(data)
+	# sort_custom nao e estavel: o desempate por id fixa a ordem dos cards.
 	ordered.sort_custom(
-		func(a: MonsterSpecies, b: MonsterSpecies) -> bool: return a.lead().tier < b.lead().tier
+		func(a: MonsterSpecies, b: MonsterSpecies) -> bool:
+			if a.lead().tier != b.lead().tier:
+				return a.lead().tier < b.lead().tier
+			return String(a.id) < String(b.id)
 	)
 	return ordered
 
@@ -141,5 +155,7 @@ func _load_dir(dir: String) -> Array[Resource]:
 	for entry: String in ResourceLoader.list_directory(dir):
 		if entry.ends_with(DIR_MARK) or not entry.ends_with(".tres"):
 			continue
-		found.append(load(dir + entry))
+		var resource := load(dir + entry)
+		if resource != null:
+			found.append(resource)
 	return found

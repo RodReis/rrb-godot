@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## F27: tela Forja (FRONTEND-LAUNCHER §3, §6, §8): cards de regra, conjuntos, armas e filtros com
 ## busca, sem numero do prototipo; simulador = shared/core para o caso de referencia do GDB (I5).
@@ -221,3 +222,21 @@ func test_faixa_final_navega() -> void:
 	)
 	(bestiary[0] as Button).pressed.emit()
 	assert_signal_emitted_with_parameters(_screen, "navigate_requested", [Router.BESTIARY])
+
+
+func test_nenhum_controle_do_corpo_engole_a_roda_do_mouse() -> void:
+	var stoppers := _screen.find_children("*", "Control", true, false).filter(
+		func(node: Node) -> bool:
+			return (
+				(node as Control).mouse_filter == Control.MOUSE_FILTER_STOP
+				and not node is ScrollBar
+				and not _is_chrome(node)
+			)
+	)
+	assert_eq(stoppers.size(), 0, "STOP no corpo trava a rolagem")
+
+
+## Cabecalho, abas, barra de rolagem e o estado ficam fora do corpo que rola.
+func _is_chrome(node: Node) -> bool:
+	var scroll := _screen.find_children("*", "ScrollContainer", true, false)[0] as ScrollContainer
+	return not scroll.is_ancestor_of(node)
