@@ -16,6 +16,8 @@ export type TicketState = 'searching' | 'matched' | 'cancelled';
 export interface TicketView {
   status: TicketState;
   elapsedS: number;
+  /** Em `matched`: o Launcher manda `POST /matches/:id/abandon` se o Game não abrir. */
+  matchId?: string;
   /** Presente enquanto a partida existe e o token ainda está em memória. */
   assignment?: MatchAssignment;
 }
@@ -68,7 +70,8 @@ export class QueueService {
     const match = await this.matches.findById(ticket.matchId);
     if (!match || match.status === 'aborted') return { status: 'cancelled', elapsedS };
     const assignment = this.orchestrator.assignmentFor(match.id, userId);
-    return assignment ? { status: 'matched', elapsedS, assignment } : { status: 'matched', elapsedS };
+    const matched = { status: 'matched' as const, elapsedS, matchId: match.id };
+    return assignment ? { ...matched, assignment } : matched;
   }
 
   /** Idempotente para ticket já cancelado/expirado; pareado só sai por `abandon` da partida. */

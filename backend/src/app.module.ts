@@ -12,6 +12,7 @@ import { InternalGuard } from './common/internal.guard';
 import { JwtGuard } from './common/jwt.guard';
 import { AppConfig } from './config';
 import { Database } from './db/database';
+import { HealthController } from './health.controller';
 import { InternalMatchesController, MatchesController } from './matches/matches.controller';
 import { DrizzleMatchesRepository, MatchesRepository } from './matches/matches.repository';
 import { MatchesService } from './matches/matches.service';
@@ -53,6 +54,7 @@ export class AppModule {
         }),
       ],
       controllers: [
+        HealthController,
         AuthController,
         UsersController,
         QueueController,
