@@ -129,9 +129,58 @@ jobs:
         shell: pwsh
         run: ./tools/test.ps1 -Module game
 
+  test-backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true' || needs.changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: rrb
+          POSTGRES_PASSWORD: rrb
+          POSTGRES_DB: rrb_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U rrb -d rrb_test" --health-interval 2s
+          --health-timeout 5s --health-retries 15
+    env:
+      TEST_DATABASE_URL: postgres://rrb:rrb@localhost:5432/rrb_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: backend/package.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: backend/pnpm-lock.yaml
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - name: tsc --noEmit
+        if: ${{ !cancelled() }}
+        run: pnpm typecheck
+      - name: Jest unit (cobertura >= 80 % em *.service.ts)
+        if: ${{ !cancelled() }}
+        run: pnpm test:cov
+      - name: Jest e2e (Postgres do services)
+        if: ${{ !cancelled() }}
+        run: pnpm test:e2e
+      - name: openapi.json versionado bate com o gerado
+        if: ${{ !cancelled() }}
+        run: pnpm build && pnpm openapi && git diff --exit-code openapi.json
+
   gate:
     runs-on: ubuntu-latest
-    needs: [changes, lint-gd, test-game]
+    needs: [changes, lint-gd, test-game, test-backend]
     if: always()
     steps:
       # Job pulado por path filter conta como sucesso; changes pulado ou falho, não.

@@ -29,5 +29,13 @@ Thumbs.db
 *.blend1
 *.blend2
 
+# Backend (F21)
+/backend/node_modules/
+/backend/dist/
+/backend/coverage/
+.env
+.env.*
+!.env.example
+
 # Relatorio do soak (tools/soak.ps1)
 soak-report/

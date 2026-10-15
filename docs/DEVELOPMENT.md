@@ -18,10 +18,10 @@ Abrir editor: `& $env:GODOT_PATH -e --path game` ou `--path launcher`.
 
 | O quê | game | launcher | backend |
 |---|---|---|---|
-| Testes | `.\tools\test.ps1 -Module game` | `.\tools\test.ps1 -Module launcher` | `pnpm -C backend test` |
-| Rodar | `.\tools\run-server.ps1` + `.\tools\run-clients.ps1 -Autopilot` | `& $env:GODOT_PATH --path launcher` | `pnpm -C backend start:dev` |
+| Testes | `.\tools\test.ps1 -Module game` | `.\tools\test.ps1 -Module launcher` | `pnpm -C backend test` (unit) · `pnpm -C backend test:e2e` (Postgres do compose) |
+| Rodar | `.\tools\run-server.ps1` + `.\tools\run-clients.ps1 -Autopilot` | `& $env:GODOT_PATH --path launcher` | `docker compose -f infra/docker-compose.yml --profile backend up --build` (API em `:3000`) |
 | Offline/bot | `& $env:GODOT_PATH --path game -- --offline --bot` | — | — |
-| Docker | `docker compose -f infra/docker-compose.yml up --build` | — | incluído no compose |
+| Docker | `docker compose -f infra/docker-compose.yml up --build` | — | perfil `backend` do compose (`postgres` + `backend`) |
 | Soak | `.\tools\soak.ps1 -Matches 50` | — | — |
 
 `tools/test.ps1 -Module X` roda GUT headless em `X/test` **e** `shared/test` (ADR-0003). Até F1, os comandos do M0 valem como estão no plano.
@@ -120,7 +120,7 @@ Passo a passo: `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md` (Tarefas 
 
 ### MVP3 — Meta + deploy (`backend`, `launcher`, `infra`, `game`)
 
-- [ ] **F21** — `backend/`: NestJS 11, Drizzle + Postgres, `auth`, `users`, zod, Pino; e2e com Postgres em container; `openapi.json`.
+- [x] **F21** — `backend/`: NestJS 11, Drizzle + Postgres, `auth`, `users`, zod, Pino; e2e com Postgres em container; `openapi.json`. Erros `{ statusCode, code, message }` (`WEAK_PASSWORD`, `INVALID_EMAIL`, `EMAIL_TAKEN`, `INVALID_CREDENTIALS`, `INVALID_REFRESH_TOKEN`, `UNAUTHORIZED`, `RATE_LIMITED`); rota protegida `GET /users/me`; job `test-backend` no `gate`. (#77)
 - [ ] **F22** — `matchmaking`, `orchestrator` (Dockerode, pool, token, heartbeat), `matches` internos.
 - [ ] **F23** — Game server: `--token`, `BackendClient`, `ResultReporter`, códigos de saída (`ARCHITECTURE-GAME.md` §6).
 - [ ] **F24** — `launcher/`: `App`, `ScreenStack`, `Router`, `SettingsStore` + `settings.cfg` compartilhado, tela Configurações, Theme completo, galeria. **Obrigação de licença:** créditos do jogo com o Golem de Pedra ("Lava Golem", vladimirmejia, CC-BY 3.0 — `shared/assets/LICENSES.md`) antes de qualquer build distribuída; fatia que leva a tela de créditos a confirmar pelo Cowork (registrado pelo PI em 2026-10-09). *(F55, 2026-10-12: o Golem do jogo virou arte própria; a obrigação caiu — o crédito fica só no roadmap.)*
