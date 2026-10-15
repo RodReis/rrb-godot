@@ -22,6 +22,13 @@
       "when": 1792066434342,
       "tag": "0002_token_por_jogador",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792104784479,
+      "tag": "0003_nickname_unico",
+      "breakpoints": true
     }
   ]
 }

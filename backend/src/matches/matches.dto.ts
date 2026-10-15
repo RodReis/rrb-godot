@@ -53,7 +53,7 @@ const HistorySideSchema = z.object({
   finalLevel: count,
 });
 
-/** Só o lado do oponente que a tela mostra: herói, kills e nível. Nunca id, e-mail ou token. */
+/** Só o lado do oponente que a tela mostra: `#nickname` (sem o `#`), herói, kills e nível. Nunca id, e-mail ou token. */
 const HistoryMatchSchema = z.object({
   matchId: z.uuid(),
   result: z.enum(['win', 'loss', 'interrupted']),
@@ -65,7 +65,7 @@ const HistoryMatchSchema = z.object({
     bossKill: z.boolean(),
     setActive: z.string().nullable(),
   }),
-  opponent: HistorySideSchema,
+  opponent: HistorySideSchema.extend({ nickname: z.string().nullable() }),
 });
 const MatchHistorySchema = z.object({
   totals: z.object({ wins: count, losses: count }),

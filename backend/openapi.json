@@ -142,7 +142,7 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "",
+            "description": "`nickname` nulo = falta definir (1º login)",
             "content": {
               "application/json": {
                 "schema": {
@@ -153,6 +153,57 @@
           },
           "401": {
             "description": "UNAUTHORIZED"
+          },
+          "404": {
+            "description": "USER_NOT_FOUND"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/me/nickname": {
+      "put": {
+        "operationId": "UsersController_setNickname",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetNicknameDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_NICKNAME | VALIDATION_FAILED"
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "404": {
+            "description": "USER_NOT_FOUND"
+          },
+          "409": {
+            "description": "NICKNAME_TAKEN | NICKNAME_ALREADY_SET"
           }
         },
         "security": [
@@ -619,6 +670,10 @@
             "format": "email",
             "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
           },
+          "nickname": {
+            "type": "string",
+            "nullable": true
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -628,7 +683,21 @@
         "required": [
           "id",
           "email",
+          "nickname",
           "createdAt"
+        ]
+      },
+      "SetNicknameDto": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_]{3,16}$",
+            "description": "3–16 caracteres: A–Z a–z 0–9 _ (único sem diferenciar maiúsculas)"
+          }
+        },
+        "required": [
+          "nickname"
         ]
       },
       "QueueTicketDto": {
@@ -823,12 +892,19 @@
                       "type": "integer",
                       "minimum": 0,
                       "maximum": 2147483647
+                    },
+                    "nickname": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
                     }
                   },
                   "required": [
                     "heroId",
                     "kills",
-                    "finalLevel"
+                    "finalLevel",
+                    "nickname"
                   ]
                 }
               },

@@ -26,6 +26,7 @@ import { OrchestratorService } from './orchestrator/orchestrator.service';
 import { SweeperService } from './sweeper.service';
 import { UsersController } from './users/users.controller';
 import { DrizzleUsersRepository, UsersRepository } from './users/users.repository';
+import { UsersService } from './users/users.service';
 
 // ponytail: um módulo só (Database, JwtService e config são compartilhados por tudo); separar em
 // módulos de feature quando houver um segundo processo ou o grafo de providers ficar difícil de ler.
@@ -72,6 +73,7 @@ export class AppModule {
         { provide: APP_PIPE, useClass: ZodValidationPipe },
         { provide: APP_FILTER, useClass: HttpErrorFilter },
         AuthService,
+        UsersService,
         MatchTokenService,
         OrchestratorService,
         MatchesService,
