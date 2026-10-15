@@ -8,12 +8,13 @@ import {
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
 import { AuthTokens, AuthTokensDto, LoginDto, RefreshDto, RegisterDto } from './auth.dto';
 import { AuthService } from './auth.service';
 
 @ApiTags('auth')
 @ApiTooManyRequestsResponse({ description: 'RATE_LIMITED' })
+@SkipThrottle({ queue: true })
 @UseGuards(ThrottlerGuard)
 @Controller('auth')
 export class AuthController {

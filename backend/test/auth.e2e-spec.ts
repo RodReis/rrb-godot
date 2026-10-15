@@ -12,6 +12,7 @@ import { Database } from '../src/db/database';
 const config: AppConfig = loadConfig({
   DATABASE_URL: process.env.TEST_DATABASE_URL ?? 'postgres://rrb:rrb@localhost:5432/rrb_test',
   JWT_SECRET: 'segredo-e2e-com-pelo-menos-32-caracteres',
+  INTERNAL_SECRET: 'interno-e2e-com-pelo-menos-32-caracteres',
   AUTH_RATE_LIMIT: '1000',
   LOG_LEVEL: 'silent',
 });
@@ -33,7 +34,7 @@ describe('auth e users (e2e)', () => {
     app = await createApp();
     const database = app.get(Database);
     await database.migrate();
-    await database.pool.query('TRUNCATE users');
+    await database.pool.query('TRUNCATE users CASCADE');
   });
 
   afterAll(async () => {

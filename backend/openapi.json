@@ -143,6 +143,301 @@
           "users"
         ]
       }
+    },
+    "/queue": {
+      "post": {
+        "operationId": "QueueController_join",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueTicketDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "409": {
+            "description": "ALREADY_QUEUED (ticket ativo ou partida em andamento)"
+          },
+          "429": {
+            "description": "RATE_LIMITED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "queue"
+        ]
+      }
+    },
+    "/queue/{ticket}": {
+      "get": {
+        "operationId": "QueueController_status",
+        "parameters": [
+          {
+            "name": "ticket",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TicketStatusDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "404": {
+            "description": "TICKET_NOT_FOUND"
+          },
+          "429": {
+            "description": "RATE_LIMITED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "queue"
+        ]
+      },
+      "delete": {
+        "operationId": "QueueController_cancel",
+        "parameters": [
+          {
+            "name": "ticket",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "404": {
+            "description": "TICKET_NOT_FOUND"
+          },
+          "409": {
+            "description": "ALREADY_MATCHED"
+          },
+          "429": {
+            "description": "RATE_LIMITED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "queue"
+        ]
+      }
+    },
+    "/matches/{id}/abandon": {
+      "post": {
+        "operationId": "MatchesController_abandon",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "404": {
+            "description": "MATCH_NOT_FOUND"
+          },
+          "409": {
+            "description": "MATCH_NOT_ASSIGNED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "matches"
+        ]
+      }
+    },
+    "/internal/matches/{id}/validate": {
+      "post": {
+        "operationId": "InternalMatchesController_validate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidatedMatchDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "INTERNAL_UNAUTHORIZED | TOKEN_INVALID | TOKEN_EXPIRED"
+          },
+          "404": {
+            "description": "MATCH_NOT_FOUND"
+          },
+          "409": {
+            "description": "MATCH_NOT_ACTIVE"
+          }
+        },
+        "security": [
+          {
+            "internal-secret": []
+          }
+        ],
+        "tags": [
+          "internal"
+        ]
+      }
+    },
+    "/internal/matches/{id}/heartbeat": {
+      "post": {
+        "operationId": "InternalMatchesController_heartbeat",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "INTERNAL_UNAUTHORIZED"
+          },
+          "404": {
+            "description": "MATCH_NOT_FOUND"
+          },
+          "409": {
+            "description": "MATCH_NOT_RUNNING"
+          }
+        },
+        "security": [
+          {
+            "internal-secret": []
+          }
+        ],
+        "tags": [
+          "internal"
+        ]
+      }
+    },
+    "/internal/matches/{id}/result": {
+      "post": {
+        "operationId": "InternalMatchesController_result",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MatchResultDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "INVALID_RESULT | VALIDATION_FAILED"
+          },
+          "401": {
+            "description": "INTERNAL_UNAUTHORIZED"
+          },
+          "404": {
+            "description": "MATCH_NOT_FOUND"
+          },
+          "409": {
+            "description": "MATCH_NOT_RUNNING"
+          }
+        },
+        "security": [
+          {
+            "internal-secret": []
+          }
+        ],
+        "tags": [
+          "internal"
+        ]
+      }
     }
   },
   "info": {
@@ -159,6 +454,11 @@
         "scheme": "bearer",
         "bearerFormat": "JWT",
         "type": "http"
+      },
+      "internal-secret": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-internal-secret"
       }
     },
     "schemas": {
@@ -250,6 +550,228 @@
           "id",
           "email",
           "createdAt"
+        ]
+      },
+      "QueueTicketDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "searching"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "createdAt"
+        ]
+      },
+      "TicketStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "searching",
+              "matched",
+              "cancelled"
+            ]
+          },
+          "elapsedS": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "assignment": {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer",
+                "minimum": -9007199254740991,
+                "maximum": 9007199254740991
+              },
+              "token": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "host",
+              "port",
+              "token"
+            ]
+          }
+        },
+        "required": [
+          "status",
+          "elapsedS"
+        ]
+      },
+      "ValidateDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "ValidatedMatchDto": {
+        "type": "object",
+        "properties": {
+          "matchId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "playerIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "matchId",
+          "playerIds",
+          "seed"
+        ]
+      },
+      "MatchResultDto": {
+        "type": "object",
+        "properties": {
+          "winnerUserId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "nullable": true
+          },
+          "endReason": {
+            "type": "string",
+            "pattern": "^[a-z_]{1,32}$"
+          },
+          "durationS": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 86400
+          },
+          "players": {
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "heroId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                "kills": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647
+                },
+                "deaths": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647
+                },
+                "finalLevel": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647
+                },
+                "damageDealt": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "damageTaken": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "monstersKilled": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647
+                },
+                "chestsOpened": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647
+                },
+                "bossKill": {
+                  "type": "boolean"
+                },
+                "setActive": {
+                  "type": "string",
+                  "maxLength": 64,
+                  "nullable": true
+                },
+                "levelAtPhase1End": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647,
+                  "nullable": true
+                },
+                "avgPingMs": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 2147483647,
+                  "nullable": true
+                }
+              },
+              "required": [
+                "userId",
+                "heroId",
+                "kills",
+                "deaths",
+                "finalLevel",
+                "damageDealt",
+                "damageTaken",
+                "monstersKilled",
+                "chestsOpened",
+                "bossKill"
+              ]
+            }
+          }
+        },
+        "required": [
+          "winnerUserId",
+          "endReason",
+          "durationS",
+          "players"
         ]
       }
     }

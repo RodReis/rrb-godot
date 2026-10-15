@@ -15,6 +15,7 @@ async function generate(): Promise<void> {
   const config = loadConfig({
     DATABASE_URL: 'postgres://openapi@localhost/openapi',
     JWT_SECRET: 'openapi-nao-assina-nada-0123456789abcdef',
+    INTERNAL_SECRET: 'openapi-nao-protege-nada-0123456789abcdef',
     LOG_LEVEL: 'silent',
   });
   const app = await NestFactory.create(AppModule.forRoot(config), { logger: false });
@@ -25,6 +26,7 @@ async function generate(): Promise<void> {
       .setDescription('Erros: { statusCode, code, message }. `code` é o contrato com o Launcher.')
       .setVersion('0.1.0')
       .addBearerAuth()
+      .addApiKey({ type: 'apiKey', in: 'header', name: 'x-internal-secret' }, 'internal-secret')
       .build(),
   );
   const path = join(process.cwd(), 'openapi.json');
