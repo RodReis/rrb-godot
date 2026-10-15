@@ -21,7 +21,7 @@ export class AuthController {
 
   @Post('register')
   @ApiCreatedResponse({ type: AuthTokensDto })
-  @ApiBadRequestResponse({ description: 'WEAK_PASSWORD | INVALID_EMAIL | VALIDATION_FAILED' })
+  @ApiBadRequestResponse({ description: 'WEAK_PASSWORD | PASSWORD_TOO_LONG | INVALID_EMAIL | VALIDATION_FAILED' })
   @ApiConflictResponse({ description: 'EMAIL_TAKEN' })
   register(@Body() body: RegisterDto): Promise<AuthTokens> {
     return this.auth.register(body.email, body.password);

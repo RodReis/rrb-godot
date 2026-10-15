@@ -27,7 +27,7 @@
             }
           },
           "400": {
-            "description": "WEAK_PASSWORD | INVALID_EMAIL | VALIDATION_FAILED"
+            "description": "WEAK_PASSWORD | PASSWORD_TOO_LONG | INVALID_EMAIL | VALIDATION_FAILED"
           },
           "409": {
             "description": "EMAIL_TAKEN"
@@ -172,6 +172,7 @@
           "password": {
             "type": "string",
             "minLength": 8,
+            "maxLength": 128,
             "pattern": "^(?=.*\\p{L})(?=.*\\d)",
             "description": "Mínimo 8 caracteres, com pelo menos uma letra e um número"
           }
@@ -205,7 +206,8 @@
           },
           "password": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "maxLength": 128
           }
         },
         "required": [

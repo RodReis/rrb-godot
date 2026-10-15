@@ -26,6 +26,18 @@ describe('RegisterSchema', () => {
     expect(firstMessage({ email: 'nao-e-email', password: 'abcdefg1' })).toBe('INVALID_EMAIL');
   });
 
+  it('rejeita e-mail acima de 254 caracteres com INVALID_EMAIL', () => {
+    const email = `${'a'.repeat(250)}@b.com`;
+    expect(firstMessage({ email, password: 'abcdefg1' })).toBe('INVALID_EMAIL');
+  });
+
+  it('rejeita senha acima de 128 caracteres com PASSWORD_TOO_LONG', () => {
+    expect(firstMessage({ email: 'a@b.com', password: `a1${'x'.repeat(127)}` })).toBe(
+      'PASSWORD_TOO_LONG',
+    );
+    expect(firstMessage({ email: 'a@b.com', password: `a1${'x'.repeat(126)}` })).toBeUndefined();
+  });
+
   it('normaliza e-mail (trim + minúsculas)', () => {
     const parsed = RegisterSchema.parse({ email: '  Foo@Bar.COM ', password: 'abcdefg1' });
     expect(parsed.email).toBe('foo@bar.com');

@@ -1,4 +1,5 @@
 import { INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import type { App } from 'supertest/types';
@@ -86,6 +87,20 @@ describe('auth e users (e2e)', () => {
       .send({ ...credentials, password: 'errada123' });
     expect(wrong.status).toBe(401);
     expect(wrong.body).toMatchObject({ statusCode: 401, code: 'INVALID_CREDENTIALS' });
+
+    const unknown = await request(server)
+      .post('/auth/login')
+      .send({ email: 'ninguem@rrb.dev', password: 'senha1234' });
+    expect(unknown.status).toBe(401);
+    expect(unknown.body).toMatchObject({ statusCode: 401, code: 'INVALID_CREDENTIALS' });
+  });
+
+  it('corpo acima de 100 KB → 413 PAYLOAD_TOO_LARGE (não 500)', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'a@b.com', password: 'x'.repeat(200_000) });
+    expect(res.status).toBe(413);
+    expect(res.body).toMatchObject({ statusCode: 413, code: 'PAYLOAD_TOO_LARGE' });
   });
 
   it('POST /auth/refresh troca refresh por novo par; access no lugar → 401', async () => {
@@ -116,6 +131,13 @@ describe('auth e users (e2e)', () => {
       .get('/users/me')
       .set('Authorization', `Bearer ${login.body.refreshToken}`);
     expect(withRefresh.status).toBe(401);
+
+    const forged = new JwtService({ secret: 'outro-segredo-com-pelo-menos-32-caracteres' });
+    const foreign = await forged.signAsync({ sub: 'x', typ: 'access' });
+    const withForeign = await request(server)
+      .get('/users/me')
+      .set('Authorization', `Bearer ${foreign}`);
+    expect(withForeign.status).toBe(401);
 
     const me = await request(server)
       .get('/users/me')
