@@ -10,8 +10,6 @@ updated: 2026-10-15
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
-- [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85)
-- [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84)
 
 ### Sem épico
 
@@ -22,14 +20,17 @@ updated: 2026-10-15
 
 ### [MVP3] Meta + deploy (#76)
 
-- [MVP3][SPEC-025][F25] Login e cadastro, lobby com diorama, fila por polling, lançar o Game e treino vs bot (#81)
+- [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85)
+- [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84)
 - [MVP3][SPEC-026][F26] Histórico de partidas: GET /matches e tela com herói do oponente (#83)
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-025][F25] Login e cadastro, lobby com diorama, fila por polling, lançar o Game e treino vs bot (#81)
 
 ## Feito
 
