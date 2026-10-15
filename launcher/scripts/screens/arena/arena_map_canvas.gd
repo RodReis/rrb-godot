@@ -58,6 +58,8 @@ func _init() -> void:
 
 ## Monta imagem e pinos; false se a imagem nao carregou (a tela mostra o erro).
 func bind(data: ArenaMapData, rules: MatchRules) -> bool:
+	if not _pins.is_empty():
+		return true
 	var texture := load(IMAGE_PATH) as Texture2D
 	if texture == null:
 		return false
@@ -65,6 +67,8 @@ func bind(data: ArenaMapData, rules: MatchRules) -> bool:
 	_build_legend()
 	for poi: Dictionary in data.pois:
 		var id: String = poi["id"]
+		if not ArenaMapTexts.PIN_STYLE.has(id):
+			continue
 		var style: Array = ArenaMapTexts.PIN_STYLE[id]
 		for group: Dictionary in poi["groups"]:
 			var pin := MapPin.new()

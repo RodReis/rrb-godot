@@ -52,7 +52,9 @@ func test_phase_windows_follow_the_rules() -> void:
 
 func test_phase_one_rules_carry_the_rule_numbers() -> void:
 	var text := _join(ArenaMapTexts.phase_one_rules(_catalog.match_rules, _data))
-	for expected: String in ["05:00", "03:00", "03:30", "8", "80 XP", str(CHEST_TOTAL)]:
+	for expected: String in [
+		"05:00", "03:00", "03:30", "8", "80 XP", str(CHEST_TOTAL), "120 HP", "30%"
+	]:
 		assert_string_contains(text, expected)
 	assert_eq(ArenaMapTexts.phase_one_rules(_catalog.match_rules, _data).size(), 4)
 
@@ -83,10 +85,20 @@ func test_phase_two_rules_react_to_a_changed_resource() -> void:
 func test_zone_steps_come_from_the_zone_table() -> void:
 	var steps := ArenaMapTexts.zone_steps(_catalog.match_rules)
 	assert_eq(steps.size(), 5, "o raio 0 aos 10:00 e a resolucao, nao um passo")
-	assert_eq(steps[0], PackedStringArray(["05:00", "100%", "35"]))
+	assert_eq(steps[0], PackedStringArray(["05:00", "35 u", "100.0"]))
 	assert_eq(steps[1][0], "06:00")
+	assert_eq(steps[1][1], "26 u")
 	assert_eq(steps[4][0], "09:00")
-	assert_eq(steps[4][2], "3,5")
+	assert_eq(steps[4][1], "3,5 u")
+
+
+func test_zone_steps_and_rule_survive_incomplete_zone_data() -> void:
+	_catalog.match_rules.zone_radius = PackedFloat64Array()
+	_catalog.match_rules.zone_times = PackedFloat64Array([0.0, 60.0])
+	assert_eq(ArenaMapTexts.zone_steps(_catalog.match_rules).size(), 0)
+	assert_eq(ArenaMapTexts.phase_two_rules(_catalog.match_rules).size(), 4)
+	_catalog.match_rules.zone_radius = PackedFloat64Array([35.0, 26.0, 17.5])
+	assert_eq(ArenaMapTexts.zone_steps(_catalog.match_rules).size(), 2, "sem tempo, sem passo")
 
 
 func test_header_chips_and_phase_note_use_the_rules() -> void:
@@ -121,7 +133,9 @@ func test_unknown_poi_returns_an_empty_card() -> void:
 
 func test_crater_card_follows_the_boss_and_the_clock() -> void:
 	var text := _info_text(ArenaMapPois.CRATER)
-	for expected: String in ["Rei Esqueleto", "2.400 HP", "550 XP", "03:30", "03:00", "05:00", "100%"]:
+	for expected: String in [
+		"Rei Esqueleto", "2.400 HP", "550 XP", "03:30", "03:00", "05:00", "100%"
+	]:
 		assert_string_contains(text, expected)
 	_catalog.match_rules.boss_spawn_time = 270.0
 	assert_string_contains(_info_text(ArenaMapPois.CRATER), "04:30")
@@ -129,7 +143,9 @@ func test_crater_card_follows_the_boss_and_the_clock() -> void:
 
 func test_base_card_counts_the_real_markers() -> void:
 	var text := _info_text(ArenaMapPois.BASE_A)
-	for expected: String in ["Base A", "4× Esqueleto", "1× Esqueleto Guerreiro", "6 baús comuns", "05:00"]:
+	for expected: String in [
+		"Base A", "4× Esqueleto", "1× Esqueleto Guerreiro", "6 baús comuns", "05:00"
+	]:
 		assert_string_contains(text, expected)
 	assert_string_contains(_info_text(ArenaMapPois.BASE_B), "Base B")
 

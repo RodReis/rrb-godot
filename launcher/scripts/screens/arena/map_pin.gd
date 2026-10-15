@@ -3,7 +3,8 @@ extends BaseButton
 ## Pino de um ponto de interesse sobre o mapa (prototipo "Arena & Mapa"): circulo com o glifo do
 ## ponto, brilho do acento, anel quando escolhido ou com foco do teclado, escala 1,1 no mouse e,
 ## nos marcos grandes (bases e cratera), o pulso "animate-ping". O rotulo fica abaixo e so aparece
-## nos marcos, no pino escolhido ou sob o mouse (dezenas de rotulos fixos cobririam o mapa).
+## nos marcos e no pino sob o mouse ou com o foco, que e o que acabou de ser clicado (dezenas de
+## rotulos fixos cobririam o mapa e os de um ponto com varios campos se sobreporiam).
 
 const SIZE_BIG: float = 44.0
 const SIZE_SMALL: float = 32.0
@@ -128,7 +129,7 @@ func _set_ping(value: float) -> void:
 
 
 func _sync_label() -> void:
-	_label_box.visible = _big or selected or is_hovered() or has_focus()
+	_label_box.visible = _big or is_hovered() or has_focus()
 	# O rotulo de um pino escolhido ou sob o mouse nao pode ficar atras do circulo de outro.
 	z_index = Z_SELECTED if selected else (Z_ACTIVE if is_hovered() or has_focus() else 0)
 

@@ -44,5 +44,7 @@ static func ground_of(parent: Node) -> Array[Vector2]:
 	var points: Array[Vector2] = []
 	for child: Node in parent.get_children():
 		var node := child as Node3D
+		if node == null:
+			continue
 		points.append(Vector2(node.global_position.x, node.global_position.z))
 	return points

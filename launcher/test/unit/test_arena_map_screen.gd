@@ -30,6 +30,15 @@ class BrokenCatalog:
 		return false
 
 
+## Catalogo sem o arquivo do mapa (load_all recarrega o mapa, entao o arquivo some de verdade).
+class NoMapCatalog:
+	extends CatalogService
+
+	func load_all() -> void:
+		super.load_all()
+		arena_map = null
+
+
 func before_each() -> void:
 	_catalog = _fresh_catalog()
 	_screen = await _open(_catalog)
@@ -77,10 +86,15 @@ func test_broken_catalog_shows_the_error_state() -> void:
 
 
 func test_missing_arena_map_shows_the_error_state() -> void:
+	var screen := await _open(NoMapCatalog.new())
+	assert_eq(screen.state(), StateBox.State.ERROR)
+
+
+func test_retry_recovers_the_map_when_the_rest_of_the_catalog_is_loaded() -> void:
 	var catalog := _fresh_catalog()
 	catalog.arena_map = null
-	var screen := await _open(catalog)
-	assert_eq(screen.state(), StateBox.State.ERROR)
+	catalog.load_all()
+	assert_not_null(catalog.arena_map)
 
 
 func test_stale_image_shows_the_error_state() -> void:
@@ -161,11 +175,13 @@ func test_accept_key_on_a_focused_pin_selects_it() -> void:
 	assert_eq(_screen.selected_poi(), ArenaMapPois.TALL_GRASS)
 
 
-func test_selected_small_pin_shows_its_label() -> void:
-	var pin := _screen.canvas().pins_of(ArenaMapPois.RIVER)[0]
-	assert_false(pin.label_visible())
-	pin.pressed.emit()
-	assert_true(pin.label_visible())
+func test_small_pin_shows_its_label_only_with_focus_or_mouse() -> void:
+	var pins := _screen.canvas().pins_of(ArenaMapPois.TALL_GRASS)
+	assert_false(pins[0].label_visible())
+	pins[0].grab_focus()
+	assert_true(pins[0].label_visible())
+	pins[0].pressed.emit()
+	assert_false(pins[1].label_visible(), "so o pino clicado mostra o rotulo, nao todos do ponto")
 
 
 func test_phase_cards_follow_the_rules() -> void:
@@ -177,6 +193,21 @@ func test_phase_cards_follow_the_rules() -> void:
 	assert_eq(two.rule_count(), 4)
 	assert_string_contains(" ".join(one.rule_texts()), "03:30")
 	assert_string_contains(" ".join(two.rule_texts()), "5 kills")
+
+
+func test_header_has_the_description_from_the_rules() -> void:
+	var text := "\n".join(_texts(_screen))
+	assert_string_contains(text, "5 min de farm e 5 min de zona mortal")
+
+
+func test_zone_rule_survives_incomplete_zone_data() -> void:
+	var catalog := _fresh_catalog()
+	catalog.match_rules.zone_radius = PackedFloat64Array()
+	catalog.match_rules.zone_times = PackedFloat64Array()
+	catalog.match_rules.zone_damage_pct = PackedFloat64Array()
+	var screen := await _open(catalog)
+	assert_eq(screen.state(), StateBox.State.READY)
+	assert_eq(screen.phase_card(PhaseCard.Kind.CONFRONTATION).rule_count(), 4)
 
 
 func test_phase_cards_react_to_a_changed_resource() -> void:

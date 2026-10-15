@@ -118,6 +118,7 @@ func refresh() -> void:
 			_footer.visible = false
 			_state.set_state(StateBox.State.ERROR, tr(NO_MAP))
 			return
+	_bind_header()
 	_footer.visible = true
 	_state.set_state(StateBox.State.READY)
 	var first := _canvas.pins_of(selected_poi())
@@ -169,7 +170,7 @@ func _fit_body() -> void:
 
 
 func _can_go_back_changed() -> void:
-	if is_node_ready() and _built:
+	if is_node_ready():
 		_bind_header()
 
 

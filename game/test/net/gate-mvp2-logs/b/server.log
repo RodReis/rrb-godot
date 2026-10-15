@@ -1,0 +1,301 @@
+gameserver-1  | [netem] rtt=100ms (50ms por direcao) jitter=0ms loss=2% por direcao
+gameserver-1  | libfontconfig.so.1: cannot open shared object file: No such file or directory
+gameserver-1  | Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+gameserver-1  | 
+gameserver-1  | [DBG][netfox.extras::NetworkSimulator] Feature disabled
+gameserver-1  | [DBG][@0][#1][_][netfox::NetworkPerformance] Network performance enabled, registering performance monitors
+gameserver-1  | [spawn] seed dos baus 20
+gameserver-1  | [server] escutando em *:7000
+gameserver-1  | [server] peer 1711628049 conectou
+gameserver-1  | [server] peer 1654475808 conectou
+gameserver-1  | [match] LOBBY_WAIT -> HERO_PICK, tick 165
+gameserver-1  | [match] luz: noite -> dia
+gameserver-1  | [DBG][@165][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791834289.5769s raw time
+gameserver-1  | [DBG][@165][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791834289.5818s raw time
+gameserver-1  | [DBG][@173][#1][_][netfox::NetworkTime] Peer #1654475808 is now on time!
+gameserver-1  | [DBG][@173][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1654475808
+gameserver-1  | [DBG][@179][#1][_][netfox::NetworkTime] Peer #1711628049 is now on time!
+gameserver-1  | [DBG][@179][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1711628049
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor {  } anunciados=0
+gameserver-1  | [probe] check 270 vivos=34 baus=0 160,160,160,160,360,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor {  } anunciados=0
+gameserver-1  | [probe] check 570 vivos=34 baus=0 160,160,160,160,360,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [match] HERO_PICK -> PHASE1, tick 885
+gameserver-1  | [match] knight para o peer 1711628049 (time 1)
+gameserver-1  | [match] ranger para o peer 1654475808 (time 2)
+gameserver-1  | [neblina] filtro: media 63.1 us/tick, pico 523 us, 18 trocas em 887 ticks (65 alvos, 2 observadores, 2 peers), tick 886
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor {  } anunciados=0
+gameserver-1  | [probe] check 870 vivos=34 baus=0 160,160,160,160,360,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A0 morto por 1711628049 no tick 991, renasce no 3691
+gameserver-1  | [spawn] T1A2 morto por 1711628049 no tick 1103, renasce no 3803
+gameserver-1  | [neblina] filtro: media 173.1 us/tick, pico 965 us, 26 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1186
+gameserver-1  | [probe] throttle minimo { 1711628049: 0, 1654475808: 0 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 7, "1711628049:basic": 11 } anunciados=12
+gameserver-1  | [probe] check 1170 vivos=32 baus=0 0,160,0,160,240,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A3 morto por 1711628049 no tick 1299, renasce no 3999
+gameserver-1  | [spawn] T1A1 morto por 1711628049 no tick 1411, renasce no 4111
+gameserver-1  | [spawn] T2A morto por 1711628049 no tick 1439, renasce no 4139
+gameserver-1  | [neblina] filtro: media 196.2 us/tick, pico 714 us, 26 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1486
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 14, "1711628049:basic": 20 } anunciados=25
+gameserver-1  | [probe] check 1470 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 1579
+gameserver-1  | [neblina] filtro: media 205.1 us/tick, pico 811 us, 35 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1786
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 15, "1711628049:basic": 20 } anunciados=25
+gameserver-1  | [probe] check 1770 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 173.5 us/tick, pico 338 us, 22 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2086
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 21, "1711628049:basic": 20 } anunciados=25
+gameserver-1  | [probe] check 2070 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 176.2 us/tick, pico 471 us, 23 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2386
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 28, "1711628049:basic": 20 } anunciados=25
+gameserver-1  | [probe] check 2370 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 174.2 us/tick, pico 3343 us, 21 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2686
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 34, "1711628049:basic": 20 } anunciados=25
+gameserver-1  | [probe] check 2670 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 2704
+gameserver-1  | [neblina] filtro: media 201.0 us/tick, pico 4234 us, 7 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2986
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 35, "1711628049:basic": 20 } anunciados=25
+gameserver-1  | [probe] check 2970 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1ATop0 morto por 1711628049 no tick 3172, renasce no 5872
+gameserver-1  | [spawn] T2ATop morto por 1711628049 no tick 3256, renasce no 5956
+gameserver-1  | [neblina] filtro: media 198.1 us/tick, pico 2140 us, 32 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3286
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 42, "1711628049:basic": 29 } anunciados=39
+gameserver-1  | [probe] check 3270 vivos=27 baus=0 0,0,0,0,0,0,160,0,160,160,360,680,300,300,160,160,160,160,305,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1ATop1 morto por 1711628049 no tick 3368, renasce no 6068
+gameserver-1  | [neblina] filtro: media 191.6 us/tick, pico 409 us, 43 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3586
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 48, "1711628049:basic": 34 } anunciados=47
+gameserver-1  | [probe] check 3570 vivos=26 baus=0 0,0,0,0,0,0,0,0,66,113,313,680,300,300,160,160,105,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A0 morto por 1711628049 no tick 3780, renasce no 6480
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 3837
+gameserver-1  | [neblina] filtro: media 190.4 us/tick, pico 391 us, 29 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3886
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 54, "1711628049:basic": 38 } anunciados=51
+gameserver-1  | [probe] check 3870 vivos=27 baus=0 0,0,160,0,0,0,0,0,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 181.7 us/tick, pico 435 us, 12 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4186
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 57, "1711628049:basic": 38 } anunciados=52
+gameserver-1  | [probe] check 4170 vivos=30 baus=0 0,160,160,160,360,0,0,0,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 187.2 us/tick, pico 381 us, 23 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4486
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 63, "1711628049:basic": 38 } anunciados=52
+gameserver-1  | [probe] check 4470 vivos=30 baus=0 0,160,160,160,360,0,0,0,160,160,360,680,300,300,160,160,160,160,305,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 177.5 us/tick, pico 404 us, 17 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4786
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 70, "1711628049:basic": 38 } anunciados=52
+gameserver-1  | [probe] check 4770 vivos=30 baus=0 0,160,160,160,360,0,0,0,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 4966
+gameserver-1  | [neblina] filtro: media 169.1 us/tick, pico 405 us, 12 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5086
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 74, "1711628049:basic": 38 } anunciados=52
+gameserver-1  | [probe] check 5070 vivos=30 baus=0 0,160,160,160,360,0,0,0,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 193.5 us/tick, pico 1410 us, 17 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5386
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 78, "1711628049:basic": 39 } anunciados=53
+gameserver-1  | [probe] check 5370 vivos=30 baus=0 0,160,113,160,360,0,0,0,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A2 morto por 1711628049 no tick 5450, renasce no 8150
+gameserver-1  | [spawn] T1A3 morto por 1711628049 no tick 5562, renasce no 8262
+gameserver-1  | [spawn] T2A morto por 1711628049 no tick 5590, renasce no 8290
+gameserver-1  | [neblina] filtro: media 187.5 us/tick, pico 624 us, 23 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5686
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 85, "1711628049:basic": 49 } anunciados=70
+gameserver-1  | [probe] check 5670 vivos=27 baus=0 0,109,0,0,0,0,0,0,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A1 morto por 1711628049 no tick 5726, renasce no 8426
+gameserver-1  | [neblina] filtro: media 183.0 us/tick, pico 1241 us, 46 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5986
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 92, "1711628049:basic": 54 } anunciados=81
+gameserver-1  | [probe] check 5970 vivos=28 baus=0 0,0,0,0,0,160,0,360,7,160,360,680,300,300,160,160,105,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 6097
+gameserver-1  | [match] aviso do boss (3:00), tick 6285
+gameserver-1  | [neblina] filtro: media 174.0 us/tick, pico 348 us, 12 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6286
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 94, "1711628049:basic": 54 } anunciados=81
+gameserver-1  | [probe] check 6270 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A0 morto por 1711628049 no tick 6580, renasce no 9280
+gameserver-1  | [neblina] filtro: media 166.1 us/tick, pico 518 us, 20 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6586
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 100, "1711628049:basic": 58 } anunciados=87
+gameserver-1  | [probe] check 6570 vivos=30 baus=0 7,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,105,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 168.5 us/tick, pico 380 us, 20 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6886
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 107, "1711628049:basic": 58 } anunciados=87
+gameserver-1  | [probe] check 6870 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,160,160,160,105,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 188.8 us/tick, pico 582 us, 17 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7186
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 113, "1711628049:basic": 58 } anunciados=88
+gameserver-1  | [probe] check 7170 vivos=29 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,105,160,160,105,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 7228
+gameserver-1  | [neblina] filtro: media 174.2 us/tick, pico 333 us, 3 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7486
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 115, "1711628049:basic": 58 } anunciados=89
+gameserver-1  | [probe] check 7470 vivos=30 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,105,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|
+gameserver-1  | [neblina] filtro: media 188.2 us/tick, pico 1614 us, 38 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7786
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 122, "1711628049:basic": 58 } anunciados=89
+gameserver-1  | [probe] check 7770 vivos=30 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,105,160,160,160,305,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|
+gameserver-1  | [spawn] T1ABot0 morto por 1711628049 no tick 8037, renasce no 10737
+gameserver-1  | [spawn] T1ABot1 morto por 1711628049 no tick 8065, renasce no 10765
+gameserver-1  | [neblina] filtro: media 173.8 us/tick, pico 437 us, 49 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8086
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 128, "1711628049:basic": 65 } anunciados=103
+gameserver-1  | [probe] check 8070 vivos=28 baus=0 0,0,0,0,0,160,160,360,0,0,156,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|
+gameserver-1  | [spawn] T2ABot morto por 1711628049 no tick 8177, renasce no 10877
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 8335
+gameserver-1  | [neblina] filtro: media 182.2 us/tick, pico 379 us, 26 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8386
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 134, "1711628049:basic": 70 } anunciados=109
+gameserver-1  | [probe] check 8370 vivos=30 baus=2 0,0,160,160,306,160,160,360,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest20,Chest21
+gameserver-1  | [spawn] T1A2 morto por 1711628049 no tick 8448, renasce no 11148
+gameserver-1  | [spawn] T2A morto por 1711628049 no tick 8532, renasce no 11232
+gameserver-1  | [spawn] T1A3 morto por 1711628049 no tick 8616, renasce no 11316
+gameserver-1  | [neblina] filtro: media 201.0 us/tick, pico 518 us, 10 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8686
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 137, "1711628049:basic": 80 } anunciados=121
+gameserver-1  | [probe] check 8670 vivos=28 baus=2 0,106,0,0,0,160,160,360,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest20,Chest21
+gameserver-1  | [spawn] T1A1 morto por 1711628049 no tick 8700, renasce no 11400
+gameserver-1  | [chest] 1711628049 leva Peitoral do Caçador
+gameserver-1  | [chest] 1711628049 leva Botas da Guarda
+gameserver-1  | [chest] 1711628049 leva Arma Comum
+gameserver-1  | [neblina] filtro: media 195.0 us/tick, pico 474 us, 43 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8986
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 143, "1711628049:basic": 81 } anunciados=122
+gameserver-1  | [probe] check 8970 vivos=27 baus=8 0,0,0,0,0,160,160,360,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest20,Chest21
+gameserver-1  | [spawn] T1ATop0 morto por 1711628049 no tick 9181, renasce no 11881
+gameserver-1  | [spawn] T2ATop morto por 1711628049 no tick 9237, renasce no 11937
+gameserver-1  | [neblina] filtro: media 182.6 us/tick, pico 1143 us, 39 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9286
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 150, "1711628049:basic": 89 } anunciados=133
+gameserver-1  | [probe] check 9270 vivos=25 baus=8 0,0,0,0,0,0,89,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest20,Chest21
+gameserver-1  | [spawn] T1ATop1 morto por 1711628049 no tick 9321, renasce no 12021
+gameserver-1  | [chest] 1711628049 leva Elmo do Caçador
+gameserver-1  | [neblina] filtro: media 186.9 us/tick, pico 647 us, 49 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9586
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 157, "1711628049:basic": 92 } anunciados=137
+gameserver-1  | [probe] check 9570 vivos=25 baus=10 160,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,285,260,680,360,260,2400|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [spawn] T1A0 morto por 1711628049 no tick 9755, renasce no 12455
+gameserver-1  | [match] PHASE1 -> TRANSITION, tick 9885
+gameserver-1  | [match] fim da fase 1 (5:00), portoes caem, tick 9885
+gameserver-1  | [match] jogador 1711628049: Nv 6, 1175 XP
+gameserver-1  | [match] jogador 1654475808: Nv 1, 0 XP
+gameserver-1  | [spawn] Rei Esqueleto vivo aos 5:00 sai do mapa sem drop, tick 9885
+gameserver-1  | [neblina] filtro: media 200.7 us/tick, pico 693 us, 44 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9886
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 163, "1711628049:basic": 95 } anunciados=141
+gameserver-1  | [probe] check 9870 vivos=24 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,105,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [match] TRANSITION -> PHASE2, tick 10035
+gameserver-1  | [neblina] filtro: media 222.5 us/tick, pico 1587 us, 45 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10186
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 170, "1711628049:basic": 95 } anunciados=142
+gameserver-1  | [probe] check 10170 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,105,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 229.1 us/tick, pico 808 us, 26 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10486
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 177, "1711628049:basic": 95 } anunciados=142
+gameserver-1  | [probe] check 10470 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 209.6 us/tick, pico 405 us, 24 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10786
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 183, "1711628049:basic": 95 } anunciados=142
+gameserver-1  | [probe] check 10770 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 207.5 us/tick, pico 639 us, 24 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11086
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 190, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 11070 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 188.1 us/tick, pico 473 us, 23 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11386
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 197, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 11370 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 11613
+gameserver-1  | [neblina] filtro: media 182.3 us/tick, pico 1136 us, 19 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11686
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 201, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 11670 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 173.8 us/tick, pico 403 us, 26 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11986
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 206, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 11970 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 186.8 us/tick, pico 575 us, 46 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12286
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 213, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 12270 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 192.5 us/tick, pico 919 us, 42 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12586
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 219, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 12570 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 204.3 us/tick, pico 1231 us, 41 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12886
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 226, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 12870 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 201.1 us/tick, pico 1153 us, 47 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13186
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 233, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 13170 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 13220
+gameserver-1  | [neblina] filtro: media 180.5 us/tick, pico 809 us, 24 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13486
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 235, "1711628049:basic": 95 } anunciados=143
+gameserver-1  | [probe] check 13470 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 224.1 us/tick, pico 1333 us, 31 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13786
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 242, "1711628049:basic": 95 } anunciados=144
+gameserver-1  | [probe] check 13770 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 185.2 us/tick, pico 580 us, 35 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14086
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 249, "1711628049:basic": 95 } anunciados=144
+gameserver-1  | [probe] check 14070 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 199.5 us/tick, pico 1149 us, 32 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14386
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 255, "1711628049:basic": 95 } anunciados=145
+gameserver-1  | [probe] check 14370 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,305,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 14480
+gameserver-1  | [neblina] filtro: media 183.9 us/tick, pico 774 us, 26 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14686
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 258, "1711628049:basic": 95 } anunciados=145
+gameserver-1  | [probe] check 14670 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,305,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 176.6 us/tick, pico 473 us, 32 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14986
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 265, "1711628049:basic": 95 } anunciados=146
+gameserver-1  | [probe] check 14970 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,250,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 187.9 us/tick, pico 370 us, 35 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15286
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 271, "1711628049:basic": 95 } anunciados=147
+gameserver-1  | [probe] check 15270 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,250,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 179.5 us/tick, pico 394 us, 34 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15586
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 15590
+gameserver-1  | [probe] throttle minimo { 1711628049: 28, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 278, "1711628049:basic": 95 } anunciados=147
+gameserver-1  | [probe] check 15570 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,250,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 219.9 us/tick, pico 1148 us, 24 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15886
+gameserver-1  | [probe] throttle minimo { 1711628049: 30, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 281, "1711628049:basic": 95 } anunciados=147
+gameserver-1  | [probe] check 15870 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,160,160,160,160,250,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 206.3 us/tick, pico 432 us, 24 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16186
+gameserver-1  | [probe] check 16170 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,105,160,160,160,195,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 287, "1711628049:basic": 95 } anunciados=149
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 16220
+gameserver-1  | [neblina] filtro: media 190.7 us/tick, pico 448 us, 16 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16486
+gameserver-1  | [probe] check 16470 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,105,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 290, "1711628049:basic": 95 } anunciados=149
+gameserver-1  | [neblina] filtro: media 203.1 us/tick, pico 576 us, 20 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16786
+gameserver-1  | [probe] check 16770 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,105,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 32 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 297, "1711628049:basic": 95 } anunciados=150
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 16820
+gameserver-1  | [match] PHASE2 -> SUDDEN_DEATH, tick 17085
+gameserver-1  | [neblina] filtro: media 204.4 us/tick, pico 472 us, 13 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 17086
+gameserver-1  | [probe] check 17070 vivos=23 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,105,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1711628049: 32, 1654475808: 30 }
+gameserver-1  | [probe] vfx servidor { "1654475808:basic": 299, "1711628049:basic": 95 } anunciados=150
+gameserver-1  | [match] heroi 1654475808 morto por 0, tick 17300
+gameserver-1  | [match] SUDDEN_DEATH -> ENDED, tick 17300
+gameserver-1  | [match] fim: elimination, vencedor 1711628049, estatisticas { "duration": 547.166666666667, "players": [{ "peer": 1711628049, "hero": 0, "kills": 0, "deaths": 0, "level": 6, "hero_damage": 0, "damage_taken": 1839, "monsters": 25, "chests": 10, "boss_killed": false, "equipment": (2, 14, 17, 11) }, { "peer": 1654475808, "hero": 1, "kills": 0, "deaths": 14, "level": 1, "hero_damage": 0, "damage_taken": 5320, "monsters": 0, "chests": 0, "boss_killed": false, "equipment": (-1, -1, -1, -1) }] }, tick 17300
+gameserver-1  | [soak] {"reason":"elimination","stats":{"duration":547.166666666667,"players":[{"boss_killed":false,"chests":10,"damage_taken":1839,"deaths":0,"equipment":"(2, 14, 17, 11)","hero":0,"hero_damage":0,"kills":0,"level":6,"monsters":25,"peer":1711628049},{"boss_killed":false,"chests":0,"damage_taken":5320,"deaths":14,"equipment":"(-1, -1, -1, -1)","hero":1,"hero_damage":0,"kills":0,"level":1,"monsters":0,"peer":1654475808}]},"tick":17300,"winner":1711628049}

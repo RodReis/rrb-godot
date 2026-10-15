@@ -25,6 +25,8 @@ var _rule_texts: Array[RichTextLabel] = []
 var _window: Label = Label.new()
 var _title: Label = Label.new()
 var _kicker: Label = Label.new()
+var _pulse_dot: Panel
+var _pulse: Tween
 
 
 func _init() -> void:
@@ -32,12 +34,15 @@ func _init() -> void:
 	size_flags_horizontal = SIZE_EXPAND_FILL
 	_column.theme_type_variation = &"LnVGapSm"
 	add_child(_column)
+	visibility_changed.connect(_on_visibility_changed)
 
 
 ## [param rules]: linhas de regra; o rodape (nota ou zona) entra depois, por set_note/set_zone.
 func bind(
 	phase: Kind, kicker: String, window: String, title: String, rules: Array[ArenaMapTexts.Rule]
 ) -> void:
+	if _column.get_child_count() > 0:
+		return
 	kind = phase
 	var error := phase == Kind.CONFRONTATION
 	var head := HBoxContainer.new()
@@ -68,10 +73,13 @@ func bind(
 	_column.add_child(_rules)
 	for rule: ArenaMapTexts.Rule in rules:
 		_rules.add_child(_rule_row(rule))
-	if error and is_inside_tree():
-		var pulse := dot.create_tween().set_loops()
-		pulse.tween_property(dot, ^"modulate:a", PULSE_ALPHA, PULSE_SECONDS)
-		pulse.tween_property(dot, ^"modulate:a", 1.0, PULSE_SECONDS)
+	if error:
+		_pulse_dot = dot
+		# O card ainda nao esta na arvore: o pulso nasce quando ele entra.
+		if is_inside_tree():
+			_start_pulse()
+		else:
+			tree_entered.connect(_start_pulse, CONNECT_ONE_SHOT)
 
 
 ## Faixa de rodape da fase 1: rotulo a esquerda e valor a direita.
@@ -92,7 +100,7 @@ func set_note(note: PackedStringArray) -> void:
 	_column.add_child(well)
 
 
-## Tabela do raio da zona da fase 2: por passo, o instante, o percentual da arena e a barra.
+## Tabela do raio da zona da fase 2: por passo, o instante, o raio em u e a barra (fracao da arena).
 func set_zone(caption: String, steps: Array[PackedStringArray]) -> void:
 	var box := VBoxContainer.new()
 	box.theme_type_variation = &"LnVGapXs"
@@ -111,16 +119,16 @@ func set_zone(caption: String, steps: Array[PackedStringArray]) -> void:
 		clock.theme_type_variation = &"LnNum"
 		clock.text = step[0]
 		cell.add_child(clock)
-		var percent := Label.new()
-		percent.theme_type_variation = &"LnNumError"
-		percent.text = step[1]
-		cell.add_child(percent)
+		var radius := Label.new()
+		radius.theme_type_variation = &"LnNumError"
+		radius.text = step[1]
+		cell.add_child(radius)
 		var bar := ProgressBar.new()
 		bar.theme_type_variation = &"LnCpBarError"
 		bar.show_percentage = false
 		bar.min_value = 0.0
 		bar.max_value = 100.0
-		bar.value = float(step[1].trim_suffix("%").replace(",", "."))
+		bar.value = step[2].to_float()
 		bar.custom_minimum_size.y = 6.0
 		cell.add_child(bar)
 		row.add_child(cell)
@@ -155,6 +163,24 @@ func all_texts() -> PackedStringArray:
 		found.append((child as Label).text)
 	found.append_array(rule_texts())
 	return found
+
+
+func _start_pulse() -> void:
+	if _pulse != null:
+		_pulse.kill()
+	_pulse = _pulse_dot.create_tween().set_loops()
+	_pulse.tween_property(_pulse_dot, ^"modulate:a", PULSE_ALPHA, PULSE_SECONDS)
+	_pulse.tween_property(_pulse_dot, ^"modulate:a", 1.0, PULSE_SECONDS)
+
+
+## Tela escondida pela pilha: o pulso para.
+func _on_visibility_changed() -> void:
+	if _pulse == null or not _pulse.is_valid():
+		return
+	if is_visible_in_tree():
+		_pulse.play()
+	else:
+		_pulse.pause()
 
 
 func _rule_row(rule: ArenaMapTexts.Rule) -> HBoxContainer:

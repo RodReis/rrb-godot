@@ -1,0 +1,1 @@
+servidor: envio 234 kbit/s, recepcao 207 kbit/s (media de 9 min, 2 clientes)

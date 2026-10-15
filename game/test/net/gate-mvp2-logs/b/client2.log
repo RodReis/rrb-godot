@@ -1,0 +1,303 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.351 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 5060
+
+[DBG][netfox.extras::NetworkSimulator] Feature disabled
+[DBG][@0][#1][_][netfox::NetworkPerformance] Network performance enabled, registering performance monitors
+[spawn] seed dos baus 57150318
+[warmup] 201 instancias aquecidas em 2251 ms
+[client] conectado como peer 1654475808
+[match] luz: noite -> dia
+[DBG][@0][#1654475808][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1
+[DBG][@0][#1654475808][_][netfox::NetworkTimeSynchronizer] Received initial timestamp @ 1791834289.7860s raw time
+[INF][@0][#1654475808][_][netfox::NetworkTimeSynchronizer] Time sync loop started! Initial timestamp: 5.48514986038208s
+[DBG][@164][#1654475808][_][netfox::NetworkTime] Peer #1654475808 is now on time!
+[client] NetworkTime sincronizado, tick 164
+[DBG][@174][#1654475808][_][netfox::NetworkTime] Peer #1711628049 is now on time!
+[probe] check 270 vivos=0 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 0 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 570 vivos=0 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 0 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 870 vivos=0 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 0 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 1170 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 0 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 1470 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 0 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 1770 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 3 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 2070 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 6 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 2370 vivos=3 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 9 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 2670 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=0 repetidos=0
+[probe] neblina: 10 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 2970 vivos=3 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=1 repetidos=0
+[probe] neblina: 12 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 3270 vivos=3 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=1 repetidos=0
+[probe] neblina: 16 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 3570 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,105,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=2 repetidos=0
+[probe] neblina: 18 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 3870 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=2 repetidos=0
+[probe] neblina: 19 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 4170 vivos=3 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=3 repetidos=0
+[probe] neblina: 22 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 4470 vivos=4 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,305,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=3 repetidos=0
+[probe] neblina: 25 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 4770 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=3 repetidos=0
+[probe] neblina: 28 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 5070 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=3 repetidos=0
+[probe] neblina: 28 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 5370 vivos=3 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=3 repetidos=0
+[probe] neblina: 33 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 5670 vivos=4 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=4 repetidos=0
+[probe] neblina: 35 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 5970 vivos=4 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,105,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=5 repetidos=0
+[probe] neblina: 36 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[match] aviso do boss (3:00), tick 6285
+[probe] check 6270 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=6 repetidos=0
+[probe] neblina: 38 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 6570 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,105,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=7 repetidos=0
+[probe] neblina: 41 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 6870 vivos=4 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,105,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=7 repetidos=0
+[probe] neblina: 43 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 7170 vivos=4 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,105,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=8 repetidos=0
+[probe] neblina: 44 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 7470 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,105,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=9 repetidos=0
+[probe] neblina: 45 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 7770 vivos=4 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,105,160,160,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=9 repetidos=0
+[probe] neblina: 49 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 8070 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=9 repetidos=0
+[probe] neblina: 50 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 8370 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=9 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 8670 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=9 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 8970 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=9 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 9270 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=9 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 9570 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=10 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[match] fim da fase 1 (5:00), portoes caem, tick 9885
+[probe] check 9870 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,105,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=10 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 10170 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,105,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=11 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 10470 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=11 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 10770 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 11070 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 11370 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 11670 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 51 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 11970 vivos=0 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 64 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 12270 vivos=2 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,-,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 74 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 12570 vivos=0 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 86 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 12870 vivos=1 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 99 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 13170 vivos=0 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 104 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 13470 vivos=2 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=12 repetidos=0
+[probe] neblina: 115 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 13770 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=13 repetidos=0
+[probe] neblina: 121 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 14070 vivos=2 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=14 repetidos=0
+[probe] neblina: 130 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 14370 vivos=2 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 30 }
+[probe] vfx cliente {  } recebidos=14 repetidos=0
+[probe] neblina: 133 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 14670 vivos=3 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,305,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=15 repetidos=0
+[probe] neblina: 141 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 14970 vivos=2 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=16 repetidos=0
+[probe] neblina: 150 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 15270 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,250,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=16 repetidos=0
+[probe] neblina: 156 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 15570 vivos=2 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=16 repetidos=0
+[probe] neblina: 159 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 15870 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,160,250,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=17 repetidos=0
+[probe] neblina: 168 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 16170 vivos=4 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,160,160,195,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=18 repetidos=0
+[probe] neblina: 170 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 16470 vivos=2 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,-,160,-,160,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=18 repetidos=0
+[probe] neblina: 177 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 16770 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,105,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=19 repetidos=0
+[probe] neblina: 177 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[probe] check 17070 vivos=5 baus=0 -,-,-,-,-,-,-,-,-,-,-,-,-,-,105,160,160,160,360,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-,-|
+[probe] throttle minimo { 1: 32 }
+[probe] vfx cliente {  } recebidos=19 repetidos=0
+[probe] neblina: 181 ciclos escondido -> visivel, 0 com estado recebido escondido
+[probe] remoto parado 0.0% (0/0 quadros), acumulado 0.0% (0/0)
+[match] fim: elimination, vencedor 1711628049, estatisticas { "duration": 547.166666666667, "players": [{ "peer": 1711628049, "hero": 0, "kills": 0, "deaths": 0, "level": 6, "hero_damage": 0, "damage_taken": 1839, "monsters": 25, "chests": 10, "boss_killed": false, "equipment": (2, 14, 17, 11) }, { "peer": 1654475808, "hero": 1, "kills": 0, "deaths": 14, "level": 1, "hero_damage": 0, "damage_taken": 5320, "monsters": 0, "chests": 0, "boss_killed": false, "equipment": (-1, -1, -1, -1) }] }, tick 17300

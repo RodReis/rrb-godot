@@ -1,0 +1,304 @@
+gameserver-1  | [netem] rtt=100ms (50ms por direcao) jitter=0ms loss=2% por direcao
+gameserver-1  | libfontconfig.so.1: cannot open shared object file: No such file or directory
+gameserver-1  | Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+gameserver-1  | 
+gameserver-1  | [DBG][netfox.extras::NetworkSimulator] Feature disabled
+gameserver-1  | [DBG][@0][#1][_][netfox::NetworkPerformance] Network performance enabled, registering performance monitors
+gameserver-1  | [spawn] seed dos baus 20
+gameserver-1  | [server] escutando em *:7000
+gameserver-1  | [server] peer 1301470219 conectou
+gameserver-1  | [server] peer 2113959257 conectou
+gameserver-1  | [match] LOBBY_WAIT -> HERO_PICK, tick 153
+gameserver-1  | [match] luz: noite -> dia
+gameserver-1  | [DBG][@153][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791834966.3432s raw time
+gameserver-1  | [DBG][@153][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791834966.3473s raw time
+gameserver-1  | [DBG][@161][#1][_][netfox::NetworkTime] Peer #1301470219 is now on time!
+gameserver-1  | [DBG][@161][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1301470219
+gameserver-1  | [DBG][@163][#1][_][netfox::NetworkTime] Peer #2113959257 is now on time!
+gameserver-1  | [DBG][@163][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 2113959257
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 28 }
+gameserver-1  | [probe] vfx servidor {  } anunciados=0
+gameserver-1  | [probe] check 270 vivos=34 baus=0 160,160,160,160,360,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor {  } anunciados=0
+gameserver-1  | [probe] check 570 vivos=34 baus=0 160,160,160,160,360,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [match] HERO_PICK -> PHASE1, tick 873
+gameserver-1  | [match] knight para o peer 1301470219 (time 1)
+gameserver-1  | [match] ranger para o peer 2113959257 (time 2)
+gameserver-1  | [neblina] filtro: media 52.1 us/tick, pico 446 us, 18 trocas em 875 ticks (65 alvos, 2 observadores, 2 peers), tick 874
+gameserver-1  | [probe] throttle minimo { 1301470219: 0, 2113959257: 0 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 1 } anunciados=1
+gameserver-1  | [probe] check 870 vivos=34 baus=0 160,160,160,160,360,160,160,360,160,160,360,680,300,300,160,160,160,160,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1B0 morto por 2113959257 no tick 924, renasce no 3624
+gameserver-1  | [spawn] T1A0 morto por 1301470219 no tick 980, renasce no 3680
+gameserver-1  | [spawn] T1B2 morto por 2113959257 no tick 987, renasce no 3687
+gameserver-1  | [spawn] T1B1 morto por 2113959257 no tick 1055, renasce no 3755
+gameserver-1  | [spawn] T1A2 morto por 1301470219 no tick 1092, renasce no 3792
+gameserver-1  | [spawn] T1B3 morto por 2113959257 no tick 1118, renasce no 3818
+gameserver-1  | [neblina] filtro: media 158.3 us/tick, pico 343 us, 6 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1174
+gameserver-1  | [probe] throttle minimo { 1301470219: 22, 2113959257: 14 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 15, "1301470219:basic": 11 } anunciados=29
+gameserver-1  | [probe] check 1170 vivos=28 baus=0 0,160,0,160,200,160,160,360,160,160,360,680,300,300,0,0,0,0,240,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T2B morto por 2113959257 no tick 1244, renasce no 3944
+gameserver-1  | [spawn] T1A3 morto por 1301470219 no tick 1260, renasce no 3960
+gameserver-1  | [spawn] T2A morto por 1301470219 no tick 1288, renasce no 3988
+gameserver-1  | [spawn] T1BBot0 morto por 2113959257 no tick 1370, renasce no 4070
+gameserver-1  | [spawn] T1A1 morto por 1301470219 no tick 1400, renasce no 4100
+gameserver-1  | [neblina] filtro: media 162.7 us/tick, pico 464 us, 16 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1474
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 27, "1301470219:basic": 19 } anunciados=50
+gameserver-1  | [probe] check 1470 vivos=23 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,0,160,230,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T2BBot morto por 2113959257 no tick 1548, renasce no 4248
+gameserver-1  | [spawn] T1BBot1 morto por 2113959257 no tick 1608, renasce no 4308
+gameserver-1  | [neblina] filtro: media 162.4 us/tick, pico 473 us, 50 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1774
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 30 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 37, "1301470219:basic": 21 } anunciados=64
+gameserver-1  | [probe] check 1770 vivos=21 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,230,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 175.5 us/tick, pico 2969 us, 16 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2074
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 30 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 40, "1301470219:basic": 21 } anunciados=66
+gameserver-1  | [probe] check 2070 vivos=21 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 169.2 us/tick, pico 551 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2374
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 40, "1301470219:basic": 21 } anunciados=66
+gameserver-1  | [probe] check 2370 vivos=21 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 161.7 us/tick, pico 676 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2674
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 40, "1301470219:basic": 21 } anunciados=66
+gameserver-1  | [probe] check 2670 vivos=21 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 161.8 us/tick, pico 363 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2974
+gameserver-1  | [probe] throttle minimo { 1301470219: 30, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 40, "1301470219:basic": 21 } anunciados=66
+gameserver-1  | [probe] check 2970 vivos=21 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1ATop0 morto por 1301470219 no tick 3201, renasce no 5901
+gameserver-1  | [neblina] filtro: media 159.4 us/tick, pico 400 us, 16 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3274
+gameserver-1  | [spawn] T2ATop morto por 1301470219 no tick 3285, renasce no 5985
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 40, "1301470219:basic": 29 } anunciados=78
+gameserver-1  | [probe] check 3270 vivos=20 baus=0 0,0,0,0,0,0,160,31,160,160,360,680,300,300,0,0,0,0,0,160,160,360,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1ATop1 morto por 1301470219 no tick 3397, renasce no 6097
+gameserver-1  | [neblina] filtro: media 159.8 us/tick, pico 426 us, 23 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3574
+gameserver-1  | [probe] throttle minimo { 1301470219: 28, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 54, "1301470219:basic": 34 } anunciados=83
+gameserver-1  | [probe] check 3570 vivos=18 baus=0 0,0,0,0,0,0,0,0,113,160,360,680,300,300,0,0,0,0,0,160,160,360,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1B2 morto por 2113959257 no tick 3749, renasce no 6449
+gameserver-1  | [spawn] T1B0 morto por 2113959257 no tick 3809, renasce no 6509
+gameserver-1  | [spawn] T1A0 morto por 1301470219 no tick 3817, renasce no 6517
+gameserver-1  | [neblina] filtro: media 158.9 us/tick, pico 369 us, 23 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3874
+gameserver-1  | [spawn] T1B3 morto por 2113959257 no tick 3872, renasce no 6572
+gameserver-1  | [probe] throttle minimo { 1301470219: 28, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 69, "1301470219:basic": 40 } anunciados=101
+gameserver-1  | [probe] check 3870 vivos=21 baus=0 0,0,113,0,0,0,0,0,160,160,360,680,300,300,0,160,0,20,0,160,160,360,0,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A2 morto por 1301470219 no tick 3948, renasce no 6648
+gameserver-1  | [spawn] T2B morto por 2113959257 no tick 4049, renasce no 6749
+gameserver-1  | [neblina] filtro: media 160.3 us/tick, pico 373 us, 4 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4174
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 84, "1301470219:basic": 43 } anunciados=112
+gameserver-1  | [probe] check 4170 vivos=23 baus=0 0,160,0,160,360,0,0,0,160,160,360,680,300,300,0,90,0,0,0,160,160,360,160,0,0,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 181.0 us/tick, pico 2707 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4474
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 99, "1301470219:basic": 43 } anunciados=112
+gameserver-1  | [probe] check 4470 vivos=25 baus=0 0,160,0,160,360,0,0,0,160,160,360,680,300,300,0,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 156.9 us/tick, pico 712 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4774
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 114, "1301470219:basic": 43 } anunciados=112
+gameserver-1  | [probe] check 4770 vivos=25 baus=0 0,160,0,160,360,0,0,0,160,160,360,680,300,300,0,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 167.4 us/tick, pico 384 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5074
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 129, "1301470219:basic": 43 } anunciados=112
+gameserver-1  | [probe] check 5070 vivos=25 baus=0 0,160,0,160,360,0,0,0,160,160,360,680,300,300,0,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 168.1 us/tick, pico 476 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5374
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 144, "1301470219:basic": 43 } anunciados=112
+gameserver-1  | [probe] check 5370 vivos=25 baus=0 0,160,0,160,360,0,0,0,160,160,360,680,300,300,0,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 165.4 us/tick, pico 429 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5674
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 159, "1301470219:basic": 43 } anunciados=112
+gameserver-1  | [probe] check 5670 vivos=25 baus=0 0,160,0,160,360,0,0,0,160,160,360,680,300,300,0,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A3 morto por 1301470219 no tick 5860, renasce no 8560
+gameserver-1  | [spawn] T2A morto por 1301470219 no tick 5944, renasce no 8644
+gameserver-1  | [neblina] filtro: media 163.7 us/tick, pico 403 us, 4 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5974
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 174, "1301470219:basic": 52 } anunciados=125
+gameserver-1  | [probe] check 5970 vivos=24 baus=0 0,160,0,0,0,160,0,0,160,160,360,680,300,300,0,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A1 morto por 1301470219 no tick 6056, renasce no 8756
+gameserver-1  | [match] aviso do boss (3:00), tick 6273
+gameserver-1  | [neblina] filtro: media 167.3 us/tick, pico 368 us, 20 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6274
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 30 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 189, "1301470219:basic": 58 } anunciados=135
+gameserver-1  | [probe] check 6270 vivos=25 baus=0 0,0,0,0,0,160,160,360,7,160,258,680,300,300,0,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1B2 morto por 2113959257 no tick 6513, renasce no 9213
+gameserver-1  | [neblina] filtro: media 162.5 us/tick, pico 485 us, 12 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6574
+gameserver-1  | [spawn] T1B0 morto por 2113959257 no tick 6573, renasce no 9273
+gameserver-1  | [probe] throttle minimo { 1301470219: 30, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 204, "1301470219:basic": 61 } anunciados=144
+gameserver-1  | [probe] check 6570 vivos=27 baus=0 58,0,0,0,0,160,160,360,160,160,360,680,300,300,20,90,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [spawn] T1A0 morto por 1301470219 no tick 6618, renasce no 9318
+gameserver-1  | [spawn] T1B3 morto por 2113959257 no tick 6635, renasce no 9335
+gameserver-1  | [spawn] T1B1 morto por 2113959257 no tick 6673, renasce no 9373
+gameserver-1  | [spawn] T2B morto por 2113959257 no tick 6864, renasce no 9564
+gameserver-1  | [neblina] filtro: media 170.2 us/tick, pico 3793 us, 2 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6874
+gameserver-1  | [probe] throttle minimo { 1301470219: 30, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 218, "1301470219:basic": 62 } anunciados=156
+gameserver-1  | [probe] check 6870 vivos=25 baus=0 0,0,160,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 154.4 us/tick, pico 315 us, 1 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7174
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 233, "1301470219:basic": 62 } anunciados=156
+gameserver-1  | [probe] check 7170 vivos=25 baus=0 0,0,160,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|
+gameserver-1  | [neblina] filtro: media 160.4 us/tick, pico 556 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7474
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 248, "1301470219:basic": 62 } anunciados=156
+gameserver-1  | [probe] check 7470 vivos=26 baus=0 0,0,160,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|
+gameserver-1  | [neblina] filtro: media 156.4 us/tick, pico 405 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7774
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 263, "1301470219:basic": 62 } anunciados=156
+gameserver-1  | [probe] check 7770 vivos=26 baus=0 0,0,160,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|
+gameserver-1  | [spawn] T1A2 morto por 1301470219 no tick 8067, renasce no 10767
+gameserver-1  | [neblina] filtro: media 158.5 us/tick, pico 394 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8074
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 278, "1301470219:basic": 66 } anunciados=160
+gameserver-1  | [probe] check 8070 vivos=25 baus=0 0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|
+gameserver-1  | [spawn] T1ABot0 morto por 1301470219 no tick 8274, renasce no 10974
+gameserver-1  | [spawn] T1ABot1 morto por 1301470219 no tick 8330, renasce no 11030
+gameserver-1  | [neblina] filtro: media 164.5 us/tick, pico 1707 us, 16 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8374
+gameserver-1  | [spawn] T2ABot morto por 1301470219 no tick 8386, renasce no 11086
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 293, "1301470219:basic": 74 } anunciados=175
+gameserver-1  | [probe] check 8370 vivos=23 baus=0 0,0,0,0,0,160,160,360,0,0,51,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|
+gameserver-1  | [neblina] filtro: media 165.9 us/tick, pico 447 us, 41 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8674
+gameserver-1  | [probe] throttle minimo { 1301470219: 28, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 308, "1301470219:basic": 75 } anunciados=176
+gameserver-1  | [probe] check 8670 vivos=24 baus=2 0,0,0,160,360,160,160,360,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2346|Chest20,Chest21
+gameserver-1  | [spawn] T2A morto por 1301470219 no tick 8901, renasce no 11601
+gameserver-1  | [neblina] filtro: media 161.7 us/tick, pico 341 us, 11 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8974
+gameserver-1  | [spawn] T1A3 morto por 1301470219 no tick 8985, renasce no 11685
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 323, "1301470219:basic": 85 } anunciados=186
+gameserver-1  | [probe] check 8970 vivos=24 baus=2 0,160,0,52,0,160,160,360,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest20,Chest21
+gameserver-1  | [spawn] T1A1 morto por 1301470219 no tick 9069, renasce no 11769
+gameserver-1  | [chest] 1301470219 leva Peitoral do Caçador
+gameserver-1  | [chest] 1301470219 leva Botas da Guarda
+gameserver-1  | [neblina] filtro: media 167.0 us/tick, pico 385 us, 15 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9274
+gameserver-1  | [spawn] T1B2 morto por 2113959257 no tick 9274, renasce no 11974
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 338, "1301470219:basic": 88 } anunciados=192
+gameserver-1  | [probe] check 9270 vivos=23 baus=5 0,0,0,0,0,160,160,360,0,0,0,680,300,300,0,0,10,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest7,Chest9,Chest11,Chest20,Chest21
+gameserver-1  | [spawn] T1B0 morto por 2113959257 no tick 9334, renasce no 12034
+gameserver-1  | [spawn] T1A0 morto por 1301470219 no tick 9383, renasce no 12083
+gameserver-1  | [spawn] T1B3 morto por 2113959257 no tick 9396, renasce no 12096
+gameserver-1  | [chest] 1301470219 leva Arma Comum
+gameserver-1  | [spawn] T1B1 morto por 2113959257 no tick 9454, renasce no 12154
+gameserver-1  | [neblina] filtro: media 179.9 us/tick, pico 777 us, 22 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9574
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 352, "1301470219:basic": 93 } anunciados=208
+gameserver-1  | [probe] check 9570 vivos=23 baus=8 0,0,0,0,0,160,160,289,0,0,0,680,300,300,0,0,0,0,360,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest20,Chest21
+gameserver-1  | [spawn] T1ATop0 morto por 1301470219 no tick 9625, renasce no 12325
+gameserver-1  | [spawn] T2B morto por 2113959257 no tick 9667, renasce no 12367
+gameserver-1  | [spawn] T2ATop morto por 1301470219 no tick 9681, renasce no 12381
+gameserver-1  | [spawn] T1ATop1 morto por 1301470219 no tick 9765, renasce no 12465
+gameserver-1  | [chest] 1301470219 leva Elmo do Caçador
+gameserver-1  | [match] PHASE1 -> TRANSITION, tick 9873
+gameserver-1  | [match] fim da fase 1 (5:00), portoes caem, tick 9873
+gameserver-1  | [match] jogador 1301470219: Nv 6, 1184 XP
+gameserver-1  | [match] jogador 2113959257: Nv 5, 1020 XP
+gameserver-1  | [spawn] Rei Esqueleto vivo aos 5:00 sai do mapa sem drop, tick 9873
+gameserver-1  | [neblina] filtro: media 173.1 us/tick, pico 1009 us, 6 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9874
+gameserver-1  | [probe] throttle minimo { 1301470219: 28, 2113959257: 30 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 366, "1301470219:basic": 100 } anunciados=221
+gameserver-1  | [probe] check 9870 vivos=19 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,2400|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [match] heroi 2113959257 morto por 1301470219, tick 9998
+gameserver-1  | [match] TRANSITION -> PHASE2, tick 10023
+gameserver-1  | [match] heroi 1301470219 morto por 0, tick 10026
+gameserver-1  | [neblina] filtro: media 174.8 us/tick, pico 423 us, 51 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10174
+gameserver-1  | [probe] throttle minimo { 1301470219: 30, 2113959257: 30 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 368, "1301470219:basic": 101, "1301470219:r": 1 } anunciados=226
+gameserver-1  | [probe] check 10170 vivos=18 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,680,360,260,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [spawn] Mage1 morto por 1301470219 no tick 10453, sem respawn
+gameserver-1  | [neblina] filtro: media 168.1 us/tick, pico 1075 us, 66 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10474
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 381, "1301470219:basic": 106, "1301470219:r": 1 } anunciados=239
+gameserver-1  | [probe] check 10470 vivos=17 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,360,260,364,123,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [spawn] Warrior1 morto por 1301470219 no tick 10507, sem respawn
+gameserver-1  | [spawn] Golem1 morto por 1301470219 no tick 10588, sem respawn
+gameserver-1  | [neblina] filtro: media 163.4 us/tick, pico 428 us, 10 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10774
+gameserver-1  | [spawn] Warrior0 morto por 1301470219 no tick 10782, sem respawn
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 396, "1301470219:basic": 115, "1301470219:r": 1 } anunciados=249
+gameserver-1  | [probe] check 10770 vivos=15 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,32,260,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [match] heroi 1301470219 morto por 0, tick 11019
+gameserver-1  | [neblina] filtro: media 175.4 us/tick, pico 674 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11074
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 411, "1301470219:basic": 123, "1301470219:r": 1 } anunciados=257
+gameserver-1  | [probe] check 11070 vivos=14 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,680,0,260,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 165.7 us/tick, pico 496 us, 34 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11374
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 426, "1301470219:basic": 125, "1301470219:r": 1 } anunciados=259
+gameserver-1  | [probe] check 11370 vivos=14 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,598,0,260,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [spawn] Golem0 morto por 1301470219 no tick 11581, sem respawn
+gameserver-1  | [neblina] filtro: media 166.5 us/tick, pico 468 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11674
+gameserver-1  | [spawn] Mage0 morto por 1301470219 no tick 11689, sem respawn
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 28 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 441, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 11670 vivos=13 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,14,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 162.7 us/tick, pico 328 us, 27 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11974
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 456, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 11970 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 165.6 us/tick, pico 472 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12274
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 471, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 12270 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 192.0 us/tick, pico 1246 us, 48 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12574
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 30 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 486, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 12570 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 193.2 us/tick, pico 565 us, 87 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12874
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 12870 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 182.6 us/tick, pico 402 us, 38 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13174
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 13170 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 187.6 us/tick, pico 460 us, 121 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13474
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 13470 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 175.7 us/tick, pico 617 us, 82 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13774
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [probe] check 13770 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [neblina] filtro: media 180.3 us/tick, pico 534 us, 19 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14074
+gameserver-1  | [probe] check 14070 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 30, 2113959257: 24 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [neblina] filtro: media 198.3 us/tick, pico 485 us, 320 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14374
+gameserver-1  | [probe] check 14370 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 22, 2113959257: 16 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [neblina] filtro: media 187.5 us/tick, pico 862 us, 129 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14674
+gameserver-1  | [probe] check 14670 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [neblina] filtro: media 186.2 us/tick, pico 371 us, 105 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14974
+gameserver-1  | [probe] check 14970 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 28, 2113959257: 28 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [neblina] filtro: media 175.5 us/tick, pico 479 us, 13 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15274
+gameserver-1  | [probe] check 15270 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 30, 2113959257: 28 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 491, "1301470219:basic": 136, "1301470219:r": 1 } anunciados=270
+gameserver-1  | [neblina] filtro: media 180.2 us/tick, pico 414 us, 166 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15574
+gameserver-1  | [probe] check 15570 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 30, 2113959257: 30 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 493, "1301470219:basic": 137, "1301470219:r": 2 } anunciados=275
+gameserver-1  | [match] heroi 2113959257 morto por 1301470219, tick 15691
+gameserver-1  | [neblina] filtro: media 182.1 us/tick, pico 940 us, 120 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15874
+gameserver-1  | [probe] check 15870 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 498, "1301470219:basic": 141, "1301470219:r": 2 } anunciados=280
+gameserver-1  | [match] heroi 1301470219 morto por 2113959257, tick 16162
+gameserver-1  | [neblina] filtro: media 169.1 us/tick, pico 487 us, 24 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16174
+gameserver-1  | [probe] check 16170 vivos=12 baus=10 0,0,0,0,0,0,0,0,0,0,0,680,300,300,0,0,0,0,0,160,160,360,160,160,360,680,300,300,0,0,0,0,0,0,x|Chest6,Chest7,Chest8,Chest9,Chest10,Chest11,Chest15,Chest16,Chest20,Chest21
+gameserver-1  | [probe] throttle minimo { 1301470219: 32, 2113959257: 32 }
+gameserver-1  | [probe] vfx servidor { "2113959257:basic": 507, "1301470219:basic": 146, "1301470219:r": 2 } anunciados=289

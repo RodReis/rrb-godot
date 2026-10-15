@@ -102,7 +102,7 @@ static func header_chips(rules: MatchRules) -> Array[Array]:
 		],
 		[
 			_t("ZONA INICIAL"),
-			CompendiumFormat.decimal(rules.zone_radius[0]),
+			CompendiumFormat.decimal(_first_radius(rules)),
 			_t("u de raio"),
 			&"LnNumLgCyan"
 		],
@@ -165,14 +165,23 @@ static func phase_one_rules(rules: MatchRules, data: ArenaMapData) -> Array[Rule
 			),
 			ACCENT_CYAN
 		),
-		Rule.new(
-			UiIcons.INVENTORY_2,
-			_t("%d baús no mapa:") % _sum(totals),
-			(
-				_t("%s; cada um oferece itens e você escolhe um. Não reabrem.")
-				% _chest_summary(totals)
-			),
-			ACCENT_CYAN
+		(
+			Rule
+			. new(
+				UiIcons.INVENTORY_2,
+				_t("%d baús no mapa:") % _sum(totals),
+				(
+					_t(
+						"%s. Você escolhe um dos itens oferecidos; o baú comum cura +%s HP em %s das vezes."
+					)
+					% [
+						_chest_summary(totals),
+						CompendiumFormat.decimal(rules.heal_amount),
+						CompendiumFormat.percent(rules.common_chest_heal_chance)
+					]
+				),
+				ACCENT_CYAN
+			)
 		),
 		Rule.new(
 			UiIcons.SWORDS,
@@ -200,7 +209,6 @@ static func phase_one_rules(rules: MatchRules, data: ArenaMapData) -> Array[Rule
 
 
 static func phase_two_rules(rules: MatchRules) -> Array[Rule]:
-	var last := rules.zone_radius.size() - 2
 	var damage_max := 0.0
 	for fraction: float in rules.zone_damage_pct:
 		damage_max = maxf(damage_max, fraction)
@@ -229,9 +237,9 @@ static func phase_two_rules(rules: MatchRules) -> Array[Rule]:
 					)
 				)
 				% [
-					CompendiumFormat.decimal(rules.zone_radius[0]),
-					CompendiumFormat.decimal(rules.zone_radius[last]),
-					CompendiumFormat.percent(rules.zone_damage_pct[0]),
+					CompendiumFormat.decimal(_first_radius(rules)),
+					CompendiumFormat.decimal(_last_radius(rules)),
+					CompendiumFormat.percent(_first_damage(rules)),
 					CompendiumFormat.percent(damage_max)
 				]
 			),
@@ -267,26 +275,25 @@ static func phase_one_note(rules: MatchRules) -> PackedStringArray:
 	return PackedStringArray([_t("XP DO ABATE DE HERÓI"), "%d XP" % rules.phase1_kill_xp])
 
 
-## Passos da zona da fase 2 para a barra: [instante do jogo "05:00", percentual da arena "74%",
-## raio em u]. O ultimo ponto (raio 0) e a resolucao imediata, nao um passo.
+## Passos da zona da fase 2 para a barra: [instante do jogo "05:00", raio "26 u", percentual da
+## arena para a barra]. O ultimo ponto (raio 0) e a resolucao imediata, nao um passo.
 static func zone_steps(rules: MatchRules) -> Array[PackedStringArray]:
 	var steps: Array[PackedStringArray] = []
-	var full := rules.zone_radius[0]
-	for i: int in rules.zone_radius.size():
+	var full := _first_radius(rules)
+	var count := mini(rules.zone_radius.size(), rules.zone_times.size())
+	if full <= 0.0:
+		return steps
+	for i: int in count:
 		if rules.zone_radius[i] <= 0.0:
 			continue
-		(
-			steps
-			. append(
-				PackedStringArray(
-					[
-						CompendiumFormat.clock(rules.phase1_duration + rules.zone_times[i]),
-						"%d%%" % roundi(rules.zone_radius[i] / full * CompendiumFormat.PERCENT),
-						CompendiumFormat.decimal(rules.zone_radius[i]),
-					]
-				)
-			)
+		var entry := PackedStringArray(
+			[
+				CompendiumFormat.clock(rules.phase1_duration + rules.zone_times[i]),
+				"%s u" % CompendiumFormat.decimal(rules.zone_radius[i]),
+				String.num(rules.zone_radius[i] / full * CompendiumFormat.PERCENT, 2),
+			]
 		)
+		steps.append(entry)
 	return steps
 
 
@@ -295,6 +302,8 @@ static func poi_info(id: String, data: ArenaMapData, catalog: CatalogService) ->
 	var poi := data.poi(id)
 	var info := PoiInfo.new()
 	if poi.is_empty():
+		return info
+	if not PIN_STYLE.has(id):
 		return info
 	var style: Array = PIN_STYLE[id]
 	info.id = id
@@ -324,6 +333,8 @@ static func poi_info(id: String, data: ArenaMapData, catalog: CatalogService) ->
 
 ## Rotulo do pino no mapa; o chefe leva a hora em que surge.
 static func pin_label(id: String, rules: MatchRules) -> String:
+	if not PIN_STYLE.has(id):
+		return id
 	var label: String = PIN_STYLE[id][1]
 	if id == ArenaMapPois.CRATER:
 		return "%s %s" % [_t(label), CompendiumFormat.clock(rules.boss_spawn_time)]
@@ -419,7 +430,7 @@ static func _side(info: PoiInfo, groups: Array, catalog: CatalogService) -> void
 	info.text = (
 		_t(
 			(
-				"%d campos, dois em cada metade do mapa, cada um com %s e %s. Os monstros comuns "
+				"%d campos nas laterais do mapa, cada um com %s e %s. Os monstros comuns "
 				+ "renascem %s s depois de morrer, só na fase 1."
 			)
 		)
@@ -547,6 +558,23 @@ static func _chests_text(chests: Dictionary) -> String:
 
 static func _chest_summary(totals: Dictionary[String, int]) -> String:
 	return _chests_text(totals)
+
+
+static func _first_radius(rules: MatchRules) -> float:
+	return 0.0 if rules.zone_radius.is_empty() else rules.zone_radius[0]
+
+
+## Menor raio de um passo da zona (o ultimo com raio > 0).
+static func _last_radius(rules: MatchRules) -> float:
+	var last := 0.0
+	for radius: float in rules.zone_radius:
+		if radius > 0.0:
+			last = radius
+	return last
+
+
+static func _first_damage(rules: MatchRules) -> float:
+	return 0.0 if rules.zone_damage_pct.is_empty() else rules.zone_damage_pct[0]
 
 
 ## tr() e de instancia; os textos daqui sao estaticos e passam pelo servidor de traducao.

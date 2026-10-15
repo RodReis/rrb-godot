@@ -30,6 +30,9 @@ var _loaded: bool = false
 
 ## Le tudo de shared/data; chamar de novo nao duplica nada.
 func load_all() -> void:
+	# Fora da guarda: "Tentar de novo" recupera o mapa mesmo com o resto do catalogo ja carregado.
+	if arena_map == null:
+		arena_map = load(ARENA_MAP_PATH) as ArenaMapData
 	if _loaded:
 		return
 	heroes.assign(_load_dir(HEROES_DIR))
@@ -39,7 +42,6 @@ func load_all() -> void:
 	set_bonuses.assign(catalog.set_bonuses if catalog != null else [])
 	xp_curve = load(XP_CURVE_PATH) as XpCurve
 	match_rules = load(MATCH_RULES_PATH) as MatchRules
-	arena_map = load(ARENA_MAP_PATH) as ArenaMapData
 	if match_rules != null:
 		_sort_heroes()
 	_loaded = (
