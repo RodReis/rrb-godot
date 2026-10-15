@@ -94,10 +94,21 @@ func poll() -> void:
 		_finish()
 		cancelled.emit()
 	elif status.assignment == null:
-		_fail(MATCH_GONE)
+		# Partida existe sem servidor para esta conta: libera para a proxima fila (§6).
+		_finish()
+		if not status.match_id.is_empty():
+			await api.request(HTTPClient.METHOD_POST, "/matches/%s/abandon" % status.match_id)
+		failed.emit(MATCH_GONE)
 	else:
 		_finish()
 		matched.emit(status.match_id, status.assignment)
+
+
+## Esquece a fila sem falar com o backend (sessao expirada ou logout): o ticket sem polling
+## expira sozinho no backend.
+func reset() -> void:
+	_finish()
+	_joining = false
 
 
 func _fail(reason: String) -> void:

@@ -8,6 +8,9 @@ extends Node
 ## Sessao expirada e sem renovacao: o App volta ao login.
 signal unauthorized
 
+## Resultado do refresh: renovou, recusado (sessao acabou) ou sem resposta (rede).
+enum Refresh { OK, DENIED, OFFLINE }
+
 ## Sem resposta (rede, timeout, backend fora).
 const NO_RESPONSE: int = 0
 ## code() de quem nao respondeu e de quem respondeu sem {code} (ex.: HTML de proxy).
@@ -78,8 +81,14 @@ func request(
 	var response: Response = await _send(method, path, body, authed)
 	if response.status != STATUS_UNAUTHORIZED or not authed or not has_session():
 		return response
-	if await _refresh():
-		response = await _send(method, path, body, authed)
+	var refreshed: Refresh = await _refresh()
+	if not has_session():
+		return response  # saiu (logout) enquanto o refresh voltava
+	match refreshed:
+		Refresh.OK:
+			response = await _send(method, path, body, authed)
+		Refresh.OFFLINE:
+			return Response.make(NO_RESPONSE, null)  # rede: a sessao continua valendo
 	if response.status == STATUS_UNAUTHORIZED:
 		clear_tokens()
 		unauthorized.emit()
@@ -88,16 +97,21 @@ func request(
 
 # ponytail: dois 401 simultaneos renovam duas vezes; hoje so o polling da fila e autenticado em
 # paralelo. Serializar o refresh se aparecer outra chamada autenticada concorrente.
-func _refresh() -> bool:
+func _refresh() -> Refresh:
 	if refresh_token.is_empty():
-		return false
-	var body := {"refreshToken": refresh_token}
+		return Refresh.DENIED
+	var used := refresh_token
+	var body := {"refreshToken": used}
 	var response: Response = await _send(HTTPClient.METHOD_POST, "/auth/refresh", body, false)
+	if response.status == NO_RESPONSE:
+		return Refresh.OFFLINE
 	var tokens := AuthTokens.from_dict(response.json) if response.ok() else null
 	if tokens == null:
-		return false
+		return Refresh.DENIED
+	if refresh_token != used:
+		return Refresh.DENIED  # logout no meio: nao ressuscita a sessao
 	set_tokens(tokens)
-	return true
+	return Refresh.OK
 
 
 ## Um HTTPRequest por chamada, liberado no fim; timeout de 10 s.

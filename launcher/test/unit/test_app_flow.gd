@@ -89,6 +89,36 @@ func test_encerrar_pelo_overlay_pede_confirmacao_e_nao_acusa_erro() -> void:
 	assert_false(_app.match_overlay().visible)
 
 
+func test_treinar_durante_a_busca_sai_da_fila() -> void:
+	var lobby := await _enter_lobby()
+	_api.reply(
+		"POST /queue",
+		201,
+		{"id": "t1", "status": "searching", "createdAt": "2026-10-15T12:00:00.000Z"}
+	)
+	await lobby.toggle_queue()
+	assert_true(_app.queue.is_searching())
+	_api.reply("DELETE /queue/t1", 204)
+	lobby.practice_requested.emit()
+	await wait_process_frames(1)
+	assert_true(_api.calls.has("DELETE /queue/t1"))
+	assert_false(_app.queue.is_searching())
+	assert_eq(lobby.queue_state(), LobbyScreen.QueueState.IDLE)
+	assert_push_warning("ausente")
+
+
+func test_sessao_expirada_encerra_a_fila() -> void:
+	var lobby := await _enter_lobby()
+	_api.reply(
+		"POST /queue",
+		201,
+		{"id": "t1", "status": "searching", "createdAt": "2026-10-15T12:00:00.000Z"}
+	)
+	await lobby.toggle_queue()
+	_api.unauthorized.emit()
+	assert_false(_app.queue.is_searching())
+
+
 func test_sair_da_conta_volta_ao_login() -> void:
 	var lobby := await _enter_lobby()
 	lobby.logout_requested.emit()

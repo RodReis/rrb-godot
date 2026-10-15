@@ -52,6 +52,29 @@ func test_refresh_recusado_limpa_a_sessao_e_avisa() -> void:
 	assert_false(_api.has_session())
 
 
+func test_refresh_sem_resposta_mantem_a_sessao() -> void:
+	_api.set_tokens(AuthTokens.from_dict(TOKENS_A))
+	_api.reply("GET /queue/t1", 401, {"code": "UNAUTHORIZED"})
+	watch_signals(_api)
+	var response: ApiClient.Response = await _api.request(HTTPClient.METHOD_GET, "/queue/t1")
+	assert_eq(response.status, ApiClient.NO_RESPONSE, "conta como rede, nao como sessao vencida")
+	assert_true(_api.has_session())
+	assert_signal_not_emitted(_api, "unauthorized")
+
+
+func test_logout_durante_o_refresh_nao_ressuscita_a_sessao() -> void:
+	_api.set_tokens(AuthTokens.from_dict(TOKENS_A))
+	_api.reply("GET /queue/t1", 401, {"code": "UNAUTHORIZED"})
+	_api.reply("POST /auth/refresh", 200, TOKENS_B)
+	_api.during_call = func(call: String) -> void:
+		if call == "POST /auth/refresh":
+			_api.clear_tokens()
+	watch_signals(_api)
+	await _api.request(HTTPClient.METHOD_GET, "/queue/t1")
+	assert_false(_api.has_session())
+	assert_signal_not_emitted(_api, "unauthorized")
+
+
 func test_401_sem_sessao_nao_e_sessao_expirada() -> void:
 	_api.reply("POST /auth/login", 401, {"code": "INVALID_CREDENTIALS"})
 	watch_signals(_api)

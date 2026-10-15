@@ -141,7 +141,7 @@ func toggle_queue() -> void:
 	if _state == QueueState.SEARCHING:
 		_cta.disabled = true
 		await _queue.leave()
-		_cta.disabled = false
+		_cta.disabled = _state in [QueueState.JOINING, QueueState.MATCHED]
 	elif _state in [QueueState.IDLE, QueueState.ERROR]:
 		_show_state(QueueState.JOINING)
 		await _queue.join()

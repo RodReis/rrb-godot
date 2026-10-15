@@ -117,11 +117,26 @@ func test_ticket_cancelado_pelo_servidor() -> void:
 	assert_false(_queue.is_searching())
 
 
-func test_matched_sem_servidor_e_falha() -> void:
+func test_matched_sem_servidor_abandona_e_falha() -> void:
 	await _join()
 	_api.reply("GET /queue/" + TICKET, 200, {"status": "matched", "elapsedS": 3, "matchId": MATCH})
+	_api.reply("POST /matches/%s/abandon" % MATCH, 204)
 	await _queue.poll()
+	assert_true(_api.calls.has("POST /matches/%s/abandon" % MATCH))
 	assert_signal_emitted_with_parameters(_queue, "failed", [QueueService.MATCH_GONE])
+	assert_false(_queue.is_searching())
+
+
+func test_reset_esquece_a_fila_sem_chamar_o_backend() -> void:
+	await _join()
+	var calls := _api.calls.size()
+	_queue.reset()
+	assert_false(_queue.is_searching())
+	assert_true(_queue.poll_timer().is_stopped())
+	assert_eq(_api.calls.size(), calls)
+	_api.reply("POST /queue", 201, TICKET_JSON)
+	await _queue.join()
+	assert_true(_queue.is_searching(), "pode entrar de novo")
 
 
 func test_resposta_fora_do_contrato_e_falha() -> void:

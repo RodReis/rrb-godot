@@ -119,6 +119,7 @@ func check_backend() -> void:
 
 ## Lanca o Game; true se abriu (mostra o overlay e trava a navegacao).
 func launch_game(game_args: PackedStringArray, practice: bool) -> bool:
+	_ended_by_player = false
 	if game.launch(game_args) < 0:
 		return false
 	_match.open(practice)
@@ -171,6 +172,13 @@ func _refresh_footer() -> void:
 
 
 func _start_practice() -> void:
+	if game.is_running():
+		return
+	if queue.is_searching():
+		await queue.leave()  # treino e fila juntos pareariam com o jogo ocupado
+	var lobby := _stack.current() as LobbyScreen
+	if lobby != null:
+		lobby.reset_queue()
 	_match_id = ""
 	if not launch_game(OFFLINE_ARGS, true):
 		show_toast(tr("Instalação incompleta: o jogo não foi encontrado."), Toast.Kind.ERROR)
@@ -179,6 +187,7 @@ func _start_practice() -> void:
 func _logout() -> void:
 	if queue.is_searching():
 		await queue.leave()
+	queue.reset()
 	auth.logout()
 	account_email = ""
 	_stack.reset(Router.LOGIN)
@@ -237,6 +246,7 @@ func _on_bar_quit_requested() -> void:
 
 ## Sessao expirada sem renovacao (§3.3): volta ao Login com aviso.
 func _on_api_unauthorized() -> void:
+	queue.reset()
 	show_toast(tr("Sua sessão expirou. Entre de novo."), Toast.Kind.WARN)
 	account_email = ""
 	_stack.reset(Router.LOGIN)
@@ -244,6 +254,11 @@ func _on_api_unauthorized() -> void:
 
 ## Pareado: abre o Game com o servidor e o token; sem executavel, abandona a partida (§6).
 func _on_queue_matched(match_id: String, assignment: MatchAssignment) -> void:
+	if game.is_running():
+		# Nao deveria acontecer (o treino sai da fila); mesmo assim, nao culpar a instalacao.
+		await api.request(HTTPClient.METHOD_POST, "/matches/%s/abandon" % match_id)
+		_show_lobby_error(tr("Feche o jogo aberto antes de buscar partida."))
+		return
 	_match_id = match_id
 	var args := PackedStringArray(
 		[
@@ -255,9 +270,13 @@ func _on_queue_matched(match_id: String, assignment: MatchAssignment) -> void:
 		return
 	await api.request(HTTPClient.METHOD_POST, "/matches/%s/abandon" % match_id)
 	_match_id = ""
+	_show_lobby_error(tr("Instalação incompleta: o jogo não foi encontrado."))
+
+
+func _show_lobby_error(message: String) -> void:
 	var lobby := _stack.current() as LobbyScreen
 	if lobby != null:
-		lobby.show_error(tr("Instalação incompleta: o jogo não foi encontrado."))
+		lobby.show_error(message)
 
 
 ## Fim do Game: tabela do §5.2. Ate o historico existir (F26), o codigo 0 volta ao lobby.
@@ -267,7 +286,7 @@ func _on_game_exited(code: int) -> void:
 	var online := not _match_id.is_empty()
 	_match_id = ""
 	var lobby := _stack.current() as LobbyScreen
-	if lobby != null:
+	if lobby != null and not queue.is_searching():
 		lobby.reset_queue()
 	var outcome := GameProcess.outcome(code)
 	if _ended_by_player:
