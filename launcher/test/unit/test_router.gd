@@ -25,6 +25,13 @@ func test_menu_tem_o_guia_e_bestiario() -> void:
 	assert_false(Router.NAV.has(Router.FORGE), "a Forja e aba do Guia, nao item do menu")
 
 
+func test_menu_tem_arena_e_mapa_entre_o_lobby_e_o_guia() -> void:
+	var order: Array = Router.NAV.keys()
+	assert_true(order.has(Router.ARENA_MAP))
+	assert_eq(order.find(Router.ARENA_MAP), order.find(Router.LOBBY) + 1)
+	assert_eq(Router.nav_route(Router.ARENA_MAP), Router.ARENA_MAP)
+
+
 func test_forja_destaca_o_item_do_guia_e_bestiario() -> void:
 	assert_eq(Router.nav_route(Router.FORGE), Router.BESTIARY)
 	assert_eq(Router.nav_route(Router.HISTORY), Router.HISTORY)

@@ -4,8 +4,9 @@ extends SceneTree
 ##   shared/assets/ui/arena_map.png  render estatico, ortografico, de dia (decisao do PI, F33)
 ##   shared/assets/ui/arena_map.tres ArenaMapData: enquadramento + pontos de interesse
 ## A imagem e os dados saem da MESMA cena (game/scenes/arena/ilha_arcana.tscn): os pontos vem dos
-## SpawnMarker, das pontes e das moitas dela; so as 2 lagoas (sem no proprio) sao as de
-## tools/arena/arena_dressing.gd. Regere sempre que a arena mudar. Precisa de janela (GPU) e do
+## SpawnMarker, das pontes e das moitas dela (ArenaMapSource). Regere sempre que a arena mudar; o
+## teste test_arena_map_data.gd (Game) falha se o arquivo gravado ficar velho. Precisa de janela
+## (GPU) e do
 ## projeto do Game (a cena depende dos scripts dele). Na raiz do repo:
 ##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/render_arena_map.gd
 
@@ -13,8 +14,6 @@ const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const OUT_IMAGE: String = "res://shared/assets/ui/arena_map.png"
 const OUT_DATA: String = "res://shared/assets/ui/arena_map.tres"
 const IMAGE_SIZE: Vector2i = Vector2i(2048, 1152)
-## Lagoas do rio (SPEC-046 §2.1): a NO e a rotacao de 180 graus dela (arena_dressing.gd LAGOON_A).
-const LAGOON_A: Vector2 = Vector2(-26, -18)
 ## Frames de espera: shaders compilam, o lightmap carrega e a floresta do vale e criada.
 const WARMUP_FRAMES: int = 60
 ## Luz de dia so desta foto: sol alto e de frente-esquerda (sombras para o lado, relevo legivel).
@@ -65,7 +64,12 @@ func _run() -> void:
 	failed = failed or ResourceSaver.save(data, OUT_DATA) != OK
 	for poi: Dictionary in data.pois:
 		var uniform := ArenaMapPois.is_uniform(poi)
-		print("[arena-map] %s: %d campo(s)%s" % [poi["id"], poi["groups"].size(), "" if uniform else " DIFERENTES"])
+		print(
+			(
+				"[arena-map] %s: %d campo(s)%s"
+				% [poi["id"], poi["groups"].size(), "" if uniform else " DIFERENTES"]
+			)
+		)
 		failed = failed or not uniform
 	quit(1 if failed else 0)
 
@@ -97,34 +101,5 @@ func _data(arena: Node3D) -> ArenaMapData:
 	data.view_height = ArenaMapView.VIEW_HEIGHT
 	data.view_aspect = ArenaMapView.ASPECT
 	data.image_size = IMAGE_SIZE
-	var lagoons: Array[Vector2] = [LAGOON_A, -LAGOON_A]
-	data.pois = ArenaMapPois.build(
-		_markers(), _ground_of(arena.get_node("Bridges")), _ground_of(arena.get_node("TallGrass")), lagoons
-	)
+	data.pois = ArenaMapSource.pois(arena)
 	return data
-
-
-## Marcadores da arena como Dictionaries puros (o que ArenaMapPois.build espera).
-func _markers() -> Array[Dictionary]:
-	var markers: Array[Dictionary] = []
-	for node: Node in get_nodes_in_group(SpawnMarker.GROUP):
-		var marker := node as SpawnMarker
-		var at := marker.global_position
-		markers.append(
-			{
-				"kind": int(marker.kind),
-				"team": marker.team,
-				"at": Vector2(at.x, at.z),
-				"monster_id": String(marker.monster_id),
-				"chest_kind": String(ChestRules.Kind.keys()[marker.chest_kind]).to_lower(),
-			}
-		)
-	return markers
-
-
-func _ground_of(parent: Node) -> Array[Vector2]:
-	var points: Array[Vector2] = []
-	for child: Node in parent.get_children():
-		var node := child as Node3D
-		points.append(Vector2(node.global_position.x, node.global_position.z))
-	return points

@@ -214,6 +214,10 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 	var history_screen := screen as HistoryScreen
 	if history_screen != null:
 		history_screen.bind(history)
+	var arena_map := screen as ArenaMapScreen
+	if arena_map != null:
+		arena_map.bind(catalog)
+		arena_map.practice_requested.connect(_start_practice)
 	var compendium := screen as CompendiumScreen
 	if compendium != null:
 		compendium.bind(catalog)

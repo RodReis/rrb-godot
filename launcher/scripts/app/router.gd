@@ -6,6 +6,7 @@ extends RefCounted
 const LOGIN: StringName = &"login"
 const LOBBY: StringName = &"lobby"
 const HISTORY: StringName = &"history"
+const ARENA_MAP: StringName = &"arena_map"
 const BESTIARY: StringName = &"bestiary"
 const FORGE: StringName = &"forge"
 const SETTINGS: StringName = &"settings"
@@ -17,6 +18,7 @@ const ROUTES: Dictionary[StringName, String] = {
 	LOGIN: "res://scenes/screens/login.tscn",
 	LOBBY: "res://scenes/screens/lobby.tscn",
 	HISTORY: "res://scenes/screens/history.tscn",
+	ARENA_MAP: "res://scenes/screens/arena_map.tscn",
 	BESTIARY: "res://scenes/screens/bestiary.tscn",
 	FORGE: "res://scenes/screens/forge.tscn",
 	SETTINGS: "res://scenes/screens/settings.tscn",
@@ -24,7 +26,11 @@ const ROUTES: Dictionary[StringName, String] = {
 }
 ## Menu da barra superior, na ordem: rota -> rotulo (Herois do prototipo: ainda sem tela).
 const NAV: Dictionary[StringName, String] = {
-	LOBBY: "LOBBY", BESTIARY: "GUIA & BESTIÁRIO", HISTORY: "HISTÓRICO", SETTINGS: "AJUSTES"
+	LOBBY: "LOBBY",
+	ARENA_MAP: "ARENA & MAPA",
+	BESTIARY: "GUIA & BESTIÁRIO",
+	HISTORY: "HISTÓRICO",
+	SETTINGS: "AJUSTES",
 }
 ## Telas que o menu destaca pelo item de outra rota: a Forja e a aba do Guia & Bestiario.
 const NAV_PARENT: Dictionary[StringName, StringName] = {FORGE: BESTIARY}

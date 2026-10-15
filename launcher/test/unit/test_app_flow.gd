@@ -201,6 +201,45 @@ func test_menu_do_topo_abre_o_guia_com_o_catalogo() -> void:
 	assert_eq(screen.cards().size(), 6)
 
 
+func test_menu_do_topo_abre_arena_e_mapa_com_o_catalogo() -> void:
+	await _enter_lobby()
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	bar.navigate_requested.emit(Router.ARENA_MAP)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.ARENA_MAP)
+	var screen := _app.stack().current() as ArenaMapScreen
+	assert_eq(screen.state(), StateBox.State.READY)
+	assert_eq(screen.canvas().pins().size(), 21)
+
+
+func test_aba_arena_do_guia_troca_a_tela_sem_empilhar() -> void:
+	await _enter_lobby()
+	_app.stack().push(Router.BESTIARY)
+	await wait_process_frames(2)
+	(_app.stack().current() as BestiaryScreen).navigate_requested.emit(Router.ARENA_MAP)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.ARENA_MAP)
+	assert_eq(_app.stack().depth(), 2, "troca a do topo")
+
+
+func test_treino_da_arena_e_mapa_sai_da_fila_como_o_do_lobby() -> void:
+	var lobby := await _enter_lobby()
+	_api.reply(
+		"POST /queue",
+		201,
+		{"id": "t1", "status": "searching", "createdAt": "2026-10-15T12:00:00.000Z"}
+	)
+	await lobby.toggle_queue()
+	_app.stack().push(Router.ARENA_MAP)
+	await wait_process_frames(2)
+	_api.reply("DELETE /queue/t1", 204)
+	(_app.stack().current() as ArenaMapScreen).practice_requested.emit()
+	await wait_process_frames(1)
+	assert_true(_api.calls.has("DELETE /queue/t1"))
+	assert_false(_app.queue.is_searching())
+	assert_push_warning("ausente")
+
+
 func test_aba_da_forja_troca_a_tela_sem_empilhar() -> void:
 	await _enter_lobby()
 	_app.stack().push(Router.BESTIARY)

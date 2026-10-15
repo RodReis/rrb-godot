@@ -13,6 +13,8 @@ const VIEW_HEIGHT: float = 72.0
 const ASPECT: float = 16.0 / 9.0
 ## Distancia da camera ao centro (so precisa passar acima do relevo mais alto).
 const CAMERA_DISTANCE: float = 220.0
+## Centro da imagem em (u, v).
+const MIDDLE: float = 0.5
 
 
 ## Posicao no chao (x, z do mundo) mais altura [param height] -> (u, v) em [0, 1] da imagem.
@@ -20,8 +22,8 @@ static func world_to_uv(ground: Vector2, height: float = 0.0) -> Vector2:
 	var pitch := deg_to_rad(PITCH_DEGREES)
 	var screen_up := height * cos(pitch) - ground.y * sin(pitch)
 	return Vector2(
-		0.5 + ground.x / (VIEW_HEIGHT * ASPECT),
-		0.5 - screen_up / VIEW_HEIGHT,
+		MIDDLE + ground.x / (VIEW_HEIGHT * ASPECT),
+		MIDDLE - screen_up / VIEW_HEIGHT,
 	)
 
 
@@ -29,8 +31,8 @@ static func world_to_uv(ground: Vector2, height: float = 0.0) -> Vector2:
 static func uv_to_world(uv: Vector2) -> Vector2:
 	var pitch := deg_to_rad(PITCH_DEGREES)
 	return Vector2(
-		(uv.x - 0.5) * VIEW_HEIGHT * ASPECT,
-		(uv.y - 0.5) * VIEW_HEIGHT / sin(pitch),
+		(uv.x - MIDDLE) * VIEW_HEIGHT * ASPECT,
+		(uv.y - MIDDLE) * VIEW_HEIGHT / sin(pitch),
 	)
 
 

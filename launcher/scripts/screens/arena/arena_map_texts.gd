@@ -5,6 +5,7 @@ extends RefCounted
 ## nunca do prototipo. A parte qualitativa vem da CONVENTION §4 e do GDB §5-§7. Funcoes puras,
 ## testaveis sem cena. Formato pt-BR: CompendiumFormat.
 
+const SECONDS_PER_MINUTE: float = 60.0
 const ACCENT_GOLD: StringName = &"gold"
 const ACCENT_CYAN: StringName = &"cyan"
 const ACCENT_ERROR: StringName = &"error"
@@ -61,6 +62,20 @@ class PoiInfo:
 	var facts: Array[PackedStringArray] = []
 
 
+## Titulo e descricao do cabecalho; os minutos das duas fases vem de MatchRules.
+static func header_title() -> String:
+	return _t("Arena do Vale: Duelo 1v1")
+
+
+static func header_description(rules: MatchRules) -> String:
+	var farm := rules.phase1_duration / SECONDS_PER_MINUTE
+	var zone := (rules.max_match_duration - rules.phase1_duration) / SECONDS_PER_MINUTE
+	return (
+		_t("Floresta, rio e cratera central • Duas fases: %s min de farm e %s min de zona mortal")
+		% [CompendiumFormat.decimal(farm), CompendiumFormat.decimal(zone)]
+	)
+
+
 ## "00:00 — 05:00".
 static func phase_one_window(rules: MatchRules) -> String:
 	return "%s — %s" % [CompendiumFormat.clock(0.0), CompendiumFormat.clock(rules.phase1_duration)]
@@ -96,14 +111,17 @@ static func header_chips(rules: MatchRules) -> Array[Array]:
 
 
 ## Faixa de rodape: [rotulo, valor, icone, acento]; totais contados da arena real e do catalogo.
-static func strip_stats(
-	data: ArenaMapData, catalog: CatalogService
-) -> Array[Array]:
+static func strip_stats(data: ArenaMapData, catalog: CatalogService) -> Array[Array]:
 	var chests := _sum(chest_totals(data))
 	return [
 		[_t("MONSTROS"), str(monster_total(data)), UiIcons.SWORDS, ACCENT_GOLD],
 		[_t("BAÚS"), str(chests), UiIcons.INVENTORY_2, ACCENT_CYAN],
-		[_t("MATO ALTO"), str(_group_count(data, ArenaMapPois.TALL_GRASS)), UiIcons.GRASS, ACCENT_CYAN],
+		[
+			_t("MATO ALTO"),
+			str(_group_count(data, ArenaMapPois.TALL_GRASS)),
+			UiIcons.GRASS,
+			ACCENT_CYAN
+		],
 		[
 			_t("BOSS NEUTRO"),
 			"1 %s" % catalog.boss().display_name,
@@ -204,7 +222,12 @@ static func phase_two_rules(rules: MatchRules) -> Array[Rule]:
 			UiIcons.CRISIS_ALERT,
 			_t("Zona de gás:"),
 			(
-				_t("círculo de %s u que encolhe até %s u; fora dele o dano vai de %s a %s do HP máx por segundo.")
+				_t(
+					(
+						"círculo de %s u que encolhe até %s u; fora dele o dano vai de %s a %s do"
+						+ " HP máx por segundo."
+					)
+				)
 				% [
 					CompendiumFormat.decimal(rules.zone_radius[0]),
 					CompendiumFormat.decimal(rules.zone_radius[last]),
@@ -252,13 +275,16 @@ static func zone_steps(rules: MatchRules) -> Array[PackedStringArray]:
 	for i: int in rules.zone_radius.size():
 		if rules.zone_radius[i] <= 0.0:
 			continue
-		steps.append(
-			PackedStringArray(
-				[
-					CompendiumFormat.clock(rules.phase1_duration + rules.zone_times[i]),
-					CompendiumFormat.percent(rules.zone_radius[i] / full),
-					CompendiumFormat.decimal(rules.zone_radius[i]),
-				]
+		(
+			steps
+			. append(
+				PackedStringArray(
+					[
+						CompendiumFormat.clock(rules.phase1_duration + rules.zone_times[i]),
+						"%d%%" % roundi(rules.zone_radius[i] / full * CompendiumFormat.PERCENT),
+						CompendiumFormat.decimal(rules.zone_radius[i]),
+					]
+				)
 			)
 		)
 	return steps
@@ -311,7 +337,11 @@ static func _base(info: PoiInfo, id: String, group: Dictionary, catalog: Catalog
 	info.title = _t("Base %s") % letter
 	info.text = (
 		_t(
-			"Seu herói nasce e renasce aqui. O portão só deixa passar o time dono até as %s. A fonte cura %s do HP máx por segundo num raio de %s u, só na fase 1. Dentro dos muros: %s."
+			(
+				"Seu herói nasce e renasce aqui. O portão só deixa passar o time dono até as %s. A "
+				+ "fonte cura %s do HP máx por segundo num raio de %s u, só na fase 1. Dentro dos "
+				+ "muros: %s."
+			)
 		)
 		% [
 			CompendiumFormat.clock(rules.phase1_duration),
@@ -321,7 +351,9 @@ static func _base(info: PoiInfo, id: String, group: Dictionary, catalog: Catalog
 		]
 	)
 	info.facts = [
-		PackedStringArray([_t("PORTÃO"), _t("CAI ÀS %s") % CompendiumFormat.clock(rules.phase1_duration)]),
+		PackedStringArray(
+			[_t("PORTÃO"), _t("CAI ÀS %s") % CompendiumFormat.clock(rules.phase1_duration)]
+		),
 		PackedStringArray([_t("BAÚS"), _chests_text(group["chests"])]),
 	]
 
@@ -333,7 +365,11 @@ static func _crater(info: PoiInfo, catalog: CatalogService) -> void:
 	info.title = _t("Cratera Central & %s") % boss.display_name
 	info.text = (
 		_t(
-			"Área de maior tensão da partida. O %s (%s HP, %s XP) surge aos %s, com aviso global aos %s, e derruba um item épico garantido. Se estiver vivo às %s, sai do mapa sem drop. Na fase 2, o centro é o último ponto da zona."
+			(
+				"Área de maior tensão da partida. O %s (%s HP, %s XP) surge aos %s, com aviso global "
+				+ "aos %s, e derruba um item épico garantido. Se estiver vivo às %s, sai do mapa sem "
+				+ "drop. Na fase 2, o centro é o último ponto da zona."
+			)
 		)
 		% [
 			boss.display_name,
@@ -345,7 +381,9 @@ static func _crater(info: PoiInfo, catalog: CatalogService) -> void:
 		]
 	)
 	info.facts = [
-		PackedStringArray([_t("DROP"), _t("ITEM ÉPICO (%s)") % CompendiumFormat.percent(boss.drop_epic_chance)]),
+		PackedStringArray(
+			[_t("DROP"), _t("ITEM ÉPICO (%s)") % CompendiumFormat.percent(boss.drop_epic_chance)]
+		),
 		PackedStringArray([_t("SURGE"), CompendiumFormat.clock(rules.boss_spawn_time)]),
 	]
 
@@ -356,7 +394,10 @@ static func _center(info: PoiInfo, groups: Array, catalog: CatalogService) -> vo
 	info.title = _t("Ilha Central")
 	info.text = (
 		_t(
-			"Disputada pelos dois times desde %s: %d acampamentos com %s e baús raros (%s). Só as pontes dão acesso à ilha."
+			(
+				"Disputada pelos dois times desde %s: %d acampamentos com %s e baús raros (%s). Só as"
+				+ " pontes dão acesso à ilha."
+			)
 		)
 		% [
 			CompendiumFormat.clock(0.0),
@@ -377,7 +418,10 @@ static func _side(info: PoiInfo, groups: Array, catalog: CatalogService) -> void
 	info.title = _t("Campos Laterais")
 	info.text = (
 		_t(
-			"%d campos, dois em cada metade do mapa, cada um com %s e %s. Os monstros comuns renascem %s s depois de morrer, só na fase 1."
+			(
+				"%d campos, dois em cada metade do mapa, cada um com %s e %s. Os monstros comuns "
+				+ "renascem %s s depois de morrer, só na fase 1."
+			)
 		)
 		% [
 			groups.size(),
@@ -388,7 +432,9 @@ static func _side(info: PoiInfo, groups: Array, catalog: CatalogService) -> void
 	)
 	info.facts = [
 		PackedStringArray([_t("CAMPOS"), str(groups.size())]),
-		PackedStringArray([_t("RESPAWN"), "%s s" % CompendiumFormat.decimal(rules.monster_respawn_phase1)]),
+		PackedStringArray(
+			[_t("RESPAWN"), "%s s" % CompendiumFormat.decimal(rules.monster_respawn_phase1)]
+		),
 	]
 
 
@@ -398,7 +444,10 @@ static func _corner(info: PoiInfo, groups: Array, catalog: CatalogService) -> vo
 	info.title = _t("Campos de Canto")
 	info.text = (
 		_t(
-			"%d campos neutros nas curvas das rotas de cima e de baixo, alcançáveis pelos dois times: %s e %s (%s raro, %s comum)."
+			(
+				"%d campos neutros nas curvas das rotas de cima e de baixo, alcançáveis pelos dois "
+				+ "times: %s e %s (%s raro, %s comum)."
+			)
 		)
 		% [
 			groups.size(),
@@ -410,7 +459,9 @@ static func _corner(info: PoiInfo, groups: Array, catalog: CatalogService) -> vo
 	)
 	info.facts = [
 		PackedStringArray([_t("CAMPOS"), str(groups.size())]),
-		PackedStringArray([_t("RESPAWN"), "%s s" % CompendiumFormat.decimal(rules.monster_respawn_phase1)]),
+		PackedStringArray(
+			[_t("RESPAWN"), "%s s" % CompendiumFormat.decimal(rules.monster_respawn_phase1)]
+		),
 	]
 
 
@@ -419,7 +470,10 @@ static func _river(info: PoiInfo, lagoons: int) -> void:
 	info.title = _t("Rio")
 	info.text = (
 		_t(
-			"O rio contorna a cratera e corre até %d lagoas. Ele bloqueia o movimento a pé; projéteis atravessam."
+			(
+				"O rio contorna a cratera e corre até %d lagoas. Ele bloqueia o movimento a pé; "
+				+ "projéteis atravessam."
+			)
 		)
 		% lagoons
 	)
@@ -431,7 +485,10 @@ static func _bridges(info: PoiInfo, count: int) -> void:
 	info.title = _t("Pontes")
 	info.text = (
 		_t(
-			"As %d pontes são a única travessia do anel do rio, uma por metade: dão acesso à ilha central. As rotas de cima e de baixo contornam as lagoas por fora."
+			(
+				"As %d pontes são a única travessia do anel do rio, uma por metade: dão acesso à ilha"
+				+ " central. As rotas de cima e de baixo contornam as lagoas por fora."
+			)
 		)
 		% count
 	)
@@ -443,13 +500,22 @@ static func _grass(info: PoiInfo, count: int, rules: MatchRules) -> void:
 	info.title = _t("Mato Alto")
 	info.text = (
 		_t(
-			"Quem está dentro de uma moita some para o adversário que está fora dela, a qualquer distância; quem está na mesma moita se vê. Atacar ou usar habilidade de dentro revela o herói por %s s. O raio de visão é de %s u."
+			(
+				"Quem está dentro de uma moita some para o adversário que está fora dela, a qualquer "
+				+ "distância; quem está na mesma moita se vê. Atacar ou usar habilidade de dentro "
+				+ "revela o herói por %s s. O raio de visão é de %s u."
+			)
 		)
-		% [CompendiumFormat.decimal(rules.grass_reveal_time), CompendiumFormat.decimal(rules.vision_radius)]
+		% [
+			CompendiumFormat.decimal(rules.grass_reveal_time),
+			CompendiumFormat.decimal(rules.vision_radius)
+		]
 	)
 	info.facts = [
 		PackedStringArray([_t("MOITAS"), str(count)]),
-		PackedStringArray([_t("REVELA"), "%s s" % CompendiumFormat.decimal(rules.grass_reveal_time)]),
+		PackedStringArray(
+			[_t("REVELA"), "%s s" % CompendiumFormat.decimal(rules.grass_reveal_time)]
+		),
 	]
 
 

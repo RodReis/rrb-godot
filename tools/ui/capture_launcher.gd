@@ -15,6 +15,7 @@ extends SceneTree
 ## F27: --route=bestiary|forge; --tier=t1|t2|t3|boss e --query=<texto> (Bestiario); --section=
 ## weapons|<id do conjunto> e --query (Forja); --build=<heroi>:<nivel>:<item>,<item> poe o build no
 ## simulador; --scroll=<px> rola o corpo (999999 = ate o fim); --catalog=broken mostra o erro.
+## F33: --route=arena_map; --poi=<id> escolhe o ponto de interesse (base_a, crater, tall_grass...).
 
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_SIZE: Vector2i = Vector2i(1920, 1080)
@@ -150,6 +151,7 @@ func _capture() -> void:
 			}
 			(history_screen[0] as HistoryScreen).select_filter(filters[args["filter"]])
 	await _compendium(app as App, args)
+	_arena_map(app as App, args)
 	if args.has("tab"):
 		var screen := app.find_children("*", "SettingsScreen", true, false)
 		if not screen.is_empty():
@@ -221,6 +223,13 @@ class HangingApi:
 	) -> ApiClient.Response:
 		await never
 		return null
+
+
+## F33: escolhe o ponto de interesse da tela Arena & Mapa (so desta captura).
+func _arena_map(app: App, args: Dictionary) -> void:
+	var found := app.find_children("*", "ArenaMapScreen", true, false)
+	if not found.is_empty() and args.has("poi"):
+		(found[0] as ArenaMapScreen).select_poi(args["poi"])
 
 
 ## F27: filtros, busca, build do simulador e rolagem do Compendio (so desta captura).

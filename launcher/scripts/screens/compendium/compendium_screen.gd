@@ -9,7 +9,7 @@ extends LauncherScreen
 ## Pedido de ir para outra tela do compendio (ou ao lobby); quem navega e o App.
 signal navigate_requested(route: StringName)
 
-enum Tab { BESTIARY, FORGE }
+enum Tab { BESTIARY, FORGE, ARENA }
 
 ## Brilhos do cabecalho do prototipo: primary-container/10 de 384 px (canto superior direito) e
 ## secondary/10 de 320 px.
@@ -23,7 +23,7 @@ const GLOW_CYAN_BOTTOM: float = -80.0
 const ARROW_SCROLL: float = 0.25
 const PAGE_SCROLL: float = 0.9
 const TAB_ROUTES: Dictionary[Tab, StringName] = {
-	Tab.BESTIARY: Router.BESTIARY, Tab.FORGE: Router.FORGE
+	Tab.BESTIARY: Router.BESTIARY, Tab.FORGE: Router.FORGE, Tab.ARENA: Router.ARENA_MAP
 }
 const NO_CATALOG: String = "Não foi possível carregar o catálogo do jogo."
 
@@ -183,7 +183,9 @@ func _build_header() -> void:
 	row.theme_type_variation = &"LnHGapXs"
 	strip.add_child(row)
 	var group := ButtonGroup.new()
-	var specs: Array[Array] = [[Tab.BESTIARY, UiIcons.SKULL], [Tab.FORGE, UiIcons.SHIELD]]
+	var specs: Array[Array] = [
+		[Tab.BESTIARY, UiIcons.SKULL], [Tab.FORGE, UiIcons.SHIELD], [Tab.ARENA, UiIcons.RADAR]
+	]
 	for spec: Array in specs:
 		var chip := FilterChip.new("", spec[1], FilterChip.ICON_INACTIVE_DEFAULT)
 		chip.button_group = group
@@ -193,6 +195,7 @@ func _build_header() -> void:
 		_tab_chips[spec[0]] = chip
 	_tab_chips[Tab.BESTIARY].set_label_text(tr("Bestiário"))
 	_tab_chips[Tab.FORGE].set_label_text(tr("Equipamentos & Sets"))
+	_tab_chips[Tab.ARENA].set_label_text(tr("Arena & Mecânicas"))
 	_ribbon.visible = false
 	_tab_chips[_current_tab()].set_pressed_no_signal(true)
 	_tab_chips[_current_tab()].refresh()

@@ -155,6 +155,13 @@ func test_aba_da_forja_pede_a_rota_e_a_propria_aba_nao() -> void:
 	assert_signal_emitted_with_parameters(_screen, "navigate_requested", [Router.FORGE])
 
 
+func test_aba_arena_e_mecanicas_leva_ao_mapa() -> void:
+	watch_signals(_screen)
+	_screen.tab_chip(CompendiumScreen.Tab.ARENA).pressed.emit()
+	assert_signal_emitted_with_parameters(_screen, "navigate_requested", [Router.ARENA_MAP])
+	assert_false(_screen.tab_chip(CompendiumScreen.Tab.ARENA).button_pressed)
+
+
 func test_primeiro_foco_na_aba_da_tela() -> void:
 	await wait_process_frames(2)
 	assert_true(_screen.tab_chip(CompendiumScreen.Tab.BESTIARY).has_focus())
