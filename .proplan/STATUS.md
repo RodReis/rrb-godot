@@ -9,7 +9,6 @@ updated: 2026-10-15
 
 ### [MVP3] Meta + deploy (#76)
 
-- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78)
 - [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86)
 - [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85)
 - [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84)
@@ -18,7 +17,10 @@ updated: 2026-10-15
 - [MVP3][SPEC-024][F24] Shell do launcher: App, pilha de telas, Theme completo, galeria, Configurações com aba Créditos e settings.cfg (#80)
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
-- [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79)
+
+### Sem épico
+
+- [MVP3][SPEC-023][FIX] Container do game server não é preso à partida atribuída (#181)
 
 ## A Fazer
 
@@ -36,6 +38,8 @@ _(vazio)_
 
 ### [MVP3] Meta + deploy (#76)
 
+- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78, finalizado em: 2026-10-15)
+- [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79, finalizado em: 2026-10-15)
 - [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77, finalizado em: 2026-10-15)
 
 ### [MVP2.6] Heróis 5 e 6 — Ladina e Engenheiro (#160)
