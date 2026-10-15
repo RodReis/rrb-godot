@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## F26: tela Historico (FRONTEND-LAUNCHER §3, §6): os 5 estados do StateBox, feed de duelos com o
 ## destaque na partida mais recente, filtros Todas/Vitorias/Derrotas, textos reais (sem dado de
@@ -243,6 +244,40 @@ func test_foco_inicial_no_filtro_todas() -> void:
 	await _open()
 	await wait_process_frames(2)
 	assert_true(_screen.filter_chip(HistoryScreen.Filter.ALL).has_focus())
+
+
+func test_mais_de_50_partidas_avisa_que_o_feed_e_so_das_recentes() -> void:
+	var cut := _history()
+	cut["totals"] = {"wins": 70, "losses": 30}
+	await _open(200, cut)
+	assert_eq(_screen.record_text(), "70V — 30D")
+	assert_string_contains(_screen.footer_text(), "só as mais recentes")
+
+
+func test_com_filtro_o_destaque_continua_sendo_a_mais_recente() -> void:
+	await _open()
+	_screen.select_filter(HistoryScreen.Filter.LOSSES)
+	assert_false(_screen.visible_cards()[0].highlighted, "a mais recente (vitoria) esta escondida")
+
+
+func test_tela_escondida_nao_rola_com_o_teclado() -> void:
+	var many := _history()
+	many["matches"] = []
+	for i: int in 30:
+		many["matches"].append(
+			_match(
+				i,
+				"win",
+				ME_RANGER,
+				{"heroId": "knight", "kills": 3, "finalLevel": 8},
+				500,
+				"kill_goal"
+			)
+		)
+	await _open(200, many)
+	_screen.visible = false
+	_screen._unhandled_key_input(_action(&"ui_page_down"))
+	assert_eq(_screen.scroll_position(), 0)
 
 
 func test_setas_e_paginas_rolam_o_feed() -> void:

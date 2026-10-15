@@ -149,3 +149,23 @@ func test_duas_telas_pedindo_juntas_fazem_uma_chamada() -> void:
 	await wait_until(func() -> bool: return results.size() == 2, 2.0)
 	assert_eq(_api.calls.size(), 1)
 	assert_eq(results, [true, true])
+
+
+func test_clear_no_meio_da_busca_descarta_a_resposta() -> void:
+	_api.reply(CALL, 200, HISTORY)
+	_api.during_call = func(_call: String) -> void: _service.clear()
+	assert_false(await _service.fetch())
+	assert_null(_service.history, "a resposta da conta anterior nao volta")
+	_api.during_call = Callable()
+	_api.reply(CALL, 200, {"totals": {"wins": 0, "losses": 0}, "matches": []})
+	assert_true(await _service.fetch(), "nova busca depois do clear funciona")
+	assert_eq(_service.history.matches.size(), 0)
+
+
+func test_is_ready_so_com_historico_e_sem_erro() -> void:
+	assert_false(_service.is_ready())
+	_api.reply(CALL, 200, HISTORY)
+	await _service.fetch()
+	assert_true(_service.is_ready())
+	await _service.fetch(true)
+	assert_false(_service.is_ready(), "falha ao atualizar")

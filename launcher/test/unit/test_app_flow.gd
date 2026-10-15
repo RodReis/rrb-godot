@@ -205,3 +205,29 @@ func test_sessao_expirada_descarta_o_historico() -> void:
 	await _app.history.fetch()
 	_api.unauthorized.emit()
 	assert_null(_app.history.history)
+
+
+func test_saida_com_erro_de_partida_online_tambem_descarta_o_cache() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, {"totals": {"wins": 0, "losses": 0}, "matches": []})
+	await _app.history.fetch()
+	_app.set(&"_match_id", MATCH)
+	_app.game.exited.emit(GameProcess.EXIT_RESULT_NOT_REPORTED)
+	assert_null(_app.history.history)
+
+
+func test_fim_de_partida_com_o_historico_ja_aberto_busca_de_novo() -> void:
+	await _enter_lobby()
+	var empty := {"totals": {"wins": 0, "losses": 0}, "matches": []}
+	_api.reply("GET /matches?mine=1", 200, empty)
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	bar.navigate_requested.emit(Router.HISTORY)
+	await wait_process_frames(2)
+	var old_screen := _app.stack().current()
+	_api.reply("GET /matches?mine=1", 200, empty)
+	_app.set(&"_match_id", MATCH)
+	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.HISTORY)
+	assert_ne(_app.stack().current(), old_screen, "tela nova, com dado novo")
+	assert_eq(_api.calls.count("GET /matches?mine=1"), 2)

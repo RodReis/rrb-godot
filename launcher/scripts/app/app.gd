@@ -295,6 +295,8 @@ func _on_game_exited(code: int) -> void:
 	_stack.locked = false
 	var online := not _match_id.is_empty()
 	_match_id = ""
+	if online:
+		_refresh_history()
 	var lobby := _stack.current() as LobbyScreen
 	if lobby != null and not queue.is_searching():
 		lobby.reset_queue()
@@ -305,7 +307,6 @@ func _on_game_exited(code: int) -> void:
 		return
 	if outcome.kind == GameProcess.Kind.NORMAL:
 		if online:
-			history.clear()
 			_stack.push(Router.HISTORY)
 		return
 	if outcome.offer_queue and online and lobby != null:
@@ -319,6 +320,14 @@ func _on_game_exited(code: int) -> void:
 		return
 	var kind := Toast.Kind.WARN if outcome.kind == GameProcess.Kind.WARNING else Toast.Kind.ERROR
 	show_toast(tr(outcome.message), kind)
+
+
+## Partida online acabou (de qualquer jeito): descarta o cache e, se o Historico ja esta aberto,
+## recria a tela para ela buscar de novo.
+func _refresh_history() -> void:
+	history.clear()
+	if _stack.current_route() == Router.HISTORY:
+		_stack.replace(Router.HISTORY)
 
 
 func _on_match_end_requested() -> void:

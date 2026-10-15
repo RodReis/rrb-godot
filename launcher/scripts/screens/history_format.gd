@@ -24,7 +24,7 @@ const END_REASONS: Dictionary[String, String] = {
 	"collapse_kills": "Colapso: mais abates",
 	"collapse_damage": "Colapso: mais dano",
 	"collapse_draw": "Colapso: sorteio",
-	"abandoned": "Ninguém conectado",
+	"abandoned": "Partida abandonada",
 	"heartbeat_lost": "Servidor sem sinal",
 	"token_expired": "Ninguém entrou a tempo",
 	"pairing_failed": "Falha ao montar a partida",

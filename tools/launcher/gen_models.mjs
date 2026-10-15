@@ -41,7 +41,10 @@ function baseType(prop) {
 // Nulo no backend fica com o valor inicial; inteiro nulo fica -1 (0 seria um valor valido).
 function gdType(prop, nested) {
   const { type, nullable } = baseType(prop);
-  if (type === 'array') return { type: `Array[${nested}]`, init: '[]' };
+  if (type === 'array') {
+    if (!nested) throw new Error(`array sem classe em NESTED: ${JSON.stringify(prop)}`);
+    return { type: `Array[${nested}]`, init: '[]' };
+  }
   if (nested) return { type: nested, init: 'null' };
   if (type === 'integer') return { type: 'int', init: nullable ? '-1' : '0' };
   if (type === 'number') return { type: 'float', init: '0.0' };

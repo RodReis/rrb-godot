@@ -36,6 +36,8 @@ var _count: Label = Label.new()
 var _cards: Array[MatchCard] = []
 var _strip_panel: PanelContainer
 var _loading: bool = false
+## O backend so manda as mais recentes: o V–D da conta e maior que o das partidas carregadas.
+var _truncated: bool = false
 
 
 func _ready() -> void:
@@ -67,15 +69,15 @@ func _ready() -> void:
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	var step := 0.0
-	if event.is_action_pressed(&"ui_down"):
+	if event.is_action_pressed(&"ui_down", true):
 		step = ARROW_SCROLL
-	elif event.is_action_pressed(&"ui_up"):
+	elif event.is_action_pressed(&"ui_up", true):
 		step = -ARROW_SCROLL
 	elif event.is_action_pressed(&"ui_page_down"):
 		step = PAGE_SCROLL
 	elif event.is_action_pressed(&"ui_page_up"):
 		step = -PAGE_SCROLL
-	if step != 0.0 and _scroll.visible:
+	if step != 0.0 and is_visible_in_tree() and _scroll.visible:
 		_scroll.scroll_vertical += int(_scroll.size.y * step)
 		get_viewport().set_input_as_handled()
 
@@ -95,15 +97,9 @@ func refresh(force: bool = false) -> void:
 	if _service.history == null:
 		_show_unknown()
 	_state.set_state(StateBox.State.LOADING)
-	var ok := await _service.fetch(force)
-	_loading = false
-	if not is_inside_tree():
-		return
-	if ok:
-		_show_history(_service.history)
-	else:
-		_show_unknown()
-		_state.set_state(StateBox.State.ERROR, _error_text(_service.error_code))
+	# Sinal, nao await: a conexao morre com a tela (Esc durante o loading libera o no).
+	_service.fetch_finished.connect(_on_service_fetch_finished, CONNECT_ONE_SHOT)
+	_service.fetch.call(force)
 
 
 func select_filter(filter: Filter) -> void:
@@ -254,6 +250,7 @@ func _show_history(history: MatchHistory) -> void:
 		_cards.append(card)
 		wins += int(summary.result == MatchCard.WIN)
 		losses += int(summary.result == MatchCard.LOSS)
+	_truncated = history.totals.wins + history.totals.losses > wins + losses
 	_record.text = _record_text(history.totals.wins, history.totals.losses)
 	_chips[Filter.ALL].set_count(history.matches.size())
 	_chips[Filter.WINS].set_count(wins)
@@ -273,6 +270,8 @@ func _apply_filter() -> void:
 		card.visible = matches
 		shown += int(matches)
 	_count.text = tr("Mostrando %d partidas") % shown if shown != 1 else tr("Mostrando 1 partida")
+	if _truncated:
+		_count.text += " · " + tr("só as mais recentes")
 	if _service == null or _service.history == null:
 		return
 	if _cards.is_empty():
@@ -291,6 +290,15 @@ func _error_text(code: String) -> String:
 	if code == ApiClient.OFFLINE:
 		return tr("Servidor fora do ar. Tente de novo em instantes.")
 	return tr("Não foi possível carregar o histórico.")
+
+
+func _on_service_fetch_finished() -> void:
+	_loading = false
+	if _service.is_ready():
+		_show_history(_service.history)
+	else:
+		_show_unknown()
+		_state.set_state(StateBox.State.ERROR, _error_text(_service.error_code))
 
 
 func _on_state_retry_requested() -> void:

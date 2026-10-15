@@ -16,22 +16,34 @@ var error_code: String = ""
 
 var _api: ApiClient
 var _loading: bool = false
+## Muda no clear(): resposta de busca iniciada antes (outra conta ou sessao) e descartada.
+var _epoch: int = 0
 
 
 func _init(api: ApiClient) -> void:
 	_api = api
 
 
+## Ha historico valido e a ultima busca nao falhou.
+func is_ready() -> bool:
+	return history != null and error_code.is_empty()
+
+
 ## true = `history` pronto (cache ou backend). `force` ignora o cache. Falha ao atualizar mantem o
-## historico anterior e devolve false.
+## historico anterior e devolve false. Sempre emite `fetch_finished` ao terminar.
 func fetch(force: bool = false) -> bool:
 	if _loading:
 		await fetch_finished
-		return error_code.is_empty()
+		return is_ready()
 	if history != null and not force:
+		fetch_finished.emit()
 		return true
 	_loading = true
+	var epoch := _epoch
 	var response: ApiClient.Response = await _api.request(HTTPClient.METHOD_GET, PATH)
+	if epoch != _epoch:
+		fetch_finished.emit()  # clear() no meio (logout): nada desta resposta fica
+		return false
 	var parsed := MatchHistory.from_dict(response.json) if response.ok() else null
 	if parsed != null:
 		history = parsed
@@ -44,5 +56,7 @@ func fetch(force: bool = false) -> bool:
 
 
 func clear() -> void:
+	_epoch += 1
+	_loading = false
 	history = null
 	error_code = ""
