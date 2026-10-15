@@ -9,6 +9,9 @@ extends RefCounted
 ## tempo e recusada; sair do lobby e voltar e permitido (release), e as estatisticas do peer
 ## antigo continuam atribuidas a ela.
 
+## Codigo que o backend devolve quando o x-internal-secret nao confere.
+const INTERNAL_UNAUTHORIZED: String = "INTERNAL_UNAUTHORIZED"
+
 ## "" ate o primeiro token valido.
 var match_id: String = ""
 ## Seed que o backend sorteou para a partida (so informativa: o servidor usa a propria).
@@ -49,7 +52,9 @@ func admit(peer: int, token: String) -> Decision:
 		return _refuse(AuthReply.DENIED)
 	var reply := await _api.validate(claimed, token)
 	if not reply.is_ok():
-		return _refuse(AuthReply.ERROR if reply.is_retryable() else AuthReply.DENIED)
+		# Segredo interno errado tambem e 401, mas a culpa e nossa, nao do token do jogador.
+		var ours := reply.is_retryable() or reply.code() == INTERNAL_UNAUTHORIZED
+		return _refuse(AuthReply.ERROR if ours else AuthReply.DENIED)
 	var user: Variant = reply.body.get("userId")
 	if not user is String or (user as String).is_empty() or reply.body.get("matchId") != claimed:
 		return _refuse(AuthReply.ERROR)

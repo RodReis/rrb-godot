@@ -15,8 +15,9 @@ param(
     [string]$InternalSecret = $env:INTERNAL_SECRET,
     [int]$Port = 7101,
     # Sobrescreve o token de cada cliente (ex.: 'lixo' ou '' para testar a recusa).
-    [string]$TokenA = $null,
-    [string]$TokenB = $null,
+    # '@partida' = o token do JSON da partida; '' = cliente sem token.
+    [string]$TokenA = '@partida',
+    [string]$TokenB = '@partida',
     [switch]$NoClientB,
     # --time: a partida ja comeca perto do fim (590 s de 600), para fechar em ~40 s.
     [int]$StartTime = 590,
@@ -28,17 +29,21 @@ $repo = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $PSScriptRoot
 $cli = $env:GODOT_PATH -replace '\.exe$', '_console.exe'
 if (-not (Test-Path $cli)) { $cli = $env:GODOT_PATH }
 $match = Get-Content $MatchFile | ConvertFrom-Json
-if ($null -eq $TokenA) { $TokenA = $match.tokenA }
-if ($null -eq $TokenB) { $TokenB = $match.tokenB }
+if ($TokenA -eq '@partida') { $TokenA = $match.tokenA }
+if ($TokenB -eq '@partida') { $TokenB = $match.tokenB }
 New-Item -ItemType Directory -Force $Out | Out-Null
 
+$savedUrl = $env:BACKEND_URL
+$savedSecret = $env:INTERNAL_SECRET
 $env:BACKEND_URL = $BackendUrl
 $env:INTERNAL_SECRET = $InternalSecret
 $server = Start-Process -FilePath $cli -PassThru -NoNewWindow -ArgumentList @(
     '--headless', '--path', "`"$repo\game`"", '--', '--server', "--port=$Port", '--seed=16', "--time=$StartTime"
 ) -RedirectStandardOutput "$Out\server.log" -RedirectStandardError "$Out\server.err"
 $null = $server.Handle   # PowerShell 5.1: sem isso o ExitCode volta $null
-Remove-Item Env:BACKEND_URL, Env:INTERNAL_SECRET
+# Os clientes nao recebem o segredo: devolve o ambiente do chamador.
+$env:BACKEND_URL = $savedUrl
+$env:INTERNAL_SECRET = $savedSecret
 Start-Sleep -Seconds 6
 
 function Start-Client([string]$name, [string]$token) {

@@ -40,6 +40,15 @@ func test_id_que_nao_e_uuid_e_recusado() -> void:
 		assert_eq(MatchToken.match_id(_token({"match_id": bad})), "", bad)
 
 
+func test_uuid_com_quebra_de_linha_no_fim_e_recusado() -> void:
+	assert_eq(MatchToken.match_id(_token({"match_id": ID + "\n"})), "")
+
+
+func test_payload_com_comprimento_impossivel_em_base64_e_recusado() -> void:
+	# 4n+1 caracteres: o regex passaria e o decodificador do motor logaria erro.
+	assert_eq(MatchToken.match_id("a.AAAAA.c"), "")
+
+
 func test_lixo_nao_quebra() -> void:
 	for bad: String in ["", "lixo", "a.b", "a.b.c.d", "a.%%%.c", "a." + _b64url("[1]") + ".c"]:
 		assert_eq(MatchToken.match_id(bad), "", bad)

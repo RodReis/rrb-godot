@@ -43,7 +43,7 @@ Obs.: com o fim da partida o cliente mostra a tela de fim e espera o botão "Vol
 | A | OK — servidor `0`; `finished`/`collapse_hp`, duração 600 s; ranger e cavaleiro gravados para as contas certas (peer → conta conferido com o log dos clientes); `last_heartbeat_at` 30 s depois de `started_at` |
 | B1 | OK — `2` (a 1ª execução deu `4`: recusa imediata largava o peer antes da resposta sair; corrigido com 0,25 s de espera em `PeerAuth`) |
 | B2 | OK — `2` |
-| B3 | OK — `2` |
+| B3 | OK — `2` (cliente sem token manda o marcador `-`: o auth do SceneMultiplayer recusa pacote vazio e a 1ª tentativa saiu com `4`) |
 | C | OK — servidor `3`; arquivo gravado com o corpo do `MatchResult` |
 | D | OK — aos 120 s `LOBBY_WAIT -> ENDED (abandoned)`; resultado sem jogadores (o único peer não escolheu herói); servidor `0`; banco `finished` / `abandoned` / 0 s |
 

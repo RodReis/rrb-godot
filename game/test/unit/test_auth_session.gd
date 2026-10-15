@@ -81,6 +81,13 @@ func test_backend_fora_do_ar_nao_e_culpa_do_token() -> void:
 		assert_eq(decision.reply, AuthReply.ERROR, str(status))
 
 
+func test_segredo_interno_errado_nao_e_culpa_do_jogador() -> void:
+	_backend.validate_replies = [BackendReply.of(401, {"code": "INTERNAL_UNAUTHORIZED"})]
+	var decision := await AuthSession.new(_backend).admit(PEER_A, _token(MATCH_ID))
+	assert_false(decision.admitted)
+	assert_eq(decision.reply, AuthReply.ERROR)
+
+
 func test_resposta_sem_conta_e_erro_interno() -> void:
 	_backend.validate_replies = [BackendReply.of(200, {"seed": 1})]
 	var decision := await AuthSession.new(_backend).admit(PEER_A, _token(MATCH_ID))

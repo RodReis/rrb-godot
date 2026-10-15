@@ -19,6 +19,10 @@ extends Node3D
 ## saindo com os codigos de ExitCodes. Sem backend so com --no-backend (dev).
 
 const MAX_PLAYERS: int = 2
+## Conexoes do ENet no servidor. Maior que os jogadores: peer ainda no handshake de autenticacao
+## ocupa uma, e com so 2 dois peers pendurados trancariam a partida; quem decide quem joga e o
+## token (MAX_PLAYERS vagas no MatchController).
+const MAX_CONNECTIONS: int = 32
 ## Herois da selecao; sem cena (Hero.SCENE_PATH) aparece indisponivel.
 const ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/knight.tres"),
@@ -209,7 +213,7 @@ func _warm_shaders() -> void:
 func start_server(port: int, bind_ip: String = "*") -> bool:
 	var peer := ENetMultiplayerPeer.new()
 	peer.set_bind_ip(bind_ip)
-	var err := peer.create_server(port, MAX_PLAYERS)
+	var err := peer.create_server(port, MAX_CONNECTIONS)
 	if err != OK:
 		push_error("[server] falha ao abrir porta %d: %s" % [port, error_string(err)])
 		get_tree().quit(1)
@@ -240,6 +244,11 @@ func _start_session(no_backend: bool) -> bool:
 	_server.name = "ServerSession"
 	add_child(_server)
 	var api: BackendApi = null
+	if no_backend and ServerSession.has_backend_environment():
+		# Container de producao sempre tem as duas variaveis; um --no-backend ali seria engano.
+		push_error("[server] --no-backend com BACKEND_URL/INTERNAL_SECRET definidos: recusado")
+		get_tree().quit(ExitCodes.ARGUMENTS)
+		return false
 	if not no_backend:
 		api = ServerSession.backend_from_environment(_server)
 		if api == null:
@@ -257,9 +266,7 @@ func _start_session(no_backend: bool) -> bool:
 	var auth := PeerAuth.new()
 	auth.name = "PeerAuth"
 	add_child(auth)
-	auth.serve(_server.admit)
-	# Peer que desistiu no meio do handshake nunca chega ao peer_connected/disconnected.
-	(multiplayer as SceneMultiplayer).peer_authentication_failed.connect(_server.auth.release)
+	auth.serve(_server.admit, _server.auth.release)
 	return true
 
 

@@ -12,16 +12,23 @@ var auth: AuthSession
 var _api: BackendApi
 var _heartbeat: Heartbeat
 var _reporter: ResultReporter
+## O resultado ja foi mandado: nao reinicia o heartbeat se alguem for admitido depois.
+var _reported: bool = false
+
+
+## As duas variaveis do container (o orquestrador as define) estao presentes.
+static func has_backend_environment() -> bool:
+	return (
+		not OS.get_environment(ENV_URL).is_empty() and not OS.get_environment(ENV_SECRET).is_empty()
+	)
 
 
 ## BackendClient montado com as variaveis de ambiente do container (o orquestrador as define);
 ## null se faltar alguma. O segredo nunca passa por argumento de linha de comando.
 static func backend_from_environment(host: Node) -> BackendApi:
-	var url := OS.get_environment(ENV_URL)
-	var secret := OS.get_environment(ENV_SECRET)
-	if url.is_empty() or secret.is_empty():
+	if not has_backend_environment():
 		return null
-	return BackendClient.new(host, url, secret)
+	return BackendClient.new(host, OS.get_environment(ENV_URL), OS.get_environment(ENV_SECRET))
 
 
 ## [param api] null = sem backend.
@@ -42,13 +49,14 @@ func is_online() -> bool:
 ## `running` no backend, e dai o servidor passa a mandar heartbeat.
 func admit(peer: int, token: String) -> String:
 	var decision := await auth.admit(peer, token)
-	if decision.admitted and is_online() and not _heartbeat.is_running():
+	if decision.admitted and is_online() and not _reported and not _heartbeat.is_running():
 		_heartbeat.start(_api, auth.match_id)
 	return decision.reply
 
 
 ## Fim da partida: manda o resultado e devolve o codigo de saida do processo.
 func report(winner: int, reason: StringName, stats: MatchStats, match_seed: int) -> int:
+	_reported = true
 	_heartbeat.stop()
 	if not is_online():
 		return ExitCodes.OK

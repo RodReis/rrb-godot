@@ -13,6 +13,8 @@ const PAYLOAD_INDEX: int = 1
 const BASE64_BLOCK: int = 4
 ## base64url (RFC 7515): so estes caracteres, senao o decodificador do motor loga erro.
 const BASE64URL_PATTERN: String = "^[A-Za-z0-9_-]+$"
+## O $ do PCRE casa antes de um \n final; o comprimento fixo fecha essa brecha.
+const UUID_LENGTH: int = 36
 const UUID_PATTERN: String = "^[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}$"
 
 
@@ -23,14 +25,22 @@ static func match_id(token: String) -> String:
 	var parts := token.split(".")
 	if parts.size() != PARTS:
 		return ""
-	if RegEx.create_from_string(BASE64URL_PATTERN).search(parts[PAYLOAD_INDEX]) == null:
+	var payload_part := parts[PAYLOAD_INDEX]
+	# Comprimento 4n+1 nao existe em base64 (o decodificador do motor loga erro).
+	var valid_length := payload_part.length() % BASE64_BLOCK != 1
+	if not valid_length or RegEx.create_from_string(BASE64URL_PATTERN).search(payload_part) == null:
 		return ""
 	var parser := JSON.new()  # parse_string loga erro no motor quando o texto nao e JSON
-	var text := Marshalls.base64_to_utf8(_standard_base64(parts[PAYLOAD_INDEX]))
+	var text := Marshalls.base64_to_utf8(_standard_base64(payload_part))
 	if parser.parse(text) != OK or not parser.data is Dictionary:
 		return ""
 	var id: Variant = (parser.data as Dictionary).get("match_id")
-	if id is String and RegEx.create_from_string(UUID_PATTERN).search(id) != null:
+	var well_formed: bool = (
+		id is String
+		and (id as String).length() == UUID_LENGTH
+		and RegEx.create_from_string(UUID_PATTERN).search(id) != null
+	)
+	if well_formed:
 		return id
 	return ""
 
