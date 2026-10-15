@@ -50,6 +50,11 @@ const DISCONNECTED_LOG_SECONDS: float = 5.0
 ## PI em 2026-10-10, F39) para a verificacao visual da arena; o servidor continua filtrando o que
 ## cada um ve. Religar no [GATE] do MVP2.5.
 const FOG_OF_WAR_OVERLAY: bool = false
+## Argumentos do motor que ja definem a janela (run-clients.ps1 usa --resolution e --position):
+## com eles, o settings.cfg nao mexe no modo nem no tamanho.
+const WINDOW_ARGS: Array[String] = [
+	"--resolution", "--position", "--fullscreen", "-f", "--windowed", "-w", "--maximized", "-m"
+]
 
 ## Nivel dos herois spawnados por este servidor (--level de dev ate o F9).
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
@@ -91,10 +96,12 @@ var _disconnected_log: Timer
 @onready var hero_select: HeroSelect = $HeroSelect
 @onready var match_end: MatchEnd = $MatchEnd
 @onready var bestiary: Bestiary = $Bestiary
+@onready var camera: FollowCamera = $Camera
 
 
 func _ready() -> void:
 	InputActions.ensure()
+	_apply_user_settings()
 	spawner.spawn_path = spawner.get_path_to(players)
 	spawner.spawn_function = _spawn_player
 	connect_button.pressed.connect(_on_connect_pressed)
@@ -290,6 +297,22 @@ func start_client(host: String, port: int) -> void:
 	status_label.text = tr("Aguardando o adversário...")
 	await NetworkTime.after_sync
 	print("[client] NetworkTime sincronizado, tick %d" % NetworkTime.tick)
+
+
+## settings.cfg do Launcher (ARCHITECTURE-LAUNCHER §5.3, F24): controles, audio, video e a
+## sensibilidade do giro da camera. O [graphics] fica com a arena (GraphicsSettings). Headless
+## (servidor dedicado, testes) nao tem janela, audio nem jogador local: nao le o arquivo.
+func _apply_user_settings() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	var values := UserSettings.load_file()
+	SettingsApplier.apply_controls(values)
+	SettingsApplier.apply_audio(values)
+	var cli_window := false
+	for arg: String in OS.get_cmdline_args():
+		cli_window = cli_window or arg.get_slice("=", 0) in WINDOW_ARGS
+	SettingsApplier.apply_video(values, get_window(), not cli_window)
+	camera.orbit_sensitivity *= values[UserSettings.CONTROLS][UserSettings.MOUSE_SENSITIVITY]
 
 
 func _on_connect_pressed() -> void:

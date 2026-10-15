@@ -374,3 +374,4 @@ text = "Enter"
 [node name="Sound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("jingle")
+bus = &"Music"

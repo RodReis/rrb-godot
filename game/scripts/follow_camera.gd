@@ -1,3 +1,4 @@
+class_name FollowCamera
 extends Camera3D
 ## Camera em 3a pessoa alta (PRD §3.6): atras do heroi local, inclinacao e distancia fixas,
 ## sem colisao. Yaw inicial do time: trava olhando [member focus] a partir de onde o heroi

@@ -346,8 +346,10 @@ layout_mode = 1
 [node name="TransitionSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("jingle")
+bus = &"Music"
 
 [node name="SuddenDeathSound" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
 stream = ExtResource("jingle")
+bus = &"Music"
 pitch_scale = 0.8
