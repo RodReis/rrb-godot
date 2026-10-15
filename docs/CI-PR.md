@@ -36,7 +36,8 @@ Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker
 - **`gate`:** `needs: [changes, lint-gd, test-game]`, `if: always()`; pulado por path filter = sucesso; `changes` falho ou pulado = falha.
 - Base reformatada uma vez com `gdformat` (#17) para o check por arquivo tocado não herdar dívida.
 - **`soak` (F19 #68):** `.github/workflows/soak.yml`, `ubuntu-latest`, `timeout-minutes: 120`, `permissions: contents: read`. Roda `tools/soak.ps1 -Count 50 -Parallel 8` (servidor dedicado com `--bots`, tempo real) e sobe `soak-report/` (CSV, JSON e um log por partida) como artefato por 14 dias. Dispara por `schedule` (06:00 UTC), `workflow_dispatch` (input `count`) e `pull_request` só quando `soak.yml` muda. Fora do `gate`; falha do nightly é card `[FIX]`.
-- Ainda não implementados: `test-launcher`, `test-backend`, `build-server`, `export-check`, `lint-docs`, medição (§5) — entram por card `[INFRA]`. Até `lint-docs` existir, PR só de `docs/**` roda `changes` + `gate`.
+- **`test-backend` (F21 #77):** em `backend/` ou `infra`; Postgres 16 em `services:`; `pnpm install --frozen-lockfile` → `eslint` → `tsc --noEmit` → `jest --coverage` (limite ≥ 80 % de linhas por `src/**/*.service.ts`, no `package.json`) → e2e supertest (`--runInBand`) → `pnpm build && pnpm openapi && git diff --exit-code openapi.json` (o `openapi.json` versionado tem de bater com o gerado). Node 24, pnpm pelo `packageManager` do `backend/package.json`. Entra no `needs` do `gate`.
+- Ainda não implementados: `test-launcher`, `build-server`, `export-check`, `lint-docs`, medição (§5) — entram por card `[INFRA]`. Até `lint-docs` existir, PR só de `docs/**` roda `changes` + `gate`.
 
 ## 3. Path filter
 

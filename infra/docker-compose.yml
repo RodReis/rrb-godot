@@ -13,3 +13,38 @@ services:
       NETEM_JITTER_MS: "${NETEM_JITTER_MS:-}"
       NETEM_LOSS_PCT: "${NETEM_LOSS_PCT:-}"
       GAME_ARGS: "${GAME_ARGS:-}"
+
+  # Backend local (dev/e2e) — perfil próprio para não subir junto com o gameserver:
+  #   docker compose -f infra/docker-compose.yml --profile backend up -d postgres   (só o banco, e2e)
+  #   docker compose -f infra/docker-compose.yml --profile backend up --build       (banco + API)
+  # Credenciais abaixo são só de desenvolvimento local; produção usa as variáveis do Coolify.
+  postgres:
+    profiles: [backend]
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: rrb
+      POSTGRES_PASSWORD: rrb
+      POSTGRES_DB: rrb
+    volumes:
+      - ./postgres/init-test-db.sql:/docker-entrypoint-initdb.d/init-test-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rrb -d rrb"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+  backend:
+    profiles: [backend]
+    build:
+      context: ../backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://rrb:rrb@postgres:5432/rrb
+      JWT_SECRET: "${JWT_SECRET:-dev-local-apenas-nao-usar-em-producao-0123}"
+      PORT: "3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
