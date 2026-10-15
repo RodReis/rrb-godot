@@ -36,6 +36,24 @@ const TRACKING: int = 1
 ## Altura do trilho do slider (h-2).
 const SLIDER_TRACK: int = 4
 const SCROLL_W: int = 6
+## Login e Lobby (F25): cartoes sobre o diorama a 90 % (console da fila) e 80 % (cartoes leves),
+## celula a 60 %; sombra pequena (shadow) de 4 px; borda 3D do JOGAR (shadow 0 3px 0).
+const ALPHA_CONSOLE: float = 0.9
+const ALPHA_SOFT: float = 0.8
+const ALPHA_CELL: float = 0.6
+const SHADOW_BLUR_SM: int = 4
+const SHADOW_OFFSET_SM: Vector2 = Vector2(0, 1)
+const PLAY_EDGE: int = 3
+## Borda 3D do CTA da fila (shadow 0 6px 0 #935600).
+const CTA_EDGE: int = 6
+## Raio dos pontos de status (rounded-full ate 12 px).
+const DOT_RADIUS: int = 6
+## Campo de texto: px-10 (40 px, espaco do icone) e py-2.5 (10 px).
+const INPUT_PAD_ICON: int = 40
+const INPUT_PAD_Y: int = 10
+const SELECTION_ALPHA: float = 0.4
+## py-0.5 dos selos.
+const BADGE_PAD_Y: int = 2
 
 ## Sufixo -> espacamento dos tipos LnHGap*/LnVGap* (TOKENS §3).
 const GAPS: Array[Array] = [
@@ -99,9 +117,62 @@ const LABELS: Dictionary[StringName, Array] = {
 	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_LG, &"GOLD_BRIGHT"],
 	&"LnIconTitle":
 	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_XL, &"GOLD_BRIGHT"],
+	# Login e Lobby (F25).
+	&"LnDisplay":
+	[UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_DISPLAY, &"TEXT"],
+	&"LnDisplayGold":
+	[UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_DISPLAY, &"GOLD_BRIGHT"],
+	&"LnHeadlineMd":
+	[
+		UiTokens.FONT_LN_DISPLAY_PATH,
+		UiTokens.WEIGHT_SEMIBOLD,
+		UiTokens.TYPE_LN_HEADLINE_MD,
+		&"TEXT"
+	],
+	&"LnHeadlineMdGold":
+	[
+		UiTokens.FONT_LN_DISPLAY_PATH,
+		UiTokens.WEIGHT_SEMIBOLD,
+		UiTokens.TYPE_LN_HEADLINE_MD,
+		&"GOLD_BRIGHT"
+	],
+	&"LnTitle":
+	[UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_SEMIBOLD, UiTokens.TYPE_LN_BODY_LG, &"TEXT"],
+	&"LnTitleGold":
+	[UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_BODY_LG, &"GOLD_BRIGHT"],
+	&"LnBodyLg":
+	[UiTokens.FONT_LN_BODY_PATH, UiTokens.WEIGHT_MEDIUM, UiTokens.TYPE_LN_BODY_LG, &"TEXT_MUTED"],
+	&"LnBodySmGold":
+	[UiTokens.FONT_LN_BODY_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.TYPE_LN_BODY_SM, &"GOLD_BRIGHT"],
+	&"LnBodySmOutline":
+	[
+		UiTokens.FONT_LN_BODY_PATH,
+		UiTokens.WEIGHT_REGULAR,
+		UiTokens.TYPE_LN_BODY_SM,
+		&"TEXT_OUTLINE"
+	],
+	&"LnNumOutline":
+	[UiTokens.FONT_LN_MONO_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_NUM, &"TEXT_OUTLINE"],
+	&"LnNumMd":
+	[UiTokens.FONT_LN_MONO_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_NUM_MD, &"TEXT"],
+	&"LnNumMdGold":
+	[UiTokens.FONT_LN_MONO_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_NUM_MD, &"GOLD_BRIGHT"],
+	&"LnNumMdCyan":
+	[UiTokens.FONT_LN_MONO_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_NUM_MD, &"CYAN"],
+	&"LnIconSmMuted":
+	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_SM, &"TEXT_MUTED"],
+	&"LnIconMdGold":
+	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_LG, &"GOLD_BRIGHT"],
+	&"LnIconMdCyan": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_LG, &"CYAN"],
+	&"LnIconMdGoldDeep":
+	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_LG, &"GOLD"],
+	&"LnIconOnGold":
+	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_XL, &"ON_PRIMARY"],
 }
 ## Variacoes que ganham tracking (uppercase tracking-wide do prototipo).
-const TRACKED: Array[StringName] = [&"LnHeadlineSm", &"LnHeadlineSmGold", &"LnBrand", &"LnNum"]
+const TRACKED: Array[StringName] = [
+	&"LnHeadlineSm", &"LnHeadlineSmGold", &"LnBrand", &"LnNum", &"LnNumOutline"
+]
 
 static var _fonts: Dictionary[String, FontVariation] = {}
 
@@ -114,6 +185,7 @@ static func add(theme: Theme) -> void:
 	_buttons(theme)
 	_keys(theme)
 	_controls(theme)
+	_auth_and_lobby(theme)
 
 
 ## Espacamento entre filhos por token (componente nao usa override, COMPONENTS regra 4):
@@ -384,6 +456,235 @@ static func _controls(theme: Theme) -> void:
 	theme.set_stylebox(&"grabber", &"LnScrollBar", grabber)
 	theme.set_stylebox(&"grabber_highlight", &"LnScrollBar", _fill(grabber, UiTokens.BG_BRIGHT))
 	theme.set_stylebox(&"grabber_pressed", &"LnScrollBar", _fill(grabber, UiTokens.GOLD))
+
+
+## Login e Lobby (F25): campo de texto, abas Entrar/Criar conta, botoes de envio, cartoes do
+## lobby sobre o diorama (bg-surface-container-lowest/80-90), celulas, selos e chip de status.
+static func _auth_and_lobby(theme: Theme) -> void:
+	var display := font(UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_SEMIBOLD, true)
+	var body := font(UiTokens.FONT_LN_BODY_PATH, UiTokens.WEIGHT_REGULAR)
+	var mono := font(UiTokens.FONT_LN_MONO_PATH, UiTokens.WEIGHT_BOLD)
+	# Cartoes: login (low/95, shadow-2xl), console da fila (lowest/90), cartao leve (lowest/80).
+	var glass := _box(Color(UiTokens.BG_LOW, ALPHA_BAR), UiTokens.RADIUS_MD)
+	_shadow(glass, SHADOW_RAISED, SHADOW_BLUR_RAISED, SHADOW_OFFSET_RAISED)
+	glass.set_content_margin_all(UiTokens.SPACE_LG)
+	_panel(theme, &"LnCardGlass", glass)
+	var glass_md := glass.duplicate() as StyleBoxFlat
+	glass_md.set_content_margin_all(UiTokens.SPACE_MD)
+	_panel(theme, &"LnCardGlassMd", glass_md)
+	var console := _fill(glass, Color(UiTokens.BG_LOWEST, ALPHA_CONSOLE))
+	_panel(theme, &"LnConsole", console)
+	var soft := _fill(glass, Color(UiTokens.BG_LOWEST, ALPHA_SOFT))
+	soft.set_content_margin_all(UiTokens.SPACE_MD)
+	_shadow(soft, SHADOW_CARD, SHADOW_BLUR_CARD, SHADOW_OFFSET)
+	_panel(theme, &"LnConsoleSoft", soft)
+	_panel(theme, &"LnConsoleSoftHover", _fill(soft, Color(UiTokens.BG_LOW, ALPHA_SOFT)))
+	# Chip de vidro sobre a arte do Login (bg-highest/90 backdrop-blur-md, px-2 py-0.5).
+	var chip_glass := _box(Color(UiTokens.BG_HIGHEST, ALPHA_CONSOLE), UiTokens.RADIUS_XS)
+	chip_glass.content_margin_left = UiTokens.SPACE_SM
+	chip_glass.content_margin_right = UiTokens.SPACE_SM
+	chip_glass.content_margin_top = BADGE_PAD_Y
+	chip_glass.content_margin_bottom = BADGE_PAD_Y
+	_panel(theme, &"LnChipGlass", chip_glass)
+	# Moldura da arte do Login (h-72 rounded-xl bg-low shadow-xl, sem respiro).
+	var art := _box(UiTokens.BG_LOW, UiTokens.RADIUS_MD)
+	_shadow(art, SHADOW_RAISED, SHADOW_BLUR_RAISED, SHADOW_OFFSET_RAISED)
+	_panel(theme, &"LnArtFrame", art)
+	# Margens: tela do Login (lg:p-space-xl) e respiro interno (space-md).
+	for margin: Array in [
+		[&"LnScreenMarginXl", UiTokens.SPACE_XL], [&"LnInsetMd", UiTokens.SPACE_MD]
+	]:
+		theme.set_type_variation(margin[0], &"MarginContainer")
+		for side: StringName in [&"margin_left", &"margin_right", &"margin_top", &"margin_bottom"]:
+			theme.set_constant(side, margin[0], margin[1])
+	# Trilho do sub-menu do lobby (bg-lowest/80 backdrop-blur-xl p-1 rounded-xl shadow-xl).
+	var subnav := _fill(soft, Color(UiTokens.BG_LOWEST, ALPHA_SOFT))
+	subnav.set_content_margin_all(UiTokens.SPACE_XS)
+	_panel(theme, &"LnSubNavTrack", subnav)
+	# Trilho das abas (p-1 bg-lowest rounded-lg) e trilho das celulas (p-2 bg-low rounded-lg).
+	var track := _box(UiTokens.BG_LOWEST, UiTokens.RADIUS_SM)
+	track.set_content_margin_all(UiTokens.SPACE_XS)
+	_panel(theme, &"LnTabTrack", track)
+	var cells := _box(UiTokens.BG_LOW, UiTokens.RADIUS_SM)
+	cells.set_content_margin_all(UiTokens.SPACE_SM)
+	_panel(theme, &"LnCellTrack", cells)
+	var cell := _box(Color(UiTokens.BG_LOWEST, ALPHA_CELL), UiTokens.RADIUS_XS)
+	cell.set_content_margin_all(UiTokens.SPACE_XS)
+	_panel(theme, &"LnCell", cell)
+	# Linha de modo ativo (bg-surface-container rounded-lg shadow) e faixas de status.
+	var mode := _box(Color(UiTokens.BG_PANEL, 1.0), UiTokens.RADIUS_SM)
+	mode.set_content_margin_all(UiTokens.SPACE_SM)
+	_shadow(mode, SHADOW_CARD, SHADOW_BLUR_SM, SHADOW_OFFSET_SM)
+	_panel(theme, &"LnModeRow", mode)
+	var banner := _box(Color(UiTokens.BG_CARD, 1.0), UiTokens.RADIUS_SM)
+	banner.set_content_margin_all(UiTokens.SPACE_SM)
+	_panel(theme, &"LnBanner", banner)
+	_panel(theme, &"LnBannerError", _fill(banner, UiTokens.ERROR_BG))
+	# Chip de status da barra superior (rounded-xl px-3 py-1): BG_LOWEST para destacar da barra
+	# (no prototipo a barra e mais escura que o chip; aqui a barra do F24 ja e BG_LOW).
+	var chip := _box(UiTokens.BG_LOWEST, UiTokens.RADIUS_MD)
+	chip.content_margin_left = UiTokens.SPACE_MD
+	chip.content_margin_right = UiTokens.SPACE_MD
+	chip.content_margin_top = UiTokens.SPACE_XS
+	chip.content_margin_bottom = UiTokens.SPACE_XS
+	_panel(theme, &"LnStatusChip", chip)
+	# Caixas de icone: dourada (heroi), card (bento) e alta (relogio da fila).
+	var icon_gold := _box(UiTokens.GOLD, UiTokens.RADIUS_SM)
+	_inset(icon_gold)
+	_panel(theme, &"LnIconBoxGold", icon_gold)
+	_panel(theme, &"LnIconBoxCard", _box(Color(UiTokens.BG_PANEL, 1.0), UiTokens.RADIUS_SM))
+	var icon_high := _box(Color(UiTokens.BG_CARD, 1.0), UiTokens.RADIUS_SM)
+	_inset(icon_high)
+	_panel(theme, &"LnIconBoxHigh", icon_high)
+	# Selos (Label com fundo): ATIVO (GOLD) e papel do heroi (BG_HIGHEST, texto GOLD_BRIGHT).
+	_badge(theme, &"LnBadgeGold", UiTokens.GOLD, UiTokens.ON_PRIMARY, mono)
+	_badge(theme, &"LnBadgeChip", UiTokens.BG_HIGHEST, UiTokens.GOLD_BRIGHT, mono)
+	# Pontos de status (rounded-full): online, offline, verificando e o da fila (dourado).
+	for dot: Array in [
+		[&"LnDotOnline", UiTokens.CYAN],
+		[&"LnDotOffline", UiTokens.ERROR],
+		[&"LnDotChecking", UiTokens.TEXT_MUTED],
+		[&"LnDotGold", UiTokens.GOLD_BRIGHT],
+	]:
+		theme.set_type_variation(dot[0], &"Panel")
+		theme.set_stylebox(&"panel", dot[0], _box(dot[1], DOT_RADIUS))
+	_buttons_f25(theme, display)
+	_input(theme, body)
+
+
+static func _buttons_f25(theme: Theme, display: Font) -> void:
+	# Abas Entrar / Criar conta (toggle): ativa bg-surface-container-high + GOLD_BRIGHT.
+	var tab := _box(Color.TRANSPARENT, UiTokens.RADIUS_XS)
+	tab.content_margin_top = UiTokens.SPACE_XS
+	tab.content_margin_bottom = UiTokens.SPACE_XS
+	var tab_on := _fill(tab, Color(UiTokens.BG_CARD, 1.0))
+	_shadow(tab_on, SHADOW_CARD, SHADOW_BLUR_SM, SHADOW_OFFSET_SM)
+	_button(theme, &"LnAuthTab", [tab, tab, tab_on, tab_on], display)
+	_button_colors(theme, &"LnAuthTab", UiTokens.TEXT_MUTED, UiTokens.TEXT, UiTokens.GOLD_BRIGHT)
+	# Envio do formulario: bg-primary, texto on-primary, rounded-lg, shadow-lg, py-3.
+	var submit := _box(UiTokens.GOLD_BRIGHT, UiTokens.RADIUS_SM)
+	submit.set_content_margin_all(UiTokens.SPACE_MD)
+	_shadow(submit, SHADOW_CARD, SHADOW_BLUR_CARD, SHADOW_OFFSET)
+	var submit_hover := _fill(submit, UiTokens.GOLD_BRIGHT.lightened(BRIGHTEN))
+	_button(
+		theme, &"LnButtonSubmit", [submit, submit_hover, _pressed(submit), submit_hover], display
+	)
+	theme.set_font_size(&"font_size", &"LnButtonSubmit", UiTokens.TYPE_LN_HEADLINE_MD)
+	_button_colors(
+		theme, &"LnButtonSubmit", UiTokens.ON_PRIMARY, UiTokens.ON_PRIMARY, UiTokens.ON_PRIMARY
+	)
+	# Secundario ciano (treino vs bot): bg-surface-container; hover surface-container-high.
+	var cyan := _box(Color(UiTokens.BG_PANEL, 1.0), UiTokens.RADIUS_SM)
+	cyan.set_content_margin_all(UiTokens.SPACE_SM)
+	var cyan_hover := _fill(cyan, Color(UiTokens.BG_CARD, 1.0))
+	_button(theme, &"LnButtonCyan", [cyan, cyan_hover, _pressed(cyan_hover), cyan_hover], display)
+	_button_colors(theme, &"LnButtonCyan", UiTokens.CYAN, UiTokens.CYAN, UiTokens.CYAN)
+	# Sub-menu do lobby: JOGAR (GOLD com borda 3D) e itens planos.
+	var nav := _box(Color.TRANSPARENT, UiTokens.RADIUS_SM)
+	nav.content_margin_left = UiTokens.SPACE_MD
+	nav.content_margin_right = UiTokens.SPACE_MD
+	nav.content_margin_top = UiTokens.SPACE_XS
+	nav.content_margin_bottom = UiTokens.SPACE_XS
+	var nav_hover := _fill(nav, Color(UiTokens.BG_CARD, 1.0))
+	_button(theme, &"LnSubNav", [nav, nav_hover, _pressed(nav_hover), nav_hover], display)
+	_button_colors(theme, &"LnSubNav", UiTokens.TEXT_MUTED, UiTokens.TEXT, UiTokens.TEXT)
+	var play := _fill(nav, UiTokens.GOLD)
+	play.content_margin_left = UiTokens.SPACE_LG
+	play.content_margin_right = UiTokens.SPACE_LG
+	play.border_color = UiTokens.GOLD_SHADE
+	play.border_width_bottom = PLAY_EDGE
+	var play_pressed := _pressed(play)
+	play_pressed.border_width_bottom = PLAY_EDGE - 1
+	var play_hover := _fill(play, UiTokens.GOLD.lightened(BRIGHTEN))
+	_button(theme, &"LnSubNavPlay", [play, play_hover, play_pressed, play_hover], display)
+	_button_colors(
+		theme, &"LnSubNavPlay", UiTokens.ON_PRIMARY, UiTokens.ON_PRIMARY, UiTokens.ON_PRIMARY
+	)
+	# Botoes pequenos dos cartoes do rodape: neutro (BG_HIGHEST) e azul (Iniciar).
+	var small := _box(UiTokens.BG_HIGHEST, UiTokens.RADIUS_SM)
+	small.content_margin_left = UiTokens.SPACE_SM
+	small.content_margin_right = UiTokens.SPACE_SM
+	small.content_margin_top = UiTokens.SPACE_XS
+	small.content_margin_bottom = UiTokens.SPACE_XS
+	var small_hover := _fill(small, Color(UiTokens.BG_PANEL, 1.0))
+	_button(
+		theme, &"LnButtonSmall", [small, small_hover, _pressed(small_hover), small_hover], display
+	)
+	theme.set_font_size(&"font_size", &"LnButtonSmall", UiTokens.TYPE_LN_BODY_SM)
+	_button_colors(theme, &"LnButtonSmall", UiTokens.TEXT, UiTokens.TEXT, UiTokens.TEXT)
+	var blue := _fill(small, UiTokens.BLUE)
+	var blue_hover := _fill(small, UiTokens.CYAN)
+	_button(
+		theme, &"LnButtonSmallBlue", [blue, blue_hover, _pressed(blue_hover), blue_hover], display
+	)
+	theme.set_font_size(&"font_size", &"LnButtonSmallBlue", UiTokens.TYPE_LN_BODY_SM)
+	_button_colors(theme, &"LnButtonSmallBlue", Color.WHITE, UiTokens.ON_CYAN, UiTokens.ON_CYAN)
+	# CTA da fila (CtaButton): o fundo e o shader ui_cta; aqui so o texto (headline-lg bold).
+	theme.set_type_variation(&"LnButtonCta", &"Button")
+	for state: StringName in [&"normal", &"hover", &"pressed", &"hover_pressed", &"disabled"]:
+		var pad := StyleBoxEmpty.new()
+		pad.content_margin_left = UiTokens.SPACE_XL
+		pad.content_margin_right = UiTokens.SPACE_XL
+		pad.content_margin_top = UiTokens.SPACE_LG
+		pad.content_margin_bottom = UiTokens.SPACE_LG + CTA_EDGE
+		theme.set_stylebox(state, &"LnButtonCta", pad)
+	theme.set_stylebox(&"focus", &"LnButtonCta", _focus())
+	var bold := font(UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, true)
+	theme.set_font(&"font", &"LnButtonCta", bold)
+	theme.set_font_size(&"font_size", &"LnButtonCta", UiTokens.TYPE_LN_HEADLINE_LG)
+	_button_colors(
+		theme, &"LnButtonCta", UiTokens.ON_PRIMARY, UiTokens.ON_PRIMARY, UiTokens.ON_PRIMARY
+	)
+	theme.set_constant(&"h_separation", &"LnButtonCta", UiTokens.SPACE_MD)
+	# Olho da senha: so o icone, muted; hover TEXT.
+	theme.set_type_variation(&"LnIconToggle", &"Button")
+	for state: StringName in [&"normal", &"hover", &"pressed", &"hover_pressed", &"disabled"]:
+		theme.set_stylebox(state, &"LnIconToggle", StyleBoxEmpty.new())
+	theme.set_stylebox(&"focus", &"LnIconToggle", _focus())
+	theme.set_font(
+		&"font", &"LnIconToggle", font(UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR)
+	)
+	theme.set_font_size(&"font_size", &"LnIconToggle", UiTokens.ICON_SM)
+	_button_colors(theme, &"LnIconToggle", UiTokens.TEXT_MUTED, UiTokens.TEXT, UiTokens.TEXT)
+
+
+## Campo de texto do Login: bg-lowest, px-10 (icone a esquerda e a direita), py-2.5; foco
+## bg-surface-container com filete GOLD embaixo (o foco do teclado precisa aparecer, §5).
+static func _input(theme: Theme, body: Font) -> void:
+	theme.set_type_variation(&"LnInput", &"LineEdit")
+	var field := _box(UiTokens.BG_LOWEST, UiTokens.RADIUS_XS)
+	field.content_margin_left = INPUT_PAD_ICON
+	field.content_margin_right = INPUT_PAD_ICON
+	field.content_margin_top = INPUT_PAD_Y
+	field.content_margin_bottom = INPUT_PAD_Y
+	theme.set_stylebox(&"normal", &"LnInput", field)
+	theme.set_stylebox(&"read_only", &"LnInput", field)
+	var focus := _fill(field, Color(UiTokens.BG_PANEL, 1.0))
+	focus.border_color = UiTokens.GOLD_BRIGHT
+	focus.border_width_bottom = UiTokens.BORDER_W
+	theme.set_stylebox(&"focus", &"LnInput", focus)
+	theme.set_font(&"font", &"LnInput", body)
+	theme.set_font_size(&"font_size", &"LnInput", UiTokens.TYPE_LN_BODY)
+	theme.set_color(&"font_color", &"LnInput", UiTokens.TEXT)
+	theme.set_color(&"font_placeholder_color", &"LnInput", UiTokens.BORDER)
+	theme.set_color(&"caret_color", &"LnInput", UiTokens.GOLD_BRIGHT)
+	theme.set_color(&"selection_color", &"LnInput", Color(UiTokens.GOLD, SELECTION_ALPHA))
+	theme.set_constant(&"outline_size", &"LnInput", 0)
+
+
+## Label com fundo (selo): px-1 py-0.5 rounded, mono 11.
+static func _badge(theme: Theme, type: StringName, fill: Color, text: Color, mono: Font) -> void:
+	var box := _box(fill, UiTokens.RADIUS_XS)
+	box.content_margin_left = UiTokens.SPACE_XS
+	box.content_margin_right = UiTokens.SPACE_XS
+	box.content_margin_top = BADGE_PAD_Y
+	box.content_margin_bottom = BADGE_PAD_Y
+	theme.set_type_variation(type, &"Label")
+	theme.set_stylebox(&"normal", type, box)
+	theme.set_font(&"font", type, mono)
+	theme.set_font_size(&"font_size", type, UiTokens.TYPE_LN_NUM)
+	theme.set_color(&"font_color", type, text)
+	theme.set_constant(&"outline_size", type, 0)
 
 
 ## Fonte variavel no peso pedido, com os icones de fallback (glifo de UiIcons no meio do texto).
