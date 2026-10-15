@@ -5,16 +5,16 @@ extends RefCounted
 ## tipo errado ou arquivo inexistente = ligado; schema diferente = padroes (e loga).
 ## So desliga: o que a arena ja traz desligado continua desligado.
 
-const PATH: String = "user://settings.cfg"
-const SCHEMA: int = 1
-const SECTION: String = "graphics"
+const PATH: String = UserSettings.PATH
+const SCHEMA: int = UserSettings.SCHEMA
+const SECTION: String = UserSettings.GRAPHICS
 ## Neblina volumetrica.
-const FOG: String = "fog"
-const SSIL: String = "ssil"
-const SSAO: String = "ssao"
+const FOG: String = UserSettings.FOG
+const SSIL: String = UserSettings.SSIL
+const SSAO: String = UserSettings.SSAO
 ## Grama decorativa (F42; Vegetation).
-const GRASS: String = "grass"
-const KEYS: Array[String] = [FOG, SSIL, SSAO, GRASS]
+const GRASS: String = UserSettings.GRASS
+const KEYS: Array[String] = UserSettings.GRAPHICS_KEYS
 
 
 static func defaults() -> Dictionary:

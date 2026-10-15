@@ -106,6 +106,7 @@ func build() -> Theme:
 	_slots(theme)
 	_hero_select(theme)
 	_match_end(theme)
+	LauncherTheme.add(theme)  # telas do Launcher (F24): fontes e acabamento dos prototipos
 	return theme
 
 

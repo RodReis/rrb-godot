@@ -24,6 +24,16 @@ Valores de `docs/prd/telas/*/DESIGN.md` (decisão do PI em 2026-10-09, R-PEND-11
 | `RARITY_COMMON` | `#94A3B8` | `Color(0.580, 0.639, 0.722)` | borda de item comum | 6,4:1 ✔ |
 | `RARITY_RARE` | `#3B82F6` | `Color(0.231, 0.510, 0.965)` | borda de item raro | 4,5:1 ✔ (limite) |
 | `RARITY_EPIC` | = `PURPLE` | | borda de item épico | — |
+| `BG_LOWEST` | `#060E20` | | Launcher (F24): poço, rodapé, faixa de ações, tecla | — |
+| `BG_LOW` | `#131B2E` | | Launcher: card, barra superior | — |
+| `BG_HIGHEST` | `#2D3449` | | Launcher: chip, caixa de ícone, segmento, divisor | — |
+| `BG_BRIGHT` | `#31394D` | | Launcher: hover do segmento e da rolagem | — |
+| `ON_GOLD` | `#613B00` | | Launcher: texto sobre `GOLD` (aba ativa, botão primário) | — |
+| `GOLD_EDGE` | `#78350F` | | Launcher: borda 3D do botão primário | — |
+| `ON_CYAN` | `#003351` | | Launcher: pino do switch ligado | — |
+| `ERROR` | `#FFB4AB` | | Launcher: texto de erro, ícone de sair | — |
+| `ERROR_BG` | `#93000A` | | Launcher: botão destrutivo, hover de sair | — |
+| `ON_ERROR` | `#690005` | | Launcher: ícone de sair no hover | — |
 
 Contraste WCAG calculado sobre `#171F33` (fórmula de luminância relativa; o teste `shared/test/test_theme_tokens.gd` recalcula). Consequência prática: nome do oponente, "DERROTA", nome do boss e "Épico" em `RED`/`PURPLE` só em `TYPE_VICTORY`/`TYPE_H1`/`TYPE_COUNTER`; em `TYPE_BODY` usar `TEXT` com borda/fundo colorido. Ver `DEBITO.md` DS-04. Texto sobre botão `GOLD` usa `BG_SURFACE` (8,6:1).
 
@@ -49,6 +59,8 @@ Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resol
 
 **Vidro da HUD (F57, decisão do PI em 2026-10-12):** a HUD da partida (fases 1 e 2) troca a moldura de metal pelo vidro do protótipo `docs/prd/telas/HUD Moderno/`, como **variantes novas** — o `PanelContainer` padrão, o Launcher e as molduras de skill/slot do F43 não mudam. `PanelCardGlass`: `BG_SURFACE` a 82 %, borda 1 px `GOLD` a 35 %, raio `RADIUS_LG`, sombra preta 55 % / 16 px, respiro `SPACE_MD`. `PanelCardGlassInner` (módulo do dock): `BG_SURFACE` a 45 %, borda 1 px `TEXT` a 15 %, raio `RADIUS_BUTTON`, respiro `SPACE_SM`. Acentos do vidro `PanelCardGlassAccent*`: 1 px, cor do token a 60 %, raio `RADIUS_LG`. Cantoneiras douradas (`PanelCard.corners`, 8 px × 2 px `GOLD`). Sem token de cor novo; alfas em `ThemeBuilder.ALPHA_GLASS*`.
 
+**Launcher (F24, decisão do PI em 2026-10-15):** as telas do Launcher usam as famílias dos protótipos de `docs/prd/telas/` — **Space Grotesk** (`FONT_LN_DISPLAY_PATH`: títulos, botões, teclas), **Outfit** (`FONT_LN_BODY_PATH`: texto) e **JetBrains Mono** (`FONT_LN_MONO_PATH`: rótulos numéricos) — e os painéis lisos do protótipo, sem as molduras de metal nem o contorno preto da HUD (que segue com o v2 acima). Ícones: **Material Symbols Outlined** recortado em `font_icons.ttf` (`tools/ui/build_icon_font.py`, glifos em `UiIcons`), fallback de todas as fontes do Launcher. Tamanhos do Tailwind dos protótipos: `TYPE_LN_HEADLINE_LG` 32 (título), `TYPE_LN_HEADLINE_SM` 18 (card, botão, aba), `TYPE_LN_BODY` 14, `TYPE_LN_BODY_SM` 12, `TYPE_LN_NUM` 11 (rótulo numérico e tecla); ícones `ICON_SM` 18, `ICON_MD` 20, `ICON_LG` 22, `ICON_XL` 28. Tipos no §7.
+
 ## 3. Espaçamento e tamanhos (px @1080p)
 
 | Token | Valor | Uso |
@@ -59,6 +71,8 @@ Famílias de `docs/prd/telas/` (R-PEND-11); tamanhos mantidos do DV §1.3 (resol
 | `SPACE_LG` | 20 | entre cards |
 | `SPACE_XL` | 30 | entre colunas, margem interna de tela |
 | `SPACE_SCREEN` | 40 | margem externa de tela |
+| `SPACE_MARGIN` | 16 | margem de tela do Launcher (`px-margin` do protótipo) |
+| `RADIUS_XS` | 2 | Launcher: linha, chip, tecla (`rounded` do protótipo) |
 | `RADIUS_SM` | 4 | slots, badges |
 | `RADIUS_MD` | 8 | cards, botões |
 | `RADIUS_LG` | 16 | cards grandes da seleção de heróis (F51) e da tela de fim (F52) |
@@ -108,3 +122,18 @@ Sem movimento acima de `DUR_SLOW` em UI; a opção "reduzir animação" não exi
 | Tela de fim (F52) | por tom `{Win,Lose,Draw}` (`GOLD`/`RED`/`TEXT_MUTED`): `EndCard<tom>` (fundo `BG_SURFACE` 80 %, borda do tom, brilho, raio `RADIUS_LG`), `EndIcon<tom>`, `EndReason<tom>` + `LabelEndReason<tom>`, `LabelEndTitle<tom>` (`TYPE_END_TITLE`), `LabelEndTag<tom>`, `LabelEndLevel<tom>`; linhas `EndRow`/`EndRowHover`/`EndRowBoss` (`GOLD`)/`EndRowSet` (`CYAN`)/`EndRowMuted`; valores `LabelEndValue{GoldBright,Green,Cyan,Text,TextMuted}` (`TYPE_END_VALUE`, mono), `LabelEndPill{Gold,Muted}`; comparador `EndGlyph` + `LabelEndGlyph`, `EndVs` + `LabelEndVs`; rodapé `EndFooter`, `EndKey`/`EndKeyDark`; botões `ButtonEnd`, `ButtonEndPrimary` (`GOLD`), `ButtonEndDanger` (red-600 do protótipo) + `LabelEndButton`/`LabelEndButtonDark` | — |
 
 O teste `shared/test/test_theme_tokens.gd` lê o `.tres` e confere que cada cor acima bate com `UiTokens`.
+
+## 7. Tipos do Launcher (`LauncherTheme`, F24)
+
+Gerados por `shared/ui/theme/launcher_theme.gd` (chamado no fim do `ThemeBuilder.build()`), prefixo `Ln`. Medidas do Tailwind dos protótipos (1 px CSS = 1 px no canvas 1920×1080); texto sem contorno.
+
+| Grupo | Tipos |
+|---|---|
+| Texto (`Label`) | `LnHeadlineLg`, `LnHeadlineSm`, `LnHeadlineSmGold`, `LnBrand`, `LnBody`, `LnBodyMuted`, `LnBodyGold`, `LnBodySm`, `LnBodySmMuted`, `LnBodySmError`, `LnNum`, `LnNumText`, `LnNumGold`, `LnNumCyan`; ícones `LnIconGold`, `LnIconCyan`, `LnIconMuted`, `LnIconError`, `LnIconLogo`, `LnIconTitle` |
+| Painéis (`PanelContainer`) | `LnAppBar` (`BG_LOW` 95 %, sombra), `LnCard` / `LnCardRaised` (`BG_LOW`, raio 8, sombra 20/24 px), `LnRibbon`, `LnFooter`, `LnRow` / `LnRowHover` (`BG_PANEL`/`BG_CARD` opacos, raio 2), `LnWell` (`BG_LOWEST` com inset), `LnChip`, `LnIconBox`, `LnLogoBox`, `LnModal`, `LnToast` |
+| Botões | `LnTab` (aba e menu; ativo `GOLD` com brilho), `LnButton`, `LnButtonPrimary` (`GOLD`, borda 3D `GOLD_EDGE` 4 px, brilho), `LnButtonDanger` (`ERROR_BG`), `LnIconButton`, `LnIconButtonDanger`, `LnSegment`, `LnKey` / `LnKeyCyan` / `LnKeyUltimate` (tecla; escutando = `GOLD`), `LnKeyLabel` (tecla só leitura) |
+| Controles | `LnSwitch` (`CheckButton`, SVG em `shared/ui/theme/launcher/`), `LnSlider`, `LnOption` + `LnPopup`, `LnScrollBar` |
+| Layout | `LnHGap{Xs,Sm,Md,Lg,Xl}` / `LnVGap{…}` (espaçamento por token, sem override em componente), `LnScreenMargin`, `LnDivider` / `LnDividerV` |
+
+Inset do CSS (`shadow-[inset_…]`) vira borda superior escura de 2 px (o `StyleBoxFlat` não tem sombra interna). O teste `shared/test/test_theme_tokens.gd` confere fontes, fallback de ícones, espaçamentos e estados.
+

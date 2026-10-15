@@ -7,7 +7,8 @@ extends HBoxContainer
 
 const PREVIEW: PackedScene = preload("res://shared/ui/components/monster_preview_3d.tscn")
 const SLOT_ITEM: PackedScene = preload("res://shared/ui/components/slot_item.tscn")
-const SKILL_KEYS: Array[String] = ["RMB", "Q", "E", "R"]
+## Ataque basico no botao direito (SPEC-045 §2); Q/E/R vem do InputMap (remapeavel, F24).
+const BASIC_KEY: String = "RMB"
 const SLOT_NAMES: Array[String] = ["Arma", "Elmo", "Peito", "Bota"]
 ## Indice = ItemData.Rarity.
 const RARITY_COLORS: Array[Color] = [
@@ -176,7 +177,8 @@ func _skill_row(skill: SkillData, slot: int) -> HBoxContainer:
 	var text := VBoxContainer.new()
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var title := Label.new()
-	title.text = "[%s] %s" % [SKILL_KEYS[slot], skill.display_name]
+	var key := BASIC_KEY if slot == 0 else InputActions.skill_labels()[slot - 1]
+	title.text = "[%s] %s" % [key, skill.display_name]
 	title.theme_type_variation = &"LabelH2"
 	var facts := Label.new()
 	facts.text = skill_facts(skill, _rank_of(slot))

@@ -148,3 +148,13 @@ func test_gamepad_da_dv() -> void:
 	assert_true(_has_button(InputActions.SCOREBOARD, JOY_BUTTON_BACK))
 	assert_true(_has_button(InputActions.CANCEL, JOY_BUTTON_B))
 	assert_true(_has_button(InputActions.OPEN_BESTIARY, JOY_BUTTON_DPAD_UP))
+
+
+func test_rotulo_da_tecla_segue_o_remapeamento() -> void:
+	InputActions.ensure()
+	var values := UserSettings.rebind(UserSettings.defaults(), InputActions.SKILL_Q, KEY_Z)
+	SettingsApplier.apply_controls(values)
+	assert_eq(InputActions.key_label(InputActions.SKILL_Q), "Z")
+	assert_eq(InputActions.skill_labels(), ["Z", "E", "R"] as Array[String])
+	SettingsApplier.apply_controls(UserSettings.defaults())
+	assert_eq(InputActions.key_label(InputActions.SKILL_Q), "Q")

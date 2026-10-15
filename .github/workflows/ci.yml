@@ -83,7 +83,8 @@ jobs:
         if: ${{ !cancelled() }}
         run: |
           if [ ! -d launcher ]; then echo "launcher/ ainda não existe"; exit 0; fi
-          if grep -rnE 'netfox|ENetMultiplayerPeer|res://scenes/arena' launcher \
+          # Referencia de codigo, nao texto: o credito do netfox (aba Creditos, F24) cita o nome.
+          if grep -rnE 'addons/netfox|Network(Time|Rollback|Events|Performance)|RollbackSynchronizer|StateSynchronizer|BaseNetInput|ENetMultiplayerPeer|res://scenes/arena' launcher \
               --exclude-dir=shared --exclude-dir=.godot; then
             echo "FALHA: launcher/ referencia o Game (I9)"; exit 1
           fi
@@ -128,6 +129,26 @@ jobs:
       - name: Testes GUT (game/test + shared/test)
         shell: pwsh
         run: ./tools/test.ps1 -Module game
+
+  test-launcher:
+    needs: changes
+    if: >-
+      needs.changes.outputs.launcher == 'true' || needs.changes.outputs.shared == 'true' ||
+      needs.changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/godot
+        with:
+          version: ${{ env.GODOT_VERSION }}
+
+      # GUT de launcher/test + shared/test; o smoke (test_smoke_scenes.gd) instancia cada .tscn
+      # do Launcher e a galeria do design system.
+      - name: Testes GUT e smoke de telas (launcher/test + shared/test)
+        shell: pwsh
+        run: ./tools/test.ps1 -Module launcher
 
   test-backend:
     needs: changes
@@ -180,7 +201,7 @@ jobs:
 
   gate:
     runs-on: ubuntu-latest
-    needs: [changes, lint-gd, test-game, test-backend]
+    needs: [changes, lint-gd, test-game, test-launcher, test-backend]
     if: always()
     steps:
       # Job pulado por path filter conta como sucesso; changes pulado ou falho, não.
