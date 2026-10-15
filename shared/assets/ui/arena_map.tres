@@ -1,0 +1,176 @@
+[gd_resource type="Resource" script_class="ArenaMapData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/arena_map_data.gd" id="1_ulj7g"]
+
+[resource]
+script = ExtResource("1_ulj7g")
+view_pitch_degrees = 45.0
+view_height = 72.0
+view_aspect = 1.7777777777777777
+image_size = Vector2i(2048, 1152)
+pois = Array[Dictionary]([{
+"groups": [{
+"anchor": Vector2(-23.999912, 23.999912),
+"chests": {
+"common": 6
+},
+"monsters": {
+"skeleton_t1": 4,
+"skeleton_warrior_t2": 1
+}
+}],
+"id": "base_a"
+}, {
+"groups": [{
+"anchor": Vector2(23.999912, -23.999912),
+"chests": {
+"common": 6
+},
+"monsters": {
+"skeleton_t1": 4,
+"skeleton_warrior_t2": 1
+}
+}],
+"id": "base_b"
+}, {
+"groups": [{
+"anchor": Vector2(0, 0),
+"chests": {},
+"monsters": {
+"skeleton_king_boss": 1
+}
+}],
+"id": "crater"
+}, {
+"groups": [{
+"anchor": Vector2(-7.5140314, -5.914031),
+"chests": {
+"rare": 2
+},
+"monsters": {
+"golem_t3": 1,
+"skeleton_mage_t2": 1,
+"skeleton_warrior_t2": 1
+}
+}, {
+"anchor": Vector2(7.5140314, 5.914031),
+"chests": {
+"rare": 2
+},
+"monsters": {
+"golem_t3": 1,
+"skeleton_mage_t2": 1,
+"skeleton_warrior_t2": 1
+}
+}],
+"id": "center_fields"
+}, {
+"groups": [{
+"anchor": Vector2(-4, -26.7),
+"chests": {
+"common": 2
+},
+"monsters": {
+"skeleton_t1": 2,
+"skeleton_warrior_t2": 1
+}
+}, {
+"anchor": Vector2(-26, -3.3),
+"chests": {
+"common": 2
+},
+"monsters": {
+"skeleton_t1": 2,
+"skeleton_warrior_t2": 1
+}
+}, {
+"anchor": Vector2(26, 3.3),
+"chests": {
+"common": 2
+},
+"monsters": {
+"skeleton_t1": 2,
+"skeleton_warrior_t2": 1
+}
+}, {
+"anchor": Vector2(4, 26.7),
+"chests": {
+"common": 2
+},
+"monsters": {
+"skeleton_t1": 2,
+"skeleton_warrior_t2": 1
+}
+}],
+"id": "side_fields"
+}, {
+"groups": [{
+"anchor": Vector2(-27.2, -27.2),
+"chests": {
+"reinforced": 2
+},
+"monsters": {
+"golem_corner": 1,
+"wolf_t2": 2
+}
+}, {
+"anchor": Vector2(27.2, 27.2),
+"chests": {
+"reinforced": 2
+},
+"monsters": {
+"golem_corner": 1,
+"wolf_t2": 2
+}
+}],
+"id": "corner_fields"
+}, {
+"groups": [{
+"anchor": Vector2(-26, -18),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(26, 18),
+"chests": {},
+"monsters": {}
+}],
+"id": "river"
+}, {
+"groups": [{
+"anchor": Vector2(11.313708, -11.313708),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(-11.313708, 11.313708),
+"chests": {},
+"monsters": {}
+}],
+"id": "bridges"
+}, {
+"groups": [{
+"anchor": Vector2(-19, -29),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(18.384775, -9.192389),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(-12, -7.347638e-16),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(12, 2.2042914e-15),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(-18.384775, 9.192389),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(19, 29),
+"chests": {},
+"monsters": {}
+}],
+"id": "tall_grass"
+}])

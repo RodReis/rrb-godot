@@ -1,0 +1,105 @@
+gameserver-1  | [netem] rtt=100ms (50ms por direcao) jitter=0ms loss=2% por direcao
+gameserver-1  | libfontconfig.so.1: cannot open shared object file: No such file or directory
+gameserver-1  | Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+gameserver-1  | 
+gameserver-1  | [DBG][netfox.extras::NetworkSimulator] Feature disabled
+gameserver-1  | [DBG][@0][#1][_][netfox::NetworkPerformance] Network performance enabled, registering performance monitors
+gameserver-1  | [spawn] seed dos baus 928280645
+gameserver-1  | [server] escutando em *:7000
+gameserver-1  | [server] peer 1806458374 conectou
+gameserver-1  | [server] peer 842741039 conectou
+gameserver-1  | [match] LOBBY_WAIT -> HERO_PICK, tick 307
+gameserver-1  | [match] luz: dia -> noite
+gameserver-1  | [DBG][@307][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791846297.5832s raw time
+gameserver-1  | [DBG][@307][#1][_][netfox::NetworkTimeSynchronizer] Requested initial timestamp @ 1791846297.5891s raw time
+gameserver-1  | [DBG][@315][#1][_][netfox::NetworkTime] Peer #1806458374 is now on time!
+gameserver-1  | [DBG][@315][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 1806458374
+gameserver-1  | [DBG][@315][#1][_][netfox::NetworkTime] Peer #842741039 is now on time!
+gameserver-1  | [DBG][@315][#1][_][netfox::NetworkTickrateHandshake] Received tickrate 30 from peer 842741039
+gameserver-1  | [match] HERO_PICK -> PHASE1, tick 1027
+gameserver-1  | [match] knight para o peer 1806458374 (time 1)
+gameserver-1  | [match] fire_wizard para o peer 842741039 (time 2)
+gameserver-1  | [neblina] filtro: media 45.3 us/tick, pico 546 us, 18 trocas em 1029 ticks (65 alvos, 2 observadores, 2 peers), tick 1028
+gameserver-1  | [spawn] T1B0 morto por 842741039 no tick 1124, renasce no 3824
+gameserver-1  | [spawn] T1B2 morto por 842741039 no tick 1236, renasce no 3936
+gameserver-1  | [neblina] filtro: media 153.0 us/tick, pico 362 us, 2 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1328
+gameserver-1  | [spawn] T1B3 morto por 842741039 no tick 1376, renasce no 4076
+gameserver-1  | [spawn] T1B1 morto por 842741039 no tick 1458, renasce no 4158
+gameserver-1  | [neblina] filtro: media 145.6 us/tick, pico 368 us, 7 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1628
+gameserver-1  | [spawn] T2B morto por 842741039 no tick 1701, renasce no 4401
+gameserver-1  | [neblina] filtro: media 148.0 us/tick, pico 928 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 1928
+gameserver-1  | [neblina] filtro: media 147.6 us/tick, pico 1141 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2228
+gameserver-1  | [neblina] filtro: media 140.0 us/tick, pico 359 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2528
+gameserver-1  | [neblina] filtro: media 141.0 us/tick, pico 368 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 2828
+gameserver-1  | [neblina] filtro: media 140.8 us/tick, pico 317 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3128
+gameserver-1  | [neblina] filtro: media 141.7 us/tick, pico 309 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3428
+gameserver-1  | [neblina] filtro: media 142.9 us/tick, pico 405 us, 4 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 3728
+gameserver-1  | [spawn] T2BTop morto por 842741039 no tick 3947, renasce no 6647
+gameserver-1  | [neblina] filtro: media 141.7 us/tick, pico 610 us, 25 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4028
+gameserver-1  | [spawn] T1B0 morto por 842741039 no tick 4136, renasce no 6836
+gameserver-1  | [spawn] T1B2 morto por 842741039 no tick 4217, renasce no 6917
+gameserver-1  | [neblina] filtro: media 142.8 us/tick, pico 274 us, 3 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4328
+gameserver-1  | [neblina] filtro: media 140.6 us/tick, pico 326 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4628
+gameserver-1  | [neblina] filtro: media 143.3 us/tick, pico 825 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 4928
+gameserver-1  | [neblina] filtro: media 142.3 us/tick, pico 444 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5228
+gameserver-1  | [neblina] filtro: media 153.6 us/tick, pico 3513 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5528
+gameserver-1  | [neblina] filtro: media 142.2 us/tick, pico 547 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 5828
+gameserver-1  | [neblina] filtro: media 148.4 us/tick, pico 815 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6128
+gameserver-1  | [match] aviso do boss (3:00), tick 6427
+gameserver-1  | [neblina] filtro: media 143.7 us/tick, pico 430 us, 1 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6428
+gameserver-1  | [spawn] T2B morto por 842741039 no tick 6549, renasce no 9249
+gameserver-1  | [neblina] filtro: media 146.4 us/tick, pico 455 us, 3 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 6728
+gameserver-1  | [spawn] T1B0 morto por 842741039 no tick 6895, renasce no 9595
+gameserver-1  | [neblina] filtro: media 144.2 us/tick, pico 354 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7028
+gameserver-1  | [neblina] filtro: media 156.3 us/tick, pico 2812 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7328
+gameserver-1  | [neblina] filtro: media 144.2 us/tick, pico 360 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7628
+gameserver-1  | [neblina] filtro: media 147.2 us/tick, pico 471 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 7928
+gameserver-1  | [neblina] filtro: media 147.6 us/tick, pico 501 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8228
+gameserver-1  | [spawn] T1B2 morto por 842741039 no tick 8488, renasce no 11188
+gameserver-1  | [neblina] filtro: media 154.1 us/tick, pico 912 us, 4 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8528
+gameserver-1  | [spawn] T1B3 morto por 842741039 no tick 8570, renasce no 11270
+gameserver-1  | [spawn] T1B1 morto por 842741039 no tick 8624, renasce no 11324
+gameserver-1  | [neblina] filtro: media 144.6 us/tick, pico 905 us, 6 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 8828
+gameserver-1  | [neblina] filtro: media 144.0 us/tick, pico 373 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9128
+gameserver-1  | [neblina] filtro: media 152.7 us/tick, pico 1521 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9428
+gameserver-1  | [neblina] filtro: media 143.3 us/tick, pico 271 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 9728
+gameserver-1  | [match] PHASE1 -> TRANSITION, tick 10027
+gameserver-1  | [match] fim da fase 1 (5:00), portoes caem, tick 10027
+gameserver-1  | [match] jogador 1806458374: Nv 1, 0 XP
+gameserver-1  | [match] jogador 842741039: Nv 4, 605 XP
+gameserver-1  | [spawn] Rei Esqueleto vivo aos 5:00 sai do mapa sem drop, tick 10027
+gameserver-1  | [neblina] filtro: media 143.6 us/tick, pico 356 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10028
+gameserver-1  | [match] TRANSITION -> PHASE2, tick 10177
+gameserver-1  | [neblina] filtro: media 150.3 us/tick, pico 397 us, 19 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10328
+gameserver-1  | [neblina] filtro: media 145.9 us/tick, pico 346 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10628
+gameserver-1  | [neblina] filtro: media 148.1 us/tick, pico 403 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 10928
+gameserver-1  | [neblina] filtro: media 152.6 us/tick, pico 593 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11228
+gameserver-1  | [neblina] filtro: media 151.9 us/tick, pico 870 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11528
+gameserver-1  | [neblina] filtro: media 149.3 us/tick, pico 368 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 11828
+gameserver-1  | [neblina] filtro: media 146.5 us/tick, pico 348 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12128
+gameserver-1  | [neblina] filtro: media 150.8 us/tick, pico 644 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12428
+gameserver-1  | [match] heroi 1806458374 morto por 0, tick 12522
+gameserver-1  | [neblina] filtro: media 147.4 us/tick, pico 403 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 12728
+gameserver-1  | [neblina] filtro: media 145.9 us/tick, pico 377 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13028
+gameserver-1  | [neblina] filtro: media 155.9 us/tick, pico 379 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13328
+gameserver-1  | [neblina] filtro: media 154.6 us/tick, pico 344 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13628
+gameserver-1  | [neblina] filtro: media 156.5 us/tick, pico 1230 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 13928
+gameserver-1  | [match] heroi 1806458374 morto por 0, tick 14022
+gameserver-1  | [neblina] filtro: media 151.9 us/tick, pico 656 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14228
+gameserver-1  | [neblina] filtro: media 152.9 us/tick, pico 841 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14528
+gameserver-1  | [neblina] filtro: media 152.5 us/tick, pico 368 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 14828
+gameserver-1  | [neblina] filtro: media 151.2 us/tick, pico 349 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15128
+gameserver-1  | [match] heroi 1806458374 morto por 0, tick 15222
+gameserver-1  | [neblina] filtro: media 154.3 us/tick, pico 307 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15428
+gameserver-1  | [neblina] filtro: media 150.7 us/tick, pico 397 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 15728
+gameserver-1  | [neblina] filtro: media 150.2 us/tick, pico 585 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16028
+gameserver-1  | [match] heroi 1806458374 morto por 0, tick 16152
+gameserver-1  | [neblina] filtro: media 153.8 us/tick, pico 384 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16328
+gameserver-1  | [neblina] filtro: media 149.2 us/tick, pico 390 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16628
+gameserver-1  | [neblina] filtro: media 149.6 us/tick, pico 342 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 16928
+gameserver-1  | [match] heroi 1806458374 morto por 0, tick 17082
+gameserver-1  | [match] PHASE2 -> SUDDEN_DEATH, tick 17227
+gameserver-1  | [match] SUDDEN_DEATH -> ENDED, tick 17227
+gameserver-1  | [match] fim: elimination, vencedor 842741039, estatisticas { "duration": 540.0, "players": [{ "peer": 842741039, "hero": 29, "kills": 0, "deaths": 0, "level": 4, "hero_damage": 0, "damage_taken": 850, "monsters": 13, "chests": 0, "boss_killed": false, "equipment": (-1, -1, -1, -1) }, { "peer": 1806458374, "hero": 0, "kills": 0, "deaths": 5, "level": 1, "hero_damage": 0, "damage_taken": 3000, "monsters": 0, "chests": 0, "boss_killed": false, "equipment": (-1, -1, -1, -1) }] }, tick 17227
+gameserver-1  | [soak] {"reason":"elimination","stats":{"duration":540.0,"players":[{"boss_killed":false,"chests":0,"damage_taken":850,"deaths":0,"equipment":"(-1, -1, -1, -1)","hero":29,"hero_damage":0,"kills":0,"level":4,"monsters":13,"peer":842741039},{"boss_killed":false,"chests":0,"damage_taken":3000,"deaths":5,"equipment":"(-1, -1, -1, -1)","hero":0,"hero_damage":0,"kills":0,"level":1,"monsters":0,"peer":1806458374}]},"tick":17227,"winner":842741039}
+gameserver-1  | [neblina] filtro: media 150.4 us/tick, pico 559 us, 0 trocas em 300 ticks (65 alvos, 2 observadores, 2 peers), tick 17228

@@ -11,6 +11,8 @@ const MONSTERS_DIR: String = DATA_DIR + "monsters/"
 const ITEM_CATALOG_PATH: String = DATA_DIR + "items/catalog.tres"
 const XP_CURVE_PATH: String = DATA_DIR + "rules/xp_table.tres"
 const MATCH_RULES_PATH: String = DATA_DIR + "rules/match_pacing.tres"
+## Render da arena e pontos de interesse (F33), gerados por tools/ui/render_arena_map.gd.
+const ARENA_MAP_PATH: String = "res://shared/assets/ui/arena_map.tres"
 ## ResourceLoader.list_directory marca pasta com "/" no fim.
 const DIR_MARK: String = "/"
 
@@ -20,12 +22,17 @@ var items: Array[ItemData] = []
 var set_bonuses: Array[SetBonusData] = []
 var xp_curve: XpCurve
 var match_rules: MatchRules
+## Pontos de interesse da arena (tela Arena & Mapa); nulo se o arquivo nao carrega.
+var arena_map: ArenaMapData
 
 var _loaded: bool = false
 
 
 ## Le tudo de shared/data; chamar de novo nao duplica nada.
 func load_all() -> void:
+	# Fora da guarda: "Tentar de novo" recupera o mapa mesmo com o resto do catalogo ja carregado.
+	if arena_map == null:
+		arena_map = load(ARENA_MAP_PATH) as ArenaMapData
 	if _loaded:
 		return
 	heroes.assign(_load_dir(HEROES_DIR))

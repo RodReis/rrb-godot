@@ -241,6 +241,11 @@
           "arquivo": "mvp3-f27-bestiario-forja.webp",
           "legenda": "O guia do launcher: as seis criaturas da arena com vida, dano, cadência e o que cada uma solta, e a Forja, onde se monta um herói com até quatro itens e se vê na hora a vida, a defesa e a proteção que ele terá — com a mesma conta do jogo.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f33-arena-mapa.webp",
+          "legenda": "O mapa da arena no launcher: a imagem real do vale, vista de cima, com um marcador para cada base, campo de monstros, ponte, rio, moita e a cratera do Rei Esqueleto. Ao clicar num marcador aparece o que há ali, e ao lado as duas fases da partida com os números do jogo.",
+          "tipo": "entregue"
         }
       ]
     },
