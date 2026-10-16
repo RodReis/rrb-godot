@@ -10,6 +10,9 @@ const ARENA_MAP: StringName = &"arena_map"
 const BESTIARY: StringName = &"bestiary"
 const FORGE: StringName = &"forge"
 const SETTINGS: StringName = &"settings"
+## Perfil da conta (F35): 1o login (definir nickname) e troca de avatar; fora do menu da barra,
+## abre pelo chip do cabecalho.
+const PROFILE: StringName = &"profile"
 ## Galeria do design system (prova visual dos componentes): so por --gallery, fora do menu.
 const GALLERY: StringName = &"gallery"
 ## Raiz da pilha com sessao (§3.4); sem sessao o App abre no LOGIN.
@@ -22,6 +25,7 @@ const ROUTES: Dictionary[StringName, String] = {
 	BESTIARY: "res://scenes/screens/bestiary.tscn",
 	FORGE: "res://scenes/screens/forge.tscn",
 	SETTINGS: "res://scenes/screens/settings.tscn",
+	PROFILE: "res://scenes/screens/profile.tscn",
 	GALLERY: "res://shared/ui/components/_gallery.tscn",
 }
 ## Menu da barra superior, na ordem: rota -> rotulo (Herois do prototipo: ainda sem tela).

@@ -57,9 +57,9 @@ func _match(
 
 
 func _history() -> Dictionary:
-	var knight := {"heroId": "knight", "kills": 3, "finalLevel": 8}
-	var ranger := {"heroId": "ranger", "kills": 5, "finalLevel": 9}
-	var none := {"heroId": null, "kills": 0, "finalLevel": 0}
+	var knight := {"heroId": "knight", "nickname": "RodReis", "kills": 3, "finalLevel": 8}
+	var ranger := {"heroId": "ranger", "nickname": null, "kills": 5, "finalLevel": 9}
+	var none := {"heroId": null, "nickname": null, "kills": 0, "finalLevel": 0}
 	return {
 		"totals": {"wins": 2, "losses": 1},
 		"matches":
@@ -116,6 +116,21 @@ func test_pronto_lista_as_partidas_e_conta_nos_chips() -> void:
 	assert_eq(_screen.filter_chip(HistoryScreen.Filter.LOSSES).count_text(), "1")
 	assert_eq(_screen.record_text(), "2V — 1D")
 	assert_eq(_screen.footer_text(), "Mostrando 4 partidas")
+
+
+func test_oponente_aparece_com_hashtag_nickname_e_heroi() -> void:
+	await _open()
+	var cards := _screen.cards()
+	assert_true(_has_text(cards[0], "#RodReis"), "oponente da 1a partida")
+	assert_true(_has_text(cards[0], "Cavaleiro"), "e o heroi dele")
+	assert_false(_has_text(cards[0], "##"), "o # e so de exibicao: nao se repete")
+
+
+func test_oponente_sem_nickname_mostra_so_o_heroi() -> void:
+	await _open()
+	var cards := _screen.cards()
+	assert_true(_has_text(cards[1], "Arqueira"))
+	assert_false(_texts(cards[1]).any(func(text: String) -> bool: return text.begins_with("#")))
 
 
 func test_so_a_partida_mais_recente_e_destaque() -> void:
@@ -269,7 +284,7 @@ func test_tela_escondida_nao_rola_com_o_teclado() -> void:
 				i,
 				"win",
 				ME_RANGER,
-				{"heroId": "knight", "kills": 3, "finalLevel": 8},
+				{"heroId": "knight", "nickname": "RodReis", "kills": 3, "finalLevel": 8},
 				500,
 				"kill_goal"
 			)
@@ -289,7 +304,7 @@ func test_setas_e_paginas_rolam_o_feed() -> void:
 				i,
 				"win",
 				ME_RANGER,
-				{"heroId": "knight", "kills": 3, "finalLevel": 8},
+				{"heroId": "knight", "nickname": "RodReis", "kills": 3, "finalLevel": 8},
 				500,
 				"kill_goal"
 			)

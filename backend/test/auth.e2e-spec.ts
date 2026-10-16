@@ -153,7 +153,82 @@ describe('auth e users (e2e)', () => {
     expect(me.body).toEqual({
       id: expect.any(String),
       email: credentials.email,
+      nickname: null,
       createdAt: expect.any(String),
+    });
+  });
+
+  describe('nickname (F35)', () => {
+    const server = (): App => app.getHttpServer();
+    const login = async (account: { email: string; password: string }): Promise<string> =>
+      `Bearer ${((await request(server()).post('/auth/login').send(account)).body as { accessToken: string }).accessToken}`;
+    const setNickname = (auth: string, nickname: unknown) =>
+      request(server()).put('/users/me/nickname').set('Authorization', auth).send({ nickname });
+    const me = async (auth: string) =>
+      (await request(server()).get('/users/me').set('Authorization', auth)).body as { nickname: string | null };
+
+    const second = { email: 'segundo@rrb.dev', password: 'senha1234' };
+    const third = { email: 'terceiro@rrb.dev', password: 'senha1234' };
+    let auth1: string;
+    let auth2: string;
+    let auth3: string;
+
+    beforeAll(async () => {
+      await request(server()).post('/auth/register').send(second);
+      await request(server()).post('/auth/register').send(third);
+      [auth1, auth2, auth3] = await Promise.all([login(credentials), login(second), login(third)]);
+    });
+
+    it('sem token → 401', async () => {
+      const res = await request(server()).put('/users/me/nickname').send({ nickname: 'RodReis' });
+      expect(res.status).toBe(401);
+    });
+
+    it.each([
+      ['curto', 'ab'],
+      ['longo', 'a'.repeat(17)],
+      ['com espaço', 'rod reis'],
+      ['com #', '#RodReis'],
+      ['acentuado', 'ródrigo'],
+    ])('nickname %s → 400 INVALID_NICKNAME e a conta segue sem nickname', async (_caso, nickname) => {
+      const res = await setNickname(auth1, nickname);
+      expect(res.status).toBe(400);
+      expect(res.body).toMatchObject({ statusCode: 400, code: 'INVALID_NICKNAME' });
+      expect((await me(auth1)).nickname).toBeNull();
+    });
+
+    it('corpo sem o campo → 400 VALIDATION_FAILED', async () => {
+      const res = await request(server()).put('/users/me/nickname').set('Authorization', auth1).send({});
+      expect(res.status).toBe(400);
+      expect(res.body).toMatchObject({ code: 'VALIDATION_FAILED' });
+    });
+
+    it('define o nickname (200) e /users/me passa a devolvê-lo na grafia escolhida', async () => {
+      const res = await setNickname(auth1, 'RodReis');
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({ email: credentials.email, nickname: 'RodReis' });
+      expect((await me(auth1)).nickname).toBe('RodReis');
+    });
+
+    it.each(['RodReis', 'rodreis', 'RODREIS'])('outra conta com %s → 409 NICKNAME_TAKEN (sem diferenciar maiúsculas)', async (nickname) => {
+      const res = await setNickname(auth2, nickname);
+      expect(res.status).toBe(409);
+      expect(res.body).toMatchObject({ statusCode: 409, code: 'NICKNAME_TAKEN' });
+      expect((await me(auth2)).nickname).toBeNull();
+    });
+
+    it('quem já definiu não troca → 409 NICKNAME_ALREADY_SET', async () => {
+      const res = await setNickname(auth1, 'Outro_Nome');
+      expect(res.status).toBe(409);
+      expect(res.body).toMatchObject({ code: 'NICKNAME_ALREADY_SET' });
+      expect((await me(auth1)).nickname).toBe('RodReis');
+    });
+
+    it('corrida: duas contas pedem o mesmo nickname ao mesmo tempo → uma 200 e uma 409 (o índice único arbitra)', async () => {
+      const [x, y] = await Promise.all([setNickname(auth2, 'Disputado'), setNickname(auth3, 'DISPUTADO')]);
+      expect([x.status, y.status].sort()).toEqual([200, 409]);
+      const loser = x.status === 409 ? x : y;
+      expect(loser.body).toMatchObject({ code: 'NICKNAME_TAKEN' });
     });
   });
 });

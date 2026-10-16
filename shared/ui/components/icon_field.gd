@@ -32,6 +32,13 @@ func bind(icon: String, placeholder: String) -> void:
 	line_edit.placeholder_text = placeholder
 
 
+## Campo com prefixo de texto no lugar do icone (o "#" do nickname, F35): o prefixo e so de
+## exibicao e nao entra no `line_edit.text`.
+func bind_prefix(prefix: String, placeholder: String) -> void:
+	_icon.theme_type_variation = &"LnNumGold"
+	bind(prefix, placeholder)
+
+
 ## Campo de senha: esconde o texto e poe o olho (mostrar/ocultar) a direita.
 func make_secret() -> void:
 	line_edit.secret = true

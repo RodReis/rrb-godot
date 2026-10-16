@@ -14,13 +14,21 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core';
 
-/** ARCHITECTURE-LAUNCHER.md §4.3. `nickname` entra no F35. */
-export const users = pgTable('users', {
-  id: uuid('id').primaryKey().defaultRandom(),
-  email: text('email').notNull().unique(),
-  passwordHash: text('password_hash').notNull(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-});
+/**
+ * ARCHITECTURE-LAUNCHER.md §4.3. `nickname` é nulo até o 1º login definir (F35); único sem
+ * diferenciar maiúsculas (índice em `lower(nickname)`), e a grafia escolhida é a exibida.
+ */
+export const users = pgTable(
+  'users',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    email: text('email').notNull().unique(),
+    passwordHash: text('password_hash').notNull(),
+    nickname: text('nickname'),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex('users_nickname_lower_idx').on(sql`lower(${table.nickname})`)],
+);
 
 export type User = typeof users.$inferSelect;
 

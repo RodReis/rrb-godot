@@ -335,7 +335,9 @@ describe('MatchesService', () => {
       clock.advance(60_000);
     }
 
-    it('vê a partida do próprio lado: resultado, herói, kills, nível e o herói do oponente', async () => {
+    it('vê a partida do próprio lado: resultado, herói, kills, nível e o herói e #nickname do oponente', async () => {
+      repo.nicknames.set(A, 'Duelista_01');
+      repo.nicknames.set(B, 'RodReis');
       await finished('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
 
       const asA = await service.history(A);
@@ -349,13 +351,13 @@ describe('MatchesService', () => {
           endReason: 'kill_goal',
           durationS: 512,
           me: { heroId: 'arqueiro', kills: 5, deaths: 1, finalLevel: 9, bossKill: true, setActive: 'cacador' },
-          opponent: { heroId: 'cavaleiro', kills: 2, finalLevel: 8 },
+          opponent: { heroId: 'cavaleiro', nickname: 'RodReis', kills: 2, finalLevel: 8 },
         },
       ]);
       expect(asB.matches[0]).toMatchObject({
         result: 'loss',
         me: { heroId: 'cavaleiro', kills: 2 },
-        opponent: { heroId: 'arqueiro', kills: 5, finalLevel: 9 },
+        opponent: { heroId: 'arqueiro', nickname: 'Duelista_01', kills: 5, finalLevel: 9 },
       });
       expect(asA.totals).toEqual({ wins: 1, losses: 0 });
       expect(asB.totals).toEqual({ wins: 0, losses: 1 });
@@ -368,6 +370,12 @@ describe('MatchesService', () => {
 
       expect(json).not.toContain(B);
       expect(json).not.toMatch(/userId|user_id|email|token/i);
+    });
+
+    it('oponente sem nickname (conta anterior ao F35) vem com nickname nulo, nunca com o e-mail', async () => {
+      await finished('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa');
+
+      expect((await service.history(A)).matches[0]?.opponent.nickname).toBeNull();
     });
 
     it('conta fora da partida não vê nada; partida em andamento não entra', async () => {
@@ -392,7 +400,7 @@ describe('MatchesService', () => {
         endReason: 'token_expired',
         durationS: null,
         me: { heroId: null, kills: 0 },
-        opponent: { heroId: null, kills: 0, finalLevel: 0 },
+        opponent: { heroId: null, nickname: null, kills: 0, finalLevel: 0 },
       });
       expect(history.totals).toEqual({ wins: 0, losses: 0 });
     });

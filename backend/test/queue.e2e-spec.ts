@@ -550,6 +550,7 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
 
     it('lista só as partidas da conta autenticada, com o herói do oponente e os totais V–D', async () => {
       const [a, b, c, d] = users as [User, User, User, User];
+      await rows('UPDATE users SET nickname = $1 WHERE id = $2', ['RodReis', b.id]);
       const first = await play(a, b, a);
       const second = await play(a, b, b);
       await play(c, d, c); // partida de outras contas
@@ -567,8 +568,17 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
         endReason: 'kill_goal',
         durationS: 512,
         me: { heroId: 'arqueiro', kills: 5, finalLevel: 9 },
-        opponent: { heroId: 'cavaleiro', kills: 2, finalLevel: 8 },
+        opponent: { heroId: 'cavaleiro', nickname: 'RodReis', kills: 2, finalLevel: 8 },
       });
+    });
+
+    it('oponente sem nickname (conta anterior ao F35) vem com nickname nulo', async () => {
+      const [a, b] = users as [User, User];
+      await play(a, b, a);
+
+      const body = (await history(a)).body as { matches: { opponent: { nickname: unknown } }[] };
+
+      expect(body.matches[0]?.opponent.nickname).toBeNull();
     });
 
     it('sem vazamento: nada de id, e-mail ou token de outra conta na resposta', async () => {

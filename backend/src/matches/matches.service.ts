@@ -14,7 +14,7 @@ import { Clock } from '../common/clock';
 import type { AppConfig } from '../config';
 import { MatchTokenService } from '../orchestrator/match-token.service';
 import { OrchestratorService } from '../orchestrator/orchestrator.service';
-import { HistoryEntry, MatchesRepository, MatchResult } from './matches.repository';
+import { HistoryEntry, HistoryOpponent, MatchesRepository, MatchResult } from './matches.repository';
 
 export interface ValidatedMatch {
   matchId: string;
@@ -36,7 +36,7 @@ export interface HistoryMatch {
   endReason: string | null;
   durationS: number | null;
   me: HistoryEntry['me'];
-  opponent: { heroId: string | null; kills: number; finalLevel: number };
+  opponent: HistoryOpponent;
 }
 
 export interface MatchHistory {
@@ -111,7 +111,7 @@ export class MatchesService {
         endReason: entry.endReason,
         durationS: entry.durationS,
         me: entry.me,
-        opponent: entry.opponent ?? { heroId: null, kills: 0, finalLevel: 0 },
+        opponent: entry.opponent ?? { heroId: null, nickname: null, kills: 0, finalLevel: 0 },
       })),
     };
   }

@@ -2,11 +2,13 @@ class_name AppBar
 extends PanelContainer
 ## Barra superior do Launcher (cabecalho dos prototipos de docs/prd/telas/): logo, menu so com
 ## rotas que existem (Router.NAV), chip de status real do backend (V-01b: online/offline e ping
-## HTTP, no lugar do "NETFOX 30HZ | 24ms" do prototipo), engrenagem (Configuracoes) e sair. Sem
-## ELO nem perfil (FRONTEND-LAUNCHER §8.3; perfil e o F35). Emite; quem navega e o App.
+## HTTP, no lugar do "NETFOX 30HZ | 24ms" do prototipo), chip de perfil (F35: #nickname, avatar
+## local e V-D no lugar do ELO do prototipo, FRONTEND-LAUNCHER §8.3), engrenagem (Configuracoes) e
+## sair. O chip so aparece com sessao e nickname definido. Emite; quem navega e o App.
 
 signal navigate_requested(route: StringName)
 signal quit_requested
+signal profile_requested
 
 ## h-16 do prototipo.
 const HEIGHT: float = 64.0
@@ -28,6 +30,7 @@ var _dot: Panel = Panel.new()
 var _status: Label = Label.new()
 var _ping_divider: VSeparator = VSeparator.new()
 var _ping: Label = Label.new()
+var _profile: ProfileChip = ProfileChip.new()
 
 
 func _init() -> void:
@@ -78,6 +81,9 @@ func _init() -> void:
 	spacer.size_flags_horizontal = SIZE_EXPAND_FILL
 	row.add_child(spacer)
 	row.add_child(_status_chip())
+	_profile.visible = false
+	_profile.pressed.connect(profile_requested.emit)
+	row.add_child(_profile)
 	var actions := HBoxContainer.new()
 	actions.theme_type_variation = &"LnHGapXs"
 	row.add_child(actions)
@@ -115,6 +121,32 @@ func set_backend_status(online: bool, ping_ms: int = UNKNOWN_PING) -> void:
 
 func backend_status_text() -> String:
 	return "%s %s" % [_status.text, _ping.text]
+
+
+## Chip de perfil: #nickname e avatar (null = icone padrao). Sem nickname o chip nao aparece.
+func set_profile(nickname: String, avatar: Texture2D) -> void:
+	_profile.visible = not nickname.is_empty()
+	_profile.bind(nickname, avatar)
+
+
+## V-D do historico no chip; so muda a linha de numeros.
+func set_profile_record(wins: int, losses: int) -> void:
+	_profile.set_record(wins, losses)
+
+
+## Esquece so o V-D (historico que nao carregou: nao fica numero velho).
+func clear_profile_record() -> void:
+	_profile.clear_record()
+
+
+## Sem sessao (login, logout, sessao expirada): o chip some e esquece o V-D da conta anterior.
+func clear_profile() -> void:
+	_profile.visible = false
+	clear_profile_record()
+
+
+func profile_chip() -> ProfileChip:
+	return _profile
 
 
 ## Destaca o item do menu da rota da tela atual (nenhum, se a rota nao esta no menu).

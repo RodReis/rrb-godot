@@ -24,7 +24,7 @@ const HISTORY: Dictionary = {
 				"bossKill": true,
 				"setActive": "hunter"
 			},
-			"opponent": {"heroId": "knight", "kills": 3, "finalLevel": 8},
+			"opponent": {"heroId": "knight", "nickname": "RodReis", "kills": 3, "finalLevel": 8},
 		},
 		{
 			"matchId": MATCH_B,
@@ -41,7 +41,7 @@ const HISTORY: Dictionary = {
 				"bossKill": false,
 				"setActive": null
 			},
-			"opponent": {"heroId": null, "kills": 0, "finalLevel": 0},
+			"opponent": {"heroId": null, "nickname": null, "kills": 0, "finalLevel": 0},
 		},
 	],
 }
@@ -74,6 +74,7 @@ func test_busca_as_partidas_da_propria_conta_com_o_token() -> void:
 	assert_eq(recent.me.set_active, "hunter")
 	assert_true(recent.me.boss_kill)
 	assert_eq(recent.opponent.hero_id, "knight")
+	assert_eq(recent.opponent.nickname, "RodReis")
 	assert_eq(recent.opponent.kills, 3)
 
 
@@ -85,6 +86,7 @@ func test_partida_interrompida_tem_campos_nulos_vazios() -> void:
 	assert_eq(broken.duration_s, -1)
 	assert_eq(broken.me.hero_id, "")
 	assert_eq(broken.opponent.hero_id, "")
+	assert_eq(broken.opponent.nickname, "", "sem oponente nem nickname")
 
 
 func test_cache_por_sessao_nao_repete_a_chamada() -> void:

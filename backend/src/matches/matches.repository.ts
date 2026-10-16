@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { and, desc, eq, inArray, isNotNull, lt, ne, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
-import { Match, matches, matchPlayers } from '../../drizzle/schema';
+import { Match, matches, matchPlayers, users } from '../../drizzle/schema';
 import { Database } from '../db/database';
 
 export interface NewPlayer {
@@ -50,6 +50,11 @@ export interface HistorySide {
   finalLevel: number;
 }
 
+/** O oponente é identificado pelo herói e pelo `#nickname` (nulo em conta anterior ao F35), nunca pelo e-mail. */
+export interface HistoryOpponent extends HistorySide {
+  nickname: string | null;
+}
+
 /** Uma partida terminada vista por uma conta. O oponente é só o lado dele: sem id, e-mail nem token. */
 export interface HistoryEntry {
   matchId: string;
@@ -59,7 +64,7 @@ export interface HistoryEntry {
   durationS: number | null;
   winnerUserId: string | null;
   me: HistorySide & { deaths: number; bossKill: boolean; setActive: string | null };
-  opponent: HistorySide | null;
+  opponent: HistoryOpponent | null;
 }
 
 export interface WinLossRecord {
@@ -222,6 +227,7 @@ export class DrizzleMatchesRepository extends MatchesRepository {
   async historyOf(userId: string, limit: number): Promise<HistoryEntry[]> {
     const mine = alias(matchPlayers, 'mine');
     const theirs = alias(matchPlayers, 'theirs');
+    const opponentUser = alias(users, 'opponent_user');
     const rows = await this.database.db
       .select({
         matchId: matches.id,
@@ -240,12 +246,18 @@ export class DrizzleMatchesRepository extends MatchesRepository {
           setActive: mine.setActive,
         },
         // O id do oponente nem sai do banco: só o que a tela mostra.
-        theirs: { heroId: theirs.heroId, kills: theirs.kills, finalLevel: theirs.finalLevel },
+        theirs: {
+          heroId: theirs.heroId,
+          nickname: opponentUser.nickname,
+          kills: theirs.kills,
+          finalLevel: theirs.finalLevel,
+        },
         hasOpponent: isNotNull(theirs.matchId),
       })
       .from(mine)
       .innerJoin(matches, eq(matches.id, mine.matchId))
       .leftJoin(theirs, and(eq(theirs.matchId, mine.matchId), ne(theirs.userId, mine.userId)))
+      .leftJoin(opponentUser, eq(opponentUser.id, theirs.userId))
       .where(and(eq(mine.userId, userId), inArray(matches.status, [...TERMINAL])))
       .orderBy(desc(sql`coalesce(${matches.endedAt}, ${matches.createdAt})`), desc(matches.id))
       .limit(limit);
@@ -257,7 +269,15 @@ export class DrizzleMatchesRepository extends MatchesRepository {
       durationS: row.durationS,
       winnerUserId: row.winnerUserId,
       me: row.mine,
-      opponent: row.hasOpponent ? row.theirs : null,
+      // O join com `users` torna cada coluna do oponente anulável; `hasOpponent` garante a linha.
+      opponent: row.hasOpponent
+        ? {
+            heroId: row.theirs.heroId,
+            nickname: row.theirs.nickname,
+            kills: row.theirs.kills ?? 0,
+            finalLevel: row.theirs.finalLevel ?? 0,
+          }
+        : null,
     }));
   }
 

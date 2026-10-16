@@ -1,27 +1,7 @@
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import type { User } from '../../drizzle/schema';
-import { UsersRepository } from '../users/users.repository';
+import { InMemoryUsersRepository } from '../../test/support/fakes';
 import { AuthService } from './auth.service';
-
-class FakeUsersRepository extends UsersRepository {
-  readonly rows: User[] = [];
-
-  async create(email: string, passwordHash: string): Promise<User | null> {
-    if (this.rows.some((u) => u.email === email)) return null;
-    const user: User = { id: `u${this.rows.length + 1}`, email, passwordHash, createdAt: new Date() };
-    this.rows.push(user);
-    return user;
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    return this.rows.find((u) => u.email === email) ?? null;
-  }
-
-  async findById(id: string): Promise<User | null> {
-    return this.rows.find((u) => u.id === id) ?? null;
-  }
-}
 
 const SECRET = 'segredo-de-teste-com-32-caracteres!!';
 
@@ -30,12 +10,12 @@ function errorCode(error: unknown): unknown {
 }
 
 describe('AuthService', () => {
-  let users: FakeUsersRepository;
+  let users: InMemoryUsersRepository;
   let jwt: JwtService;
   let service: AuthService;
 
   beforeEach(() => {
-    users = new FakeUsersRepository();
+    users = new InMemoryUsersRepository();
     jwt = new JwtService({ secret: SECRET });
     service = new AuthService(users, jwt);
   });

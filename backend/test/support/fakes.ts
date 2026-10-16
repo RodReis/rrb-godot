@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import type { Match, QueueTicket } from '../../drizzle/schema';
+import type { Match, QueueTicket, User } from '../../drizzle/schema';
 import { Clock } from '../../src/common/clock';
 import {
   HistoryEntry,
@@ -9,6 +9,7 @@ import {
   WinLossRecord,
 } from '../../src/matches/matches.repository';
 import { QueueRepository } from '../../src/matchmaking/queue.repository';
+import { SetNicknameResult, UsersRepository } from '../../src/users/users.repository';
 import { ContainerRuntime } from '../../src/orchestrator/container-runtime';
 
 export class FakeClock extends Clock {
@@ -55,8 +56,44 @@ export class FakeContainerRuntime extends ContainerRuntime {
   }
 }
 
+/** Repositório de contas em memória; o nickname é único sem diferenciar maiúsculas, como o índice do banco. */
+export class InMemoryUsersRepository extends UsersRepository {
+  readonly rows: User[] = [];
+
+  async create(email: string, passwordHash: string): Promise<User | null> {
+    if (this.rows.some((u) => u.email === email)) return null;
+    const user: User = {
+      id: `u${this.rows.length + 1}`,
+      email,
+      passwordHash,
+      nickname: null,
+      createdAt: new Date('2026-01-01T12:00:00.000Z'),
+    };
+    this.rows.push(user);
+    return user;
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.rows.find((u) => u.email === email) ?? null;
+  }
+
+  async findById(id: string): Promise<User | null> {
+    return this.rows.find((u) => u.id === id) ?? null;
+  }
+
+  async setNickname(id: string, nickname: string): Promise<SetNicknameResult> {
+    const user = this.rows.find((u) => u.id === id);
+    if (!user || user.nickname !== null) return { status: 'already_set' };
+    if (this.rows.some((u) => u.nickname?.toLowerCase() === nickname.toLowerCase())) return { status: 'taken' };
+    user.nickname = nickname;
+    return { status: 'ok', user };
+  }
+}
+
 export class InMemoryMatchesRepository extends MatchesRepository {
   readonly rows = new Map<string, Match>();
+  /** Nickname por conta (o banco o lê de `users`); ausente = conta sem nickname. */
+  readonly nicknames = new Map<string, string>();
   readonly players = new Map<string, Map<string, Record<string, unknown>>>();
   private readonly tokenHashes = new Map<string, string>();
 
@@ -180,7 +217,12 @@ export class InMemoryMatchesRepository extends MatchesRepository {
         durationS: match.durationS,
         winnerUserId: match.winnerUserId,
         me: side(players.get(userId)),
-        opponent: other && { heroId: other.heroId, kills: other.kills, finalLevel: other.finalLevel },
+        opponent: other && {
+          heroId: other.heroId,
+          nickname: (otherId && this.nicknames.get(otherId)) || null,
+          kills: other.kills,
+          finalLevel: other.finalLevel,
+        },
       });
     }
     return entries;

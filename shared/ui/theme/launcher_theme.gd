@@ -55,6 +55,11 @@ const SELECTION_ALPHA: float = 0.4
 ## py-0.5 dos selos.
 const BADGE_PAD_Y: int = 2
 
+## Perfil (F35): avatar redondo do chip (w-8 h-8 rounded-full), moldura do avatar grande e borda
+## do avatar escolhido na grade.
+const AVATAR_CHIP_RADIUS: int = 16
+const AVATAR_BORDER: int = 2
+const AVATAR_PREVIEW_RADIUS: int = 12
 ## Historico (F26): faixa lateral do cartao (w-1.5), placar a 50 % (bg-lowest/50), py do selo de
 ## resultado (comum py-0.5, destaque py-1) e px dos contadores dos filtros (px-1.5).
 const MATCH_STRIPE: int = 6
@@ -205,6 +210,9 @@ const LABELS: Dictionary[StringName, Array] = {
 	&"LnIconSmError": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, ICON_CARD, &"ERROR"],
 	&"LnIconSmOn": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, ICON_CARD, &"ON_GOLD"],
 	&"LnIconSmCyan": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, ICON_CARD, &"CYAN"],
+	# Perfil (F35): nome no chip do cabecalho (font-headline-sm text-body-sm bold).
+	&"LnChipName":
+	[UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_BODY_SM, &"TEXT"],
 }
 ## Variacoes que ganham tracking (uppercase tracking-wide do prototipo).
 const TRACKED: Array[StringName] = [
@@ -224,6 +232,7 @@ static func add(theme: Theme) -> void:
 	_controls(theme)
 	_auth_and_lobby(theme)
 	_history(theme)
+	_profile(theme)
 	CompendiumTheme.add(theme)
 	ArenaMapTheme.add(theme)
 
@@ -590,6 +599,42 @@ static func _auth_and_lobby(theme: Theme) -> void:
 		theme.set_stylebox(&"panel", dot[0], _box(dot[1], DOT_RADIUS))
 	_buttons_f25(theme, display)
 	_input(theme, body)
+
+
+## Perfil (F35): chip do cabecalho (bg-surface-container rounded-xl, hover mais claro), avatar
+## redondo de 32 px, moldura do avatar grande e a grade de avatares (borda dourada no escolhido).
+static func _profile(theme: Theme) -> void:
+	var chip := _box(Color(UiTokens.BG_PANEL, 1.0), UiTokens.RADIUS_MD)
+	chip.content_margin_left = UiTokens.SPACE_XS
+	chip.content_margin_right = UiTokens.SPACE_SM
+	chip.content_margin_top = UiTokens.SPACE_XS
+	chip.content_margin_bottom = UiTokens.SPACE_XS
+	_panel(theme, &"LnProfileChip", chip)
+	_panel(theme, &"LnProfileChipHover", _fill(chip, Color(UiTokens.BG_CARD, 1.0)))
+	var focus := _fill(chip, Color(UiTokens.BG_CARD, 1.0))
+	focus.border_color = UiTokens.GOLD_BRIGHT
+	focus.set_border_width_all(UiTokens.BORDER_W)
+	_panel(theme, &"LnProfileChipFocus", focus)
+	_panel(theme, &"LnAvatar", _box(UiTokens.GOLD_BRIGHT, AVATAR_CHIP_RADIUS))
+	var preview := _box(UiTokens.BG_LOWEST, AVATAR_PREVIEW_RADIUS)
+	preview.border_color = UiTokens.GOLD
+	preview.set_border_width_all(AVATAR_BORDER)
+	_panel(theme, &"LnAvatarPreview", preview)
+	var tile := _box(UiTokens.BG_LOWEST, UiTokens.RADIUS_SM)
+	tile.border_color = UiTokens.BG_HIGHEST
+	tile.set_border_width_all(AVATAR_BORDER)
+	var tile_hover := tile.duplicate() as StyleBoxFlat
+	tile_hover.border_color = Color(UiTokens.GOLD, ALPHA_SOFT)
+	var tile_on := tile.duplicate() as StyleBoxFlat
+	tile_on.border_color = UiTokens.GOLD_BRIGHT
+	tile_on.shadow_color = Color(UiTokens.GOLD, GLOW_TAB)
+	tile_on.shadow_size = GLOW_TAB_SIZE
+	_button(
+		theme,
+		&"LnAvatarTile",
+		[tile, tile_hover, tile_on, tile_on],
+		font(UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_SEMIBOLD)
+	)
 
 
 ## Historico (F26, prototipo "Historico de Partidas - Duelos"): cartao de duelo com faixa lateral

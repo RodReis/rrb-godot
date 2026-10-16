@@ -6,6 +6,7 @@ extends RefCounted
 
 var id: String = ""
 var email: String = ""
+var nickname: String = ""
 var created_at: String = ""
 
 
@@ -24,6 +25,12 @@ static func from_dict(raw: Variant) -> UserProfile:
 	if not data["email"] is String:
 		return null
 	model.email = data["email"]
+	if not data.has("nickname"):
+		return null
+	if data["nickname"] != null:
+		if not data["nickname"] is String:
+			return null
+		model.nickname = data["nickname"]
 	if not data.has("createdAt"):
 		return null
 	if not data["createdAt"] is String:

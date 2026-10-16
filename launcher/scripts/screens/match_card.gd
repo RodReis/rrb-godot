@@ -109,7 +109,13 @@ func _duel(summary: MatchSummary, portrait: Vector2) -> HBoxContainer:
 	mine.size_flags_stretch_ratio = SIDE_RATIO
 	row.add_child(mine)
 	row.add_child(_score(summary))
-	var rival := _side(summary.opponent.hero_id, summary.opponent.final_level, portrait, false)
+	var rival := _side(
+		summary.opponent.hero_id,
+		summary.opponent.final_level,
+		portrait,
+		false,
+		summary.opponent.nickname
+	)
 	_add_stats(rival.get_meta(INFO_META), summary.opponent.kills, NO_DEATHS)
 	rival.size_flags_horizontal = SIZE_EXPAND_FILL
 	rival.size_flags_stretch_ratio = SIDE_RATIO
@@ -118,13 +124,21 @@ func _duel(summary: MatchSummary, portrait: Vector2) -> HBoxContainer:
 
 
 ## Retrato + coluna de texto. Meu lado: retrato a esquerda; o do rival espelhado (texto a direita).
-func _side(hero_id: String, level: int, portrait: Vector2, mine: bool) -> HBoxContainer:
+## `nickname`: so o rival ("" = conta anterior ao F35 ou partida sem oponente: fica so o heroi).
+func _side(
+	hero_id: String, level: int, portrait: Vector2, mine: bool, nickname: String = ""
+) -> HBoxContainer:
 	var side := HBoxContainer.new()
 	side.theme_type_variation = &"LnHGapMd"
 	var info := VBoxContainer.new()
 	info.theme_type_variation = &"LnVGapXs"
 	info.size_flags_horizontal = SIZE_EXPAND_FILL
 	info.size_flags_vertical = SIZE_SHRINK_CENTER
+	if not nickname.is_empty():
+		# F35: o oponente e identificado pelo #nickname (nunca pelo e-mail) e, abaixo, pelo heroi.
+		var tag := _label(NicknameRules.display(nickname), &"LnNumGold")
+		tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT if mine else HORIZONTAL_ALIGNMENT_RIGHT
+		info.add_child(tag)
 	var title := HBoxContainer.new()
 	title.theme_type_variation = &"LnHGapXs"
 	title.alignment = BoxContainer.ALIGNMENT_BEGIN if mine else BoxContainer.ALIGNMENT_END

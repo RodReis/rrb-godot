@@ -246,6 +246,11 @@
           "arquivo": "mvp3-f33-arena-mapa.webp",
           "legenda": "O mapa da arena no launcher: a imagem real do vale, vista de cima, com um marcador para cada base, campo de monstros, ponte, rio, moita e a cratera do Rei Esqueleto. Ao clicar num marcador aparece o que há ali, e ao lado as duas fases da partida com os números do jogo.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f35-perfil.webp",
+          "legenda": "Ao entrar pela primeira vez, o jogador escolhe o seu apelido: de 3 a 16 caracteres, único na arena (\"RodReis\" e \"rodreis\" são o mesmo nome) e mostrado com um # na frente. Escolhe também um avatar entre os retratos dos heróis e dos monstros, ou envia uma imagem própria, que fica só no computador dele.",
+          "tipo": "entregue"
         }
       ]
     },
