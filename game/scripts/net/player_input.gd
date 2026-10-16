@@ -8,9 +8,9 @@ extends BaseNetInput
 const LEARN_NONE: int = -1
 ## chest_pick sem clique.
 const PICK_NONE: int = -1
-## Esfera de clique em cada adversario: centro a esta altura (u) do chao, raio do corpo + margem.
-const PICK_HEIGHT: float = 1.0
-const PICK_MARGIN: float = 0.5
+## Capsula de clique em cada adversario: dos pes ate esta altura (u), com o raio do corpo + margem.
+const PICK_HEIGHT: float = 1.8
+const PICK_MARGIN: float = 0.3
 
 static var autopilot: bool = false
 ## Tela por cima da partida (bestiario, F13): o heroi fica parado; a partida nao pausa.
@@ -45,6 +45,7 @@ var disconnected: bool = false
 var _learn_held: int = LEARN_NONE
 var _pending_pick: int = PICK_NONE
 var _attack_held: bool = false
+var _tap_pending: bool = false
 var _cancel_held: bool = false
 
 var _gamepad: bool = false
@@ -53,6 +54,9 @@ var _last_stick_aim: Vector3 = Vector3.ZERO
 
 func _input(event: InputEvent) -> void:
 	_gamepad = InputDevice.uses_gamepad(event, _gamepad)
+	# Toque curto (aperta e solta entre dois _gather) tambem vale como pedido de alvo.
+	if event.is_action_pressed(InputActions.PRIMARY_ATTACK, false, true):
+		_tap_pending = true
 
 
 ## O BaseNetInput liga um lambda em NetworkTime.before_tick_loop e so o solta quando o node e
@@ -124,7 +128,8 @@ func _gather_target() -> void:
 	target_id = TargetRules.NONE
 	target_clear = false
 	var pressed := Input.is_action_pressed(InputActions.PRIMARY_ATTACK)
-	var tapped := pressed and not _attack_held
+	var tapped := _tap_pending or (pressed and not _attack_held)
+	_tap_pending = false
 	_attack_held = pressed
 	var cancelled := Input.is_action_pressed(InputActions.CANCEL) and not _cancel_held
 	_cancel_held = Input.is_action_pressed(InputActions.CANCEL)
@@ -139,7 +144,7 @@ func _tap_target() -> void:
 	if hero == null or camera == null:
 		return
 	var enemies: Array[Combatant] = []
-	var centers := PackedVector3Array()
+	var feet := PackedVector3Array()
 	var radii := PackedFloat32Array()
 	for node: Node in get_tree().get_nodes_in_group(Combatant.TARGETS_GROUP):
 		var other := node as Combatant
@@ -147,15 +152,19 @@ func _tap_target() -> void:
 		if other.team == hero.team or not other.is_alive() or not visible:
 			continue
 		enemies.append(other)
-		centers.append(other.global_position + Vector3.UP * PICK_HEIGHT)
+		feet.append(other.global_position)
 		radii.append(other.body_radius() + PICK_MARGIN)
 	var index := TargetPick.NOT_FOUND
 	if _gamepad:
-		index = TargetPick.nearest_to_direction(hero.global_position, aim, centers)
+		index = TargetPick.nearest_to_direction(hero.global_position, aim, feet)
 	else:
 		var mouse := get_viewport().get_mouse_position()
 		index = TargetPick.pick(
-			camera.project_ray_origin(mouse), camera.project_ray_normal(mouse), centers, radii
+			camera.project_ray_origin(mouse),
+			camera.project_ray_normal(mouse),
+			feet,
+			radii,
+			PICK_HEIGHT
 		)
 	if index == TargetPick.NOT_FOUND:
 		target_clear = true

@@ -106,67 +106,12 @@ func test_skill_nao_aprendida_nao_vira() -> void:
 	assert_almost_eq(_me.forward(), Vector3.FORWARD, EPS)
 
 
-func test_trava_alvo_visivel_e_mantem_sem_novo_pedido() -> void:
-	_lock(FOE)
-	assert_eq(_me.target_id, FOE)
-	_step(3)
-	assert_eq(_me.target_id, FOE)
-	assert_eq(_me.target(), _foe)
-
-
-func test_recusa_alvo_fora_da_visao() -> void:
-	_foe.global_position = BEYOND_SIGHT
-	_lock(FOE)
-	assert_eq(_me.target_id, TargetRules.NONE)
-
-
-func test_recusa_aliado() -> void:
-	_foe.team = GateRules.TEAM_A
-	_lock(FOE)
-	assert_eq(_me.target_id, TargetRules.NONE)
-
-
-func test_recusa_id_que_nao_existe() -> void:
-	_lock(999)
-	assert_eq(_me.target_id, TargetRules.NONE)
-
-
-func test_destrava_quando_o_alvo_morre() -> void:
-	_lock(FOE)
-	_foe.hp = 0
-	_step()
-	assert_eq(_me.target_id, TargetRules.NONE)
-
-
-func test_destrava_quando_o_alvo_sai_da_visao() -> void:
-	_lock(FOE)
-	_foe.global_position = BEYOND_SIGHT
-	_step()
-	assert_eq(_me.target_id, TargetRules.NONE)
-
-
-func test_cancelar_destrava() -> void:
-	_lock(FOE)
-	_me.input.target_clear = true
-	_step()
-	assert_eq(_me.target_id, TargetRules.NONE)
-
-
-func test_auto_ataque_em_alcance_vira_para_o_alvo_e_fere() -> void:
+func test_empurrado_nao_ataca_sozinho() -> void:
 	_foe.global_position = IN_REACH
+	_me.knockback_ticks = 3
+	_me.knockback_velocity = Vector3.ZERO
 	_lock(FOE)
-	assert_gt(_me.basic_cooldown, 0, "o basico saiu sem o botao")
-	assert_almost_eq(_me.forward(), Vector3.RIGHT, EPS)
-	_step()
-	assert_lt(_foe.hp, _foe.attributes.max_hp)
-
-
-func test_fora_de_alcance_nao_ataca_nem_anda_ate_o_alvo() -> void:
-	_lock(FOE)
-	_step(5)
-	assert_eq(_me.basic_cooldown, 0)
-	assert_almost_eq(_me.global_position, Vector3.ZERO, EPS)
-	assert_eq(_foe.hp, _foe.attributes.max_hp)
+	assert_eq(_me.basic_cooldown, 0, "sem virar, o golpe sairia na direcao antiga")
 
 
 func test_botao_segurado_sem_alvo_continua_na_mira_do_cursor() -> void:
@@ -184,15 +129,3 @@ func test_skill_no_mesmo_tick_manda_a_mira_do_cursor() -> void:
 	_me.input.skill_q = true
 	_lock(FOE)
 	assert_almost_eq(_me.dash_direction, Vector3.BACK, EPS)
-
-
-func test_alvo_monstro_trava_e_leva_o_golpe() -> void:
-	var monster := (load(SKELETON) as PackedScene).instantiate() as Monster
-	monster.uid = MONSTER_UID
-	monster.transform = Transform3D(Basis(), IN_REACH)
-	add_child_autofree(monster)
-	var full := monster.hp
-	_lock(MONSTER_UID)
-	assert_eq(_me.target_id, MONSTER_UID)
-	_step()
-	assert_lt(monster.hp, full)

@@ -228,7 +228,6 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
 	var data := _hero.hero_data
-	target_id = target.combat_id()  # o heroi golpeia sozinho quando o alvo entra no alcance (F66)
 	aim = to.normalized()
 	aim_distance = to.length()
 	var q_range := data.skill_q.attack_range
@@ -262,6 +261,8 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
 		return
+	# Em alcance e com linha de tiro: o heroi golpeia sozinho o alvo travado (F66).
+	target_id = target.combat_id()
 	if barbarian:  # E e R so parado no alcance do golpe: andando, a Execucao pode errar o cone
 		skill_e = skills and use.y == 1
 		skill_r = skills and use.z == 1

@@ -281,4 +281,5 @@ func test_bot_de_arqueira_nao_atira_no_muro() -> void:
 	await wait_physics_frames(2)
 	brain._attack(START, monster, true)
 	assert_false(brain.skill_q)
+	assert_eq(brain.target_id, TargetRules.NONE, "sem linha de tiro nao trava: o heroi nao atira")
 	assert_false(brain.movement.is_zero_approx(), "segue andando ate ter linha de tiro")

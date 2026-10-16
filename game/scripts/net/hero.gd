@@ -542,7 +542,8 @@ func _lock_target() -> void:
 func _plan_attack(aim: Vector3) -> Vector3:
 	_lock_target()
 	attack_now = input.attack
-	if input.attack or _target_node == null:
+	# Empurrado, o heroi nao vira (_face so roda andando): o auto-ataque sairia na direcao antiga.
+	if input.attack or _target_node == null or knockback_ticks > 0:
 		return aim
 	var reach := hero_data.basic_attack.attack_range
 	if not TargetRules.can_attack(true, global_position, _target_node.global_position, reach):

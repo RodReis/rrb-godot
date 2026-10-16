@@ -50,7 +50,7 @@ func after_each() -> void:
 	_key(KEY_ESCAPE, false)
 
 
-## Poe [param node] no raio que passa pelo cursor (a esfera de clique fica 1 u acima dos pes).
+## Poe [param node] no raio que passa pelo cursor, 1 u acima dos pes (dentro da capsula de clique).
 func _under_cursor(node: Node3D) -> void:
 	var mouse := get_viewport().get_mouse_position()
 	var origin := _camera.project_ray_origin(mouse)
@@ -79,6 +79,13 @@ func test_toque_no_inimigo_sob_o_cursor_pede_o_alvo() -> void:
 	assert_eq(_hero.input.target_id, TARGET_ID)
 	assert_false(_hero.input.target_clear)
 	assert_true(_hero.input.attack, "o toque tambem e o inicio do ataque na mira")
+
+
+func test_toque_curto_entre_dois_gathers_ainda_pede_o_alvo() -> void:
+	_mouse(MOUSE_BUTTON_RIGHT, true)
+	_mouse(MOUSE_BUTTON_RIGHT, false)
+	_hero.input._gather()
+	assert_eq(_hero.input.target_id, TARGET_ID)
 
 
 func test_segurar_nao_repete_o_pedido() -> void:
