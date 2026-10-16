@@ -262,11 +262,7 @@ func _start_session(no_backend: bool) -> bool:
 			push_error(
 				(
 					"[server] defina %s, %s e %s (ou --no-backend, so para dev)"
-					% [
-						ServerSession.ENV_URL,
-						ServerSession.ENV_SECRET,
-						ServerSession.ENV_SLOT_PORT
-					]
+					% [ServerSession.ENV_URL, ServerSession.ENV_SECRET, ServerSession.ENV_SLOT_PORT]
 				)
 			)
 			get_tree().quit(ExitCodes.ARGUMENTS)

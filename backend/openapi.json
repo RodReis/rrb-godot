@@ -419,6 +419,14 @@
         "operationId": "InternalMatchesController_validate",
         "parameters": [
           {
+            "name": "x-slot-port",
+            "in": "header",
+            "description": "SLOT_PORT do container; tem de ser o da partida",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "id",
             "required": true,
             "in": "path",
@@ -473,6 +481,14 @@
         "operationId": "InternalMatchesController_heartbeat",
         "parameters": [
           {
+            "name": "x-slot-port",
+            "in": "header",
+            "description": "SLOT_PORT do container; tem de ser o da partida",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "id",
             "required": true,
             "in": "path",
@@ -486,7 +502,7 @@
             "description": ""
           },
           "401": {
-            "description": "INTERNAL_UNAUTHORIZED"
+            "description": "INTERNAL_UNAUTHORIZED | SLOT_MISMATCH"
           },
           "404": {
             "description": "MATCH_NOT_FOUND"
@@ -509,6 +525,14 @@
       "post": {
         "operationId": "InternalMatchesController_result",
         "parameters": [
+          {
+            "name": "x-slot-port",
+            "in": "header",
+            "description": "SLOT_PORT do container; tem de ser o da partida",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "id",
             "required": true,
@@ -536,7 +560,7 @@
             "description": "INVALID_RESULT | VALIDATION_FAILED"
           },
           "401": {
-            "description": "INTERNAL_UNAUTHORIZED"
+            "description": "INTERNAL_UNAUTHORIZED | SLOT_MISMATCH"
           },
           "404": {
             "description": "MATCH_NOT_FOUND"
