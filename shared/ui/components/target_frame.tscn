@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://shared/ui/components/target_frame.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://shared/ui/components/stat_bar.tscn" id="2_bar"]
+
+[node name="TargetFrame" type="PanelContainer"]
+custom_minimum_size = Vector2(320, 0)
+script = ExtResource("1_script")
+variant = 3
+accent = 2
+
+[node name="Column" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Column"]
+layout_mode = 2
+
+[node name="TargetName" type="Label" parent="Column/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Alvo"
+
+[node name="TargetTag" type="Label" parent="Column/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "Nv 1"
+
+[node name="TargetHp" parent="Column" instance=ExtResource("2_bar")]
+unique_name_in_owner = true
+layout_mode = 2

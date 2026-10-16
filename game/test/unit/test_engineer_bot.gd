@@ -29,7 +29,8 @@ func test_perto_usa_basico_torreta_e_dinamite() -> void:
 	var golem := _spawn_monster(GOLEM, -1, AHEAD * 3.5)
 	await wait_physics_frames(2)
 	brain._attack(START, golem, true)
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, golem.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")
 	assert_false(brain.skill_q, "dentro do cone: sem Garra")
 	assert_true(brain.skill_r)
 	assert_false(brain.skill_e, "a Dinamite tem a mira; a Torreta espera o proximo tick")
@@ -53,7 +54,7 @@ func test_entre_4_5_e_7_u_usa_a_garra_e_anda() -> void:
 	await wait_physics_frames(2)
 	brain._attack(START, golem, true)
 	assert_true(brain.skill_q)
-	assert_false(brain.attack, "fora do cone: anda")
+	assert_false(brain.movement.is_zero_approx(), "fora do alcance do basico: anda")
 
 
 func test_farmando_so_a_torreta_e_o_basico() -> void:
@@ -65,7 +66,8 @@ func test_farmando_so_a_torreta_e_o_basico() -> void:
 	assert_false(brain.skill_q)
 	assert_false(brain.skill_r, "a Dinamite fica para heroi e boss")
 	assert_true(brain.skill_e, "a Torreta ajuda a farmar")
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, golem.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")
 
 
 func _skills(distance: float) -> Vector3i:

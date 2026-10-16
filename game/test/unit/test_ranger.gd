@@ -268,7 +268,8 @@ func test_bot_de_arqueira_atira_com_linha_livre() -> void:
 	var monster := _spawn_monster(SKELETON, -1, AHEAD * 6.0)
 	await wait_physics_frames(2)
 	brain._attack(START, monster, true)
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, monster.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")
 	assert_true(brain.skill_q)
 	assert_almost_eq(brain.aim_distance, 6.0, EPS)
 
@@ -279,6 +280,6 @@ func test_bot_de_arqueira_nao_atira_no_muro() -> void:
 	var monster := _spawn_monster(SKELETON, -1, AHEAD * 6.0)
 	await wait_physics_frames(2)
 	brain._attack(START, monster, true)
-	assert_false(brain.attack)
 	assert_false(brain.skill_q)
+	assert_eq(brain.target_id, TargetRules.NONE, "sem linha de tiro nao trava: o heroi nao atira")
 	assert_false(brain.movement.is_zero_approx(), "segue andando ate ter linha de tiro")

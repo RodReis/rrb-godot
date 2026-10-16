@@ -6,6 +6,7 @@ extends Control
 const STAT_BAR: PackedScene = preload("res://shared/ui/components/stat_bar.tscn")
 const SKILL_BUTTON: PackedScene = preload("res://shared/ui/components/skill_button.tscn")
 const SLOT_ITEM: PackedScene = preload("res://shared/ui/components/slot_item.tscn")
+const TARGET_FRAME: PackedScene = preload("res://shared/ui/components/target_frame.tscn")
 const PREVIEW: PackedScene = preload("res://shared/ui/components/monster_preview_3d.tscn")
 const SKELETON_MODEL: PackedScene = preload(
 	"res://shared/assets/kaykit/skeletons/Skeleton_Minion.glb"
@@ -58,6 +59,7 @@ func _ready() -> void:
 	_catalog()
 	_scores()
 	_radars()
+	_target_frames()
 	# Launcher no topo, largura cheia; as duas colunas da HUD embaixo.
 	var columns := _left.get_parent()
 	var margin := columns.get_parent()
@@ -263,6 +265,20 @@ func _scores() -> void:
 			ScoreBanner.PlayerScore.new(RANGER.display_name.to_upper(), sample[1], false),
 			RULES.kill_goal
 		)
+
+
+func _target_frames() -> void:
+	var row := _row("TargetFrame (alvo travado, F66)")
+	# nome, etiqueta, HP, HP max, legenda
+	var samples: Array[Array] = [
+		["Cavaleiro", "Nv 3", 240, 600, "herói inimigo"],
+		["Esqueleto", "T1", 100, 100, "monstro"],
+		["Rei Esqueleto", "CHEFE", 2400, 3000, "boss"],
+	]
+	for sample: Array in samples:
+		var frame := TARGET_FRAME.instantiate() as TargetFrame
+		_add(row, frame, sample[4])
+		frame.bind(sample[0], sample[1], sample[2], sample[3])
 
 
 func _radars() -> void:

@@ -116,7 +116,7 @@ func test_bot_de_bruxo_lanca_q_e_meteoro_ate_9_u() -> void:
 	assert_true(brain.skill_q)
 	assert_true(brain.skill_r)
 	assert_false(brain.skill_e)
-	assert_false(brain.attack, "fora do alcance do basico: anda")
+	assert_false(brain.movement.is_zero_approx(), "fora do alcance do basico: anda")
 	assert_almost_eq(brain.aim_distance, 8.5, EPS, "Meteoro mira a posicao do alvo")
 
 
@@ -126,7 +126,8 @@ func test_bot_de_bruxo_usa_o_anel_com_inimigo_perto() -> void:
 	await wait_physics_frames(2)
 	brain._attack(START, monster, true)
 	assert_true(brain.skill_e)
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, monster.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")
 
 
 func test_bot_de_bruxo_farmando_nao_usa_habilidade() -> void:
@@ -137,4 +138,5 @@ func test_bot_de_bruxo_farmando_nao_usa_habilidade() -> void:
 	assert_false(brain.skill_q)
 	assert_false(brain.skill_e)
 	assert_false(brain.skill_r)
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, monster.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")

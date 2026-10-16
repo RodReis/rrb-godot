@@ -104,6 +104,8 @@ func _reset() -> void:
 	aim = Vector3.ZERO
 	aim_distance = 0.0
 	attack = false
+	target_id = TargetRules.NONE
+	target_clear = true  # sem alvo novo neste think, solta o anterior (o pedido vence o cancelar)
 	skill_q = false
 	skill_e = false
 	skill_r = false
@@ -259,7 +261,8 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
 		return
-	attack = true
+	# Em alcance e com linha de tiro: o heroi golpeia sozinho o alvo travado (F66).
+	target_id = target.combat_id()
 	if barbarian:  # E e R so parado no alcance do golpe: andando, a Execucao pode errar o cone
 		skill_e = skills and use.y == 1
 		skill_r = skills and use.z == 1
@@ -290,7 +293,7 @@ func _fight_back() -> void:
 		var to := _flat(monster.global_position)
 		if monster.is_alive() and to.length() <= reach:
 			aim = to.normalized()
-			attack = true
+			target_id = monster.combat_id()
 			return
 
 

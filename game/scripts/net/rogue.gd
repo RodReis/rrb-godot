@@ -83,7 +83,7 @@ func _use_skills(tick: int) -> void:
 	if input.skill_q and q_cooldown == 0 and SkillRules.can_use(data.skill_q, ranks.x, level):
 		q_cooldown = SkillRules.cooldown_ticks(data.skill_q, ranks.x, attributes.intelligence, rate)
 		_fan()
-	if input.attack and basic_cooldown == 0:
+	if attack_now and basic_cooldown == 0:
 		basic_cooldown = SkillRules.seconds_to_ticks(attributes.attack_interval, rate)
 		var basic := data.basic_attack
 		_shoot(

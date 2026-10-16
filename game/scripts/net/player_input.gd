@@ -8,6 +8,9 @@ extends BaseNetInput
 const LEARN_NONE: int = -1
 ## chest_pick sem clique.
 const PICK_NONE: int = -1
+## Capsula de clique em cada adversario: dos pes ate esta altura (u), com o raio do corpo + margem.
+const PICK_HEIGHT: float = 1.8
+const PICK_MARGIN: float = 0.3
 
 static var autopilot: bool = false
 ## Tela por cima da partida (bestiario, F13): o heroi fica parado; a partida nao pausa.
@@ -30,12 +33,20 @@ var interact_hold: bool = false
 ## Item do menu do bau clicado neste tick (indice em Chest.choices), ou PICK_NONE. Vai mesmo com
 ## o heroi suspenso pelo menu (F61).
 var chest_pick: int = PICK_NONE
+## Alvo a travar (F66, SPEC-066 §2): combat_id do heroi adversario ou monstro clicado, ou
+## TargetRules.NONE. Vale so no tick do clique (como learn); o servidor valida e guarda o travado.
+var target_id: int = TargetRules.NONE
+## Soltar o alvo neste tick: Esc ou clique no chao.
+var target_clear: bool = false
 
 ## Servidor: o jogador deste heroi caiu; o input fica vazio (Hero.mark_disconnected).
 var disconnected: bool = false
 
 var _learn_held: int = LEARN_NONE
 var _pending_pick: int = PICK_NONE
+var _attack_held: bool = false
+var _tap_pending: bool = false
+var _cancel_held: bool = false
 
 var _gamepad: bool = false
 var _last_stick_aim: Vector3 = Vector3.ZERO
@@ -43,6 +54,9 @@ var _last_stick_aim: Vector3 = Vector3.ZERO
 
 func _input(event: InputEvent) -> void:
 	_gamepad = InputDevice.uses_gamepad(event, _gamepad)
+	# Toque curto (aperta e solta entre dois _gather) tambem vale como pedido de alvo.
+	if event.is_action_pressed(InputActions.PRIMARY_ATTACK, false, true):
+		_tap_pending = true
 
 
 ## O BaseNetInput liga um lambda em NetworkTime.before_tick_loop e so o solta quando o node e
@@ -91,6 +105,7 @@ func _gather() -> void:
 	elif not Input.is_action_pressed(InputActions.CAMERA_ORBIT):
 		# Girando a camera o cursor fica capturado: a mira mantem o ultimo valor (SPEC-045 §3).
 		_gather_mouse_aim()
+	_gather_target()
 
 
 ## Ctrl+Q tambem casa com skill_q (Godot ignora modificador extra): aprender nao lanca a skill.
@@ -107,9 +122,61 @@ func _gather_learn() -> void:
 		skill_r = false
 
 
+## Alvo (F66): o toque no botao de ataque pega o adversario sob o cursor (no gamepad, o mais perto
+## da mira); toque no chao e Esc soltam. Segurar o botao continua o ataque na mira (SPEC-045).
+func _gather_target() -> void:
+	target_id = TargetRules.NONE
+	target_clear = false
+	var pressed := Input.is_action_pressed(InputActions.PRIMARY_ATTACK)
+	var tapped := _tap_pending or (pressed and not _attack_held)
+	_tap_pending = false
+	_attack_held = pressed
+	var cancelled := Input.is_action_pressed(InputActions.CANCEL) and not _cancel_held
+	_cancel_held = Input.is_action_pressed(InputActions.CANCEL)
+	target_clear = cancelled
+	if tapped and not Input.is_action_pressed(InputActions.CAMERA_ORBIT):
+		_tap_target()
+
+
+func _tap_target() -> void:
+	var hero := get_parent() as Hero
+	var camera := get_viewport().get_camera_3d()
+	if hero == null or camera == null:
+		return
+	var enemies: Array[Combatant] = []
+	var feet := PackedVector3Array()
+	var radii := PackedFloat32Array()
+	for node: Node in get_tree().get_nodes_in_group(Combatant.TARGETS_GROUP):
+		var other := node as Combatant
+		var visible := other.is_shown() and other.seen_by(hero)
+		if other.team == hero.team or not other.is_alive() or not visible:
+			continue
+		enemies.append(other)
+		feet.append(other.global_position)
+		radii.append(other.body_radius() + PICK_MARGIN)
+	var index := TargetPick.NOT_FOUND
+	if _gamepad:
+		index = TargetPick.nearest_to_direction(hero.global_position, aim, feet)
+	else:
+		var mouse := get_viewport().get_mouse_position()
+		index = TargetPick.pick(
+			camera.project_ray_origin(mouse),
+			camera.project_ray_normal(mouse),
+			feet,
+			radii,
+			PICK_HEIGHT
+		)
+	if index == TargetPick.NOT_FOUND:
+		target_clear = true
+	else:
+		target_id = enemies[index].combat_id()
+
+
 func _gather_idle() -> void:
 	movement = Vector3.ZERO
 	aim_distance = 0.0
+	target_id = TargetRules.NONE
+	target_clear = true
 	attack = false
 	skill_q = false
 	skill_e = false

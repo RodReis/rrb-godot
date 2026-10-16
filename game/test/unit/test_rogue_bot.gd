@@ -13,7 +13,8 @@ func test_rajada_e_emboscada_com_o_alvo_perto() -> void:
 	assert_true(brain.skill_q)
 	assert_true(brain.skill_r)
 	assert_false(brain.skill_e, "a fumaca e so para fugir")
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, golem.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")
 
 
 func test_so_emboscada_entre_4_e_8_u() -> void:
@@ -23,7 +24,7 @@ func test_so_emboscada_entre_4_e_8_u() -> void:
 	brain._attack(START, golem, true)
 	assert_false(brain.skill_q)
 	assert_true(brain.skill_r)
-	assert_false(brain.attack, "fora do alcance do basico: anda")
+	assert_false(brain.movement.is_zero_approx(), "fora do alcance do basico: anda")
 
 
 func test_farmando_nao_usa_habilidade() -> void:
@@ -34,7 +35,8 @@ func test_farmando_nao_usa_habilidade() -> void:
 	assert_false(brain.skill_q)
 	assert_false(brain.skill_e)
 	assert_false(brain.skill_r)
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, golem.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")
 
 
 func test_fumaca_de_fuga_com_hp_baixo_e_heroi_perto() -> void:

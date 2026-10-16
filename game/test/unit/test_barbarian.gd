@@ -239,7 +239,7 @@ func test_bot_salta_no_alvo_fora_do_alcance_do_basico() -> void:
 	brain._attack(START, monster, true)
 	assert_true(brain.skill_q)
 	assert_false(brain.skill_e)
-	assert_false(brain.attack)
+	assert_false(brain.movement.is_zero_approx(), "fora do alcance do basico: anda")
 	assert_almost_eq(brain.aim_distance, 5.0, EPS)
 
 
@@ -250,7 +250,8 @@ func test_bot_perto_gira_executa_e_golpeia() -> void:
 	assert_false(brain.skill_q)
 	assert_true(brain.skill_e)
 	assert_true(brain.skill_r)
-	assert_true(brain.attack)
+	assert_eq(brain.target_id, monster.combat_id())
+	assert_true(brain.movement.is_zero_approx(), "no alcance: para e golpeia")
 
 
 func test_bot_farmando_nao_usa_habilidade() -> void:
