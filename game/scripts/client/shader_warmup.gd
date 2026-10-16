@@ -11,6 +11,9 @@ extends Node
 ## com sombra, e renderiza FRAMES quadros. Depois libera tudo. No headless nao faz nada.
 
 signal finished(copies: int)
+## Fracao 0..1 do warm-up (barra da LoadingScreen, F68): carga das cenas e depois os quadros
+## desenhados. Termina em 1.0, junto com finished.
+signal progressed(fraction: float)
 
 ## Pastas com cenas que nascem depois do connect (Hero.SCENE_PATH, SpawnDirector.SCENE_PATH, VFX
 ## de combate do F41).
@@ -41,6 +44,11 @@ const VIEWPORT_SIZE: Vector2i = Vector2i(256, 256)
 ## e o do dia (na pratica um so pipeline: day_amount e uniform). Restaurado ao fim.
 const SKY_BLEND_PARAM: StringName = &"day_amount"
 const SKY_WARMUP_BLEND: float = 0.5
+## Carregar as cenas e a maior parte do tempo do warm-up (~1 s) e e sincrono: a cada LOAD_SLICE_MS
+## devolve um quadro ao motor para a barra da LoadingScreen andar (F68), sem pagar um quadro por
+## cena. LOAD_SHARE = parte da barra que e carregamento; o resto e o desenho dos FRAMES.
+const LOAD_SLICE_MS: int = 80
+const LOAD_SHARE: float = 0.5
 ## Grade das copias na frente da camera, todas dentro do frustum.
 const GRID_COLUMNS: int = 6
 const GRID_STEP: float = 2.5
@@ -65,6 +73,7 @@ static func scene_paths() -> PackedStringArray:
 ## environment: o da arena (mesmos recursos de pos = mesmas variantes de shader).
 func run(environment: Environment) -> int:
 	if DisplayServer.get_name() == "headless":
+		progressed.emit(1.0)
 		finished.emit(0)
 		return 0
 	var started := Time.get_ticks_msec()
@@ -74,13 +83,16 @@ func run(environment: Environment) -> int:
 		sky.set_shader_parameter(SKY_BLEND_PARAM, SKY_WARMUP_BLEND)
 	var viewport := _make_viewport(environment)
 	add_child(viewport)
-	var copies := _fill(viewport)
+	var copies := await _fill(viewport)
 	var drawn_at_start := Engine.get_frames_drawn()
 	while Engine.get_frames_drawn() - drawn_at_start < FRAMES:
 		if Time.get_ticks_msec() - started > TIMEOUT_MS:
 			push_warning("[warmup] sem desenhar %d quadros em %d ms; segue" % [FRAMES, TIMEOUT_MS])
 			break
+		var drawn := float(Engine.get_frames_drawn() - drawn_at_start) / FRAMES
+		progressed.emit(LOAD_SHARE + (1.0 - LOAD_SHARE) * drawn)
 		await get_tree().process_frame
+	progressed.emit(1.0)
 	viewport.queue_free()
 	if sky != null:
 		sky.set_shader_parameter(SKY_BLEND_PARAM, sky_blend)
@@ -120,10 +132,16 @@ func _make_viewport(environment: Environment) -> SubViewport:
 
 func _fill(viewport: SubViewport) -> int:
 	var copies: Array[GeometryInstance3D] = []
-	for path: String in scene_paths():
-		var instance := (load(path) as PackedScene).instantiate()
+	var paths := scene_paths()
+	var last_slice := Time.get_ticks_msec()
+	for i: int in paths.size():
+		var instance := (load(paths[i]) as PackedScene).instantiate()
 		_collect_visuals(instance, instance, Transform3D.IDENTITY, copies)
 		instance.free()
+		if Time.get_ticks_msec() - last_slice >= LOAD_SLICE_MS:
+			progressed.emit(LOAD_SHARE * float(i + 1) / paths.size())
+			await get_tree().process_frame
+			last_slice = Time.get_ticks_msec()
 	for path: String in SHADERS:
 		var material := ShaderMaterial.new()
 		material.shader = load(path)

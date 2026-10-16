@@ -220,7 +220,8 @@
       ],
       "imagens": [
         { "arquivo": "mvp2.7-f66-alvo-travado.webp", "legenda": "Um clique com o botão direito num monstro ou no adversário trava o alvo: um anel vermelho marca o chão sob ele e a moldura acima do painel mostra o nome, o nível ou o tipo e a vida. O herói não corre atrás: só ataca sozinho quando o alvo está ao alcance, e segurar o botão no chão continua atacando na direção do cursor.", "tipo": "entregue" },
-        { "arquivo": "mvp2.7-f67-zoom-camera.webp", "legenda": "A câmera chegou mais perto: a roda do mouse (ou as teclas = e -) aproxima e afasta em seis passos, de 9 a 14 metros, e o jogo lembra a distância da próxima partida. O minimapa continua parado, com a sua base sempre embaixo, mesmo girando a câmera.", "tipo": "entregue" }
+        { "arquivo": "mvp2.7-f67-zoom-camera.webp", "legenda": "A câmera chegou mais perto: a roda do mouse (ou as teclas = e -) aproxima e afasta em seis passos, de 9 a 14 metros, e o jogo lembra a distância da próxima partida. O minimapa continua parado, com a sua base sempre embaixo, mesmo girando a câmera.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f68-loading.webp", "legenda": "O logo do motor saiu e, entre abrir o jogo e a escolha de herói, entra uma tela de carregamento sorteada entre três imagens renderizadas na própria arena: os seis heróis em pose, o vale de dia e o vale de noite. Embaixo, uma dica tirada das regras do jogo e uma barra que avança de verdade: shaders, conexão e espera pelo adversário. O launcher ganhou a sua abertura com o nome do jogo.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -331,6 +332,7 @@
     "F65": "Minimapa claro, fácil de ler até de noite",
     "F66": "Herói olha para onde anda e trava o alvo com o botão direito",
     "F67": "Zoom da câmera: roda do mouse e teclas, do mais perto ao mais longe",
+    "F68": "Sem logo do motor: abertura própria e telas de carregamento com a arena e os heróis",
     "F45": "Câmera que gira em volta do herói",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",

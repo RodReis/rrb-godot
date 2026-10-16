@@ -36,7 +36,8 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | `MapPin`, `PoiDetailCard`, `PhaseCard`, `ArenaMapCanvas` (implementados, F33; tipos `LnAm*` em `ArenaMapTheme`) | `BaseButton` / `PanelContainer` / `Control` | `bind(...)`; `MapPin` com anel de escolhido/foco e pulso nos marcos | normal, hover, escolhido, foco | Arena & Mapa |
 | `ProfileChip`, `AvatarImage` (implementados, F35; tipos `LnProfileChip*`/`LnAvatar*`) | `Button` / `TextureRect` | `bind(nickname, avatar, wins, losses)` ; `AvatarImage.load(path)` (PNG/JPG ≤ 1 MiB, recorte 256×256) | com/sem avatar | barra do Launcher (`AppBar`), Perfil |
 | `TargetFrame`, `TargetRing` (planejados, F66 — ADR-0015) | `PanelContainer` / `Node3D` | `bind(name, hp, hp_max, level_or_tier)` ; `TargetRing.follow(node)` | herói × monstro; some ao destravar | HUD do Game (alvo travado) |
-| `LoadingScreen` (planejado, F68) | `Control` | `show_random(tip)` ; `set_progress(p)` | 3 artes sorteadas | boot do Game |
+| `LoadingScreen` (implementado, F68; `game/scripts/ui/`) | `CanvasLayer` (camada 90; raiz `Control` com o tema do Game) | `show_random(rng_seed, tips: TipList)` ; `report(stage, fraction)` ; `complete(stage)` ; `dismiss()` ; sinal `exit_requested` (Esc) ; `static wanted()` (falso no headless) | 3 artes sorteadas (`LoadingRules.ART_PATHS`) ; etapas `LoadingProgress.Stage`: `WARMUP`, `CONNECT`, `WAIT` (barra só sobe) | boot do Game até `HERO_PICK`, na fila e no treino |
+| `BootSplash` (implementado, F68) | `TextureRect` | `dismiss()` (fade de 0,35 s e `queue_free`; idempotente) ; `is_dismissed()` | imagem `shared/assets/ui/loading/splash.png` ("ARENA 1V1"), cobre a janela | abertura do Launcher (`App`) |
 | `MatchResultCard` (planejado, F70) | `PanelContainer` (modal) | `bind(summary, totals)` ; sinais `play_again`, `open_history`, `closed` | vitória, derrota, interrompida | lobby do Launcher após partida online |
 
 ## Regras
