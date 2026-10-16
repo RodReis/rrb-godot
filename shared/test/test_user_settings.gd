@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## F24: contrato user://settings.cfg (ARCHITECTURE-LAUNCHER §5.3). O Launcher escreve, o Game le.
 ## Chave desconhecida e ignorada; tipo ou valor fora da faixa vira o padrao; schema diferente
@@ -143,3 +144,53 @@ func test_esc_nao_pode_ser_atribuido() -> void:
 func test_tecla_sem_codigo_nao_e_atribuida() -> void:
 	var before := UserSettings.defaults()
 	assert_eq(UserSettings.rebind(before, InputActions.SKILL_Q, KEY_NONE), before)
+
+
+func test_camera_tem_distancia_padrao_11() -> void:
+	var camera: Dictionary = UserSettings.defaults()[UserSettings.CAMERA]
+	assert_eq(camera[UserSettings.DISTANCE], UserSettings.DISTANCE_DEFAULT)
+	assert_eq(UserSettings.DISTANCE_DEFAULT, 11.0)
+
+
+func test_distancia_da_camera_faz_round_trip_pelo_arquivo() -> void:
+	var values := UserSettings.defaults()
+	values[UserSettings.CAMERA][UserSettings.DISTANCE] = 9.0
+	assert_eq(UserSettings.save_file(values, TMP_PATH), OK)
+	assert_eq(UserSettings.load_file(TMP_PATH)[UserSettings.CAMERA][UserSettings.DISTANCE], 9.0)
+
+
+func test_distancia_inteira_no_arquivo_e_aceita() -> void:
+	var values := UserSettings.read(_config(UserSettings.CAMERA, {UserSettings.DISTANCE: 13}))
+	assert_eq(values[UserSettings.CAMERA][UserSettings.DISTANCE], 13.0)
+
+
+func test_distancia_fora_da_faixa_vira_padrao() -> void:
+	for wrong: float in [8.9, 14.1, 0.0, -3.0, 99.0]:
+		var values := UserSettings.read(
+			_config(UserSettings.CAMERA, {UserSettings.DISTANCE: wrong})
+		)
+		assert_eq(
+			values[UserSettings.CAMERA][UserSettings.DISTANCE],
+			UserSettings.DISTANCE_DEFAULT,
+			str(wrong)
+		)
+
+
+func test_distancia_de_tipo_errado_vira_padrao() -> void:
+	var values := UserSettings.read(_config(UserSettings.CAMERA, {UserSettings.DISTANCE: "perto"}))
+	assert_eq(values[UserSettings.CAMERA][UserSettings.DISTANCE], UserSettings.DISTANCE_DEFAULT)
+
+
+func test_arquivo_sem_secao_camera_usa_o_padrao() -> void:
+	var values := UserSettings.read(_config(UserSettings.VIDEO, {UserSettings.VSYNC: false}))
+	assert_eq(values[UserSettings.CAMERA][UserSettings.DISTANCE], UserSettings.DISTANCE_DEFAULT)
+
+
+func test_teclas_de_zoom_sao_remapeaveis_com_padrao_igual_e_menos() -> void:
+	var values := UserSettings.defaults()
+	assert_eq(UserSettings.keycode(values, InputActions.CAMERA_ZOOM_IN), KEY_EQUAL)
+	assert_eq(UserSettings.keycode(values, InputActions.CAMERA_ZOOM_OUT), KEY_MINUS)
+	var after := UserSettings.rebind(values, InputActions.CAMERA_ZOOM_IN, KEY_PAGEUP)
+	assert_eq(UserSettings.keycode(after, InputActions.CAMERA_ZOOM_IN), KEY_PAGEUP)
+	var swapped := UserSettings.rebind(values, InputActions.CAMERA_ZOOM_IN, KEY_MINUS)
+	assert_eq(UserSettings.keycode(swapped, InputActions.CAMERA_ZOOM_OUT), KEY_EQUAL, "troca")

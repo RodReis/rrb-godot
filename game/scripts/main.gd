@@ -313,6 +313,18 @@ func _apply_user_settings() -> void:
 		cli_window = cli_window or arg.get_slice("=", 0) in WINDOW_ARGS
 	SettingsApplier.apply_video(values, get_window(), not cli_window)
 	camera.orbit_sensitivity *= values[UserSettings.CONTROLS][UserSettings.MOUSE_SENSITIVITY]
+	camera.set_distance(values[UserSettings.CAMERA][UserSettings.DISTANCE])
+	camera.distance_changed.connect(_on_camera_distance_changed)
+
+
+## Zoom do jogador (SPEC-067): grava so a distancia, relendo o arquivo para nao desfazer o que o
+## Launcher tenha salvo desde o boot. Falha ao gravar so avisa; o zoom da sessao segue valendo.
+func _on_camera_distance_changed(distance: float) -> void:
+	var values := UserSettings.load_file()
+	values[UserSettings.CAMERA][UserSettings.DISTANCE] = distance
+	var err := UserSettings.save_file(values)
+	if err != OK:
+		push_warning("[settings] zoom nao gravado: %s" % error_string(err))
 
 
 func _on_connect_pressed() -> void:

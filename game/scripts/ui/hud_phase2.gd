@@ -172,10 +172,10 @@ func _update_vignette() -> void:
 ## Herois no radar (verde = eu, vermelho = adversario; neblina, F37: so o que o jogador ve); no
 ## minimapa, por baixo, baus fechados e monstros vistos (F57). A zona do radar e sempre visivel.
 func _update_map() -> void:
-	var camera := get_viewport().get_camera_3d()
+	var camera := get_viewport().get_camera_3d() as FollowCamera
 	if camera != null:
-		_minimap.set_yaw(camera.global_rotation.y)
-		_radar.set_yaw(camera.global_rotation.y)
+		_minimap.set_yaw(camera.team_yaw())
+		_radar.set_yaw(camera.team_yaw())
 	_radar_positions.clear()
 	_radar_colors.clear()
 	for node: Node in _players.get_children():

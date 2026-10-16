@@ -1,8 +1,8 @@
 class_name CameraRig
 extends RefCounted
 ## Matematica da camera em 3a pessoa alta (PRD §3.6): atras do heroi, inclinacao fixa,
-## distancia fixa; yaw inicial do time (olhando o centro a partir do spawn; PI 2026-10-09),
-## livre depois pelo giro (SPEC-045).
+## distancia ajustavel pelo jogador (zoom, SPEC-067); yaw inicial do time (olhando o centro a
+## partir do spawn; PI 2026-10-09), livre depois pelo giro (SPEC-045).
 ## yaw em radianos, mesma convencao de Node3D.rotation.y (0 = olhando -Z).
 
 
@@ -18,6 +18,13 @@ static func right(yaw: float) -> Vector3:
 static func yaw_towards(from: Vector3, target: Vector3) -> float:
 	var dir := target - from
 	return atan2(-dir.x, -dir.z)
+
+
+## Zoom (SPEC-067): [param steps] passos de UserSettings.DISTANCE_STEP; positivo aproxima.
+## Resultado preso a faixa [DISTANCE_MIN, DISTANCE_MAX].
+static func zoom(distance: float, steps: int) -> float:
+	var wanted := distance - steps * UserSettings.DISTANCE_STEP
+	return clampf(wanted, UserSettings.DISTANCE_MIN, UserSettings.DISTANCE_MAX)
 
 
 ## Giro em volta do heroi (SPEC-045): mouse para a direita ([param mouse_dx] > 0) gira a

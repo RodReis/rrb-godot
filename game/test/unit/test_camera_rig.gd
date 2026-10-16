@@ -73,3 +73,33 @@ func test_w_continua_para_longe_da_camera_com_yaw_girado() -> void:
 
 func test_to_world_preserva_a_intensidade() -> void:
 	assert_almost_eq(CameraRig.to_world(Vector2(0.5, 0), 1.2).length(), 0.5, EPS)
+
+
+func test_zoom_faixa_passo_e_padrao_da_spec_067() -> void:
+	assert_eq(UserSettings.DISTANCE_MIN, 9.0)
+	assert_eq(UserSettings.DISTANCE_MAX, 14.0)
+	assert_eq(UserSettings.DISTANCE_STEP, 1.0)
+	assert_eq(UserSettings.DISTANCE_DEFAULT, 11.0)
+
+
+func test_zoom_in_aproxima_um_passo() -> void:
+	assert_almost_eq(CameraRig.zoom(11.0, 1), 10.0, EPS)
+
+
+func test_zoom_out_afasta_um_passo() -> void:
+	assert_almost_eq(CameraRig.zoom(11.0, -1), 12.0, EPS)
+
+
+func test_zoom_para_nos_limites() -> void:
+	assert_almost_eq(CameraRig.zoom(9.0, 1), 9.0, EPS)
+	assert_almost_eq(CameraRig.zoom(14.0, -1), 14.0, EPS)
+	assert_almost_eq(CameraRig.zoom(10.0, 5), 9.0, EPS)
+
+
+func test_zoom_alcanca_cada_passo_da_faixa() -> void:
+	var seen: Array[float] = []
+	var distance := UserSettings.DISTANCE_MAX
+	while distance > UserSettings.DISTANCE_MIN:
+		distance = CameraRig.zoom(distance, 1)
+		seen.append(distance)
+	assert_eq(seen, [13.0, 12.0, 11.0, 10.0, 9.0] as Array[float])

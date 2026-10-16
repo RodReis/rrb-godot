@@ -168,10 +168,11 @@ Ambos os projetos: `application/config/use_custom_user_dir=true`, `custom_user_d
 [controls] move_forward="W" ... skill_q="Q" ... interact="F"   ; nomes de ação do InputMap = os de shared/core/input_actions.gd
           mouse_sensitivity=float  gamepad=bool
 [graphics] fog=bool  ssil=bool  ssao=bool  grass=bool   ; padrão true; Game só desliga o que a arena traz ligado (F38, ADR-0006 item 8; grass = grama decorativa, F42)
+[camera]  distance=float   ; 9.0–14.0 u, padrão 11.0; fora da faixa → padrão (F67, ADR-0015 item 5)
 [meta]    schema=1
 ```
 
-Launcher escreve; Game lê no boot. Chave desconhecida é ignorada; `schema` diferente → Game usa padrões e loga.
+Launcher escreve; Game lê no boot. **Exceção (F67):** o Game grava só `[camera] distance` quando o jogador dá zoom (relê o arquivo antes, para não desfazer o que o Launcher salvou). Teclas `camera_zoom_in`/`camera_zoom_out` (padrão `=`/`-`, além da roda do mouse) entram em `[controls]` como as demais. Chave desconhecida é ignorada; `schema` diferente → Game usa padrões e loga.
 
 ### 5.4 O que **não** faz parte do contrato
 

@@ -92,3 +92,20 @@ func test_clicar_de_novo_na_tecla_cancela_a_escuta() -> void:
 	keycap.pressed.emit()  # o toggle chega no release
 	_screen._input(_key(KEY_Z))
 	assert_eq(UserSettings.keycode(_screen.draft(), InputActions.SKILL_Q), KEY_Q)
+
+
+func test_aba_de_controles_lista_e_remapeia_o_zoom_da_camera() -> void:
+	assert_not_null(_keycap("="), "zoom in mostra a tecla padrao")
+	assert_not_null(_keycap("-"), "zoom out mostra a tecla padrao")
+	_keycap("=").pressed.emit()
+	_screen._input(_key(KEY_Z))
+	assert_eq(UserSettings.keycode(_screen.draft(), InputActions.CAMERA_ZOOM_IN), KEY_Z)
+	assert_not_null(_keycap("Z"))
+
+
+func test_salvar_nao_mexe_na_distancia_da_camera_do_rascunho() -> void:
+	var values := UserSettings.defaults()
+	values[UserSettings.CAMERA][UserSettings.DISTANCE] = 9.0
+	_store.save(values)
+	_screen.bind(_store)
+	assert_eq(_screen.draft()[UserSettings.CAMERA][UserSettings.DISTANCE], 9.0)

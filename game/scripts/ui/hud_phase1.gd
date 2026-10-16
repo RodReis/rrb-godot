@@ -146,9 +146,9 @@ func _update_loot_text() -> void:
 ## Baus fechados e monstros vistos (LootMarkers, F57) por baixo; herois (verde = eu, vermelho =
 ## adversario) e o boss vivo (roxo) por cima; neblina (F37): so o que o jogador ve agora.
 func _update_minimap() -> void:
-	var camera := get_viewport().get_camera_3d()
+	var camera := get_viewport().get_camera_3d() as FollowCamera
 	if camera != null:
-		_minimap.set_yaw(camera.global_rotation.y)
+		_minimap.set_yaw(camera.team_yaw())
 	_marker_positions.clear()
 	_marker_colors.clear()
 	_marker_radii.clear()

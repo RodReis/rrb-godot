@@ -1,21 +1,22 @@
 extends SceneTree
 ## Varredura de camera do vale (F56, ADR-0012): prova que o jogo nunca mostra o vazio em volta
-## da arena. Coloca a camera na distancia e inclinacao do jogo (follow_camera.gd: 14 u, 45 graus,
+## da arena. Coloca a camera na distancia e inclinacao do jogo (follow_camera.gd: 9-14 u, 45 graus,
 ## FOV vertical 75) com o heroi no meio de cada muro e em cada canto jogavel (8 posicoes) e gira
 ## de 45 em 45 graus (8 yaws = 64 quadros). O fundo vira magenta puro (sem tonemap, sem neblina
 ## no ceu) e cada quadro conta os pixels magenta: qualquer um e vazio. Sai com 1 se algum quadro
 ## mostrar vazio. Ferramenta de autoria (verificacao do Code e capturas do roadmap), janela aberta
 ## (nao headless). Uso, na raiz do repo:
 ##   godot --path game --resolution 1280x720 -s <repo>/tools/arena/valley_sweep.gd --
-##     <pasta> [salvar [normal]]
+##     <pasta> [salvar [normal [distancia]]]
 ## <pasta> recebe um PNG por quadro quando o 2o argumento e "salvar" (senao so o relatorio).
 ## Com "normal" no 3o argumento o fundo e a luz ficam como no jogo (so as capturas, sem contagem).
+## O 4o argumento e a distancia da camera em unidades (padrao 14; o zoom da SPEC-067 vai de 9 a 14).
 ## Troque a resolucao (ex.: 2560x1080) para provar tambem uma janela mais larga.
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 ## Mesmos valores de follow_camera.gd.
 const PITCH_DEG: float = 45.0
-const DISTANCE: float = 14.0
+const DEFAULT_DISTANCE: float = 14.0
 const FOV: float = 75.0
 ## Posicoes do heroi (x, z): meio de cada muro e cantos jogaveis, dentro do quadrado de 40 u.
 const HERO_AT: Array[Vector2] = [
@@ -41,6 +42,7 @@ var _step: int = 0
 var _out_dir: String = ""
 var _save: bool = false
 var _normal: bool = false
+var _distance: float = DEFAULT_DISTANCE
 var _camera: Camera3D
 var _failures: int = 0
 var _worst: int = 0
@@ -51,6 +53,8 @@ func _initialize() -> void:
 	_out_dir = args[0] if not args.is_empty() else ""
 	_save = args.size() > 1 and args[1] == "salvar" and not _out_dir.is_empty()
 	_normal = args.size() > 2 and args[2] == "normal"
+	if args.size() > 3 and args[3].is_valid_float():
+		_distance = args[3].to_float()
 	if _save:
 		DirAccess.make_dir_recursive_absolute(_out_dir)
 	var holder := Node3D.new()
@@ -116,7 +120,7 @@ func _place(hero: Vector2, yaw: float) -> void:
 	var forward := Vector3(-sin(yaw), 0.0, -cos(yaw))
 	var target := Vector3(hero.x, 0.0, hero.y)
 	_camera.global_position = (
-		target - forward * DISTANCE * cos(pitch) + Vector3.UP * DISTANCE * sin(pitch)
+		target - forward * _distance * cos(pitch) + Vector3.UP * _distance * sin(pitch)
 	)
 	_camera.look_at(target, Vector3.UP)
 
