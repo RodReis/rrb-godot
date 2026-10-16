@@ -47,4 +47,6 @@ func test_direcao_nula_escolhe_o_mais_proximo() -> void:
 
 
 func test_direcao_sem_candidatos_devolve_menos_um() -> void:
-	assert_eq(TargetPick.nearest_to_direction(Vector3.ZERO, Vector3.RIGHT, PackedVector3Array()), -1)
+	assert_eq(
+		TargetPick.nearest_to_direction(Vector3.ZERO, Vector3.RIGHT, PackedVector3Array()), -1
+	)

@@ -143,7 +143,8 @@ func _tap_target() -> void:
 	var radii := PackedFloat32Array()
 	for node: Node in get_tree().get_nodes_in_group(Combatant.TARGETS_GROUP):
 		var other := node as Combatant
-		if other.team == hero.team or not other.is_alive() or not other.seen_by(hero):
+		var visible := other.is_shown() and other.seen_by(hero)
+		if other.team == hero.team or not other.is_alive() or not visible:
 			continue
 		enemies.append(other)
 		centers.append(other.global_position + Vector3.UP * PICK_HEIGHT)

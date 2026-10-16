@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/target_ring.gd" id="1_script"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_ring"]
+shading_mode = 0
+albedo_color = Color(0.937, 0.267, 0.267, 1)
+
+[sub_resource type="TorusMesh" id="Mesh_ring"]
+material = SubResource("Mat_ring")
+inner_radius = 0.88
+outer_radius = 1.0
+rings = 48
+ring_segments = 8
+
+[node name="TargetRing" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="Disc" type="MeshInstance3D" parent="."]
+mesh = SubResource("Mesh_ring")
+cast_shadow = 0

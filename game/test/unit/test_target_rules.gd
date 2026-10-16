@@ -11,7 +11,9 @@ func test_valido_exige_os_quatro() -> void:
 	assert_false(TargetRules.is_valid(false, true, true, true), "nao existe")
 	assert_false(TargetRules.is_valid(true, false, true, true), "aliado")
 	assert_false(TargetRules.is_valid(true, true, false, true), "morto")
-	assert_false(TargetRules.is_valid(true, true, true, false), "fora da visao (moita, fumaca, neblina)")
+	assert_false(
+		TargetRules.is_valid(true, true, true, false), "fora da visao (moita, fumaca, neblina)"
+	)
 
 
 func test_pedido_valido_trava() -> void:
@@ -48,7 +50,10 @@ func test_pedido_vence_o_cancelar_do_mesmo_tick() -> void:
 
 func test_ataca_so_em_alcance_e_com_alvo_valido() -> void:
 	var from := Vector3.ZERO
-	assert_true(TargetRules.can_attack(true, from, Vector3(0.0, 5.0, 3.0), 3.0), "no limite, altura nao conta")
+	assert_true(
+		TargetRules.can_attack(true, from, Vector3(0.0, 5.0, 3.0), 3.0),
+		"no limite, altura nao conta"
+	)
 	assert_false(TargetRules.can_attack(true, from, Vector3(0.0, 0.0, 3.1), 3.0), "fora do alcance")
 	assert_false(TargetRules.can_attack(false, from, Vector3(0.0, 0.0, 1.0), 3.0), "alvo invalido")
 

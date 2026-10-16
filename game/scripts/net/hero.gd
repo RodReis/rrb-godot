@@ -522,8 +522,8 @@ func _interact(tick: int) -> void:
 
 
 ## Alvo do tick (F66): trava, mantem ou solta o alvo pelo pedido do input (TargetRules.resolve) e
-## deixa em _target_node o alvo valido (null = nenhum). Um cliente que pede alvo invisivel, aliado ou
-## morto recebe nenhum: o servidor nunca confia no id (invariante de honestidade, CONVENTION §4.6).
+## deixa em _target_node o alvo valido (null = nenhum). Quem pede alvo invisivel, aliado ou morto
+## fica sem alvo: o servidor nunca confia no id (invariante de honestidade, CONVENTION §4.6).
 func _lock_target() -> void:
 	var asked := _valid_target(input.target_id)
 	var held := _valid_target(target_id)
@@ -536,9 +536,9 @@ func _lock_target() -> void:
 		_target_node = asked if target_id == input.target_id else held
 
 
-## Decide o ataque do tick e devolve a mira do disparo: botao segurado dispara na mira do cursor; sem
-## ele, o alvo travado em alcance do basico dispara sozinho, na direcao dele. Skill pronta no mesmo
-## tick manda a mira do cursor (Q, E e R miram nele). Nao anda ate o alvo.
+## Decide o ataque do tick e devolve a mira do disparo: botao segurado dispara na mira do cursor;
+## sem ele, o alvo travado em alcance do basico dispara sozinho, na direcao dele. Skill pronta no
+## mesmo tick manda a mira do cursor (Q, E e R miram nele). Nao anda ate o alvo.
 func _plan_attack(aim: Vector3) -> Vector3:
 	_lock_target()
 	attack_now = input.attack
@@ -583,7 +583,9 @@ func _valid_target(id: int) -> Combatant:
 	if other == null:
 		return null
 	var enemy := other != self and other.team != team
-	return other if TargetRules.is_valid(true, enemy, other.is_alive(), other.seen_by(self)) else null
+	return (
+		other if TargetRules.is_valid(true, enemy, other.is_alive(), other.seen_by(self)) else null
+	)
 
 
 # ponytail: percorre o grupo so quando o alvo muda; cacheia o ultimo achado.

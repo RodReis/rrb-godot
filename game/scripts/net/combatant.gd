@@ -45,6 +45,12 @@ func seen_by(_observer: Hero) -> bool:
 	return true
 
 
+## O jogador deste processo ve o alvo (anel e moldura do alvo travado, F66); herois e monstros
+## decidem.
+func is_shown() -> bool:
+	return true
+
+
 ## Raio da capsula do corpo (CollisionShape3D), para o acerto de projetil (F14).
 func body_radius() -> float:
 	if _body_radius < 0.0:

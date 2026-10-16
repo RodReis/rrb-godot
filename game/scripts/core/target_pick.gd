@@ -5,6 +5,8 @@ extends RefCounted
 ## direcao de mira. So decide quem pedir ao servidor; quem valida e o servidor (TargetRules).
 
 const NOT_FOUND: int = -1
+## Peso da distancia no desempate de angulos quase iguais (por unidade).
+const DISTANCE_TIEBREAK: float = 0.0001
 
 
 ## Indice do alvo que o raio [param origin] + [param ray] (unitario) atravessa primeiro, ou
@@ -36,7 +38,7 @@ static func nearest_to_direction(from: Vector3, dir: Vector3, points: PackedVect
 		var distance := flat.length()
 		var score := -distance
 		if not dir.is_zero_approx() and distance > 0.0:
-			score = flat.dot(dir) / distance - distance * 0.0001
+			score = flat.dot(dir) / distance - distance * DISTANCE_TIEBREAK
 		if score > best_score:
 			best = i
 			best_score = score

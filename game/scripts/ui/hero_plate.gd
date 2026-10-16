@@ -9,6 +9,8 @@ extends Control
 ## Indice = slot do SkillButton: basico, Q, E, R.
 ## Ataque basico no botao direito (SPEC-045 §2); Q/E/R vem do InputMap (remapeavel, F24).
 const BASIC_KEY: String = "RMB"
+## O botao direito tambem trava o alvo clicado (F66): o tooltip do basico diz as duas coisas.
+const BASIC_HINT: String = "alvo / ataque"
 ## Switches da engrenagem (decisao do PI 2026-10-12): tudo, ou so o jingle do chefao (barramento
 ## do default_bus_layout.tres). Valem so na sessao (FORA-DE-ESCOPO: gravar no settings.cfg).
 const BUS_GAME: StringName = &"Master"
@@ -29,11 +31,14 @@ var _shown_ranks: Vector3i = -Vector3i.ONE
 var _shown_equipment: Vector4i = Inventory.NONE
 ## O heroi troca o objeto ao recalcular (nivel, item): referencia diferente = redesenhar.
 var _shown_attributes: HeroAttributes
+## Alvo cuja moldura esta na tela (F66); null = nenhuma.
+var _shown_target: Combatant
 ## Maior recarga vista desde que zerou, por botao (ticks): total da volta radial.
 var _cooldown_totals: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 
 @onready var _toast: Toast = %Toast
+@onready var _target_frame: TargetFrame = %TargetFrame
 @onready var _choice_menu: ChestChoiceMenu = %ChoiceMenu
 @onready var _hero_name: Label = %HeroName
 @onready var _hero_level: Label = %HeroLevel
@@ -85,6 +90,8 @@ func bind(hero: Hero) -> void:
 	_shown_ranks = -Vector3i.ONE
 	_cooldown_totals.fill(0)
 	_shown_attributes = null
+	_shown_target = null
+	_target_frame.clear()
 	var data := hero.hero_data
 	_skills = [data.basic_attack, data.skill_q, data.skill_e, data.skill_r]
 	_hero_name.text = data.display_name.to_upper()
@@ -100,6 +107,7 @@ func set_chests(chests: Array[Chest]) -> void:
 func update() -> void:
 	_update_plate()
 	_update_skills()
+	_update_target()
 	if _hero.equipment != _shown_equipment:
 		_notify_equipped()
 		_refresh_equipment()
@@ -145,11 +153,28 @@ func _update_plate() -> void:
 		_shown_level = _hero.level
 
 
+## Moldura do alvo travado (F66): aparece quando o heroi tem alvo que o jogador ve, segue o HP
+## dele e some ao destravar.
+func _update_target() -> void:
+	var target := _hero.target()
+	if target == null or not target.is_alive() or not target.is_shown():
+		_shown_target = null
+		_target_frame.clear()
+		return
+	var hp := TargetInfo.hp_of(target)
+	if target != _shown_target:
+		_shown_target = target
+		_target_frame.bind(TargetInfo.name_of(target), TargetInfo.tag_of(target), hp.x, hp.y)
+	else:
+		_target_frame.set_hp(hp.x, hp.y)
+
+
 func _update_skills() -> void:
 	var ranks := _hero.ranks
 	if ranks != _shown_ranks:
 		_shown_ranks = ranks
 		_buttons[0].bind(_skills[0], 1)
+		_buttons[0].tooltip_text += " · %s: %s" % [BASIC_KEY, tr(BASIC_HINT)]
 		for slot: int in SkillRules.SLOT_R + 1:
 			_buttons[slot + 1].bind(_skills[slot + 1], ranks[slot])
 	_cooldowns[0] = _hero.basic_cooldown
