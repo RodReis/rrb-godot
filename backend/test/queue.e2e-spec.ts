@@ -99,6 +99,9 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
       .post(`/internal/matches/${path}`)
       .set(SECRET_HEADER, INTERNAL_SECRET)
       .set(SLOT_PORT_HEADER, String(slotPort));
+  /** O slot que o orquestrador deu à partida (as seguintes ao primeiro pareamento usam outras portas). */
+  const slotOf = async (matchId: string): Promise<number> =>
+    (await rows<{ server_port: number }>('SELECT server_port FROM matches WHERE id = $1', [matchId]))[0]!.server_port;
 
   /** Dois jogadores entram na fila, são pareados e cada um lê o seu assignment. */
   async function pairUp(a: User, b: User): Promise<Paired> {
@@ -323,12 +326,7 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
       const [a, b, c, d] = users as [User, User, User, User];
       const m1 = await pairUp(a, b);
       const m2 = await pairUp(c, d);
-      const [slot1, slot2] = await Promise.all(
-        [m1, m2].map(async (m) => {
-          const [row] = await rows<{ server_port: number }>('SELECT server_port FROM matches WHERE id = $1', [m.matchId]);
-          return row!.server_port;
-        }),
-      );
+      const [slot1, slot2] = await Promise.all([slotOf(m1.matchId), slotOf(m2.matchId)]);
       expect(slot1).not.toBe(slot2);
 
       const hijack = await internal(`${m2.matchId}/validate`, slot1).send({ token: m2.token });
@@ -579,8 +577,9 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
     /** Pareia, valida e fecha a partida: `winner` ganha por 5 × 2. */
     async function play(a: User, b: User, winner: User): Promise<string> {
       const { matchId, token } = await pairUp(a, b);
-      await internal(`${matchId}/validate`).send({ token });
-      await internal(`${matchId}/result`).send({
+      const slot = await slotOf(matchId);
+      await internal(`${matchId}/validate`, slot).send({ token });
+      await internal(`${matchId}/result`, slot).send({
         winnerUserId: winner.id,
         endReason: 'kill_goal',
         durationS: 512,
