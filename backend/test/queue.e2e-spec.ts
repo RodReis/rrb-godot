@@ -14,6 +14,8 @@ import { FakeClock, FakeContainerRuntime } from './support/fakes';
 
 const INTERNAL_SECRET = 'interno-e2e-com-pelo-menos-32-caracteres';
 const SECRET_HEADER = 'x-internal-secret';
+const SLOT_PORT_HEADER = 'x-slot-port';
+const FIRST_SLOT_PORT = 7000;
 
 const baseConfig: AppConfig = loadConfig({
   DATABASE_URL: process.env.TEST_DATABASE_URL ?? 'postgres://rrb:rrb@localhost:5432/rrb_test',
@@ -91,7 +93,12 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
   const join = (user: User) => request(server()).post('/queue').set('Authorization', user.auth);
   const poll = (user: User, ticket: string) =>
     request(server()).get(`/queue/${ticket}`).set('Authorization', user.auth);
-  const internal = (path: string) => request(server()).post(`/internal/matches/${path}`).set(SECRET_HEADER, INTERNAL_SECRET);
+  // `slotPort`: o SLOT_PORT do container que chama; o primeiro slot do pool é o 7000.
+  const internal = (path: string, slotPort = FIRST_SLOT_PORT) =>
+    request(server())
+      .post(`/internal/matches/${path}`)
+      .set(SECRET_HEADER, INTERNAL_SECRET)
+      .set(SLOT_PORT_HEADER, String(slotPort));
 
   /** Dois jogadores entram na fila, são pareados e cada um lê o seu assignment. */
   async function pairUp(a: User, b: User): Promise<Paired> {
@@ -310,6 +317,45 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
         .set('Authorization', a.auth);
 
       expect(res.status).toBe(401);
+    });
+
+    it('#181: token da partida M2 apresentado pelo container de M1 → 401 TOKEN_INVALID e M2 continua assigned', async () => {
+      const [a, b, c, d] = users as [User, User, User, User];
+      const m1 = await pairUp(a, b);
+      const m2 = await pairUp(c, d);
+      const [slot1, slot2] = await Promise.all(
+        [m1, m2].map(async (m) => {
+          const [row] = await rows<{ server_port: number }>('SELECT server_port FROM matches WHERE id = $1', [m.matchId]);
+          return row!.server_port;
+        }),
+      );
+      expect(slot1).not.toBe(slot2);
+
+      const hijack = await internal(`${m2.matchId}/validate`, slot1).send({ token: m2.token });
+      const own = await internal(`${m2.matchId}/validate`, slot2).send({ token: m2.token });
+
+      expect(hijack.status).toBe(401);
+      expect(hijack.body).toMatchObject({ code: 'TOKEN_INVALID' });
+      expect(own.status).toBe(200);
+    });
+
+    it('#181: heartbeat e result de container que não é o da partida → 401 SLOT_MISMATCH; sem o cabeçalho também', async () => {
+      const [a, b] = users as [User, User];
+      const { matchId, token } = await pairUp(a, b);
+      await internal(`${matchId}/validate`).send({ token });
+      const result = { winnerUserId: null, endReason: 'abandoned', durationS: 1, players: [] };
+
+      const beat = await internal(`${matchId}/heartbeat`, 7001);
+      const report = await internal(`${matchId}/result`, 7001).send(result);
+      const bare = await request(server()).post(`/internal/matches/${matchId}/heartbeat`).set(SECRET_HEADER, INTERNAL_SECRET);
+      const junk = await internal(`${matchId}/heartbeat`, FIRST_SLOT_PORT).set(SLOT_PORT_HEADER, '7000abc');
+
+      for (const res of [beat, report, bare, junk]) {
+        expect(res.status).toBe(401);
+        expect(res.body).toMatchObject({ code: 'SLOT_MISMATCH' });
+      }
+      const [match] = await rows<{ status: string }>('SELECT status FROM matches WHERE id = $1', [matchId]);
+      expect(match?.status).toBe('running');
     });
 
     it('validate com o token de cada jogador: assigned → running, devolve a conta, seed e jogadores', async () => {

@@ -26,6 +26,8 @@ export class DockerRuntime extends ContainerRuntime {
       Labels: { [MANAGED_LABEL]: String(hostPort) },
       Env: [
         `PORT=${CONTAINER_PORT}`,
+        // Identidade do slot: o servidor a manda em cada chamada interna (x-slot-port, issue #181).
+        `SLOT_PORT=${hostPort}`,
         `BACKEND_URL=${this.config.GAMESERVER_BACKEND_URL}`,
         `INTERNAL_SECRET=${this.config.INTERNAL_SECRET}`,
       ],

@@ -2,7 +2,7 @@
 .SYNOPSIS
   Roteiro F23: servidor dedicado + clientes headless contra o backend local, com token de partida.
 .DESCRIPTION
-  Sobe o servidor com BACKEND_URL/INTERNAL_SECRET, espera, conecta os clientes com --token e
+  Sobe o servidor com BACKEND_URL/INTERNAL_SECRET/SLOT_PORT, espera, conecta os clientes com --token e
   imprime os codigos de saida (JSON). Os logs ficam em -Out. Precisa do backend no ar e de uma
   partida criada por f23-setup-match.js (-MatchFile). Cliente que ve a tela de fim fica aberto
   esperando o botao "Voltar": "rodando" depois do servidor sair e normal; o que vale e o codigo
@@ -14,6 +14,8 @@ param(
     [string]$BackendUrl = 'http://localhost:3000',
     [string]$InternalSecret = $env:INTERNAL_SECRET,
     [int]$Port = 7101,
+    # SLOT_PORT: a porta do slot que o backend gravou na partida (f23-setup-match.js usa 7000).
+    [int]$SlotPort = 7000,
     # Sobrescreve o token de cada cliente (ex.: 'lixo' ou '' para testar a recusa).
     # '@partida' = o token do JSON da partida; '' = cliente sem token.
     [string]$TokenA = '@partida',
@@ -35,8 +37,10 @@ New-Item -ItemType Directory -Force $Out | Out-Null
 
 $savedUrl = $env:BACKEND_URL
 $savedSecret = $env:INTERNAL_SECRET
+$savedSlot = $env:SLOT_PORT
 $env:BACKEND_URL = $BackendUrl
 $env:INTERNAL_SECRET = $InternalSecret
+$env:SLOT_PORT = "$SlotPort"
 $server = Start-Process -FilePath $cli -PassThru -NoNewWindow -ArgumentList @(
     '--headless', '--path', "`"$repo\game`"", '--', '--server', "--port=$Port", '--seed=16', "--time=$StartTime"
 ) -RedirectStandardOutput "$Out\server.log" -RedirectStandardError "$Out\server.err"
@@ -44,6 +48,7 @@ $null = $server.Handle   # PowerShell 5.1: sem isso o ExitCode volta $null
 # Os clientes nao recebem o segredo: devolve o ambiente do chamador.
 $env:BACKEND_URL = $savedUrl
 $env:INTERNAL_SECRET = $savedSecret
+$env:SLOT_PORT = $savedSlot
 Start-Sleep -Seconds 6
 
 function Start-Client([string]$name, [string]$token) {

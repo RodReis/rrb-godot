@@ -157,6 +157,26 @@ describe('MatchesService', () => {
     });
   });
 
+  describe('assertSlot', () => {
+    it('porta do container da partida passa', async () => {
+      const { id } = await assigned();
+
+      await expect(service.assertSlot(id, 7000)).resolves.toBeUndefined();
+    });
+
+    it('porta de outro container, ausente → 401 com o código pedido (padrão SLOT_MISMATCH)', async () => {
+      const { id } = await assigned();
+
+      expect(await code(service.assertSlot(id, 7001))).toBe('SLOT_MISMATCH');
+      expect(await code(service.assertSlot(id, undefined))).toBe('SLOT_MISMATCH');
+      expect(await code(service.assertSlot(id, 7001, 'TOKEN_INVALID'))).toBe('TOKEN_INVALID');
+    });
+
+    it('partida inexistente → 404 MATCH_NOT_FOUND', async () => {
+      expect(await code(service.assertSlot('99999999-9999-4999-8999-999999999999', 7000))).toBe('MATCH_NOT_FOUND');
+    });
+  });
+
   describe('heartbeat', () => {
     it('partida running: atualiza last_heartbeat_at', async () => {
       const { id, token } = await assigned();
