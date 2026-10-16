@@ -17,6 +17,8 @@ extends Node3D
 ## Online (F23): o cliente apresenta o --token no handshake (PeerAuth); o servidor dedicado so deixa
 ## entrar quem o backend validou, manda heartbeat e reporta o resultado no fim (ServerSession),
 ## saindo com os codigos de ExitCodes. Sem backend so com --no-backend (dev).
+## Loading (F68): quem joga (--offline ou --connect) ve a LoadingScreen do boot ate a selecao de
+## herois; o Main so reporta as etapas (shaders, conexao, espera). O servidor dedicado nao a cria.
 
 const MAX_PLAYERS: int = 2
 ## Conexoes do ENet no servidor. Maior que os jogadores: peer ainda no handshake de autenticacao
@@ -44,6 +46,10 @@ const EXIT_DELAY_SECONDS: float = 2.0
 ## Codigo de saida do cliente que perdeu o servidor no meio da partida: erro interno, o Launcher
 ## mostra o erro generico (ARCHITECTURE-LAUNCHER §5.2).
 const EXIT_CONNECTION_LOST: int = 4
+## Loading (F68): fracoes de etapas sem medida propria. Conexao aberta e esperando o handshake;
+## relogio sincronizado e esperando o adversario (a etapa so fecha quando a selecao abre).
+const CONNECT_STARTED: float = 0.3
+const WAIT_SYNCED: float = 0.5
 ## Intervalo do log de heroi desconectado (s): prova que ele segue simulado, sem inundar o log.
 const DISCONNECTED_LOG_SECONDS: float = 5.0
 ## Overlay escuro da neblina de guerra (F37) no cliente. Desligado durante o MVP2.5 (decisao do
@@ -80,6 +86,9 @@ var _connection_lost: ConnectionLostScreen
 ## Servidor: herois de jogadores que cairam (log periodico).
 var _disconnected: Array[Hero] = []
 var _disconnected_log: Timer
+## Cliente: tela de loading do boot ate a selecao (F68); null no servidor e depois de dispensada.
+var _loading: LoadingScreen
+var _loading_started_msec: int = 0
 
 @onready var players: Node3D = $Players
 @onready var spawns: SpawnDirector = $Spawns
@@ -152,9 +161,12 @@ func _ready() -> void:
 	var dedicated: bool = args["mode"] == "server" or OS.has_feature("dedicated_server")
 	if not dedicated:
 		_start_day_night()
+		if args["offline"] or args["host"] != "":
+			await _show_loading()
 		await _warm_shaders()
 	if args["offline"]:
 		if start_server(EPHEMERAL_PORT, HOST_BIND_IP):
+			_report_loading(1.0, LoadingProgress.Stage.CONNECT)
 			_join(multiplayer.get_unique_id())
 	elif dedicated:
 		_dedicated = true
@@ -207,12 +219,45 @@ func _warm_shaders() -> void:
 	connect_button.disabled = true
 	var warmup := ShaderWarmup.new()
 	add_child(warmup)
+	warmup.progressed.connect(_report_loading.bind(LoadingProgress.Stage.WARMUP))
 	var world := get_node_or_null("Arena/WorldEnvironment") as WorldEnvironment
 	if world == null:
 		push_warning("[warmup] arena sem WorldEnvironment: aquecendo sem o ambiente")
 	await warmup.run(world.environment if world else null)
 	warmup.queue_free()
 	connect_button.disabled = false
+
+
+## Cobre a arena com a LoadingScreen e espera um quadro desenhado, para ela aparecer antes do
+## warm-up (que bloqueia o 1o quadro). Fora de quem desenha (servidor headless) nao faz nada.
+func _show_loading() -> void:
+	if not LoadingScreen.wanted():
+		return
+	_loading = LoadingScreen.new()
+	_loading.name = "LoadingScreen"
+	_loading.exit_requested.connect(_on_connection_lost_exit_requested)
+	add_child(_loading)
+	_loading.show_random(randi(), load(LoadingRules.TIPS_PATH) as TipList)
+	_loading_started_msec = Time.get_ticks_msec()
+	await RenderingServer.frame_post_draw
+
+
+## Etapa do loading ([param fraction] 0..1); sem tela (servidor, ou ja dispensada) nao faz nada.
+## O sinal do warm-up traz a fracao primeiro, por isso a etapa vem por ultimo no bind.
+func _report_loading(fraction: float, stage: LoadingProgress.Stage) -> void:
+	if _loading != null:
+		_loading.report(stage, fraction)
+
+
+## A selecao abriu (ou a conexao falhou): a tela de loading cumpriu o papel.
+func _dismiss_loading() -> void:
+	if _loading != null:
+		print(
+			"[loading] tela dispensada apos %d ms" % (Time.get_ticks_msec() - _loading_started_msec)
+		)
+		_loading.dismiss()
+		_loading.queue_free()
+		_loading = null
 
 
 ## Falso se a porta nao abriu (o processo sai com codigo 1). Abre a espera pelos jogadores; com
@@ -286,16 +331,21 @@ func start_client(host: String, port: int) -> void:
 	var peer := ENetMultiplayerPeer.new()
 	var err := peer.create_client(host, port)
 	if err != OK:
+		_dismiss_loading()
 		status_label.text = "erro ao conectar: %s" % error_string(err)
 		return
 	multiplayer.multiplayer_peer = peer
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
+	multiplayer.connection_failed.connect(_on_connection_failed)
 	connect_panel.hide()
 	status_label.text = "conectando a %s:%d..." % [host, port]
+	_report_loading(CONNECT_STARTED, LoadingProgress.Stage.CONNECT)
 	await multiplayer.connected_to_server
 	print("[client] conectado como peer %d" % multiplayer.get_unique_id())
+	_report_loading(1.0, LoadingProgress.Stage.CONNECT)
 	status_label.text = tr("Aguardando o adversário...")
 	await NetworkTime.after_sync
+	_report_loading(WAIT_SYNCED, LoadingProgress.Stage.WAIT)
 	print("[client] NetworkTime sincronizado, tick %d" % NetworkTime.tick)
 
 
@@ -481,6 +531,8 @@ func _on_disconnected_log_timeout() -> void:
 ## --bot-hero de dev) assim que a selecao abre (mesmo resultado do timeout, sem esperar 24 s);
 ## na PHASE1 nascem os herois escolhidos.
 func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
+	if to != MatchState.State.LOBBY_WAIT:
+		_dismiss_loading()
 	if not _dedicated and to == MatchState.State.HERO_PICK:
 		var ticks_left := match_controller.deadline_tick - tick
 		hero_select.open(float(ticks_left) / NetworkTime.tickrate)
@@ -559,7 +611,14 @@ func _on_spawns_boss_killed(peer: int) -> void:
 
 ## Cliente: o servidor encerrou ou caiu. Pausa a arvore (sem peer, `get_unique_id()` erra a cada
 ## quadro) e mostra o erro; se a tela do fim ja esta aberta, ela fica e so ela anima.
+## Cliente: o ENet desistiu de conectar. A tela de loading sai para a mensagem aparecer.
+func _on_connection_failed() -> void:
+	_dismiss_loading()
+	status_label.text = "falha ao conectar ao servidor"
+
+
 func _on_server_disconnected() -> void:
+	_dismiss_loading()
 	status_label.text = "desconectado do servidor"
 	status_label.visible = true
 	get_tree().paused = true

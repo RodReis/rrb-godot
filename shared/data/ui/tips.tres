@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="TipList" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/tip_list.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+tips = PackedStringArray("O Rei Esqueleto chega aos 3:30. O aviso global vem aos 3:00.", "Dentro do mato alto ninguém te vê, até você atacar.", "Atacar ou usar uma skill de dentro do mato alto revela você por 1,5 s.", "Chegar perto do mato alto por fora não revela quem está dentro.", "A Fumaça da Ladina vale como mato alto por 3 s.", "Os monstros renascem 90 s depois de morrer, mas só na fase 1.", "Morrer na fase 1 não conta kill, mas o matador ganha 80 XP.", "Cada baú abre uma vez: aperte F e escolha 1 entre 3 itens.", "O consumível de cura dos baús comuns devolve 120 HP.", "O Rei Esqueleto que sobrar aos 5:00 sai do mapa sem deixar drop.", "Na fase 2 o respawn leva 6 s, e deixa de existir depois dos 4:00.")

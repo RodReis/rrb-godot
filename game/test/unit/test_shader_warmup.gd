@@ -57,7 +57,7 @@ func test_viewport_recebe_todas_as_copias() -> void:
 	add_child_autofree(warmup)
 	var viewport := warmup._make_viewport(null)
 	warmup.add_child(viewport)
-	var copies := warmup._fill(viewport)
+	var copies: int = await warmup._fill(viewport)
 	assert_gt(copies, ShaderWarmup.SHADERS.size())
 	# camera + sol + copias (sem WorldEnvironment com ambiente nulo)
 	assert_eq(viewport.get_child_count(), copies + 2)
@@ -94,3 +94,10 @@ func test_ceu_do_ambiente_entra_no_warmup_sem_ambiente_nao_quebra() -> void:
 	env.sky = Sky.new()
 	env.sky.sky_material = ShaderMaterial.new()
 	assert_not_null(ShaderWarmup._sky_material(env))
+
+
+func test_headless_reporta_progresso_completo() -> void:
+	var warmup: ShaderWarmup = add_child_autofree(ShaderWarmup.new())
+	watch_signals(warmup)
+	await warmup.run(null)
+	assert_signal_emitted_with_parameters(warmup, "progressed", [1.0])

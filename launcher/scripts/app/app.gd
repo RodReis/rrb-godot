@@ -9,6 +9,7 @@ extends Control
 ## tabela do §5.2 (codigo 0 de partida online abre o Historico). Telas emitem; quem navega e
 ## confirma e o App.
 ## --gallery (depois do --) abre a galeria do design system, a prova visual dos componentes.
+## Splash "ARENA 1V1" (F68): cobre a janela ate a 1a checagem do backend (teto SPLASH_MAX_SECONDS).
 
 const GALLERY_ARG: String = "--gallery"
 ## Toast no canto inferior direito, acima do rodape.
@@ -16,6 +17,8 @@ const TOAST_WIDTH: float = 360.0
 ## Status e ping do backend (GET /health) a cada 10 s.
 const HEALTH_SECONDS: float = 10.0
 const OFFLINE_ARGS: PackedStringArray = ["--offline", "--bot"]
+## Teto do splash se o backend demorar a responder.
+const SPLASH_MAX_SECONDS: float = 2.0
 
 var settings: SettingsStore = SettingsStore.new()
 var api: ApiClient = ApiClient.new()
@@ -37,6 +40,7 @@ var _modal: ModalDialog = ModalDialog.new()
 var _loading: Control = Control.new()
 var _loading_box: StateBox = StateBox.new()
 var _match: MatchOverlay = MatchOverlay.new()
+var _splash: BootSplash = BootSplash.new()
 var _health: Timer = Timer.new()
 var _online: bool = false
 ## A primeira checagem do backend ja voltou?
@@ -120,6 +124,7 @@ func check_backend() -> void:
 	_online = response.ok()
 	_checked = true
 	_ping_ms = Time.get_ticks_msec() - started if _online else AppBar.UNKNOWN_PING
+	_dismiss_splash()
 	_bar.set_backend_status(_online, _ping_ms if _online else 0)
 	var lobby := _stack.current() as LobbyScreen
 	if lobby != null:
@@ -166,6 +171,14 @@ func _build() -> void:
 	add_child(_loading)
 	add_child(_match)
 	add_child(_modal)
+	add_child(_splash)
+	get_tree().create_timer(SPLASH_MAX_SECONDS).timeout.connect(_dismiss_splash)
+
+
+## O splash se liberta depois do fade; a checagem do backend roda a cada 10 s e o teto tambem chega.
+func _dismiss_splash() -> void:
+	if is_instance_valid(_splash):
+		_splash.dismiss()
 
 
 func _apply(values: Dictionary) -> void:

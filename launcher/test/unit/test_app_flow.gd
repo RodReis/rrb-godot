@@ -147,6 +147,16 @@ func test_status_do_backend_vem_do_health() -> void:
 	assert_string_contains(bar.backend_status_text(), "ONLINE")
 
 
+func test_splash_some_na_primeira_checagem_e_a_periodica_nao_o_toca() -> void:
+	# A checagem do _ready ja voltou (before_each): o splash esta em fade, bem antes do teto de 2 s.
+	var splash := _app.find_children("*", "BootSplash", true, false)[0] as BootSplash
+	assert_true(splash.is_dismissed())
+	await wait_seconds(BootSplash.FADE_SECONDS + 0.3)
+	assert_eq(_app.find_children("*", "BootSplash", true, false).size(), 0)
+	await _app.check_backend()  # splash ja liberado: a checagem a cada 10 s nao pode quebrar
+	assert_not_null(_app.stack().current())
+
+
 func test_fim_normal_de_partida_online_abre_o_historico() -> void:
 	await _enter_lobby()
 	_api.reply("GET /matches?mine=1", 200, {"totals": {"wins": 0, "losses": 0}, "matches": []})
