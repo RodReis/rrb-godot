@@ -63,7 +63,7 @@ static func _decimal(value: float) -> String:
 func bind(resource: Resource) -> void:
 	for child: Node in _rows.get_children():
 		_rows.remove_child(child)
-		child.queue_free()
+		child.free()  # Label sem sinais pendentes; queue_free deixaria órfão até o próximo frame
 	var monster := resource as MonsterData
 	if monster == null:
 		_title.text = str(resource.get(&"display_name"))
