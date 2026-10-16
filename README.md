@@ -26,4 +26,4 @@ docs/      PRD, planos, ADRs
 
 Controles: WASD move, mouse mira, botão esquerdo ataca.
 Argumentos do jogo (depois de `--`): `--server`, `--port=7000`, `--connect=host:porta`, `--token=<match_token>`, `--autopilot`.
-Servidor dedicado de dev: `--no-backend` (sem ele exige `BACKEND_URL` e `INTERNAL_SECRET` e só aceita cliente com token de partida).
+Servidor dedicado de dev: `--no-backend` (sem ele exige `BACKEND_URL`, `INTERNAL_SECRET` e `SLOT_PORT` e só aceita cliente com token de partida).

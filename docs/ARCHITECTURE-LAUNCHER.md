@@ -131,7 +131,7 @@ Inventário, moedas, gemas, skins: **não existem** na fatia (PRD §7). Quando e
 
 ### 4.4 Segurança mínima da fatia
 
-Senha com argon2id; JWT assinado (HS256, segredo por ambiente); endpoints `/internal/*` protegidos por segredo compartilhado com o game server (variável de ambiente, nunca no cliente); rate limit em `/auth/*` e `/queue`; CORS fechado (cliente não é browser). TLS termina no proxy do Coolify. Nada além disso na fatia — anti-cheat é fora de escopo (PRD §8.5).
+Senha com argon2id; JWT assinado (HS256, segredo por ambiente); endpoints `/internal/*` protegidos por segredo compartilhado com o game server (variável de ambiente, nunca no cliente); rate limit em `/auth/*` e `/queue`; CORS fechado (cliente não é browser). Cada game server é preso à sua partida: o orquestrador dá a ele `SLOT_PORT` (a porta pública do slot) e o servidor a manda no cabeçalho `x-slot-port` em `validate`, `heartbeat` e `result`; o backend recusa (401 `TOKEN_INVALID` no `validate`, `SLOT_MISMATCH` nos outros) se não for o `server_port` da partida — quem varre as portas UDP não sequestra o container de outra partida com o token da sua (#181). Segredo por container (HMAC do `INTERNAL_SECRET` com a porta) fica para quando um container comprometido entrar no modelo de ameaça. TLS termina no proxy do Coolify. Nada além disso na fatia — anti-cheat é fora de escopo (PRD §8.5).
 
 ## 5. Contrato Launcher ↔ Game
 

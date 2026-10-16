@@ -6,6 +6,8 @@ extends Node
 
 const ENV_URL: String = "BACKEND_URL"
 const ENV_SECRET: String = "INTERNAL_SECRET"
+const ENV_SLOT_PORT: String = "SLOT_PORT"
+const MAX_PORT: int = 65535
 
 var auth: AuthSession
 
@@ -23,12 +25,27 @@ static func has_backend_environment() -> bool:
 	)
 
 
+## SLOT_PORT do container como inteiro de porta valida; 0 se ausente ou lixo.
+static func slot_port_from_environment() -> int:
+	var raw := OS.get_environment(ENV_SLOT_PORT)
+	if not raw.is_valid_int():
+		return 0
+	var port := raw.to_int()
+	return port if port > 0 and port <= MAX_PORT else 0
+
+
 ## BackendClient montado com as variaveis de ambiente do container (o orquestrador as define);
-## null se faltar alguma. O segredo nunca passa por argumento de linha de comando.
+## null se faltar alguma (inclui SLOT_PORT: sem ele o backend recusaria toda chamada). O segredo
+## nunca passa por argumento de linha de comando.
 static func backend_from_environment(host: Node) -> BackendApi:
-	if not has_backend_environment():
+	if not has_backend_environment() or slot_port_from_environment() == 0:
 		return null
-	return BackendClient.new(host, OS.get_environment(ENV_URL), OS.get_environment(ENV_SECRET))
+	return BackendClient.new(
+		host,
+		OS.get_environment(ENV_URL),
+		OS.get_environment(ENV_SECRET),
+		slot_port_from_environment()
+	)
 
 
 ## [param api] null = sem backend.

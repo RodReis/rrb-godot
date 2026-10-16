@@ -1,8 +1,21 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
+  ApiHeader,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -21,11 +34,21 @@ import { MatchesService, MatchHistory, ValidatedMatch } from './matches.service'
 const MATCH_NOT_FOUND = 'MATCH_NOT_FOUND';
 const matchId = (): ParseUuidPipe => new ParseUuidPipe(MATCH_NOT_FOUND);
 
+/** Porta pública do slot do container que chama (`SLOT_PORT`); ausente ou lixo vira `undefined` e é recusado. */
+export const SLOT_PORT_HEADER = 'x-slot-port';
+const MAX_PORT = 65_535;
+function slotPort(raw: string | undefined): number | undefined {
+  if (raw === undefined || !/^\d{1,5}$/.test(raw)) return undefined;
+  const port = Number(raw);
+  return port <= MAX_PORT ? port : undefined;
+}
+
 /** Só o game server (segredo compartilhado, §4.4). Nunca chamados pelo Launcher. */
 @ApiTags('internal')
 @ApiSecurity('internal-secret')
 @ApiUnauthorizedResponse({ description: 'INTERNAL_UNAUTHORIZED' })
 @ApiNotFoundResponse({ description: MATCH_NOT_FOUND })
+@ApiHeader({ name: SLOT_PORT_HEADER, description: 'SLOT_PORT do container; tem de ser o da partida' })
 @UseGuards(InternalGuard)
 @Controller('internal/matches')
 export class InternalMatchesController {
@@ -36,15 +59,25 @@ export class InternalMatchesController {
   @ApiOkResponse({ type: ValidatedMatchDto })
   @ApiUnauthorizedResponse({ description: 'INTERNAL_UNAUTHORIZED | TOKEN_INVALID | TOKEN_EXPIRED' })
   @ApiConflictResponse({ description: 'MATCH_NOT_ACTIVE' })
-  validate(@Param('id', matchId()) id: string, @Body() body: ValidateDto): Promise<ValidatedMatch> {
+  async validate(
+    @Param('id', matchId()) id: string,
+    @Headers(SLOT_PORT_HEADER) slot: string | undefined,
+    @Body() body: ValidateDto,
+  ): Promise<ValidatedMatch> {
+    await this.matches.assertSlot(id, slotPort(slot), 'TOKEN_INVALID');
     return this.matches.validate(id, body.token);
   }
 
   @Post(':id/heartbeat')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
+  @ApiUnauthorizedResponse({ description: 'INTERNAL_UNAUTHORIZED | SLOT_MISMATCH' })
   @ApiConflictResponse({ description: 'MATCH_NOT_RUNNING' })
-  heartbeat(@Param('id', matchId()) id: string): Promise<void> {
+  async heartbeat(
+    @Param('id', matchId()) id: string,
+    @Headers(SLOT_PORT_HEADER) slot: string | undefined,
+  ): Promise<void> {
+    await this.matches.assertSlot(id, slotPort(slot));
     return this.matches.heartbeat(id);
   }
 
@@ -52,8 +85,14 @@ export class InternalMatchesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiNoContentResponse()
   @ApiBadRequestResponse({ description: 'INVALID_RESULT | VALIDATION_FAILED' })
+  @ApiUnauthorizedResponse({ description: 'INTERNAL_UNAUTHORIZED | SLOT_MISMATCH' })
   @ApiConflictResponse({ description: 'MATCH_NOT_RUNNING' })
-  result(@Param('id', matchId()) id: string, @Body() body: MatchResultDto): Promise<void> {
+  async result(
+    @Param('id', matchId()) id: string,
+    @Headers(SLOT_PORT_HEADER) slot: string | undefined,
+    @Body() body: MatchResultDto,
+  ): Promise<void> {
+    await this.matches.assertSlot(id, slotPort(slot));
     return this.matches.result(id, body);
   }
 }

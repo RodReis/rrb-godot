@@ -261,8 +261,8 @@ func _start_session(no_backend: bool) -> bool:
 		if api == null:
 			push_error(
 				(
-					"[server] defina %s e %s (ou --no-backend, so para dev)"
-					% [ServerSession.ENV_URL, ServerSession.ENV_SECRET]
+					"[server] defina %s, %s e %s (ou --no-backend, so para dev)"
+					% [ServerSession.ENV_URL, ServerSession.ENV_SECRET, ServerSession.ENV_SLOT_PORT]
 				)
 			)
 			get_tree().quit(ExitCodes.ARGUMENTS)

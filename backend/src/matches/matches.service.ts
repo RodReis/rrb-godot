@@ -83,6 +83,19 @@ export class MatchesService {
     return { matchId, userId: payload.sub, playerIds: payload.player_ids, seed: match.seed };
   }
 
+  /**
+   * O container que chama tem de ser o da partida: `slotPort` é o `SLOT_PORT` que o orquestrador deu
+   * a ele. Sem isto, quem varre as portas UDP sequestra o container de outra partida com o token da
+   * sua (issue #181). `code` é o que o game server recebe na recusa.
+   */
+  async assertSlot(matchId: string, slotPort: number | undefined, code = 'SLOT_MISMATCH'): Promise<void> {
+    const match = await this.repo.findById(matchId);
+    if (!match) throw notFound();
+    if (slotPort !== match.serverPort) {
+      throw new UnauthorizedException({ code, message: 'Este container não é o da partida' });
+    }
+  }
+
   async heartbeat(matchId: string): Promise<void> {
     if (await this.repo.touchHeartbeat(matchId, this.clock.now())) return;
     throw (await this.repo.findById(matchId)) ? this.notRunning() : notFound();

@@ -6,6 +6,9 @@ extends BackendApi
 ## heartbeat podem correr juntos.
 
 const SECRET_HEADER: String = "x-internal-secret"
+## Porta publica do slot deste container (SLOT_PORT, dada pelo orquestrador): o backend recusa a
+## chamada se nao for a da partida, e assim token de outra partida nao sequestra este servidor.
+const SLOT_PORT_HEADER: String = "x-slot-port"
 const TIMEOUT_SECONDS: float = 5.0
 ## Posicoes do sinal HTTPRequest.request_completed.
 const COMPLETED_RESULT: int = 0
@@ -16,12 +19,25 @@ const COMPLETED_BODY: int = 3
 var _host: Node
 var _base_url: String
 var _secret: String
+var _slot_port: int
 
 
-func _init(host: Node, base_url: String, secret: String) -> void:
+func _init(host: Node, base_url: String, secret: String, slot_port: int) -> void:
 	_host = host
 	_base_url = base_url.trim_suffix("/")
 	_secret = secret
+	_slot_port = slot_port
+
+
+## Cabecalhos de toda chamada interna: JSON, segredo compartilhado e porta do slot.
+static func request_headers(secret: String, slot_port: int) -> PackedStringArray:
+	return PackedStringArray(
+		[
+			"Content-Type: application/json",
+			"%s: %s" % [SECRET_HEADER, secret],
+			"%s: %d" % [SLOT_PORT_HEADER, slot_port],
+		]
+	)
 
 
 ## Status HTTP + corpo JSON viram uma BackendReply; corpo que nao e objeto JSON vira {}.
@@ -48,11 +64,11 @@ func _post(path: String, body: Dictionary) -> BackendReply:
 	var request := HTTPRequest.new()
 	request.timeout = TIMEOUT_SECONDS
 	_host.add_child(request)
-	var headers := PackedStringArray(
-		["Content-Type: application/json", "%s: %s" % [SECRET_HEADER, _secret]]
-	)
 	var err := request.request(
-		_base_url + path, headers, HTTPClient.METHOD_POST, JSON.stringify(body)
+		_base_url + path,
+		request_headers(_secret, _slot_port),
+		HTTPClient.METHOD_POST,
+		JSON.stringify(body)
 	)
 	if err != OK:
 		push_warning("[backend] %s: pedido nao saiu (%s)" % [path, error_string(err)])
