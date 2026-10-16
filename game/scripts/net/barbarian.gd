@@ -42,7 +42,7 @@ func _use_skills(tick: int) -> void:
 	if input.skill_r and r_cooldown == 0 and SkillRules.can_use(data.skill_r, ranks.z, level):
 		r_cooldown = SkillRules.cooldown_ticks(data.skill_r, ranks.z, attributes.intelligence, rate)
 		_execute(tick)
-	if input.attack and basic_cooldown == 0 and spin_ticks == 0:
+	if attack_now and basic_cooldown == 0 and spin_ticks == 0:
 		basic_cooldown = SkillRules.seconds_to_ticks(attributes.attack_interval, rate)
 		_melee(tick)
 

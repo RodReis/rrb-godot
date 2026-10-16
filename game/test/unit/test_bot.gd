@@ -134,7 +134,7 @@ func test_recuando_revida_o_monstro_no_alcance() -> void:
 	_brain().state = BotRules.State.RETREAT
 	_brain().think(1)
 	assert_eq(_brain().state, BotRules.State.RETREAT)
-	assert_true(_bot.input.attack)
+	assert_eq(_bot.input.target_id, monster.combat_id())
 	var to := monster.global_position - _bot.global_position
 	assert_almost_eq(_bot.input.aim, to.normalized(), Vector3.ONE * 0.01)
 
@@ -159,7 +159,7 @@ func test_recuando_sem_monstro_perto_nao_ataca() -> void:
 	_bot.hp = roundi(_bot.attributes.max_hp * 0.2)
 	_brain().state = BotRules.State.RETREAT
 	_brain().think(1)
-	assert_false(_bot.input.attack)
+	assert_eq(_bot.input.target_id, TargetRules.NONE)
 
 
 func test_comeca_farmando_e_anda_ate_o_monstro_da_base() -> void:

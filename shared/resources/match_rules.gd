@@ -54,6 +54,9 @@ extends Resource
 ## Mato alto (GDB §7.3, F32): atacar ou usar skill de dentro da moita revela o heroi por este
 ## tempo.
 @export var grass_reveal_time: float
+## Controle v2 (F66, SPEC-066 §1): depois de disparar (basico ou skill) o heroi mantem a direcao
+## do disparo por este tempo (s); depois volta a encarar o movimento.
+@export var facing_hold_time: float
 ## Neblina de guerra (GDB §7.3, F37): raio de visao do heroi (u, no plano). Fora dele o servidor
 ## nao replica heroi adversario, monstros nem o estado dos baus para aquele jogador.
 @export var vision_radius: float

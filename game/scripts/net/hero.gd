@@ -29,6 +29,10 @@ extends Combatant
 ## registra em _smoke_casters, e o indice dele e o bit da nuvem.
 ## VFX (F41): cada golpe registrado no ledger do alvo sai em struck (servidor); o ImpactRelay
 ## anuncia uma vez aos clientes. O heroi nao tem no de VFX: o cliente cria os efeitos (VfxSpawner).
+## Controle v2 (F66, SPEC-066): o heroi encara a direcao em que anda (FacingRules); ao disparar o
+## basico ou uma skill pronta vira para a mira e a mantem por facing_hold_time. Alvo travado
+## (target_id, TargetRules): o pedido do input so vale se o alvo existe, e adversario, esta vivo e o
+## heroi o ve; com ele em alcance do basico, o basico sai sozinho na direcao dele (attack_now).
 
 ## Servidor: golpe de [param slot] registrado em [param target] no [param tick] (pode repetir na
 ## ressimulacao do atacante; o ImpactRelay filtra).
@@ -108,8 +112,19 @@ var heal_pause_ticks: int = 0
 var zone_ticks: int = 0
 ## Ticks em que o heroi fica visivel mesmo na moita (> 0 = atacou ou usou skill ha pouco).
 var reveal_ticks: int = 0
+## Alvo travado (F66): combat_id do heroi adversario ou monstro; TargetRules.NONE = nenhum.
+var target_id: int = TargetRules.NONE
+## Ticks que restam da janela de encarar depois de um disparo (F66, FacingRules).
+var face_ticks: int = 0
+
+## O basico dispara neste tick: botao segurado ou auto-ataque do alvo travado em alcance. Derivado
+## do input a cada tick (fora do estado de rollback); as subclasses leem aqui, nao em input.attack.
+var attack_now: bool = false
 
 var _rollback: RollbackSynchronizer
+var _target_cache: Combatant
+## Alvo travado ja validado neste tick (null = nenhum).
+var _target_node: Combatant
 var _concealment: Concealment
 ## Moitas da arena (VisibilityRules.grass_box), lidas no _ready: a arena nao muda na partida.
 var _grass: Array[Transform3D] = []
@@ -180,6 +195,8 @@ func _ready() -> void:
 		":heal_pause_ticks",
 		":zone_ticks",
 		":reveal_ticks",
+		":target_id",
+		":face_ticks",
 	]
 	_rollback.state_properties.append_array(_extra_state_properties())
 	_rollback.input_properties = [
@@ -193,6 +210,8 @@ func _ready() -> void:
 		"Input:learn",
 		"Input:interact_hold",
 		"Input:chest_pick",
+		"Input:target_id",
+		"Input:target_clear",
 	]
 	_rollback.enable_input_broadcast = false
 	add_child(_rollback)
@@ -233,7 +252,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 
 	# Input vem do cliente: nunca confiar no valor recebido.
 	var movement := InputRules.sanitize_direction(input.movement)
-	var aim := InputRules.sanitize_direction(input.aim)
+	var aim := _plan_attack(InputRules.sanitize_direction(input.aim))
 	if knockback_ticks > 0 or stun_ticks > 0:
 		dash_ticks = 0  # empurrao e atordoamento interrompem o avanco
 	if knockback_ticks > 0:
@@ -244,8 +263,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	elif dash_ticks > 0:
 		velocity = dash_direction * dash_speed
 	else:
-		if not aim.is_zero_approx():
-			look_at(global_position + aim, Vector3.UP)
+		_face(movement, aim)
 		var slow := slow_pct if slow_ticks > 0 else 0.0
 		velocity = movement * CombatRules.slowed(attributes.move_speed, slow)
 	velocity *= NetworkTime.physics_factor
@@ -382,6 +400,12 @@ func combat_id() -> int:
 	return peer_id
 
 
+## Alvo travado (F66) ou null: a HUD mostra a moldura e o anel dele. Sai do estado replicado, nao
+## do tick, entao vale tambem no cliente entre dois ticks.
+func target() -> Combatant:
+	return _lookup_target(target_id)
+
+
 func missing_hp() -> int:
 	return maxi(attributes.max_hp - hp, 0)
 
@@ -459,6 +483,8 @@ func _die(effect: HitEffect) -> void:
 	knockback_ticks = 0
 	stun_ticks = 0
 	dash_ticks = 0
+	target_id = TargetRules.NONE
+	face_ticks = 0
 	shield_ticks = 0
 	shield_hp = 0
 	slow_ticks = 0
@@ -495,7 +521,87 @@ func _interact(tick: int) -> void:
 			return
 
 
+## Alvo do tick (F66): trava, mantem ou solta o alvo pelo pedido do input (TargetRules.resolve) e
+## deixa em _target_node o alvo valido (null = nenhum). Um cliente que pede alvo invisivel, aliado ou
+## morto recebe nenhum: o servidor nunca confia no id (invariante de honestidade, CONVENTION §4.6).
+func _lock_target() -> void:
+	var asked := _valid_target(input.target_id)
+	var held := _valid_target(target_id)
+	target_id = TargetRules.resolve(
+		target_id, input.target_id, input.target_clear, asked != null, held != null
+	)
+	if target_id == TargetRules.NONE:
+		_target_node = null
+	else:
+		_target_node = asked if target_id == input.target_id else held
+
+
+## Decide o ataque do tick e devolve a mira do disparo: botao segurado dispara na mira do cursor; sem
+## ele, o alvo travado em alcance do basico dispara sozinho, na direcao dele. Skill pronta no mesmo
+## tick manda a mira do cursor (Q, E e R miram nele). Nao anda ate o alvo.
+func _plan_attack(aim: Vector3) -> Vector3:
+	_lock_target()
+	attack_now = input.attack
+	if input.attack or _target_node == null:
+		return aim
+	var reach := hero_data.basic_attack.attack_range
+	if not TargetRules.can_attack(true, global_position, _target_node.global_position, reach):
+		return aim
+	attack_now = true
+	if _skill_fires():
+		return aim
+	return TargetRules.aim_to(global_position, _target_node.global_position)
+
+
+## O heroi dispara neste tick: basico pronto ou skill apertada, aprendida e fora de recarga.
+func _fires() -> bool:
+	return (attack_now and basic_cooldown == 0) or _skill_fires()
+
+
+func _skill_fires() -> bool:
+	var data := hero_data
+	return (
+		(input.skill_q and q_cooldown == 0 and SkillRules.can_use(data.skill_q, ranks.x, level))
+		or (input.skill_e and e_cooldown == 0 and SkillRules.can_use(data.skill_e, ranks.y, level))
+		or (input.skill_r and r_cooldown == 0 and SkillRules.can_use(data.skill_r, ranks.z, level))
+	)
+
+
+## Orientacao do tick (F66, FacingRules): movimento, ou a mira se dispara agora (abre a janela).
+func _face(movement: Vector3, aim: Vector3) -> void:
+	var firing := _fires()
+	var toward := FacingRules.direction(movement, aim, firing, face_ticks)
+	if not toward.is_zero_approx():
+		look_at(global_position + toward, Vector3.UP)
+	if firing:
+		face_ticks = SkillRules.seconds_to_ticks(match_rules.facing_hold_time, NetworkTime.tickrate)
+
+
+## [param id] como alvo valido de quem trava: existe, e adversario, esta vivo e este heroi o ve.
+func _valid_target(id: int) -> Combatant:
+	var other := _lookup_target(id)
+	if other == null:
+		return null
+	var enemy := other != self and other.team != team
+	return other if TargetRules.is_valid(true, enemy, other.is_alive(), other.seen_by(self)) else null
+
+
+# ponytail: percorre o grupo so quando o alvo muda; cacheia o ultimo achado.
+func _lookup_target(id: int) -> Combatant:
+	if id == TargetRules.NONE:
+		return null
+	if is_instance_valid(_target_cache) and _target_cache.combat_id() == id:
+		return _target_cache
+	for node: Node in get_tree().get_nodes_in_group(TARGETS_GROUP):
+		var other := node as Combatant
+		if other.combat_id() == id:
+			_target_cache = other
+			return other
+	return null
+
+
 func _tick_timers() -> void:
+	face_ticks = maxi(face_ticks - 1, 0)
 	basic_cooldown = maxi(basic_cooldown - 1, 0)
 	q_cooldown = maxi(q_cooldown - 1, 0)
 	e_cooldown = maxi(e_cooldown - 1, 0)
