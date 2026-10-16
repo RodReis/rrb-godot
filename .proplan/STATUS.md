@@ -21,8 +21,6 @@ updated: 2026-10-16
 
 - [MVP2.7][SPEC-070][F70] Fim de partida → lobby: Game fecha em 15 s e o Launcher volta ao lobby com o card "Resultado da partida" (#198)
 - [MVP2.7][SPEC-069][F69] Cinemática de abertura in-engine: estado INTRO (5–8 s), voo pela arena e close no próprio herói antes da fase 1 (#197)
-- [MVP2.7][SPEC-068][F68] Splash próprio nos dois projetos e 3 telas de loading sorteadas (renders reais, dica, progresso) do boot do Game até a seleção (#196)
-- [MVP2.7][SPEC-067][F67] Câmera com zoom: roda do mouse e teclas remapeáveis, 9–14 u, padrão 11 u, salvo em settings.cfg (#195)
 
 ### [MVP3] Meta + deploy (#76)
 
@@ -42,6 +40,8 @@ _(vazio)_
 
 ### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
 
+- [MVP2.7][SPEC-068][F68] Splash próprio nos dois projetos e 3 telas de loading sorteadas (renders reais, dica, progresso) do boot do Game até a seleção (#196, finalizado em: 2026-10-16)
+- [MVP2.7][SPEC-067][F67] Câmera com zoom: roda do mouse e teclas remapeáveis, 9–14 u, padrão 11 u, salvo em settings.cfg (#195, finalizado em: 2026-10-16)
 - [MVP2.7][SPEC-066][F66] Controle v2: herói encara o movimento, alvo travado no botão direito com auto-ataque em alcance, moldura do alvo na HUD (#194, finalizado em: 2026-10-16)
 
 ### [MVP3] Meta + deploy (#76)
