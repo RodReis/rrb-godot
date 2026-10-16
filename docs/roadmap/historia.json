@@ -218,7 +218,9 @@
         "Em volta da partida: o logo do motor sai e entram telas de carregamento com imagens reais da arena, uma pequena apresentação de cinco a oito segundos sobrevoa o campo e termina no seu herói antes do relógio começar, e ao fim o jogo fecha sozinho e o launcher volta ao saguão com o resultado em destaque. O launcher ganha a tela de Heróis. No visual, o cenário recebe texturas mais ricas e o dobro de grama, e quem se esconde no mato alto passa a ver a própria silhueta pela folhagem.",
         "E chegam dois heróis: o Protetor da Selva, um druida que enraíza, cria um pântano que atrasa quem pisa nele e se cura com as próprias poções; e o Berserker, um bárbaro grande de dois machados que bate mais rápido e rouba mais vida quanto menos vida tem, e que no grito final ignora qualquer controle por quatro segundos."
       ],
-      "imagens": []
+      "imagens": [
+        { "arquivo": "mvp2.7-f66-alvo-travado.webp", "legenda": "Um clique com o botão direito num monstro ou no adversário trava o alvo: um anel vermelho marca o chão sob ele e a moldura acima do painel mostra o nome, o nível ou o tipo e a vida. O herói não corre atrás: só ataca sozinho quando o alvo está ao alcance, e segurar o botão no chão continua atacando na direção do cursor.", "tipo": "entregue" }
+      ]
     },
     "MVP3": {
       "titulo": "Jogar com os amigos",
@@ -326,6 +328,7 @@
     "F63": "Água do rio com movimento e reflexo",
     "F64": "Fonte de cura nova, com água caindo",
     "F65": "Minimapa claro, fácil de ler até de noite",
+    "F66": "Herói olha para onde anda e trava o alvo com o botão direito",
     "F45": "Câmera que gira em volta do herói",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",
