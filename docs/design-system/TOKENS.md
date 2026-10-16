@@ -137,3 +137,9 @@ Gerados por `shared/ui/theme/launcher_theme.gd` (chamado no fim do `ThemeBuilder
 
 Inset do CSS (`shadow-[inset_…]`) vira borda superior escura de 2 px (o `StyleBoxFlat` não tem sombra interna). O teste `shared/test/test_theme_tokens.gd` confere fontes, fallback de ícones, espaçamentos e estados.
 
+### Acréscimos registrados em 2026-10-16 (pendências do F25–F35)
+
+- Tokens de cor: `ON_PRIMARY`, `GOLD_SHADE`, `TEXT_OUTLINE` (F25), `ON_ERROR_CONTAINER` (F26). Fonte da verdade: `shared/ui/theme/ui_tokens.gd` e `launcher_theme.gd`.
+- Tipos de tema: `LnMatchCard*`, `LnResult*`, `LnTag*`, `LnFilter*` (F26); `LnCp*` via `CompendiumTheme` (F27); `LnAm*` via `ArenaMapTheme` (F33); `LnProfileChip*`, `LnAvatar*` (F35). Todos chamados por `LauncherTheme.add`; `theme_moba.tres` regerado a cada acréscimo.
+- Ícones: a fonte recortada (`tools/ui/build_icon_font.py`) ganhou 15 (F25) + 4 (F26) + 12 (F27) + 11 (F33) ícones; lista em `UiIcons`.
+- Fontes: Launcher = protótipo (Space Grotesk / Outfit / JetBrains Mono); HUD do Game = v2 (Cinzel / Montserrat / Barlow Condensed) — R-PEND-14 fechada; a linha "F24 herda Cinzel/metal" deste documento está superada.

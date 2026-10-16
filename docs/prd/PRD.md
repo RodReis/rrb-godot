@@ -33,10 +33,10 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | Fatia vertical (M0–M4) | Roadmap (pós-M4) |
 |---|---|
 | Modo 1x1 | 2x2, 3x3 |
-| 6 heróis: Cavaleiro (Tanque), Arqueiro (Ranger), Bárbaro (Algoz), Bruxo de Fogo (Mago) — Bárbaro e Bruxo por decisão do PI em 2026-10-11 (ADR-0011); Ladina (Algoz) e Engenheiro (Engenheiro) no MVP2.6 por decisão do PI em 2026-10-13 (ADR-0013) | 1 herói por classe, depois mais |
+| 8 heróis: Cavaleiro (Tanque), Arqueiro (Ranger), Bárbaro (Algoz), Bruxo de Fogo (Mago) — Bárbaro e Bruxo por decisão do PI em 2026-10-11 (ADR-0011); Ladina (Algoz) e Engenheiro (Engenheiro) no MVP2.6 por decisão do PI em 2026-10-13 (ADR-0013); Protetor da Selva (Controle) e Berserker (Lutador) no MVP2.7 por decisão do PI em 2026-10-16 (ADR-0015) | 1 herói por classe, depois mais |
 | 1 arena medieval hexagonal | mais arenas |
 | 7 monstros (incl. boss; Lobo e Golem de canto pelo ADR-0011) | bestiário maior |
-| 12 itens, 2 conjuntos | tabela de loot completa |
+| 21 itens (3 armas + 2 conjuntos × 3 slots × 3 raridades), 2 conjuntos | tabela de loot completa |
 | Bot básico | IA de time |
 | Contas e-mail/senha, fila 1x1 | Steam, ranked, amigos |
 | Sem economia | moedas, gemas, vales, sorteios, loja, passe semanal, skins |
@@ -104,9 +104,10 @@ Portões caem; aviso visual/sonoro de 5 s; a zona aparece cobrindo a arena intei
 
 ### 3.6 Câmera e controle
 
-- Terceira pessoa alta: câmera atrás do personagem, ~45° de inclinação, distância fixa. **Giro 360° em volta do herói com o botão esquerdo segurado** (F45, SPEC-045 — decisão do PI em 2026-10-10); começa no ângulo do time e fica onde o jogador parar.
-- Teclado/mouse: WASD move (relativo à câmera), mouse mira, **botão direito ataque básico, botão esquerdo segurado gira a câmera** (F45), Q/E/R skills, F interage (baú), Espaço esquiva (se o herói tiver).
-- Gamepad: analógico esquerdo move, direito mira, gatilhos/botões para skills.
+- Terceira pessoa alta: câmera atrás do personagem, ~45° de inclinação. **Giro 360° em volta do herói com o botão esquerdo segurado** (F45, SPEC-045 — decisão do PI em 2026-10-10); começa no ângulo do time e fica onde o jogador parar. **Zoom** pela roda do mouse e por teclas remapeáveis, 9–14 u em passos de 1 u, padrão 11 u, guardado em `settings.cfg` (F67, ADR-0015 — decisão do PI em 2026-10-16; substitui a "distância fixa" de 14 u).
+- **Orientação (ADR-0015, F66):** o herói **encara a direção em que anda**; ao atacar ou usar skill, vira para o alvo/cursor por 0,4 s e volta a seguir o movimento; parado, mantém o último yaw. (Substitui o twin-stick "mouse mira" de 2026-10-08.)
+- Teclado/mouse: WASD move (relativo à câmera); **botão direito clicado sobre um inimigo trava o alvo** — com alvo em alcance o ataque básico sai sozinho (não persegue); **botão direito segurado no chão = ataque contínuo na mira do cursor** (F45); **botão esquerdo segurado gira a câmera** (F45); Q/E/R skills na mira do cursor; F interage (baú); Espaço esquiva (se o herói tiver); `Esc` destrava o alvo.
+- Gamepad: analógico esquerdo move, direito mira; `RT` toca = trava no inimigo mais próximo da mira, segurado = ataque contínuo; gatilhos/botões para skills.
 - **Plano B** (decidido no M4): câmera isométrica fixa com mira assistida — também a base para o mobile.
 
 ### 3.7 Bot (IA)
@@ -126,8 +127,9 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 | **Algoz** | dano alto, frágil (corpo a corpo ou à distância curta) | sim — Bárbaro (ADR-0011) e Ladina (ADR-0013) |
 | **Mago** | dano mágico em área à distância, frágil | sim — Bruxo de Fogo (classe nova, ADR-0011) |
 | **Engenheiro** | dano em curta distância + controle de zona por estrutura (torreta, explosivo) | sim — Engenheiro (classe nova, ADR-0013) |
-| **Suporte** | cura/buff; depende do time | roadmap (sem sentido no 1x1) |
-| **Controle** | atordoa, lentidão, área | roadmap (sem sentido no 1x1) |
+| **Controle** | enraíza, lentidão, zona; autocura para se sustentar sozinho | sim — Protetor da Selva (ADR-0015; redesenho do pedido "Suporte" para valer no 1x1) |
+| **Lutador** | corpo a corpo sustentado; cresce com o risco (mais forte quanto menos vida); imparável sob controle | sim — Berserker (classe nova, ADR-0015) |
+| **Suporte** | cura/buff de aliado; depende do time | roadmap (sem sentido no 1x1; a Poção Verde do Protetor passa a curar aliado no 2x2) |
 
 ### 4.2 Atributos
 
@@ -187,10 +189,10 @@ Monstros não-boss renascem 90 s após morrer durante a fase 1 e não renascem n
 
 ## 6. Itens
 
-- 12 itens na fatia, 3 raridades (comum, raro, épico):
+- 21 itens na fatia, 3 raridades (comum, raro, épico) — contagem corrigida em 2026-10-16 (GDB §6.1):
   - **3 armas** genéricas (1 por raridade), bônus de Ataque; o modelo visual muda por herói (espada/arco), o dado é o mesmo. Armas específicas por herói ficam no roadmap.
   - **9 peças de armadura** (3 slots × 3 raridades), distribuídas entre 2 conjuntos: **Guarda** (Defesa; set 3/3 = +15% HP) e **Caçador** (Agilidade; set 3/3 = +10% velocidade de ataque). Comum e raro existem nos dois conjuntos; épico só cai do boss e pertence ao conjunto do baú/boss sorteado.
-- Pegar item de slot ocupado: substitui automaticamente se raridade maior; senão pergunta (tecla F segurada).
+- Baú: `F` abre um menu com 3 itens sorteados na raridade do baú; o clique escolhe (pode ser item pior, com a comparação à vista); baú reservado a quem o abriu (ADR-0014, F61 — substitui a substituição automática / `F` segurado de 2026-10-08). Números: GDB §6.2.
 - Definição em `data/items/*.tres`.
 
 ---

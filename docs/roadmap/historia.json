@@ -210,6 +210,16 @@
         { "arquivo": "mvp2.6-f59-engenheiro-dinamite.webp", "legenda": "A Caixa de Dinamite voa em arco até o ponto mirado e o círculo vermelho cresce durante o pavio de 1,5 segundo. Na explosão, todo mundo no raio de 4,5 metros leva dano e é empurrado 3 metros para fora.", "tipo": "entregue" }
       ]
     },
+    "MVP2.7": {
+      "titulo": "Acabamento e controle",
+      "pergunta": "O jogo já está gostoso de pegar na mão? O que falta para a partida parecer pronta antes de abrir para os amigos?",
+      "narrativa": [
+        "Depois de jogar as partidas em rede, o produtor listou o que incomodava: o herói andava para frente olhando para trás, atacar exigia apontar e segurar o botão o tempo todo, o boneco parecia pequeno, a partida começava seca e terminava numa lista. Este marco mexe na mão: o herói passa a encarar para onde anda e só vira para o alvo na hora do golpe; um clique num monstro ou no adversário trava o alvo, mostra a vida dele e o ataque básico sai sozinho enquanto ele estiver no alcance; a roda do mouse aproxima a câmera.",
+        "Em volta da partida: o logo do motor sai e entram telas de carregamento com imagens reais da arena, uma pequena apresentação de cinco a oito segundos sobrevoa o campo e termina no seu herói antes do relógio começar, e ao fim o jogo fecha sozinho e o launcher volta ao saguão com o resultado em destaque. O launcher ganha a tela de Heróis. No visual, o cenário recebe texturas mais ricas e o dobro de grama, e quem se esconde no mato alto passa a ver a própria silhueta pela folhagem.",
+        "E chegam dois heróis: o Protetor da Selva, um druida que enraíza, cria um pântano que atrasa quem pisa nele e se cura com as próprias poções; e o Berserker, um bárbaro grande de dois machados que bate mais rápido e rouba mais vida quanto menos vida tem, e que no grito final ignora qualquer controle por quatro segundos."
+      ],
+      "imagens": []
+    },
     "MVP3": {
       "titulo": "Jogar com os amigos",
       "pergunta": "Dois amigos conseguem jogar pela internet sem o desenvolvedor ajudar?",

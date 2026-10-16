@@ -62,12 +62,13 @@ launcher/
 
 ### 3.3 Serviços (contratos)
 
-- `ApiClient`: `request(method, path, body) -> Response{status, json}`; injeta `Authorization: Bearer`; timeout 10 s; 401 → emite `unauthorized` (volta ao login). Um único `HTTPRequest` por chamada, pool de 4.
+- `ApiClient`: `request(method, path, body) -> Response{status, json}`; injeta `Authorization: Bearer`; timeout 10 s; 401 numa chamada autenticada tenta `POST /auth/refresh` uma vez e repete; recusado → limpa a sessão e emite `unauthorized` (volta ao login). **Um `HTTPRequest` por chamada** (sem pool — F25). URL por `--api=` (padrão `http://127.0.0.1:3000`) ou embutida no pacote (`build_config.cfg`, F28). `GET /health` sem conta alimenta o chip de status da barra (10 s).
 - `AuthService`: `login(email, senha)`, `logout()`, `session: Session`. JWT **em memória** e, opcionalmente, refresh token em `user://session.dat` cifrado com `OS.get_unique_id()` — só se o PI aprovar "lembrar-me" (R-PEND-03 em `RASTREABILIDADE.md`); por padrão, sem persistência.
 - `QueueService`: `join() -> QueueTicket`, `leave()`, polling `GET /queue/:ticket` a cada 2 s (sem WebSocket na fatia: backend fino, PRD D10) → sinais `searching(elapsed)`, `matched(MatchAssignment{host, port, token})`, `cancelled`, `failed(reason)`.
 - `GameProcess`: `launch(args: PackedStringArray) -> pid`, `is_running()`, sinal `exited(code)` (polling `OS.is_process_running` a 0,5 s). Caminho do executável: `OS.get_executable_path().get_base_dir() + "/game/game.exe"` (layout de instalação, §5.1); sobrescrevível por `--game-path=` para dev.
 - `SettingsStore`: lê/escreve `user://settings.cfg` (seções `video`, `audio`, `controls`); aplica vídeo/áudio no próprio Launcher. Contrato do arquivo em §5.3.
-- `HistoryService`: `GET /matches?mine=1` → `Array[MatchSummary]`; cache em memória por sessão.
+- `HistoryService`: `GET /matches?mine=1` (obrigatório; JWT) → `MatchHistory{totals{wins,losses}, matches[≤50]}` — resultado `win`/`loss`/`interrupted`, `playedAt`, `endReason`, `durationS`, meu lado completo e do oponente **só herói, kills, nível e `#nickname`** (F26/F35); cache em memória por sessão, `clear()` no logout/401/fim de partida online. **F70 (ADR-0015):** `fetch(force)` com espera da partida nova (3 × 1 s) para o card de resultado no lobby.
+- `ProfileService` (F35): `GET /users/me` (`nickname` nulo = falta definir → tela Perfil `SETUP`), `PUT /users/me/nickname` (define uma vez; `INVALID_NICKNAME`/`NICKNAME_TAKEN`/`NICKNAME_ALREADY_SET`). Avatar é só local (`AvatarStore`, `user://avatars/`); nada vai ao backend.
 - `CatalogService`: carrega `res://shared/data/**` e expõe heróis, itens, monstros, regras — fonte do bestiário, da forja e das barras de atributo. Usa `shared/core` para o simulador (mesma fórmula do servidor, por construção).
 
 ### 3.4 Telas (5) e navegação
@@ -75,10 +76,12 @@ launcher/
 | Tela | Rota | Entra por | Sai para |
 |---|---|---|---|
 | Login | `login` | boot sem sessão; 401 | `lobby` |
-| Lobby | `lobby` | login; volta de qualquer tela; fim do processo do Game | fila (overlay no próprio lobby), `bestiary`, `forge`, `arena_map`, `history`, `settings`, sair |
+| Lobby | `lobby` | login (com nickname); volta de qualquer tela; fim do processo do Game (com card de resultado se online — F70) | fila (overlay no próprio lobby), `heroes`, `bestiary`, `forge`, `arena_map`, `history`, `settings`, `profile`, sair |
 | Bestiário | `bestiary` | lobby | lobby |
 | Forja | `forge` | lobby | lobby |
-| Histórico | `history` | lobby; automático após `GameProcess.exited(0)` | lobby |
+| Histórico | `history` | lobby; ~~automático após `GameProcess.exited(0)`~~ → **F70 (ADR-0015):** o fim de partida online volta ao **lobby** com o card "Resultado da partida"; o Histórico abre pelo card ("Ver histórico") ou pela barra | lobby |
+| Heróis | `heroes` | lobby (item HERÓIS) — **F71 (ADR-0015)**, fiel a `docs/prd/telas/Tela Herois/`; dados de `CatalogService` | lobby |
+| Perfil | `profile` | 1º login sem nickname (`SETUP`, sem voltar); chip do cabeçalho (`EDIT`, só avatar) — F35 | lobby |
 | Configurações | `settings` | lobby | lobby — inclui a aba **Créditos** (licenças de `shared/assets/LICENSES.md`, CC-BY obrigatório; decisão do PI 2026-10-10) |
 | Arena & Mapa | `arena_map` | lobby | lobby ("Praticar vs Bot" = mesma ação do lobby) — DV tela 10; mapa é imagem estática (`shared/assets/ui/arena_map.png`), nunca cena de arena |
 
@@ -115,11 +118,11 @@ backend/
 1. Launcher `POST /queue` → `QueueTicket`.
 2. Matchmaker pareia os dois primeiros tickets → pede ao orquestrador um servidor do pool.
 3. Orquestrador: escolhe container ocioso (ou sobe um se o pool estiver vazio), gera `match_token` (JWT interno com `match_id`, `player_ids`, `exp` 2 min), grava `matches` (`status=assigned`), devolve `host:porta`.
-4. `GET /queue/:ticket` passa a responder `matched` com `MatchAssignment`.
-5. Launcher lança `game.exe --connect=host:porta --token=<match_token>`.
+4. `GET /queue/:ticket` passa a responder `matched` com `MatchAssignment` **e `matchId`** (o `abandon` precisa dele — F25).
+5. Launcher lança `game.exe -- --connect=host:porta --token=<match_token>` (argumentos do Game **depois de `--`** — F25). **Um token por jogador** (F23, decisão do PI 2026-10-15): o backend assina um JWT por conta (`sub` = conta, mesmo `match_id`), `token_hash` em `match_players`.
 6. Game server recebe os dois peers, `POST /internal/matches/:id/validate` com o token → `status=running`.
 7. Fim: `POST /internal/matches/:id/result` com `MatchResult` → `status=finished`, estatísticas gravadas. Container volta ao pool (ou é recriado — decidir no M3 pelo custo).
-8. Launcher detecta `exited(0)` → `GET /matches?mine=1` → histórico.
+8. Launcher detecta `exited(0)` → `GET /matches?mine=1` (espera a partida nova, 3 × 1 s) → **lobby com card "Resultado da partida"** (F70, ADR-0015; antes: histórico).
 
 Heartbeat: game server `POST /internal/matches/:id/heartbeat` a cada 10 s; 3 faltas → `status=aborted`, container reciclado.
 
@@ -149,11 +152,11 @@ Este é o **único** lugar onde os dois módulos se tocam. Mudar aqui exige ADR.
 
 | Launcher chama | Significado |
 |---|---|
-| `game.exe --connect=<host>:<porta> --token=<match_token>` | partida online |
-| `game.exe --offline --bot` | treino contra bot |
+| `game.exe -- --connect=<host>:<porta> --token=<match_token>` | partida online (argumentos do Game depois de `--`; F25) |
+| `game.exe -- --offline --bot` | treino contra bot |
 | `--game-path=` (no launcher) | dev: outro caminho do executável |
 
-Códigos de saída do Game (definidos em `ARCHITECTURE-GAME.md` §6): `0` normal → Launcher vai ao histórico; `1` argumentos; `2` autenticação → Launcher mostra erro e volta ao lobby; `3` resultado não reportado → Launcher avisa "resultado pode demorar a aparecer"; `4` interno → erro genérico. Processo morto pelo usuário → Launcher trata como `4`.
+Códigos de saída do Game (definidos em `ARCHITECTURE-GAME.md` §6): `0` normal → Launcher volta ao lobby com o card de resultado se a partida era online (F70; treino: lobby sem card); `1` argumentos; `2` autenticação → Launcher mostra erro e volta ao lobby; `3` resultado não reportado → Launcher avisa "resultado pode demorar a aparecer"; `4` interno → erro genérico. Processo morto pelo usuário → Launcher trata como `4`.
 
 ### 5.3 `user://settings.cfg` (compartilhado)
 

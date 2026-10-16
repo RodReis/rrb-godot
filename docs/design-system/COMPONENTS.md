@@ -7,7 +7,7 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | Componente | Extende | API pública | Variantes / estados | Usado em |
 |---|---|---|---|---|
 | `PanelCard` | `PanelContainer` | `@export var variant: Variant_ = PANEL` ; `@export var accent: Accent = NONE` | `variant`: `SURFACE`, `PANEL`, `INNER`, `GLASS`, `GLASS_INNER` (vidro, só HUD — F57) ; `accent`: `NONE`, `GOLD`, `RED`, `GREEN`, `PURPLE` (borda 3 px; no vidro, 1 px com o raio do vidro) ; `@export var corners: bool` (cantoneiras douradas) | todas |
-| `ScreenHeader` (implementado, F24) | `PanelContainer` (`LnCardRaised`) | `bind(title, show_back, kicker := "", icon := "", description := "")` ; `right_slot: HBoxContainer` ; sinal `back_requested` | voltar só com `show_back` (pilha) | todas as telas do Launcher; `hero_select` |
+| `ScreenHeader` (implementado, F24; `bottom_slot`, `add_glow(...)` e `use_compact_kicker` em F26/F27) | `PanelContainer` (`LnCardRaised`) | `bind(title, show_back, kicker := "", icon := "", description := "")` ; `right_slot`, `bottom_slot: HBoxContainer` ; `add_glow` ; `use_compact_kicker` ; sinal `back_requested` | voltar só com `show_back` (pilha) | todas as telas do Launcher; `hero_select` |
 | `ScreenFooter` (implementado, F24) | `PanelContainer` (`LnFooter`) | `bind(hints: Array[HotkeyHint], status: String, brand := "")` ; `HotkeyHint.make(key, label)` | — | rodapé do App do Launcher |
 | `HotkeyBadge` | `Label` (variation `LabelBadge`) | `@export var key: String` | `size`: `SM` (12 px), `MD` (sobre ícone de skill) | HUD, rodapés, tela de controles |
 | `StatBar` | `HBoxContainer` | `bind(label: String, value: float, max_value: float, variant)` ; `animate_to(value)` (queda: barra na hora + ghost bar após 0,35 s em 0,4 s `QUAD/EASE_OUT`; subida: tudo na hora) | `variant`: `HP`, `HP_ENEMY`, `XP`, `STAT` (azul) ; `show_numbers: bool` | seleção de herói, forja, HUD |
@@ -30,6 +30,14 @@ Convenções: props por `@export`; dados por `bind(...)`; estados por `enum Stat
 | `LatencyPlot` | `Control` (`_draw`) | `push_sample(ms)` ; `@export var ceiling_ms := 80` | — | `net_debug.tscn` (Game) |
 | `CatalogList` | `VBoxContainer` | `bind(entries: Array[CatalogEntry])` ; sinal `selected(id: StringName)` | — | bestiário, forja |
 | `DetailCard` | `PanelCard` | `bind(resource: Resource)` (despacha por tipo) | — | bestiário, forja, histórico |
+| `FilterChip` (implementado, F26) | `Button` | `set_label_text(text)` ; `set_count(n)` ; sinal `pressed` | ativo, inativo, com contagem | Histórico, Bestiário, Forja |
+| `MatchCard` (implementado, F26) | `PanelContainer` | `bind(summary: MatchSummary)` | destaque (mais recente), compacta; vitória/derrota/interrompida | Histórico; base do card "Resultado da partida" (F70) |
+| `MonsterCard`, `RuleCard`, `SetPanel`, `WeaponCard`, `LiftFrame` (implementados, F27; tipos `LnCp*` em `CompendiumTheme`) | `PanelContainer` / `Control` | `bind(...)` por tipo; `LiftFrame` ergue 4 px e dá zoom 1,05 na imagem ao passar o mouse | hover | Bestiário, Forja (`CompendiumScreen`) |
+| `MapPin`, `PoiDetailCard`, `PhaseCard`, `ArenaMapCanvas` (implementados, F33; tipos `LnAm*` em `ArenaMapTheme`) | `BaseButton` / `PanelContainer` / `Control` | `bind(...)`; `MapPin` com anel de escolhido/foco e pulso nos marcos | normal, hover, escolhido, foco | Arena & Mapa |
+| `ProfileChip`, `AvatarImage` (implementados, F35; tipos `LnProfileChip*`/`LnAvatar*`) | `Button` / `TextureRect` | `bind(nickname, avatar, wins, losses)` ; `AvatarImage.load(path)` (PNG/JPG ≤ 1 MiB, recorte 256×256) | com/sem avatar | barra do Launcher (`AppBar`), Perfil |
+| `TargetFrame`, `TargetRing` (planejados, F66 — ADR-0015) | `PanelContainer` / `Node3D` | `bind(name, hp, hp_max, level_or_tier)` ; `TargetRing.follow(node)` | herói × monstro; some ao destravar | HUD do Game (alvo travado) |
+| `LoadingScreen` (planejado, F68) | `Control` | `show_random(tip)` ; `set_progress(p)` | 3 artes sorteadas | boot do Game |
+| `MatchResultCard` (planejado, F70) | `PanelContainer` (modal) | `bind(summary, totals)` ; sinais `play_again`, `open_history`, `closed` | vitória, derrota, interrompida | lobby do Launcher após partida online |
 
 ## Regras
 

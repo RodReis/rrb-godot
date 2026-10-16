@@ -23,9 +23,9 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-13 | Fim garantido: aos 5:00 da fase 2 dano dobra a cada 10 s | PRD §3.4 | F16 | game | MVP2 | mantido com mudança — PI 2026-10-10: aos 10:00 resolução imediata por HP% com desempate (GDB §7.2 item 3); o "dobra a cada 10 s" do PRD não se aplica (GDB vence, ADR-0004) |
 | P-14 | XP por kill na fase 2; monstros não respawnam | PRD §3.4 | F16 | game | MVP2 | mantido — R-PEND-06 decidida: monstros comuns ficam; Rei Esqueleto vivo aos 5:00 sai sem drop |
 | P-15 | Ordem de vitória; nunca empate | PRD §3.5 | F16 | game | MVP2 | mantido |
-| P-16 | Câmera 3ª pessoa ~45°, distância fixa | PRD §3.6 | F31, F45 | game | MVP1 | mantido — yaw fixo do time (F31) passa a ser só o inicial; giro 360° com o botão esquerdo (F45, MVP2.5, PI 2026-10-10) |
-| P-17 | Teclado/mouse: WASD, mira, LMB, Q/E/R, F, Espaço | PRD §3.6 | F31, F6, F45 | game, shared | MVP1 | mantido — ataque básico passa ao botão direito (F45, PI 2026-10-10) |
-| P-18 | Gamepad | PRD §3.6 | F31 | game | MVP1 | mantido |
+| P-16 | Câmera 3ª pessoa ~45°, distância fixa | PRD §3.6 | F31, F45 | game | MVP1 | mantido — yaw fixo do time (F31) passa a ser só o inicial; giro 360° com o botão esquerdo (F45, MVP2.5, PI 2026-10-10); **distância deixa de ser fixa** — zoom 9–14 u, padrão 11 u (F67, ADR-0015, PI 2026-10-16) |
+| P-17 | Teclado/mouse: WASD, mira, LMB, Q/E/R, F, Espaço | PRD §3.6 | F31, F6, F45, F66 | game, shared | MVP1 | mantido — ataque básico passa ao botão direito (F45, PI 2026-10-10); **"mouse mira" substituído** (ADR-0015, PI 2026-10-16): herói encara o movimento, clique do botão direito trava alvo com auto-ataque em alcance, segurar = contínuo (F66) |
+| P-18 | Gamepad | PRD §3.6 | F31, F66 | game | MVP1 | mantido — `RT` toca = trava alvo (F66) |
 | P-19 | Plano B câmera isométrica + mira assistida | PRD §3.6 | decisão M4 | game | MVP4 | adiado (gatilho: playtest) |
 | P-20 | Bot FSM fase 1 e fase 2 | PRD §3.7 | F12, F19 | game | MVP1/2 | mantido |
 | P-21 | 2 heróis: Cavaleiro, Arqueiro | PRD §4.3 | F8, F14 | game | MVP1/2 | mantido — ampliado para 4 pelo PI em 2026-10-11 (ADR-0011): Bárbaro F53, Bruxo de Fogo F54; e para 6 em 2026-10-13 (ADR-0013): Ladina F58, Engenheiro F59 |
@@ -51,6 +51,15 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-39 | Assets KayKit/Quaternius; cena de alinhamento | PRD §11 | F31 | shared | MVP1 | mantido |
 | P-39b | Crédito CC-BY 3.0 do Golem de Pedra antes de qualquer build distribuída | `shared/assets/LICENSES.md` | F24 (aba Créditos em Configurações — PI 2026-10-10) | launcher | MVP3 | mantido |
 | P-39a | Blender para criação, acabamento, ajustes e rascunhos; arte própria liberada; `.blend` em `art/`, só glTF em `shared/assets/` (decisão PI 2026-10-09) | PRD §11, ADR-0005 | fatias que tocam asset 3D; `[INFRA]` (gitattributes, import `.blend` off) | shared | MVP1+ | mantido |
+| P-40 | Cinemática de abertura 5–8 s (estado `INTRO`) antes da fase 1 | ADR-0015 item 7; CONVENTION §3 | F69 | game | MVP2.7 | mantido — requisito novo do PI (2026-10-16) |
+| P-41 | Splash próprio e 3 telas de loading sorteadas (renders reais) | ADR-0015 item 6 | F68 | game, launcher, shared | MVP2.7 | mantido — requisito novo do PI (2026-10-16) |
+| P-42 | Fim de partida → lobby com card de resultado; Game fecha em 15 s | ADR-0015 item 8 | F70 | game, launcher | MVP2.7 | mantido — substitui "fim → Histórico" (F26) |
+| P-43 | Tela Heróis no Launcher (protótipo `Tela Herois/`) | ADR-0015 item 9; DV/telas | F71 | launcher, shared | MVP2.7 | mantido — sem epíteto/lore (FORA-DE-ESCOPO) |
+| P-44 | Silhueta do próprio herói no mato alto (só cliente) | ADR-0015 item 10 | F72 | game, shared | MVP2.7 | mantido — regra de visibilidade (SPEC-032) inalterada |
+| P-45 | Acabamento PBR do cenário dentro da ADR-0006; GPU ≤ +1,5 ms | ADR-0015 item 11 | F73 | game, shared | MVP2.7 | mantido — "realista" fora da ADR-0006 excluído |
+| P-46 | Protetor da Selva, classe Controle (redesenho do pedido "Suporte") | ADR-0015 item 12; PRD §4.1; GDB §4.7 | F74 | game, shared | MVP2.7 | mantido com mudança — Suporte segue no roadmap |
+| P-47 | Berserker, classe nova Lutador, primeira passiva (Frenesi) | ADR-0015 item 13; PRD §4.1; GDB §2.2-E, §4.8 | F75 | game, shared | MVP2.7 | mantido — requisito novo do PI (2026-10-16) |
+| P-48 | "Personagens maiores" | pedido do PI 2026-10-16 | F67 (câmera 11 u) | game | MVP2.7 | **transferido** para o zoom da câmera; escala visual adiada (FORA-DE-ESCOPO, gatilho: aceite do F67) |
 | P-40 | Fora de escopo explícito (§12) | PRD §12 | `FORA-DE-ESCOPO.md` | — | — | excluído |
 
 ## 2. GDB
@@ -70,6 +79,8 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | G-11 | TTK e teto de snowball < 75% | GDB §1.1 | F29 (medição), GATE MVP4 | mantido |
 | G-12 | Economia de campo: 4 campos laterais (2 T1 + 1 T2 e 2 baús comuns cada), respawn de monstros não-boss 90 s só na fase 1 | GDB §5, §6.2 | F36 | mantido — requisito novo aprovado pelo PI em 2026-10-10 (corrige economia: mapa somava 1.710 XP, meta nível 8–9 inalcançável) |
 | G-13 | Campos de canto NO/SE: Golem de canto (sem item) + 2 Lobos + 2 Baús Reforçados (50 % raro / 50 % comum); aggro golem 4 u, lobos 3 u; moita de lagoa movida | GDB §5.1, §5.2, §6.2; SPEC-055 | F55 | mantido — requisito novo aprovado pelo PI em 2026-10-11 (ADR-0011); boss sem mudança |
+| G-14 | Protetor da Selva e Berserker: atributos, kits e Frenesi | GDB §2.2-E, §4.7, §4.8 | F74, F75 | mantido — aprovados pelo PI como proposta em 2026-10-16; ajuste no F30 |
+| G-15 | Alvo travado respeita a visão (moita, fumaça, neblina) e destrava ao sumir | GDB §7.3 | F66 | mantido — invariante de honestidade (CONVENTION §4.6) |
 
 ## 3. Design visual (DV)
 
@@ -139,5 +150,5 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ~~R-PEND-11~~ | **Decidido 2026-10-09:** `telas/` — paleta e fontes de `docs/prd/telas/` (Space Grotesk / Outfit / JetBrains Mono) substituem as do DV §1.2–1.3; `TOKENS.md` atualizado. ~~A estrutura das telas continua a do DV~~ — **emendado em 2026-10-10:** o protótipo vence o DV na composição e toda tela do Launcher é fiel ao protótipo, com acabamento; conteúdo segue as decisões; imagens viram renders dos assets reais (`FRONTEND-LAUNCHER.md` §8). O Pop-up Tático segue sem requisito | — | — |
 | ~~R-PEND-12~~ | **Decidido 2026-10-10:** revelação de 1,5 s; sem revelação por proximidade (GDB §7.3) | — | — |
 | ~~R-PEND-13~~ | **Decidido 2026-10-10:** relógio da fase 2 começa às 5:00 (a transição de 5 s conta dentro dela); colapso aos 10:00 com resolução imediata — maior HP%, desempate kills F2 → dano em heróis → sorteio pela seed; os dois desconectados → `abandoned` (GDB §7.1–7.2, `CONVENTION.md` §3) | — | — |
-| R-PEND-14 | Fontes do design system v2 (ADR-0006): o guia só exemplifica Cinzel / Barlow Condensed / Montserrat SemiBold | escolher 1 display + 1 corpo (+ mono opcional), licença OFL | trava só o F43 (HUD v2); F24 herda |
+| ~~R-PEND-14~~ | **Decidido 2026-10-11 (pop-up, F43):** HUD v2 com Cinzel (display) / Montserrat (corpo) / Barlow Condensed Bold (contadores, `tnum`), OFL. **Emendado 2026-10-15 (F24):** o Launcher usa as fontes do protótipo (Space Grotesk / Outfit / JetBrains Mono); a HUD segue v2. A fidelidade do F24 (§8) vale para layout, não para a família | — | — |
 | R-PEND-10 | Renomear `docs/prd/PRD.md` → `2026-10-08-prd-moba-2-tempos.md` (nome citado no plano M0 e nos agentes) | renomear / manter | links quebrados em `docs/superpowers/plans/` e `.claude/agents/` — `CLAUDE.md` já aponta para `PRD.md` |

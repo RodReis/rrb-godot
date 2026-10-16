@@ -41,7 +41,10 @@
 - Foco: toda tela define `focus_neighbor` e o primeiro foco (`grab_focus()` em `_ready`); navegável só por teclado/gamepad (dual-focus do 4.6: feedback visual difere por dispositivo — testar os dois).
 - `Esc` = `cancel` → `back_requested`. Nunca `get_tree().quit()` de dentro de tela.
 
-### 3.1 Tela de catálogo (Bestiário, Forja) — padrão "lista + detalhe"
+### 3.1 Tela de catálogo (Bestiário, Forja, Heróis) — padrão "lista + detalhe" **ou grade de cards (vence o protótipo, §8.4)**
+
+> Atualizado em 2026-10-16 (pendência do F27): Bestiário e Forja saíram como **grade de cards** com filtros e busca, porque o protótipo manda assim (§8.4 vence este padrão). O texto abaixo vale para tela cuja pasta de protótipo tenha lista + detalhe. A Tela Heróis (F71, ADR-0015) segue o protótipo `Tela Herois/`.
+
 
 Esquerda `ItemList`/`VBox` de botões (largura fixa `TOKENS.size.list_col`), direita `DetailCard` que recebe `bind(resource)`. Seleção por sinal `selected(id)`. Dados de `CatalogService` (`shared/data`), nunca hardcoded na cena — **o DV traz valores de exemplo nos wireframes; eles não são fonte**.
 
@@ -51,14 +54,14 @@ Esquerda `ItemList`/`VBox` de botões (largura fixa `TOKENS.size.list_col`), dir
 
 ### 3.3 Tela de lista (Histórico)
 
-`Tree` com colunas configuradas em código a partir de `MatchSummary`; paginação simples (20 por página); linha selecionada → `DetailCard`.
+~~`Tree` com colunas configuradas em código a partir de `MatchSummary`; paginação simples (20 por página); linha selecionada → `DetailCard`.~~ **Atualizado em 2026-10-16 (pendência do F26):** o protótipo manda **feed de cartões** (`MatchCard`), as 50 últimas partidas com rolagem e sem paginação (FPS medido 1.631 sem vsync); filtros Todas/Vitórias/Derrotas; `StateBox` com os 5 estados. `Tree` fica como alternativa para lista sem protótipo.
 
 ## 4. Performance
 
 - Alvo: 60 fps no lobby com diorama; ≥ 120 fps nas demais telas em 1080p (medido com `Performance.get_monitor`).
 - Diorama: `SubViewport.render_target_update_mode = UPDATE_WHEN_VISIBLE`, 30 fps, pausa ao perder foco.
 - Nada em `_process` em telas de catálogo (`set_process(false)` após `_ready`). Polling da fila é `Timer`, não `_process`.
-- Sem `instantiate()` em loop de UI a cada frame; listas grandes (histórico) usam `Tree`, não um `PanelCard` por linha.
+- Sem `instantiate()` em loop de UI a cada frame; listas grandes sem protótipo usam `Tree`; o Histórico usa cartões por decisão de fidelidade (§3.3), com teto de 50 e FPS provado na PR.
 - `Theme` único: evita `StyleBox` por nó (draw calls); override local só via `theme_type_variation`.
 
 ## 5. Acessibilidade mínima
@@ -101,6 +104,9 @@ Toda tela do Launcher é entregue **pronta e com acabamento**, fiel ao protótip
 | Forja | `Equipamentos & Forja/` | F27 #84 |
 | Arena & Mapa | `Arena & Mapa — O Vale Rúnico Apocalíptico/` | F33 #85 |
 | Perfil (nickname, avatar) | sem pasta: formulário no estilo do Login; perfil = chip do cabeçalho do `Menu Principal/` com `#nickname` e avatar, sem ELO | F35 #86 |
+| Heróis | `Tela Herois/` (1310×1600, com rolagem; sem epíteto/lore; "Arqueiro") | F71 (ADR-0015) |
+| Card "Resultado da partida" (sobre o lobby) | sem pasta: linguagem dos cartões do `Histórico de Partidas — Duelos/` e do `Menu Principal/` | F70 (ADR-0015) |
+| Telas de loading do Game e splash | sem pasta: renders reais (dia, noite, heróis) + dica + barra; tema do Game (HUD v2) | F68 (ADR-0015) |
 
 As pastas `Seleção de Heróis/`, `Destaques da Tela de Fim de Partida/` e `Pop-up Tático In-Game/` são do Game ou sem requisito e ficam fora desta regra.
 

@@ -59,6 +59,15 @@ $$\text{Velocidade} = \text{Velocidade Base} \times \left(1 + \frac{\text{AGI} \
 #### D. Velocidade de Ataque por Agilidade
 $$\text{Intervalo de Ataque (s)} = \frac{\text{Recarga Base}}{1 + \left(\frac{\text{AGI} \times 0.6\%}{100}\right)}$$
 
+#### E. Frenesi do Berserker (passiva, ADR-0015, F75)
+$$f = \min\!\left(1,\ \frac{1 - \text{HP}/\text{HP}_{\max}}{0.8}\right)$$
+$$\text{Velocidade de Ataque} \mathrel{+}= 60\% \times f \qquad \text{Roubo de Vida (básico)} = 25\% \times f$$
+- $f$ cresce linearmente com o HP perdido e chega a $1$ com **20 % de HP** (teto). A 100 % de HP, nada.
+- O bônus de velocidade de ataque entra **depois** da fórmula D (multiplica o intervalo por $1/(1+0.6f)$). O roubo de vida cura o Berserker em $25\%\,f$ do dano **do ataque básico** efetivamente causado (depois da Defesa do alvo); skills não roubam vida.
+- Durante **Ragnarök** (§4.8), $f = 1$ independentemente do HP.
+- Nome **Frenesi** para não confundir com a passiva *Fúria* da Arma Épica (§6.1-A), que é outra regra.
+- Única passiva de herói do jogo; `HeroData.passive` (`PassiveData.FRENZY`), aplicada no `_rollback_tick` do próprio herói.
+
 ---
 
 ## 3. Progressão de Nível e Curva de XP
@@ -305,6 +314,75 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 
 ---
 
+### 4.7 Protetor da Selva (Controle — Ranged médio) — ADR-0015, SPEC-074
+- **Papel:** controlador com autocura: enraíza, cria zona de lentidão e se cura com as poções; dano moderado à distância média. Classe **Controle** (PRD §4.1); redesenhado do pedido "Suporte" porque no 1x1 não há aliado (ADR-0015 item 12).
+- **Modelo:** KayKit Adventurers 2.0 Extra `Druid` (cor original); arma visível = cajado `druid_staff` (F48); a Poção Verde usa `potion_large_green` como projétil.
+- **Velocidade Base:** $6.0\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-16 como proposta, conferidos no soak do F74. Q e E escalam ATK (regra do §2.1) — inclusive a cura.*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 470 | +34 | 776 |
+| **Defesa** | 16 | +1.6 | 30.4 |
+| **Ataque** | 44 | +3.8 | 78.2 |
+| **Inteligência** | 24 | +2.4 | 45.6 (CDR: 22.8%) |
+| **Agilidade** | 16 | +1.4 | 28.6 |
+
+#### Habilidades do Protetor da Selva
+- **Ataque Básico (Seiva):**
+  - Tipo: Projétil direto (velocidade $20\text{ u/s}$, alcance $6.5\text{ u}$, raio colisão $0.35\text{ u}$). Bloqueado pela Muralha, como a flecha.
+  - Cooldown Base: $1.0\text{ s}$.
+  - Dano: $100\%\text{ ATK}$.
+- **Q — Raízes Vivas:**
+  - Projétil (velocidade $18\text{ u/s}$, alcance $7.0\text{ u}$, raio colisão $0.4\text{ u}$) que para no primeiro herói ou monstro. O atingido fica **enraizado por $1.5\text{ s}$** = lentidão de $100\%$ (reusa o `slow`; pode mirar, atacar e usar skill, só não anda). Bloqueado pela Muralha. Boss: só o dano.
+  - Cooldown Base: $[10.0, 9.5, 9.0, 8.5, 8.0]\text{ s}$.
+  - Dano: $[40, 65, 90, 115, 140] + (0.5 \times \text{ATK})$.
+- **E — Poção Verde:**
+  - Arremessa a poção em arco até $5.0\text{ u}$ (para no obstáculo). Zona de cura de raio $3.0\text{ u}$ por $3.0\text{ s}$ ($6$ pulsos a cada $0.5\text{ s}$): cura o Protetor e **aliados** dentro dela (no 1x1, só ele). Usar de dentro da moita revela (§7.3).
+  - Cooldown Base: $[16.0, 15.0, 14.0, 13.0, 12.0]\text{ s}$.
+  - Cura Total: $[90, 135, 180, 225, 270] + (0.5 \times \text{ATK})$, dividida pelos pulsos. Não passa do HP máximo.
+- **R — Pântano (Ultimate, Nv 6+):**
+  - Zona circular de raio $5.0\text{ u}$ no ponto mirado, até $7.0\text{ u}$, por $6.0\text{ s}$. Inimigos dentro (heróis e monstros): **lentidão $40\%$** e dano por pulso a cada $1.0\text{ s}$ ($6$ pulsos). A marcação é visível como a do Meteoro.
+  - Cooldown Base: $[60.0, 50.0]\text{ s}$.
+  - Dano por Pulso: $[30, 50] + (0.25 \times \text{INT})$.
+
+---
+
+### 4.8 Berserker (Lutador — Melee) — ADR-0015, SPEC-075
+- **Papel:** lutador corpo a corpo sustentado: quanto menos vida, mais rápido bate e mais rouba vida (Frenesi, §2.2-E); imparável sob controle de grupo no Ragnarök. Classe nova **Lutador** (PRD §4.1).
+- **Modelo:** KayKit Adventurers 2.0 Extra `Barbarian_Large` (textura alternativa `alt_A/B/C` — PI escolhe no aceite do F75), rig `Rig_Large`; armas visíveis = dois `axe_1handed_Large` (F48, 3 raridades nos dois). Sem escudo; elmo não aparece (exceção do ADR-0011 item 3). **Colisão igual aos demais heróis.**
+- **Velocidade Base:** $6.1\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-16 como proposta, conferidos no soak do F75. Q e E escalam ATK (regra do §2.1).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 560 | +44 | 956 |
+| **Defesa** | 18 | +1.8 | 34.2 |
+| **Ataque** | 58 | +5.0 | 103 |
+| **Inteligência** | 8 | +0.8 | 15.2 (CDR: 7.6%) |
+| **Agilidade** | 20 | +1.8 | 36.2 |
+
+#### Habilidades do Berserker
+- **Passiva — Frenesi:** §2.2-E ($+60\%$ de velocidade de ataque e $25\%$ de roubo de vida no básico, lineares com o HP perdido, teto a 20 % de HP).
+- **Ataque Básico (Machados Gêmeos):**
+  - Tipo: Melee em arco cônico ($90^\circ$, raio $2.4\text{ u}$), alternando a mão a cada golpe (só visual).
+  - Cooldown: $0.9\text{ s}$ (antes da Frenesi).
+  - Dano: $100\%\text{ ATK}$.
+- **Q — Arremesso de Machado:**
+  - Projétil (velocidade $22\text{ u/s}$, alcance $7.0\text{ u}$, raio colisão $0.4\text{ u}$) que para no primeiro herói ou monstro: dano e **lentidão $30\%$ por $1.5\text{ s}$**. Bloqueado pela Muralha. Um dos machados some da mão por $1.0\text{ s}$ (visual).
+  - Cooldown Base: $[9.0, 8.5, 8.0, 7.5, 7.0]\text{ s}$.
+  - Dano: $[60, 90, 120, 150, 180] + (0.6 \times \text{ATK})$.
+- **E — Grito de Guerra:**
+  - Por $2.0\text{ s}$: $+[30, 40, 50, 60, 70]$ de **Defesa** e $+15\%$ de velocidade de movimento. Sem dano, sem alvo.
+  - Cooldown Base: $[14.0, 13.0, 12.0, 11.0, 10.0]\text{ s}$.
+- **R — Ragnarök (Ultimate, Nv 6+):**
+  - Por $4.0\text{ s}$: **imune a controle de grupo** (lentidão, raiz, atordoamento, empurrão e puxão não se aplicam; os já ativos são limpos no uso), $+25\%$ de velocidade de movimento e **Frenesi no máximo** ($f = 1$). Sem dano.
+  - Cooldown Base: $[70.0, 58.0]\text{ s}$.
+
+---
+
 ## 5. Bestiário e Economia de Campo (Fase 1)
 
 **Respawn na fase 1 (decisão do PI em 2026-10-10, F36):** todo monstro não-boss renasce no próprio ponto de spawn **90 s** depois de morrer, enquanto durar a fase 1. Na fase 2 ninguém renasce; os vivos aos 5:00 ficam (o Rei Esqueleto vivo aos 5:00 sai sem drop — §7.1). A quantidade continua limitada para que o centro seja a melhor fonte de XP.
@@ -329,7 +407,8 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 | **Alcance corpo a corpo** | $1.8\text{ u}$ | Esqueleto, Esqueleto Guerreiro e Golem golpeiam o alvo nesse alcance. |
 | **Área do Golem** | raio $2.5\text{ u}$ | O golpe acerta todos os heróis em volta do Golem. |
 | **Esqueleto Mago** | $7.0\text{ u}$, acerto instantâneo | Sem projétil: não é bloqueado pela Muralha do Cavaleiro. |
-| **Campos de canto** (ADR-0011) | aggro Golem $4.0\text{ u}$, Lobo $3.0\text{ u}$; leash $10.0\text{ u}$ | Lobos menores para não puxarem quem passa no corredor TOP/BOT. |
+| **Campos de canto** (ADR-0011) | aggro $6.0\text{ u}$ (Golem e Lobo — decisão do PI em 2026-10-12 no aceite do F55; antes 4/3 u); leash $10.0\text{ u}$ | Quem passa no meio do corredor TOP/BOT (~7,2 u) não puxa. |
+| **Provocação e campo** (decisão do PI em 2026-10-12, F55) | dano de herói → persegue quem feriu, mesmo fora do aggro; monstros com spawn a até $6.0\text{ u}$ (`CAMP_RADIUS`) acordam juntos | Campo inteiro reage a um ataque; voltando ao spawn ignora; boss fora da regra. |
 | **Lobo** | velocidade $5.0\text{ u/s}$, corpo a corpo $1.8\text{ u}$ | Mais rápido que os outros monstros, ainda abaixo dos heróis (5,8–6,2): dá para fugir. |
 
 Valores em `shared/data/monsters/*.tres` (`aggro_range`, `leash_range`, `move_speed`, `melee_range`, `area_radius`). O Rei Esqueleto (Boss) fica para o F11.
@@ -358,7 +437,9 @@ Valores em `shared/data/monsters/*.tres` (`aggro_range`, `leash_range`, `move_sp
 
 O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
 
-### 6.1 Catálogo dos 12 Itens da Fatia Vertical
+### 6.1 Catálogo dos 21 Itens da Fatia Vertical
+
+> Contagem corrigida em 2026-10-16 (pendência do F27): 3 armas + 2 conjuntos × 3 slots × 3 raridades = **21** itens em `shared/data/items/` (o "12" original contava só um conjunto).
 
 #### A. Armas (3 itens — Escalam ATK)
 - **Arma Comum:** $+12\text{ ATK}$
@@ -423,6 +504,7 @@ A transição de 5 s (portões caem, aviso) **já conta como fase 2**: o relógi
 - **Revelação ao agir:** atacar ou usar skill de dentro da moita revela o herói ao adversário por $1.5\text{ s}$ (decisão do PI em 2026-10-10).
 - **Proximidade:** sem revelação por proximidade — quem está fora da moita não vê quem está dentro, a qualquer distância; só vê quem está na mesma moita.
 - **Fumaça da Ladina (ADR-0013, F58):** a nuvem da Bomba de Fumaça (§4.5) vale como moita por $3.0\text{ s}$, com as mesmas regras acima; lançar a fumaça não revela. A Torreta do Engenheiro (§4.6) só atira em quem o Engenheiro vê por estas regras.
+- **Alvo travado (ADR-0015, F66):** o botão direito **clicado** sobre um herói inimigo ou monstro trava o alvo; o servidor só aceita alvo **visível para aquele peer** por estas regras e destrava no tick em que ele deixa de ser visível (moita, fumaça, neblina) ou morre. Com alvo travado e dentro do alcance do básico, o básico dispara sozinho na cadência normal; fora do alcance, nada. O auto-ataque de dentro da moita revela como qualquer ataque.
 
 ---
 

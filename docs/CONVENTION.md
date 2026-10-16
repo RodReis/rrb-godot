@@ -39,15 +39,16 @@ Nada de gameplay é persistido pelo cliente. Nada de conta é lido pelo Game cli
 ## 3. Estados da partida (`MatchState`)
 
 ```
-LOBBY_WAIT → HERO_PICK → PHASE1 → TRANSITION → PHASE2 → SUDDEN_DEATH → ENDED
-                                                   └──────(meta de kills)──────┘
+LOBBY_WAIT → HERO_PICK → INTRO → PHASE1 → TRANSITION → PHASE2 → SUDDEN_DEATH → ENDED
+                                                           └──────(meta de kills)──────┘
 ```
 
 | Estado | Entra quando | Sai quando | Relógio |
 |---|---|---|---|
 | `LOBBY_WAIT` | servidor sobe | 2 peers válidos (ou timeout → `ENDED/abandoned`) | — |
 | `HERO_PICK` | 2 peers | ambos lock-in **ou** 24 s (sem escolha → herói padrão do slot: P1 Cavaleiro, P2 Arqueiro — decidido pelo PI em 2026-10-10, R-PEND-04). **Espelho permitido** (os dois podem escolher o mesmo herói) | pick |
-| `PHASE1` | pick concluído | `t_match = 5:00` | `t_match` 0:00–5:00 |
+| `INTRO` | pick concluído | `≥ 5 s` **e** os 2 clientes `ready`, **ou** 8 s (ADR-0015, F69) | cinemática no cliente; `t_match` ainda não corre |
+| `PHASE1` | fim do `INTRO` | `t_match = 5:00` | `t_match` 0:00–5:00 |
 | `TRANSITION` | 5:00 | +5 s | aviso visual/sonoro; **já conta como fase 2**: `t_phase2` começa às 5:00 (decisão do PI 2026-10-10) |
 | `PHASE2` | 5:05 | meta de kills **ou** `t_phase2 = 4:00` (9:00 de partida) | `t_phase2` 0:05–4:00 |
 | `SUDDEN_DEATH` | `t_phase2 = 4:00` (9:00 de partida) | último time com vivo **ou** 10:00 → colapso com resolução imediata (GDB §7.2 item 3) | até 10:00 |
@@ -58,7 +59,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 ## 4. Regras por tema (fonte → seção)
 
 ### 4.1 Fase 1 — preparação
-- Mapa: layout, escala e marcadores em `docs/prd/mvp/spec/SPEC-044.md` (ADR-0007; raio 35 u; spawn→centro ~6 s; espelho N–S; rio N–S + anel bloqueiam, 4 pontes — 2 por metade; cratera com 4 entradas). SPEC-007 vale só para §1 (escala) e §4 (marcadores).
+- Mapa: layout, escala e marcadores em `docs/prd/mvp/spec/SPEC-046.md` (ADR-0009, "Rift Medieval adaptado": borda quadrada 80×80 u, rio em S NO–SE com lagoas, bases SO/NE em rotação de 180°, 2 pontes na MID, 3 corredores de 8 u — TOP/MID/BOT —, selva nos quadrantes; spawn→centro ~6,3 s), dentro de um **vale** só visual (ADR-0012, F56: floresta, encostas e cristas na faixa externa; riacho no lugar das cascatas; a câmera nunca vê o vazio). Centro: cratera de magma **sem pilares** (ADR-0014, F60). SPEC-044 vale só para o que a SPEC-046 cita como inalterado (cratera/ilha §2.2, bases §2.4, marcadores §4); SPEC-007 vale só para §1 (escala) e §4 (marcadores). Atualizado em 2026-10-16 (pendência do F56/F33).
 - Portões: só o time dono passa (PRD §3.1). Centro (ilha + anel) é PvP desde 0:00.
 - Monstros: distribuição e XP em GDB §5.1 — base, centro, **4 campos laterais** (NO e SE, um de cada lado do rio) e **2 campos de canto** (curva TOP/BOT, Golem de canto + 2 Lobos — ADR-0011, F55). Monstros não-boss renascem **90 s** após morrer, só na fase 1 (decisão do PI 2026-10-10, F36). Baús: 28 (inclui 4 Reforçados — 50 % raro / 50 % comum, ADR-0011), não reabrem (GDB §6.2). Boss surge aos **3:30**; aviso global aos **3:00** (banner + som + pista visual no portal — decisão do PI 2026-10-09, origem benchmark §3.2).
 - Morte na fase 1: respawn 8,0 s na própria base, **não** conta kill, matador recebe 80 XP (GDB §3.3). Sem perda de itens.
@@ -84,9 +85,12 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - Monstros comuns não respawnam na fase 2; os que sobraram continuam vivos e dão XP. O **Rei Esqueleto** existe até morrer ou até 5:00: vivo na transição, sai do mapa **sem drop** (decisão do PI 2026-10-10, R-PEND-06).
 
 ### 4.5 Heróis
-- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013.
-- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo.
-- ATK escala básico, Q e E; INT escala só o R — vale para os 6 heróis (GDB §2.1).
+- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015.
+- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo; Protetor da Selva projétil 20 u/s, 6,5 u, raio 0,35 u; Berserker arco 90°/2,4 u.
+- **Orientação e alvo travado (ADR-0015, F66):** o herói encara a direção do movimento; ao atacar/usar skill vira para o alvo por 0,4 s. `target_id` vem no input e o servidor só aceita alvo vivo, inimigo e **visível para aquele peer** (§4.6, §4.7, §4.9); com alvo em alcance o básico dispara sozinho, fora do alcance não anda. Destrava ao morrer, sumir da visão, `Esc` ou clique no chão.
+- **Passiva (ADR-0015, F75):** `HeroData.passive` (`PassiveData`); só `FRENZY` (Berserker, GDB §2.2-E). Aplicada no `_rollback_tick` do próprio herói.
+- **Raiz = lentidão 100 %** (Raízes Vivas, GDB §4.7): o enraizado mira, ataca e usa skill, só não anda. **Imunidade a controle** (Ragnarök, GDB §4.8): lentidão, raiz, atordoamento, empurrão e puxão não se aplicam e os ativos são limpos.
+- ATK escala básico, Q e E (inclusive a cura da Poção Verde); INT escala só o R — vale para os 8 heróis (GDB §2.1).
 - **Torreta do Engenheiro** (ADR-0013): indestrutível, 6 s, uma por vez; acerta heróis e monstros que o Engenheiro vê (§4.7, §4.9); não dá visão própria; o disparo dela não revela o Engenheiro.
 - Tudo validado no servidor; cliente prevê só movimento próprio e disparo visual do projétil (benchmark §4).
 
@@ -99,6 +103,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - Vê quem está na mesma moita. Atacar ou usar skill de dentro revela o herói por **1,5 s** (GDB §7.3). **Sem revelação por proximidade**: chegar perto da moita pelo lado de fora não revela (decisão do PI 2026-10-10, R-PEND-12).
 - **Fumaça da Ladina** (ADR-0013, F58): a nuvem da Bomba de Fumaça vale como moita por 3 s, para qualquer herói dentro dela. Única exceção à revelação ao agir: **lançar a própria fumaça não revela**.
 - Monstros e bot seguem a mesma regra que um jogador (invariante de honestidade do bot, §4.6).
+- **Silhueta do próprio herói (ADR-0015, F72):** só no cliente de quem controla, dentro da moita: herói translúcido e moita semitransparente em volta. Não muda replicação nem `VisibilityRules`; adversário e monstros não ganham silhueta.
 - Geometria entra no F7; a regra de visibilidade é F32 (MVP2), porque depende de filtro de replicação do netfox.
 
 ### 4.9 Neblina de guerra (decisão do PI 2026-10-10 — reverte a exclusão de 2026-10-09)
@@ -132,7 +137,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 
 ## 6. Nomes de ações de input (InputMap)
 
-Definidos uma vez em `shared/core/input_actions.gd` e usados pelo Game (jogo) e pelo Launcher (tela de controles): `move_forward`, `move_back`, `move_left`, `move_right`, `primary_attack`, `camera_orbit` (F45), `skill_q`, `skill_e`, `skill_r`, `interact`, `dodge`, `scoreboard`, `cancel`. Mapeamento padrão: design visual §3.3. `open_bestiary` (`B`) abre o bestiário em partida sem pausar (decisão do PI 2026-10-09). `learn_q`, `learn_e`, `learn_r` gastam um ponto de habilidade em Q, E, R com `Ctrl` + tecla da skill, um ponto por toque, sem lançar a skill; só teclado até os botões `+Q/+E/+R` da HUD no F13, que trazem o gamepad (decisão do PI 2026-10-09, F9).
+Definidos uma vez em `shared/core/input_actions.gd` e usados pelo Game (jogo) e pelo Launcher (tela de controles): `move_forward`, `move_back`, `move_left`, `move_right`, `primary_attack` (clique sobre inimigo = trava alvo; segurar = contínuo — F66), `camera_orbit` (F45), `camera_zoom_in`, `camera_zoom_out` (F67), `skill_q`, `skill_e`, `skill_r`, `interact`, `dodge`, `scoreboard`, `cancel` (também destrava o alvo). Mapeamento padrão: design visual §3.3. `open_bestiary` (`B`) abre o bestiário em partida sem pausar (decisão do PI 2026-10-09). `learn_q`, `learn_e`, `learn_r` gastam um ponto de habilidade em Q, E, R com `Ctrl` + tecla da skill, um ponto por toque, sem lançar a skill; só teclado até os botões `+Q/+E/+R` da HUD no F13, que trazem o gamepad (decisão do PI 2026-10-09, F9).
 
 ## 7. Divergências e pendências
 

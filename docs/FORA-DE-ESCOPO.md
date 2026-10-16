@@ -7,6 +7,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 - Nada daqui entra em código antes do MVP4 concluído (PRD §1.3: "nada do roadmap entra antes do M4").
 - Bárbaro (Algoz), Bruxo de Fogo (Mago) e campos de canto saíram desta lista em 2026-10-11 por decisão do PI (ADR-0011): entram no MVP2.
 - Ladina (Algoz) e Engenheiro (classe nova) entraram em 2026-10-13 por decisão do PI (ADR-0013): marco MVP2.6. A "Ladina" do protótipo da seleção volta com dado real (F58).
+- Protetor da Selva (classe Controle, `Druid` do Extra) e Berserker (classe nova Lutador, `Barbarian_Large` do Extra, primeira passiva) entraram em 2026-10-16 por decisão do PI (ADR-0015): marco MVP2.7. Saem daqui as linhas "Heróis Controle", "Druida e `BARBARIAN_LARGE`" e "passivas" (Suporte continua).
 - Arte própria saiu desta lista em 2026-10-09 por decisão do PI (ADR-0005): entra em qualquer MVP quando a fatia precisar.
 - Item do design visual ou do benchmark que não está no PRD **não é requisito** — fica aqui ou em `RASTREABILIDADE.md` §5 até o PI decidir.
 - "Adiado" tem MVP ou fase de destino; "excluído" tem motivo.
@@ -16,13 +17,19 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Item | Fonte | Motivo | Destino | Gatilho de retorno |
 |---|---|---|---|---|
 | Modos 2x2 e 3x3 | PRD §1.3 | classes e times são conteúdo, não risco | pós-MVP4 | decisão do PI no gate M4 ("ir para 3x3") |
-| Heróis Suporte, Controle (+ mais) | PRD §1.3, §4.1 | sem sentido no 1x1 (Algoz e Mago entraram pelo ADR-0011) | pós-MVP4 | 3x3 aprovado |
+| Heróis Suporte (+ mais) | PRD §1.3, §4.1 | sem sentido no 1x1 (Algoz e Mago entraram pelo ADR-0011; Controle entrou pelo ADR-0015 como controlador com autocura) | pós-MVP4 | 2x2/3x3 aprovado — a Poção Verde do Protetor passa a curar aliado (ADR-0015) |
 | Ajuste do Rei Esqueleto (knockback 2,5 u > alcance 2,2 u do Cavaleiro; HP 2.400 às 3:30) | ADR-0011 (análise apresentada ao PI) | PI escolheu só campos e baús novos | F30 (MVP4) | medição do F55 (nível do bot aos 3:30) ou soak do F19 mostrar boss ainda inviável, ou pedido do PI |
 | Queimadura (dano contínuo) no Bruxo de Fogo | ADR-0011 | mecânica nova no rollback; PI aprovou o kit sem | pós-MVP4 | pedido do PI |
 | Necromante e Golem do KayKit Skeletons Extra (pago) | ADR-0011 | PI escolheu não usar agora (golem atual + lobo no Blender) | pós-MVP4 | compra do pack Extra pelo PI |
 | Torreta do Engenheiro com HP (destrutível) ou com visão própria | ADR-0013 | mecânica nova (alvo que não é herói nem monstro, kill credit, bot que ataca estrutura); PI escolheu indestrutível, 6 s | pós-MVP4 | playtest M4 mostrar Torreta forte demais ou sem resposta |
 | Textura alternativa do Extra na Ladina; `Rogue` sem capuz; besta de 2 mãos | ADR-0013 | PI escolheu `Rogue_Hooded` com a cor original | pós-MVP4 | pedido do PI (skins) |
-| Druida e `BARBARIAN_LARGE` do Adventurers 2.0 Extra | ADR-0013 | não pedidos | pós-MVP4 | pedido do PI |
+| Escala visual dos personagens (1,1–1,2×, colisão igual) | ADR-0015 | PI escolheu aproximar a câmera (F67, padrão 11 u) | MVP2.7 ou MVP4 | PI achar 11 u insuficiente no aceite do F67 |
+| Silhueta no mato alto para aliado | ADR-0015 | 1x1 não tem aliado; F72 cobre só o próprio herói | pós-MVP4 | 2x2 aprovado |
+| Cinemática de abertura pulável (`Esc`) | ADR-0015 | PI escolheu 5 s mínimo, corta aos 8 s, sem pular | MVP4 | playtest reclamar da espera |
+| Alvo travado que persegue (anda até entrar em alcance) | ADR-0015 | mistura com WASD; mais código no bot e no cliente; PI escolheu "só ataca em alcance" | MVP4 | playtest pedir |
+| Epíteto e lore dos heróis na Tela Heróis (ex.: "dos Ventos") | ADR-0015, protótipo `Tela Herois/` | texto não existe em nenhum documento; regra do F27 (só `shared/data`) | — | PI escrever os textos (vão para `HeroData`) |
+| Realismo fora da ADR-0006 (retexturizar heróis KayKit, tirar toon/outline) | ADR-0015 | semanas de arte e reaceite de tudo; PI manteve a direção | — | nova ADR do PI |
+| Rig `Rig_Large` em outros heróis / variante "Large" de outros corpos | ADR-0015 | só o Berserker usa | pós-MVP4 | pedido do PI |
 | Garra do Engenheiro puxando monstro/boss; veneno ou sangramento na Ladina | ADR-0013 | monstro tem leash e IA própria; dano contínuo é mecânica nova no rollback | pós-MVP4 | pedido do PI |
 | Pontes nas pontas do rio e pontes de selva (5 travessias) | ADR-0009 | PI escolheu 3 rotas (TOP/MID/BOT) | MVP2 ou MVP4 | F19/[GATE] mostrar funil na MID |
 | Três portões por base (um por rota) | ADR-0009 / SPEC-046 §7 | 1 portão por base basta; regra e testes do F8 intactos | — | pedido do PI após playtest |
