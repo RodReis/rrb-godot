@@ -36,11 +36,17 @@ const KEY_ROWS: Array[Array] = [
 	["Esquiva", [InputActions.DODGE], &"LnKeyCyan", &"LnBody"],
 	["Placar", [InputActions.SCOREBOARD], &"LnKey", &"LnBody"],
 	["Bestiário", [InputActions.OPEN_BESTIARY], &"LnKey", &"LnBody"],
+	[
+		"Zoom da câmera (aproxima · afasta · ou roda do mouse)",
+		[InputActions.CAMERA_ZOOM_IN, InputActions.CAMERA_ZOOM_OUT],
+		&"LnKey",
+		&"LnBody"
+	],
 ]
 ## Botoes do mouse (SPEC-045 §2): fixos, nao entram no settings.cfg.
 const MOUSE_KEYS: Array[String] = ["M2 (DIR)", "M1 (ESQ)"]
 ## Nome da tecla no settings.cfg -> texto na tecla.
-const KEY_NAMES: Dictionary[String, String] = {"Space": "ESPAÇO"}
+const KEY_NAMES: Dictionary[String, String] = {"Space": "ESPAÇO", "Equal": "=", "Minus": "-"}
 ## Tamanhos de janela oferecidos (16:9 e o 1366 x 768 comum); so os que cabem na tela.
 const RESOLUTIONS: Array[Vector2i] = [
 	Vector2i(1280, 720),

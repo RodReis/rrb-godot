@@ -219,7 +219,8 @@
         "E chegam dois heróis: o Protetor da Selva, um druida que enraíza, cria um pântano que atrasa quem pisa nele e se cura com as próprias poções; e o Berserker, um bárbaro grande de dois machados que bate mais rápido e rouba mais vida quanto menos vida tem, e que no grito final ignora qualquer controle por quatro segundos."
       ],
       "imagens": [
-        { "arquivo": "mvp2.7-f66-alvo-travado.webp", "legenda": "Um clique com o botão direito num monstro ou no adversário trava o alvo: um anel vermelho marca o chão sob ele e a moldura acima do painel mostra o nome, o nível ou o tipo e a vida. O herói não corre atrás: só ataca sozinho quando o alvo está ao alcance, e segurar o botão no chão continua atacando na direção do cursor.", "tipo": "entregue" }
+        { "arquivo": "mvp2.7-f66-alvo-travado.webp", "legenda": "Um clique com o botão direito num monstro ou no adversário trava o alvo: um anel vermelho marca o chão sob ele e a moldura acima do painel mostra o nome, o nível ou o tipo e a vida. O herói não corre atrás: só ataca sozinho quando o alvo está ao alcance, e segurar o botão no chão continua atacando na direção do cursor.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f67-zoom-camera.webp", "legenda": "A câmera chegou mais perto: a roda do mouse (ou as teclas = e -) aproxima e afasta em seis passos, de 9 a 14 metros, e o jogo lembra a distância da próxima partida. O minimapa continua parado, com a sua base sempre embaixo, mesmo girando a câmera.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -329,6 +330,7 @@
     "F64": "Fonte de cura nova, com água caindo",
     "F65": "Minimapa claro, fácil de ler até de noite",
     "F66": "Herói olha para onde anda e trava o alvo com o botão direito",
+    "F67": "Zoom da câmera: roda do mouse e teclas, do mais perto ao mais longe",
     "F45": "Câmera que gira em volta do herói",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",

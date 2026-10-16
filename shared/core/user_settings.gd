@@ -3,8 +3,8 @@ extends RefCounted
 ## Contrato user://settings.cfg (ARCHITECTURE-LAUNCHER §5.3): o Launcher escreve (F24), o Game le
 ## no boot. Valores num Dictionary secao -> chave -> valor, com os padroes de defaults(). Chave
 ## desconhecida e ignorada; tipo errado ou valor invalido vira o padrao (volume e sensibilidade
-## sao limitados a faixa); schema diferente devolve os padroes e loga. Funcoes puras: rebind()
-## devolve uma copia.
+## sao limitados a faixa; a distancia da camera fora da faixa volta ao padrao); schema diferente
+## devolve os padroes e loga. Funcoes puras: rebind() devolve uma copia.
 
 const PATH: String = "user://settings.cfg"
 const SCHEMA: int = 1
@@ -36,6 +36,14 @@ const SSAO: String = "ssao"
 const GRASS: String = "grass"
 const GRAPHICS_KEYS: Array[String] = [FOG, SSIL, SSAO, GRASS]
 
+## [camera] da SPEC-067: distancia do FollowCamera ao heroi, em passos inteiros.
+const CAMERA: String = "camera"
+const DISTANCE: String = "distance"
+const DISTANCE_MIN: float = 9.0
+const DISTANCE_MAX: float = 14.0
+const DISTANCE_STEP: float = 1.0
+const DISTANCE_DEFAULT: float = 11.0
+
 ## Limites de quadros oferecidos; 0 = sem limite (Engine.max_fps).
 const FPS_UNLIMITED: int = 0
 const FPS_CAPS: Array[int] = [60, 120, 144, FPS_UNLIMITED]
@@ -60,6 +68,8 @@ const BINDABLE: Array[StringName] = [
 	InputActions.DODGE,
 	InputActions.SCOREBOARD,
 	InputActions.OPEN_BESTIARY,
+	InputActions.CAMERA_ZOOM_IN,
+	InputActions.CAMERA_ZOOM_OUT,
 ]
 ## Teclas que nao podem ir para uma acao: Esc volta/fecha em toda tela.
 const RESERVED_KEYS: Array[Key] = [KEY_ESCAPE]
@@ -84,6 +94,7 @@ static func defaults() -> Dictionary:
 		AUDIO: {MASTER: VOLUME_MAX, MUSIC: VOLUME_MAX, SFX: VOLUME_MAX, VOICE: VOLUME_MAX},
 		CONTROLS: controls,
 		GRAPHICS: graphics,
+		CAMERA: {DISTANCE: DISTANCE_DEFAULT},
 	}
 
 
@@ -154,6 +165,9 @@ static func _valid(section: String, key: String, raw: Variant, fallback: Variant
 	if fallback is float:
 		if not (raw is float or raw is int):
 			return fallback
+		if section == CAMERA:  # fora da faixa nao e limitado: volta ao padrao (SPEC-067 §3)
+			var distance := float(raw)
+			return distance if distance >= DISTANCE_MIN and distance <= DISTANCE_MAX else fallback
 		return _clamp_float(section, float(raw))
 	if typeof(raw) != typeof(fallback):
 		return fallback

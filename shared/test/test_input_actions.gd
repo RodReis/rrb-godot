@@ -158,3 +158,45 @@ func test_rotulo_da_tecla_segue_o_remapeamento() -> void:
 	assert_eq(InputActions.skill_labels(), ["Z", "E", "R"] as Array[String])
 	SettingsApplier.apply_controls(UserSettings.defaults())
 	assert_eq(InputActions.key_label(InputActions.SKILL_Q), "Q")
+
+
+func _wheel(button: MouseButton) -> InputEventMouseButton:
+	var ev := _click(button)
+	ev.factor = 1.0
+	return ev
+
+
+func test_zoom_da_camera_tem_duas_acoes_com_tecla_e_roda() -> void:
+	InputActions.ensure()
+	assert_eq(InputActions.CAMERA_ZOOM_IN, &"camera_zoom_in")
+	assert_eq(InputActions.CAMERA_ZOOM_OUT, &"camera_zoom_out")
+	assert_true(_has_key(InputActions.CAMERA_ZOOM_IN, KEY_EQUAL))
+	assert_true(_has_key(InputActions.CAMERA_ZOOM_OUT, KEY_MINUS))
+	assert_true(
+		InputMap.event_is_action(_wheel(MOUSE_BUTTON_WHEEL_UP), InputActions.CAMERA_ZOOM_IN)
+	)
+	assert_true(
+		InputMap.event_is_action(_wheel(MOUSE_BUTTON_WHEEL_DOWN), InputActions.CAMERA_ZOOM_OUT)
+	)
+	assert_false(
+		InputMap.event_is_action(_wheel(MOUSE_BUTTON_WHEEL_DOWN), InputActions.CAMERA_ZOOM_IN)
+	)
+
+
+func test_zoom_chamar_ensure_duas_vezes_nao_duplica_eventos() -> void:
+	InputActions.ensure()
+	var before := InputMap.action_get_events(InputActions.CAMERA_ZOOM_IN).size()
+	InputActions.ensure()
+	assert_eq(InputMap.action_get_events(InputActions.CAMERA_ZOOM_IN).size(), before)
+
+
+func test_remapear_zoom_troca_a_tecla_e_guarda_a_roda() -> void:
+	InputActions.ensure()
+	var values := UserSettings.rebind(UserSettings.defaults(), InputActions.CAMERA_ZOOM_IN, KEY_Z)
+	SettingsApplier.apply_controls(values)
+	assert_eq(InputActions.key_label(InputActions.CAMERA_ZOOM_IN), "Z")
+	assert_true(
+		InputMap.event_is_action(_wheel(MOUSE_BUTTON_WHEEL_UP), InputActions.CAMERA_ZOOM_IN)
+	)
+	SettingsApplier.apply_controls(UserSettings.defaults())
+	assert_eq(InputActions.key_label(InputActions.CAMERA_ZOOM_IN), "Equal")

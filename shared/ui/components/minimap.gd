@@ -1,9 +1,10 @@
 class_name Minimap
 extends Control
 ## Minimapa das fases 1 e 2 (COMPONENTS.md): imagem pronta do mapa (tools/arena/minimap_image.gd,
-## luz de dia, sempre clara — F65, ADR-0014) girada com a camera do jogador e marcadores
-## desenhados por cima. Mesma projecao do ZoneRadar (ZoneRadar.to_radar), que fica por cima na
-## fase 2. Nao le dado sozinho: quem usa passa o giro e as posicoes.
+## luz de dia, sempre clara — F65, ADR-0014) travada na orientacao do time (base embaixo, nao
+## gira com a camera; PI 2026-10-16) e marcadores desenhados por cima. Mesma projecao do
+## ZoneRadar (ZoneRadar.to_radar), que fica por cima na fase 2. Nao le dado sozinho: quem
+## usa passa o yaw fixo e as posicoes.
 
 const MARKER_OUTLINE: float = 2.0
 
