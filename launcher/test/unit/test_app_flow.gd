@@ -247,6 +247,17 @@ func test_menu_do_topo_abre_arena_e_mapa_com_o_catalogo() -> void:
 	assert_eq(screen.canvas().pins().size(), 21)
 
 
+func test_menu_do_topo_abre_a_tela_herois_com_o_catalogo() -> void:
+	await _enter_lobby()
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	bar.navigate_requested.emit(Router.HEROES)
+	await wait_process_frames(2)
+	assert_eq(_app.stack().current_route(), Router.HEROES)
+	var screen := _app.stack().current() as HeroesScreen
+	assert_eq(screen.state(), StateBox.State.READY)
+	assert_eq(screen.cards().size(), 6)
+
+
 func test_aba_arena_do_guia_troca_a_tela_sem_empilhar() -> void:
 	await _enter_lobby()
 	_app.stack().push(Router.BESTIARY)

@@ -235,6 +235,7 @@ static func add(theme: Theme) -> void:
 	_profile(theme)
 	CompendiumTheme.add(theme)
 	ArenaMapTheme.add(theme)
+	HeroesTheme.add(theme)
 
 
 ## Espacamento entre filhos por token (componente nao usa override, COMPONENTS regra 4):

@@ -15,6 +15,8 @@ extends SceneTree
 ## F27: --route=bestiary|forge; --tier=t1|t2|t3|boss e --query=<texto> (Bestiario); --section=
 ## weapons|<id do conjunto> e --query (Forja); --build=<heroi>:<nivel>:<item>,<item> poe o build no
 ## simulador; --scroll=<px> rola o corpo (999999 = ate o fim); --catalog=broken mostra o erro.
+## F71: --route=heroes; --hero=<id> escolhe o heroi do painel; --role=<classe> filtra por classe;
+## --query=<texto> busca; --scroll=<px> rola o corpo (999999 = ate o fim); --catalog=broken erro.
 ## F33: --route=arena_map; --poi=<id> escolhe o ponto de interesse (base_a, crater, tall_grass...).
 ## F35: --route=profile --state=setup|invalid|taken|offline|saving|avatar|upload_error|edit poe o
 ## Perfil num estado (ApiClient falso, avatares em user://capture_avatars/); --route=lobby com
@@ -173,6 +175,7 @@ func _capture() -> void:
 			(history_screen[0] as HistoryScreen).select_filter(filters[args["filter"]])
 	await _compendium(app as App, args)
 	_arena_map(app as App, args)
+	await _heroes(app as App, args)
 	if args.has("tab"):
 		var screen := app.find_children("*", "SettingsScreen", true, false)
 		if not screen.is_empty():
@@ -335,6 +338,25 @@ func _arena_map(app: App, args: Dictionary) -> void:
 	var found := app.find_children("*", "ArenaMapScreen", true, false)
 	if not found.is_empty() and args.has("poi"):
 		(found[0] as ArenaMapScreen).select_poi(args["poi"])
+
+
+## F71: heroi, classe, busca e rolagem da tela Herois (so desta captura).
+func _heroes(app: App, args: Dictionary) -> void:
+	var found := app.find_children("*", "HeroesScreen", true, false)
+	if found.is_empty():
+		return
+	var screen := found[0] as HeroesScreen
+	if args.has("hero"):
+		screen.select_hero(StringName(args["hero"]))
+	if args.has("role"):
+		screen.select_role(args["role"])
+	if args.has("query"):
+		screen.search_field().text = args["query"]
+		screen.search_field().text_changed.emit(args["query"])
+	if args.has("scroll"):
+		await process_frame
+		await process_frame
+		screen.scroll_to(int(args["scroll"]))
 
 
 ## F27: filtros, busca, build do simulador e rolagem do Compendio (so desta captura).
