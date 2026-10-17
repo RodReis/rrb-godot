@@ -10,8 +10,11 @@ extends "arena_terrain.gd"
 const VEGETATION_OUT: String = "res://scenes/arena/vegetation.tscn"
 const VEGETATION_SCRIPT: String = "res://scripts/world/vegetation.gd"
 const GRASS_SHADER: String = "res://shared/shaders/grass_wind.gdshader"
-## Grade com jitter (u): um candidato por celula.
-const GRASS_STEP: float = 0.4
+## Densidade relativa ao F42 (F73: x2 nos campos abertos); a celula encolhe pela raiz.
+const GRASS_DENSITY: float = 2.0
+## Grade com jitter (u): um candidato por celula (0,4 u no F42).
+const GRASS_BASE_STEP: float = 0.4
+const GRASS_STEP: float = GRASS_BASE_STEP / sqrt(GRASS_DENSITY)
 ## Peso maximo de camada que nao e grama nem musgo na mascara para ainda nascer tufo.
 const GRASS_MASK_MAX: float = 0.2
 ## Folga em volta da caixa do mato alto (u).

@@ -15,7 +15,17 @@ const SPLAT_SOFT: float = 0.9
 ## Canal do musgo na mascara (R terra, G pedra, B musgo, A rocha).
 const MOSS_CHANNEL: int = 2
 
-const TEXTURES: String = "res://shared/assets/ambientcg/%s_%s.jpg"
+## Conjuntos PBR CC0 (ambientCG, 2K, F73): pasta por area em shared/assets/textures/<area>/.
+const TEXTURES: String = "res://shared/assets/textures/%s/%s_%s.jpg"
+const TEXTURE_AREAS: Dictionary[String, String] = {
+	"grass": "terrain",
+	"moss": "terrain",
+	"dirt": "terrain",
+	"paving": "terrain",
+	"rock": "rock",
+	"bricks": "castle",
+	"planks": "wood",
+}
 const TERRAIN_LAYERS: Array[String] = ["grass", "moss", "dirt", "paving", "rock"]
 const TERRAIN_SHADER: String = "res://shared/shaders/terrain_splat.gdshader"
 const TRIPLANAR_SHADER: String = "res://shared/shaders/triplanar_pbr.gdshader"
@@ -25,6 +35,14 @@ const TERRAIN_MATERIAL: String = MATERIALS + "terrain.tres"
 const ROCK_MATERIAL: String = MATERIALS + "rock_moss.tres"
 const STONE_MATERIAL: String = MATERIALS + "castle_stone.tres"
 const PINE_MATERIAL: String = MATERIALS + "pine_foliage.tres"
+## Madeira (F73): cavalo-de-frisa, balista e baus; a cor da celula do atlas entra como matiz.
+const WOOD_MATERIAL: String = MATERIALS + "wood_planks.tres"
+const WOOD_TINT: Color = Color(1.0, 0.95, 0.9)
+const WOOD_TILE: float = 0.8
+const WOOD_ATLAS_TINT: float = 0.85
+## Mais claro e saturado que a pedra: o bau laranja e leitura de jogo (loot), nao pode escurecer.
+const WOOD_BRIGHTNESS: float = 1.35
+const WOOD_SATURATION: float = 1.3
 const TALL_GRASS_MATERIAL: String = MATERIALS + "tall_grass.tres"
 ## Mato alto com abertura para o heroi local (F72): shader proprio, transparente no pipeline.
 const TALL_GRASS_SHADER: String = "res://shared/shaders/tall_grass.gdshader"
@@ -315,6 +333,7 @@ func _save_materials() -> void:
 	_save(_valley_material(), VALLEY_MATERIAL)
 	_save(_valley_pine_material(), VALLEY_PINE_MATERIAL)
 	_save(_triplanar("bricks", Color(0.78, 0.78, 0.8), 0.45, 0.78, 0.65), STONE_MATERIAL)
+	_save(_wood_material(), WOOD_MATERIAL)
 	# Folhagem: detalhe da grama, cor (tronco marrom, galho verde-escuro) pela celula do atlas.
 	_save(_foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0)), PINE_MATERIAL)
 	# Mato alto: mesma receita, mais claro que o pinheiro (leitura a distancia da camera).
@@ -330,9 +349,9 @@ func _terrain_material() -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = load(TERRAIN_SHADER)
 	for layer: String in TERRAIN_LAYERS:
-		m.set_shader_parameter("%s_albedo" % layer, _texture(TEXTURES % [layer, "albedo"]))
-		m.set_shader_parameter("%s_normal" % layer, _texture(TEXTURES % [layer, "normal"]))
-		m.set_shader_parameter("%s_rough" % layer, _texture(TEXTURES % [layer, "rough"]))
+		m.set_shader_parameter("%s_albedo" % layer, _pbr(layer, "albedo"))
+		m.set_shader_parameter("%s_normal" % layer, _pbr(layer, "normal"))
+		m.set_shader_parameter("%s_rough" % layer, _pbr(layer, "rough"))
 	m.set_shader_parameter("splat_map", _texture(SPLAT_PATH))
 	m.set_shader_parameter(
 		"splat_rect", Vector4(SPLAT_ORIGIN.x, SPLAT_ORIGIN.y, SPLAT_EXTENT, SPLAT_EXTENT)
@@ -355,13 +374,13 @@ func _triplanar(
 ) -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = load(TRIPLANAR_SHADER)
-	m.set_shader_parameter("base_albedo", _texture(TEXTURES % [base, "albedo"]))
-	m.set_shader_parameter("base_normal", _texture(TEXTURES % [base, "normal"]))
-	m.set_shader_parameter("base_rough", _texture(TEXTURES % [base, "rough"]))
+	m.set_shader_parameter("base_albedo", _pbr(base, "albedo"))
+	m.set_shader_parameter("base_normal", _pbr(base, "normal"))
+	m.set_shader_parameter("base_rough", _pbr(base, "rough"))
 	m.set_shader_parameter("base_tile", tile)
 	m.set_shader_parameter("base_tint", tint)
-	m.set_shader_parameter("moss_albedo", _texture(TEXTURES % ["moss", "albedo"]))
-	m.set_shader_parameter("moss_normal", _texture(TEXTURES % ["moss", "normal"]))
+	m.set_shader_parameter("moss_albedo", _pbr("moss", "albedo"))
+	m.set_shader_parameter("moss_normal", _pbr("moss", "normal"))
 	m.set_shader_parameter("moss_tint", MOSS_TINT)
 	m.set_shader_parameter("moss_from", moss_from)
 	m.set_shader_parameter("moss_amount", 0.8 if moss_from < 1.0 else 0.0)
@@ -370,6 +389,13 @@ func _triplanar(
 	m.set_shader_parameter("ambient_lift", Color.BLACK)
 	m.set_shader_parameter("brightness", TERRAIN_BRIGHTNESS)
 	m.set_shader_parameter("saturation", TERRAIN_SATURATION)
+	return m
+
+
+func _wood_material() -> ShaderMaterial:
+	var m := _triplanar("planks", WOOD_TINT, WOOD_TILE, 1.0, WOOD_ATLAS_TINT)
+	m.set_shader_parameter("brightness", WOOD_BRIGHTNESS)
+	m.set_shader_parameter("saturation", WOOD_SATURATION)
 	return m
 
 
@@ -404,6 +430,10 @@ func _foliage(m: ShaderMaterial) -> ShaderMaterial:
 
 ## Textura importada; na primeira rodada (mascara recem-gravada, ainda sem import) devolve uma
 ## referencia vazia com o caminho, que o .tres salva como recurso externo.
+func _pbr(set_name: String, kind: String) -> Texture2D:
+	return _texture(TEXTURES % [TEXTURE_AREAS[set_name], set_name, kind])
+
+
 func _texture(path: String) -> Texture2D:
 	if ResourceLoader.exists(path):
 		return load(path)

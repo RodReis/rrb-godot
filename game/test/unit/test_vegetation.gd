@@ -15,6 +15,9 @@ const CRATER_REACH: float = 7.4
 ## Spawn A (canto SO) e raio do muro em arco da base = spawn -> portao (SPEC-046 §2.4).
 const SPAWN_A: Vector3 = Vector3(-24.0, 0.0, 24.0)
 const BASE_ARC: float = 12.7
+## F73: o dobro do F42 (6.205 tufos com a grade de 0,4 u); o piso deixa folga ao ruido da mascara.
+const DENSE_TUFTS_FLOOR: int = 11000
+const FADE_START: float = 30.0
 
 var _arena: Node3D
 var _vegetation: Vegetation
@@ -39,6 +42,23 @@ func test_arena_instancia_a_vegetacao() -> void:
 	var node := _arena.get_node_or_null("Vegetation")
 	assert_not_null(node)
 	assert_eq(node.scene_file_path, VEGETATION)
+
+
+func test_densidade_dobrada_no_f73() -> void:
+	assert_gt(_tufts.size(), DENSE_TUFTS_FLOOR)
+
+
+func test_shader_encolhe_o_tufo_com_a_distancia() -> void:
+	# O renderizador headless nao devolve o padrao do uniform: le do codigo do shader.
+	var code := (load(GRASS_SHADER) as Shader).code
+	var start := _uniform_default(code, "fade_start")
+	assert_almost_eq(start, FADE_START, 0.01)
+	assert_gt(_uniform_default(code, "fade_end"), start)
+
+
+func _uniform_default(code: String, uniform: String) -> float:
+	var found := RegEx.create_from_string("uniform float %s = ([0-9.]+)" % uniform).search(code)
+	return found.get_string(1).to_float() if found != null else NAN
 
 
 func test_um_draw_call_com_o_shader_de_vento() -> void:
