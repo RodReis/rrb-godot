@@ -71,6 +71,7 @@ script = ExtResource("1_script")
 id = &"fire_wizard"
 display_name = "Bruxo de Fogo"
 role = "Mago"
+weapon_name = "Cajado"
 summary = "Dano mágico em área à distância, frágil; afasta quem chega perto com o Anel de Fogo."
 base_move_speed = 6.0
 base_hp = 360.0

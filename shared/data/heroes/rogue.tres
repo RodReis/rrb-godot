@@ -71,6 +71,7 @@ script = ExtResource("1_script")
 id = &"rogue"
 display_name = "Ladina"
 role = "Algoz"
+weapon_name = "Besta"
 summary = "Dano alto de perto com a besta, frágil; some na fumaça e entra com a Emboscada."
 base_move_speed = 6.3
 base_hp = 400.0

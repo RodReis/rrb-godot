@@ -72,6 +72,7 @@ script = ExtResource("1_script")
 id = &"barbarian"
 display_name = "Bárbaro"
 role = "Algoz"
+weapon_name = "Machado"
 summary = "Dano alto corpo a corpo, frágil; entra com salto e finaliza com a Execução."
 base_move_speed = 6.0
 base_hp = 480.0
