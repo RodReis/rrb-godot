@@ -19,6 +19,8 @@ extends SceneTree
 ## F35: --route=profile --state=setup|invalid|taken|offline|saving|avatar|upload_error|edit poe o
 ## Perfil num estado (ApiClient falso, avatares em user://capture_avatars/); --route=lobby com
 ## --nick=<nome> [--avatar=hero:knight] [--record=14:6] mostra o chip do cabecalho.
+## F70: --result=win|loss|interrupted|loading|error abre o lobby com o card "Resultado da partida"
+## naquele estado (dados de exemplo do Historico; so da captura).
 
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_SIZE: Vector2i = Vector2i(1920, 1080)
@@ -137,6 +139,9 @@ func _capture() -> void:
 	root.add_child(app)
 	await process_frame
 	root.size = _size(args.get("size", ""))
+	# O splash (F68) cobre a janela ate o 1o health ou 2 s: some antes de a tela ser composta.
+	(app as App).call("_dismiss_splash")
+	await create_timer(BootSplash.FADE_SECONDS + 0.3).timeout
 	if args.has("login"):
 		var credentials: PackedStringArray = args["login"].split(":", true, 1)
 		var result := await (app as App).auth.login(credentials[0], credentials[1])
@@ -155,6 +160,7 @@ func _capture() -> void:
 	if args.get("route", "") == "lobby" and args.has("nick"):
 		(app as App).call("_refresh_profile_chip")
 	await _set_state(app as App, args.get("state", ""))
+	_result_card(app as App, args.get("result", ""))
 	await _profile_state(app as App, args.get("state", ""))
 	if args.has("overlay"):
 		(app as App).match_overlay().open(false)
@@ -189,6 +195,24 @@ func _capture() -> void:
 	var err := image.save_png(out)
 	print("[capture] %s %s (%s)" % [out, image.get_size(), error_string(err)])
 	quit(err)
+
+
+## F70: card de resultado por cima do lobby. win/loss/interrupted usam as partidas de exemplo do
+## Historico (vitoria, derrota, interrompida); loading e error sao os outros dois estados.
+func _result_card(app: App, state: String) -> void:
+	if state.is_empty():
+		return
+	var card := app.result_card()
+	if state == "loading":
+		card.show_loading()
+		return
+	if state == "error":
+		card.show_error()
+		return
+	var sample: Array = HISTORY_SAMPLE["matches"]
+	var index: int = {"win": 0, "loss": 1, "interrupted": 3}[state]
+	var summary := MatchSummary.from_dict(sample[index])
+	card.show_result(summary, MatchTotals.from_dict(HISTORY_SAMPLE["totals"]))
 
 
 ## F35: conta de exemplo no ProfileService (ApiClient falso: nada vai ao backend) e avatares em

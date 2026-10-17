@@ -5,7 +5,8 @@ extends CanvasLayer
 ## a condicao do fim, a duracao e a tabela lado a lado dos dois jogadores, quem joga a esquerda,
 ## com a comparacao no meio. So exibe o MatchStats que chegou no match_ended; nada e calculado
 ## aqui alem de quem esta melhor em cada linha. Os dois botoes pedem o fim do processo por sinal
-## (o Game nao tem fila: "Jogar novamente" e o Launcher reabrindo a fila); Esc = voltar.
+## (o Game nao tem fila: "Jogar novamente" e o Launcher reabrindo a fila); Esc = voltar. Sem
+## clique, fecha sozinha apos AUTO_CLOSE_SECONDS (contagem visivel, F70) pelo mesmo sinal do Voltar.
 
 signal play_again_requested
 signal back_requested
@@ -85,6 +86,8 @@ const PRESS_SCALE: float = 0.95
 ## Som: o jingle do repo (DS-10), agudo na vitoria e grave na derrota.
 const VICTORY_PITCH: float = 1.2
 const DEFEAT_PITCH: float = 0.7
+## Sem clique, a tela fecha sozinha (F70, ADR-0015 item 8): o Launcher volta ao lobby com o card.
+const AUTO_CLOSE_SECONDS: float = 15.0
 
 @export var item_catalog: ItemCatalog = preload("res://shared/data/items/catalog.tres")
 
@@ -93,8 +96,10 @@ var _roster: Array[HeroData] = []
 var _tween: Tween
 ## Tween em laço do botão principal; null fora da vitória.
 var _pulse_tween: Tween
+var _seconds_left: float = 0.0
 
 @onready var _root: Control = $Root
+@onready var _countdown: Label = %Countdown
 @onready var _backdrop: RunicBackdrop = %Backdrop
 @onready var _particles: CPUParticles2D = %Particles
 @onready var _title: Label = %Title
@@ -120,6 +125,7 @@ var _pulse_tween: Tween
 
 func _ready() -> void:
 	visible = false
+	set_process(false)
 	var names: Array[String] = []
 	for row: String in ROWS:
 		names.append(tr(row))
@@ -144,10 +150,23 @@ func _ready() -> void:
 		button.resized.connect(_on_button_resized.bind(button))
 
 
+func _process(delta: float) -> void:
+	_seconds_left = maxf(_seconds_left - delta, 0.0)
+	_show_countdown()
+	if _seconds_left <= 0.0:
+		set_process(false)
+		back_requested.emit()
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
 		back_requested.emit()
+
+
+## Segundos que faltam para a tela fechar sozinha; 0 antes de apresentar e depois de fechar.
+func seconds_left() -> float:
+	return _seconds_left
 
 
 ## Se o botão principal está pulsando (só na vitória).
@@ -190,6 +209,9 @@ func present(winner: int, reason: StringName, stats: MatchStats, local_peer: int
 	visible = true
 	_play_again.grab_focus()
 	_animate(outcome)
+	_seconds_left = AUTO_CLOSE_SECONDS
+	_show_countdown()
+	set_process(true)
 
 
 ## Milhar com ponto, como em pt-BR ("4.820").
@@ -201,6 +223,10 @@ static func format_number(value: int) -> String:
 			grouped += "."
 		grouped += digits[i]
 	return "-" + grouped if value < 0 else grouped
+
+
+func _show_countdown() -> void:
+	_countdown.text = tr("Fechando em %d s") % ceili(_seconds_left)
 
 
 func _glyph_holder() -> CenterContainer:

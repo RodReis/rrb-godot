@@ -2,8 +2,9 @@
 extends GutTest
 ## F25: fluxo do App (ARCHITECTURE-LAUNCHER §3.4, §5.2, §6) com ApiClient falso: abre no Login,
 ## entra no Lobby, sessao expirada volta ao Login, pareado sem executavel abandona a partida e
-## mostra o erro, saida do Game fecha o overlay e trata o codigo, sair da conta. F26: o fim normal
-## de uma partida online abre o Historico; treino e codigo 3 nao.
+## mostra o erro, saida do Game fecha o overlay e trata o codigo, sair da conta. F70: o fim normal
+## de uma partida online volta ao lobby com o card "Resultado da partida" (espera a partida no
+## GET /matches, 3 tentativas); treino e codigo 3 nao abrem o card.
 
 const SCENE: PackedScene = preload("res://scenes/app.tscn")
 const MATCH: String = "0b7e9f00-1111-4222-8333-444455556666"
@@ -30,6 +31,51 @@ func before_each() -> void:
 	_app.avatars = AvatarStore.new("user://test_app_avatars/")
 	add_child_autofree(_app)
 	await wait_process_frames(1)
+
+
+## GET /matches?mine=1 com a partida MATCH (ou sem ela, se `with_match` for falso).
+func _history_json(with_match: bool, wins: int = 1, losses: int = 0) -> Dictionary:
+	var matches: Array = []
+	if with_match:
+		(
+			matches
+			. append(
+				{
+					"matchId": MATCH,
+					"result": "win",
+					"playedAt": "2026-10-16T12:10:00.000Z",
+					"endReason": "kill_goal",
+					"durationS": 508,
+					"me":
+					{
+						"heroId": "knight",
+						"kills": 5,
+						"finalLevel": 9,
+						"deaths": 3,
+						"bossKill": false,
+						"setActive": null,
+					},
+					"opponent":
+					{"heroId": "ranger", "kills": 3, "finalLevel": 8, "nickname": "Rival"},
+				}
+			)
+		)
+	return {"totals": {"wins": wins, "losses": losses}, "matches": matches}
+
+
+## Fim da partida online MATCH com o Game saindo com `code`; sem espera entre as tentativas.
+func _end_online_match(code: int = GameProcess.EXIT_NORMAL) -> void:
+	_app.result_retry_seconds = 0.0
+	_app.set(&"_match_id", MATCH)  # partida online aberta (o launch real nao existe no teste)
+	_app.game.exited.emit(code)
+
+
+func _wait_result_card() -> MatchResultCard:
+	var card := _app.result_card()
+	await wait_until(
+		func() -> bool: return card.state() in [StateBox.State.READY, StateBox.State.ERROR], 3.0
+	)
+	return card
 
 
 func _enter_lobby() -> LobbyScreen:
@@ -155,39 +201,6 @@ func test_splash_some_na_primeira_checagem_e_a_periodica_nao_o_toca() -> void:
 	assert_eq(_app.find_children("*", "BootSplash", true, false).size(), 0)
 	await _app.check_backend()  # splash ja liberado: a checagem a cada 10 s nao pode quebrar
 	assert_not_null(_app.stack().current())
-
-
-func test_fim_normal_de_partida_online_abre_o_historico() -> void:
-	await _enter_lobby()
-	_api.reply("GET /matches?mine=1", 200, {"totals": {"wins": 0, "losses": 0}, "matches": []})
-	_app.set(&"_match_id", MATCH)  # partida online aberta (o launch real nao existe no teste)
-	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
-	await wait_process_frames(2)
-	assert_eq(_app.stack().current_route(), Router.HISTORY)
-	assert_eq(_app.stack().depth(), 2, "o lobby continua embaixo")
-	assert_true(_api.calls.has("GET /matches?mine=1"))
-
-
-func test_fim_normal_descarta_o_cache_para_a_partida_nova_aparecer() -> void:
-	await _enter_lobby()
-	var base := _api.calls.count("GET /matches?mine=1")  # o chip do cabecalho busca o V-D (F35)
-	var stale := {"totals": {"wins": 0, "losses": 0}, "matches": []}
-	_api.reply("GET /matches?mine=1", 200, stale)
-	await _app.history.fetch()
-	_api.reply("GET /matches?mine=1", 200, stale)
-	_app.set(&"_match_id", MATCH)
-	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
-	await wait_process_frames(2)
-	assert_eq(_api.calls.count("GET /matches?mine=1"), base + 2)
-
-
-func test_fim_normal_do_treino_volta_ao_lobby_sem_historico() -> void:
-	await _enter_lobby()
-	var base := _api.calls.count("GET /matches?mine=1")  # o chip do cabecalho busca o V-D (F35)
-	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
-	await wait_process_frames(2)
-	assert_eq(_app.stack().current_route(), Router.LOBBY)
-	assert_eq(_api.calls.count("GET /matches?mine=1"), base, "treino nao grava partida: nada novo")
 
 
 func test_resultado_nao_reportado_avisa_e_fica_no_lobby() -> void:
@@ -326,19 +339,172 @@ func test_saida_com_erro_de_partida_online_tambem_descarta_o_cache() -> void:
 	assert_null(_app.history.history)
 
 
-func test_fim_de_partida_com_o_historico_ja_aberto_busca_de_novo() -> void:
+func test_fim_normal_online_volta_ao_lobby_com_o_card_do_resultado() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(true, 3, 2))
+	_end_online_match()
+	var card := await _wait_result_card()
+	assert_eq(_app.stack().current_route(), Router.LOBBY)
+	assert_eq(_app.stack().depth(), 1, "sem Historico empilhado")
+	assert_true(card.visible)
+	assert_eq(card.state(), StateBox.State.READY)
+	assert_eq(card.result(), MatchCard.WIN)
+
+
+func test_card_atualiza_o_vd_do_chip_do_cabecalho() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(true, 3, 2))
+	_end_online_match()
+	await _wait_result_card()
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	assert_eq(bar.profile_chip().record_label_text(), "3V–2D")
+
+
+func test_partida_que_demora_2_s_aparece() -> void:
+	await _enter_lobby()
+	var base := _api.calls.count("GET /matches?mine=1")
+	_api.reply("GET /matches?mine=1", 200, _history_json(false, 0, 0))
+	_api.reply("GET /matches?mine=1", 200, _history_json(false, 0, 0))
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	var card := await _wait_result_card()
+	assert_eq(card.state(), StateBox.State.READY)
+	assert_eq(_api.calls.count("GET /matches?mine=1"), base + 3)
+
+
+func test_partida_que_nao_aparece_em_3_tentativas_mostra_o_erro() -> void:
+	await _enter_lobby()
+	var base := _api.calls.count("GET /matches?mine=1")
+	for i: int in 3:
+		_api.reply("GET /matches?mine=1", 200, _history_json(false, 0, 0))
+	_end_online_match()
+	var card := await _wait_result_card()
+	assert_eq(card.state(), StateBox.State.ERROR)
+	assert_eq(_api.calls.count("GET /matches?mine=1"), base + 3, "3 tentativas, nem mais")
+	assert_eq(_app.stack().current_route(), Router.LOBBY)
+
+
+func test_backend_fora_ao_buscar_o_resultado_mostra_o_erro() -> void:
+	await _enter_lobby()
+	_end_online_match()  # sem resposta nenhuma: backend fora
+	var card := await _wait_result_card()
+	assert_eq(card.state(), StateBox.State.ERROR)
+
+
+func test_fim_normal_descarta_o_cache_para_a_partida_nova_aparecer() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(false, 0, 0))
+	await _app.history.fetch()
+	assert_not_null(_app.history.history)
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	var card := await _wait_result_card()
+	assert_eq(card.state(), StateBox.State.READY, "buscou de novo em vez de usar o cache velho")
+
+
+func test_fim_normal_do_treino_volta_ao_lobby_sem_card() -> void:
 	await _enter_lobby()
 	var base := _api.calls.count("GET /matches?mine=1")  # o chip do cabecalho busca o V-D (F35)
-	var empty := {"totals": {"wins": 0, "losses": 0}, "matches": []}
-	_api.reply("GET /matches?mine=1", 200, empty)
-	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
-	bar.navigate_requested.emit(Router.HISTORY)
-	await wait_process_frames(2)
-	var old_screen := _app.stack().current()
-	_api.reply("GET /matches?mine=1", 200, empty)
-	_app.set(&"_match_id", MATCH)
 	_app.game.exited.emit(GameProcess.EXIT_NORMAL)
+	await wait_process_frames(3)
+	assert_eq(_app.stack().current_route(), Router.LOBBY)
+	assert_false(_app.result_card().visible)
+	assert_eq(_api.calls.count("GET /matches?mine=1"), base, "treino nao grava partida: nada novo")
+
+
+func test_resultado_nao_reportado_nao_abre_o_card() -> void:
+	await _enter_lobby()
+	_end_online_match(GameProcess.EXIT_RESULT_NOT_REPORTED)
+	await wait_process_frames(3)
+	assert_false(_app.result_card().visible, "o aviso do codigo 3 e separado do card")
+
+
+func test_fim_com_outra_tela_aberta_volta_ao_lobby() -> void:
+	await _enter_lobby()
+	_app.stack().push(Router.BESTIARY)
 	await wait_process_frames(2)
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	await _wait_result_card()
+	assert_eq(_app.stack().current_route(), Router.LOBBY)
+	assert_eq(_app.stack().depth(), 1)
+
+
+func test_jogar_de_novo_entra_na_fila_uma_vez_so() -> void:
+	var lobby := await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	var card := await _wait_result_card()
+	_api.reply(
+		"POST /queue",
+		201,
+		{"id": "t1", "status": "searching", "createdAt": "2026-10-15T12:00:00.000Z"}
+	)
+	card.play_again_button().pressed.emit()
+	card.play_again_button().pressed.emit()
+	await wait_process_frames(3)
+	assert_eq(_api.calls.count("POST /queue"), 1)
+	assert_false(card.visible, "o card fecha ao entrar na fila")
+	assert_true(_app.queue.is_searching())
+	assert_eq(lobby.queue_state(), LobbyScreen.QueueState.SEARCHING)
+
+
+func test_ver_historico_fecha_o_card_e_abre_o_historico() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	var card := await _wait_result_card()
+	card.history_button().pressed.emit()
+	await wait_process_frames(3)
+	assert_false(card.visible)
 	assert_eq(_app.stack().current_route(), Router.HISTORY)
-	assert_ne(_app.stack().current(), old_screen, "tela nova, com dado novo")
-	assert_eq(_api.calls.count("GET /matches?mine=1"), base + 2)
+	assert_eq(_app.stack().depth(), 2, "o lobby continua embaixo")
+
+
+func test_erro_leva_ao_historico_tambem() -> void:
+	await _enter_lobby()
+	_end_online_match()
+	var card := await _wait_result_card()
+	card.history_button().pressed.emit()
+	await wait_process_frames(3)
+	assert_eq(_app.stack().current_route(), Router.HISTORY)
+
+
+func test_tentar_de_novo_do_erro_busca_a_partida_outra_vez() -> void:
+	await _enter_lobby()
+	_end_online_match()
+	var card := await _wait_result_card()
+	assert_eq(card.state(), StateBox.State.ERROR)
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	card.retry_requested.emit()
+	await wait_until(func() -> bool: return card.state() == StateBox.State.READY, 3.0)
+	assert_eq(card.result(), MatchCard.WIN)
+
+
+func test_esc_no_carregando_nao_deixa_o_card_reabrir_depois() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	_app.result_card().close()  # o jogador fechou enquanto a partida ainda era buscada
+	await wait_process_frames(5)
+	assert_false(_app.result_card().visible)
+
+
+func test_sair_da_conta_fecha_o_card() -> void:
+	var lobby := await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	await _wait_result_card()
+	lobby.logout_requested.emit()
+	await wait_process_frames(2)
+	assert_false(_app.result_card().visible)
+	assert_eq(_app.stack().current_route(), Router.LOGIN)
+
+
+func test_sessao_expirada_fecha_o_card() -> void:
+	await _enter_lobby()
+	_api.reply("GET /matches?mine=1", 200, _history_json(true))
+	_end_online_match()
+	await _wait_result_card()
+	_api.unauthorized.emit()
+	assert_false(_app.result_card().visible)

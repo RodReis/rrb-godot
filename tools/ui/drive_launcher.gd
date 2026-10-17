@@ -11,6 +11,10 @@ extends SceneTree
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_TIMEOUT: float = 900.0
 const STEP: float = 0.5
+## Quadros esperando o lobby depois do login (conta buscada no backend).
+const LOBBY_WAIT_FRAMES: int = 600
+## Espera do card de resultado depois que o Game fecha (3 tentativas a 1 s mais a rede).
+const RESULT_TIMEOUT: float = 15.0
 
 var _app: App
 var _args: Dictionary = {}
@@ -33,6 +37,11 @@ func _run() -> void:
 	login.email_field().text = _args.get("email", "")
 	login.password_field().text = _args.get("password", "")
 	await login.submit()
+	# Depois do login o App ainda busca a conta (F35) antes de abrir o lobby.
+	for i: int in LOBBY_WAIT_FRAMES:
+		if _app.stack().current() is LobbyScreen:
+			break
+		await process_frame
 	var lobby := _app.stack().current() as LobbyScreen
 	if lobby == null:
 		_finish(1, "nao entrou no lobby: %s" % login.error_text())
@@ -67,6 +76,8 @@ func _run() -> void:
 			var modal := _app.find_children("*", "ModalDialog", true, false)[0] as ModalDialog
 			modal.buttons()[1].pressed.emit()
 		if game_seen and not _app.game.is_running() and not _app.match_overlay().visible:
+			if not _args.has("kill-after") and not await _wait_result_card():
+				return
 			await _frames(30)
 			_log(
 				(
@@ -85,6 +96,28 @@ func _run() -> void:
 			return
 		await create_timer(STEP).timeout
 	_finish(1, "tempo esgotado")
+
+
+## Partida online que acabou normal (F70): o Launcher volta ao lobby com o card "Resultado da
+## partida"; espera ele sair do carregando e confere que mostra um resultado. false = ja encerrou.
+func _wait_result_card() -> bool:
+	var card := _app.result_card()
+	var deadline := Time.get_ticks_msec() / 1000.0 + RESULT_TIMEOUT
+	while card.state() in [StateBox.State.IDLE, StateBox.State.LOADING]:
+		if Time.get_ticks_msec() / 1000.0 > deadline:
+			_finish(1, "o card de resultado nao saiu do carregando")
+			return false
+		await create_timer(STEP).timeout
+	_log("card: %s %s" % [StateBox.State.keys()[card.state()], card.result()])
+	await _frames(30)
+	await _save("resultado")
+	if card.state() != StateBox.State.READY:
+		_finish(1, "o card nao achou a partida no historico")
+		return false
+	if _app.stack().current_route() != Router.LOBBY:
+		_finish(1, "o card nao abriu sobre o lobby: %s" % _app.stack().current_route())
+		return false
+	return true
 
 
 func _parse() -> Dictionary:
