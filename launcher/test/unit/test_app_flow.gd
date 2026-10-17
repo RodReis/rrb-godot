@@ -37,23 +37,28 @@ func before_each() -> void:
 func _history_json(with_match: bool, wins: int = 1, losses: int = 0) -> Dictionary:
 	var matches: Array = []
 	if with_match:
-		matches.append(
-			{
-				"matchId": MATCH,
-				"result": "win",
-				"playedAt": "2026-10-16T12:10:00.000Z",
-				"endReason": "kill_goal",
-				"durationS": 508,
-				"me": {
-					"heroId": "knight",
-					"kills": 5,
-					"finalLevel": 9,
-					"deaths": 3,
-					"bossKill": false,
-					"setActive": null,
-				},
-				"opponent": {"heroId": "ranger", "kills": 3, "finalLevel": 8, "nickname": "Rival"},
-			}
+		(
+			matches
+			. append(
+				{
+					"matchId": MATCH,
+					"result": "win",
+					"playedAt": "2026-10-16T12:10:00.000Z",
+					"endReason": "kill_goal",
+					"durationS": 508,
+					"me":
+					{
+						"heroId": "knight",
+						"kills": 5,
+						"finalLevel": 9,
+						"deaths": 3,
+						"bossKill": false,
+						"setActive": null,
+					},
+					"opponent":
+					{"heroId": "ranger", "kills": 3, "finalLevel": 8, "nickname": "Rival"},
+				}
+			)
 		)
 	return {"totals": {"wins": wins, "losses": losses}, "matches": matches}
 

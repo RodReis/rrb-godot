@@ -7,23 +7,27 @@ const MATCH: String = "0b7e9f00-1111-4222-8333-444455556666"
 
 
 func _make_summary(result: String = "win") -> MatchSummary:
-	return MatchSummary.from_dict(
-		{
-			"matchId": MATCH,
-			"result": result,
-			"playedAt": "2026-10-16T12:10:00.000Z",
-			"endReason": "kill_goal" if result != "interrupted" else "heartbeat_lost",
-			"durationS": 508 if result != "interrupted" else null,
-			"me": {
-				"heroId": "knight",
-				"kills": 5,
-				"finalLevel": 9,
-				"deaths": 3,
-				"bossKill": false,
-				"setActive": null,
-			},
-			"opponent": {"heroId": "ranger", "kills": 3, "finalLevel": 8, "nickname": "Rival"},
-		}
+	return (
+		MatchSummary
+		. from_dict(
+			{
+				"matchId": MATCH,
+				"result": result,
+				"playedAt": "2026-10-16T12:10:00.000Z",
+				"endReason": "kill_goal" if result != "interrupted" else "heartbeat_lost",
+				"durationS": 508 if result != "interrupted" else null,
+				"me":
+				{
+					"heroId": "knight",
+					"kills": 5,
+					"finalLevel": 9,
+					"deaths": 3,
+					"bossKill": false,
+					"setActive": null,
+				},
+				"opponent": {"heroId": "ranger", "kills": 3, "finalLevel": 8, "nickname": "Rival"},
+			}
+		)
 	)
 
 
@@ -160,11 +164,16 @@ func test_resultado_novo_troca_o_cartao_anterior() -> void:
 	assert_true(_all_texts(card).has("14V — 7D"))
 
 
+func _caption(card: MatchResultCard) -> Label:
+	for node: Node in card.find_children("*", "Label", true, false):
+		if (node as Label).text == "V–D DA CONTA":
+			return node as Label
+	return null
+
+
 func test_vd_da_conta_so_aparece_com_resultado() -> void:
 	var card := _make_card()
-	var caption := card.find_children("*", "Label", true, false).filter(
-		func(label: Node) -> bool: return (label as Label).text == "V–D DA CONTA"
-	)[0] as Label
+	var caption := _caption(card)
 	card.show_loading()
 	assert_false(caption.visible, "carregando: sem V-D inventado")
 	card.show_error()

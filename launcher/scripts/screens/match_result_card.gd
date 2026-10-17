@@ -78,7 +78,7 @@ func show_result(summary: MatchSummary, totals: MatchTotals) -> void:
 	_play_again.grab_focus.call_deferred()
 
 
-## A partida nao apareceu a tempo: o aviso do codigo 3 (App) e outro; aqui so o caminho ao Historico.
+## A partida nao apareceu a tempo: o aviso do codigo 3 (App) e outro; aqui, o caminho ao Historico.
 func show_error() -> void:
 	_clear_match_card()
 	_open(StateBox.State.ERROR, tr("Não foi possível carregar o resultado desta partida."))
@@ -96,7 +96,9 @@ func state() -> StateBox.State:
 
 ## WIN, LOSS ou INTERRUPTED (do MatchCard); "" fora do estado de resultado.
 func result() -> String:
-	return _match_card.result if _match_card != null and _state.state == StateBox.State.READY else ""
+	return (
+		_match_card.result if _match_card != null and _state.state == StateBox.State.READY else ""
+	)
 
 
 func play_again_button() -> Button:

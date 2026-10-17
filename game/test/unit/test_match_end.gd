@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## Tela de fim de partida (F18 + F52, protótipo "Destaques da Tela de Fim de Partida"): só exibe o
 ## que chegou no match_ended (MatchStats do servidor); quem joga fica à esquerda; o tom da tela
@@ -325,7 +326,8 @@ func test_contagem_desce_com_o_tempo() -> void:
 	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
 	_end._process(4.5)
 	assert_almost_eq(_end.seconds_left(), 10.5, 0.001)
-	assert_eq(countdown.text, "Fechando em 11 s", "arredonda para cima: nunca mostra 0 antes de fechar")
+	# Arredonda para cima: nunca mostra 0 antes de fechar.
+	assert_eq(countdown.text, "Fechando em 11 s")
 
 
 func test_ao_zerar_fecha_sozinha_uma_vez() -> void:
