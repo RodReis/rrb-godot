@@ -4,6 +4,17 @@ extends Node
 ## estado do Hero (replicado/previsto) e mostra o equipamento (SPEC-048): cada item equipado
 ## vira pecas presas aos ossos por BoneAttachment3D (ItemVisuals). So le estado; nunca o altera.
 ## Morto: cai uma vez e fica. Servidor headless nao carrega peca nenhuma.
+## Silhueta no mato alto (F72, ADR-0015 item 10): so no cliente de quem controla o heroi, dentro de
+## moita ou fumaca, as malhas ganham um passe translucido sem teste de profundidade e a moita abre
+## em volta. Le a regra (Hero.zones_at); nao toca em VisibilityRules, estado nem replicacao.
+
+## Raio da abertura da moita em volta do heroi (u) e alpha da silhueta.
+const REVEAL_RADIUS: float = 2.5
+const SILHOUETTE_ALPHA: float = 0.35
+## Por cima de tudo o que e transparente (a moita fica em -10, as barras em 0).
+const SILHOUETTE_PRIORITY: int = 100
+## Material unico das moitas (o glTF aponta para ele): o mesmo recurso em todas as malhas.
+const GRASS: ShaderMaterial = preload("res://shared/resources/materials/tall_grass.tres")
 
 @export var model: Node3D
 @export var hidden_parts: Array[StringName] = []
@@ -43,6 +54,9 @@ var _fallen: bool = false
 var _items: ItemVisuals
 var _skeleton: Skeleton3D
 var _shown_equipment: Vector4i = Inventory.NONE
+var _tracks_cover: bool = false
+var _covered: bool = false
+var _silhouette: StandardMaterial3D
 var _attachments: Array[Array] = [[], [], [], []]  # indice = ItemData.Slot -> BoneAttachment3D
 
 
@@ -60,9 +74,16 @@ func _ready() -> void:
 	_skeleton = model.find_child("Skeleton3D") as Skeleton3D
 	if DisplayServer.get_name() != "headless":  # so quem desenha carrega pecas e icones
 		use_items(ItemVisuals.for_hero(_hero.hero_data.id))
+		use_cover_silhouette(_controlled_here())
+
+
+func _exit_tree() -> void:
+	_set_covered(false)  # a moita e um recurso global: sem isto sobra a abertura na ultima posicao
 
 
 func _process(_delta: float) -> void:
+	if _tracks_cover:
+		_set_covered(_hero.is_alive() and _hero.zones_at(_hero.global_position) != Hero.NO_ZONES)
 	if _items != null and _hero.equipment != _shown_equipment:
 		_show_equipment(_hero.equipment)
 	if not _hero.is_alive():
@@ -116,11 +137,21 @@ func use_items(items: ItemVisuals) -> void:
 		_show_equipment(_hero.equipment)
 
 
+## Liga (ou desliga) a silhueta no mato alto. O jogo liga so para o heroi controlado neste cliente;
+## o runner headless liga a mao.
+func use_cover_silhouette(enabled: bool) -> void:
+	_tracks_cover = enabled
+	if not enabled:
+		_set_covered(false)
+
+
 func _show_equipment(equipment: Vector4i) -> void:
 	for slot: int in Inventory.SLOTS:
 		if equipment[slot] != _shown_equipment[slot]:
 			_show_slot(slot, Inventory.item_at(equipment, slot, _hero.item_catalog))
 	_shown_equipment = equipment
+	if _covered:
+		_apply_silhouette(_silhouette)  # peca nova tambem entra na silhueta
 
 
 ## Troca as pecas do slot pelas de [param item] (nulo = vazio) e esconde a peca do pack que elas
@@ -157,6 +188,36 @@ func _show_slot(slot: int, item: ItemData) -> void:
 		mesh.transform = _skeleton.get_bone_global_rest(index).affine_inverse() * mesh.transform
 		_attachments[slot].append(attachment)
 	root.free()
+
+
+## O heroi e de quem joga neste processo: o dono do peer, fora o bot do treino.
+func _controlled_here() -> bool:
+	return not _hero.is_bot and _hero.name.to_int() == multiplayer.get_unique_id()
+
+
+## Entra ou sai do mato: liga ou desliga a silhueta e a abertura. Dentro, a abertura segue o heroi.
+func _set_covered(covered: bool) -> void:
+	if covered:
+		GRASS.set_shader_parameter(&"hero_pos", _hero.global_position)
+	if covered == _covered:
+		return
+	_covered = covered
+	GRASS.set_shader_parameter(&"reveal_radius", REVEAL_RADIUS if covered else 0.0)
+	if _silhouette == null:
+		_silhouette = StandardMaterial3D.new()
+		_silhouette.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		_silhouette.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		_silhouette.no_depth_test = true
+		_silhouette.disable_receive_shadows = true
+		_silhouette.render_priority = SILHOUETTE_PRIORITY
+		_silhouette.albedo_color = Color(UiTokens.BLUE, SILHOUETTE_ALPHA)
+	_apply_silhouette(_silhouette if covered else null)
+
+
+## Passe de silhueta em todas as malhas do heroi, pecas de equipamento incluidas.
+func _apply_silhouette(material: Material) -> void:
+	for mesh: Node in model.find_children("*", "MeshInstance3D", true, false):
+		(mesh as MeshInstance3D).material_overlay = material
 
 
 func _loop(animation: StringName, speed: float = 1.0) -> void:
