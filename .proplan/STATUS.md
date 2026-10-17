@@ -11,23 +11,21 @@ _(vazio)_
 
 ## A Fazer
 
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
+- [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
+
 ### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
 
 - [MVP2.7][SPEC-075][F75] Berserker (classe nova Lutador): passiva Frenesi, Machados Gêmeos, Arremesso de Machado, Grito de Guerra, Ragnarök; Barbarian_Large do Extra, Rig_Large, bot e VFX (#203)
 - [MVP2.7][SPEC-074][F74] Protetor da Selva (Controle): Seiva, Raízes Vivas, Poção Verde, Pântano; Druid do Extra, cajado visível, bot e VFX (#202)
 - [MVP2.7][SPEC-073][F73] Acabamento do cenário dentro da ADR-0006: texturas PBR CC0, normal maps, grama ×2 com fade; GPU ≤ +1,5 ms (#201)
 - [MVP2.7][SPEC-072][F72] Mato alto: silhueta translúcida do próprio herói e moita semitransparente ao redor (só cliente; SPEC-032 intacta) (#200)
-- [MVP2.7][SPEC-071][F71] Tela Heróis no launcher fiel ao protótipo "Tela Herois", só com dados de shared/data (#199)
-
-### [MVP3] Meta + deploy (#76)
-
-- [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 
 ## Em Andamento
 
-### [MVP3] Meta + deploy (#76)
-
-- [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
+_(vazio)_
 
 ## Feito
 
@@ -37,6 +35,7 @@ _(vazio)_
 
 ### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
 
+- [MVP2.7][SPEC-071][F71] Tela Heróis no launcher fiel ao protótipo "Tela Herois", só com dados de shared/data (#199, finalizado em: 2026-10-17)
 - [MVP2.7][SPEC-070][F70] Fim de partida → lobby: Game fecha em 15 s e o Launcher volta ao lobby com o card "Resultado da partida" (#198, finalizado em: 2026-10-17)
 - [MVP2.7][SPEC-069][F69] Cinemática de abertura in-engine: estado INTRO (5–8 s), voo pela arena e close no próprio herói antes da fase 1 (#197, finalizado em: 2026-10-17)
 - [MVP2.7][SPEC-068][F68] Splash próprio nos dois projetos e 3 telas de loading sorteadas (renders reais, dica, progresso) do boot do Game até a seleção (#196, finalizado em: 2026-10-16)
