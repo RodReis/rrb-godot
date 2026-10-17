@@ -26,6 +26,10 @@ const ROCK_MATERIAL: String = MATERIALS + "rock_moss.tres"
 const STONE_MATERIAL: String = MATERIALS + "castle_stone.tres"
 const PINE_MATERIAL: String = MATERIALS + "pine_foliage.tres"
 const TALL_GRASS_MATERIAL: String = MATERIALS + "tall_grass.tres"
+## Mato alto com abertura para o heroi local (F72): shader proprio, transparente no pipeline.
+const TALL_GRASS_SHADER: String = "res://shared/shaders/tall_grass.gdshader"
+## Antes dos outros transparentes (VFX, barras), que desenham por cima da moita.
+const TALL_GRASS_RENDER_PRIORITY: int = -10
 ## Piso e encostas do vale (F56, ADR-0012): pedra nas faces inclinadas, musgo nas de cima.
 const VALLEY_MATERIAL: String = MATERIALS + "valley_ground.tres"
 const VALLEY_ROCK_TILE: float = 0.12
@@ -314,9 +318,7 @@ func _save_materials() -> void:
 	# Folhagem: detalhe da grama, cor (tronco marrom, galho verde-escuro) pela celula do atlas.
 	_save(_foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0)), PINE_MATERIAL)
 	# Mato alto: mesma receita, mais claro que o pinheiro (leitura a distancia da camera).
-	_save(
-		_foliage(_triplanar("grass", Color(0.85, 0.88, 0.62), 0.9, 1.0, 1.0)), TALL_GRASS_MATERIAL
-	)
+	_save(_tall_grass_material(), TALL_GRASS_MATERIAL)
 
 
 func _save(material: Material, path: String) -> void:
@@ -384,6 +386,13 @@ func _valley_pine_material() -> ShaderMaterial:
 	m.set_shader_parameter("ambient_lift", VALLEY_PINE_LIFT)
 	m.set_shader_parameter("brightness", VALLEY_PINE_BRIGHTNESS)
 	m.set_shader_parameter("saturation", VALLEY_PINE_SATURATION)
+	return m
+
+
+func _tall_grass_material() -> ShaderMaterial:
+	var m := _foliage(_triplanar("grass", Color(0.85, 0.88, 0.62), 0.9, 1.0, 1.0))
+	m.shader = load(TALL_GRASS_SHADER)
+	m.render_priority = TALL_GRASS_RENDER_PRIORITY
 	return m
 
 
