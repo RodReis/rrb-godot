@@ -12,6 +12,9 @@ extends SceneTree
 ## --engineer: cada Engenheiro tem Torreta atirando e Dinamite explodindo a medicao inteira
 ## (SPEC-059 §8 item 8): a sonda reemite os eventos do ImpactRelay (deploy_shown, turret_shot_shown)
 ## na posicao do heroi e do outro, nos compassos ENGINEER_*_SECONDS.
+## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
+## silhueta e a abertura da moita ligam enquanto ele esta la).
+## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
 ## Sai com 1 se os herois nao nascerem em SPAWN_TIMEOUT segundos.
 
 const MAIN: String = "res://scenes/main.tscn"
@@ -49,6 +52,10 @@ var _equip: bool = false
 var _smoke: bool = false
 var _smoke_wait: float = 0.0
 var _engineer: bool = false
+var _grass: bool = false
+var _grass_linked: bool = false
+var _patch: Node3D
+var _shot: String = ""
 var _turret_wait: float = 0.0
 var _shot_wait: float = 0.0
 var _crate_wait: float = 0.0
@@ -64,6 +71,10 @@ func _initialize() -> void:
 			_smoke = true
 		elif arg == "--engineer":
 			_engineer = true
+		elif arg == "--grass":
+			_grass = true
+		elif arg.begins_with("--shot="):
+			_shot = arg.trim_prefix("--shot=")
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	var main := (load(MAIN) as PackedScene).instantiate()
@@ -84,6 +95,9 @@ func _process(delta: float) -> bool:
 			_smoke_rogues()
 	if _engineer and _phase > 0:
 		_engineer_effects(delta)
+	if _grass and _phase > 0 and not _grass_linked:
+		_grass_linked = true
+		root.get_node("NetworkRollback").connect(&"after_process_tick", _hold_in_grass)
 	match _phase:
 		0:
 			if _players.get_child_count() >= HEROES:
@@ -102,6 +116,9 @@ func _process(delta: float) -> bool:
 			)
 			if gpu > 0.0:  # 0 = sem medicao neste quadro
 				_gpu_ms.append(gpu)
+			if _shot != "" and _elapsed >= MEASURE_SECONDS / 2.0:
+				root.get_viewport().get_texture().get_image().save_png(_shot)
+				_shot = ""
 			if _elapsed >= MEASURE_SECONDS:
 				_report()
 				quit(0)
@@ -135,6 +152,25 @@ func _smoke_rogues() -> void:
 			)
 
 
+## Sem tipos do jogo (como _equip_heroes): leva o heroi controlado para o centro da moita mais
+## perto dele (a da propria metade: na fase 1 o time nao sai dela) depois de simular e antes de
+## gravar o tick (after_process_tick): mover so no quadro seria desfeito no tick seguinte, e o
+## piloto automatico o tiraria de la.
+func _hold_in_grass(_tick: int) -> void:
+	var hero := _players.get_node_or_null(str(get_multiplayer().get_unique_id())) as Node3D
+	if hero == null:
+		return
+	if _patch == null:
+		var best := INF
+		for node: Node in get_nodes_in_group(&"tall_grass"):
+			var distance := hero.global_position.distance_to((node as Node3D).global_position)
+			if distance < best:
+				best = distance
+				_patch = node as Node3D
+	if _patch != null:
+		hero.global_position = _patch.global_position * Vector3(1, 0, 1)
+
+
 func _next_phase() -> void:
 	_phase += 1
 	_elapsed = 0.0
@@ -154,6 +190,7 @@ func _report() -> void:
 		"gpu_p99_ms": _percentile(_gpu_ms, P99),
 		"equip": _equip,
 		"smoke": _smoke,
+		"grass": _grass,
 	}
 	var text := JSON.stringify(result, "  ")
 	print("[frametime] ", text)
