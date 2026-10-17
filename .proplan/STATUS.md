@@ -11,11 +11,14 @@ updated: 2026-10-17
 
 - [MVP2.7][SPEC-075][F75] Berserker (classe nova Lutador): passiva Frenesi, Machados Gêmeos, Arremesso de Machado, Grito de Guerra, Ragnarök; Barbarian_Large do Extra, Rig_Large, bot e VFX (#203)
 - [MVP2.7][SPEC-074][F74] Protetor da Selva (Controle): Seiva, Raízes Vivas, Poção Verde, Pântano; Druid do Extra, cajado visível, bot e VFX (#202)
+
+## A Fazer
+
+### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
+
 - [MVP2.7][SPEC-073][F73] Acabamento do cenário dentro da ADR-0006: texturas PBR CC0, normal maps, grama ×2 com fade; GPU ≤ +1,5 ms (#201)
 - [MVP2.7][SPEC-072][F72] Mato alto: silhueta translúcida do próprio herói e moita semitransparente ao redor (só cliente; SPEC-032 intacta) (#200)
 - [MVP2.7][SPEC-071][F71] Tela Heróis no launcher fiel ao protótipo "Tela Herois", só com dados de shared/data (#199)
-
-## A Fazer
 
 ### [MVP3] Meta + deploy (#76)
 
