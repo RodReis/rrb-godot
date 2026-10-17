@@ -76,6 +76,7 @@ script = ExtResource("1_script")
 id = &"engineer"
 display_name = "Engenheiro"
 role = "Engenheiro"
+weapon_name = "Bacamarte"
 summary = "Dano em cone de perto com o bacamarte; puxa o adversário com a Garra e controla a área com a Torreta e a Dinamite."
 base_move_speed = 5.9
 base_hp = 520.0

@@ -7,6 +7,7 @@ const LOGIN: StringName = &"login"
 const LOBBY: StringName = &"lobby"
 const HISTORY: StringName = &"history"
 const ARENA_MAP: StringName = &"arena_map"
+const HEROES: StringName = &"heroes"
 const BESTIARY: StringName = &"bestiary"
 const FORGE: StringName = &"forge"
 const SETTINGS: StringName = &"settings"
@@ -22,15 +23,17 @@ const ROUTES: Dictionary[StringName, String] = {
 	LOBBY: "res://scenes/screens/lobby.tscn",
 	HISTORY: "res://scenes/screens/history.tscn",
 	ARENA_MAP: "res://scenes/screens/arena_map.tscn",
+	HEROES: "res://scenes/screens/heroes.tscn",
 	BESTIARY: "res://scenes/screens/bestiary.tscn",
 	FORGE: "res://scenes/screens/forge.tscn",
 	SETTINGS: "res://scenes/screens/settings.tscn",
 	PROFILE: "res://scenes/screens/profile.tscn",
 	GALLERY: "res://shared/ui/components/_gallery.tscn",
 }
-## Menu da barra superior, na ordem: rota -> rotulo (Herois do prototipo: ainda sem tela).
+## Menu da barra superior, na ordem: rota -> rotulo.
 const NAV: Dictionary[StringName, String] = {
 	LOBBY: "LOBBY",
+	HEROES: "HERÓIS",
 	ARENA_MAP: "ARENA & MAPA",
 	BESTIARY: "GUIA & BESTIÁRIO",
 	HISTORY: "HISTÓRICO",

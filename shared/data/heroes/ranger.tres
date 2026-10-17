@@ -72,8 +72,9 @@ slow = 0.25
 [resource]
 script = ExtResource("1_script")
 id = &"ranger"
-display_name = "Arqueira"
+display_name = "Arqueiro"
 role = "Ranger"
+weapon_name = "Arco"
 summary = "Dano sustentado à distância, mobilidade e controle de terreno."
 base_move_speed = 6.2
 base_hp = 380.0

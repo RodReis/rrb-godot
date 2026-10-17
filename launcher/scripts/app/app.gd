@@ -263,6 +263,9 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 	if arena_map != null:
 		arena_map.bind(catalog)
 		arena_map.practice_requested.connect(_start_practice)
+	var heroes_screen := screen as HeroesScreen
+	if heroes_screen != null:
+		heroes_screen.bind(catalog)
 	var compendium := screen as CompendiumScreen
 	if compendium != null:
 		compendium.bind(catalog)

@@ -6,6 +6,8 @@ extends Resource
 @export var display_name: String
 ## Classe (PRD §4.1) e frase do papel (GDB §4), mostradas na selecao.
 @export var role: String
+## Arma visivel no modelo (GDB §4, "Modelo"), mostrada na Tela Herois (F71).
+@export var weapon_name: String
 @export_multiline var summary: String
 @export var base_move_speed: float
 @export var base_hp: float

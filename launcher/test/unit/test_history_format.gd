@@ -4,7 +4,7 @@ extends GutTest
 
 
 func test_heroi_vem_de_shared_data() -> void:
-	assert_eq(HistoryFormat.hero_name("ranger"), "Arqueira")
+	assert_eq(HistoryFormat.hero_name("ranger"), "Arqueiro")
 	assert_eq(HistoryFormat.hero_role("barbarian"), "Algoz")
 	assert_not_null(HistoryFormat.hero("knight"))
 
