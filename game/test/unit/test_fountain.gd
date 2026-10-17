@@ -107,8 +107,13 @@ func test_heroi_ve_a_fonte_aberta_so_na_fase_1() -> void:
 	match_controller.join(1, GateRules.TEAM_A, false, START)
 	match_controller.join(2, GateRules.TEAM_B, false, START)
 	match_controller.update(START + 24 * RATE)
+	assert_false(_hero.fountain_open, "INTRO")
+	assert_true(_hero.input_locked, "INTRO")
+	var phase1_tick := START + 24 * RATE + 8 * RATE  # corte da INTRO (F69)
+	match_controller.update(phase1_tick)
 	assert_true(_hero.fountain_open, "PHASE1")
-	clock.update(START + 24 * RATE + 300 * RATE)
+	assert_false(_hero.input_locked, "PHASE1")
+	clock.update(phase1_tick + 300 * RATE)
 	assert_false(_hero.fountain_open, "TRANSITION")
 
 

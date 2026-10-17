@@ -1,8 +1,9 @@
 extends GutTest
 ## MatchController com relogio injetado (ticks falsos a 30 Hz, ARCHITECTURE-GAME §8):
-## LOBBY_WAIT -> HERO_PICK -> PHASE1 -> TRANSITION (CONVENTION §3), timeout do lobby ->
+## LOBBY_WAIT -> HERO_PICK -> INTRO -> PHASE1 -> TRANSITION (CONVENTION §3), timeout do lobby ->
 ## ENDED/abandoned, timeout do pick -> padrao do slot, espelho aceito, lock-in duplicado ou
-## invalido recusado.
+## invalido recusado. INTRO (F69): minimo 5 s e ready dos dois, ou corte aos 8 s; o relogio da
+## fase 1 so comeca no fim dela.
 
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
 const RATE: int = 30
@@ -10,6 +11,8 @@ const START: int = 1000
 const P1: int = 11
 const P2: int = 22
 const P3: int = 33
+const INTRO_MIN: int = 5 * RATE
+const INTRO_MAX: int = 8 * RATE
 const BOTH: Array[StringName] = [&"knight", &"ranger"]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 
@@ -56,6 +59,20 @@ func _run(from: int, to: int) -> void:
 func _to_pick() -> void:
 	_match.join(P1, GateRules.TEAM_A, false, START)
 	_match.join(P2, GateRules.TEAM_B, false, START)
+
+
+## Os dois escolhem no tick START e acusam ready na hora: a INTRO dura o minimo e abre a fase 1.
+func _to_phase1() -> void:
+	_to_intro()
+	_match.submit_ready(P1, START)
+	_match.submit_ready(P2, START)
+	_run(START, START + INTRO_MIN)
+
+
+func _to_intro() -> void:
+	_to_pick()
+	_match.submit_pick(P1, &"knight", START)
+	_match.submit_pick(P2, &"knight", START)
 
 
 func _hero_of(peer: int) -> StringName:
@@ -106,16 +123,18 @@ func test_quem_sai_no_lobby_libera_a_vaga() -> void:
 	assert_eq(_match.state, MatchState.State.HERO_PICK)
 
 
-func test_lock_in_dos_dois_comeca_a_fase_1_e_o_relogio() -> void:
+func test_lock_in_dos_dois_abre_a_intro_sem_relogio() -> void:
 	_to_pick()
 	assert_true(_match.submit_pick(P1, &"knight", START + 30))
 	assert_eq(_match.state, MatchState.State.HERO_PICK)
 	assert_true(_match.submit_pick(P2, &"ranger", START + 60))
-	assert_eq(_match.state, MatchState.State.PHASE1)
-	assert_true(_clock.is_started())
-	assert_eq(_clock.start_tick, START + 60)
+	assert_eq(_match.state, MatchState.State.INTRO)
+	assert_false(_clock.is_started(), "o relogio so corre depois da INTRO")
+	assert_eq(_match.deadline_tick, START + 60 + INTRO_MAX)
 	assert_eq(_picks.size(), 2)
 	assert_eq(_picks[0], [P1, Ids.to_int(&"knight"), START + 30])
+	var s := MatchState.State
+	assert_eq(_phases.back(), [s.HERO_PICK, s.INTRO, START + 60])
 
 
 func test_timeout_do_pick_da_o_heroi_padrao_do_slot() -> void:
@@ -124,7 +143,7 @@ func test_timeout_do_pick_da_o_heroi_padrao_do_slot() -> void:
 	_run(START, deadline - 1)
 	assert_eq(_match.state, MatchState.State.HERO_PICK)
 	_run(deadline, deadline)
-	assert_eq(_match.state, MatchState.State.PHASE1)
+	assert_eq(_match.state, MatchState.State.INTRO)
 	assert_eq(_hero_of(P1), &"knight")
 	assert_eq(_hero_of(P2), &"ranger")
 
@@ -148,7 +167,7 @@ func test_espelho_e_aceito() -> void:
 	_to_pick()
 	assert_true(_match.submit_pick(P1, &"knight", START))
 	assert_true(_match.submit_pick(P2, &"knight", START))
-	assert_eq(_match.state, MatchState.State.PHASE1)
+	assert_eq(_match.state, MatchState.State.INTRO)
 
 
 func test_lock_in_duplicado_e_recusado() -> void:
@@ -175,14 +194,14 @@ func test_lock_in_fora_da_selecao_e_recusado() -> void:
 	_match.join(P2, GateRules.TEAM_B, false, START)
 	_match.submit_pick(P1, &"knight", START)
 	_match.submit_pick(P2, &"knight", START)
-	assert_false(_match.submit_pick(P1, &"knight", START + 1), "ja na fase 1")
+	assert_false(_match.submit_pick(P1, &"knight", START + 1), "ja na INTRO")
 
 
 func test_quem_cai_na_selecao_fica_com_o_padrao_e_desconectado() -> void:
 	_to_pick()
 	_match.leave(P2, START + 10)
 	_run(START, START + 24 * RATE)
-	assert_eq(_match.state, MatchState.State.PHASE1)
+	assert_eq(_match.state, MatchState.State.INTRO)
 	assert_eq(_hero_of(P2), &"ranger")
 	for seat: MatchController.Seat in _match.seats():
 		assert_eq(seat.connected, seat.peer != P2)
@@ -192,17 +211,16 @@ func test_queda_na_selecao_nao_faz_o_outro_esperar_o_prazo() -> void:
 	_to_pick()
 	_match.submit_pick(P1, &"knight", START + 10)
 	_match.leave(P2, START + 20)
-	assert_eq(_match.state, MatchState.State.PHASE1)
+	assert_eq(_match.state, MatchState.State.INTRO)
 	assert_eq(_hero_of(P2), &"ranger")
-	assert_eq(_clock.start_tick, START + 20)
+	assert_false(_clock.is_started())
 
 
 func test_fase_1_vira_transicao_aos_5_00() -> void:
-	_to_pick()
-	_match.submit_pick(P1, &"knight", START)
-	_match.submit_pick(P2, &"knight", START)
-	var five_minutes := START + 300 * RATE
-	_run(START, five_minutes - 1)
+	_to_phase1()
+	assert_eq(_clock.start_tick, START + INTRO_MIN, "5:00 conta a partir do fim da INTRO")
+	var five_minutes := START + INTRO_MIN + 300 * RATE
+	_run(START + INTRO_MIN + 1, five_minutes - 1)
 	assert_eq(_match.state, MatchState.State.PHASE1)
 	_run(five_minutes, five_minutes)
 	assert_eq(_match.state, MatchState.State.TRANSITION)
@@ -212,8 +230,6 @@ func test_fase_1_vira_transicao_aos_5_00() -> void:
 
 func test_relogio_adiantado_de_dev_comeca_a_fase_1_ja_avancada() -> void:
 	_match.start_seconds = 290.0
-	_to_pick()
-	_match.submit_pick(P1, &"knight", START)
-	_match.submit_pick(P2, &"knight", START)
-	_run(START, START + 10 * RATE)
+	_to_phase1()
+	_run(START + INTRO_MIN + 1, START + INTRO_MIN + 10 * RATE)
 	assert_eq(_match.state, MatchState.State.TRANSITION)

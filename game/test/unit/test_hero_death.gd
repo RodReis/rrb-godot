@@ -24,7 +24,9 @@ var _deaths: Array = []  # [peer, killer, tick]
 
 func before_each() -> void:
 	_deaths = []
-	_rules = load(RULES) as MatchRules
+	# Sem minimo de INTRO: o relogio comeca no START e os tempos do teste valem como antes (F69).
+	_rules = (load(RULES) as MatchRules).duplicate() as MatchRules
+	_rules.intro_min_duration = 0.0
 	_clock = MatchClock.new()
 	_clock.rules = _rules
 	add_child_autofree(_clock)
@@ -43,6 +45,8 @@ func before_each() -> void:
 	_match.join(KILLER, GateRules.TEAM_B, false, START)
 	_match.submit_pick(VICTIM, &"knight", START)
 	_match.submit_pick(KILLER, &"knight", START)
+	_match.submit_ready(VICTIM, START)
+	_match.submit_ready(KILLER, START)
 	_victim.transform = Transform3D(Basis(), AWAY)
 
 

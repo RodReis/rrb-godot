@@ -142,7 +142,7 @@ func test_pick_do_adversario_aparece_no_card_dele() -> void:
 
 func test_timeout_mostra_o_heroi_padrao_como_meu() -> void:
 	_match.update(START + 24 * RATE)
-	assert_eq(_match.state, MatchState.State.PHASE1)
+	assert_eq(_match.state, MatchState.State.INTRO)
 	assert_eq(_screen._player_name.text, "CAVALEIRO")
 	assert_true(_screen._lock_in.disabled)
 

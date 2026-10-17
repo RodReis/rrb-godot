@@ -153,6 +153,12 @@ func _ready() -> void:
 	_bot_hero = args["bot_hero"]
 	_bot_pilot = args["bot_pilot"]
 	_token = args["token"]
+	if IntroCamera.wanted():  # cinematica de abertura (F69): so quem desenha
+		var intro := IntroCamera.new()
+		intro.name = "IntroCamera"
+		intro.ready_delay = args["intro_ready_delay"]
+		add_child(intro)
+		intro.bind(camera, match_controller, players)
 	if args["probe"]:
 		var probe := NetProbe.new()
 		probe.players = players
@@ -552,8 +558,8 @@ func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 				if PickRules.can_pick(wanted, _available_heroes()):
 					hero_id = wanted
 				match_controller.submit_pick(seat.peer, hero_id, tick)
-	elif to == MatchState.State.PHASE1:
-		_spawn_heroes()
+	elif to == MatchState.State.INTRO:
+		_spawn_heroes()  # no spawn, sem input, durante a cinematica (F69)
 
 
 ## --autopilot=bot com --bot-hero (dev): confirma o heroi pedido pela propria selecao (RPC normal).

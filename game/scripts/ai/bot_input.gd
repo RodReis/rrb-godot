@@ -43,6 +43,9 @@ var _zone_radius: float = INF
 
 
 func _gather() -> void:
+	if PlayerInput.cinematic:  # --autopilot=bot na cinematica (F69): o servidor segura o heroi
+		_gather_idle()
+		return
 	think(NetworkTime.tick)
 
 

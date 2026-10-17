@@ -82,6 +82,8 @@ func _process(delta: float) -> bool:
 		var tick: int = root.get_node("NetworkTime").get("tick")
 		controller.call("submit_pick", 1, StringName(_hero_id), tick)
 	if _hero == null:
+		if controller.get("state") <= MatchState.State.INTRO:
+			return false  # o heroi ja existe na INTRO, mas sem input (F69)
 		_hero = _main.get_node_or_null("Players/1") as Node3D
 		if _hero != null:
 			_place()

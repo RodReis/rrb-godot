@@ -1,7 +1,9 @@
 class_name MatchController
 extends Node
-## Ciclo da partida (CONVENTION §3, ARCHITECTURE-GAME §3.3): LOBBY_WAIT -> HERO_PICK -> PHASE1
-## -> TRANSITION -> PHASE2 -> SUDDEN_DEATH -> ENDED, sobre o MatchClock em ticks. Fase 2 (F16):
+## Ciclo da partida (CONVENTION §3, ARCHITECTURE-GAME §3.3): LOBBY_WAIT -> HERO_PICK -> INTRO
+## -> PHASE1 -> TRANSITION -> PHASE2 -> SUDDEN_DEATH -> ENDED, sobre o MatchClock em ticks. A INTRO
+## (F69) e a cinematica do cliente: herois no spawn e sem input, relogio parado; sai com 5 s no
+## minimo e o ready dos dois (bot e desconectado contam como prontos) ou aos 8 s. Fase 2 (F16):
 ## zona ligada (ZoneController), kills e dano no KillTracker, respawn desligado na morte subita e
 ## fim por VictoryRules a cada morte, na morte subita e no colapso (10:00). A FSM,
 ## as vagas e a selecao rodam so no servidor (open()); nos clientes este no so recebe os eventos
@@ -37,6 +39,8 @@ class Seat:
 	var connected: bool = true
 	## &"" ate o lock-in; no fim da selecao, o padrao do slot.
 	var hero: StringName = &""
+	## INTRO: o cliente terminou a cinematica. Bot e quem caiu entram ja prontos.
+	var ready: bool = false
 
 
 @export var rules: MatchRules
@@ -62,6 +66,8 @@ var deadline_tick: int = 0
 
 var _open: bool = false
 var _tickrate: int = 0
+## Servidor: primeiro tick em que a INTRO pode acabar (entrada + intro_min_duration).
+var _intro_min_tick: int = 0
 var _seats: Array[Seat] = []
 var _tracker: KillTracker = KillTracker.new()
 var _stats: MatchStats = MatchStats.new()
@@ -127,6 +133,9 @@ func leave(peer: int, tick: int) -> void:
 	if state == MatchState.State.HERO_PICK and seat.hero == &"":
 		_pick_default(seat, tick)
 		_start_if_all_picked(tick)
+	elif state == MatchState.State.INTRO:
+		seat.ready = true  # quem caiu nao segura o outro; o minimo de 5 s continua valendo
+		_end_intro_if_due(tick)
 
 
 ## Servidor: lock-in. Recusa fora da selecao, peer de fora, repetido ou heroi indisponivel;
@@ -143,14 +152,26 @@ func submit_pick(peer: int, hero: StringName, tick: int) -> bool:
 	return true
 
 
-## Servidor: prazos de espera e de selecao.
+## Servidor: ready da cinematica (INTRO). Recusa fora da INTRO ou de peer sem vaga.
+func submit_ready(peer: int, tick: int) -> bool:
+	var seat := _seat(peer)
+	if state != MatchState.State.INTRO or seat == null:
+		return false
+	seat.ready = true
+	_end_intro_if_due(tick)
+	return true
+
+
+## Servidor: prazos de espera, de selecao e da cinematica.
 func update(tick: int) -> void:
 	if not _open:
 		return
 	if state == MatchState.State.LOBBY_WAIT and tick >= deadline_tick:
 		_finish(tick, NO_WINNER, REASON_ABANDONED)
 	elif state == MatchState.State.HERO_PICK and tick >= deadline_tick:
-		_start_phase1(tick)
+		_start_intro(tick)
+	elif state == MatchState.State.INTRO:
+		_end_intro_if_due(tick)
 
 
 ## Servidor: morte e subida de nivel de cada heroi, avisadas uma vez por mudanca.
@@ -192,6 +213,17 @@ func report_monster_killed(peer: int, _tick: int) -> void:
 func report_boss_killed(peer: int) -> void:
 	if _open:
 		_counted(peer).boss_killed = true
+
+
+## Cliente -> servidor: a cinematica acabou (INTRO). Evento discreto fora da simulacao (F69).
+@rpc("any_peer", "call_local", "reliable")
+func report_intro_ready() -> void:
+	if not multiplayer.is_server():
+		return
+	var peer := multiplayer.get_remote_sender_id()
+	if peer == 0:
+		peer = multiplayer.get_unique_id()
+	submit_ready(peer, NetworkTime.tick)
 
 
 ## Cliente -> servidor: lock-in do heroi (numero de Ids). Valor do cliente: validado aqui.
@@ -237,16 +269,29 @@ func _pick_default(seat: Seat, tick: int) -> void:
 
 func _start_if_all_picked(tick: int) -> void:
 	if _seats.all(func(s: Seat) -> bool: return s.hero != &""):
-		_start_phase1(tick)
+		_start_intro(tick)
 
 
-## Quem nao confirmou fica com o padrao do slot; depois relogio e herois.
-func _start_phase1(tick: int) -> void:
+## Quem nao confirmou fica com o padrao do slot; depois a cinematica (quem quer os herois no
+## spawn ouve o phase_changed). Bot e quem ja caiu entram prontos.
+func _start_intro(tick: int) -> void:
 	for seat: Seat in _seats:
 		if seat.hero == &"":
 			_pick_default(seat, tick)
-	_enter(MatchState.State.PHASE1, tick)
-	clock.start(tick, _tickrate, start_seconds)
+		seat.ready = seat.is_bot or not seat.connected
+	_intro_min_tick = tick + _ticks(rules.intro_min_duration)
+	_enter(MatchState.State.INTRO, tick, tick + _ticks(rules.intro_max_duration))
+
+
+## Sai com o minimo cumprido e o ready de todos, ou no corte (intro_max_duration). O relogio da
+## fase 1 comeca no mesmo tick da entrada nela: t_match = 0:00.
+func _end_intro_if_due(tick: int) -> void:
+	if state != MatchState.State.INTRO:
+		return
+	var everyone_ready := _seats.all(func(s: Seat) -> bool: return s.ready)
+	if tick >= deadline_tick or (everyone_ready and tick >= _intro_min_tick):
+		_enter(MatchState.State.PHASE1, tick)
+		clock.start(tick, _tickrate, start_seconds)
 
 
 ## Servidor: muda o estado em todos (quem ouve phase_changed no servidor spawna os herois) e
@@ -263,6 +308,7 @@ func _enter(to: MatchState.State, tick: int, p_deadline_tick: int = 0) -> void:
 		if not KillRules.respawns(state):
 			hero.respawn_off_tick = mini(hero.respawn_off_tick, tick)
 		hero.fountain_open = state == MatchState.State.PHASE1
+		hero.input_locked = state == MatchState.State.INTRO
 	if zone != null:
 		zone.active = MatchState.is_phase2(state)
 
@@ -363,6 +409,13 @@ func _on_hero_died(victim: Hero, tick: int) -> void:
 
 @rpc("authority", "call_local", "reliable")
 func _changed(from: int, to: int, p_deadline_tick: int, tick: int) -> void:
+	if not multiplayer.is_server():  # o servidor ja logou em _enter; aqui prova o tick de cada cliente
+		print(
+			(
+				"[match] %s -> %s, tick %d"
+				% [_name(from as MatchState.State), _name(to as MatchState.State), tick]
+			)
+		)
 	state = to as MatchState.State
 	deadline_tick = p_deadline_tick
 	phase_changed.emit(from, to, tick)

@@ -29,6 +29,8 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed(InputActions.OPEN_BESTIARY):
+		if PlayerInput.cinematic:
+			return  # sem tela por cima da cinematica de abertura (F69)
 		toggle()
 	elif visible and event.is_action_pressed(InputActions.CANCEL):
 		close()

@@ -84,6 +84,25 @@ func test_fase_1_mostra_a_hud_1_e_a_transicao_troca_para_a_2() -> void:
 	assert_true(_phase2.is_processing())
 
 
+func test_intro_esconde_as_duas_e_a_fase_1_traz_a_hud_1_de_volta() -> void:
+	_bind()
+	var phase1 := _hud.get_node("HudPhase1") as HudPhase1
+	_phase(MatchState.State.INTRO)
+	assert_false(phase1.visible, "cinematica de abertura sem HUD")
+	assert_false(_phase2.visible)
+	_phase(MatchState.State.PHASE1)
+	assert_true(phase1.visible)
+	assert_false(_phase2.visible)
+
+
+func test_bind_durante_a_intro_ja_nasce_escondida() -> void:
+	_match.state = MatchState.State.INTRO
+	_bind()
+	var phase1 := _hud.get_node("HudPhase1") as HudPhase1
+	assert_false(phase1.visible)
+	assert_false(_phase2.visible)
+
+
 func test_bind_no_meio_da_fase_2_ja_mostra_a_hud_2() -> void:
 	_match.state = MatchState.State.PHASE2
 	_bind()

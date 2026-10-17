@@ -46,9 +46,11 @@ func _bind_target_ring(hero: Hero) -> void:
 	_target_ring.bind(hero)
 
 
+## Na cinematica de abertura (INTRO, F69) as duas ficam escondidas.
 func _show(state: int) -> void:
 	var phase2 := state >= MatchState.State.TRANSITION
-	_phase1.set_active(not phase2)
+	var intro := state == MatchState.State.INTRO
+	_phase1.set_active(not phase2 and not intro)
 	_phase2.set_active(phase2)
 
 
