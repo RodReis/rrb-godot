@@ -7,7 +7,8 @@ extends PanelContainer
 ## builds, skins e "testar no treino" (sem requisito, §8.3 regra 1).
 
 const BANNER_HEIGHT: float = 300.0
-const FADE_HEIGHT: int = 140
+## Faixa de baixo do banner, reservada a classe e ao nome; o retrato inteiro fica acima dela.
+const CAPTION_HEIGHT: float = 68.0
 const SKILL_ICON: Vector2 = Vector2(56, 56)
 const BAR_HEIGHT: float = 6.0
 ## Seta entre o valor do nivel 1 e o do nivel 10.
@@ -48,11 +49,12 @@ func _banner(data: HeroData) -> Control:
 	frame.clip_contents = true
 	var art := TextureRect.new()
 	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	# Corpo inteiro sem corte: o fundo do render e o BG_LOW do painel, entao a borda some.
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	art.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	art.offset_bottom = -CAPTION_HEIGHT
 	art.texture = HeroesFormat.portrait(data.id)
 	frame.add_child(art)
-	frame.add_child(_fade())
 	var caption := VBoxContainer.new()
 	caption.theme_type_variation = &"LnVGapXs"
 	caption.set_anchors_and_offsets_preset(PRESET_BOTTOM_WIDE)
@@ -70,28 +72,6 @@ func _banner(data: HeroData) -> Control:
 	caption.add_child(title)
 	frame.add_child(caption)
 	return frame
-
-
-## Degrade da base do retrato (from-surface-container-low) sob o nome.
-func _fade() -> TextureRect:
-	var gradient := Gradient.new()
-	var solid := Color(UiTokens.BG_LOW, 1.0)
-	gradient.offsets = PackedFloat32Array([0.0, 1.0])
-	gradient.colors = PackedColorArray([Color(solid, 0.0), solid])
-	var texture := GradientTexture2D.new()
-	texture.gradient = gradient
-	texture.width = 1
-	texture.height = FADE_HEIGHT
-	texture.fill_from = Vector2.ZERO
-	texture.fill_to = Vector2(0.0, 1.0)
-	var fade := TextureRect.new()
-	fade.texture = texture
-	fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	fade.stretch_mode = TextureRect.STRETCH_SCALE
-	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	fade.set_anchors_and_offsets_preset(PRESET_BOTTOM_WIDE)
-	fade.offset_top = -FADE_HEIGHT
-	return fade
 
 
 ## ARMA e ALCANCE (do ataque basico), os dois ladrilhos do prototipo que existem em shared/data.
