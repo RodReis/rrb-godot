@@ -6,8 +6,8 @@ extends Control
 ## QueueService, HistoryService, ProfileService, GameProcess): sem sessao abre no Login; com
 ## sessao busca a conta e, sem nickname (1o login, F35), abre o Perfil antes do Lobby; o Lobby e a
 ## raiz; 401 sem renovacao volta ao Login. Fila pareada -> lanca o Game; saida do Game pela
-## tabela do §5.2 (codigo 0 de partida online abre o Historico). Telas emitem; quem navega e
-## confirma e o App.
+## tabela do §5.2 (codigo 0 de partida online volta ao Lobby com o card "Resultado da partida",
+## F70). Telas emitem; quem navega e confirma e o App.
 ## --gallery (depois do --) abre a galeria do design system, a prova visual dos componentes.
 ## Splash "ARENA 1V1" (F68): cobre a janela ate a 1a checagem do backend (teto SPLASH_MAX_SECONDS).
 
@@ -19,6 +19,10 @@ const HEALTH_SECONDS: float = 10.0
 const OFFLINE_ARGS: PackedStringArray = ["--offline", "--bot"]
 ## Teto do splash se o backend demorar a responder.
 const SPLASH_MAX_SECONDS: float = 2.0
+## Fim de partida online (F70): o servidor pode ainda estar gravando o resultado, entao o
+## GET /matches?mine=1 e repetido ate a partida nova aparecer (3 tentativas, 1 s entre elas).
+const RESULT_ATTEMPTS: int = 3
+const RESULT_RETRY_SECONDS: float = 1.0
 
 var settings: SettingsStore = SettingsStore.new()
 var api: ApiClient = ApiClient.new()
@@ -29,6 +33,8 @@ var avatars: AvatarStore = AvatarStore.new()
 var catalog: CatalogService = CatalogService.new()
 var queue: QueueService = QueueService.new()
 var game: GameProcess = GameProcess.new()
+## Espera entre as tentativas de achar a partida no historico (teste zera).
+var result_retry_seconds: float = RESULT_RETRY_SECONDS
 ## E-mail da sessao aberta (cartao "Sua conta" do lobby), o do backend; vazio sem sessao.
 var account_email: String = ""
 
@@ -40,6 +46,7 @@ var _modal: ModalDialog = ModalDialog.new()
 var _loading: Control = Control.new()
 var _loading_box: StateBox = StateBox.new()
 var _match: MatchOverlay = MatchOverlay.new()
+var _result: MatchResultCard = MatchResultCard.new()
 var _splash: BootSplash = BootSplash.new()
 var _health: Timer = Timer.new()
 var _online: bool = false
@@ -50,6 +57,8 @@ var _ping_ms: int = AppBar.UNKNOWN_PING
 var _match_id: String = ""
 ## O jogador encerrou o Game pelo overlay: sai como 4 (§5.2), mas o aviso nao e de erro.
 var _ended_by_player: bool = false
+## Partida do card de resultado aberto (para "Tentar de novo" buscar a mesma).
+var _result_match_id: String = ""
 
 
 func _ready() -> void:
@@ -76,6 +85,9 @@ func _ready() -> void:
 	queue.matched.connect(_on_queue_matched, CONNECT_DEFERRED)
 	game.exited.connect(_on_game_exited)
 	_match.end_requested.connect(_on_match_end_requested)
+	_result.play_again_requested.connect(_on_result_play_again_requested)
+	_result.history_requested.connect(_on_result_history_requested)
+	_result.retry_requested.connect(_on_result_retry_requested)
 	_health.wait_time = HEALTH_SECONDS
 	_health.timeout.connect(check_backend)
 	add_child(_health)
@@ -113,6 +125,10 @@ func stack() -> ScreenStack:
 
 func match_overlay() -> MatchOverlay:
 	return _match
+
+
+func result_card() -> MatchResultCard:
+	return _result
 
 
 ## GET /health: online e ping em ms na barra, no rodape e no console do lobby (V-01b).
@@ -170,6 +186,7 @@ func _build() -> void:
 	_loading.add_child(_loading_box)
 	add_child(_loading)
 	add_child(_match)
+	add_child(_result)
 	add_child(_modal)
 	add_child(_splash)
 	get_tree().create_timer(SPLASH_MAX_SECONDS).timeout.connect(_dismiss_splash)
@@ -208,6 +225,7 @@ func _start_practice() -> void:
 
 
 func _logout() -> void:
+	_result.close()
 	if queue.is_searching():
 		await queue.leave()
 	queue.reset()
@@ -361,6 +379,7 @@ func _on_bar_quit_requested() -> void:
 
 ## Sessao expirada sem renovacao (§3.3): volta ao Login com aviso.
 func _on_api_unauthorized() -> void:
+	_result.close()
 	queue.reset()
 	history.clear()
 	profile.clear()
@@ -397,26 +416,31 @@ func _show_lobby_error(message: String) -> void:
 		lobby.show_error(message)
 
 
-## Fim do Game: tabela do §5.2. Codigo 0 de partida online abre o Historico (cache descartado:
-## a partida nova tem de aparecer); o treino contra o bot nao grava partida, volta ao lobby.
+## Fim do Game: tabela do §5.2. Codigo 0 de partida online volta ao Lobby e abre o card "Resultado
+## da partida" (F70); o treino contra o bot nao grava partida: lobby sem card. Qualquer outra saida
+## de partida online descarta o cache do historico.
 func _on_game_exited(code: int) -> void:
 	_match.close()
 	_stack.locked = false
-	var online := not _match_id.is_empty()
+	var match_id := _match_id
+	var online := not match_id.is_empty()
 	_match_id = ""
-	if online:
+	var outcome := GameProcess.outcome(code)
+	var with_card := online and outcome.kind == GameProcess.Kind.NORMAL
+	if with_card:
+		_go_to_lobby()
+	elif online:
 		_refresh_history()
 	var lobby := _stack.current() as LobbyScreen
 	if lobby != null and not queue.is_searching():
 		lobby.reset_queue()
-	var outcome := GameProcess.outcome(code)
 	if _ended_by_player:
 		_ended_by_player = false
 		show_toast(tr("Jogo encerrado."))
 		return
 	if outcome.kind == GameProcess.Kind.NORMAL:
-		if online:
-			_stack.push(Router.HISTORY)
+		if with_card:
+			await _show_match_result(match_id)
 		return
 	if outcome.offer_queue and online and lobby != null:
 		var actions: Array[DialogAction] = [
@@ -438,6 +462,73 @@ func _refresh_history() -> void:
 	if _stack.current_route() == Router.HISTORY:
 		_stack.replace(Router.HISTORY)
 	_refresh_record()
+
+
+func _go_to_lobby() -> void:
+	while _stack.depth() > 1 and _stack.current_route() != Router.LOBBY:
+		_stack.pop()
+
+
+## Card do resultado por cima do lobby; o cache do historico e descartado para a partida nova vir
+## do backend.
+func _show_match_result(match_id: String) -> void:
+	_result_match_id = match_id
+	history.clear()
+	await _load_match_result(match_id)
+
+
+## Busca a partida no historico (ate RESULT_ATTEMPTS vezes) e mostra o resultado ou o erro. Para se
+## o jogador fechou o card ou saiu da conta enquanto esperava.
+func _load_match_result(match_id: String) -> void:
+	_result.show_loading()
+	var summary: MatchSummary = null
+	for attempt: int in RESULT_ATTEMPTS:
+		if attempt > 0:
+			await get_tree().create_timer(result_retry_seconds).timeout
+		if not _result.visible or not auth.is_logged_in():
+			return
+		await history.fetch(true)
+		summary = _find_match(match_id)
+		if summary != null:
+			break
+	if not _result.visible or not auth.is_logged_in():
+		return
+	if summary == null:
+		_result.show_error()
+		_bar.clear_profile_record()
+		return
+	_result.show_result(summary, history.history.totals)
+	_refresh_record()
+
+
+func _find_match(match_id: String) -> MatchSummary:
+	if not history.is_ready():
+		return null
+	for summary: MatchSummary in history.history.matches:
+		if summary.match_id == match_id:
+			return summary
+	return null
+
+
+func _on_result_play_again_requested() -> void:
+	_result.close()
+	if queue.is_searching():
+		return
+	var lobby := _stack.current() as LobbyScreen
+	if lobby != null:
+		lobby.toggle_queue()  # o console do lobby acompanha: ENTRANDO -> PROCURANDO
+	else:
+		queue.join()
+
+
+func _on_result_history_requested() -> void:
+	_result.close()
+	if _stack.current_route() != Router.HISTORY:
+		_stack.push(Router.HISTORY)
+
+
+func _on_result_retry_requested() -> void:
+	_load_match_result(_result_match_id)
 
 
 func _on_match_end_requested() -> void:
