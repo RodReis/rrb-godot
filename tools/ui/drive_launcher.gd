@@ -11,6 +11,8 @@ extends SceneTree
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_TIMEOUT: float = 900.0
 const STEP: float = 0.5
+## Quadros esperando o lobby depois do login (conta buscada no backend).
+const LOBBY_WAIT_FRAMES: int = 600
 ## Espera do card de resultado depois que o Game fecha (3 tentativas a 1 s mais a rede).
 const RESULT_TIMEOUT: float = 15.0
 
@@ -35,6 +37,11 @@ func _run() -> void:
 	login.email_field().text = _args.get("email", "")
 	login.password_field().text = _args.get("password", "")
 	await login.submit()
+	# Depois do login o App ainda busca a conta (F35) antes de abrir o lobby.
+	for i: int in LOBBY_WAIT_FRAMES:
+		if _app.stack().current() is LobbyScreen:
+			break
+		await process_frame
 	var lobby := _app.stack().current() as LobbyScreen
 	if lobby == null:
 		_finish(1, "nao entrou no lobby: %s" % login.error_text())
