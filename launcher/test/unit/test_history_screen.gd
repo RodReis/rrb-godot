@@ -129,7 +129,7 @@ func test_oponente_aparece_com_hashtag_nickname_e_heroi() -> void:
 func test_oponente_sem_nickname_mostra_so_o_heroi() -> void:
 	await _open()
 	var cards := _screen.cards()
-	assert_true(_has_text(cards[1], "Arqueira"))
+	assert_true(_has_text(cards[1], "Arqueiro"))
 	assert_false(_texts(cards[1]).any(func(text: String) -> bool: return text.begins_with("#")))
 
 
@@ -211,7 +211,7 @@ func test_destaque_mostra_placar_herois_e_fatos() -> void:
 	var card := _screen.cards()[0]
 	var texts := _texts(card)
 	assert_true(texts.has("5  %s  3" % UiIcons.SWORDS), str(texts))
-	assert_true(texts.has("Arqueira (Você)"), str(texts))
+	assert_true(texts.has("Arqueiro (Você)"), str(texts))
 	assert_true(texts.has("Cavaleiro"), str(texts))
 	assert_true(texts.has("5 Kills"))
 	assert_true(texts.has("3 Mortes"))

@@ -113,7 +113,7 @@ func test_derrota_mostra_quem_joga_a_esquerda() -> void:
 	assert_eq(_text("%Title"), "DERROTA")
 	assert_eq(_type("%Title"), &"LabelEndTitleLose")
 	assert_eq(_me().name_label.text, "VOCÊ")
-	assert_eq(_me().hero_label.text, "— ARQUEIRA")
+	assert_eq(_me().hero_label.text, "— ARQUEIRO")
 	assert_eq(_them().name_label.text, "OPONENTE")
 	assert_eq(_them().hero_label.text, "— CAVALEIRO")
 	assert_eq(_type("%MeCard"), &"EndCardLose")

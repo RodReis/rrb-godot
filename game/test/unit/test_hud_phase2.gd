@@ -139,7 +139,7 @@ func test_kill_scored_atualiza_o_placar() -> void:
 	var banner := _node("%ScoreBanner") as ScoreBanner
 	var texts := _texts(banner)
 	assert_has(texts, "CAVALEIRO (VOCÊ)")
-	assert_has(texts, "ARQUEIRA (OPONENTE)")
+	assert_has(texts, "ARQUEIRO (OPONENTE)")
 	assert_has(texts, "2")
 	assert_has(texts, "1")
 	assert_has(texts, "META: %d KILLS" % RULES.kill_goal)

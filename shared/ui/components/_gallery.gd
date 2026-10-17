@@ -183,10 +183,10 @@ func _skills() -> void:
 		[KNIGHT.skill_q, "Q", 1, 0.0, false, true, "upgradable"],
 		[KNIGHT.skill_r, "R", 0, 0.0, true, false, "LOCKED"],
 		[KNIGHT.skill_r, "R", 0, 0.0, true, true, "LOCKED + upgradable"],
-		[RANGER.basic_attack, "RMB", 1, 0.0, false, false, "Arqueira"],
-		[RANGER.skill_q, "Q", 1, 0.0, false, false, "Arqueira"],
-		[RANGER.skill_e, "E", 1, 2.2, false, false, "Arqueira"],
-		[RANGER.skill_r, "R", 1, 0.0, false, false, "Arqueira"],
+		[RANGER.basic_attack, "RMB", 1, 0.0, false, false, "Arqueiro"],
+		[RANGER.skill_q, "Q", 1, 0.0, false, false, "Arqueiro"],
+		[RANGER.skill_e, "E", 1, 2.2, false, false, "Arqueiro"],
+		[RANGER.skill_r, "R", 1, 0.0, false, false, "Arqueiro"],
 	]
 	for sample: Array in samples:
 		var button := SKILL_BUTTON.instantiate() as SkillButton

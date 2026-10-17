@@ -67,6 +67,7 @@ script = ExtResource("1_script")
 id = &"knight"
 display_name = "Cavaleiro"
 role = "Tanque"
+weapon_name = "Espada Curta"
 summary = "Absorção de dano, engajamento frontal e controle de grupo."
 base_move_speed = 5.8
 base_hp = 600.0
