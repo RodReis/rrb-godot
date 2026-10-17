@@ -19,6 +19,12 @@ const ZOOM_SECONDS: float = 0.12
 ## Radianos de giro por pixel de mouse (SPEC-045 §3.7; ajuste na verificacao visual).
 @export_range(0.001, 0.02, 0.0005) var orbit_sensitivity: float = 0.005
 
+## Cinematica de abertura (IntroCamera, F69): enquanto intro_active, a pose do jogo se mistura com
+## intro_pose; intro_rig_weight 0 = so a cinematica, 1 = so a camera de jogo.
+var intro_active: bool = false
+var intro_pose: Transform3D = Transform3D.IDENTITY
+var intro_rig_weight: float = 0.0
+
 var _yaw: float = 0.0
 ## Yaw da camera ao nascer (olhando o centro a partir da base): o minimapa e o radar ficam
 ## travados nele, com a base do time embaixo, e nao giram com o jogador (PI 2026-10-16).
@@ -42,6 +48,8 @@ func _process(_delta: float) -> void:
 	var me := get_node_or_null("../Players/%d" % multiplayer.get_unique_id()) as Node3D
 	if me == null:
 		_yaw_locked = false
+		if intro_active:
+			global_transform = intro_pose
 		return
 	if not _yaw_locked:
 		_yaw = CameraRig.yaw_towards(me.global_position, focus)
@@ -49,6 +57,8 @@ func _process(_delta: float) -> void:
 		_yaw_locked = true
 	global_position = me.global_position + CameraRig.offset(_yaw, pitch_degrees, distance)
 	look_at(me.global_position, Vector3.UP)
+	if intro_active:
+		global_transform = intro_pose.interpolate_with(global_transform, intro_rig_weight)
 
 
 ## Movimento e soltura chegam aqui antes da HUD: a HUD nao trava o giro ja iniciado.

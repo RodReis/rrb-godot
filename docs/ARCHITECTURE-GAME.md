@@ -93,9 +93,11 @@ O que vai em `shared/core` e não em `game/scripts/core`: o que o Launcher tamb�
 
 ```
 LOBBY_WAIT ─(2 jogadores conectados e token válido)─▶ HERO_PICK ─(ambos lock-in ou timeout 24 s)─▶
-PHASE1 (5:00) ─(relógio)─▶ TRANSITION (5 s) ─▶ PHASE2 ─(4:00 da fase 2)─▶ SUDDEN_DEATH ─▶ ENDED
-                                                   └─(meta de kills)──────────────────────▶ ENDED
+INTRO ─(≥ 5 s e `ready` dos 2, ou 8 s)─▶ PHASE1 (5:00) ─(relógio)─▶ TRANSITION (5 s) ─▶ PHASE2
+  ─(4:00 da fase 2)─▶ SUDDEN_DEATH ─▶ ENDED          └─(meta de kills)───────────────────▶ ENDED
 ```
+
+- `INTRO` (F69, ADR-0015): os heróis nascem no spawn ao entrar (antes nasciam na `PHASE1`), com `Hero.input_locked` (o servidor não aplica input; o cliente manda input zerado, `PlayerInput.cinematic`). O relógio **não** corre: `MatchClock.start` roda ao sair da `INTRO`, então `t_match` começa em 0:00 nesse tick. O cliente toca a `IntroCamera` (`IntroRules`: voo 3 s → close 2 s → blend 0,5 s) e manda `ready` por RPC (`MatchController.report_intro_ready`, fora da simulação) quando termina; bot e jogador desconectado entram prontos. O `deadline_tick` da `INTRO` é o corte (8 s) e o mesmo `phase_changed` leva todos à `PHASE1` no mesmo tick. Rollback e `StateSynchronizer` não mudam.
 
 - `MatchClock`: relógio autoritativo em ticks; `t_match`, `t_phase`. Boss aos 3:30, aviso aos 3:00, portões aos 5:00, zona fecha em 4:00 de fase 2, respawn desliga aos 9:00, colapso aos 10:00 (GDB §7.1).
 - `ZoneController`: raio e dano por tempo (tabela GDB §7.1 em `match_pacing.tres`); registra o dano no ledger de cada herói fora do círculo, e cada herói aplica no próprio `_rollback_tick` (padrão `HitLedger`, §3.2).

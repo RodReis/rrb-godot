@@ -15,6 +15,9 @@ const PICK_MARGIN: float = 0.3
 static var autopilot: bool = false
 ## Tela por cima da partida (bestiario, F13): o heroi fica parado; a partida nao pausa.
 static var suspended: bool = false
+## Cinematica de abertura (INTRO, F69): a camera e da IntroCamera, o heroi nao recebe input e as
+## placas de nome e HP do mundo (herois e monstros) ficam escondidas.
+static var cinematic: bool = false
 
 var movement: Vector3 = Vector3.ZERO
 var aim: Vector3 = Vector3.ZERO
@@ -79,7 +82,7 @@ func _gather() -> void:
 	_pending_pick = PICK_NONE
 	if disconnected:
 		chest_pick = PICK_NONE
-	if suspended or disconnected:
+	if suspended or cinematic or disconnected:
 		_gather_idle()
 		return
 	if autopilot:

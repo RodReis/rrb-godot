@@ -29,7 +29,9 @@ var _ended: Array = []  # [winner, reason, stats, tick]
 func before_each() -> void:
 	_phases = []
 	_ended = []
-	_rules = load(RULES) as MatchRules
+	# Sem minimo de INTRO: o relogio comeca no START e os tempos do teste valem como antes (F69).
+	_rules = (load(RULES) as MatchRules).duplicate() as MatchRules
+	_rules.intro_min_duration = 0.0
 	_clock = MatchClock.new()
 	_clock.rules = _rules
 	add_child_autofree(_clock)
@@ -58,6 +60,8 @@ func before_each() -> void:
 	_match.join(P2, GateRules.TEAM_B, false, START)
 	_match.submit_pick(P1, &"knight", START)
 	_match.submit_pick(P2, &"knight", START)
+	_match.submit_ready(P1, START)
+	_match.submit_ready(P2, START)
 
 
 func _spawn(peer: int, team: int, where: Vector3) -> Hero:

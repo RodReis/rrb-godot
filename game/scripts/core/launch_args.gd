@@ -28,6 +28,9 @@ const DAYNIGHT_DAY: String = "day"
 const DAYNIGHT_NIGHT: String = "night"
 ## --bot-heroes: um heroi por time.
 const HERO_PAIR_SIZE: int = 2
+## --intro-ready-delay=S: o cliente atrasa o ready da cinematica de abertura em S segundos (dev,
+## F69: prova o corte aos 8 s com um dos dois atrasado).
+const DEFAULT_INTRO_READY_DELAY: float = 0.0
 
 
 static func parse(args: PackedStringArray) -> Dictionary:
@@ -40,6 +43,7 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"seed": NO_SEED,
 		"time": DEFAULT_TIME,
 		"daynight": DAYNIGHT_AUTO,
+		"intro_ready_delay": DEFAULT_INTRO_READY_DELAY,
 		"offline": false,
 		"bot": false,
 		"bot_hero": &"",
@@ -82,6 +86,10 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			var seconds := arg.trim_prefix("--time=")
 			var valid := seconds.is_valid_float() and seconds.to_float() >= DEFAULT_TIME
 			result["time"] = seconds.to_float() if valid else DEFAULT_TIME
+		elif arg.begins_with("--intro-ready-delay="):
+			var seconds := arg.trim_prefix("--intro-ready-delay=")
+			var valid := seconds.is_valid_float() and seconds.to_float() >= 0.0
+			result["intro_ready_delay"] = seconds.to_float() if valid else DEFAULT_INTRO_READY_DELAY
 		elif arg.begins_with("--daynight="):
 			var mode := arg.trim_prefix("--daynight=")
 			var valid := mode == DAYNIGHT_DAY or mode == DAYNIGHT_NIGHT

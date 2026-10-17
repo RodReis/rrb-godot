@@ -9,6 +9,10 @@ extends Resource
 @export var hero_pick_duration: float
 ## Heroi de quem nao confirma a tempo, por slot (P1, P2) — R-PEND-04.
 @export var default_heroes: Array[StringName]
+## Cinematica de abertura (INTRO, F69/ADR-0015): so sai depois do minimo e com o ready dos dois;
+## aos intro_max_duration corta de qualquer jeito.
+@export var intro_min_duration: float
+@export var intro_max_duration: float
 
 @export var phase1_duration: float
 ## TRANSITION (aviso, portoes caem) antes da PHASE2; ja conta como fase 2 (CONVENTION §3).

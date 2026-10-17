@@ -88,8 +88,9 @@ func _process(_delta: float) -> void:
 	visible = shown
 	if _concealment.on_client():
 		collision_layer = _layer if shown else 0
-	hp_label.visible = is_alive()
-	hp_bar.visible = is_alive()
+	var plate := is_alive() and not PlayerInput.cinematic  # sem placas na cinematica (F69)
+	hp_label.visible = plate
+	hp_bar.visible = plate
 	hp_label.text = data.display_name
 	hp_bar.set_ratio(hp / data.hp)
 

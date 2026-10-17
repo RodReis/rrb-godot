@@ -72,6 +72,9 @@ var respawn_seconds: float = 0.0
 var killer_id: int = 0
 ## Servidor: a fonte da base cura (so na fase 1), definido pelo MatchController.
 var fountain_open: bool = false
+## Servidor: cinematica de abertura (INTRO, F69): nenhum input e aplicado e o heroi fica no spawn.
+## Definido pelo MatchController; o cliente ja manda input zerado (PlayerInput.cinematic).
+var input_locked: bool = false
 ## Servidor: tick da morte subita (KillRules.respawns), definido pelo MatchController. Por tick,
 ## nao flag: ressimular um tick de antes dele ainda renasce.
 var respawn_off_tick: int = RESPAWN_ALWAYS
@@ -244,7 +247,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 		_drink(tick)
 	_simulate_effects(tick)  # o que ja foi lancado segue mesmo com o heroi morto
 	_refresh_body()
-	if not is_alive():
+	if not is_alive() or input_locked:
 		velocity = Vector3.ZERO
 		return
 	_learn()
@@ -287,8 +290,9 @@ func _process(_delta: float) -> void:
 	_refresh_attributes()
 	_refresh_body()
 	visible = _concealment.is_shown()
-	hp_label.visible = is_alive()
-	hp_bar.visible = is_alive()
+	var plate := is_alive() and not PlayerInput.cinematic  # sem placas na cinematica (F69)
+	hp_label.visible = plate
+	hp_bar.visible = plate
 	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
 	if stun_ticks > 0:
 		status += " (atordoado)"
