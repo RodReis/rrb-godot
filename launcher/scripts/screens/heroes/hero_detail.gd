@@ -6,9 +6,9 @@ extends PanelContainer
 ## HeroesFormat (GDB vence o prototipo, §8.3 regra 2). Fora do prototipo: epiteto, lore, nivel,
 ## builds, skins e "testar no treino" (sem requisito, §8.3 regra 1).
 
-const BANNER_HEIGHT: float = 300.0
+const BANNER_HEIGHT: float = 376.0
 ## Faixa de baixo do banner, reservada a classe e ao nome; o retrato inteiro fica acima dela.
-const CAPTION_HEIGHT: float = 68.0
+const CAPTION_HEIGHT: float = 44.0
 const SKILL_ICON: Vector2 = Vector2(56, 56)
 const BAR_HEIGHT: float = 6.0
 ## Seta entre o valor do nivel 1 e o do nivel 10.

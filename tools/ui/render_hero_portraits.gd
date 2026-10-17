@@ -46,6 +46,13 @@ const CAMERA_TARGET: Vector3 = Vector3(0.0, 1.38, 0.0)
 const CAMERA_EYE_LARGE: Vector3 = Vector3(0.0, 1.45, 6.6)
 const CAMERA_TARGET_LARGE: Vector3 = Vector3(0.0, 1.12, 0.0)
 const CAMERA_FOV: float = 26.0
+## Retrato grande: a figura (modelo + arma) ocupa a mesma fracao do quadro em todos os herois, para
+## nenhum parecer maior que os outros na Tela Herois.
+const FIT_HEIGHT: float = 0.78
+const FIT_WIDTH: float = 0.86
+const FIT_FRAMES: int = 4
+## Diferenca por canal (0..1) abaixo da qual o pixel conta como fundo.
+const INK_TOLERANCE: float = 0.02
 
 
 func _initialize() -> void:
@@ -60,14 +67,19 @@ func _run() -> void:
 		if not await _render(hero_id, OUT_DIR, SIZE, CAMERA_EYE, CAMERA_TARGET):
 			failed = true
 		if not await _render(
-			hero_id, OUT_DIR_LARGE, SIZE_LARGE, CAMERA_EYE_LARGE, CAMERA_TARGET_LARGE
+			hero_id, OUT_DIR_LARGE, SIZE_LARGE, CAMERA_EYE_LARGE, CAMERA_TARGET_LARGE, true
 		):
 			failed = true
 	quit(1 if failed else 0)
 
 
 func _render(
-	hero_id: String, out_dir: String, size: Vector2i, eye: Vector3, target: Vector3
+	hero_id: String,
+	out_dir: String,
+	size: Vector2i,
+	eye: Vector3,
+	target: Vector3,
+	fit: bool = false
 ) -> bool:
 	var spec: Array = HEROES[hero_id]
 	var viewport := SubViewport.new()
@@ -97,6 +109,11 @@ func _render(
 	camera.current = true
 	for i: int in WARMUP_FRAMES:
 		await process_frame
+	if fit:
+		await RenderingServer.frame_post_draw
+		_fit_camera(viewport, camera, target)
+		for i: int in FIT_FRAMES:
+			await process_frame
 	await RenderingServer.frame_post_draw
 	var image := viewport.get_texture().get_image()
 	var path := "%s%s.png" % [out_dir, hero_id]
@@ -104,6 +121,49 @@ func _render(
 	print("[portrait] %s %s (%s)" % [path, image.get_size(), error_string(err)])
 	viewport.queue_free()
 	return err == OK
+
+
+## Enquadra o corpo todo com a mesma folga em todos: mede a tinta (pixels diferentes do fundo) de
+## um render de prova e ajusta distancia e centro da camera. A caixa dos meshes nao serve: a de um
+## mesh com pele (skin) e maior que o corpo visivel.
+func _fit_camera(viewport: SubViewport, camera: Camera3D, target: Vector3) -> void:
+	var ink := _ink_bounds(viewport.get_texture().get_image())
+	var size := float(viewport.size.y)
+	var scale_needed := maxf(
+		float(ink.size.y) / (FIT_HEIGHT * size), float(ink.size.x) / (FIT_WIDTH * size)
+	)
+	var offset_px := Vector2(ink.get_center()) - Vector2(viewport.size) / 2.0
+	var distance := camera.global_position.distance_to(target)
+	var world_per_px := 2.0 * distance * tan(deg_to_rad(CAMERA_FOV) / 2.0) / size
+	var shift := (
+		camera.global_transform.basis.x * offset_px.x * world_per_px
+		- camera.global_transform.basis.y * offset_px.y * world_per_px
+	)
+	var new_target := target + shift
+	var eye := new_target + camera.global_transform.basis.z * distance * scale_needed
+	camera.look_at_from_position(eye, new_target)
+
+
+## Caixa dos pixels que nao sao o fundo.
+func _ink_bounds(image: Image) -> Rect2i:
+	var found := Rect2i()
+	var first := true
+	for y: int in image.get_height():
+		for x: int in image.get_width():
+			if _is_background(image.get_pixel(x, y)):
+				continue
+			var spot := Rect2i(x, y, 1, 1)
+			found = spot if first else found.expand(Vector2i(x, y))
+			first = false
+	return found
+
+
+func _is_background(pixel: Color) -> bool:
+	return (
+		absf(pixel.r - BACKDROP.r) < INK_TOLERANCE
+		and absf(pixel.g - BACKDROP.g) < INK_TOLERANCE
+		and absf(pixel.b - BACKDROP.b) < INK_TOLERANCE
+	)
 
 
 func _environment() -> WorldEnvironment:
