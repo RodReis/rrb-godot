@@ -306,6 +306,51 @@ func test_esc_volta() -> void:
 	assert_signal_emitted(_end, "back_requested")
 
 
+func test_botao_voltar_diz_voltar_ao_lobby() -> void:
+	var label := _end.get_node("Root/Layout/Footer/Actions/Back/Content/Row/Label") as Label
+	assert_eq(label.text, "VOLTAR AO LOBBY")
+
+
+func test_contagem_comeca_em_15_s_e_fica_visivel() -> void:
+	var countdown := _end.get_node("%Countdown") as Label
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	assert_eq(MatchEnd.AUTO_CLOSE_SECONDS, 15.0)
+	assert_eq(_end.seconds_left(), 15.0)
+	assert_true(countdown.is_visible_in_tree())
+	assert_eq(countdown.text, "Fechando em 15 s")
+
+
+func test_contagem_desce_com_o_tempo() -> void:
+	var countdown := _end.get_node("%Countdown") as Label
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	_end._process(4.5)
+	assert_almost_eq(_end.seconds_left(), 10.5, 0.001)
+	assert_eq(countdown.text, "Fechando em 11 s", "arredonda para cima: nunca mostra 0 antes de fechar")
+
+
+func test_ao_zerar_fecha_sozinha_uma_vez() -> void:
+	watch_signals(_end)
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	_end._process(14.9)
+	assert_signal_not_emitted(_end, "back_requested")
+	_end._process(0.2)
+	assert_signal_emit_count(_end, "back_requested", 1)
+	assert_eq(_end.seconds_left(), 0.0)
+	assert_false(_end.is_processing(), "parada: nao emite de novo")
+
+
+func test_nao_conta_antes_de_apresentar() -> void:
+	assert_false(_end.is_processing())
+	assert_eq(_end.seconds_left(), 0.0)
+
+
+func test_apresentar_de_novo_reinicia_a_contagem() -> void:
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	_end._process(10.0)
+	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
+	assert_eq(_end.seconds_left(), 15.0)
+
+
 func test_botao_principal_pulsa_so_na_vitoria() -> void:
 	var again := _end.get_node("%PlayAgain") as Button
 	_end.present(ME, VictoryRules.KILL_GOAL, _stats(), ME)
