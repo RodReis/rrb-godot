@@ -118,7 +118,7 @@ func _process(_delta: float) -> void:
 	elif started_e:
 		_once(skill_e)
 	elif started_basic:
-		_once(basic_attack)
+		_once(_basic_clip())
 	elif _one_shot:
 		return
 	elif _hero.shield_ticks > 0:
@@ -164,11 +164,10 @@ func _show_slot(slot: int, item: ItemData) -> void:
 	var piece: PackedScene = null
 	if item != null and _items != null:
 		piece = _items.pieces.get(item.id) as PackedScene
-	var pack_part: Node3D = null
 	if _items != null and _items.pack_parts[slot] != &"":
-		pack_part = model.find_child(_items.pack_parts[slot]) as Node3D
-	if pack_part != null:
-		pack_part.visible = piece == null
+		# Padrao do find_children: "Axe_*" esconde os dois machados do Berserker (F75).
+		for pack_part: Node in model.find_children(_items.pack_parts[slot], "Node3D", true, false):
+			(pack_part as Node3D).visible = piece == null
 	if piece == null:
 		return
 	var root := piece.instantiate()
@@ -188,6 +187,11 @@ func _show_slot(slot: int, item: ItemData) -> void:
 		mesh.transform = _skeleton.get_bone_global_rest(index).affine_inverse() * mesh.transform
 		_attachments[slot].append(attachment)
 	root.free()
+
+
+## Animacao do golpe basico que acabou de sair (Machados Gemeos alternam a mao, F75).
+func _basic_clip() -> StringName:
+	return basic_attack
 
 
 ## O heroi e de quem joga neste processo: o dono do peer, fora o bot do treino.

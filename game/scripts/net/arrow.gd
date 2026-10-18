@@ -15,7 +15,7 @@ extends Node3D
 ## Visual: disparo novo neste slot (o rastro do VFX recomeca daqui).
 signal shown_launched
 
-enum Kind { NONE, BASIC, PIERCE, EXPLODE, FAN, CLAW, ROOT }
+enum Kind { NONE, BASIC, PIERCE, EXPLODE, FAN, CLAW, ROOT, AXE }
 
 ## Propriedades de estado de rollback (caminho "Arrows/<nome>:<prop>" no heroi).
 const STATE: Array[String] = [

@@ -119,6 +119,9 @@ var reveal_ticks: int = 0
 var target_id: int = TargetRules.NONE
 ## Ticks que restam da janela de encarar depois de um disparo (F66, FacingRules).
 var face_ticks: int = 0
+## Ticks imune a controle (Ragnarok do Berserker, F75): lentidao, raiz, atordoamento, empurrao e
+## puxao que chegam pelo ledger nao se aplicam.
+var cc_immune_ticks: int = 0
 
 ## O basico dispara neste tick: botao segurado ou auto-ataque do alvo travado em alcance. Derivado
 ## do input a cada tick (fora do estado de rollback); as subclasses leem aqui, nao em input.attack.
@@ -200,6 +203,7 @@ func _ready() -> void:
 		":reveal_ticks",
 		":target_id",
 		":face_ticks",
+		":cc_immune_ticks",
 	]
 	_rollback.state_properties.append_array(_extra_state_properties())
 	_rollback.input_properties = [
@@ -268,7 +272,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	else:
 		_face(movement, aim)
 		var slow := slow_pct if slow_ticks > 0 else 0.0
-		velocity = movement * CombatRules.slowed(attributes.move_speed, slow)
+		velocity = movement * CombatRules.slowed(move_speed(), slow)
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
@@ -414,6 +418,24 @@ func missing_hp() -> int:
 	return maxi(attributes.max_hp - hp, 0)
 
 
+## Dano que [param raw] faria agora: depois da DEF, nada se invulneravel, no maximo o HP restante
+## (roubo de vida do Berserker). A Muralha frontal fica de fora.
+func effective_damage(raw: int) -> int:
+	if invuln_ticks > 0 or not is_alive():
+		return 0
+	return mini(CombatRules.mitigated(raw, defense()), hp)
+
+
+## DEF do momento: atributos + bonus temporario da subclasse (Grito de Guerra).
+func defense() -> float:
+	return attributes.defense + _defense_bonus()
+
+
+## Velocidade de movimento do momento (u/s): atributos + bonus temporario da subclasse.
+func move_speed() -> float:
+	return attributes.move_speed * (1.0 + _move_speed_bonus())
+
+
 ## Habilidade canalizada em curso (Rodopio do Barbaro): o HeroVisual mostra a animacao dela.
 func is_channeling() -> bool:
 	return false
@@ -495,6 +517,7 @@ func _die(effect: HitEffect) -> void:
 	invuln_ticks = 0
 	interact_ticks = 0
 	zone_ticks = 0
+	cc_immune_ticks = 0
 
 
 ## Gasta um ponto no slot pedido pelo input (Ctrl+Q/E/R). Valor do cliente: validado aqui.
@@ -619,6 +642,7 @@ func _tick_timers() -> void:
 	slow_ticks = maxi(slow_ticks - 1, 0)
 	reveal_ticks = maxi(reveal_ticks - 1, 0)
 	invuln_ticks = maxi(invuln_ticks - 1, 0)
+	cc_immune_ticks = maxi(cc_immune_ticks - 1, 0)
 	shield_ticks = maxi(shield_ticks - 1, 0)
 	if shield_ticks == 0:
 		shield_hp = 0
@@ -663,6 +687,16 @@ func _reveals_on_e() -> bool:
 ## Propriedades de estado de rollback alem das do Hero (caminhos relativos a este node).
 func _extra_state_properties() -> Array[String]:
 	return []
+
+
+## DEF somada agora (Grito de Guerra do Berserker); sai do estado de rollback da subclasse.
+func _defense_bonus() -> float:
+	return 0.0
+
+
+## Fracao de velocidade de movimento somada agora (Grito de Guerra e Ragnarok do Berserker).
+func _move_speed_bonus() -> float:
+	return 0.0
 
 
 ## Basico corpo a corpo (Cavaleiro, Barbaro): golpeia quem esta no arco do basic_attack.
@@ -729,7 +763,7 @@ func _apply_hits(tick: int) -> void:
 		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
 		if effect.true_damage > 0:
 			zone_ticks = SkillRules.seconds_to_ticks(ZONE_FLAG_SECONDS, NetworkTime.tickrate)
-		var damage := CombatRules.mitigated(effect.damage, attributes.defense)
+		var damage := CombatRules.mitigated(effect.damage, defense())
 		if invuln_ticks > 0:
 			damage = 0
 		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
@@ -749,6 +783,8 @@ func _apply_hits(tick: int) -> void:
 		if hp == 0:
 			_die(effect)
 			continue
+		if cc_immune_ticks > 0:
+			continue  # Ragnarok: empurrao, puxao, atordoamento, lentidao e raiz nao se aplicam
 		if not effect.push.is_zero_approx():
 			knockback_ticks = (
 				effect.push_ticks

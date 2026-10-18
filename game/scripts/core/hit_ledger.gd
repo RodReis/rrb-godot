@@ -5,10 +5,11 @@ extends RefCounted
 ## atacante nao duplica (um efeito por fonte = atacante + habilidade, por tick).
 
 ## REWARD: XP dado pelo monstro ao matador (nao colide com o golpe do monstro no mesmo tick) e
-## saque do bau (cura, item). ZONE: dano da zona (fonte 0, F16).
-enum Slot { BASIC, Q, E, R, REWARD, ZONE }
+## saque do bau (cura, item). ZONE: dano da zona (fonte 0, F16). PASSIVE: o heroi no proprio
+## ledger (roubo de vida do Frenesi, F75).
+enum Slot { BASIC, Q, E, R, REWARD, ZONE, PASSIVE }
 
-const SLOT_COUNT: int = 6
+const SLOT_COUNT: int = 7
 
 var _hits: Dictionary = {}  # tick (int) -> { source_key (int) -> HitEffect }
 
