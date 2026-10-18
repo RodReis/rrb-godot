@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ServantData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/servant_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Servo do Vazio"
+base_hp = PackedFloat64Array(180, 280)
+hp_intelligence_ratio = 2.0
+defense = 10.0
+move_speed = 5.5
+attack_reach = 1.2
+attack_interval = 1.0
+base_damage = PackedFloat64Array(22, 34)
+damage_intelligence_ratio = 0.25
+target_reach = 9.0
+retarget_interval = 0.25
+side_offset = 1.2
+follow_distance = 2.0

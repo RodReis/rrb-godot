@@ -256,7 +256,7 @@ func _contest(tick: int) -> void:
 ## perigo perto (_potion_when_hurt). Berserker pelo perfil (BotRules.berserker_skills): Arremesso
 ## para alcancar e Grito ao entrar em Lutar; o Ragnarok vale em qualquer estado (_rage_when_needed).
 ## Ocultista pelo perfil (BotRules.occultist_skills): o basico acumula marcas, Praga no alvo,
-## Circulo se o alvo se aproxima.
+## Circulo se o alvo se aproxima, Servos contra heroi ou boss.
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -305,11 +305,13 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_e = skills and use.y == 1
-	elif occultist:  # basico sempre (marcas); Praga no alvo; Circulo se ele se aproxima
+	elif occultist:  # basico sempre (marcas); Praga no alvo; Circulo se ele se aproxima; Servos
 		var closing := BotRules.closing_speed(target.velocity, to)
-		use = BotRules.occultist_skills(to.length(), closing, PROFILE)
+		var worth := target is Hero or Druid._is_boss(target)
+		use = BotRules.occultist_skills(to.length(), closing, worth, PROFILE)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_e = skills and use.y == 1
+		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)

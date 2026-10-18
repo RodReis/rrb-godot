@@ -86,21 +86,15 @@ func test_recarga_do_circulo_13_s_no_rank_1() -> void:
 	assert_gt(expected, 300, "13 s menos o CDR da INT 35")
 
 
-func test_r_sem_ponto_alocavel_e_nao_dispara() -> void:
+func test_nivel_10_tem_o_r2() -> void:
 	_spawn_occultist(10)
-	assert_eq(_occultist.ranks.z, 0, "mesmo no nivel 10, sem rank de R")
-	_occultist.input.skill_r = true
-	_run(START, 5)
-	assert_eq(_occultist.r_cooldown, 0, "nao usou")
+	assert_eq(_occultist.ranks.z, 2)
 
 
-func test_ponto_do_nivel_6_nao_vai_para_o_r() -> void:
+func test_ponto_do_nivel_6_vai_para_o_r() -> void:
 	_spawn_occultist(5)
 	_occultist.xp = XpTable.xp_for_level(_occultist.xp_curve, 6)
 	_occultist.ranks = Vector3i(3, 2, 0)
 	_occultist.input.learn = SkillRules.SLOT_R
 	_run(START, 2)
-	assert_eq(_occultist.ranks, Vector3i(3, 2, 0), "o R recusa o ponto")
-	_occultist.input.learn = SkillRules.SLOT_Q
-	_run(START + 2, 2)
-	assert_eq(_occultist.ranks, Vector3i(4, 2, 0), "o ponto vai para o Q")
+	assert_eq(_occultist.ranks, Vector3i(3, 2, 1), "F78: o R aceita o ponto")

@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ai/void_servant.gd" id="1_servant"]
+[ext_resource type="Script" path="res://scripts/ai/void_servant_visual.gd" id="2_visual"]
+[ext_resource type="Resource" path="res://shared/data/servants/void_servant.tres" id="3_data"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/void_servant.glb" id="4_model"]
+[ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.4
+height = 1.4
+
+[node name="VoidServant" type="CharacterBody3D"]
+collision_layer = 0
+collision_mask = 15
+script = ExtResource("1_servant")
+data = ExtResource("3_data")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.7, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Model" parent="." instance=ExtResource("4_model")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="Visual" type="Node" parent="." node_paths=PackedStringArray("model")]
+script = ExtResource("2_visual")
+model = NodePath("../Model")
+
+[node name="HpBar" type="MeshInstance3D" parent="."]
+position = Vector3(0, 2.0, 0)
+script = ExtResource("hpbar_script")

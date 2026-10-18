@@ -1,0 +1,195 @@
+extends OccultistTestBase
+## F78: R Servos do Vazio (GDB §4.10, SPEC-078). Invocacao, duracao e substituicao; escolha do alvo
+## (prioridade, alcance, so o que o Ocultista ve); dano e abate creditados ao Ocultista; matar o
+## servo nao da nada; sem o R, nada. (Retribuicao contra servo fica para o F76.)
+
+const LASTS: int = 210  # 7,0 s a 30 ticks/s
+const FAR: Vector3 = Vector3(40, 0, 0)
+
+
+## Um tick de todos: o Ocultista e os herois alvo pelo rollback, os servos pela IA do servidor.
+func _tick_all(from: int, count: int) -> void:
+	for tick: int in range(from, from + count):
+		_run(tick, 1)
+		for servant: VoidServant in _occultist.servants:
+			servant._on_network_tick(TICK, tick)
+
+
+func _cast_r(tick: int = START) -> void:
+	_occultist.input.skill_r = true
+	_run(tick, 1)
+
+
+func _servant_hp(level: int = 6) -> int:
+	var data := _occultist.servants[0].data
+	return VoidServantRules.max_hp(data, 1 if level < 10 else 2, _occultist.attributes.intelligence)
+
+
+func test_sem_o_r_aprendido_nada_acontece() -> void:
+	_spawn_occultist(5)
+	assert_eq(_occultist.ranks.z, 0, "R so no Nv 6")
+	_cast_r()
+	assert_eq(_occultist.r_cooldown, 0)
+	for servant: VoidServant in _occultist.servants:
+		assert_false(servant.is_alive())
+
+
+func test_r_invoca_os_dois_servos_ao_lado_com_hp_do_gdb() -> void:
+	_spawn_occultist(6)
+	assert_eq(_occultist.ranks.z, 1, "Nv 6 ganha o R1")
+	_cast_r()
+	assert_gt(_occultist.r_cooldown, 0)
+	var servants := _occultist.servants
+	assert_eq(servants.size(), 2)
+	assert_eq(servants[0].hp, _servant_hp())
+	assert_eq(servants[1].hp, _servant_hp())
+	assert_almost_eq(servants[0].global_position.x, 1.2, EPS, "a direita")
+	assert_almost_eq(servants[1].global_position.x, -1.2, EPS, "a esquerda")
+	assert_eq(servants[0].team, _occultist.team)
+	assert_ne(servants[0].combat_id(), servants[1].combat_id())
+
+
+func test_somem_no_fim_dos_7_segundos() -> void:
+	_spawn_occultist(6)
+	_cast_r()
+	_tick_all(START + 1, LASTS - 2)
+	assert_true(_occultist.servants[0].is_alive(), "ainda no ultimo tick da duracao")
+	_tick_all(START + LASTS - 1, 2)
+	assert_false(_occultist.servants[0].is_alive())
+	assert_false(_occultist.servants[1].is_alive())
+
+
+func test_nova_invocacao_substitui_a_anterior() -> void:
+	_spawn_occultist(6)
+	_cast_r()
+	var servant := _occultist.servants[0]
+	servant.global_position = Vector3(5, 0, 5)
+	servant.receive_hit(START + 1, 99, HitEffect.new(60, Vector3.ZERO))
+	assert_lt(servant.hp, _servant_hp())
+	_occultist.r_cooldown = 0
+	_cast_r(START + 100)
+	assert_eq(servant.hp, _servant_hp(), "HP cheio de novo")
+	assert_almost_eq(servant.global_position.x, 1.2, EPS, "volta ao lado do Ocultista")
+	_tick_all(START + 101, LASTS - 2)
+	assert_true(servant.is_alive(), "a duracao conta da invocacao nova")
+
+
+func test_ressimular_o_tick_da_invocacao_nao_reinvoca() -> void:
+	_spawn_occultist(6)
+	_cast_r()
+	var servant := _occultist.servants[0]
+	servant.receive_hit(START + 1, 99, HitEffect.new(60, Vector3.ZERO))
+	var hp := servant.hp
+	servant.summon(START, Vector3.ZERO, Basis(), 1, 50.0, LASTS)
+	assert_eq(servant.hp, hp)
+
+
+func test_def_10_reduz_o_golpe_no_servo() -> void:
+	_spawn_occultist(6)
+	_cast_r()
+	var servant := _occultist.servants[0]
+	servant.receive_hit(START + 1, 99, HitEffect.new(80, Vector3.ZERO))
+	assert_eq(servant.hp, _servant_hp() - CombatRules.mitigated(80, 10.0))
+	servant.receive_hit(START + 1, 99, HitEffect.new(80, Vector3.ZERO))
+	assert_eq(servant.hp, _servant_hp() - CombatRules.mitigated(80, 10.0), "mesmo tick + fonte")
+
+
+func test_heroi_inimigo_vem_antes_do_monstro_mais_perto() -> void:
+	_spawn_occultist(6)
+	var knight := _spawn_knight(Vector3(0, 0, -6))
+	_spawn_monster(GOLEM, -3, Vector3(3, 0, 0))
+	_cast_r()
+	_tick_all(START + 1, 1)
+	assert_eq(_occultist.servants[0].target(), knight)
+	assert_eq(_occultist.servants[1].target(), knight)
+
+
+func test_alvo_travado_do_ocultista_vem_antes_do_heroi() -> void:
+	_spawn_occultist(6)
+	_spawn_knight(Vector3(0, 0, -4))
+	var golem := _spawn_monster(GOLEM, -3, Vector3(5, 0, 0))
+	_occultist.target_id = golem.uid
+	_occultist.input.target_id = golem.uid
+	_cast_r()
+	_tick_all(START + 1, 1)
+	assert_eq(_occultist.servants[0].target(), golem)
+
+
+func test_monstro_no_alcance_sem_heroi() -> void:
+	_spawn_occultist(6)
+	var golem := _spawn_monster(GOLEM, -3, Vector3(6, 0, 0))
+	_cast_r()
+	_tick_all(START + 1, 1)
+	assert_eq(_occultist.servants[0].target(), golem)
+
+
+func test_sem_alvo_seguem_o_ocultista() -> void:
+	_spawn_occultist(6)
+	_spawn_knight(FAR)
+	_cast_r()
+	var servant := _occultist.servants[0]
+	servant.global_position = Vector3(8, 0, 0)
+	_tick_all(START + 1, 60)
+	assert_null(servant.target())
+	var gap := Vector2(servant.global_position.x, servant.global_position.z).length()
+	assert_between(gap, 1.0, 2.5, "volta e para perto do Ocultista (follow_distance 2 u)")
+
+
+func test_so_ataca_o_que_o_ocultista_ve() -> void:
+	_spawn_occultist(6)
+	var knight := _spawn_knight(Vector3(14, 0, 0))  # fora do raio de visao (12 u) do Ocultista
+	_cast_r()
+	var servant := _occultist.servants[0]
+	servant.global_position = Vector3(12, 0, 0)  # o servo esta a 2 u dele
+	_tick_all(START + 1, 1)
+	assert_null(servant.target(), "o Ocultista nao ve o Cavaleiro")
+	_occultist.global_position = Vector3(5, 0, 0)
+	_tick_all(START + 2, 8)
+	assert_eq(servant.target(), knight, "na reavaliacao, ja visto")
+
+
+func test_dano_e_abate_do_servo_contam_para_o_ocultista() -> void:
+	_spawn_occultist(6)
+	var knight := _spawn_knight(Vector3(0, 0, -6))
+	knight.respawn_seconds = 60.0  # sem isso renasce no tick seguinte
+	_cast_r()
+	for servant: VoidServant in _occultist.servants:
+		servant.global_position = Vector3(0, 0, -5)
+	_tick_all(START + 1, 3)
+	assert_lt(knight.hp, KNIGHT_HP)
+	assert_gt(knight.hero_damage_from(CASTER), 0, "dano de heroi creditado ao Ocultista")
+	knight.hp = 1
+	_tick_all(START + 4, 31)
+	assert_false(knight.is_alive())
+	assert_eq(knight.killer_id, CASTER, "abate do Ocultista")
+
+
+func test_monstro_morto_pelo_servo_da_xp_ao_ocultista() -> void:
+	_spawn_occultist(6)
+	var golem := _spawn_monster(GOLEM, -3, Vector3(4, 0, 0))
+	_cast_r()
+	_occultist.servants[0].global_position = Vector3(3, 0, 0)
+	golem.hp = 1
+	var xp := _occultist.xp
+	_tick_all(START + 1, 3)
+	assert_false(golem.is_alive())
+	assert_gt(_occultist.xp, xp)
+
+
+func test_matar_o_servo_nao_da_nada_a_quem_mata() -> void:
+	_spawn_occultist(6)
+	var knight := _spawn_knight(Vector3(0, 0, 3))
+	_cast_r()
+	var servant := _occultist.servants[0]
+	servant.global_position = Vector3(0, 0, 2)  # a frente do Cavaleiro (que olha para -Z)
+	servant.hp = 1
+	var xp := knight.xp
+	knight.input.attack = true
+	for tick: int in range(START + 1, START + 4):
+		knight._rollback_tick(TICK, tick, true)
+	assert_false(servant.is_alive(), "o Cavaleiro matou o servo")
+	knight.input.attack = false
+	for tick: int in range(START + 4, START + 8):
+		knight._rollback_tick(TICK, tick, true)
+	assert_eq(knight.xp, xp, "sem XP")
+	assert_true(_occultist.is_alive())

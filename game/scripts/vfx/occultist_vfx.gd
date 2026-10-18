@@ -6,7 +6,9 @@ extends HeroVfx
 ## cajado a cada disparo, estouro no impacto confirmado (roxo no basico e no pulso do Circulo, verde
 ## na Praga). O Circulo Profano nao sai do estado do Ocultista (ele some de quem esta fora da
 ## visao): chega pelo ImpactRelay (zone), como o Pantano. As marcas de Maldicao e a nuvem da Praga
-## sobre o alvo sao do CurseMarks, que le o estado do alvo. Raios e tempos de occultist.tres.
+## sobre o alvo sao do CurseMarks, que le o estado do alvo. Servos do Vazio (F78): estouro roxo onde
+## cada servo surge e onde ele some, lido do HP replicado do servo (so de quem o ve). Raios e tempos
+## de occultist.tres.
 
 const SHADOW_BURST: PackedScene = preload("res://scenes/vfx/shadow_burst.tscn")
 const PLAGUE_BURST: PackedScene = preload("res://scenes/vfx/plague_burst.tscn")
@@ -18,12 +20,16 @@ const MUZZLE: Vector3 = Vector3(-0.35, 1.7, -0.7)
 ## Escala do clarao do disparo e do estouro do pulso do Circulo.
 const MUZZLE_FLASH: float = 0.6
 const PULSE_BURST: float = 0.7
+## Escala do estouro de quando um servo surge e de quando some.
+const SERVANT_BURST: float = 1.6
 
 var _arrows: Array[Arrow] = []
 var _shadow_bodies: Array[Node3D] = []
 var _plague_bodies: Array[Node3D] = []
 var _shadow_trails: Array[TrailRibbon] = []
 var _plague_trails: Array[TrailRibbon] = []
+## Servo vivo no quadro anterior, pelo indice em Occultist.servants.
+var _servants_alive: Array[bool] = [false, false]
 
 @onready var _shadow_trail: TrailRibbon = $ShadowTrail
 @onready var _plague_trail: TrailRibbon = $PlagueTrail
@@ -93,6 +99,21 @@ func _refresh(shown: bool, _delta: float) -> void:
 		pool.spawn(SHADOW_BURST, muzzle, MUZZLE_FLASH)
 	if _started(&"q", hero.q_cooldown):
 		pool.spawn(PLAGUE_BURST, muzzle, MUZZLE_FLASH)
+	_servant_bursts()
+
+
+## Estouro onde um servo surgiu ou sumiu desde o quadro anterior, se o jogador o ve.
+func _servant_bursts() -> void:
+	var servants := (hero as Occultist).servants
+	for i: int in servants.size():
+		var servant := servants[i]
+		var alive := servant.is_alive()
+		if alive != _servants_alive[i] and servant.is_shown():
+			var chest := Transform3D(
+				Basis.IDENTITY, servant.global_position + Vector3.UP * STRIKE_HEIGHT
+			)
+			pool.spawn(SHADOW_BURST, chest, SERVANT_BURST)
+		_servants_alive[i] = alive
 
 
 ## Copia o molde para dentro do projetil (ele o carrega: top_level, anda com a flecha).

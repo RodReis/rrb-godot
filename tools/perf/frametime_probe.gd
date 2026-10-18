@@ -19,7 +19,8 @@ extends SceneTree
 ## --occultist: cada Ocultista tem Circulo Profano ativo no outro heroi a medicao inteira, e o outro
 ## fica com 3 marcas de Maldicao e a Praga visiveis (SPEC-077 aceite): a sonda reemite o evento do
 ## ImpactRelay (zone_shown) a cada OCCULTIST_CIRCLE_SECONDS e segura curse_* e dot_ticks no alvo
-## (dot_left 0: a Praga aparece sem ferir).
+## (dot_left 0: a Praga aparece sem ferir). Cada Ocultista tambem reinvoca os 2 Servos do Vazio a
+## cada OCCULTIST_SERVANT_SECONDS (SPEC-078 aceite: 4 servos ativos com dois Ocultistas).
 ## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
 ## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
@@ -46,6 +47,8 @@ const DRUID_POTION_SECONDS: float = 2.5
 const DRUID_SWAMP_SECONDS: float = 5.5
 ## Circulo novo antes de o anterior (3 s) acabar.
 const OCCULTIST_CIRCLE_SECONDS: float = 2.5
+## Servos novos antes de os anteriores (7 s) acabarem.
+const OCCULTIST_SERVANT_SECONDS: float = 6.5
 ## Ticks que o --occultist segura nas marcas e na Praga do alvo (qualquer valor > 0 as mantem).
 const CURSE_HOLD_TICKS: int = 120
 ## Timer de imunidade que o --berserker segura (ticks; qualquer valor > 0 mantem o Ragnarok).
@@ -77,6 +80,7 @@ var _druid: bool = false
 var _berserker: bool = false
 var _occultist: bool = false
 var _circle_wait: float = 0.0
+var _servant_wait: float = 0.0
 var _potion_wait: float = 0.0
 var _swamp_wait: float = 0.0
 var _grass: bool = false
@@ -331,6 +335,7 @@ func _rage_berserkers() -> void:
 ## Sem tipos do jogo: Circulo no outro heroi pelo sinal do relay; marcas e Praga seguradas nele.
 func _occultist_effects(delta: float) -> void:
 	_circle_wait -= delta
+	_servant_wait -= delta
 	var relay := current_scene.get_node("ImpactRelay")
 	var tick: int = root.get_node("NetworkTime").get(&"tick")
 	for hero: Node in _players.get_children():
@@ -347,5 +352,9 @@ func _occultist_effects(delta: float) -> void:
 		if _circle_wait <= 0.0:
 			var center: Vector3 = other.get(&"global_position")
 			relay.emit_signal(&"zone_shown", hero.name.to_int(), 0, center, tick)
+		if _servant_wait <= 0.0:
+			hero.call(&"_summon", tick)
 	if _circle_wait <= 0.0:
 		_circle_wait = OCCULTIST_CIRCLE_SECONDS
+	if _servant_wait <= 0.0:
+		_servant_wait = OCCULTIST_SERVANT_SECONDS

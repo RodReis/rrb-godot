@@ -179,15 +179,16 @@ static func berserker_skills(
 
 ## Habilidades do Ocultista (SPEC-077) contra um alvo a [param distance] que se aproxima a
 ## [param closing_speed] u/s (negativo = afasta): Praga (x) ate plague_range; Circulo Profano (y)
-## ate circle_range com o alvo se aproximando; o R (z) nunca (Servos so no F78). O basico, que
-## acumula as marcas, sai sozinho no alcance. 1 = usa (o Hero ainda confere recarga e rank).
+## ate circle_range com o alvo se aproximando; Servos do Vazio (z, F78) ate servants_range se o
+## alvo e heroi ou boss ([param worth_servants]: nao gasta o R no farm). O basico, que acumula as
+## marcas, sai sozinho no alcance. 1 = usa (o Hero ainda confere recarga e rank).
 static func occultist_skills(
-	distance: float, closing_speed: float, profile: BotProfile
+	distance: float, closing_speed: float, worth_servants: bool, profile: BotProfile
 ) -> Vector3i:
 	return Vector3i(
 		int(distance <= profile.plague_range),
 		int(distance <= profile.circle_range and closing_speed >= profile.circle_approach_speed),
-		0,
+		int(worth_servants and distance <= profile.servants_range),
 	)
 
 

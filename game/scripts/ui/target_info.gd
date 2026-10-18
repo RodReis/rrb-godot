@@ -1,7 +1,8 @@
 class_name TargetInfo
 extends RefCounted
 ## O que a moldura do alvo travado mostra (F66, SPEC-066 §4): nome, etiqueta e HP do heroi
-## adversario (nome do heroi, nivel) ou do monstro (nome, tier). Alvo desconhecido volta vazio.
+## adversario (nome do heroi, nivel), do monstro (nome, tier) ou do Servo do Vazio (F78: nome, sem
+## etiqueta). Alvo desconhecido volta vazio.
 
 
 static func name_of(target: Combatant) -> String:
@@ -9,6 +10,8 @@ static func name_of(target: Combatant) -> String:
 		return (target as Hero).hero_data.display_name
 	if target is Monster:
 		return (target as Monster).data.display_name
+	if target is VoidServant:
+		return (target as VoidServant).data.display_name
 	return ""
 
 
@@ -32,4 +35,7 @@ static func hp_of(target: Combatant) -> Vector2i:
 	if target is Monster:
 		var monster := target as Monster
 		return Vector2i(monster.hp, roundi(monster.data.hp))
+	if target is VoidServant:
+		var servant := target as VoidServant
+		return Vector2i(servant.hp, servant.max_hp)
 	return Vector2i.ZERO

@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
 [ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="8_rules"]
 [ext_resource type="Script" path="res://scripts/net/arrow.gd" id="9_arrow"]
+[ext_resource type="PackedScene" path="res://scenes/heroes/void_servant.tscn" id="10_servant"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
 radius = 0.4
@@ -125,3 +126,9 @@ mesh = SubResource("SphereMesh_shadow")
 visible = false
 cast_shadow = 0
 mesh = SubResource("SphereMesh_plague")
+
+[node name="Servants" type="Node" parent="."]
+
+[node name="Servant0" parent="Servants" instance=ExtResource("10_servant")]
+
+[node name="Servant1" parent="Servants" instance=ExtResource("10_servant")]

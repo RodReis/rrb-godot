@@ -48,10 +48,12 @@ extends Resource
 @export var throw_range: float
 @export var rage_hp_pct: float
 ## Ocultista (SPEC-077): Praga com o alvo a ate plague_range; Circulo Profano com o alvo a ate
-## circle_range e se aproximando a pelo menos circle_approach_speed (u/s); o R nunca.
+## circle_range e se aproximando a pelo menos circle_approach_speed (u/s); Servos do Vazio (F78)
+## contra heroi ou boss a ate servants_range.
 @export var plague_range: float
 @export var circle_range: float
 @export var circle_approach_speed: float
+@export var servants_range: float
 ## Fase 2 (F19): a menos disto da borda da zona (ou fora dela) o bot foge para dentro. Escolha do
 ## Code: nenhum documento fixa o valor; a zona encolhe ~0,15 u/s, 2 u sao ~13 s de folga.
 @export var zone_margin: float
