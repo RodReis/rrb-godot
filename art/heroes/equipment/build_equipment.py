@@ -326,6 +326,10 @@ LARGE_FIT = {
 }
 # Folga para fora na escala (a peca e uma casca sobre o corpo; sem ela o corpo maior a atravessa).
 LARGE_FIT_MARGIN = 1.06
+# Ajuste por osso depois da caixa (escala por eixo, deslocamento em u): o Barbarian_Large anda curvado
+# e a cabeca afunda entre os ombros; o peitoral inteiro cobria o rosto na camera do jogo (PI
+# 2026-10-18). Mais baixo e mais curto, ele fica no tronco.
+LARGE_FIT_TWEAK = {"chest": (Vector((0.92, 1.0, 0.72)), Vector((0.0, 0.0, -0.32)))}
 
 
 def bone_boxes(path):
@@ -367,7 +371,11 @@ def large_fit():
     for bone in LARGE_FIT:
         (mlo, mhi), (llo, lhi) = medium[bone], large[bone]
         scale = Vector([LARGE_FIT_MARGIN * (lhi[i] - llo[i]) / (mhi[i] - mlo[i]) for i in range(3)])
-        fit[bone] = ((mlo + mhi) / 2.0, (llo + lhi) / 2.0, scale)
+        shift = Vector()
+        if bone in LARGE_FIT_TWEAK:
+            factor, shift = LARGE_FIT_TWEAK[bone]
+            scale = Vector([scale[i] * factor[i] for i in range(3)])
+        fit[bone] = ((mlo + mhi) / 2.0, (llo + lhi) / 2.0 + shift, scale)
     return fit
 
 

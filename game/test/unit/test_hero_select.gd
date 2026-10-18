@@ -199,6 +199,16 @@ func test_tecla_8_escolhe_o_berserker_com_os_dados_reais() -> void:
 	assert_false(screen._cards[6]._tag.visible)
 
 
+func test_retrato_enquadra_o_corpo_maior_do_berserker_com_o_idle_dele() -> void:
+	var knight := HeroSelect.model_of(&"knight")
+	var berserker := HeroSelect.model_of(&"berserker")
+	autofree(knight)
+	autofree(berserker)
+	assert_eq(knight.get_meta(&"portrait_height"), 0.0, "altura padrao do card")
+	assert_gt(berserker.get_meta(&"portrait_height") as float, 1.9, "Barbarian_Large e mais alto")
+	assert_eq(berserker.get_meta(&"idle"), &"Idle_A")
+
+
 func test_modelo_so_do_heroi_com_cena() -> void:
 	var model := HeroSelect.model_of(&"knight")
 	assert_not_null(model)

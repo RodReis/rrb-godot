@@ -84,5 +84,7 @@ func test_peca_do_pack_substituida_existe_no_modelo() -> void:
 	for hero: StringName in MODELS:
 		var model := _model(hero)
 		for part: StringName in ItemVisuals.for_hero(hero).pack_parts:
-			if part != &"":
-				assert_not_null(model.find_child(part), "%s: %s" % [hero, part])
+			if part == &"":
+				continue
+			for pattern: String in String(part).split("|"):
+				assert_not_null(model.find_child(pattern), "%s: %s" % [hero, pattern])

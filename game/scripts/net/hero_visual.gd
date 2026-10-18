@@ -41,6 +41,9 @@ const GRASS: ShaderMaterial = preload("res://shared/resources/materials/tall_gra
 @export var death: StringName = &"Death_A"
 ## Velocidade abaixo da qual o heroi esta parado (u/s).
 @export var moving_speed: float = 0.1
+## Altura (m) que o retrato da selecao enquadra; 0 = a do rig medio (HeroChoice). Berserker: o
+## Barbarian_Large e mais alto (F75).
+@export var portrait_height: float = 0.0
 
 var _hero: Hero
 var _player: AnimationPlayer
@@ -57,6 +60,8 @@ var _shown_equipment: Vector4i = Inventory.NONE
 var _tracks_cover: bool = false
 var _covered: bool = false
 var _silhouette: StandardMaterial3D
+## Sobreposicao de estado em todas as malhas (Ragnarok do Berserker, F75); a silhueta do mato vence.
+var _status_overlay: Material
 var _attachments: Array[Array] = [[], [], [], []]  # indice = ItemData.Slot -> BoneAttachment3D
 
 
@@ -152,6 +157,8 @@ func _show_equipment(equipment: Vector4i) -> void:
 	_shown_equipment = equipment
 	if _covered:
 		_apply_silhouette(_silhouette)  # peca nova tambem entra na silhueta
+	elif _status_overlay != null:
+		_apply_silhouette(_status_overlay)
 
 
 ## Troca as pecas do slot pelas de [param item] (nulo = vazio) e esconde a peca do pack que elas
@@ -165,9 +172,11 @@ func _show_slot(slot: int, item: ItemData) -> void:
 	if item != null and _items != null:
 		piece = _items.pieces.get(item.id) as PackedScene
 	if _items != null and _items.pack_parts[slot] != &"":
-		# Padrao do find_children: "Axe_*" esconde os dois machados do Berserker (F75).
-		for pack_part: Node in model.find_children(_items.pack_parts[slot], "Node3D", true, false):
-			(pack_part as Node3D).visible = piece == null
+		# Padroes do find_children separados por "|": "Axe_*" esconde os dois machados do Berserker
+		# e o peitoral dele tira as ombreiras e a pele do pack (F75).
+		for pattern: String in String(_items.pack_parts[slot]).split("|"):
+			for pack_part: Node in model.find_children(pattern, "Node3D", true, false):
+				(pack_part as Node3D).visible = piece == null
 	if piece == null:
 		return
 	var root := piece.instantiate()
@@ -189,6 +198,16 @@ func _show_slot(slot: int, item: ItemData) -> void:
 	root.free()
 
 
+## Liga (material) ou desliga (nulo) a sobreposicao de estado em todas as malhas do heroi, pecas de
+## equipamento incluidas (Ragnarok do Berserker, F75). Dentro do mato a silhueta fica por cima.
+func set_status_overlay(material: Material) -> void:
+	if material == _status_overlay:
+		return
+	_status_overlay = material
+	if not _covered:
+		_apply_silhouette(material)
+
+
 ## Animacao do golpe basico que acabou de sair (Machados Gemeos alternam a mao, F75).
 func _basic_clip() -> StringName:
 	return basic_attack
@@ -207,6 +226,9 @@ func _set_covered(covered: bool) -> void:
 		return
 	_covered = covered
 	GRASS.set_shader_parameter(&"reveal_radius", REVEAL_RADIUS if covered else 0.0)
+	if not covered:
+		_apply_silhouette(_status_overlay)  # fora do mato volta a sobreposicao de estado, se houver
+		return
 	if _silhouette == null:
 		_silhouette = StandardMaterial3D.new()
 		_silhouette.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED

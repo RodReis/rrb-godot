@@ -181,3 +181,17 @@ func test_berserker_usa_os_dois_machados_e_pecas_do_corpo_large() -> void:
 	assert_eq(_pieces("berserker_hunter_boots_t2__*").size(), 4)
 	for axe: Node in _hero.find_child("Model").find_children("Axe_*", "Node3D", true, false):
 		assert_false((axe as Node3D).visible, "%s do pack sai com a arma equipada" % axe.name)
+
+
+func test_ragnarok_poe_o_corpo_em_chamas_e_tira_no_fim() -> void:
+	_bind(BERSERKER)
+	_equip([&"guard_chest_t3", &"sword_t3_epic"])
+	var berserker := _hero as Berserker
+	berserker.cc_immune_ticks = 120
+	_visual._process(FRAME)
+	for mesh: Node in _visual.model.find_children("*", "MeshInstance3D", true, false):
+		assert_true((mesh as MeshInstance3D).material_overlay is ShaderMaterial, mesh.name)
+	berserker.cc_immune_ticks = 0
+	_visual._process(FRAME)
+	for mesh: Node in _visual.model.find_children("*", "MeshInstance3D", true, false):
+		assert_null((mesh as MeshInstance3D).material_overlay, mesh.name)

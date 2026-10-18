@@ -6,6 +6,8 @@ extends HeroVisual
 
 ## Osso da mao que arremessa.
 const THROWN_BONE: String = "handslot.r"
+## Corpo em chamas enquanto dura o Ragnarok (PI 2026-10-18): por cima de todas as malhas.
+const RAGE_FIRE: Shader = preload("res://scenes/vfx/rage_fire.gdshader")
 
 ## Golpe da mao esquerda; o da direita e basic_attack.
 @export var basic_attack_left: StringName = &"Dualwield_Melee_Attack_Slice"
@@ -13,10 +15,16 @@ const THROWN_BONE: String = "handslot.r"
 @export var thrown_axe: StringName = &"Axe_R"
 
 var _thrown_shown: bool = true
+var _rage_fire: ShaderMaterial
 
 
 func _process(delta: float) -> void:
 	super(delta)
+	var raging := (_hero as Berserker).is_raging() and _hero.is_alive()
+	if raging and _rage_fire == null:
+		_rage_fire = ShaderMaterial.new()
+		_rage_fire.shader = RAGE_FIRE
+	set_status_overlay(_rage_fire if raging else null)
 	var shown := (_hero as Berserker).axe_out_ticks == 0
 	if shown != _thrown_shown:
 		_thrown_shown = shown

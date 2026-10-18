@@ -40,7 +40,7 @@
 
 [resource]
 script = ExtResource("1_script")
-pack_parts = Array[StringName]([&"Axe_*", &"", &"", &""])
+pack_parts = Array[StringName]([&"Axe_*", &"", &"Barbarian_Large_Shoulderpad*|Barbarian_Large_BearPelt", &""])
 pieces = Dictionary[StringName, PackedScene]({
 &"guard_boots_t1": ExtResource("p0"),
 &"guard_boots_t2": ExtResource("p1"),
