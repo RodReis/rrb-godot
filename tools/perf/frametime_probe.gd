@@ -14,6 +14,8 @@ extends SceneTree
 ## na posicao do heroi e do outro, nos compassos ENGINEER_*_SECONDS.
 ## --druid: cada Protetor da Selva tem Pocao Verde e Pantano ativos a medicao inteira (SPEC-074 §8):
 ## a sonda reemite o evento do ImpactRelay (zone_shown) nos compassos DRUID_*_SECONDS.
+## --berserker: cada Berserker fica no Ragnarok a medicao inteira (SPEC-075 aceite: corpo em chamas,
+## aura, fumaca e brasas do Frenesi com f = 1); a sonda segura Hero.cc_immune_ticks.
 ## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
 ## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
@@ -38,6 +40,8 @@ const ENGINEER_CRATE_SECONDS: float = 3.0
 ## anterior (6 s) acabar.
 const DRUID_POTION_SECONDS: float = 2.5
 const DRUID_SWAMP_SECONDS: float = 5.5
+## Timer de imunidade que o --berserker segura (ticks; qualquer valor > 0 mantem o Ragnarok).
+const RAGE_HOLD_TICKS: int = 120
 ## Itens do --equip, por HeroData.id (um conjunto por heroi, arma epica).
 const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"knight": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
@@ -61,6 +65,7 @@ var _smoke: bool = false
 var _smoke_wait: float = 0.0
 var _engineer: bool = false
 var _druid: bool = false
+var _berserker: bool = false
 var _potion_wait: float = 0.0
 var _swamp_wait: float = 0.0
 var _grass: bool = false
@@ -84,6 +89,8 @@ func _initialize() -> void:
 			_engineer = true
 		elif arg == "--druid":
 			_druid = true
+		elif arg == "--berserker":
+			_berserker = true
 		elif arg == "--grass":
 			_grass = true
 		elif arg.begins_with("--shot="):
@@ -110,6 +117,8 @@ func _process(delta: float) -> bool:
 		_engineer_effects(delta)
 	if _druid and _phase > 0:
 		_druid_effects(delta)
+	if _berserker and _phase > 0:
+		_rage_berserkers()
 	if _grass and _phase > 0 and not _grass_linked:
 		_grass_linked = true
 		root.get_node("NetworkRollback").connect(&"after_process_tick", _hold_in_grass)
@@ -206,6 +215,7 @@ func _report() -> void:
 		"equip": _equip,
 		"smoke": _smoke,
 		"grass": _grass,
+		"berserker": _berserker,
 	}
 	var text := JSON.stringify(result, "  ")
 	print("[frametime] ", text)
@@ -292,3 +302,11 @@ func _druid_effects(delta: float) -> void:
 		_potion_wait = DRUID_POTION_SECONDS
 	if _swamp_wait <= 0.0:
 		_swamp_wait = DRUID_SWAMP_SECONDS
+
+
+## Sem tipos do jogo: o Ragnarok dura enquanto a sonda segura o timer de imunidade.
+func _rage_berserkers() -> void:
+	for hero: Node in _players.get_children():
+		var data: Resource = hero.get(&"hero_data")
+		if data != null and data.get(&"id") == &"berserker":
+			hero.set(&"cc_immune_ticks", RAGE_HOLD_TICKS)
