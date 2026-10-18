@@ -43,6 +43,7 @@ for (const c of capturas) {
   if (existsSync(src)) copyFileSync(src, join(IMG, c.arquivo));
   else warn(`captura ${c.arquivo} não encontrada`);
 }
+capturas.reverse(); // mais recentes primeiro
 write("capturas.json", capturas);
 
 // ---- roadmap ----

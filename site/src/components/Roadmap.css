@@ -1,0 +1,14 @@
+.mvps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.mvp { padding: 1.25rem; display: grid; gap: 0.5rem; align-content: start; }
+.mvp header { display: flex; justify-content: space-between; align-items: center; }
+.mvp h3 { font-size: 1.1rem; }
+.mvp-q { color: var(--text-muted); font-size: 0.9rem; }
+.mvp-state { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: var(--radius-xs); }
+.state-concluido { background: color-mix(in srgb, var(--gold) 25%, transparent); color: var(--gold-bright); }
+.state-andamento { background: color-mix(in srgb, var(--blue) 30%, transparent); color: var(--cyan); }
+.state-planejado { background: var(--bg-high); color: var(--text-muted); }
+.mvp-bar { height: 6px; background: var(--bg-lowest); border-radius: 3px; overflow: hidden; margin-top: auto; }
+.mvp-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-bright)); transition: width var(--dur-slow) var(--ease-out); }
+.is-andamento .mvp-bar span { background: linear-gradient(90deg, var(--blue), var(--cyan)); }
+.mvp small { color: var(--text-muted); font-family: var(--font-mono); font-size: 0.7rem; }
+.roadmap-more { margin-top: 1.5rem; color: var(--text-muted); }

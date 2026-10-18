@@ -1,0 +1,5 @@
+.footer { background: var(--bg-lowest); border-top: 1px solid var(--border); padding-block: 3rem; color: var(--text-muted); font-size: 0.9rem; }
+.footer-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; }
+.footer p { margin: 0.75rem 0; max-width: 40ch; }
+.footer ul { margin: 0.5rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.3rem; }
+@media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr; } }

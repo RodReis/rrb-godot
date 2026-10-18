@@ -1,0 +1,14 @@
+.gallery-title { font-size: 1.2rem; color: var(--gold-bright); margin-bottom: 1rem; }
+.gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0.9rem; margin: 0; padding: 0; list-style: none; }
+.gallery button { position: relative; padding: 0; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; background: var(--bg-card); cursor: pointer; width: 100%; transition: border-color var(--dur-fast), transform var(--dur-fast) var(--ease-out); }
+.gallery button:hover { border-color: var(--gold); transform: translateY(-3px); }
+.gallery img { aspect-ratio: 16 / 9; object-fit: cover; width: 100%; }
+.gallery .chip { position: absolute; left: 8px; bottom: 8px; }
+.gallery-more { margin: 1.5rem auto 0; display: flex; cursor: pointer; font-family: var(--font-display); }
+.lightbox { border: 0; padding: 0; background: transparent; max-width: min(96vw, 1400px); }
+.lightbox::backdrop { background: rgb(6 14 32 / 0.9); }
+.lightbox figure { margin: 0; display: grid; gap: 0.75rem; justify-items: center; }
+.lightbox img { max-height: 80vh; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.lightbox figcaption { color: var(--text-muted); text-align: center; max-width: 70ch; }
+.lightbox-nav { display: flex; align-items: center; gap: 0.75rem; }
+.lightbox-nav button { background: var(--bg-panel); color: var(--gold-bright); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 1.4rem; width: 44px; height: 44px; cursor: pointer; }
