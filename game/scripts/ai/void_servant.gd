@@ -13,10 +13,14 @@ extends Combatant
 ## Alvo (§4.10), reavaliado a cada retarget_interval desde a invocacao e na hora em que o atual
 ## morre ou some: VoidServantRules.choose entre o que o Ocultista ve (§7.3); sem alvo, segue o
 ## Ocultista. Visao (§7.3): como o monstro (raio de visao do observador); o time do dono sempre ve.
-## Inativo (HP 0) fica fora do alcance de todos e sem colisao.
+## Inativo (HP 0) fica fora do alcance de todos e sem colisao. Colide como o heroi do dono (passa o
+## portao do proprio time). Praga e Maldicao de um Ocultista inimigo valem como no heroi: a Praga
+## pulsa pela DEF do servo, que a Maldicao reduz (OccultistRules).
 
 ## uid = -(UID_BASE + 2 * peer_id do dono + indice): longe dos uids de monstro e bau (-1, -2...).
 const UID_BASE: int = 1000000
+## Salto maior que isto entre dois quadros (u) e reinvocacao: o servo anda 5,5 u/s.
+const TELEPORT_DISTANCE: float = 2.0
 
 ## Numeros do servo.
 @export var data: ServantData
@@ -32,8 +36,10 @@ var attack_cooldown: int = 0
 
 var _concealment: Concealment
 var _interpolator: TickInterpolator
-## Cliente: HP do quadro anterior (0 -> vivo = invocacao: teleporta sem interpolar).
+## Cliente: HP e posicao do quadro anterior (0 -> vivo ou salto = invocacao: teleporta sem
+## interpolar).
 var _last_hp: int = 0
+var _last_position: Vector3 = Vector3.ZERO
 # Servidor.
 var _damage: int = 0
 ## Tick da invocacao (-1 = nunca) e tick em que some.
@@ -43,6 +49,12 @@ var _target: Combatant
 var _stun_ticks: int = 0
 var _slow_ticks: int = 0
 var _slow_pct: float = 0.0
+## Maldicao e Praga de um Ocultista inimigo (como no Hero, F77).
+var _curse_stacks: int = 0
+var _curse_ticks: int = 0
+var _dot_ticks: int = 0
+var _dot_left: int = 0
+var _dot_interval: int = 0
 var _alive_mask: int = 0
 var _seen: HitLedger = HitLedger.new()  # golpes ja aplicados: ressimular o heroi nao duplica
 ## Candidatos da escolha do alvo (reusados, sem alocar).
@@ -78,9 +90,11 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _last_hp == 0 and hp > 0:
-		_interpolator.teleport()  # invocado longe de onde sumiu
+	var jumped := global_position.distance_to(_last_position) > TELEPORT_DISTANCE
+	if (_last_hp == 0 and hp > 0) or jumped:
+		_interpolator.teleport()  # invocado longe de onde sumiu, ou reinvocado vivo
 	_last_hp = hp
+	_last_position = global_position
 	visible = _concealment.is_shown()
 	hp_bar.visible = is_alive() and not PlayerInput.cinematic
 	hp_bar.set_ratio(float(hp) / maxi(max_hp, 1))
@@ -90,6 +104,7 @@ func _process(_delta: float) -> void:
 func setup(hero: Hero, index: int) -> void:
 	summoner = hero
 	team = hero.team
+	_alive_mask = GateRules.hero_mask(team)
 	uid = -(UID_BASE + 2 * hero.peer_id + index)
 	hp_bar.set_friendly(hero.peer_id == multiplayer.get_unique_id())
 
@@ -113,6 +128,7 @@ func summon(
 	attack_cooldown = 0
 	_stun_ticks = 0
 	_slow_ticks = 0
+	_clear_curse_and_dot()
 	_target = null
 	collision_mask = _alive_mask
 
@@ -126,7 +142,7 @@ func missing_hp() -> int:
 
 
 func effective_damage(raw: int) -> int:
-	return mini(CombatRules.mitigated(raw, data.defense), hp) if is_alive() else 0
+	return mini(CombatRules.mitigated(raw, _defense()), hp) if is_alive() else 0
 
 
 func combat_id() -> int:
@@ -160,11 +176,18 @@ func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
 		return
 	_seen.set_hit(tick, source, effect)
 	_seen.trim_before(tick - NetworkRollback.history_limit)
-	var damage := CombatRules.mitigated(effect.damage, data.defense) + maxi(effect.true_damage, 0)
+	var damage := CombatRules.mitigated(effect.damage, _defense()) + maxi(effect.true_damage, 0)
 	hp = maxi(hp - damage, 0)
 	if not is_alive():
 		_vanish()
 		return
+	if effect.curse > 0:
+		_curse_stacks = OccultistRules.add_stacks(_curse_stacks, effect.curse)
+		_curse_ticks = effect.curse_ticks
+	if effect.dot_pulses > 0:
+		_dot_interval = effect.dot_interval_ticks
+		_dot_ticks = OccultistRules.dot_duration_ticks(effect.dot_pulses, _dot_interval)
+		_dot_left = effect.dot_total
 	if not effect.push.is_zero_approx():
 		move_and_collide(effect.push)
 	_stun_ticks = maxi(_stun_ticks, effect.stun_ticks)
@@ -185,6 +208,9 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 		return
 	if tick >= _end_tick:
 		_vanish()
+		return
+	_tick_curse_and_dot()
+	if not is_alive():
 		return
 	attack_cooldown = maxi(attack_cooldown - 1, 0)
 	_stun_ticks = maxi(_stun_ticks - 1, 0)
@@ -278,6 +304,34 @@ func _follow() -> void:
 	_walk_to(summoner.global_position)
 
 
+## DEF do servo menos a Maldicao.
+func _defense() -> float:
+	return OccultistRules.effective_defense(data.defense, _curse_stacks)
+
+
+## Um tick das marcas e da Praga: o pulso passa pela DEF (como no heroi); o abate de servo nao da
+## nada, entao a fonte da Praga nao e guardada.
+func _tick_curse_and_dot() -> void:
+	var raw := OccultistRules.pulse_damage(_dot_left, _dot_ticks, _dot_interval)
+	if raw > 0:
+		_dot_left -= raw
+		hp = maxi(hp - CombatRules.mitigated(raw, _defense()), 0)
+		if not is_alive():
+			_vanish()
+	_dot_ticks = maxi(_dot_ticks - 1, 0)
+	_curse_ticks = maxi(_curse_ticks - 1, 0)
+	if _curse_ticks == 0:
+		_curse_stacks = 0
+
+
+func _clear_curse_and_dot() -> void:
+	_curse_stacks = 0
+	_curse_ticks = 0
+	_dot_ticks = 0
+	_dot_left = 0
+	_dot_interval = 0
+
+
 ## HP 0 ou fim da duracao: fora do alcance de todos, parado e sem colisao.
 func _vanish() -> void:
 	hp = 0
@@ -286,6 +340,7 @@ func _vanish() -> void:
 	_target = null
 	_stun_ticks = 0
 	_slow_ticks = 0
+	_clear_curse_and_dot()
 
 
 func _walk_to(point: Vector3) -> void:

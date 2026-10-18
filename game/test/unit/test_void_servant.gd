@@ -193,3 +193,35 @@ func test_matar_o_servo_nao_da_nada_a_quem_mata() -> void:
 		knight._rollback_tick(TICK, tick, true)
 	assert_eq(knight.xp, xp, "sem XP")
 	assert_true(_occultist.is_alive())
+
+
+func test_colide_como_o_heroi_do_dono_e_passa_o_proprio_portao() -> void:
+	_spawn_occultist(6)
+	_cast_r()
+	assert_eq(_occultist.servants[0].collision_mask, GateRules.hero_mask(GateRules.TEAM_A))
+
+
+func test_maldicao_reduz_a_def_do_servo() -> void:
+	_spawn_occultist(6)
+	_cast_r()
+	var servant := _occultist.servants[0]
+	var curse := HitEffect.new(0, Vector3.ZERO)
+	curse.curse = 1
+	curse.curse_ticks = CURSE_TICKS
+	servant.receive_hit(START + 1, 98, curse)
+	servant.receive_hit(START + 1, 99, HitEffect.new(80, Vector3.ZERO))
+	assert_eq(servant.hp, _servant_hp() - CombatRules.mitigated(80, 4.0), "DEF 10 - 6")
+
+
+func test_praga_inimiga_pulsa_no_servo_pela_def() -> void:
+	_spawn_occultist(6)
+	_cast_r()
+	var servant := _occultist.servants[0]
+	var plague := HitEffect.new(0, Vector3.ZERO)
+	plague.dot_total = 120
+	plague.dot_pulses = 8
+	plague.dot_interval_ticks = PULSE_INTERVAL
+	servant.receive_hit(START + 1, 99, plague)
+	for tick: int in range(START + 1, START + 1 + 8 * PULSE_INTERVAL):
+		servant._tick_curse_and_dot()
+	assert_eq(servant.hp, _servant_hp() - 8 * CombatRules.mitigated(15, 10.0), "8 pulsos de 15")
