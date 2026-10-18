@@ -117,6 +117,14 @@ func test_papel_e_descricao_dos_herois() -> void:
 				+ "e se cura com a Poção Verde."
 			)
 		],
+		&"berserker":
+		[
+			"Lutador",
+			(
+				"Lutador corpo a corpo: quanto menos vida, mais rápido bate e mais rouba vida; "
+				+ "no Ragnarök ignora controle."
+			)
+		],
 	}
 	for id: StringName in expected:
 		assert_eq(_hero(id).role, expected[id][0], "role de %s" % id)

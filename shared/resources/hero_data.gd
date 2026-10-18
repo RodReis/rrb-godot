@@ -24,3 +24,5 @@ extends Resource
 @export var skill_q: SkillData
 @export var skill_e: SkillData
 @export var skill_r: SkillData
+## Passiva (ADR-0015 item 13); nulo = sem passiva. So o Berserker tem (Frenesi).
+@export var passive: PassiveData
