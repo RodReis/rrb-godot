@@ -18,6 +18,8 @@
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/megakit_house_long.glb" id="16_house_long"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/monsters/wolf.glb" id="17_wolf"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/chest_reinforced_body.glb" id="18_chest_reinforced"]
+[ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers/Barbarian.glb" id="19_barbarian"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/berserker.glb" id="20_berserker"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ref"]
 radius = 0.4
@@ -92,3 +94,9 @@ transform = Transform3D(1.2, 0, 0, 0, 1.2, 0, 0, 0, 1.2, 4, 0, 0)
 
 [node name="ChestReinforced" parent="." instance=ExtResource("18_chest_reinforced")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, 0)
+
+[node name="Barbarian" parent="." instance=ExtResource("19_barbarian")]
+transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, -2, 0, -3)
+
+[node name="Berserker" parent="." instance=ExtResource("20_berserker")]
+transform = Transform3D(0.58, 0, 0, 0, 0.58, 0, 0, 0, 0.58, 0, 0, -3)
