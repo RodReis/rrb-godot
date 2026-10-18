@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/ui/world_health_bar.gd" id="hpbar_script"]
 [ext_resource type="Resource" path="res://shared/data/rules/match_pacing.tres" id="8_rules"]
 [ext_resource type="Script" path="res://scripts/net/arrow.gd" id="9_arrow"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/thrown_axe.glb" id="10_axe_model"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hero"]
 radius = 0.4
@@ -64,3 +65,6 @@ script = ExtResource("2_input")
 top_level = true
 visible = false
 script = ExtResource("9_arrow")
+
+[node name="Axe" parent="Arrows/Arrow0" instance=ExtResource("10_axe_model")]
+transform = Transform3D(0.58, 0, 0, 0, 0.58, 0, 0, 0, 0.58, 0, 0, 0)

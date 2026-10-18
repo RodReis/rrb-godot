@@ -1,0 +1,117 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/vfx_one_shot.gd" id="1_script"]
+[ext_resource type="Shader" path="res://scenes/vfx/shockwave.gdshader" id="2_shock"]
+
+[sub_resource type="Curve" id="Curve_grow"]
+_data = [Vector2(0, 0.08), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_grow"]
+curve = SubResource("Curve_grow")
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fade"]
+gradient = SubResource("Gradient_fade")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_wave"]
+resource_local_to_scene = true
+gravity = Vector3(0, 0, 0)
+scale_min = 9.0
+scale_max = 9.0
+scale_curve = SubResource("CurveTexture_grow")
+color_ramp = SubResource("GradientTexture1D_fade")
+
+[sub_resource type="ShaderMaterial" id="Mat_wave"]
+render_priority = 1
+shader = ExtResource("2_shock")
+shader_parameter/strength = 0.05
+shader_parameter/ring_width = 0.14
+shader_parameter/tint = Color(1, 0.5, 0.15, 1)
+shader_parameter/tint_amount = 0.7
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wave"]
+material = SubResource("Mat_wave")
+size = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="Gradient_fire"]
+offsets = PackedFloat32Array(0, 0.25, 1)
+colors = PackedColorArray(1, 0.95, 0.6, 1, 1, 0.45, 0.08, 0.9, 0.4, 0.05, 0.02, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fire"]
+gradient = SubResource("Gradient_fire")
+
+[sub_resource type="Curve" id="Curve_shrink"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.2), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_shrink"]
+curve = SubResource("Curve_shrink")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_fire"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.2
+emission_ring_radius = 0.8
+emission_ring_inner_radius = 0.2
+direction = Vector3(0, 1, 0)
+spread = 35.0
+initial_velocity_min = 4.0
+initial_velocity_max = 7.5
+gravity = Vector3(0, -3, 0)
+scale_min = 1.0
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_shrink")
+color_ramp = SubResource("GradientTexture1D_fire")
+
+[sub_resource type="StandardMaterial3D" id="Mat_fire"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(3, 1.5, 0.6, 1)
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_fire"]
+material = SubResource("Mat_fire")
+size = Vector2(0.3, 0.3)
+
+[node name="RagnarokBurst" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 1.2
+light_seconds = 0.3
+fade_seconds = 0.4
+
+[node name="Wave" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-6, -1, -6, 12, 2, 12)
+process_material = SubResource("PPM_wave")
+draw_pass_1 = SubResource("PlaneMesh_wave")
+
+[node name="Fire" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+amount = 48
+lifetime = 0.9
+one_shot = true
+explosiveness = 0.9
+visibility_aabb = AABB(-4, -1, -4, 8, 8, 8)
+process_material = SubResource("PPM_fire")
+draw_pass_1 = SubResource("QuadMesh_fire")
+
+[node name="Flash" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+light_color = Color(1, 0.5, 0.15, 1)
+light_energy = 5.0
+omni_range = 7.0

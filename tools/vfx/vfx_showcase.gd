@@ -11,7 +11,7 @@ extends SceneTree
 const MAIN: String = "res://scenes/main.tscn"
 ## Distancia (u) ate o monstro ao comecar: a Investida (6 u) e a flecha alcancam.
 const START_DISTANCE: Dictionary = {
-	"knight": 4.0, "ranger": 6.0, "rogue": 3.5, "engineer": 5.0, "druid": 5.0
+	"knight": 4.0, "ranger": 6.0, "rogue": 3.5, "engineer": 5.0, "druid": 5.0, "berserker": 2.0
 }
 ## Sequencia por heroi: [segundos desde o inicio, acao, segundos apertada]. Acao "end" encerra.
 const SCRIPTS: Dictionary = {
@@ -67,6 +67,16 @@ const SCRIPTS: Dictionary = {
 		[5.2, &"skill_r", 0.1],
 		[12.0, &"primary_attack", 0.1],
 		[13.0, &"end", 0.0],
+	],
+	# Berserker (F75): Arremesso, Grito (E), Ragnarok (R, aura e Frenesi no maximo) e os dois
+	# machados alternando a mao (2 u: ja no alcance do basico, sem andar).
+	"berserker":
+	[
+		[0.6, &"skill_q", 0.1],
+		[1.6, &"skill_e", 0.1],
+		[2.6, &"skill_r", 0.1],
+		[3.4, &"primary_attack", 3.0],
+		[8.0, &"end", 0.0],
 	],
 }
 
