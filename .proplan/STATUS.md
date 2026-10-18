@@ -11,14 +11,16 @@ _(vazio)_
 
 ## A Fazer
 
+### [MVP2.8] Heróis 9 e 10 — Paladino Radiante (Tanque reativo) e Ocultista (Mago de dano contínuo) com Servos do Vazio (#213)
+
+- [MVP2.8][SPEC-078][F78] Servos do Vazio (R do Ocultista): 2 servos móveis com IA no servidor, perseguem heróis e monstros visíveis, sem recompensa ao morrer, kill para o dono (#216)
+- [MVP2.8][SPEC-077][F77] Ocultista (Mago de dano contínuo): Projétil Sombrio com Maldição, Praga, Círculo Profano; Mage do Extra com atlas escuro e capuz próprios, bot e VFX (#215)
+- [MVP2.8][SPEC-076][F76] Paladino Radiante (Tanque reativo): Maça, Golpe Consagrado, Retribuição, Bênção Inviolável; Knight do Extra alt_B sem elmo, maça própria, bot e VFX (#214)
+
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
-
-### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
-
-- [MVP2.7][SPEC-075][F75] Berserker (classe nova Lutador): passiva Frenesi, Machados Gêmeos, Arremesso de Machado, Grito de Guerra, Ragnarök; Barbarian_Large do Extra, Rig_Large, bot e VFX (#203)
 
 ## Em Andamento
 
@@ -32,6 +34,7 @@ _(vazio)_
 
 ### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
 
+- [MVP2.7][SPEC-075][F75] Berserker (classe nova Lutador): passiva Frenesi, Machados Gêmeos, Arremesso de Machado, Grito de Guerra, Ragnarök; Barbarian_Large do Extra, Rig_Large, bot e VFX (#203, finalizado em: 2026-10-18)
 - [MVP2.7][SPEC-074][F74] Protetor da Selva (Controle): Seiva, Raízes Vivas, Poção Verde, Pântano; Druid do Extra, cajado visível, bot e VFX (#202, finalizado em: 2026-10-18)
 - [MVP2.7][SPEC-073][F73] Acabamento do cenário dentro da ADR-0006: texturas PBR CC0, normal maps, grama ×2 com fade; GPU ≤ +1,5 ms (#201, finalizado em: 2026-10-18)
 - [MVP2.7][SPEC-072][F72] Mato alto: silhueta translúcida do próprio herói e moita semitransparente ao redor (só cliente; SPEC-032 intacta) (#200, finalizado em: 2026-10-17)
