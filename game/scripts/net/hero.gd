@@ -126,8 +126,8 @@ var cc_immune_ticks: int = 0
 ## efetiva que sai delas (_defense). Valem para todo herói; o VFX mostra as marcas.
 var curse_stacks: int = 0
 var curse_ticks: int = 0
-## Praga do Ocultista (F77): ticks que faltam, dano bruto por pulso, ticks entre pulsos e o peer_id
-## de quem a pôs (o dano e o abate contam para ele).
+## Praga do Ocultista (F77): ticks que faltam, dano bruto que ainda falta (dividido pelos pulsos
+## restantes), ticks entre pulsos e o peer_id de quem a pôs (o dano e o abate contam para ele).
 var dot_ticks: int = 0
 var dot_left: int = 0
 var dot_interval: int = 0

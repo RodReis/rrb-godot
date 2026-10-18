@@ -138,3 +138,36 @@ func test_morrer_zera_a_maldicao_e_a_praga() -> void:
 	_run(START, 2)
 	assert_eq(knight.hp, 0)
 	assert_eq([knight.curse_stacks, knight.curse_ticks, knight.dot_ticks], [0, 0, 0])
+
+func test_ressimular_o_mesmo_tick_da_o_mesmo_estado_do_alvo() -> void:
+	# Rollback: o servidor restaura o estado do alvo e reaplica o ledger do tick; pulso da Praga e
+	# marca nova saem so do estado + ledger, entao a 2a passada repete a 1a.
+	_spawn_occultist(1)
+	var knight := _spawn_knight(AHEAD * 6.0)
+	var tick := START + 50
+	var mark := HitEffect.new(20, Vector3.ZERO)
+	mark.attacker_id = CASTER
+	mark.curse = 1
+	mark.curse_ticks = CURSE_TICKS
+	knight.receive_hit(tick, HitLedger.source_key(CASTER, HitLedger.Slot.BASIC), mark)
+	var before := [knight.hp, 1, 30, PULSE_INTERVAL + 1, 37, PULSE_INTERVAL]
+	var after: Array = []
+	for pass_index: int in 2:
+		knight.hp = before[0]
+		knight.curse_stacks = before[1]
+		knight.curse_ticks = before[2]
+		knight.dot_ticks = before[3]
+		knight.dot_left = before[4]
+		knight.dot_interval = before[5]
+		knight.dot_source = CASTER
+		knight._apply_hits(tick)
+		var state := [
+			knight.hp, knight.curse_stacks, knight.curse_ticks, knight.dot_left, knight.dot_ticks
+		]
+		if pass_index == 0:
+			after = state
+		else:
+			assert_eq(state, after, "2a passada igual a 1a")
+	assert_lt(after[0], before[0], "pulso e golpe feriram")
+	assert_eq(after[1], 2, "1 marca a mais")
+	assert_lt(after[3], 37, "o pulso tirou do que faltava")

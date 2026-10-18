@@ -206,7 +206,8 @@ func provoke(hero: Hero) -> void:
 
 
 # ponytail: golpe ja aplicado nao e desfeito se a ressimulacao do heroi errar; raro (input
-# atrasado no servidor) e o servidor segue autoritativo.
+# atrasado no servidor) e o servidor segue autoritativo. Vale tambem para Maldicao e Praga (F77):
+# um acerto desfeito deixa a marca e a Praga no monstro. Desfazer exige rollback no monstro.
 func cancel_hit(_tick: int, _source: int) -> void:
 	pass
 
