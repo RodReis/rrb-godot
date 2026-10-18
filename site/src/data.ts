@@ -4,7 +4,7 @@ import capturasJson from "./data/capturas.json";
 import roadmapJson from "./data/roadmap.json";
 
 export type Skill = { key: "Q" | "E" | "R"; name: string; description: string; icon: string };
-export type Hero = { id: string; name: string; role: string; weapon: string; summary: string; skills: Skill[] };
+export type Hero = { id: string; name: string; role: string; weapon: string; portrait: string; summary: string; skills: Skill[] };
 export type Faixa = { de: number; ate: number; rotulo: string; curto?: string; detalhe: string; cor: "gold" | "red" | "purple" };
 export type Captura = { arquivo: string; legenda: string; tipo: string; mvp: string };
 export type Mvp = {

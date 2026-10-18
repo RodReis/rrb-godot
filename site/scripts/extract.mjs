@@ -29,6 +29,15 @@ for (const h of heroes) for (const s of h.skills) {
   if (existsSync(src)) copyFileSync(src, join(ICONS, s.icon));
   else { warn(`ícone ${s.icon} não encontrado`); s.icon = ""; }
 }
+// retratos 512 px de shared/assets/ui/heroes/large -> WebP 384 px (nome = id do herói)
+mkdirSync(join(IMG, "heroes"), { recursive: true });
+for (const h of heroes) {
+  const src = P("shared", "assets", "ui", "heroes", "large", `${h.id}.png`);
+  if (existsSync(src)) {
+    await sharp(src).resize({ width: 384 }).webp({ quality: 82 }).toFile(join(IMG, "heroes", `${h.id}.webp`));
+    h.portrait = `heroes/${h.id}.webp`;
+  } else { warn(`retrato de ${h.id} não encontrado`); h.portrait = ""; }
+}
 write("heroes.json", heroes);
 
 // ---- história + capturas ----
@@ -59,5 +68,11 @@ for (const name of ["arena_day", "arena_night", "heroes"]) {
   const src = P("shared", "assets", "ui", "loading", `${name}.png`);
   if (!existsSync(src)) { warn(`${name}.png não encontrado`); continue; }
   await sharp(src).resize({ width: 1920, withoutEnlargement: true }).webp({ quality: 78 }).toFile(join(IMG, `${name}.webp`));
+}
+// mapa da arena visto de cima (o mesmo do Launcher)
+{
+  const src = P("shared", "assets", "ui", "arena_map.png");
+  if (existsSync(src)) await sharp(src).resize({ width: 1600 }).webp({ quality: 80 }).toFile(join(IMG, "arena_map.webp"));
+  else warn("arena_map.png não encontrado");
 }
 console.log(`heróis: ${heroes.length} · capturas: ${capturas.length} · MVPs: ${mvps.map((m) => `${m.id} ${m.entregues}/${m.total}`).join(", ")}`);

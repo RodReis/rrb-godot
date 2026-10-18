@@ -1,13 +1,19 @@
-.heroes { background-size: cover; background-position: center; isolation: isolate; }
-.heroes::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, var(--bg-surface), rgb(11 19 38 / 0.82) 30%, rgb(11 19 38 / 0.82) 70%, var(--bg-surface)); }
-.hero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin: 0; padding: 0; list-style: none; }
-.hero-card { padding: 1.5rem; display: grid; gap: 0.9rem; align-content: start; transition: border-color var(--dur-fast), transform var(--dur-fast) var(--ease-out); }
+.heroes { padding-top: 0; }
+/* lineup dos 6 heróis em destaque, sem véu por cima; só funde com o fundo nas bordas */
+.heroes-banner { position: relative; height: clamp(220px, 38vw, 460px); overflow: hidden; margin-bottom: 2.5rem; }
+.heroes-banner img { width: 100%; height: 100%; object-fit: cover; object-position: center 35%; }
+.heroes-banner::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, var(--bg-surface), transparent 22%, transparent 70%, var(--bg-surface)); }
+.hero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.25rem; margin: 0; padding: 0; list-style: none; }
+.hero-card { padding: 1.25rem; display: grid; grid-template-columns: 150px 1fr; gap: 1.1rem; align-items: start; transition: border-color var(--dur-fast), transform var(--dur-fast) var(--ease-out); }
 .hero-card:hover { border-color: var(--gold); transform: translateY(-4px); }
-.hero-card header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.hero-portrait { width: 150px; height: 150px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-surface); object-fit: cover; }
+.hero-body { display: grid; gap: 0.7rem; min-width: 0; }
+.hero-body header { display: grid; gap: 0.4rem; justify-items: start; }
 .hero-card h3 { font-size: 1.3rem; color: var(--gold-bright); }
-.hero-card p { color: var(--text-muted); font-size: 0.95rem; }
-.skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+.hero-body p { color: var(--text-muted); font-size: 0.92rem; }
+.skills { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
 .skills li { position: relative; display: grid; justify-items: center; gap: 0.35rem; font-size: 0.78rem; text-align: center; }
 .skills img, .skill-fallback { width: 48px; height: 48px; border-radius: var(--radius-sm); border: 2px solid var(--border); background: var(--bg-card); }
 .skill-key { position: absolute; top: 34px; right: calc(50% - 30px); font-family: var(--font-display); font-size: 0.6rem; padding: 0 4px; background: var(--gold); color: var(--on-gold); border-radius: 3px; }
 .skill-name { color: var(--text); line-height: 1.2; }
+@media (max-width: 420px) { .hero-card { grid-template-columns: 1fr; } .hero-portrait { width: 100%; height: auto; aspect-ratio: 1; } }
