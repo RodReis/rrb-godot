@@ -33,7 +33,7 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | Fatia vertical (M0–M4) | Roadmap (pós-M4) |
 |---|---|
 | Modo 1x1 | 2x2, 3x3 |
-| 8 heróis: Cavaleiro (Tanque), Arqueiro (Ranger), Bárbaro (Algoz), Bruxo de Fogo (Mago) — Bárbaro e Bruxo por decisão do PI em 2026-10-11 (ADR-0011); Ladina (Algoz) e Engenheiro (Engenheiro) no MVP2.6 por decisão do PI em 2026-10-13 (ADR-0013); Protetor da Selva (Controle) e Berserker (Lutador) no MVP2.7 por decisão do PI em 2026-10-16 (ADR-0015) | 1 herói por classe, depois mais |
+| 10 heróis: Cavaleiro (Tanque), Arqueiro (Ranger), Bárbaro (Algoz), Bruxo de Fogo (Mago) — Bárbaro e Bruxo por decisão do PI em 2026-10-11 (ADR-0011); Ladina (Algoz) e Engenheiro (Engenheiro) no MVP2.6 por decisão do PI em 2026-10-13 (ADR-0013); Protetor da Selva (Controle) e Berserker (Lutador) no MVP2.7 por decisão do PI em 2026-10-16 (ADR-0015); Paladino Radiante (Tanque) e Ocultista (Mago) no MVP2.8 por decisão do PI em 2026-10-18 (ADR-0016) | 1 herói por classe, depois mais |
 | 1 arena medieval hexagonal | mais arenas |
 | 7 monstros (incl. boss; Lobo e Golem de canto pelo ADR-0011) | bestiário maior |
 | 21 itens (3 armas + 2 conjuntos × 3 slots × 3 raridades), 2 conjuntos | tabela de loot completa |
@@ -122,14 +122,14 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 
 | Classe | Papel | Na fatia? |
 |---|---|---|
-| **Tanque** | absorve dano, controla espaço | sim — Cavaleiro |
+| **Tanque** | absorve dano, controla espaço | sim — Cavaleiro e Paladino Radiante (tanque reativo, ADR-0016) |
 | **Ranger** | dano à distância | sim — Arqueiro |
 | **Algoz** | dano alto, frágil (corpo a corpo ou à distância curta) | sim — Bárbaro (ADR-0011) e Ladina (ADR-0013) |
-| **Mago** | dano mágico em área à distância, frágil | sim — Bruxo de Fogo (classe nova, ADR-0011) |
+| **Mago** | dano mágico em área à distância, frágil | sim — Bruxo de Fogo (classe nova, ADR-0011) e Ocultista (dano contínuo + invocação, ADR-0016) |
 | **Engenheiro** | dano em curta distância + controle de zona por estrutura (torreta, explosivo) | sim — Engenheiro (classe nova, ADR-0013) |
 | **Controle** | enraíza, lentidão, zona; autocura para se sustentar sozinho | sim — Protetor da Selva (ADR-0015; redesenho do pedido "Suporte" para valer no 1x1) |
 | **Lutador** | corpo a corpo sustentado; cresce com o risco (mais forte quanto menos vida); imparável sob controle | sim — Berserker (classe nova, ADR-0015) |
-| **Suporte** | cura/buff de aliado; depende do time | roadmap (sem sentido no 1x1; a Poção Verde do Protetor passa a curar aliado no 2x2) |
+| **Suporte** | cura/buff de aliado; depende do time | roadmap (sem sentido no 1x1; a Poção Verde do Protetor e a Retribuição/Bênção do Paladino passam a valer em aliado no 2x2) |
 
 ### 4.2 Atributos
 
@@ -167,7 +167,15 @@ Máquina de estados desde o M1: `Farmar` (monstro mais próximo do seu tier) →
 | E | **Bomba de Fumaça** — nuvem que funciona como moita por 3 s | **Torreta** — 6 s atirando no inimigo visível mais próximo |
 | R (nv 6) | **Emboscada** — avança e golpeia com a faca; bônus se oculta | **Caixa de Dinamite** — explode após 1,5 s, área e empurrão |
 
-Números dos 6 heróis: GDB §4 (vence este documento, ADR-0004). Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não neste documento.
+| | **Paladino Radiante (Tanque)** — ADR-0016 | **Ocultista (Mago)** — ADR-0016 |
+|---|---|---|
+| Modelo | KayKit Adventurers 2.0 Extra — Knight (`alt_B`, sem elmo), escudo + maça (Blender) | KayKit Adventurers 2.0 Extra — Mage (atlas escuro próprio + capuz, Blender), livro + cajado |
+| Ataque básico | maça (corpo a corpo, lento e forte) | projétil sombrio + 1 marca de Maldição (−Defesa, até 3) |
+| Q | **Golpe Consagrado** — atordoa o 1º alvo à frente | **Praga** — projétil com dano contínuo por 4 s |
+| E | **Retribuição** — devolve parte do dano de golpes de perto por 3 s | **Círculo Profano** — zona com dano por pulso e lentidão |
+| R (nv 6) | **Bênção Inviolável** — cura + imunidade a todo dano (inclusive zona) | **Servos do Vazio** — 2 servos que perseguem heróis e monstros |
+
+Números dos 10 heróis: GDB §4 (vence este documento, ADR-0004). Valores por nível de skill ficam em Resources (`data/heroes/*.tres`), não neste documento.
 
 ---
 
@@ -289,6 +297,7 @@ O projeto atual (plataforma 2D) é descartado; `tools/setup-godot-mcp.ps1` e `.m
 | **M2 — Partida em rede** | Arqueiro, fase 2 (zona, kills, fim garantido), HUD, transição | 1x1 online termina sempre; 50 partidas bot×bot sem travar | 4 sem |
 | **M2.5 — Bloco visual** | giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX do Cavaleiro e do Arqueiro, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
 | **M2.6 — Heróis 5 e 6** | Ladina e Engenheiro (ADR-0013) | 2 fatias aceitas pelo PI; soak de cada herói verde | — (sem prazo definido pelo PI) |
+| **M2.8 — Heróis 9 e 10** | Paladino Radiante, Ocultista e Servos do Vazio (ADR-0016) | 3 fatias aceitas pelo PI; soak de cada fatia verde | — (sem prazo definido pelo PI) |
 | **M3 — Meta + deploy** | backend, pool no VPS, build PC | dois amigos jogam pela internet sem intervenção do dev | 3 sem |
 | **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números | decisão sobre câmera, duração e ir para 3x3 | 2 sem |
 

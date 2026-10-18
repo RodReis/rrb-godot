@@ -31,6 +31,7 @@
 |---|---|---|
 | `user`, `session`, `queue_ticket`, `match` (registro), `match_players` | Backend | Launcher (sua conta), Game server (validar/reportar) |
 | Estado da partida (posições, HP, XP, itens, zona, kills, relógio) | Game **server** | Game client (replicado) |
+| Servo do Vazio (invocação do Ocultista — ADR-0016, F78): posição, HP, alvo, tempo restante | Game **server** | Game client (replicado, filtrado por visão como monstro) |
 | `settings.cfg` | Launcher | Game |
 | `shared/data/*.tres` | repositório (Cowork/PI) | ambos |
 
@@ -85,13 +86,16 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - Monstros comuns não respawnam na fase 2; os que sobraram continuam vivos e dão XP. O **Rei Esqueleto** existe até morrer ou até 5:00: vivo na transição, sai do mapa **sem drop** (decisão do PI 2026-10-10, R-PEND-06).
 
 ### 4.5 Heróis
-- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015.
-- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo; Protetor da Selva projétil 20 u/s, 6,5 u, raio 0,35 u; Berserker arco 90°/2,4 u.
+- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015 —, §4.9 (Paladino Radiante) e §4.10 (Ocultista) — pelo ADR-0016.
+- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo; Protetor da Selva projétil 20 u/s, 6,5 u, raio 0,35 u; Berserker arco 90°/2,4 u; Paladino Radiante arco 60°/2,0 u; Ocultista projétil 15 u/s, 7,5 u, raio 0,4 u.
 - **Orientação e alvo travado (ADR-0015, F66):** o herói encara a direção do movimento; ao atacar/usar skill vira para o alvo por 0,4 s. `target_id` vem no input e o servidor só aceita alvo vivo, inimigo e **visível para aquele peer** (§4.6, §4.7, §4.9); com alvo em alcance o básico dispara sozinho, fora do alcance não anda. Destrava ao morrer, sumir da visão, `Esc` ou clique no chão.
 - **Passiva (ADR-0015, F75):** `HeroData.passive` (`PassiveData`); só `FRENZY` (Berserker, GDB §2.2-E). Aplicada no `_rollback_tick` do próprio herói.
 - **Raiz = lentidão 100 %** (Raízes Vivas, GDB §4.7): o enraizado mira, ataca e usa skill, só não anda. **Imunidade a controle** (Ragnarök, GDB §4.8): lentidão, raiz, atordoamento, empurrão e puxão não se aplicam e os ativos são limpos.
-- ATK escala básico, Q e E (inclusive a cura da Poção Verde); INT escala só o R — vale para os 8 heróis (GDB §2.1).
+- ATK escala básico, Q e E (inclusive a cura da Poção Verde); INT escala só o R — vale para os 10 heróis (GDB §2.1).
 - **Torreta do Engenheiro** (ADR-0013): indestrutível, 6 s, uma por vez; acerta heróis e monstros que o Engenheiro vê (§4.7, §4.9); não dá visão própria; o disparo dela não revela o Engenheiro.
+- **Maldição (ADR-0016, F77):** até 3 marcas, −6 Defesa cada, 4 s renovados a cada marca nova; Defesa efetiva nunca negativa (GDB §2.2-F). **Praga:** dano contínuo preso ao alvo, renova sem acumular. Os dois são estado do próprio alvo, aplicado no `_rollback_tick` dele pelo ledger (ADR-0001).
+- **Retribuição (Paladino, ADR-0016, F76):** devolve dano de golpe direto (não projétil, não zona/pulso) de origem a até 3 u — heróis, servos e monstros; dano devolvido não volta de novo. **Bênção Inviolável:** imunidade a **todo** dano, inclusive a zona da fase 2; controles continuam valendo.
+- **Servos do Vazio (Ocultista, ADR-0016, F78):** 2 por invocação, uma invocação por vez; atacam heróis e monstros (boss incluído) que o Ocultista vê; podem ser mortos; matar servo não dá XP, drop nem kill; dano e kill do servo contam para o Ocultista; o ataque do servo não revela o Ocultista.
 - Tudo validado no servidor; cliente prevê só movimento próprio e disparo visual do projétil (benchmark §4).
 
 ### 4.6 Bot

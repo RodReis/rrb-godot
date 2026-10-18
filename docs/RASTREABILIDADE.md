@@ -60,6 +60,10 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-46 | Protetor da Selva, classe Controle (redesenho do pedido "Suporte") | ADR-0015 item 12; PRD §4.1; GDB §4.7 | F74 | game, shared | MVP2.7 | mantido com mudança — Suporte segue no roadmap |
 | P-47 | Berserker, classe nova Lutador, primeira passiva (Frenesi) | ADR-0015 item 13; PRD §4.1; GDB §2.2-E, §4.8 | F75 | game, shared | MVP2.7 | mantido — requisito novo do PI (2026-10-16) |
 | P-48 | "Personagens maiores" | pedido do PI 2026-10-16 | F67 (câmera 11 u) | game | MVP2.7 | **transferido** para o zoom da câmera; escala visual adiada (FORA-DE-ESCOPO, gatilho: aceite do F67) |
+| P-49 | Paladino Radiante, Tanque reativo (redesenho do pedido "Suporte tanque") | ADR-0016 itens 3–5; PRD §4.1; GDB §4.9 | F76 | game, shared | MVP2.8 | mantido com mudança — kit de time vale só nele no 1x1; aliados no 2x2 (FORA-DE-ESCOPO) |
+| P-50 | Ocultista, 2º Mago, dano contínuo + Maldição (−Defesa) | ADR-0016 itens 6–8; PRD §4.1; GDB §2.2-F, §4.10 | F77 | game, shared | MVP2.8 | mantido com mudança — "reduzir resistência" = reduzir Defesa (só existe Defesa) |
+| P-51 | Invocação de pequenas unidades (Servos do Vazio) | ADR-0016 item 9; GDB §4.10 | F78 | game, shared | MVP2.8 | mantido — partido em fatia própria por decisão do PI |
+| P-52 | Textura escura do Ocultista e Mage diferente do Bruxo | ADR-0016 item 8 | F77 | game, shared | MVP2.8 | mantido com mudança — não existe Mage escuro no pack: atlas próprio + capuz, exceção à ADR-0006 |
 | P-40 | Fora de escopo explícito (§12) | PRD §12 | `FORA-DE-ESCOPO.md` | — | — | excluído |
 
 ## 2. GDB
@@ -80,6 +84,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | G-12 | Economia de campo: 4 campos laterais (2 T1 + 1 T2 e 2 baús comuns cada), respawn de monstros não-boss 90 s só na fase 1 | GDB §5, §6.2 | F36 | mantido — requisito novo aprovado pelo PI em 2026-10-10 (corrige economia: mapa somava 1.710 XP, meta nível 8–9 inalcançável) |
 | G-13 | Campos de canto NO/SE: Golem de canto (sem item) + 2 Lobos + 2 Baús Reforçados (50 % raro / 50 % comum); aggro golem 4 u, lobos 3 u; moita de lagoa movida | GDB §5.1, §5.2, §6.2; SPEC-055 | F55 | mantido — requisito novo aprovado pelo PI em 2026-10-11 (ADR-0011); boss sem mudança |
 | G-14 | Protetor da Selva e Berserker: atributos, kits e Frenesi | GDB §2.2-E, §4.7, §4.8 | F74, F75 | mantido — aprovados pelo PI como proposta em 2026-10-16; ajuste no F30 |
+| G-16 | Paladino Radiante e Ocultista: atributos, kits, Maldição e Servos | GDB §2.2-F, §4.9, §4.10, §7.3 | F76, F77, F78 | mantido — aprovados pelo PI como proposta em 2026-10-18; ajuste no F30 |
 | G-15 | Alvo travado respeita a visão (moita, fumaça, neblina) e destrava ao sumir | GDB §7.3 | F66 | mantido — invariante de honestidade (CONVENTION §4.6) |
 
 ## 3. Design visual (DV)

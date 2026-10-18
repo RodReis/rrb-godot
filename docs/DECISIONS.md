@@ -17,7 +17,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | D3 | Fase 1 em mapa único: bases seguras + centro contestado | game |
 | D4 | Fase 2 com zona encolhendo + meta de kills; sem respawn crescente | game |
 | D5 | Monetização por sorteios/vales/loja/passe só na fase B | launcher/backend (futuro) |
-| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011 —, para 6 no MVP2.6 — ADR-0013 — e para 8 no MVP2.7 — ADR-0015) | game |
+| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011 —, para 6 no MVP2.6 — ADR-0013 — para 8 no MVP2.7 — ADR-0015 — e para 10 no MVP2.8 — ADR-0016) | game |
 | D7 | Engine Godot 4.7, condicionada ao gate M0 | ambos |
 | D8 | GDScript (não C#) | ambos |
 | D9 | Assets KayKit (principal) + Quaternius (secundário), cena de alinhamento; ajustes e arte própria no Blender (ADR-0005) | shared |
@@ -42,6 +42,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0013](adr/0013-ladina-e-engenheiro-mvp2-6.md) | Ladina (Algoz, besta, `Rogue_Hooded`) e Engenheiro (classe nova, Adventurers 2.0 Extra) no marco MVP2.6; fumaça = moita temporária que não revela ao lançar; Torreta indestrutível 6 s contra heróis e monstros; nome "Arqueiro" | aceito | 2026-10-13 |
 | [0014](adr/0014-ajustes-pos-gate-mvp2.md) | Ajustes do PI depois do [GATE] do MVP2, antes do MVP2.6/MVP3: centro sem pilares (F60), baú com menu de 3 itens por clique e reservado a quem abriu (F61), `B` = ficha do herói com aba Monstros (F62), água por shader (F63), fonte de cura remodelada (F64), minimapa claro por imagem pronta (F65); supera parcialmente SPEC-047, GDB §6.2, SPEC-034/044 (pilares) | aceito | 2026-10-13 |
 | [0015](adr/0015-acabamento-controle-v2-e-herois-7-8.md) | Marco MVP2.7 "Acabamento e controle" antes do [GATE] MVP3: herói encara o movimento + alvo travado com auto-ataque em alcance (F66), zoom da câmera 9–14 u padrão 11 u (F67), splash próprio + 3 loadings de renders reais (F68), estado `INTRO` com cinemática in-engine 5–8 s (F69), fim de partida → lobby com card de resultado (F70), Tela Heróis (F71), silhueta do próprio herói no mato (F72), cenário PBR dentro da ADR-0006 com orçamento +1,5 ms (F73), Protetor da Selva — classe Controle, `Druid` — (F74) e Berserker — classe nova Lutador, `Barbarian_Large`, primeira passiva — (F75); supera parcialmente PRD §3.6/§4.1/§1.3, SPEC-031, SPEC-045, F26 | aceito | 2026-10-16 |
+| [0016](adr/0016-paladino-e-ocultista-mvp2-8.md) | Marco MVP2.8 "Heróis 9 e 10" depois do MVP2.7 e antes do [GATE] MVP3: Paladino Radiante — Tanque reativo, `Knight` `alt_B` sem elmo, maça própria; Retribuição contra heróis/servos/monstros; Bênção imune a todo dano inclusive zona — (F76), Ocultista — Mago de dano contínuo, Maldição até 3 marcas com piso 0, exceção à ADR-0006 (atlas escuro + capuz) — (F77) e Servos do Vazio — invocação móvel com IA, sem recompensa ao matar, kill para o dono — (F78); supera parcialmente PRD §1.3/§4.3 | aceito | 2026-10-18 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 

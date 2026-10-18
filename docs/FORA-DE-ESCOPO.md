@@ -8,6 +8,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 - Bárbaro (Algoz), Bruxo de Fogo (Mago) e campos de canto saíram desta lista em 2026-10-11 por decisão do PI (ADR-0011): entram no MVP2.
 - Ladina (Algoz) e Engenheiro (classe nova) entraram em 2026-10-13 por decisão do PI (ADR-0013): marco MVP2.6. A "Ladina" do protótipo da seleção volta com dado real (F58).
 - Protetor da Selva (classe Controle, `Druid` do Extra) e Berserker (classe nova Lutador, `Barbarian_Large` do Extra, primeira passiva) entraram em 2026-10-16 por decisão do PI (ADR-0015): marco MVP2.7. Saem daqui as linhas "Heróis Controle", "Druida e `BARBARIAN_LARGE`" e "passivas" (Suporte continua).
+- Paladino Radiante (Tanque reativo, redesenho do pedido "Suporte") e Ocultista (Mago, com Servos do Vazio) entraram em 2026-10-18 por decisão do PI (ADR-0016): marco MVP2.8. Suporte continua no roadmap.
 - Arte própria saiu desta lista em 2026-10-09 por decisão do PI (ADR-0005): entra em qualquer MVP quando a fatia precisar.
 - Item do design visual ou do benchmark que não está no PRD **não é requisito** — fica aqui ou em `RASTREABILIDADE.md` §5 até o PI decidir.
 - "Adiado" tem MVP ou fase de destino; "excluído" tem motivo.
@@ -17,7 +18,9 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Item | Fonte | Motivo | Destino | Gatilho de retorno |
 |---|---|---|---|---|
 | Modos 2x2 e 3x3 | PRD §1.3 | classes e times são conteúdo, não risco | pós-MVP4 | decisão do PI no gate M4 ("ir para 3x3") |
-| Heróis Suporte (+ mais) | PRD §1.3, §4.1 | sem sentido no 1x1 (Algoz e Mago entraram pelo ADR-0011; Controle entrou pelo ADR-0015 como controlador com autocura) | pós-MVP4 | 2x2/3x3 aprovado — a Poção Verde do Protetor passa a curar aliado (ADR-0015) |
+| Heróis Suporte (+ mais) | PRD §1.3, §4.1 | sem sentido no 1x1 (Algoz e Mago entraram pelo ADR-0011; Controle entrou pelo ADR-0015 como controlador com autocura; o pedido "Paladino suporte" entrou como Tanque reativo pelo ADR-0016) | pós-MVP4 | 2x2/3x3 aprovado — a Poção Verde do Protetor passa a curar aliado (ADR-0015) |
+| Retribuição e Bênção Inviolável do Paladino em aliados | ADR-0016 item 3 | 1x1 sem aliado; as regras já valem "em aliados no raio" | pós-MVP4 | 2x2/3x3 aprovado |
+| Servo do Vazio dar XP ou drop ao ser morto | pop-up do PI 2026-10-18 | mexe na economia da fase 1 (GDB §5.2); PI escolheu "nada" | excluído | — |
 | Ajuste do Rei Esqueleto (knockback 2,5 u > alcance 2,2 u do Cavaleiro; HP 2.400 às 3:30) | ADR-0011 (análise apresentada ao PI) | PI escolheu só campos e baús novos | F30 (MVP4) | medição do F55 (nível do bot aos 3:30) ou soak do F19 mostrar boss ainda inviável, ou pedido do PI |
 | Queimadura (dano contínuo) no Bruxo de Fogo | ADR-0011 | mecânica nova no rollback; PI aprovou o kit sem | pós-MVP4 | pedido do PI |
 | Necromante e Golem do KayKit Skeletons Extra (pago) | ADR-0011 | PI escolheu não usar agora (golem atual + lobo no Blender) | pós-MVP4 | compra do pack Extra pelo PI |

@@ -233,6 +233,15 @@
         { "arquivo": "mvp2.7-f74-protetor-pantano.webp", "legenda": "No nível 6 chega o Pântano: uma zona de 5 metros por 6 segundos que deixa heróis e monstros 40% mais lentos e causa dano a cada segundo. A marcação tracejada fica visível para os dois lados.", "tipo": "entregue" }
       ]
     },
+    "MVP2.8": {
+      "titulo": "Heróis 9 e 10",
+      "pergunta": "Dá para ter um segundo tanque e um segundo mago que joguem de um jeito totalmente diferente dos primeiros?",
+      "narrativa": [
+        "O produtor pediu um paladino que protege o time e um ocultista que amaldiçoa e invoca. Como as partidas ainda são um contra um, o paladino virou um tanque que responde: o primeiro que chega perto leva um golpe de maça que atordoa, quem bate nele de perto recebe parte do dano de volta, e no aperto ele fica imune a qualquer dano por um instante, até à zona do fim de jogo. O Cavaleiro abre a luta; o Paladino a pune.",
+        "O Ocultista é o oposto do Bruxo de Fogo: em vez de explosões, cada tiro deixa uma marca que enfraquece a defesa do alvo, a Praga corrói por quatro segundos e o Círculo Profano prende quem pisa nele. No nível seis ele invoca dois servos que correm atrás do adversário ou dos monstros. Matar um servo não dá nada; se um servo fizer o abate, o ponto é do Ocultista. Ele ganhou capuz e cores escuras próprias, para não ser confundido com o Bruxo na tela."
+      ],
+      "imagens": []
+    },
     "MVP3": {
       "titulo": "Jogar com os amigos",
       "pergunta": "Dois amigos conseguem jogar pela internet sem o desenvolvedor ajudar?",
@@ -344,6 +353,9 @@
     "F68": "Sem logo do motor: abertura própria e telas de carregamento com a arena e os heróis",
     "F71": "Tela Heróis no launcher: classe, atributos e habilidades de cada herói",
     "F74": "Protetor da Selva, o sétimo herói: raízes que prendem, poção de cura e pântano",
+    "F76": "Paladino Radiante, o nono herói: maça que atordoa, dano devolvido e imunidade",
+    "F77": "Ocultista, o décimo herói: maldição, praga e círculo profano",
+    "F78": "Servos do Vazio: a invocação do Ocultista",
     "F45": "Câmera que gira em volta do herói",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",

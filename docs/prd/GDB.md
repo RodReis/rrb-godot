@@ -68,6 +68,13 @@ $$\text{Velocidade de Ataque} \mathrel{+}= 60\% \times f \qquad \text{Roubo de V
 - Nome **Frenesi** para não confundir com a passiva *Fúria* da Arma Épica (§6.1-A), que é outra regra.
 - Única passiva de herói do jogo; `HeroData.passive` (`PassiveData.FRENZY`), aplicada no `_rollback_tick` do próprio herói.
 
+#### F. Maldição do Ocultista (debuff, ADR-0016, F77)
+$$\text{DEF}_{\text{efetiva}} = \max\!\left(0,\ \text{DEF} - m \times 6\right), \qquad m \in \{0, 1, 2, 3\}$$
+- Cada acerto do **ataque básico** do Ocultista (§4.10) aplica **1 marca** ($m \mathrel{+}= 1$, teto $m = 3$) em herói ou monstro inimigo (boss incluído). Só o básico aplica marca; Q, E e Servos não.
+- As marcas duram $4.0\text{ s}$; **a marca nova renova a duração de todas**. Ao expirar, caem todas juntas ($m = 0$).
+- A Defesa efetiva **nunca fica negativa** (piso 0) e entra na fórmula A no lugar da Defesa; bônus temporários de Defesa (Grito de Guerra, itens) somam antes do desconto.
+- Estado no próprio alvo (`curse_stacks`, `curse_ticks`), aplicado no `_rollback_tick` dele pelo ledger (ADR-0001).
+
 ---
 
 ## 3. Progressão de Nível e Curva de XP
@@ -383,6 +390,77 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 
 ---
 
+### 4.9 Paladino Radiante (Tanque — Melee reativo) — ADR-0016, SPEC-076
+- **Papel:** tanque que **responde** a quem chega nele: atordoa o primeiro que entra na frente, devolve dano de golpes de perto e fica imune a dano por um instante. O Cavaleiro (§4.1) inicia a luta; o Paladino a pune. Classe **Tanque** (PRD §4.1); redesenho do pedido "Suporte" para valer no 1x1 (ADR-0016 item 3). Retribuição e Bênção valem em aliados no raio quando houver 2x2 (no 1x1, só nele).
+- **Modelo:** KayKit Adventurers 2.0 Extra `Knight` com `knight_texture_alt_B` (cinza/dourado), **sem elmo**; escudo do pack diferente do Cavaleiro; arma visível = **maça** (arte própria no Blender, 3 raridades — F48).
+- **Velocidade Base:** $5.7\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-18 como proposta, conferidos no soak do F76. Q e E escalam ATK (regra do §2.1).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 620 | +46 | 1034 |
+| **Defesa** | 28 | +2.8 | 53.2 |
+| **Ataque** | 38 | +3.4 | 68.6 |
+| **Inteligência** | 16 | +1.6 | 30.4 (CDR: 15.2%) |
+| **Agilidade** | 8 | +0.8 | 15.2 |
+
+#### Habilidades do Paladino Radiante
+- **Ataque Básico (Maça):**
+  - Tipo: Melee em arco cônico ($60^\circ$, raio $2.0\text{ u}$).
+  - Cooldown: $1.2\text{ s}$.
+  - Dano: $120\%\text{ ATK}$.
+- **Q — Golpe Consagrado:**
+  - Golpe de maça à frente: acerta o **primeiro** herói, servo ou monstro numa faixa de $2.5\text{ u}$ de comprimento por $1.0\text{ u}$ de largura e o **atordoa**. Boss: só o dano.
+  - Cooldown Base: $[10.0, 9.5, 9.0, 8.5, 8.0]\text{ s}$.
+  - Atordoamento: $[0.8, 0.9, 1.0, 1.1, 1.2]\text{ s}$.
+  - Dano: $[50, 75, 100, 125, 150] + (0.7 \times \text{ATK})$.
+- **E — Retribuição:**
+  - Por $3.0\text{ s}$: cada golpe **direto** recebido de herói, servo ou monstro cuja origem esteja a até $3.0\text{ u}$ — **não** projétil, **não** zona/pulso — devolve ao atacante $[25, 30, 35, 40, 45]\%$ do dano que o Paladino recebeu (depois da Defesa dele) $+ (0.2 \times \text{ATK})$, mitigado pela Defesa do atacante (fórmula A). Dano devolvido não é devolvido de novo (sem laço). Sem alvo; aura visível.
+  - Cooldown Base: $[13.0, 12.5, 12.0, 11.5, 11.0]\text{ s}$.
+- **R — Bênção Inviolável (Ultimate, Nv 6+):**
+  - No uso: cura $[120, 200] + (1.2 \times \text{INT})$ (não passa do HP máximo) e **imunidade a todo dano** por $[1.5, 2.0]\text{ s}$ — **inclusive a zona da fase 2** (ADR-0016 item 5). Controles (atordoamento, lentidão, empurrão, puxão) **continuam** valendo. Reaproveita o estado de invulnerabilidade do Rolamento (§4.2). Vale também para aliados a até $5.0\text{ u}$ (no 1x1, só nele).
+  - Cooldown Base: $[60.0, 50.0]\text{ s}$.
+
+---
+
+### 4.10 Ocultista (Mago — Ranged, dano contínuo) — ADR-0016, SPEC-077 / SPEC-078
+- **Papel:** mago de dano ao longo do tempo: amaldiçoa (tira Defesa), corrói com a Praga, prende o alvo no Círculo Profano e invoca servos que perseguem. Classe **Mago** (PRD §4.1), 2º da classe; o Bruxo de Fogo (§4.4) é o mago de explosão.
+- **Modelo:** KayKit Adventurers 2.0 Extra `Mage` com **atlas próprio escuro (preto/roxo)** e **capuz** modelado no Blender no lugar do chapéu (exceção à ADR-0006 só para ele — ADR-0016 item 8); `spellbook_open` na mão esquerda; arma visível = `staff` do pack (3 raridades — F48).
+- **Velocidade Base:** $6.0\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-18 como proposta, conferidos no soak do F77 e do F78. Q e E escalam ATK (regra do §2.1).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 370 | +27 | 613 |
+| **Defesa** | 9 | +1.0 | 18 |
+| **Ataque** | 42 | +3.8 | 76.2 |
+| **Inteligência** | 32 | +3.2 | 60.8 (CDR: 30% — teto) |
+| **Agilidade** | 14 | +1.2 | 24.8 |
+
+#### Habilidades do Ocultista
+- **Ataque Básico (Projétil Sombrio):**
+  - Tipo: Projétil direto (velocidade $15\text{ u/s}$, alcance $7.5\text{ u}$, raio colisão $0.4\text{ u}$). Bloqueado pela Muralha, como a flecha.
+  - Cooldown Base: $1.1\text{ s}$.
+  - Dano: $90\%\text{ ATK}$ + **1 marca de Maldição** (§2.2-F).
+- **Q — Praga:**
+  - Projétil (velocidade $17\text{ u/s}$, alcance $8.0\text{ u}$, raio colisão $0.4\text{ u}$) que para no primeiro herói ou monstro: **dano contínuo por $4.0\text{ s}$** ($8$ pulsos a cada $0.5\text{ s}$). Reaplicar renova a duração (não acumula). Bloqueado pela Muralha.
+  - Cooldown Base: $[8.0, 7.5, 7.0, 6.5, 6.0]\text{ s}$.
+  - Dano Total: $[80, 120, 160, 200, 240] + (1.0 \times \text{ATK})$, dividido pelos pulsos.
+- **E — Círculo Profano:**
+  - Zona circular de raio $2.5\text{ u}$ no ponto mirado, até $7.0\text{ u}$, por $3.0\text{ s}$. Inimigos dentro (heróis, servos inimigos e monstros): **lentidão $35\%$** e dano por pulso a cada $0.5\text{ s}$ ($6$ pulsos). A marcação é visível como a do Meteoro.
+  - Cooldown Base: $[13.0, 12.5, 12.0, 11.5, 11.0]\text{ s}$.
+  - Dano Total: $[60, 90, 120, 150, 180] + (0.6 \times \text{ATK})$, dividido pelos pulsos.
+- **R — Servos do Vazio (Ultimate, Nv 6+) — F78:**
+  - Invoca **2 servos** ao lado do Ocultista por $7.0\text{ s}$. Uma invocação por vez (a nova substitui a anterior).
+  - **Servo:** HP $[180, 280] + (2.0 \times \text{INT})$, Defesa $10$, velocidade $5.5\text{ u/s}$, colisão de monstro pequeno; ataque corpo a corpo de alcance $1.2\text{ u}$ a cada $1.0\text{ s}$, dano $[22, 34] + (0.25 \times \text{INT})$.
+  - **Alvo:** o alvo travado do Ocultista, se houver e estiver a até $9.0\text{ u}$; senão o herói inimigo mais próximo a até $9.0\text{ u}$; senão o monstro mais próximo (boss incluído) a até $9.0\text{ u}$ — sempre **visível ao Ocultista** (§7.3). Sem alvo: seguem o Ocultista.
+  - Podem ser alvo de ataques, skills e do alvo travado; morrem ao zerar o HP ou no fim da duração. **Matar um servo não dá nada** (sem XP, sem drop, não conta kill). **Dano e kill do servo contam para o Ocultista** (como a Torreta, §4.6). O ataque do servo não revela o Ocultista.
+  - Cooldown Base: $[55.0, 46.0]\text{ s}$.
+
+---
+
 ## 5. Bestiário e Economia de Campo (Fase 1)
 
 **Respawn na fase 1 (decisão do PI em 2026-10-10, F36):** todo monstro não-boss renasce no próprio ponto de spawn **90 s** depois de morrer, enquanto durar a fase 1. Na fase 2 ninguém renasce; os vivos aos 5:00 ficam (o Rei Esqueleto vivo aos 5:00 sai sem drop — §7.1). A quantidade continua limitada para que o centro seja a melhor fonte de XP.
@@ -503,6 +581,7 @@ A transição de 5 s (portões caem, aviso) **já conta como fase 2**: o relógi
 - **Raio de visão do herói:** $12.0\text{ u}$ (decisão do PI em 2026-10-10). Fora dele, herói adversário e monstros não são replicados para aquele jogador; área nunca vista fica escura, área já vista fica cinza. O círculo da zona é sempre visível.
 - **Revelação ao agir:** atacar ou usar skill de dentro da moita revela o herói ao adversário por $1.5\text{ s}$ (decisão do PI em 2026-10-10).
 - **Proximidade:** sem revelação por proximidade — quem está fora da moita não vê quem está dentro, a qualquer distância; só vê quem está na mesma moita.
+- **Servos do Ocultista (ADR-0016, F78):** são vistos e escondidos pelas mesmas regras dos monstros (raio de visão, neblina, moita); só atacam o que o Ocultista vê.
 - **Fumaça da Ladina (ADR-0013, F58):** a nuvem da Bomba de Fumaça (§4.5) vale como moita por $3.0\text{ s}$, com as mesmas regras acima; lançar a fumaça não revela. A Torreta do Engenheiro (§4.6) só atira em quem o Engenheiro vê por estas regras.
 - **Alvo travado (ADR-0015, F66):** o botão direito **clicado** sobre um herói inimigo ou monstro trava o alvo; o servidor só aceita alvo **visível para aquele peer** por estas regras e destrava no tick em que ele deixa de ser visível (moita, fumaça, neblina) ou morre. Com alvo travado e dentro do alcance do básico, o básico dispara sozinho na cadência normal; fora do alcance, nada. O auto-ataque de dentro da moita revela como qualquer ataque.
 
