@@ -244,7 +244,7 @@ func test_menu_do_topo_abre_arena_e_mapa_com_o_catalogo() -> void:
 	assert_eq(_app.stack().current_route(), Router.ARENA_MAP)
 	var screen := _app.stack().current() as ArenaMapScreen
 	assert_eq(screen.state(), StateBox.State.READY)
-	assert_eq(screen.canvas().pins().size(), 21)
+	assert_eq(screen.canvas().pins().size(), 25)
 
 
 func test_menu_do_topo_abre_a_tela_herois_com_o_catalogo() -> void:

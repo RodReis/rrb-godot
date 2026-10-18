@@ -374,7 +374,7 @@ func _build_corner_field(flip: float) -> void:
 
 
 ## Patio da ponte da metade: moita de um lado e rocha do outro, fora da banda MID; moita da
-## lagoa ao lado da lagoa, fora do corredor TOP.
+## lagoa ao lado da lagoa, fora do corredor TOP; moitas de emboscada rente ao corredor (F73).
 func _build_yard(walls: StaticBody3D, flip: float) -> void:
 	var tag := _team_tag(flip)
 	var axis := _polar(BRIDGE_AZIMUTH_A, 1.0)
@@ -386,6 +386,11 @@ func _build_yard(walls: StaticBody3D, flip: float) -> void:
 	_rock(walls, rock_at, "Yard%s" % tag)
 	var lagoon_grass := _world(LAGOON_GRASS_A, flip)
 	_tall_grass(lagoon_grass, YARD_GRASS_SIZE, Basis(), "GrassLagoon%s" % tag, "tall_grass_4x4")
+	for i: int in range(AMBUSH_GRASS_A.size()):
+		var ambush := _world(AMBUSH_GRASS_A[i], flip)
+		_tall_grass(
+			ambush, YARD_GRASS_SIZE, Basis(), "GrassAmbush%s%d" % [tag, i], "tall_grass_4x4"
+		)
 
 
 ## Muro em arco em volta do spawn, raio = spawn -> portao, com a abertura do portao, ate os

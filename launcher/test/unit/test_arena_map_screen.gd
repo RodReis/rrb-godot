@@ -7,7 +7,7 @@ extends GutTest
 const SCENE: PackedScene = preload("res://scenes/screens/arena_map.tscn")
 ## Pinos = um por campo/elemento da arena (bases 2, cratera 1, centro 2, laterais 4, canto 2,
 ## rio 2, pontes 2, mato 6).
-const PIN_COUNT: int = 21
+const PIN_COUNT: int = 25
 const BIG_PINS: int = 3
 const DESIGN_SIZE: Vector2 = Vector2(1920, 1080)
 ## Numeros de exemplo do prototipo "Arena & Mapa" que o GDB nao confirma (§8.3 regra 2).

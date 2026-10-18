@@ -116,6 +116,10 @@ const YARD_GRASS_SIZE: Vector2 = Vector2(4, 4)
 ## Moita de lagoa, em (x, z) do mundo, fora do corredor TOP: SPEC-055 §2 a tira de (-30, -26)
 ## para abrir o campo de canto.
 const LAGOON_GRASS_A: Vector2 = Vector2(-19, -29)
+## Moitas de emboscada (F73, decisao do PI em 2026-10-17): rente aos corredores TOP (O e N), fora
+## deles (SPEC-046 §2.3), dos bolsoes de selva e do campo de canto; em (x, z) do mundo na metade A,
+## a B e a rotacao (corredores BOT). Mesma moita 4x4 do patio.
+const AMBUSH_GRASS_A: Array[Vector2] = [Vector2(-28.5, 6.0), Vector2(-5.0, -28.5)]
 
 # Campos de canto (SPEC-055 §2, ADR-0011), no bolso da curva TOP (NO); o SE e a rotacao. Neutros:
 # os dois times chegam pela propria rota. Golem no centro, lobos e baus reforcados em volta.
