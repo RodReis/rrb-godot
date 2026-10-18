@@ -34,6 +34,13 @@ func has_hit(tick: int, source: int) -> bool:
 	return _hits.has(tick) and (_hits[tick] as Dictionary).has(source)
 
 
+## Efeito da [param source] em [param tick]; nulo se nao ha.
+func get_hit(tick: int, source: int) -> HitEffect:
+	if not has_hit(tick, source):
+		return null
+	return (_hits[tick] as Dictionary)[source] as HitEffect
+
+
 func clear_hit(tick: int, source: int) -> void:
 	if not _hits.has(tick):
 		return

@@ -134,27 +134,36 @@ func _ragnarok() -> void:
 	knockback_velocity = Vector3.ZERO
 
 
-## Basico no arco do berserker.tres (Hero._melee) e, no servidor, o roubo de vida do Frenesi sobre o
-## dano que cada golpe causa depois da DEF, pelo ledger do proprio Berserker no tick seguinte (como
-## o golpe nos alvos). Sem acerto, desfaz o que uma simulacao anterior tinha registrado.
+## Basico no arco do berserker.tres (Hero._melee) e, no servidor, o roubo de vida do Frenesi. O roubo
+## e medido antes do golpe: o monstro tira o HP na hora (Monster.receive_hit), entao depois o golpe
+## que o mata ja nao "causaria" nada.
 func _twin_axes(tick: int) -> void:
-	_melee(tick)
 	var passive: PassiveData = hero_data.passive
-	if not multiplayer.is_server() or passive == null:
-		return
+	if multiplayer.is_server() and passive != null:
+		_steal_life(tick, passive)
+	_melee(tick)
+
+
+## Cura do Frenesi sobre o dano que cada golpe do arco causa depois da DEF, pelo ledger do proprio
+## Berserker no tick seguinte (como o golpe nos alvos).
+# ponytail: ressimular o mesmo tick nunca encolhe a cura ja gravada (o monstro ja tomou o golpe e o
+# recalculo sairia menor); o alvo heroi que sai do arco na ressimulacao deixa a cura antiga, como o
+# golpe no monstro que nao se desfaz. Guardar o dano real por (tick, fonte) se isso pesar.
+func _steal_life(tick: int, passive: PassiveData) -> void:
 	var basic := hero_data.basic_attack
 	var damage := roundi(SkillRules.amount(basic, 1, attributes))
 	var half_arc := basic.arc_degrees / 2.0
 	var dealt := 0
-	for other: Combatant in _enemies():
+	_enemies_into(_targets)
+	for other: Combatant in _targets:
 		if CombatRules.is_in_melee_arc(
 			global_position, forward(), other.global_position, basic.attack_range, half_arc
 		):
 			dealt += other.effective_damage(damage)
 	var source := HitLedger.source_key(peer_id, HitLedger.Slot.PASSIVE)
 	var heal: int = BerserkerRules.lifesteal_heal(dealt, frenzy(), passive.lifesteal)
-	if heal <= 0:
-		_hits.clear_hit(tick + 1, source)
+	var recorded := _hits.get_hit(tick + 1, source)
+	if heal <= 0 or (recorded != null and recorded.heal >= heal):
 		return
 	var effect := HitEffect.new()
 	effect.heal = heal

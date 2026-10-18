@@ -753,6 +753,7 @@ func _miss(other: Combatant, tick: int, slot: HitLedger.Slot) -> void:
 ## (I7). Saque: cura ate o HP max e item equipado no slot dele (a decisao de trocar ja foi do
 ## Chest). Morto recebe XP e item, nada mais.
 func _apply_hits(tick: int) -> void:
+	var heal := 0
 	for effect: HitEffect in _hits.effects_at(tick):
 		xp += maxi(effect.xp, 0)
 		var item := item_catalog.find(effect.item)
@@ -760,7 +761,7 @@ func _apply_hits(tick: int) -> void:
 			equipment = Inventory.equip(equipment, item)
 		if not is_alive():
 			continue
-		hp = mini(hp + maxi(effect.heal, 0), attributes.max_hp)
+		heal += maxi(effect.heal, 0)
 		if effect.true_damage > 0:
 			zone_ticks = SkillRules.seconds_to_ticks(ZONE_FLAG_SECONDS, NetworkTime.tickrate)
 		var damage := CombatRules.mitigated(effect.damage, defense())
@@ -797,6 +798,10 @@ func _apply_hits(tick: int) -> void:
 			if CombatRules.slow_applies(slow_pct, slow_ticks, effect.slow):
 				slow_pct = effect.slow
 				slow_ticks = maxi(slow_ticks, effect.slow_ticks)
+	# Cura do tick (saque, roubo de vida) depois de todo o dano: o resultado nao depende da ordem dos
+	# efeitos no ledger (golpe fatal mata mesmo com cura no mesmo tick).
+	if heal > 0 and is_alive():
+		hp = mini(hp + heal, attributes.max_hp)
 	_hits.trim_before(tick - NetworkRollback.history_limit)
 
 

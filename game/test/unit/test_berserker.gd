@@ -220,3 +220,47 @@ func test_outro_heroi_nao_tem_frenesi_nem_imunidade() -> void:
 	assert_eq(knight.cc_immune_ticks, 0)
 	assert_almost_eq(knight.defense(), knight.attributes.defense, EPS)
 	assert_almost_eq(knight.move_speed(), knight.attributes.move_speed, EPS)
+
+
+func test_golpe_que_mata_o_monstro_tambem_cura() -> void:
+	var b := _spawn_berserker(1)
+	var golem := _spawn_monster(GOLEM, -1, AHEAD * 1.5)
+	golem.hp = 30  # o golpe (58) mata; causou 30
+	b.hp = roundi(BERSERKER_HP * 0.2)
+	var before := b.hp
+	b.input.attack = true
+	_run(START, 2)
+	assert_false(golem.is_alive())
+	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(30, 1.0, 0.25))
+
+
+func test_ressimular_o_golpe_no_monstro_nao_encolhe_a_cura() -> void:
+	var b := _spawn_berserker(1)
+	var golem := _spawn_monster(GOLEM, -1, AHEAD * 1.5)
+	golem.hp = 100  # depois do 1o golpe sobram 42: recalcular daria 42, nao 58
+	b.hp = roundi(BERSERKER_HP * 0.2)
+	var before := b.hp
+	b.input.attack = true
+	b._rollback_tick(TICK, START, true)
+	b.basic_cooldown = 0  # ressimula o mesmo tick: o monstro ja tomou o golpe
+	b.input.attack = true
+	b._rollback_tick(TICK, START, false)
+	_run(START + 1, 1)
+	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(BERSERKER_ATK, 1.0, 0.25))
+
+
+func test_cura_e_dano_fatal_no_mesmo_tick_nao_dependem_da_ordem() -> void:
+	for heal_first: bool in [true, false]:
+		var b := _spawn_berserker(1)
+		b.hp = 10
+		var heal := HitEffect.new()
+		heal.heal = 300  # aplicada antes, salvaria (10 + 300 > dano 169 depois da DEF)
+		var lethal := HitEffect.new(200, AHEAD)
+		if heal_first:
+			_hit_berserker(START, HitLedger.Slot.REWARD, heal)
+			_hit_berserker(START, HitLedger.Slot.BASIC, lethal)
+		else:
+			_hit_berserker(START, HitLedger.Slot.BASIC, lethal)
+			_hit_berserker(START, HitLedger.Slot.REWARD, heal)
+		_run(START, 1)
+		assert_false(b.is_alive(), "golpe fatal mata (cura primeiro: %s)" % heal_first)
