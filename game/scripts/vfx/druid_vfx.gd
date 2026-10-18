@@ -22,6 +22,8 @@ const HAND: Vector3 = Vector3(-0.3, 1.1, -0.4)
 ## Escala do clarao da seiva e das raizes.
 const BASIC_FLASH: float = 0.8
 const ROOT_FLASH: float = 1.3
+## Escala das raizes em volta do alvo (a malha tem 1,2 u; o corpo, ~1,8 u).
+const ROOTS_SCALE: float = 1.7
 ## Quanto as raizes duram no chefe (s): ele so toma o dano, entao e um floreio, nao uma prisao.
 const BOSS_ROOTS_SECONDS: float = 0.4
 ## Raio (u) em que o impacto confirmado acha o alvo (a posicao dele no cliente atrasa um pouco).
@@ -46,7 +48,7 @@ func impact(slot: HitLedger.Slot, at: Vector3) -> void:
 		HitLedger.Slot.Q:
 			pool.spawn(SPLAT, chest)
 			var seconds := _root_seconds(at)
-			var roots := pool.spawn(ROOTS, feet, ROOT_FLASH) as RootsVfx
+			var roots := pool.spawn(ROOTS, feet, ROOTS_SCALE) as RootsVfx
 			roots.last(seconds)
 		HitLedger.Slot.R:
 			pool.spawn(POP, feet)

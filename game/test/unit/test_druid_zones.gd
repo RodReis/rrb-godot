@@ -195,3 +195,20 @@ func test_recarga_do_pantano_60_s_no_rank_1() -> void:
 	)
 	assert_eq(_druid.r_cooldown, expected)
 	assert_gt(expected, 1200, "60 s menos o CDR da INT 36")
+
+
+func test_raiz_dentro_do_pantano_solta_no_fim_e_volta_a_lentidao_de_40() -> void:
+	_cast_swamp(6, 5.0)
+	var knight := _spawn_knight(AHEAD * 5.0 + SIDE)
+	_run(START, 40)
+	assert_almost_eq(knight.slow_pct, 0.4, EPS, "so o Pantano")
+	_druid.input.skill_q = true
+	_druid.input.aim = Vector3(1, 0, -5).normalized()
+	var tick := START + 40
+	var rooted := false
+	for i: int in 120:
+		_run(tick + i, 1)
+		rooted = rooted or is_equal_approx(knight.slow_pct, 1.0)
+	assert_true(rooted, "a raiz acertou")
+	assert_gt(knight.slow_ticks, 0, "o pulso seguinte reaplicou a lentidao")
+	assert_almost_eq(knight.slow_pct, 0.4, EPS, "depois da raiz, o Pantano volta a mandar")

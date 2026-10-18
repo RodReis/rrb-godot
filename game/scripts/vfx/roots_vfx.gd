@@ -4,10 +4,10 @@ extends VfxOneShot
 ## brotam em anel em volta do alvo atingido (crescem em GROW_SECONDS com um pequeno excesso),
 ## ficam pelo tempo do enraizamento e encolhem em SHRINK_SECONDS. O anel e as inclinacoes sao
 ## fixos por indice (sem sorteio): o mesmo efeito reaproveitado do pool repete. O radius do play
-## escala as raizes.
+## escala o efeito inteiro (anel e raizes).
 
 const TENDRIL: PackedScene = preload("res://shared/assets/rrb/vfx/root_tendril.glb")
-const COUNT: int = 6
+const COUNT: int = 8
 ## Distancia das raizes ao alvo (u, a escala 1) e inclinacao para fora (graus).
 const RING_RADIUS: float = 0.55
 const LEAN_DEGREES: float = 18.0
@@ -18,9 +18,8 @@ const GROW_OVERSHOOT: float = 1.7
 ## Escala minima: escala 0 deixa a base singular e as posicoes dos filhos viram NaN.
 const MIN_SCALE: float = 0.001
 ## Variacao do tamanho de cada raiz (fracao), fixa por indice.
-const SIZE_JITTER: Array[float] = [1.0, 0.8, 1.15, 0.9, 1.1, 0.85]
+const SIZE_JITTER: Array[float] = [1.0, 0.8, 1.15, 0.9, 1.1, 0.85, 1.05, 0.95]
 
-var _factor: float = 1.0
 var _tendrils: Array[Node3D] = []
 
 
@@ -43,7 +42,7 @@ func _process(delta: float) -> void:
 	var grow := _grow_at(_age)
 	var shrink := clampf((lifetime - _age) / SHRINK_SECONDS, 0.0, 1.0)
 	for i: int in _tendrils.size():
-		var size := maxf(grow * shrink * SIZE_JITTER[i] * _factor, MIN_SCALE)
+		var size := maxf(grow * shrink * SIZE_JITTER[i], MIN_SCALE)
 		_tendrils[i].scale = Vector3.ONE * size
 
 
@@ -53,7 +52,7 @@ func last(seconds: float) -> void:
 
 
 func _apply_radius(radius: float) -> void:
-	_factor = radius
+	scale = Vector3.ONE * radius
 
 
 ## 0 -> 1 em GROW_SECONDS, com excesso (ease-out-back).

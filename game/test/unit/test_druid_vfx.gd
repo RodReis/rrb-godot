@@ -128,7 +128,7 @@ func test_raizes_brotam_de_zero_a_um_e_encolhem_no_fim() -> void:
 	roots._process(0.0)
 	assert_lt(tendril.scale.x, 0.1, "comeca perto de zero")
 	roots._process(RootsVfx.GROW_SECONDS)
-	assert_almost_eq(tendril.scale.x, RootsVfx.SIZE_JITTER[0] * roots._factor, 0.01, "pleno")
+	assert_almost_eq(tendril.scale.x, RootsVfx.SIZE_JITTER[0], 0.01, "pleno")
 	roots._process(1.5 - RootsVfx.GROW_SECONDS)
 	roots._process(RootsVfx.SHRINK_SECONDS)
 	assert_gt(tendril.scale.x, 0.0, "nunca singular")

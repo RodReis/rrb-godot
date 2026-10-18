@@ -70,3 +70,19 @@ func test_empurrao_e_horizontal_com_a_distancia_dada() -> void:
 
 func test_empurrao_sem_direcao_e_zero() -> void:
 	assert_eq(CombatRules.push_vector(Vector3.ZERO, 1.5), Vector3.ZERO)
+
+
+func test_lentidao_nova_sem_ativa_vale() -> void:
+	assert_true(CombatRules.slow_applies(0.0, 0, 0.4))
+	assert_true(CombatRules.slow_applies(0.9, 0, 0.4), "a antiga ja acabou")
+
+
+func test_lentidao_igual_ou_mais_forte_vale() -> void:
+	assert_true(CombatRules.slow_applies(0.4, 5, 1.0))
+	assert_true(CombatRules.slow_applies(0.4, 20, 0.4))
+	assert_true(CombatRules.slow_applies(0.4000000059604645, 1, 0.4), "pct do estado vem com menos precisao")
+
+
+func test_lentidao_mais_fraca_nao_vale_por_cima_da_ativa() -> void:
+	assert_false(CombatRules.slow_applies(1.0, 1, 0.4))
+	assert_false(CombatRules.slow_applies(0.6, 30, 0.4))
