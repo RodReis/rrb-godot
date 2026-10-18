@@ -42,3 +42,4 @@ soak-report/
 
 # URL do backend embutida no pacote (tools/build-package.ps1)
 /launcher/build_config.cfg
+.claude/settings.json
