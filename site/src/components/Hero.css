@@ -1,4 +1,4 @@
-.hero { position: relative; min-height: 100svh; display: grid; place-items: center; background-size: cover; background-position: center 40%; isolation: isolate; }
+.hero { position: relative; min-height: 100svh; display: grid; place-items: center; background-size: cover; background-position: center 40%; isolation: isolate; overflow: hidden; }
 /* véu roxo do splash do launcher sobre a arena à noite */
 .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(74 28 60 / 0.6), rgb(52 22 56 / 0.45) 45%, rgb(11 19 38 / 0.7) 80%, var(--bg-surface) 100%); mix-blend-mode: normal; }
 .hero-fog { position: absolute; inset: -20%; pointer-events: none; opacity: 0.6; will-change: transform; }
