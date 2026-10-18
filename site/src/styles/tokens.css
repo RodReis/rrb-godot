@@ -1,0 +1,36 @@
+/* Valores de docs/design-system/TOKENS.md §1 (mesmos do Theme do jogo). */
+:root {
+  --bg-surface: #0b1326;
+  --bg-lowest: #060e20;
+  --bg-panel: #171f33;
+  --bg-card: #222a3d;
+  --bg-high: #2d3449;
+  --gold: #f59e0b;
+  --gold-bright: #ffc174;
+  --gold-edge: #78350f;
+  --on-gold: #613b00;
+  --blue: #3198dc;
+  --cyan: #93ccff;
+  --red: #ef4444;
+  --green: #22c55e;
+  --purple: #a855f7;
+  --text: #dae2fd;
+  --text-muted: #d8c3ad;
+  --border: #534434;
+
+  --font-display: "Cinzel", "Times New Roman", serif;
+  --font-body: "Outfit", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --dur-fast: 0.15s;
+  --dur-base: 0.3s;
+  --dur-slow: 0.6s;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --space-section: clamp(4rem, 3rem + 5vw, 8rem);
+  --gutter: clamp(16px, 4vw, 48px);
+  --max-w: 1200px;
+}
