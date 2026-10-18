@@ -243,7 +243,18 @@
         "O produtor pediu um paladino que protege o time e um ocultista que amaldiçoa e invoca. Como as partidas ainda são um contra um, o paladino virou um tanque que responde: o primeiro que chega perto leva um golpe de maça que atordoa, quem bate nele de perto recebe parte do dano de volta, e no aperto ele fica imune a qualquer dano por um instante, até à zona do fim de jogo. O Cavaleiro abre a luta; o Paladino a pune.",
         "O Ocultista é o oposto do Bruxo de Fogo: em vez de explosões, cada tiro deixa uma marca que enfraquece a defesa do alvo, a Praga corrói por quatro segundos e o Círculo Profano prende quem pisa nele. No nível seis ele invoca dois servos que correm atrás do adversário ou dos monstros. Matar um servo não dá nada; se um servo fizer o abate, o ponto é do Ocultista. Ele ganhou capuz e cores escuras próprias, para não ser confundido com o Bruxo na tela."
       ],
-      "imagens": []
+      "imagens": [
+        {
+          "arquivo": "mvp2.8-f77-ocultista-circulo.webp",
+          "legenda": "O Ocultista desenha o Círculo Profano no chão: quem fica dentro anda mais devagar e perde vida a cada meio segundo. A runa sobre o inimigo é a Maldição, que tira defesa a cada acerto do ataque básico.",
+          "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp2.8-f77-ocultista-silhueta.webp",
+          "legenda": "Dois magos, duas silhuetas: o Ocultista de capuz e roupa escura, com livro aberto, ao lado do Bruxo de Fogo de chapéu pontudo. Na câmera do jogo, o capuz separa um do outro.",
+          "tipo": "em-construcao"
+        }
+      ]
     },
     "MVP3": {
       "titulo": "Jogar com os amigos",
