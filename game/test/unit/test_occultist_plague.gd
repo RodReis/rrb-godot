@@ -174,6 +174,7 @@ func test_recarga_da_praga_8_s_no_rank_1() -> void:
 	assert_eq(_occultist.q_cooldown, expected)
 	assert_gt(expected, 150, "8 s menos o CDR da INT 32")
 
+
 ## Dano bruto de cada pulso da Praga, na ordem: o que falta dividido pelos pulsos restantes.
 func _plague_raws(total: int, pulses: int) -> Array[int]:
 	var raws: Array[int] = []

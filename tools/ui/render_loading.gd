@@ -43,10 +43,10 @@ const CAMERA_FAR: float = 900.0
 ## Palco dos herois: base do time A; fileira em arco voltada para a camera.
 const STAGE_CENTER: Vector3 = Vector3(-22.0, 0.0, 22.0)
 const STAGE_FACING: Vector3 = Vector3(-1.0, 0.0, 1.0)
-## Fileira: do fim da arma do primeiro heroi ao do ultimo cabem STAGE_ROW_WIDTH (u); cada heroi ocupa a
-## propria largura (quanto passa do centro para a esquerda e para a direita da tela, arma incluida) e a
-## folga que sobra e dividida igual entre vizinhos. Heroi novo: medir e acrescentar em STAGE_EXTENTS.
-## Mais herois = menos folga; a camera e a escala nao mudam.
+## Fileira: do fim da arma do primeiro heroi ao do ultimo cabem STAGE_ROW_WIDTH (u); cada heroi
+## ocupa a propria largura (quanto passa do centro para a esquerda e para a direita da tela, arma
+## incluida) e a folga que sobra e dividida igual entre vizinhos. Heroi novo: medir e acrescentar em
+## STAGE_EXTENTS. Mais herois = menos folga; a camera e a escala nao mudam.
 const STAGE_ROW_WIDTH: float = 15.0
 const STAGE_EXTENTS_DEFAULT: Vector2 = Vector2(0.6, 0.6)
 const STAGE_EXTENTS: Dictionary[String, Vector2] = {

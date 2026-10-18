@@ -139,6 +139,7 @@ func test_morrer_zera_a_maldicao_e_a_praga() -> void:
 	assert_eq(knight.hp, 0)
 	assert_eq([knight.curse_stacks, knight.curse_ticks, knight.dot_ticks], [0, 0, 0])
 
+
 func test_ressimular_o_mesmo_tick_da_o_mesmo_estado_do_alvo() -> void:
 	# Rollback: o servidor restaura o estado do alvo e reaplica o ledger do tick; pulso da Praga e
 	# marca nova saem so do estado + ledger, entao a 2a passada repete a 1a.

@@ -11,7 +11,12 @@ extends SceneTree
 const MAIN: String = "res://scenes/main.tscn"
 ## Distancia (u) ate o monstro ao comecar: a Investida (6 u) e a flecha alcancam.
 const START_DISTANCE: Dictionary = {
-	"knight": 4.0, "ranger": 6.0, "rogue": 3.5, "engineer": 5.0, "druid": 5.0, "berserker": 2.0,
+	"knight": 4.0,
+	"ranger": 6.0,
+	"rogue": 3.5,
+	"engineer": 5.0,
+	"druid": 5.0,
+	"berserker": 2.0,
 	"occultist": 5.0,
 }
 ## Sequencia por heroi: [segundos desde o inicio, acao, segundos apertada]. Acao "end" encerra.

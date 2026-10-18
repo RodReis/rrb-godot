@@ -2,7 +2,8 @@ class_name CurseIndicator
 extends Node3D
 ## Marcas de Maldicao (1 a 3 runas acima da placa) e nuvem da Praga no corpo de UM alvo (F77,
 ## SPEC-077 §VFX), so cliente. O CurseMarks le o estado replicado do alvo e chama apply; aqui so se
-## desenha. Ocioso (sem marca, sem Praga, ou alvo fora da vista): set_process desligado e tudo oculto.
+## desenha. Ocioso (sem marca, sem Praga, ou alvo fora da vista): set_process desligado e tudo
+## oculto.
 
 const MARK_COUNT: int = 3
 ## Distancia (u) entre runas da fileira, centrada no alvo (no eixo X do mundo).

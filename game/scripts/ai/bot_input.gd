@@ -244,19 +244,19 @@ func _contest(tick: int) -> void:
 	_farm(tick)
 
 
-## Chega no alcance do basico e golpeia; [param skills] usa as habilidades (o Hero confere
-## recarga): Q de projetil (Arqueira) ja no alcance dele, em linha com a mira; E que nao e avanco
-## (Muralha; o Rolamento fica de fora); R com a mira no alvo (Chuva cai nele). Barbaro pelos
-## limiares do perfil (BotRules.barbarian_skills): o Salto cai no alvo (aim_distance). Bruxo
-## pelos limiares do perfil (BotRules.fire_wizard_skills). Ladina pelos limiares do perfil
-## (BotRules.rogue_skills); a fumaca de fuga vale em qualquer estado (_smoke_escape). Engenheiro
-## pelos limiares do perfil (BotRules.engineer_skills): Dinamite so com heroi e boss; a Torreta
-## tambem no farm; a mira da Dinamite e do alvo, a da Torreta e meio caminho. Protetor da Selva
-## pelos limiares do perfil (BotRules.druid_skills): Raizes e Pantano no alvo; a Pocao vale em
-## qualquer estado com HP baixo e perigo perto (_potion_when_hurt). Berserker pelo perfil
-## (BotRules.berserker_skills): Arremesso para alcancar e Grito ao entrar em Lutar; o Ragnarok vale
-## em qualquer estado (_rage_when_needed). Ocultista pelo perfil (BotRules.occultist_skills): o basico
-## acumula marcas, Praga no alvo, Circulo se o alvo se aproxima.
+## Chega no alcance do basico e golpeia; [param skills] usa as habilidades (o Hero confere recarga):
+## Q de projetil (Arqueira) ja no alcance dele, em linha com a mira; E que nao e avanco (Muralha; o
+## Rolamento fica de fora); R com a mira no alvo (Chuva cai nele). Barbaro pelos limiares do perfil
+## (BotRules.barbarian_skills): o Salto cai no alvo (aim_distance). Bruxo pelos limiares do perfil
+## (BotRules.fire_wizard_skills). Ladina pelos limiares do perfil (BotRules.rogue_skills); a fumaca
+## de fuga vale em qualquer estado (_smoke_escape). Engenheiro pelos limiares do perfil
+## (BotRules.engineer_skills): Dinamite so com heroi e boss; a Torreta tambem no farm; a mira da
+## Dinamite e do alvo, a da Torreta e meio caminho. Protetor da Selva pelos limiares do perfil
+## (BotRules.druid_skills): Raizes e Pantano no alvo; a Pocao vale em qualquer estado com HP baixo e
+## perigo perto (_potion_when_hurt). Berserker pelo perfil (BotRules.berserker_skills): Arremesso
+## para alcancar e Grito ao entrar em Lutar; o Ragnarok vale em qualquer estado (_rage_when_needed).
+## Ocultista pelo perfil (BotRules.occultist_skills): o basico acumula marcas, Praga no alvo,
+## Circulo se o alvo se aproxima.
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)

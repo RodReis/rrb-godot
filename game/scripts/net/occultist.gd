@@ -1,11 +1,11 @@
 class_name Occultist
 extends ProjectileHero
-## Ocultista (GDB §4.10, F77, SPEC-077): basico Projetil Sombrio (projetil que para no 1o alvo e soma
-## 1 marca de Maldicao); Q Praga (projetil que para no 1o heroi ou monstro e o corroi por 4 s, em 8
-## pulsos); E Circulo Profano (zona no ponto mirado ate cast_range: lentidao e dano por pulso); R
-## Servos do Vazio fica desligado (max_rank 0) ate o F78. Maldicao e Praga sao estado do ALVO
-## (Hero/Monster: curse_stacks, dot_ticks...), aplicadas por ele a partir do ledger; aqui so se monta
-## o HitEffect. A zona e estado do Ocultista (nao node), como o Pantano do Protetor; chega ao
+## Ocultista (GDB §4.10, F77, SPEC-077): basico Projetil Sombrio (projetil que para no 1o alvo e
+## soma 1 marca de Maldicao); Q Praga (projetil que para no 1o heroi ou monstro e o corroi por 4 s,
+## em 8 pulsos); E Circulo Profano (zona no ponto mirado ate cast_range: lentidao e dano por pulso);
+## R Servos do Vazio fica desligado (max_rank 0) ate o F78. Maldicao e Praga sao estado do ALVO
+## (Hero/Monster: curse_stacks, dot_ticks...), aplicadas por ele a partir do ledger; aqui so se
+## monta o HitEffect. A zona e estado do Ocultista (nao node), como o Pantano do Protetor; chega ao
 ## cliente que nao o ve pelo ImpactRelay (zone_started). Numeros de occultist.tres.
 
 ## Servidor: [param kind] (Zone) posta em [param center] no [param tick] (a ressimulacao repete; o
@@ -96,8 +96,8 @@ func _arrow_struck(arrow: Arrow, other: Combatant, at: Vector3, tick: int) -> bo
 	return true
 
 
-## Circulo no ponto mirado ate cast_range (como o Meteoro e o Pantano, nao para no obstaculo); o novo
-## troca o anterior.
+## Circulo no ponto mirado ate cast_range (como o Meteoro e o Pantano, nao para no obstaculo); o
+## novo troca o anterior.
 func _make_circle(tick: int) -> void:
 	var e := hero_data.skill_e
 	var distance := InputRules.sanitize_distance(input.aim_distance, e.cast_range)

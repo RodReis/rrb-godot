@@ -108,5 +108,7 @@ func test_habilidades_tem_descricao_e_icone() -> void:
 
 
 func test_id_estavel_em_ids_all() -> void:
-	assert_eq(Ids.to_int(&"berserker"), 35, "ordem de Ids.ALL estavel na rede (so acrescenta no fim)")
+	assert_eq(
+		Ids.to_int(&"berserker"), 35, "ordem de Ids.ALL estavel na rede (so acrescenta no fim)"
+	)
 	assert_eq(Ids.to_name(Ids.to_int(&"berserker")), &"berserker")

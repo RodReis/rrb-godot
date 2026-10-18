@@ -808,7 +808,11 @@ func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
 	var damage := CombatRules.mitigated(effect.damage, _defense())
 	if invuln_ticks > 0:
 		damage = 0
-	if blockable and shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
+	if (
+		blockable
+		and shield_ticks > 0
+		and CombatRules.is_frontal(global_position, forward(), effect.source)
+	):
 		var split := CombatRules.absorb(damage, shield_hp)
 		damage = split.x
 		shield_hp = split.y
