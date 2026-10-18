@@ -38,6 +38,11 @@ extends Resource
 @export var claw_range: float
 @export var turret_range: float
 @export var dynamite_range: float
+## Protetor da Selva (SPEC-074): Raizes Vivas com o alvo a ate root_range; Pocao Verde quando o HP
+## cai abaixo de potion_hp_pct (fracao) com perigo perto; Pantano com o alvo a ate swamp_range.
+@export var root_range: float
+@export var potion_hp_pct: float
+@export var swamp_range: float
 ## Fase 2 (F19): a menos disto da borda da zona (ou fora dela) o bot foge para dentro. Escolha do
 ## Code: nenhum documento fixa o valor; a zona encolhe ~0,15 u/s, 2 u sao ~13 s de folga.
 @export var zone_margin: float

@@ -227,7 +227,10 @@
         { "arquivo": "mvp2.7-f70-resultado-no-lobby.webp", "legenda": "Quando a partida termina, a tela de fim fecha sozinha em 15 segundos (ou no botão Voltar ao lobby) e o Launcher reaparece no lobby com o resultado por cima: vitória ou derrota, os heróis dos dois lados, o placar de kills, o nível, a duração, o motivo do fim e o seu novo placar de vitórias e derrotas. Dali você joga de novo com um clique ou abre o histórico.", "tipo": "entregue" },
         { "arquivo": "mvp2.7-f71-tela-herois.webp", "legenda": "Nova tela Heróis no launcher: os seis heróis em cartões, com busca por nome ou arma e filtro por classe. Ao escolher um, o painel mostra a classe, o papel, a arma, os atributos do nível 1 ao 10 e as quatro habilidades com a tecla e o que cada uma faz. Tudo vem dos mesmos números que o servidor usa na partida.", "tipo": "entregue" },
         { "arquivo": "mvp2.7-f72-silhueta-mato-alto.webp", "legenda": "Dentro do mato alto o seu herói deixa de sumir da sua própria vista: aparece como uma silhueta azul translúcida por cima da folhagem, e a moita abre em volta dele, ficando semitransparente num raio de dois metros e meio. À esquerda, antes; à direita, depois. Só quem controla o herói vê isso: o adversário continua sem ver nada dentro do mato.", "tipo": "entregue" },
-        { "arquivo": "mvp2.7-f73-cenario-pbr.webp", "legenda": "O cenário ganhou mais detalhe sem mudar o estilo dos heróis: madeira de verdade nos baús, no cavalo-de-frisa e na balista (as tábuas aparecem de perto, mas o baú continua laranja para você achar o saque), pedra e muralha com relevo mais fino e o dobro de grama nos campos abertos, que some suavemente ao longe. À esquerda, antes; à direita, depois, no mesmo ponto de vista.", "tipo": "entregue" }
+        { "arquivo": "mvp2.7-f73-cenario-pbr.webp", "legenda": "O cenário ganhou mais detalhe sem mudar o estilo dos heróis: madeira de verdade nos baús, no cavalo-de-frisa e na balista (as tábuas aparecem de perto, mas o baú continua laranja para você achar o saque), pedra e muralha com relevo mais fino e o dobro de grama nos campos abertos, que some suavemente ao longe. À esquerda, antes; à direita, depois, no mesmo ponto de vista.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f74-protetor-raizes.webp", "legenda": "O Protetor da Selva lança as Raízes Vivas: elas param no primeiro inimigo e brotam em volta dele, prendendo-o por 1,5 segundo. Preso, ele não anda, mas ainda mira, ataca e usa habilidade. O chefe só toma o dano.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f74-protetor-pocao.webp", "legenda": "A Poção Verde cai em arco até 5 metros e abre uma zona de 3 metros que cura quem está dentro: seis pulsos em 3 segundos, sem passar da vida máxima. Usar a poção de dentro do mato revela o herói.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f74-protetor-pantano.webp", "legenda": "No nível 6 chega o Pântano: uma zona de 5 metros por 6 segundos que deixa heróis e monstros 40% mais lentos e causa dano a cada segundo. A marcação tracejada fica visível para os dois lados.", "tipo": "entregue" }
       ]
     },
     "MVP3": {
@@ -340,6 +343,7 @@
     "F67": "Zoom da câmera: roda do mouse e teclas, do mais perto ao mais longe",
     "F68": "Sem logo do motor: abertura própria e telas de carregamento com a arena e os heróis",
     "F71": "Tela Heróis no launcher: classe, atributos e habilidades de cada herói",
+    "F74": "Protetor da Selva, o sétimo herói: raízes que prendem, poção de cura e pântano",
     "F45": "Câmera que gira em volta do herói",
     "F21": "Contas e login",
     "F22": "Fila e orquestração de servidores",

@@ -10,7 +10,9 @@ extends SceneTree
 
 const MAIN: String = "res://scenes/main.tscn"
 ## Distancia (u) ate o monstro ao comecar: a Investida (6 u) e a flecha alcancam.
-const START_DISTANCE: Dictionary = {"knight": 4.0, "ranger": 6.0, "rogue": 3.5, "engineer": 5.0}
+const START_DISTANCE: Dictionary = {
+	"knight": 4.0, "ranger": 6.0, "rogue": 3.5, "engineer": 5.0, "druid": 5.0
+}
 ## Sequencia por heroi: [segundos desde o inicio, acao, segundos apertada]. Acao "end" encerra.
 const SCRIPTS: Dictionary = {
 	"knight":
@@ -55,6 +57,16 @@ const SCRIPTS: Dictionary = {
 		[8.2, &"primary_attack", 0.1],
 		[9.2, &"primary_attack", 0.1],
 		[11.0, &"end", 0.0],
+	],
+	# Protetor da Selva (F74): Seiva, Raizes a 5 u, Pocao Verde nos pes (E), Pantano no monstro (R).
+	"druid":
+	[
+		[0.6, &"primary_attack", 0.1],
+		[1.6, &"skill_q", 0.1],
+		[3.4, &"skill_e", 0.1],
+		[5.2, &"skill_r", 0.1],
+		[12.0, &"primary_attack", 0.1],
+		[13.0, &"end", 0.0],
 	],
 }
 

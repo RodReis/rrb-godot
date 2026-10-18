@@ -30,6 +30,7 @@ BARBARIAN = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Bar
 MAGE = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Mage.glb")
 ROGUE = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "rogue.glb")
 ENGINEER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "engineer.glb")
+DRUID = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "druid.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
@@ -37,6 +38,8 @@ ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
 TRIS_MIN, TRIS_MAX = 50, 800
 # Arma do pack acima disto (o shotgun tem 1.120) e reduzida no Blender, para sobrar orcamento ao enfeite.
 WEAPON_BASE_MAX = 700
+# Cajado do Druida (1.062 no pack): base menor, o enfeite epico (colar, pontas, pedra) soma ~110.
+BASE_MAX_BY_HERO = {"druid": 640}
 ICON_SIZE = 128
 # Token PURPLE (#A855F7) em sRGB; o material converte para linear.
 PURPLE_SRGB = (0.659, 0.333, 0.969)
@@ -322,7 +325,7 @@ ARMOR = {
 # Armas: peca do pack no espaco do modelo (pose de repouso) + acabamento por raridade
 
 
-def pack_weapon(path, mesh_name):
+def pack_weapon(path, mesh_name, limit=WEAPON_BASE_MAX):
     """Malha da arma do pack com a transformacao de repouso aplicada (espaco do modelo)."""
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=path)
@@ -336,7 +339,7 @@ def pack_weapon(path, mesh_name):
     mesh = src.data.copy()
     for o in imported:
         bpy.data.objects.remove(o, do_unlink=True)
-    return decimated(mesh, WEAPON_BASE_MAX), world
+    return decimated(mesh, limit), world
 
 
 def decimated(mesh, limit):
@@ -481,7 +484,27 @@ def shotgun_accents(p, rarity):
     p.gem(EPIC, (0.0, -0.35, 0.34), (0.08, 0.09, 0.06))
 
 
+def druid_staff_accents(p, rarity):
+    # Espaco local do druid_staff (F74): haste em +Z (-0.89 a 0.80; raio 0.04-0.09), no do punho z ~0.2, forquilha
+    # de galhos em z 0.8-1.36 (x -0.57 a 0.30, y +-0.33), ponta do pe fina em z -0.89.
+    if rarity == 0:
+        return
+    trim = BLUE if rarity == 1 else GOLD
+    p.cylinder(trim, (0.0, 0.0), 0.085, 0.085, -0.56, -0.46, 8, caps=False)  # anel do pe
+    p.cylinder(trim, (0.0, 0.0), 0.10, 0.10, 0.46, 0.55, 8, caps=False)  # anel acima do punho
+    if rarity == 1:
+        p.gem(BLUE, (0.0, -0.10, 0.50), (0.05, 0.04, 0.06))  # pedra no anel
+        return
+    p.cylinder(GOLD, (0.0, 0.0), 0.11, 0.09, 0.40, 0.46, 8)  # colar dourado
+    for tip in ((-0.52, 0.0, 1.30), (-0.30, 0.28, 1.30), (-0.30, -0.28, 1.30)):
+        r = bmesh.ops.create_cone(p.bm, cap_ends=True, segments=6, radius1=0.06, radius2=0.0, depth=0.20,
+                                  matrix=Matrix.Translation(tip))
+        p.add(r["verts"], GOLD)  # pontas douradas nos galhos
+    p.gem(EPIC, (-0.12, 0.0, 0.84), (0.08, 0.08, 0.10))  # pedra roxa no cruzamento dos galhos
+
+
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
+HERO_WEAPON_ITEMS = {"druid": ["staff_t1", "staff_t2", "staff_t3_epic"]}  # F74: o Druida usa cajado, nao espada
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
     "knight": (KNIGHT, "1H_Sword", "handslot.r", sword_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
@@ -490,6 +513,7 @@ WEAPONS = {
     "fire_wizard": (MAGE, "2H_Staff", "handslot.r", staff_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
     "rogue": (ROGUE, "crossbow_1handed", "handslot.r", crossbow_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
     "engineer": (ENGINEER, "shotgun", "handslot.r", shotgun_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
+    "druid": (DRUID, "druid_staff", "handslot.r", druid_staff_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
 }
 
 # ---------------------------------------------------------------------------------------------
@@ -618,9 +642,9 @@ def main():
             pieces.append((coll, name, None, None))
 
     for hero, (path, mesh_name, bone, accents, axis_local, view_local) in WEAPONS.items():
-        mesh, world = pack_weapon(path, mesh_name)
+        mesh, world = pack_weapon(path, mesh_name, BASE_MAX_BY_HERO.get(hero, WEAPON_BASE_MAX))
         axis = (world.to_3x3() @ Vector(axis_local), world.to_3x3() @ Vector(view_local))
-        for rarity, item in enumerate(WEAPON_ITEMS):
+        for rarity, item in enumerate(HERO_WEAPON_ITEMS.get(hero, WEAPON_ITEMS)):
             name = "%s_%s" % (hero, item)
             coll = bpy.data.collections.new(name)
             bpy.context.scene.collection.children.link(coll)
@@ -644,6 +668,13 @@ def main():
 
     for name, count in report:
         print("PIECE %-28s %4d tris" % (name, count))
+
+    if PREVIEW:  # so as pecas do Druida, em 512 px, para conferir o acabamento
+        bpy.context.scene.render.resolution_x = 512
+        bpy.context.scene.render.resolution_y = 512
+        for coll, glb, _icon, axis in pieces:
+            if glb.startswith("druid"):
+                render_icon(cam, coll, os.path.join(PREVIEW, glb + ".png"), weapon_axes=axis)
 
 
 main()

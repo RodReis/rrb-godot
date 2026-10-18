@@ -4,7 +4,7 @@ extends GutTest
 ## (nenhum número do protótipo).
 
 const SCENE: PackedScene = preload("res://scenes/screens/heroes.tscn")
-const HEROES: int = 6
+const HEROES: int = 7
 ## Números e textos de exemplo do protótipo "Tela Herois" que o GDB não confirma (§8.3 regras 1-2).
 const PROTOTYPE_TEXTS: Array[String] = [
 	"1480",
@@ -201,11 +201,11 @@ func test_nenhum_numero_ou_texto_de_exemplo_do_prototipo() -> void:
 
 func test_fita_de_contadores_vem_dos_dados() -> void:
 	var cells := _screen.ribbon_texts()
-	assert_eq(cells[1], "06")
+	assert_eq(cells[1], "07")
 
 
 func test_filtro_de_classe_mostra_so_a_classe_e_a_contagem_vem_dos_dados() -> void:
-	assert_eq(_screen.role_chip("").count_text(), "6")
+	assert_eq(_screen.role_chip("").count_text(), "7")
 	assert_eq(_screen.role_chip("Algoz").count_text(), "2")
 	_screen.select_role("Algoz")
 	assert_eq(_names(_screen.visible_cards()), PackedStringArray(["Bárbaro", "Ladina"]))

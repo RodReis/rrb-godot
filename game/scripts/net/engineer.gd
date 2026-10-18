@@ -17,9 +17,6 @@ signal turret_fired(from: Vector3, at: Vector3, tick: int)
 
 enum Deploy { TURRET, CRATE }
 
-## Folga entre a Torreta e o obstaculo em que ela para (geometria, nao balanceamento).
-const PLACE_MARGIN: float = 0.3
-
 # Estado de rollback.
 ## Ticks restantes da Torreta; o ponto fica onde foi instalada.
 var turret_ticks: int = 0
@@ -39,11 +36,11 @@ func _extra_state_properties() -> Array[String]:
 	return props
 
 
-func _flight_speed() -> float:
+func _flight_speed(_kind: Arrow.Kind = Arrow.Kind.BASIC) -> float:
 	return hero_data.skill_q.speed
 
 
-func _flight_radius() -> float:
+func _flight_radius(_kind: Arrow.Kind = Arrow.Kind.BASIC) -> float:
 	return hero_data.skill_q.radius
 
 
@@ -167,16 +164,3 @@ func _turret_target(reach: float) -> Combatant:
 			_seen_points.append(other.global_position)
 	var at := EngineerRules.nearest(turret_center, _seen_points, reach)
 	return _seen[at] if at >= 0 else null
-
-
-## [param target] no plano do Engenheiro, recuado se um muro, pilar ou portao barra o caminho: o
-## ponto fica PLACE_MARGIN antes do obstaculo.
-func _before_obstacle(target: Vector3) -> Vector3:
-	var from := global_position + Vector3.UP * FLIGHT_HEIGHT
-	var to := Vector3(target.x, from.y, target.z)
-	var fraction := _wall_fraction(from, to)
-	if fraction == CombatRules.NO_HIT:
-		return target
-	var reach := maxf(from.distance_to(to) * fraction - PLACE_MARGIN, 0.0)
-	var flat := from.move_toward(to, reach)
-	return Vector3(flat.x, target.y, flat.z)

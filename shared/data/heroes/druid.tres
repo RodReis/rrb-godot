@@ -1,0 +1,97 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/druid_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/druid_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/druid_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/druid_r.svg" id="icon_r"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"druid_basic"
+icon = ExtResource("icon_basic")
+display_name = "Seiva"
+description = "Lança seiva (6,5 u) que para no primeiro inimigo; a Muralha bloqueia. Dano: 100% do ATQ."
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.0)
+attack_ratio = 1.0
+attack_range = 6.5
+radius = 0.35
+speed = 20.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"druid_q"
+icon = ExtResource("icon_q")
+display_name = "Raízes Vivas"
+description = "Lança raízes (7 u) que param no primeiro herói ou monstro: o atingido fica enraizado por 1,5 s (não anda, mas mira, ataca e usa habilidade). O chefe só toma o dano. A Muralha bloqueia. Dano: base do rank + 50% do ATQ."
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(10, 9.5, 9, 8.5, 8)
+base_amount = PackedFloat64Array(40, 65, 90, 115, 140)
+attack_ratio = 0.5
+attack_range = 7.0
+radius = 0.4
+speed = 18.0
+duration = PackedFloat64Array(1.5)
+slow = 1.0
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"druid_e"
+icon = ExtResource("icon_e")
+display_name = "Poção Verde"
+description = "Arremessa a poção em arco até 5 u (para no obstáculo): zona de 3 u por 3 s que cura o Protetor e os aliados em 6 pulsos de 0,5 s. Cura total: base do rank + 50% do ATQ; não passa do HP máximo. Usar de dentro da moita revela."
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(16, 15, 14, 13, 12)
+base_amount = PackedFloat64Array(90, 135, 180, 225, 270)
+attack_ratio = 0.5
+radius = 3.0
+cast_range = 5.0
+duration = PackedFloat64Array(3)
+pulse_count = 6
+pulse_interval = 0.5
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"druid_r"
+icon = ExtResource("icon_r")
+display_name = "Pântano"
+description = "Cria no ponto mirado (até 7 u) um pântano de 5 u por 6 s: heróis e monstros dentro ficam 40% mais lentos e tomam dano a cada 1 s (6 pulsos). Dano por pulso: base do rank + 25% da INT."
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(60, 50)
+base_amount = PackedFloat64Array(30, 50)
+intelligence_ratio = 0.25
+radius = 5.0
+cast_range = 7.0
+duration = PackedFloat64Array(6)
+pulse_count = 6
+pulse_interval = 1.0
+slow = 0.4
+
+[resource]
+script = ExtResource("1_script")
+id = &"druid"
+display_name = "Protetor da Selva"
+role = "Controle"
+weapon_name = "Cajado"
+summary = "Controla a luta à distância: enraíza com as Raízes, trava a área com o Pântano e se cura com a Poção Verde."
+base_move_speed = 6.0
+base_hp = 470.0
+hp_per_level = 34.0
+base_defense = 16.0
+defense_per_level = 1.6
+base_attack = 44.0
+attack_per_level = 3.8
+base_intelligence = 24.0
+intelligence_per_level = 2.4
+base_agility = 16.0
+agility_per_level = 1.4
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")

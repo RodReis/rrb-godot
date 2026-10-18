@@ -13,6 +13,9 @@ const FLIGHT_HEIGHT: float = 1.0
 const MAX_WALL_PROBES: int = 4
 ## Folga para dar o projetil como chegado ao alcance (soma de passos em ponto flutuante).
 const ARRIVED_EPSILON: float = 0.0001
+## Folga entre algo posto no chao (Torreta, Pocao Verde) e o obstaculo em que ele para (geometria,
+## nao balanceamento).
+const PLACE_MARGIN: float = 0.3
 
 var _arrows: Array[Arrow] = []
 ## Inimigos vivos do tick (preenchido pela subclasse antes de _advance_arrows).
@@ -31,16 +34,24 @@ func _ready() -> void:
 	super()
 	for arrow: Arrow in _arrows:
 		arrow.speed = _flight_speed()
+		arrow.kind_speeds = _kind_speeds()
 
 
-## Velocidade e raio de colisao de todos os projeteis do heroi (u/s, u): os do basico (PI
-## 2026-10-10). O Engenheiro (F59) nao tem projetil no basico e voa com a Garra Mecanica do Q.
-func _flight_speed() -> float:
+## Velocidade e raio de colisao dos projeteis do heroi (u/s, u): os do basico (PI 2026-10-10). O
+## Engenheiro (F59) nao tem projetil no basico e voa com a Garra Mecanica do Q; o Protetor da
+## Selva (F74) tem numeros diferentes em cada projetil, pelo [param _kind] do disparo.
+func _flight_speed(_kind: Arrow.Kind = Arrow.Kind.BASIC) -> float:
 	return hero_data.basic_attack.speed
 
 
-func _flight_radius() -> float:
+func _flight_radius(_kind: Arrow.Kind = Arrow.Kind.BASIC) -> float:
 	return hero_data.basic_attack.radius
+
+
+## Velocidade de voo por tipo de projetil, so para o visual (Arrow.kind_speeds); vazio = todos na
+## _flight_speed() do heroi.
+func _kind_speeds() -> Dictionary[int, float]:
+	return {}
 
 
 ## Muro, pilar ou portao entre o heroi e [param target] (o bot nao atira na parede).
@@ -119,13 +130,14 @@ func _arrow_stopped(_arrow: Arrow, _tick: int) -> void:
 ## Um tick de voo: toca, na ordem do caminho, quem o segmento do tick alcanca antes do bloqueio.
 func _advance(arrow: Arrow, tick: int) -> void:
 	var step := RangerRules.flight_step(
-		_flight_speed(), arrow.max_range, arrow.traveled, NetworkTime.tickrate
+		_flight_speed(arrow.kind), arrow.max_range, arrow.traveled, NetworkTime.tickrate
 	)
 	var p0 := arrow.origin
 	var p1 := p0 + arrow.direction * step
-	var block := _block_fraction(p0, p1)
+	var radius := _flight_radius(arrow.kind)
+	var block := _block_fraction(p0, p1, radius)
 	var reach := 1.0 if block == CombatRules.NO_HIT else block
-	_collect_hits(arrow, p0, p1, reach, _flight_radius())
+	_collect_hits(arrow, p0, p1, reach, radius)
 	for i: int in _hit_targets.size():
 		var other := _hit_targets[i]
 		arrow.mark_hit(other.combat_id())
@@ -164,9 +176,9 @@ func _collect_hits(arrow: Arrow, p0: Vector3, p1: Vector3, reach: float, radius:
 ## Menor fracao do segmento em que muro/pilar/portao ou a Muralha inimiga barram o projetil. A
 ## Muralha conta pela ponta do projetil (centro + raio): ela fica 0,8 u a frente do Cavaleiro e,
 ## pelo centro, a bola de 0,4 u tocaria o corpo no mesmo ponto em que cruza a Muralha (F54).
-func _block_fraction(p0: Vector3, p1: Vector3) -> float:
+func _block_fraction(p0: Vector3, p1: Vector3, radius: float) -> float:
 	var block := _wall_fraction(p0, p1)
-	var lead := (p1 - p0).normalized() * _flight_radius()
+	var lead := (p1 - p0).normalized() * radius
 	for other: Combatant in _targets:
 		var hero := other as Hero
 		if hero == null:
@@ -212,3 +224,16 @@ func _area_hit(
 			_hit(other, tick, slot, HitEffect.new(damage, center, push))
 		else:
 			_miss(other, tick, slot)
+
+
+## [param target] no plano do heroi, recuado se um muro, pilar ou portao barra o caminho: o ponto
+## fica PLACE_MARGIN antes do obstaculo.
+func _before_obstacle(target: Vector3) -> Vector3:
+	var from := global_position + Vector3.UP * FLIGHT_HEIGHT
+	var to := Vector3(target.x, from.y, target.z)
+	var fraction := _wall_fraction(from, to)
+	if fraction == CombatRules.NO_HIT:
+		return target
+	var reach := maxf(from.distance_to(to) * fraction - PLACE_MARGIN, 0.0)
+	var flat := from.move_toward(to, reach)
+	return Vector3(flat.x, target.y, flat.z)

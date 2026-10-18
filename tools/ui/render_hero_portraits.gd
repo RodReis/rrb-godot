@@ -36,6 +36,7 @@ const HEROES: Dictionary[String, Array] = {
 	],
 	"rogue": ["res://shared/assets/rrb/heroes/rogue.glb", []],
 	"engineer": ["res://shared/assets/rrb/heroes/engineer.glb", []],
+	"druid": ["res://shared/assets/rrb/heroes/druid.glb", []],
 }
 const BACKDROP: Color = Color(0.075, 0.106, 0.180)
 const AMBIENT: Color = Color(0.55, 0.62, 0.85)

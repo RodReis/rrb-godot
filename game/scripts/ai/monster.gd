@@ -158,8 +158,9 @@ func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
 		move_and_collide(effect.push)
 	_stun_ticks = maxi(_stun_ticks, effect.stun_ticks)
 	if effect.slow_ticks > 0:
-		_slow_pct = maxf(_slow_pct, effect.slow) if _slow_ticks > 0 else effect.slow
-		_slow_ticks = maxi(_slow_ticks, effect.slow_ticks)
+		if CombatRules.slow_applies(_slow_pct, _slow_ticks, effect.slow):
+			_slow_pct = effect.slow
+			_slow_ticks = maxi(_slow_ticks, effect.slow_ticks)
 	_provoke_camp(effect.attacker_id)
 	if not is_alive():
 		_die(tick, effect.attacker_id)

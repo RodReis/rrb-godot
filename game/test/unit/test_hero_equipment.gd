@@ -9,6 +9,7 @@ const BARBARIAN: String = "res://scenes/heroes/barbarian.tscn"
 const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
 const ROGUE: String = "res://scenes/heroes/rogue.tscn"
 const ENGINEER: String = "res://scenes/heroes/engineer.tscn"
+const DRUID: String = "res://scenes/heroes/druid.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -155,3 +156,14 @@ func test_headless_nao_carrega_pecas() -> void:
 	_equip([&"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3", &"sword_t3_epic"])
 	assert_eq(_pieces().size(), 0)
 	assert_true(_part("Knight_Helmet").visible)
+
+
+func test_protetor_usa_o_cajado_e_nao_mostra_elmo() -> void:
+	_bind(DRUID)
+	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t3_epic"])
+	assert_eq(_pieces("druid_staff_t3_epic__handslot_r").size(), 1)
+	assert_eq(_pieces("guard_helm_*").size(), 0, "capuz e galhada ficam (ADR-0011 item 3)")
+	assert_eq(_pieces("guard_chest_t3__*").size(), 1)
+	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
+	_hero._refresh_attributes()
+	assert_eq(_hero.attributes.defense, 16.0 + 15.0 + 22.0, "o elmo vale sem aparecer")

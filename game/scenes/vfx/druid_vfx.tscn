@@ -1,0 +1,42 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/druid_vfx.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/vfx/trail_ribbon.gd" id="2_trail"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_seed_trail"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.0, 2.2, 0.6, 0.85)
+
+[sub_resource type="StandardMaterial3D" id="Mat_root_trail"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.7, 1.5, 0.35, 0.9)
+
+[sub_resource type="QuadMesh" id="QuadMesh_warmup"]
+size = Vector2(0.05, 0.05)
+
+[node name="DruidVfx" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="SeedTrail" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_warmup")
+material_override = SubResource("Mat_seed_trail")
+script = ExtResource("2_trail")
+lifetime = 0.1
+width = 0.1
+
+[node name="RootTrail" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_warmup")
+material_override = SubResource("Mat_root_trail")
+script = ExtResource("2_trail")
+lifetime = 0.14
+width = 0.18

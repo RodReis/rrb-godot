@@ -109,6 +109,14 @@ func test_papel_e_descricao_dos_herois() -> void:
 				+ "a área com a Torreta e a Dinamite."
 			)
 		],
+		&"druid":
+		[
+			"Controle",
+			(
+				"Controla a luta à distância: enraíza com as Raízes, trava a área com o Pântano "
+				+ "e se cura com a Poção Verde."
+			)
+		],
 	}
 	for id: StringName in expected:
 		assert_eq(_hero(id).role, expected[id][0], "role de %s" % id)

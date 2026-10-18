@@ -40,7 +40,7 @@ $clients = @()
 try {
     docker compose -f $compose up --build -d 2>&1 | Select-Object -Last 3
     $deadline = (Get-Date).AddMinutes(2)
-    while (-not ((docker compose -f $compose logs gameserver 2>&1) -match 'escutando')) {
+    while (-not ((docker compose -f $compose logs gameserver 2>&1) -match 'escutando|--no-backend: qualquer peer')) {
         if ((Get-Date) -gt $deadline) { throw 'servidor nao subiu em 2 min' }
         Start-Sleep -Seconds 1
     }

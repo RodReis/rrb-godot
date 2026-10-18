@@ -758,8 +758,9 @@ func _apply_hits(tick: int) -> void:
 			knockback_velocity = effect.push * NetworkTime.tickrate / knockback_ticks
 		stun_ticks = maxi(stun_ticks, effect.stun_ticks)
 		if effect.slow_ticks > 0:
-			slow_pct = maxf(slow_pct, effect.slow) if slow_ticks > 0 else effect.slow
-			slow_ticks = maxi(slow_ticks, effect.slow_ticks)
+			if CombatRules.slow_applies(slow_pct, slow_ticks, effect.slow):
+				slow_pct = effect.slow
+				slow_ticks = maxi(slow_ticks, effect.slow_ticks)
 	_hits.trim_before(tick - NetworkRollback.history_limit)
 
 

@@ -12,6 +12,8 @@ extends SceneTree
 ## --engineer: cada Engenheiro tem Torreta atirando e Dinamite explodindo a medicao inteira
 ## (SPEC-059 §8 item 8): a sonda reemite os eventos do ImpactRelay (deploy_shown, turret_shot_shown)
 ## na posicao do heroi e do outro, nos compassos ENGINEER_*_SECONDS.
+## --druid: cada Protetor da Selva tem Pocao Verde e Pantano ativos a medicao inteira (SPEC-074 §8):
+## a sonda reemite o evento do ImpactRelay (zone_shown) nos compassos DRUID_*_SECONDS.
 ## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
 ## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
@@ -32,6 +34,10 @@ const SMOKE_SECONDS: float = 2.5
 const ENGINEER_TURRET_SECONDS: float = 5.5
 const ENGINEER_SHOT_SECONDS: float = 0.75
 const ENGINEER_CRATE_SECONDS: float = 3.0
+## Compassos do --druid (s): Pocao nova antes de a anterior (3 s) acabar e Pantano novo antes de o
+## anterior (6 s) acabar.
+const DRUID_POTION_SECONDS: float = 2.5
+const DRUID_SWAMP_SECONDS: float = 5.5
 ## Itens do --equip, por HeroData.id (um conjunto por heroi, arma epica).
 const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"knight": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
@@ -40,6 +46,7 @@ const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"fire_wizard": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"rogue": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"engineer": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
+	&"druid": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 }
 
 var _out: String = "frametime"
@@ -52,6 +59,9 @@ var _equip: bool = false
 var _smoke: bool = false
 var _smoke_wait: float = 0.0
 var _engineer: bool = false
+var _druid: bool = false
+var _potion_wait: float = 0.0
+var _swamp_wait: float = 0.0
 var _grass: bool = false
 var _grass_linked: bool = false
 var _patch: Node3D
@@ -71,6 +81,8 @@ func _initialize() -> void:
 			_smoke = true
 		elif arg == "--engineer":
 			_engineer = true
+		elif arg == "--druid":
+			_druid = true
 		elif arg == "--grass":
 			_grass = true
 		elif arg.begins_with("--shot="):
@@ -95,6 +107,8 @@ func _process(delta: float) -> bool:
 			_smoke_rogues()
 	if _engineer and _phase > 0:
 		_engineer_effects(delta)
+	if _druid and _phase > 0:
+		_druid_effects(delta)
 	if _grass and _phase > 0 and not _grass_linked:
 		_grass_linked = true
 		root.get_node("NetworkRollback").connect(&"after_process_tick", _hold_in_grass)
@@ -253,3 +267,27 @@ func _other_than(hero: Node) -> Node:
 		if other != hero:
 			return other
 	return null
+
+
+## Sem tipos do jogo: Pocao nos pes do Protetor e Pantano no outro heroi, pelo sinal do relay.
+func _druid_effects(delta: float) -> void:
+	_potion_wait -= delta
+	_swamp_wait -= delta
+	var relay := current_scene.get_node("ImpactRelay")
+	var tick: int = root.get_node("NetworkTime").get(&"tick")
+	for hero: Node in _players.get_children():
+		var data: Resource = hero.get(&"hero_data")
+		if data == null or data.get(&"id") != &"druid":
+			continue
+		var position: Vector3 = hero.get(&"global_position")
+		var other := _other_than(hero)
+		var target: Vector3 = other.get(&"global_position") if other != null else position
+		var caster := hero.name.to_int()
+		if _potion_wait <= 0.0:
+			relay.emit_signal(&"zone_shown", caster, 0, position, tick)
+		if _swamp_wait <= 0.0:
+			relay.emit_signal(&"zone_shown", caster, 1, target, tick)
+	if _potion_wait <= 0.0:
+		_potion_wait = DRUID_POTION_SECONDS
+	if _swamp_wait <= 0.0:
+		_swamp_wait = DRUID_SWAMP_SECONDS

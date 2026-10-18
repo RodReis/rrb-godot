@@ -11,6 +11,8 @@ const KNOCKBACK_SECONDS: float = 0.25
 const NO_HIT: float = -1.0
 ## Abaixo disto dois segmentos sao paralelos.
 const PARALLEL_EPSILON: float = 0.000001
+## Diferenca de fracao de lentidao abaixo da qual duas lentidoes contam como iguais.
+const SLOW_EPSILON: float = 0.0001
 
 
 ## Dano bruto depois da DEF (Stats, GDB §2.2), arredondado.
@@ -67,6 +69,14 @@ static func is_in_melee_arc(
 		return true
 	var flat_forward := Vector3(forward.x, 0.0, forward.z).normalized()
 	return rad_to_deg(flat_forward.angle_to(to_target / dist)) <= half_angle_deg
+
+
+## Uma lentidao nova de [param new_pct] vale para quem tem [param pct] por [param ticks]? Sem
+## lentidao ativa, sempre; com ela, so se a nova nao for mais fraca (a mais forte manda e so ela
+## estende o prazo: o Pantano de 40 % reaplicado a cada pulso nao prolonga a raiz de 100 %, F74).
+## Folga de SLOW_EPSILON: o pct do estado de rollback chega com precisao menor que o do .tres.
+static func slow_applies(pct: float, ticks: int, new_pct: float) -> bool:
+	return ticks <= 0 or new_pct >= pct - SLOW_EPSILON
 
 
 ## Velocidade com lentidao [param slow] (fracao; 0,25 = 25 %).

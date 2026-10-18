@@ -14,6 +14,9 @@ extends Node
 ## Engenheiro some de quem o ve oculto e a Torreta nao. A instalacao chega confiavel
 ## (deploy_shown); cada disparo da Torreta, nao (turret_shot_shown: perder um tracante so tira um
 ## efeito).
+## Pocao Verde e Pantano do Protetor da Selva (F74, SPEC-074): mesmo caminho da fumaca e da Torreta
+## (zone_shown, confiavel: a zona vale por 3 e 6 s e o Protetor some de quem esta fora do mato ou da
+## visao).
 
 ## Cliente e host: o heroi [param attacker_id] acertou com [param slot] em [param at].
 signal impacted(attacker_id: int, slot: int, at: Vector3)
@@ -22,6 +25,9 @@ signal smoke_shown(caster_id: int, center: Vector3, tick: int)
 ## Cliente e host: o Engenheiro [param caster_id] posicionou [param kind] (Engineer.Deploy) em
 ## [param center].
 signal deploy_shown(caster_id: int, kind: int, center: Vector3, tick: int)
+## Cliente e host: o Protetor da Selva [param caster_id] abriu a zona [param kind] (Druid.Zone) em
+## [param center] no [param tick].
+signal zone_shown(caster_id: int, kind: int, center: Vector3, tick: int)
 ## Cliente e host: a Torreta do Engenheiro [param caster_id], em [param from], atirou em
 ## [param at]; [param ticks_left] = o que falta da Torreta (quem entra na visao depois da instalacao
 ## a monta pelo primeiro tiro que ve).
@@ -45,6 +51,9 @@ static var deploys_announced: int = 0
 static var deploys_received: int = 0
 static var turret_shots_announced: int = 0
 static var turret_shots_received: int = 0
+## Medicao: zonas do Protetor da Selva, anunciadas (servidor) e recebidas (cliente).
+static var zones_announced: int = 0
+static var zones_received: int = 0
 
 ## Pai dos herois (Main/Players); definido antes de entrar na arvore.
 var players: Node
@@ -74,6 +83,9 @@ func _on_players_child_entered_tree(node: Node) -> void:
 	if engineer != null:
 		engineer.deployed.connect(_on_engineer_deployed.bind(engineer))
 		engineer.turret_fired.connect(_on_engineer_turret_fired.bind(engineer))
+	var druid := node as Druid
+	if druid != null:
+		druid.zone_started.connect(_on_druid_zone_started.bind(druid))
 
 
 ## O heroi do jogador [param peer] ve o ponto [param at] (time de [param caster] sempre ve).
@@ -128,6 +140,20 @@ func _on_engineer_turret_fired(from: Vector3, at: Vector3, tick: int, engineer: 
 		turret_shot_shown.emit(engineer.peer_id, from, at, engineer.turret_ticks)
 
 
+func _on_druid_zone_started(kind: Druid.Zone, center: Vector3, tick: int, druid: Druid) -> void:
+	if not multiplayer.is_server():
+		return
+	var slot := HitLedger.Slot.E if kind == Druid.Zone.POTION else HitLedger.Slot.R
+	if not _announced.first(tick, druid.peer_id, slot, 0):
+		return
+	zones_announced += 1
+	for peer: int in multiplayer.get_peers():
+		if _sees_point(peer, center, druid):
+			_show_zone.rpc_id(peer, druid.peer_id, kind, center, tick)
+	if _sees_point(multiplayer.get_unique_id(), center, druid):
+		zone_shown.emit(druid.peer_id, kind, center, tick)
+
+
 func _on_hero_struck(target: Combatant, slot: HitLedger.Slot, tick: int, hero: Hero) -> void:
 	if not multiplayer.is_server():
 		return
@@ -155,6 +181,13 @@ func _show_smoke(caster_id: int, center: Vector3, tick: int) -> void:
 func _show_deploy(caster_id: int, kind: int, center: Vector3, tick: int) -> void:
 	deploys_received += 1
 	deploy_shown.emit(caster_id, kind, center, tick)
+
+
+## Servidor -> cliente: uma zona do Protetor da Selva que este jogador ve.
+@rpc("authority", "call_remote", "reliable")
+func _show_zone(caster_id: int, kind: int, center: Vector3, tick: int) -> void:
+	zones_received += 1
+	zone_shown.emit(caster_id, kind, center, tick)
 
 
 ## Servidor -> cliente: um disparo de Torreta que este jogador ve.
