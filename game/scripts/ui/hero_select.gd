@@ -2,11 +2,11 @@ class_name HeroSelect
 extends CanvasLayer
 ## Selecao de herois (F51, prototipo docs/prd/telas/Seleção de Heróis; CONVENTION §3): aberta
 ## pelo main na HERO_PICK e fechada quando ela acaba. Card esquerdo = voce (heroi mostrado),
-## grade = so herois com cena, card direito = oponente quando o servidor confirma. 1-7 escolhem,
+## grade = so herois com cena, card direito = oponente quando o servidor confirma. 1-8 escolhem,
 ## Espaco ou o botao confirma; o lock-in vai ao servidor por RPC e so vale quando volta como
 ## hero_picked (inclusive o padrao do timeout). So le sinais e dados; quem decide e o servidor.
 
-const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7]
+const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8]
 ## Atributos do HeroData com o nome do PRD §4.2.
 const STAT_NAMES: Array[String] = [
 	"HP (Vida)", "DEF (Defesa)", "ATK (Ataque)", "INT (Inteligência)", "AGI (Agilidade)"
@@ -177,7 +177,9 @@ func lock_in() -> void:
 	_match.submit_hero_selection.rpc_id(1, Ids.to_int(_roster[_selected].id))
 
 
-## So o visual do heroi: o no Model da cena, com as pecas que o heroi nao usa escondidas.
+## So o visual do heroi: o no Model da cena, com as pecas que o heroi nao usa escondidas, o clipe de
+## idle do HeroVisual em meta "idle" (o MonsterPreview3D toca esse) e a altura de retrato dele em
+## meta "portrait_height" (0 = a padrao do card).
 static func model_of(hero_id: StringName) -> Node3D:
 	var path := Hero.SCENE_PATH % hero_id
 	if not ResourceLoader.exists(path):
@@ -192,6 +194,8 @@ static func model_of(hero_id: StringName) -> Node3D:
 			var node := model.find_child(part) as Node3D
 			if node != null:
 				node.hide()
+		model.set_meta(&"idle", visual.get(&"idle"))
+		model.set_meta(&"portrait_height", visual.get(&"portrait_height"))
 	instance.free()
 	return model
 

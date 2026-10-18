@@ -3,7 +3,7 @@ extends SceneTree
 ## prototipo do Historico da lugar a um render dos assets reais, ADR-0005) para
 ## shared/assets/ui/heroes/<id>.png. Mesmo modelo e pecas escondidas do Game (game/scenes/heroes/),
 ## em idle, sobre o fundo BG_LOW. Precisa de janela (nao headless):
-##   godot --path launcher -s <repo>/tools/ui/render_hero_portraits.gd
+##   godot --path launcher -s <repo>/tools/ui/render_hero_portraits.gd [-- --only=<id>]
 ## Duas saidas por heroi: o retrato 128 x 128 (2x o maior uso, o de 64 px do destaque), do peito
 ## para cima, e o retrato grande 512 x 512 da Tela Herois (F71), de corpo inteiro, em
 ## shared/assets/ui/heroes/large/<id>.png.
@@ -16,7 +16,9 @@ const WARMUP_FRAMES: int = 20
 const IDLE: StringName = &"Idle"
 ## Instante da animacao idle usado como pose (s).
 const POSE_TIME: float = 0.4
-## id -> [cena, pecas escondidas] (as mesmas de game/scenes/heroes/<id>.tscn).
+## id -> [cena, pecas escondidas] (as mesmas de game/scenes/heroes/<id>.tscn) e, opcionais, a
+## escala do modelo (o Barbarian_Large do Berserker e ~1,9x mais alto que o rig medio) e o clipe
+## de idle.
 const HEROES: Dictionary[String, Array] = {
 	"knight":
 	[
@@ -37,6 +39,7 @@ const HEROES: Dictionary[String, Array] = {
 	"rogue": ["res://shared/assets/rrb/heroes/rogue.glb", []],
 	"engineer": ["res://shared/assets/rrb/heroes/engineer.glb", []],
 	"druid": ["res://shared/assets/rrb/heroes/druid.glb", []],
+	"berserker": ["res://shared/assets/rrb/heroes/berserker.glb", [], 0.48, &"Idle_A"],
 }
 const BACKDROP: Color = Color(0.075, 0.106, 0.180)
 const AMBIENT: Color = Color(0.55, 0.62, 0.85)
@@ -64,7 +67,13 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR_LARGE))
 	var failed := false
+	var only := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.get_slice("=", 1)
 	for hero_id: String in HEROES:
+		if not only.is_empty() and hero_id != only:
+			continue
 		if not await _render(hero_id, OUT_DIR, SIZE, CAMERA_EYE, CAMERA_TARGET):
 			failed = true
 		if not await _render(
@@ -93,13 +102,16 @@ func _render(
 	world.add_child(_environment())
 	var model := (load(spec[0]) as PackedScene).instantiate() as Node3D
 	world.add_child(model)
+	if spec.size() > 2:
+		model.scale = Vector3.ONE * (spec[2] as float)
 	for part: StringName in spec[1]:
 		var node := model.find_child(part) as Node3D
 		if node != null:
 			node.hide()
 	var player := model.find_child("AnimationPlayer") as AnimationPlayer
-	if player != null and player.has_animation(IDLE):
-		player.play(IDLE)
+	var idle: StringName = spec[3] if spec.size() > 3 else IDLE
+	if player != null and player.has_animation(idle):
+		player.play(idle)
 		player.seek(POSE_TIME, true)
 		player.pause()
 	_lights(world)

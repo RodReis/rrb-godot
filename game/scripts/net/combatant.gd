@@ -34,6 +34,12 @@ func missing_hp() -> int:
 	return 0
 
 
+## Dano que [param raw] (bruto) causaria agora, depois da defesa e no maximo o HP restante (roubo
+## de vida do Berserker, F75); heroi e monstro decidem.
+func effective_damage(raw: int) -> int:
+	return raw
+
+
 ## Id unico de quem e golpeado (peer_id do heroi, uid negativo do monstro).
 func combat_id() -> int:
 	return 0

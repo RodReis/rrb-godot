@@ -76,3 +76,14 @@ func test_tem_tile_e_modelos_da_arena() -> void:
 		"TallGrass4x3",
 	]:
 		assert_not_null(_scene.get_node_or_null(node_name), node_name)
+
+
+func test_berserker_cobre_a_capsula_e_se_distingue_do_barbaro() -> void:
+	# F75: Barbarian_Large (escala 0,58 na cena do heroi) com elmo de chifres, ao lado do Barbaro (rig
+	# medio): a malha cobre a capsula de colisao (h 1,8) e e bem mais alta (silhueta distinta).
+	await wait_process_frames(2)
+	var berserker := _top(_scene.get_node("Berserker"), "")
+	var barbarian := _top(_scene.get_node("Barbarian"), "Barbarian_")
+	gut.p("Berserker: %.2f u, Barbaro: %.2f u" % [berserker, barbarian])
+	assert_between(berserker, HERO_HEIGHT + 0.4, HERO_HEIGHT + 0.9)
+	assert_gt(berserker - barbarian, 0.3, "silhueta mais alta que a do Barbaro")

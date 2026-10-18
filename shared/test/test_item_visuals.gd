@@ -3,7 +3,7 @@ extends GutTest
 ## de peca aponta para um osso que existe no rig do heroi e no slot certo; a peca do pack que o
 ## slot substitui existe no modelo. Barbaro (F53), Bruxo (F54), Ladina (F58), Engenheiro (F59) e
 ## Protetor da Selva (F74), ADR-0011 item 3 e ADR-0013 item 7: elmo sem peca (o capuz e o chapeu
-## ficam), mas com icone.
+## ficam), mas com icone. Berserker (F75): elmo de chifres fixo; o Rig_Large tem os mesmos ossos.
 
 const CATALOG: String = "res://shared/data/items/catalog.tres"
 ## Heroi -> modelo (mesmo rig KayKit nos dois).
@@ -15,9 +15,12 @@ const MODELS: Dictionary[StringName, String] = {
 	&"rogue": "res://shared/assets/rrb/heroes/rogue.glb",
 	&"engineer": "res://shared/assets/rrb/heroes/engineer.glb",
 	&"druid": "res://shared/assets/rrb/heroes/druid.glb",
+	&"berserker": "res://shared/assets/rrb/heroes/berserker.glb",
 }
 ## Herois cujo elmo nao aparece (ADR-0011 item 3).
-const HELMLESS: Array[StringName] = [&"barbarian", &"fire_wizard", &"rogue", &"engineer", &"druid"]
+const HELMLESS: Array[StringName] = [
+	&"barbarian", &"fire_wizard", &"rogue", &"engineer", &"druid", &"berserker"
+]
 ## Indice = ItemData.Slot: prefixos (separados por "|") dos ossos que as pecas do slot usam.
 const SLOT_BONES: Array[String] = ["handslot.", "head", "chest", "foot.|lowerleg."]
 
@@ -81,5 +84,7 @@ func test_peca_do_pack_substituida_existe_no_modelo() -> void:
 	for hero: StringName in MODELS:
 		var model := _model(hero)
 		for part: StringName in ItemVisuals.for_hero(hero).pack_parts:
-			if part != &"":
-				assert_not_null(model.find_child(part), "%s: %s" % [hero, part])
+			if part == &"":
+				continue
+			for pattern: String in String(part).split("|"):
+				assert_not_null(model.find_child(pattern), "%s: %s" % [hero, pattern])

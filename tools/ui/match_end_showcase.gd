@@ -13,7 +13,7 @@ const SCENE: String = "res://scenes/ui/match_end.tscn"
 const CONTROLLER: String = "res://scripts/match/match_controller.gd"
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
 const HEROES: Array[String] = [
-	"knight", "ranger", "barbarian", "fire_wizard", "rogue", "engineer", "druid"
+	"knight", "ranger", "barbarian", "fire_wizard", "rogue", "engineer", "druid", "berserker"
 ]
 const ME: int = 11
 const THEM: int = 22

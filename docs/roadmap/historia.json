@@ -230,7 +230,10 @@
         { "arquivo": "mvp2.7-f73-cenario-pbr.webp", "legenda": "O cenário ganhou mais detalhe sem mudar o estilo dos heróis: madeira de verdade nos baús, no cavalo-de-frisa e na balista (as tábuas aparecem de perto, mas o baú continua laranja para você achar o saque), pedra e muralha com relevo mais fino e o dobro de grama nos campos abertos, que some suavemente ao longe. À esquerda, antes; à direita, depois, no mesmo ponto de vista.", "tipo": "entregue" },
         { "arquivo": "mvp2.7-f74-protetor-raizes.webp", "legenda": "O Protetor da Selva lança as Raízes Vivas: elas param no primeiro inimigo e brotam em volta dele, prendendo-o por 1,5 segundo. Preso, ele não anda, mas ainda mira, ataca e usa habilidade. O chefe só toma o dano.", "tipo": "entregue" },
         { "arquivo": "mvp2.7-f74-protetor-pocao.webp", "legenda": "A Poção Verde cai em arco até 5 metros e abre uma zona de 3 metros que cura quem está dentro: seis pulsos em 3 segundos, sem passar da vida máxima. Usar a poção de dentro do mato revela o herói.", "tipo": "entregue" },
-        { "arquivo": "mvp2.7-f74-protetor-pantano.webp", "legenda": "No nível 6 chega o Pântano: uma zona de 5 metros por 6 segundos que deixa heróis e monstros 40% mais lentos e causa dano a cada segundo. A marcação tracejada fica visível para os dois lados.", "tipo": "entregue" }
+        { "arquivo": "mvp2.7-f74-protetor-pantano.webp", "legenda": "No nível 6 chega o Pântano: uma zona de 5 metros por 6 segundos que deixa heróis e monstros 40% mais lentos e causa dano a cada segundo. A marcação tracejada fica visível para os dois lados.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f75-berserker-arremesso.webp", "legenda": "O Berserker, oitavo herói e primeiro Lutador, luta com um machado em cada mão. O Arremesso de Machado sai girando, para no primeiro inimigo e o deixa mais lento por um segundo e meio; o machado só volta à mão um segundo depois.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f75-berserker-grito.webp", "legenda": "O Grito de Guerra solta uma onda vermelha e deixa o Berserker mais resistente e mais rápido por 2 segundos. A passiva Frenesi faz o resto: quanto menos vida ele tem, mais rápido bate e mais vida rouba com os golpes.", "tipo": "entregue" },
+        { "arquivo": "mvp2.7-f75-berserker-ragnarok.webp", "legenda": "No nível 6 chega o Ragnarök: por 4 segundos o Berserker pega fogo, fica imune a lentidão, raiz, atordoamento, empurrão e puxão, corre mais e entra no Frenesi máximo, mesmo com a vida cheia.", "tipo": "entregue" }
       ]
     },
     "MVP2.8": {
@@ -353,6 +356,7 @@
     "F68": "Sem logo do motor: abertura própria e telas de carregamento com a arena e os heróis",
     "F71": "Tela Heróis no launcher: classe, atributos e habilidades de cada herói",
     "F74": "Protetor da Selva, o sétimo herói: raízes que prendem, poção de cura e pântano",
+    "F75": "Berserker, o oitavo herói: dois machados, frenesi e o Ragnarök em chamas",
     "F76": "Paladino Radiante, o nono herói: maça que atordoa, dano devolvido e imunidade",
     "F77": "Ocultista, o décimo herói: maldição, praga e círculo profano",
     "F78": "Servos do Vazio: a invocação do Ocultista",

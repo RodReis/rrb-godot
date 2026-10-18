@@ -17,6 +17,7 @@ const DRIVERS: Dictionary = {
 	&"rogue": preload("res://scenes/vfx/rogue_vfx.tscn"),
 	&"engineer": preload("res://scenes/vfx/engineer_vfx.tscn"),
 	&"druid": preload("res://scenes/vfx/druid_vfx.tscn"),
+	&"berserker": preload("res://scenes/vfx/berserker_vfx.tscn"),
 }
 
 ## Pai dos herois (Main/Players) e o relay de impactos; definidos antes de entrar na arvore.

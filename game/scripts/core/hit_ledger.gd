@@ -5,10 +5,11 @@ extends RefCounted
 ## atacante nao duplica (um efeito por fonte = atacante + habilidade, por tick).
 
 ## REWARD: XP dado pelo monstro ao matador (nao colide com o golpe do monstro no mesmo tick) e
-## saque do bau (cura, item). ZONE: dano da zona (fonte 0, F16).
-enum Slot { BASIC, Q, E, R, REWARD, ZONE }
+## saque do bau (cura, item). ZONE: dano da zona (fonte 0, F16). PASSIVE: o heroi no proprio
+## ledger (roubo de vida do Frenesi, F75).
+enum Slot { BASIC, Q, E, R, REWARD, ZONE, PASSIVE }
 
-const SLOT_COUNT: int = 6
+const SLOT_COUNT: int = 7
 
 var _hits: Dictionary = {}  # tick (int) -> { source_key (int) -> HitEffect }
 
@@ -31,6 +32,13 @@ func set_hit(tick: int, source: int, effect: HitEffect) -> void:
 
 func has_hit(tick: int, source: int) -> bool:
 	return _hits.has(tick) and (_hits[tick] as Dictionary).has(source)
+
+
+## Efeito da [param source] em [param tick]; nulo se nao ha.
+func get_hit(tick: int, source: int) -> HitEffect:
+	if not has_hit(tick, source):
+		return null
+	return (_hits[tick] as Dictionary)[source] as HitEffect
 
 
 func clear_hit(tick: int, source: int) -> void:

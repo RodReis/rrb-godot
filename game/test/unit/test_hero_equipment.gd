@@ -10,6 +10,7 @@ const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
 const ROGUE: String = "res://scenes/heroes/rogue.tscn"
 const ENGINEER: String = "res://scenes/heroes/engineer.tscn"
 const DRUID: String = "res://scenes/heroes/druid.tscn"
+const BERSERKER: String = "res://scenes/heroes/berserker.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -167,3 +168,28 @@ func test_protetor_usa_o_cajado_e_nao_mostra_elmo() -> void:
 	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
 	_hero._refresh_attributes()
 	assert_eq(_hero.attributes.defense, 16.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
+
+
+func test_berserker_usa_os_dois_machados_e_pecas_do_corpo_large() -> void:
+	_bind(BERSERKER)
+	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t3_epic"])
+	assert_eq(_pieces("berserker_axe_t3_epic__handslot_*").size(), 2, "um machado em cada mao")
+	assert_eq(_pieces("guard_helm_*").size(), 0, "elmo de chifres fica (ADR-0011 item 3)")
+	assert_eq(_pieces("berserker_guard_chest_t3__*").size(), 1)
+	assert_eq(_pieces("berserker_hunter_boots_t2__*").size(), 4)
+	for axe: Node in _hero.find_child("Model").find_children("Axe_*", "Node3D", true, false):
+		assert_false((axe as Node3D).visible, "%s do pack sai com a arma equipada" % axe.name)
+
+
+func test_ragnarok_poe_o_corpo_em_chamas_e_tira_no_fim() -> void:
+	_bind(BERSERKER)
+	_equip([&"guard_chest_t3", &"sword_t3_epic"])
+	var berserker := _hero as Berserker
+	berserker.cc_immune_ticks = 120
+	_visual._process(FRAME)
+	for mesh: Node in _visual.model.find_children("*", "MeshInstance3D", true, false):
+		assert_true((mesh as MeshInstance3D).material_overlay is ShaderMaterial, mesh.name)
+	berserker.cc_immune_ticks = 0
+	_visual._process(FRAME)
+	for mesh: Node in _visual.model.find_children("*", "MeshInstance3D", true, false):
+		assert_null((mesh as MeshInstance3D).material_overlay, mesh.name)

@@ -31,6 +31,7 @@ MAGE = os.path.join(REPO, "shared", "assets", "kaykit", "adventurers", "Mage.glb
 ROGUE = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "rogue.glb")
 ENGINEER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "engineer.glb")
 DRUID = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "druid.glb")
+BERSERKER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "berserker.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
@@ -312,6 +313,81 @@ def cut_back(pieces):
     return pieces
 
 
+# Berserker (F75): o Barbarian_Large tem o rig com os mesmos ossos e a mesma orientacao do rig medio,
+# mas outras proporcoes. Peitoral e botas sao as mesmas pecas, levadas ao corpo Large osso a osso: a
+# caixa dos vertices de cada osso (pelo grupo de maior peso, em pose de repouso) no Knight vira a
+# caixa do mesmo osso no Berserker (centro e escala por eixo). Elmo nao: o Berserker tem o de chifres.
+LARGE_FIT = {
+    "chest": ("spine", "chest"),
+    "lowerleg.l": ("lowerleg.l",),
+    "lowerleg.r": ("lowerleg.r",),
+    "foot.l": ("foot.l", "toes.l"),
+    "foot.r": ("foot.r", "toes.r"),
+}
+# Folga para fora na escala (a peca e uma casca sobre o corpo; sem ela o corpo maior a atravessa).
+LARGE_FIT_MARGIN = 1.06
+# Ajuste por osso depois da caixa (escala por eixo, deslocamento em u): o Barbarian_Large anda curvado
+# e a cabeca afunda entre os ombros; o peitoral inteiro cobria o rosto na camera do jogo (PI
+# 2026-10-18). Mais baixo e mais curto, ele fica no tronco.
+LARGE_FIT_TWEAK = {"chest": (Vector((0.92, 1.0, 0.72)), Vector((0.0, 0.0, -0.32)))}
+
+
+def bone_boxes(path):
+    """Caixa (min, max) dos vertices de cada osso de LARGE_FIT no modelo de `path`, em repouso."""
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=path)
+    imported = [o for o in bpy.data.objects if o not in before]
+    for o in imported:
+        if o.type == "ARMATURE":
+            o.data.pose_position = "REST"
+    bpy.context.view_layer.update()
+    points = {bone: [] for bone in LARGE_FIT}
+    for o in imported:
+        # So corpo e pernas: ombreira, pele e capa tambem pesam no chest e inchariam a caixa.
+        if o.type != "MESH" or not o.vertex_groups or not ("_Body" in o.name or "_Leg" in o.name):
+            continue
+        names = {g.index: g.name for g in o.vertex_groups}
+        for v in o.data.vertices:
+            if not v.groups:
+                continue
+            owner = names[max(v.groups, key=lambda g: g.weight).group]
+            for bone, sources in LARGE_FIT.items():
+                if owner in sources:
+                    points[bone].append(o.matrix_world @ v.co)
+    for o in imported:
+        bpy.data.objects.remove(o, do_unlink=True)
+    boxes = {}
+    for bone, pts in points.items():
+        lo = Vector([min(p[i] for p in pts) for i in range(3)])
+        hi = Vector([max(p[i] for p in pts) for i in range(3)])
+        boxes[bone] = (lo, hi)
+    return boxes
+
+
+def large_fit():
+    """osso -> (centro no Knight, centro no Berserker, escala por eixo)."""
+    medium, large = bone_boxes(KNIGHT), bone_boxes(BERSERKER)
+    fit = {}
+    for bone in LARGE_FIT:
+        (mlo, mhi), (llo, lhi) = medium[bone], large[bone]
+        scale = Vector([LARGE_FIT_MARGIN * (lhi[i] - llo[i]) / (mhi[i] - mlo[i]) for i in range(3)])
+        shift = Vector()
+        if bone in LARGE_FIT_TWEAK:
+            factor, shift = LARGE_FIT_TWEAK[bone]
+            scale = Vector([scale[i] * factor[i] for i in range(3)])
+        fit[bone] = ((mlo + mhi) / 2.0, (llo + lhi) / 2.0 + shift, scale)
+    return fit
+
+
+def to_large(pieces, fit):
+    for p in pieces:
+        center_m, center_l, scale = fit[p.bone]
+        for v in p.bm.verts:
+            d = v.co - center_m
+            v.co = center_l + Vector((d.x * scale.x, d.y * scale.y, d.z * scale.z))
+    return pieces
+
+
 ARMOR = {
     "guard_helm": guard_helm,
     "guard_chest": guard_chest,
@@ -503,7 +579,24 @@ def druid_staff_accents(p, rarity):
     p.gem(EPIC, (-0.12, 0.0, 0.84), (0.08, 0.08, 0.10))  # pedra roxa no cruzamento dos galhos
 
 
+def axe1h_accents(p, rarity):
+    # Espaco local do axe_1handed_Large (F75): cabo em +Z (-0.55 a ~1.0, raio ~0.10), cabeca de uma
+    # lamina em z 0.95-1.94 para -X (fio em x ~-1.15), espessura +-0.185 em Y no olho.
+    if rarity == 0:
+        return
+    trim = BLUE if rarity == 1 else GOLD
+    p.cylinder(trim, (0.0, 0.0), 0.13, 0.13, 0.10, 0.26, 8, caps=False)  # anel da empunhadura
+    if rarity == 1:
+        p.gem(BLUE, (-0.40, 0.0, 1.45), (0.12, 0.20, 0.12))  # pedra no olho da cabeca
+        return
+    p.box(GOLD, (-1.12, 0.0, 1.45), (0.09, 0.07, 0.86))  # fio dourado da lamina
+    p.cylinder(GOLD, (0.0, 0.0), 0.15, 0.13, -0.58, -0.40, 8)  # pomo dourado
+    p.gem(EPIC, (-0.40, 0.0, 1.45), (0.13, 0.21, 0.13))
+
+
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
+# Berserker (F75): o par de machados vale um item de arma; o glb tem um machado em cada mao.
+BERSERKER_WEAPONS = ["axe_t1", "axe_t2", "axe_t3_epic"]
 HERO_WEAPON_ITEMS = {"druid": ["staff_t1", "staff_t2", "staff_t3_epic"]}  # F74: o Druida usa cajado, nao espada
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
@@ -641,6 +734,17 @@ def main():
                 coll.objects.link(piece.build(atlas, epic))
             pieces.append((coll, name, None, None))
 
+    # Peitoral e botas no corpo Large do Berserker (F75): mesmo id de item, peca propria (sem icone novo).
+    fit = large_fit()
+    for group in ("guard_chest", "guard_boots", "hunter_chest", "hunter_boots"):
+        for rarity in range(3):
+            name = "berserker_%s_t%d" % (group, rarity + 1)
+            coll = bpy.data.collections.new(name)
+            bpy.context.scene.collection.children.link(coll)
+            for piece in to_large(ARMOR[group](name, rarity), fit):
+                coll.objects.link(piece.build(atlas, epic))
+            pieces.append((coll, name, None, None))
+
     for hero, (path, mesh_name, bone, accents, axis_local, view_local) in WEAPONS.items():
         mesh, world = pack_weapon(path, mesh_name, BASE_MAX_BY_HERO.get(hero, WEAPON_BASE_MAX))
         axis = (world.to_3x3() @ Vector(axis_local), world.to_3x3() @ Vector(view_local))
@@ -652,10 +756,33 @@ def main():
             coll.objects.link(obj)
             pieces.append((coll, name, name, axis))
 
+    # Berserker (F75): um machado em cada mao no mesmo glb; o teto de triangulos vale por mao e o icone
+    # e so o da direita (colecao propria, renderizada como a das outras armas).
+    hands = {}
+    icon_only = []
+    mesh_r, world_r = pack_weapon(BERSERKER, "Axe_R")
+    mesh_l, world_l = pack_weapon(BERSERKER, "Axe_L")
+    axis = (world_r.to_3x3() @ Vector((0.0, 0.0, 1.0)), world_r.to_3x3() @ Vector((0.0, 1.0, 0.0)))
+    for rarity, item in enumerate(BERSERKER_WEAPONS):
+        name = "berserker_" + item
+        coll = bpy.data.collections.new(name)
+        bpy.context.scene.collection.children.link(coll)
+        right = weapon_piece(obj_name(name, "handslot.r"), "handslot.r", mesh_r, world_r, rarity, axe1h_accents, atlas, epic)
+        left = weapon_piece(obj_name(name, "handslot.l"), "handslot.l", mesh_l, world_l, rarity, axe1h_accents, atlas, epic)
+        coll.objects.link(right)
+        coll.objects.link(left)
+        hands[name] = 2
+        icon_coll = bpy.data.collections.new(name + "_icon")
+        bpy.context.scene.collection.children.link(icon_coll)
+        icon_coll.objects.link(right)
+        icon_only.append((icon_coll, name, axis))
+        pieces.append((coll, name, None, axis))
+
     for coll, glb, _icon, _axis in pieces:
         count = sum(tris(o) for o in coll.objects)
         report.append((glb, count))
-        if not TRIS_MIN <= count <= TRIS_MAX:
+        per_hand = count / hands.get(glb, 1)
+        if not TRIS_MIN <= per_hand <= TRIS_MAX:
             raise SystemExit("%s: %d triangulos fora de %d-%d" % (glb, count, TRIS_MIN, TRIS_MAX))
         export(coll, os.path.join(OUT, glb + ".glb"))
 
@@ -665,15 +792,17 @@ def main():
     for coll, _glb, icon, axis in pieces:
         if icon is not None:
             render_icon(cam, coll, os.path.join(ICONS, icon + ".png"), weapon_axes=axis)
+    for coll, icon, axis in icon_only:
+        render_icon(cam, coll, os.path.join(ICONS, icon + ".png"), weapon_axes=axis)
 
     for name, count in report:
         print("PIECE %-28s %4d tris" % (name, count))
 
-    if PREVIEW:  # so as pecas do Druida, em 512 px, para conferir o acabamento
+    if PREVIEW:  # so as pecas do Berserker, em 512 px, para conferir o acabamento
         bpy.context.scene.render.resolution_x = 512
         bpy.context.scene.render.resolution_y = 512
         for coll, glb, _icon, axis in pieces:
-            if glb.startswith("druid"):
+            if glb.startswith("berserker"):
                 render_icon(cam, coll, os.path.join(PREVIEW, glb + ".png"), weapon_axes=axis)
 
 

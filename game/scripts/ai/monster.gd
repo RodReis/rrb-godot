@@ -103,6 +103,11 @@ func missing_hp() -> int:
 	return maxi(roundi(data.hp) - hp, 0)
 
 
+## Monstro nao tem DEF: o golpe tira o bruto, ate o HP restante.
+func effective_damage(raw: int) -> int:
+	return mini(raw, hp) if is_alive() else 0
+
+
 func combat_id() -> int:
 	return uid
 

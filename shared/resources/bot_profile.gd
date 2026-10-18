@@ -43,6 +43,10 @@ extends Resource
 @export var root_range: float
 @export var potion_hp_pct: float
 @export var swamp_range: float
+## Berserker (SPEC-075): Arremesso de Machado com o alvo alem do alcance do basico e ate
+## throw_range; Ragnarok sob controle ou com o HP abaixo de rage_hp_pct (fracao), com perigo perto.
+@export var throw_range: float
+@export var rage_hp_pct: float
 ## Fase 2 (F19): a menos disto da borda da zona (ou fora dela) o bot foge para dentro. Escolha do
 ## Code: nenhum documento fixa o valor; a zona encolhe ~0,15 u/s, 2 u sao ~13 s de folga.
 @export var zone_margin: float

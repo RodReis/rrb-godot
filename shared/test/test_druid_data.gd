@@ -90,6 +90,6 @@ func test_habilidades_tem_descricao_e_icone() -> void:
 		assert_not_null(skill.icon, "icone de %s" % skill.id)
 
 
-func test_id_no_fim_de_ids_all() -> void:
-	assert_eq(Ids.ALL[Ids.ALL.size() - 1], &"druid", "id novo so no fim (ordem estavel na rede)")
+func test_id_estavel_em_ids_all() -> void:
+	assert_eq(Ids.to_int(&"druid"), 34, "id nunca muda de posicao (ordem estavel na rede)")
 	assert_eq(Ids.to_name(Ids.to_int(&"druid")), &"druid")

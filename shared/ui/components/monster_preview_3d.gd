@@ -30,7 +30,8 @@ func _process(delta: float) -> void:
 	_stage.rotate_y(deg_to_rad(turn_speed) * delta)
 
 
-## Troca o modelo mostrado (nulo = vazio); toca [param animation] em laco se o modelo tiver.
+## Troca o modelo mostrado (nulo = vazio); toca em laco a meta "idle" do modelo (clipe proprio do
+## heroi, Berserker F75) ou [param animation], se o modelo tiver.
 func show_model(model: Node3D, animation: StringName = &"Idle") -> void:
 	for child: Node in _stage.get_children():
 		_stage.remove_child(child)
@@ -40,10 +41,11 @@ func show_model(model: Node3D, animation: StringName = &"Idle") -> void:
 		return
 	_stage.add_child(model)
 	_frame(frame_height if frame_height > 0.0 else _height(model))
+	var clip: StringName = model.get_meta(&"idle", animation)
 	var player := model.find_child("AnimationPlayer") as AnimationPlayer
-	if player != null and player.has_animation(animation):
-		player.get_animation(animation).loop_mode = Animation.LOOP_LINEAR
-		player.play(animation)
+	if player != null and player.has_animation(clip):
+		player.get_animation(clip).loop_mode = Animation.LOOP_LINEAR
+		player.play(clip)
 
 
 func _frame(height: float) -> void:

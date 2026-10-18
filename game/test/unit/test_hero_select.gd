@@ -18,10 +18,18 @@ const FULL_ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/rogue.tres"),
 	preload("res://shared/data/heroes/engineer.tres"),
 	preload("res://shared/data/heroes/druid.tres"),
+	preload("res://shared/data/heroes/berserker.tres"),
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 const ALL_SCENES: Array[StringName] = [
-	&"knight", &"ranger", &"barbarian", &"fire_wizard", &"rogue", &"engineer", &"druid"
+	&"knight",
+	&"ranger",
+	&"barbarian",
+	&"fire_wizard",
+	&"rogue",
+	&"engineer",
+	&"druid",
+	&"berserker"
 ]
 const RATE: int = 30
 const START: int = 1000
@@ -153,9 +161,9 @@ func test_close_esconde() -> void:
 	assert_false(_screen.visible)
 
 
-func test_sete_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
+func test_oito_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
 	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
-	assert_eq(screen._choices.get_child_count(), 7)
+	assert_eq(screen._choices.get_child_count(), 8)
 	_press(screen, KEY_4)
 	assert_eq(screen._player_name.text, "BRUXO DE FOGO")
 	assert_eq(screen._player_role.text, "MAGO")
@@ -187,6 +195,25 @@ func test_tecla_7_escolhe_o_protetor_da_selva_com_os_dados_reais() -> void:
 	assert_eq(screen._player_role.text, "CONTROLE")
 	assert_true(screen._cards[6]._tag.visible)
 	assert_false(screen._cards[5]._tag.visible)
+
+
+func test_tecla_8_escolhe_o_berserker_com_os_dados_reais() -> void:
+	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
+	_press(screen, KEY_8)
+	assert_eq(screen._player_name.text, "BERSERKER")
+	assert_eq(screen._player_role.text, "LUTADOR")
+	assert_true(screen._cards[7]._tag.visible)
+	assert_false(screen._cards[6]._tag.visible)
+
+
+func test_retrato_enquadra_o_corpo_maior_do_berserker_com_o_idle_dele() -> void:
+	var knight := HeroSelect.model_of(&"knight")
+	var berserker := HeroSelect.model_of(&"berserker")
+	autofree(knight)
+	autofree(berserker)
+	assert_eq(knight.get_meta(&"portrait_height"), 0.0, "altura padrao do card")
+	assert_gt(berserker.get_meta(&"portrait_height") as float, 1.9, "Barbarian_Large e mais alto")
+	assert_eq(berserker.get_meta(&"idle"), &"Idle_A")
 
 
 func test_modelo_so_do_heroi_com_cena() -> void:

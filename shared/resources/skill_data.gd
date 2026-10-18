@@ -40,6 +40,8 @@ extends Resource
 @export var pulse_interval: float
 ## Fracao de lentidao (0.25 = 25 %).
 @export var slow: float
+## Velocidade de movimento somada enquanto dura (0.15 = +15 %; Grito de Guerra e Ragnarok).
+@export var move_speed_bonus: float
 ## Perda de dano por alvo atravessado e dano minimo, em fracao.
 @export var pierce_decay: float
 @export var pierce_min: float

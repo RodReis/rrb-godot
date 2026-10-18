@@ -12,7 +12,8 @@ const PATH: String = "res://shared/data/items/visuals/%s_items.tres"
 ## Separa a peca do osso no nome do no da peca.
 const BONE_SEPARATOR: String = "__"
 
-## Peca do pack escondida enquanto o slot tem peca (indice = ItemData.Slot; vazio = nenhuma).
+## Peca do pack escondida enquanto o slot tem peca (indice = ItemData.Slot; vazio = nenhuma). Padrao
+## do find_children; varios separados por "|" (peitoral do Berserker tira ombreiras e pele, F75).
 @export var pack_parts: Array[StringName] = [&"", &"", &"", &""]
 @export var pieces: Dictionary[StringName, PackedScene] = {}
 @export var icons: Dictionary[StringName, Texture2D] = {}
