@@ -23,6 +23,7 @@ jobs:
       backend: ${{ steps.filter.outputs.backend }}
       infra: ${{ steps.filter.outputs.infra }}
       docs: ${{ steps.filter.outputs.docs }}
+      site: ${{ steps.filter.outputs.site }}
       gd_files: ${{ steps.filter.outputs.gd_files }}
     steps:
       - uses: actions/checkout@v4
@@ -38,6 +39,7 @@ jobs:
             backend: ['backend/**']
             infra: ['infra/**', '.github/**', 'tools/ci/**']
             docs: ['docs/**', '*.md']
+            site: ['site/**', 'tools/roadmap/**', 'shared/data/heroes/**', 'docs/roadmap/historia.json', 'docs/STATUS.md']
             gd:
               - added|modified: '**/*.gd'
 
@@ -199,9 +201,33 @@ jobs:
         if: ${{ !cancelled() }}
         run: pnpm build && pnpm openapi && git diff --exit-code openapi.json
 
+  site:
+    needs: changes
+    if: needs.changes.outputs.site == 'true' || needs.changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: site/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: site/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - name: roadmap parser (tools/roadmap)
+        run: node --test ../tools/roadmap/build-roadmap.test.mjs
+      - run: pnpm build
+
   gate:
     runs-on: ubuntu-latest
-    needs: [changes, lint-gd, test-game, test-launcher, test-backend]
+    needs: [changes, lint-gd, test-game, test-launcher, test-backend, site]
     if: always()
     steps:
       # Job pulado por path filter conta como sucesso; changes pulado ou falho, não.

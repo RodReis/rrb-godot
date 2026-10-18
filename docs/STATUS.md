@@ -7,6 +7,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Campo | Valor |
 |---|---|
 | Marco / MVP ativo | **MVP2.7 — Acabamento e controle** (`docs/prd/mvp/MVP-2.7.md`, issue-pai `#193`, ADR-0015), cards criados em 2026-10-16. **MVP3** com F21–F27, F33 e F35 `finalizado` pelo PI (2026-10-15/16); restam **F28 #82** (`doing`, parcial — deploy no Coolify, medição e aceite com 2 clientes dependem do VPS/domínio do PI) e **[GATE] #87** (`todo`). MVP2.6 fechado em 2026-10-14; [GATE] MVP2 #69 aprovado em 2026-10-13; MVP2.5 entregue; MVP1 gate 2026-10-10; MVP0 2026-10-09 (ADR-0001) |
+| Site público | `site/` — landing **Loot Start** (React + Vite, GitHub Pages), pedido do PI em 2026-10-18, fora do board. Nome "Loot Start" vale só no site; rename do jogo e o 3º módulo na ADR-0002 ficam para o Cowork. Dados extraídos em build de `shared/data/heroes`, `docs/roadmap/historia.json` e deste arquivo (§2/§3 via `tools/roadmap/status.mjs`) |
 | Módulo em foco | `game/` (F66–F70, F72–F75) e `launcher/` (F68, F70, F71) |
 | Próximo marco | **MVP2.8 — Heróis 9 e 10** (`docs/prd/mvp/MVP-2.8.md`, issue-pai `#213`, ADR-0016), cards criados em 2026-10-18: F76 #214 → F77 #215 → F78 #216, os 3 em `todo` |
 | Próximo gate | MVP2.7 sem `[GATE]` (aceite visual + soak por fatia, como MVP2.5/2.6); [GATE] MVP3 #87 segue em paralelo quando o PI liberar o VPS (F28) |

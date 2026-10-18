@@ -24,6 +24,8 @@ Abrir editor: `& $env:GODOT_PATH -e --path game` ou `--path launcher`.
 | Docker | `docker compose -f infra/docker-compose.yml up --build` | — | perfil `backend` do compose (`postgres` + `backend`) |
 | Soak | `.\tools\soak.ps1 -Matches 50` | — | — |
 
+**Site público** (`site/`, landing "Loot Start" em React, fora do board — pedido do PI em 2026-10-18): `pnpm -C site install` uma vez; `pnpm -C site dev` (extrai dados de `shared/data/heroes`, `docs/roadmap/historia.json` e `docs/STATUS.md` e sobe o Vite em `:5173`); `pnpm -C site test` (parser `.tres`); `pnpm -C site build`. Deploy automático no GitHub Pages por `.github/workflows/site.yml` ao mergear na `main` (exige Settings → Pages → Source: GitHub Actions). Spec: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md`.
+
 `tools/test.ps1 -Module X` roda GUT headless em `X/test` **e** `shared/test` (ADR-0003). Até F1, os comandos do M0 valem como estão no plano.
 
 ## 2. Ordem de execução
