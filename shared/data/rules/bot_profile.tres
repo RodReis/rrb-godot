@@ -22,4 +22,7 @@ ambush_range = 8.0
 claw_range = 7.0
 turret_range = 7.0
 dynamite_range = 6.0
+root_range = 7.0
+potion_hp_pct = 0.5
+swamp_range = 7.0
 zone_margin = 2.0

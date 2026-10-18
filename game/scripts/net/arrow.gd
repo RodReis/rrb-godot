@@ -15,7 +15,7 @@ extends Node3D
 ## Visual: disparo novo neste slot (o rastro do VFX recomeca daqui).
 signal shown_launched
 
-enum Kind { NONE, BASIC, PIERCE, EXPLODE, FAN, CLAW }
+enum Kind { NONE, BASIC, PIERCE, EXPLODE, FAN, CLAW, ROOT }
 
 ## Propriedades de estado de rollback (caminho "Arrows/<nome>:<prop>" no heroi).
 const STATE: Array[String] = [
@@ -26,6 +26,9 @@ const RELAUNCH_EPSILON_SQ: float = 0.0001
 
 ## Velocidade de voo (u/s), so para o visual; definida pelo ProjectileHero.
 var speed: float = 0.0
+## Velocidade de voo (u/s) por Kind quando o heroi tem projeteis de velocidades diferentes (F74); o
+## tipo que nao esta aqui voa em [member speed].
+var kind_speeds: Dictionary[int, float] = {}
 
 # Estado de rollback.
 var kind: int = Kind.NONE
@@ -52,7 +55,8 @@ func _process(delta: float) -> void:
 	if not visible:
 		_shown_launch = Vector3.INF
 		return
-	var ahead := minf(speed * NetworkTime.tick_factor * NetworkTime.ticktime, max_range - traveled)
+	var flight := kind_speeds.get(kind, speed) as float
+	var ahead := minf(flight * NetworkTime.tick_factor * NetworkTime.ticktime, max_range - traveled)
 	var network := traveled + maxf(ahead, 0.0)
 	var launch := origin - direction * traveled
 	if launch.distance_squared_to(_shown_launch) > RELAUNCH_EPSILON_SQ:
@@ -60,7 +64,7 @@ func _process(delta: float) -> void:
 		_shown_progress = network
 		shown_launched.emit()
 	else:
-		_shown_progress = VfxRules.arrow_progress(_shown_progress, network, speed, delta, max_range)
+		_shown_progress = VfxRules.arrow_progress(_shown_progress, network, flight, delta, max_range)
 	var at := _shown_launch + direction * _shown_progress
 	global_position = at
 	if not direction.is_zero_approx():

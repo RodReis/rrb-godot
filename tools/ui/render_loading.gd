@@ -73,6 +73,7 @@ const HEROES: Dictionary[String, Array] = {
 	],
 	"rogue": ["res://shared/assets/rrb/heroes/rogue.glb", []],
 	"engineer": ["res://shared/assets/rrb/heroes/engineer.glb", []],
+	"druid": ["res://shared/assets/rrb/heroes/druid.glb", []],
 }
 const TITLE: String = "ARENA 1V1"
 const TITLE_SIZE: int = 150

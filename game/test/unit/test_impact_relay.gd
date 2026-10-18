@@ -5,6 +5,7 @@ extends GutTest
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const ROGUE: String = "res://scenes/heroes/rogue.tscn"
 const ENGINEER: String = "res://scenes/heroes/engineer.tscn"
+const DRUID: String = "res://scenes/heroes/druid.tscn"
 const TICK: int = 40
 const DAMAGE: int = 10
 
@@ -176,3 +177,60 @@ func test_torreta_visivel_chega_mesmo_com_o_engenheiro_longe() -> void:
 	assert_eq(deploys["count"], 1)
 	assert_eq(shots["count"], 1, "um disparo por tick")
 	assert_eq(shots["last"], [6, spot, Vector3(0, 0, -1), engineer.turret_ticks])
+
+
+# Pocao Verde e Pantano do Protetor da Selva (F74): chegam por evento, uma vez, a quem ve o ponto.
+
+
+func _watch_druid(zones: Dictionary) -> void:
+	_relay.zone_shown.connect(
+		func(caster: int, kind: int, center: Vector3, tick: int) -> void:
+			zones["count"] += 1
+			zones["last"] = [caster, kind, center, tick]
+	)
+
+
+func test_pocao_no_raio_de_visao_chega_uma_vez() -> void:
+	var druid := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -8), DRUID) as Druid
+	var zones := {"count": 0, "last": []}
+	_watch_druid(zones)
+	var spot := Vector3(0, 0, -10)
+	druid.zone_started.emit(Druid.Zone.POTION, spot, TICK)
+	druid.zone_started.emit(Druid.Zone.POTION, spot, TICK)
+	assert_eq(zones["count"], 1, "ressimular nao repete")
+	assert_eq(zones["last"], [6, Druid.Zone.POTION, spot, TICK])
+
+
+func test_pocao_e_pantano_no_mesmo_tick_sao_dois_eventos() -> void:
+	var druid := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -8), DRUID) as Druid
+	var zones := {"count": 0, "last": []}
+	_watch_druid(zones)
+	druid.zone_started.emit(Druid.Zone.POTION, Vector3(0, 0, -10), TICK)
+	druid.zone_started.emit(Druid.Zone.SWAMP, Vector3(0, 0, -12), TICK)
+	assert_eq(zones["count"], 2)
+
+
+func test_zona_fora_do_raio_de_visao_nao_chega() -> void:
+	var druid := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -30), DRUID) as Druid
+	var zones := {"count": 0, "last": []}
+	_watch_druid(zones)
+	druid.zone_started.emit(Druid.Zone.SWAMP, Vector3(0, 0, -30), TICK)
+	assert_eq(zones["count"], 0)
+
+
+func test_zona_do_proprio_time_chega_a_qualquer_distancia() -> void:
+	var druid := _spawn("6", GateRules.TEAM_A, Vector3(0, 0, -30), DRUID) as Druid
+	var zones := {"count": 0, "last": []}
+	_watch_druid(zones)
+	druid.zone_started.emit(Druid.Zone.POTION, Vector3(0, 0, -30), TICK)
+	assert_eq(zones["count"], 1)
+
+
+func test_zona_visivel_chega_mesmo_com_o_protetor_longe() -> void:
+	# O Protetor (adversario) esta a 30 u, fora do raio de visao; o Pantano, a 5 u: quem ve a zona
+	# recebe, porque o evento nao depende do estado do Protetor (que sumiu).
+	var druid := _spawn("6", GateRules.TEAM_B, Vector3(0, 0, -30), DRUID) as Druid
+	var zones := {"count": 0, "last": []}
+	_watch_druid(zones)
+	druid.zone_started.emit(Druid.Zone.SWAMP, Vector3(0, 0, -5), TICK)
+	assert_eq(zones["count"], 1)

@@ -142,6 +142,22 @@ static func engineer_aim_distance(distance: float, dynamite_ready: bool) -> floa
 	return distance if dynamite_ready else distance * HALFWAY
 
 
+## Habilidades do Protetor da Selva (SPEC-074 §bot) contra um alvo a [param distance], com
+## [param hp_pct] do HP: Raizes (x) ate root_range; Pocao Verde (y) com HP abaixo de potion_hp_pct;
+## Pantano (z) ate swamp_range. 1 = usa (o Hero ainda confere recarga e rank).
+static func druid_skills(distance: float, hp_pct: float, profile: BotProfile) -> Vector3i:
+	return Vector3i(
+		int(distance <= profile.root_range),
+		int(hp_pct < profile.potion_hp_pct),
+		int(distance <= profile.swamp_range),
+	)
+
+
+## Distancia de mira (u) do bot de Protetor: o Pantano cai no alvo; a Pocao, nos pes dele.
+static func druid_aim_distance(distance: float, swamp_ready: bool) -> float:
+	return distance if swamp_ready else 0.0
+
+
 ## Habilidade em que o bot gasta o proximo ponto: a primeira de R, Q, E abaixo do rank tipico do
 ## nivel ([param typical], GDB §3.2 — E1 no nivel 2); todas no tipico = R, Q, E na ordem. A
 ## validade do ponto (nivel minimo, rank maximo) e do SkillRules.learn.

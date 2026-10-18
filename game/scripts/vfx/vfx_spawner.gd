@@ -3,7 +3,8 @@ extends Node
 ## Cliente (F41): cria os efeitos de cada heroi que entra em Players (HeroVfx da cena do heroi,
 ## por HeroData.id) e entrega o impacto confirmado pelo servidor (ImpactRelay) ao efeito do
 ## atacante, a nuvem da Ladina (F58) ao efeito dela e a Torreta e a caixa do Engenheiro (F59) ao
-## dele. Nunca existe no servidor headless (bloco visual regra 1): a main so o cria quando wanted().
+## dele e a Pocao Verde e o Pantano do Protetor da Selva (F74) ao dele. Nunca existe no servidor
+## headless (bloco visual regra 1): a main so o cria quando wanted().
 ## O heroi nao ganha filho: os efeitos ficam aqui e o seguem.
 
 const NODE_NAME: StringName = &"Vfx"
@@ -15,6 +16,7 @@ const DRIVERS: Dictionary = {
 	&"fire_wizard": preload("res://scenes/vfx/fire_wizard_vfx.tscn"),
 	&"rogue": preload("res://scenes/vfx/rogue_vfx.tscn"),
 	&"engineer": preload("res://scenes/vfx/engineer_vfx.tscn"),
+	&"druid": preload("res://scenes/vfx/druid_vfx.tscn"),
 }
 
 ## Pai dos herois (Main/Players) e o relay de impactos; definidos antes de entrar na arvore.
@@ -39,6 +41,7 @@ func _ready() -> void:
 	relay.smoke_shown.connect(_on_relay_smoke_shown)
 	relay.deploy_shown.connect(_on_relay_deploy_shown)
 	relay.turret_shot_shown.connect(_on_relay_turret_shot_shown)
+	relay.zone_shown.connect(_on_relay_zone_shown)
 	for node: Node in players.get_children():
 		_on_players_child_entered_tree(node)
 
@@ -83,3 +86,9 @@ func _on_relay_turret_shot_shown(
 	var driver: Object = _drivers.get(caster_id)
 	if is_instance_valid(driver) and driver is EngineerVfx:
 		(driver as EngineerVfx).turret_shot(from, at, ticks_left)
+
+
+func _on_relay_zone_shown(caster_id: int, kind: int, center: Vector3, tick: int) -> void:
+	var driver: Object = _drivers.get(caster_id)
+	if is_instance_valid(driver) and driver is DruidVfx:
+		(driver as DruidVfx).zone(kind, center, tick)

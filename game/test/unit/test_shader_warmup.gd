@@ -5,7 +5,7 @@ extends GutTest
 
 func test_cobre_herois_monstros_e_bau() -> void:
 	var paths := ShaderWarmup.scene_paths()
-	for hero: String in ["knight", "ranger", "barbarian", "fire_wizard", "rogue", "engineer"]:
+	for hero: String in ["knight", "ranger", "barbarian", "fire_wizard", "rogue", "engineer", "druid"]:
 		assert_has(paths, Hero.SCENE_PATH % hero)
 	for file: String in ResourceLoader.list_directory("res://scenes/monsters/"):
 		if file.get_extension() == "tscn":

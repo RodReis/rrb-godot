@@ -92,6 +92,7 @@ func think(tick: int) -> void:
 		_:
 			_farm(tick)
 	_smoke_escape(view, enemy)
+	_potion_when_hurt(view)
 
 
 ## Ladina: Bomba de Fumaca para fugir do heroi que o bot ve, com HP baixo (SPEC-058 §7).
@@ -100,6 +101,16 @@ func _smoke_escape(view: BotView, enemy: Hero) -> void:
 		return
 	if BotRules.rogue_skills(view.enemy_distance, view.hp_pct, PROFILE).y == 1:
 		skill_e = true
+
+
+## Protetor da Selva: Pocao Verde nos pes quando o HP cai abaixo do limiar do perfil com perigo perto
+## (SPEC-074). O Pantano, que tambem usa aim_distance, tem a vez na mira dele (_attack).
+func _potion_when_hurt(view: BotView) -> void:
+	if not _hero is Druid or skill_r or not view.in_danger:
+		return
+	if BotRules.druid_skills(INF, view.hp_pct, PROFILE).y == 1 and _skill_ready(SkillRules.SLOT_E):
+		skill_e = true
+		aim_distance = 0.0
 
 
 func _reset() -> void:
@@ -226,7 +237,9 @@ func _contest(tick: int) -> void:
 ## pelos limiares do perfil (BotRules.fire_wizard_skills). Ladina pelos limiares do perfil
 ## (BotRules.rogue_skills); a fumaca de fuga vale em qualquer estado (_smoke_escape). Engenheiro
 ## pelos limiares do perfil (BotRules.engineer_skills): Dinamite so com heroi e boss; a Torreta
-## tambem no farm; a mira da Dinamite e do alvo, a da Torreta e meio caminho.
+## tambem no farm; a mira da Dinamite e do alvo, a da Torreta e meio caminho. Protetor da Selva
+## pelos limiares do perfil (BotRules.druid_skills): Raizes e Pantano no alvo; a Pocao vale em
+## qualquer estado com HP baixo e perigo perto (_potion_when_hurt).
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -242,6 +255,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var wizard := _hero is FireWizard
 	var rogue := _hero is Rogue
 	var engineer := _hero is Engineer
+	var druid := _hero is Druid
 	var use := Vector3i.ZERO
 	if barbarian:
 		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
@@ -260,6 +274,11 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
 		skill_e = use.y == 1 and not skill_r and _skill_ready(SkillRules.SLOT_E)
 		aim_distance = BotRules.engineer_aim_distance(to.length(), skill_r)
+	elif druid:  # Raizes prendem; o Pantano cai no alvo (a Pocao fica no _potion_when_hurt)
+		use = BotRules.druid_skills(to.length(), 1.0, PROFILE)
+		skill_q = skills and use.x == 1 and not blocked
+		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
+		aim_distance = BotRules.druid_aim_distance(to.length(), skill_r)
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
@@ -271,7 +290,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_r = skills and use.z == 1
 	elif wizard:
 		skill_e = skills and use.y == 1
-	elif rogue or engineer:
+	elif rogue or engineer or druid:
 		pass
 	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)

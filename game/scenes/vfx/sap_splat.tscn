@@ -1,0 +1,56 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/vfx_one_shot.gd" id="1_script"]
+
+[sub_resource type="Gradient" id="G_splat"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0.85, 1.0, 0.5, 1.0, 0.25, 0.7, 0.15, 0.7, 0.25, 0.7, 0.15, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_splat"]
+gradient = SubResource("G_splat")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_splat"]
+direction = Vector3(0, 1, 0)
+spread = 80.0
+initial_velocity_min = 2.5
+initial_velocity_max = 5.5
+gravity = Vector3(0, -11, 0)
+scale_min = 0.6
+scale_max = 1.2
+color_ramp = SubResource("Ramp_splat")
+
+[sub_resource type="StandardMaterial3D" id="Mat_splat"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.6, 2.6, 0.9, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="SphereMesh" id="Sphere_splat"]
+material = SubResource("Mat_splat")
+radius = 0.06
+height = 0.12
+radial_segments = 8
+rings = 4
+
+[node name="SapSplat" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 0.55
+light_seconds = 0.15
+
+[node name="Drops" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+amount = 16
+lifetime = 0.45
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("PPM_splat")
+draw_pass_1 = SubResource("Sphere_splat")
+
+[node name="Glow" type="OmniLight3D" parent="."]
+light_color = Color(0.5, 1, 0.3, 1)
+light_energy = 2.0
+omni_range = 3.0
