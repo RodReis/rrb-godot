@@ -7,7 +7,7 @@ extends SceneTree
 ##   shared/assets/ui/loading/splash.png       "ARENA 1V1" sobre o entardecer (Launcher)
 ## Mesma luz/ceu do ciclo dia/noite do jogo (DayNightProfile). Heroi novo: acrescente em HEROES e
 ## rode de novo. Precisa de janela (GPU) e do projeto do Game; na raiz do repo:
-##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/render_loading.gd
+##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/render_loading.gd [-- --only=<arquivo>]
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const PROFILE: String = "res://shared/data/visual/day_night.tres"
@@ -44,7 +44,7 @@ const STAGE_CENTER: Vector3 = Vector3(-22.0, 0.0, 22.0)
 const STAGE_FACING: Vector3 = Vector3(-1.0, 0.0, 1.0)
 const STAGE_SPACING: float = 1.9
 const STAGE_ARC_DEPTH: float = 0.35
-const STAGE_CAMERA_BACK: float = 11.0
+const STAGE_CAMERA_BACK: float = 12.5
 const STAGE_CAMERA_HEIGHT: float = 1.5
 const STAGE_TARGET_HEIGHT: float = 0.4
 const STAGE_FOV: float = 34.0
@@ -53,7 +53,8 @@ const KEY_COLOR: Color = Color(1.0, 0.88, 0.72)
 const KEY_ENERGY: float = 1.0
 const KEY_SIDE: float = 3.0
 const KEY_HEIGHT: float = 5.0
-## id -> [modelo, pecas escondidas] (as mesmas de tools/ui/render_hero_portraits.gd).
+## id -> [modelo, pecas escondidas] (as mesmas de tools/ui/render_hero_portraits.gd) e, opcionais, a
+## escala relativa ao rig medio (a do jogo: Berserker 0,58 / demais 0,78) e o clipe de idle.
 const HEROES: Dictionary[String, Array] = {
 	"knight":
 	[
@@ -74,6 +75,7 @@ const HEROES: Dictionary[String, Array] = {
 	"rogue": ["res://shared/assets/rrb/heroes/rogue.glb", []],
 	"engineer": ["res://shared/assets/rrb/heroes/engineer.glb", []],
 	"druid": ["res://shared/assets/rrb/heroes/druid.glb", []],
+	"berserker": ["res://shared/assets/rrb/heroes/berserker.glb", [], 0.74, &"Idle_A"],
 }
 const TITLE: String = "ARENA 1V1"
 const TITLE_SIZE: int = 150
@@ -94,10 +96,18 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
 	_profile = load(PROFILE) as DayNightProfile
 	var failed := false
-	failed = not await _arena_shot("arena_day", NIGHT_DAY) or failed
-	failed = not await _arena_shot("arena_night", NIGHT_NIGHT) or failed
-	failed = not await _heroes_shot("heroes", NIGHT_DUSK) or failed
-	failed = not await _splash("splash", NIGHT_DUSK) or failed
+	var only := ""
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--only="):
+			only = arg.get_slice("=", 1)
+	if only.is_empty() or only == "arena_day":
+		failed = not await _arena_shot("arena_day", NIGHT_DAY) or failed
+	if only.is_empty() or only == "arena_night":
+		failed = not await _arena_shot("arena_night", NIGHT_NIGHT) or failed
+	if only.is_empty() or only == "heroes":
+		failed = not await _heroes_shot("heroes", NIGHT_DUSK) or failed
+	if only.is_empty() or only == "splash":
+		failed = not await _splash("splash", NIGHT_DUSK) or failed
 	quit(1 if failed else 0)
 
 
@@ -223,9 +233,12 @@ func _place_hero(
 		if node != null:
 			node.hide()
 	model.look_at_from_position(at, at - facing)
+	if spec.size() > 2:  # depois do look_at, que zera a escala
+		model.scale = Vector3.ONE * (spec[2] as float)
 	var player := model.find_child("AnimationPlayer") as AnimationPlayer
-	if player != null and player.has_animation(IDLE):
-		player.play(IDLE)
+	var idle: StringName = spec[3] if spec.size() > 3 else IDLE
+	if player != null and player.has_animation(idle):
+		player.play(idle)
 		player.seek(pose_time, true)
 		player.pause()
 

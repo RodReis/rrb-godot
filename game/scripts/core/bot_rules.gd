@@ -158,6 +158,25 @@ static func druid_aim_distance(distance: float, swamp_ready: bool) -> float:
 	return distance if swamp_ready else 0.0
 
 
+## Habilidades do Berserker (SPEC-075 regra 6) contra um alvo a [param distance]: Arremesso (x) para
+## alcancar (fora do [param basic_range] e ate throw_range); Grito de Guerra (y) ao entrar em Lutar
+## ([param entered_fight]); Ragnarok (z) sob controle ([param controlled]) ou com [param hp_pct]
+## abaixo de rage_hp_pct. 1 = usa (o Hero ainda confere recarga e rank).
+static func berserker_skills(
+	distance: float,
+	basic_range: float,
+	entered_fight: bool,
+	hp_pct: float,
+	controlled: bool,
+	profile: BotProfile
+) -> Vector3i:
+	return Vector3i(
+		int(distance > basic_range and distance <= profile.throw_range),
+		int(entered_fight),
+		int(controlled or hp_pct < profile.rage_hp_pct),
+	)
+
+
 ## Habilidade em que o bot gasta o proximo ponto: a primeira de R, Q, E abaixo do rank tipico do
 ## nivel ([param typical], GDB §3.2 — E1 no nivel 2); todas no tipico = R, Q, E na ordem. A
 ## validade do ponto (nivel minimo, rank maximo) e do SkillRules.learn.

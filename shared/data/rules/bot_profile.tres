@@ -25,4 +25,6 @@ dynamite_range = 6.0
 root_range = 7.0
 potion_hp_pct = 0.5
 swamp_range = 7.0
+throw_range = 7.0
+rage_hp_pct = 0.4
 zone_margin = 2.0

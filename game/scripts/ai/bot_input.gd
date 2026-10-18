@@ -40,6 +40,8 @@ var _tick: int = 0
 var _last_cooldowns: Vector3i = Vector3i.ZERO
 ## Raio da zona no ultimo think da fase 2 (do relogio replicado, igual ao do cliente).
 var _zone_radius: float = INF
+## O think atual acabou de entrar em FIGHT (Grito de Guerra do Berserker, SPEC-075).
+var _entered_fight: bool = false
 
 
 func _gather() -> void:
@@ -72,6 +74,7 @@ func think(tick: int) -> void:
 				]
 			)
 		)
+	_entered_fight = next == BotRules.State.FIGHT and state != BotRules.State.FIGHT
 	state = next
 	_learn_points()
 	_log_skills()
@@ -93,6 +96,7 @@ func think(tick: int) -> void:
 			_farm(tick)
 	_smoke_escape(view, enemy)
 	_potion_when_hurt(view)
+	_rage_when_needed(view)
 
 
 ## Ladina: Bomba de Fumaca para fugir do heroi que o bot ve, com HP baixo (SPEC-058 §7).
@@ -111,6 +115,16 @@ func _potion_when_hurt(view: BotView) -> void:
 	if BotRules.druid_skills(INF, view.hp_pct, PROFILE).y == 1 and _skill_ready(SkillRules.SLOT_E):
 		skill_e = true
 		aim_distance = 0.0
+
+
+## Berserker: Ragnarok com perigo perto, sob controle (lento, enraizado, atordoado, empurrado ou
+## puxado) ou com o HP abaixo do limiar do perfil (SPEC-075 regra 6), em qualquer estado.
+func _rage_when_needed(view: BotView) -> void:
+	if not _hero is Berserker or not view.in_danger or not _skill_ready(SkillRules.SLOT_R):
+		return
+	var controlled := _hero.slow_ticks > 0 or _hero.stun_ticks > 0 or _hero.knockback_ticks > 0
+	if BotRules.berserker_skills(INF, 0.0, false, view.hp_pct, controlled, PROFILE).z == 1:
+		skill_r = true
 
 
 func _reset() -> void:
@@ -239,7 +253,9 @@ func _contest(tick: int) -> void:
 ## pelos limiares do perfil (BotRules.engineer_skills): Dinamite so com heroi e boss; a Torreta
 ## tambem no farm; a mira da Dinamite e do alvo, a da Torreta e meio caminho. Protetor da Selva
 ## pelos limiares do perfil (BotRules.druid_skills): Raizes e Pantano no alvo; a Pocao vale em
-## qualquer estado com HP baixo e perigo perto (_potion_when_hurt).
+## qualquer estado com HP baixo e perigo perto (_potion_when_hurt). Berserker pelo perfil
+## (BotRules.berserker_skills): Arremesso para alcancar e Grito ao entrar em Lutar; o Ragnarok vale
+## em qualquer estado (_rage_when_needed).
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -256,6 +272,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var rogue := _hero is Rogue
 	var engineer := _hero is Engineer
 	var druid := _hero is Druid
+	var berserker := _hero is Berserker
 	var use := Vector3i.ZERO
 	if barbarian:
 		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
@@ -279,6 +296,11 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
 		aim_distance = BotRules.druid_aim_distance(to.length(), skill_r)
+	elif berserker:  # Arremesso para alcancar; Grito ao entrar em Lutar; o Ragnarok no _rage_when_needed
+		var basic_range := data.basic_attack.attack_range
+		use = BotRules.berserker_skills(to.length(), basic_range, _entered_fight, 1.0, false, PROFILE)
+		skill_q = skills and use.x == 1 and not blocked
+		skill_e = skills and use.y == 1
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
@@ -290,7 +312,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_r = skills and use.z == 1
 	elif wizard:
 		skill_e = skills and use.y == 1
-	elif rogue or engineer or druid:
+	elif rogue or engineer or druid or berserker:
 		pass
 	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)
