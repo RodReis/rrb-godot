@@ -16,6 +16,10 @@ extends SceneTree
 ## a sonda reemite o evento do ImpactRelay (zone_shown) nos compassos DRUID_*_SECONDS.
 ## --berserker: cada Berserker fica no Ragnarok a medicao inteira (SPEC-075 aceite: corpo em chamas,
 ## aura, fumaca e brasas do Frenesi com f = 1); a sonda segura Hero.cc_immune_ticks.
+## --occultist: cada Ocultista tem Circulo Profano ativo no outro heroi a medicao inteira, e o outro
+## fica com 3 marcas de Maldicao e a Praga visiveis (SPEC-077 aceite): a sonda reemite o evento do
+## ImpactRelay (zone_shown) a cada OCCULTIST_CIRCLE_SECONDS e segura curse_* e dot_ticks no alvo
+## (dot_left 0: a Praga aparece sem ferir).
 ## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
 ## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
@@ -40,6 +44,10 @@ const ENGINEER_CRATE_SECONDS: float = 3.0
 ## anterior (6 s) acabar.
 const DRUID_POTION_SECONDS: float = 2.5
 const DRUID_SWAMP_SECONDS: float = 5.5
+## Circulo novo antes de o anterior (3 s) acabar.
+const OCCULTIST_CIRCLE_SECONDS: float = 2.5
+## Ticks que o --occultist segura nas marcas e na Praga do alvo (qualquer valor > 0 as mantem).
+const CURSE_HOLD_TICKS: int = 120
 ## Timer de imunidade que o --berserker segura (ticks; qualquer valor > 0 mantem o Ragnarok).
 const RAGE_HOLD_TICKS: int = 120
 ## Itens do --equip, por HeroData.id (um conjunto por heroi, arma epica).
@@ -52,6 +60,7 @@ const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"engineer": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"druid": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"berserker": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
+	&"occultist": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 }
 
 var _out: String = "frametime"
@@ -66,6 +75,8 @@ var _smoke_wait: float = 0.0
 var _engineer: bool = false
 var _druid: bool = false
 var _berserker: bool = false
+var _occultist: bool = false
+var _circle_wait: float = 0.0
 var _potion_wait: float = 0.0
 var _swamp_wait: float = 0.0
 var _grass: bool = false
@@ -91,6 +102,8 @@ func _initialize() -> void:
 			_druid = true
 		elif arg == "--berserker":
 			_berserker = true
+		elif arg == "--occultist":
+			_occultist = true
 		elif arg == "--grass":
 			_grass = true
 		elif arg.begins_with("--shot="):
@@ -119,6 +132,8 @@ func _process(delta: float) -> bool:
 		_druid_effects(delta)
 	if _berserker and _phase > 0:
 		_rage_berserkers()
+	if _occultist and _phase > 0:
+		_occultist_effects(delta)
 	if _grass and _phase > 0 and not _grass_linked:
 		_grass_linked = true
 		root.get_node("NetworkRollback").connect(&"after_process_tick", _hold_in_grass)
@@ -216,6 +231,7 @@ func _report() -> void:
 		"smoke": _smoke,
 		"grass": _grass,
 		"berserker": _berserker,
+		"occultist": _occultist,
 	}
 	var text := JSON.stringify(result, "  ")
 	print("[frametime] ", text)
@@ -310,3 +326,26 @@ func _rage_berserkers() -> void:
 		var data: Resource = hero.get(&"hero_data")
 		if data != null and data.get(&"id") == &"berserker":
 			hero.set(&"cc_immune_ticks", RAGE_HOLD_TICKS)
+
+
+## Sem tipos do jogo: Circulo no outro heroi pelo sinal do relay; marcas e Praga seguradas nele.
+func _occultist_effects(delta: float) -> void:
+	_circle_wait -= delta
+	var relay := current_scene.get_node("ImpactRelay")
+	var tick: int = root.get_node("NetworkTime").get(&"tick")
+	for hero: Node in _players.get_children():
+		var data: Resource = hero.get(&"hero_data")
+		if data == null or data.get(&"id") != &"occultist":
+			continue
+		var other := _other_than(hero)
+		if other == null:
+			continue
+		other.set(&"curse_stacks", 3)
+		other.set(&"curse_ticks", CURSE_HOLD_TICKS)
+		other.set(&"dot_ticks", CURSE_HOLD_TICKS)
+		other.set(&"dot_left", 0)
+		if _circle_wait <= 0.0:
+			var center: Vector3 = other.get(&"global_position")
+			relay.emit_signal(&"zone_shown", hero.name.to_int(), 0, center, tick)
+	if _circle_wait <= 0.0:
+		_circle_wait = OCCULTIST_CIRCLE_SECONDS

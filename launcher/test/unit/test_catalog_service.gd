@@ -2,7 +2,7 @@ extends GutTest
 ## F27: CatalogService carrega todo shared/data (fonte unica dos numeros, GDB vence — ADR-0004) e
 ## agrupa as variantes de monstro por especie para o Bestiario.
 
-const HERO_COUNT: int = 8
+const HERO_COUNT: int = 9
 const MONSTER_COUNT: int = 7
 const SPECIES_COUNT: int = 6
 const ITEM_COUNT: int = 21

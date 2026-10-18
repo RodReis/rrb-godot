@@ -43,7 +43,23 @@ const CAMERA_FAR: float = 900.0
 ## Palco dos herois: base do time A; fileira em arco voltada para a camera.
 const STAGE_CENTER: Vector3 = Vector3(-22.0, 0.0, 22.0)
 const STAGE_FACING: Vector3 = Vector3(-1.0, 0.0, 1.0)
-const STAGE_SPACING: float = 1.9
+## Fileira: do fim da arma do primeiro heroi ao do ultimo cabem STAGE_ROW_WIDTH (u); cada heroi
+## ocupa a propria largura (quanto passa do centro para a esquerda e para a direita da tela, arma
+## incluida) e a folga que sobra e dividida igual entre vizinhos. Heroi novo: medir e acrescentar em
+## STAGE_EXTENTS. Mais herois = menos folga; a camera e a escala nao mudam.
+const STAGE_ROW_WIDTH: float = 15.0
+const STAGE_EXTENTS_DEFAULT: Vector2 = Vector2(0.6, 0.6)
+const STAGE_EXTENTS: Dictionary[String, Vector2] = {
+	"knight": Vector2(1.15, 0.6),
+	"ranger": Vector2(0.5, 0.7),
+	"barbarian": Vector2(0.7, 0.6),
+	"fire_wizard": Vector2(1.15, 0.7),
+	"rogue": Vector2(0.5, 0.65),
+	"engineer": Vector2(0.8, 0.6),
+	"druid": Vector2(0.9, 0.6),
+	"berserker": Vector2(0.95, 1.65),
+	"occultist": Vector2(0.85, 0.95),
+}
 const STAGE_ARC_DEPTH: float = 0.35
 const STAGE_CAMERA_BACK: float = 12.5
 const STAGE_CAMERA_HEIGHT: float = 1.5
@@ -77,6 +93,7 @@ const HEROES: Dictionary[String, Array] = {
 	"engineer": ["res://shared/assets/rrb/heroes/engineer.glb", []],
 	"druid": ["res://shared/assets/rrb/heroes/druid.glb", []],
 	"berserker": ["res://shared/assets/rrb/heroes/berserker.glb", [], 0.74, &"Idle_A"],
+	"occultist": ["res://shared/assets/rrb/heroes/occultist.glb", []],
 }
 const TITLE: String = "ARENA 1V1"
 const TITLE_SIZE: int = 150
@@ -125,8 +142,16 @@ func _heroes_shot(file: String, night: float) -> bool:
 	var facing := STAGE_FACING.normalized()
 	var across := Vector3.UP.cross(facing).normalized()
 	var ids := HEROES.keys()
+	var extents: Array[Vector2] = []
+	var used := 0.0
+	for id: String in ids:
+		extents.append(STAGE_EXTENTS.get(id, STAGE_EXTENTS_DEFAULT) as Vector2)
+		used += extents[-1].x + extents[-1].y
+	var gap := maxf(0.0, (STAGE_ROW_WIDTH - used) / maxf(1.0, ids.size() - 1.0))
+	var cursor := -(used + gap * (ids.size() - 1)) * 0.5
 	for i: int in ids.size():
-		var offset := (float(i) - (ids.size() - 1) * 0.5) * STAGE_SPACING
+		var offset := cursor + extents[i].x
+		cursor = offset + extents[i].y + gap
 		var at := STAGE_CENTER + across * offset - facing * absf(offset) * STAGE_ARC_DEPTH
 		_place_hero(viewport, ids[i], at, facing, POSE_TIMES[i % POSE_TIMES.size()])
 	var camera := Camera3D.new()

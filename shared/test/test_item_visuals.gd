@@ -4,6 +4,7 @@ extends GutTest
 ## slot substitui existe no modelo. Barbaro (F53), Bruxo (F54), Ladina (F58), Engenheiro (F59) e
 ## Protetor da Selva (F74), ADR-0011 item 3 e ADR-0013 item 7: elmo sem peca (o capuz e o chapeu
 ## ficam), mas com icone. Berserker (F75): elmo de chifres fixo; o Rig_Large tem os mesmos ossos.
+## Ocultista (F77, ADR-0016 item 8): capuz proprio fixo, elmo sem peca.
 
 const CATALOG: String = "res://shared/data/items/catalog.tres"
 ## Heroi -> modelo (mesmo rig KayKit nos dois).
@@ -16,10 +17,11 @@ const MODELS: Dictionary[StringName, String] = {
 	&"engineer": "res://shared/assets/rrb/heroes/engineer.glb",
 	&"druid": "res://shared/assets/rrb/heroes/druid.glb",
 	&"berserker": "res://shared/assets/rrb/heroes/berserker.glb",
+	&"occultist": "res://shared/assets/rrb/heroes/occultist.glb",
 }
 ## Herois cujo elmo nao aparece (ADR-0011 item 3).
 const HELMLESS: Array[StringName] = [
-	&"barbarian", &"fire_wizard", &"rogue", &"engineer", &"druid", &"berserker"
+	&"barbarian", &"fire_wizard", &"rogue", &"engineer", &"druid", &"berserker", &"occultist"
 ]
 ## Indice = ItemData.Slot: prefixos (separados por "|") dos ossos que as pecas do slot usam.
 const SLOT_BONES: Array[String] = ["handslot.", "head", "chest", "foot.|lowerleg."]

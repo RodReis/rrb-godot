@@ -28,7 +28,7 @@
 param(
     [int]$Count = 50,
     [int]$Parallel = 6,
-    [string[]]$Heroes = @('knight', 'ranger', 'barbarian', 'fire_wizard', 'rogue', 'engineer', 'druid', 'berserker'),
+    [string[]]$Heroes = @('knight', 'ranger', 'barbarian', 'fire_wizard', 'rogue', 'engineer', 'druid', 'berserker', 'occultist'),
     [string]$Require = '',
     [int]$Seed = 1,
     [int]$BasePort = 7100,

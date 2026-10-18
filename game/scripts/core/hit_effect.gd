@@ -20,6 +20,15 @@ var item: int = Ids.NONE
 var slow: float = 0.0
 var slow_ticks: int = 0
 var true_damage: int = 0
+## Maldição do Ocultista (F77): marcas a somar (o alvo limita em OccultistRules.MAX_STACKS) e ticks
+## que elas duram (o alvo desconta um tick no mesmo _rollback_tick: o atacante manda 1 a mais).
+var curse: int = 0
+var curse_ticks: int = 0
+## Praga do Ocultista (F77): dano bruto total, pulsos e ticks entre pulsos; o alvo guarda o estado e
+## pulsa sozinho, creditando attacker_id. Reaplicar renova (não acumula).
+var dot_total: int = 0
+var dot_pulses: int = 0
+var dot_interval_ticks: int = 0
 
 
 func _init(

@@ -125,6 +125,14 @@ func test_papel_e_descricao_dos_herois() -> void:
 				+ "no Ragnarök ignora controle."
 			)
 		],
+		&"occultist":
+		[
+			"Mago",
+			(
+				"Mago de dano contínuo: amaldiçoa para derreter a Defesa, corrói com a Praga e "
+				+ "prende o alvo no Círculo Profano."
+			)
+		],
 	}
 	for id: StringName in expected:
 		assert_eq(_hero(id).role, expected[id][0], "role de %s" % id)

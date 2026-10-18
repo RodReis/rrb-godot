@@ -255,7 +255,7 @@ func test_menu_do_topo_abre_a_tela_herois_com_o_catalogo() -> void:
 	assert_eq(_app.stack().current_route(), Router.HEROES)
 	var screen := _app.stack().current() as HeroesScreen
 	assert_eq(screen.state(), StateBox.State.READY)
-	assert_eq(screen.cards().size(), 8)
+	assert_eq(screen.cards().size(), 9)
 
 
 func test_aba_arena_do_guia_troca_a_tela_sem_empilhar() -> void:

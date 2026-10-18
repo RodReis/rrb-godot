@@ -122,6 +122,16 @@ var face_ticks: int = 0
 ## Ticks imune a controle (Ragnarok do Berserker, F75): lentidao, raiz, atordoamento, empurrao e
 ## puxao que chegam pelo ledger nao se aplicam.
 var cc_immune_ticks: int = 0
+## Maldição do Ocultista (F77, GDB §2.2-F): marcas (0..3), ticks até caírem todas juntas e a DEF
+## efetiva que sai delas (_defense). Valem para todo herói; o VFX mostra as marcas.
+var curse_stacks: int = 0
+var curse_ticks: int = 0
+## Praga do Ocultista (F77): ticks que faltam, dano bruto que ainda falta (dividido pelos pulsos
+## restantes), ticks entre pulsos e o peer_id de quem a pôs (o dano e o abate contam para ele).
+var dot_ticks: int = 0
+var dot_left: int = 0
+var dot_interval: int = 0
+var dot_source: int = 0
 
 ## O basico dispara neste tick: botao segurado ou auto-ataque do alvo travado em alcance. Derivado
 ## do input a cada tick (fora do estado de rollback); as subclasses leem aqui, nao em input.attack.
@@ -160,6 +170,7 @@ func _ready() -> void:
 	attributes = Inventory.attributes(hero_data, level, equipment, item_catalog)
 	_attributes_equipment = equipment
 	ranks = XpTable.typical_ranks(xp_curve, level)
+	ranks.z = mini(ranks.z, hero_data.skill_r.max_rank)  # R desligado (Ocultista, F77): sem rank
 	hp = attributes.max_hp
 	set_multiplayer_authority(1)
 	input.set_multiplayer_authority(1 if is_bot else peer_id)
@@ -204,6 +215,12 @@ func _ready() -> void:
 		":target_id",
 		":face_ticks",
 		":cc_immune_ticks",
+		":curse_stacks",
+		":curse_ticks",
+		":dot_ticks",
+		":dot_left",
+		":dot_interval",
+		":dot_source",
 	]
 	_rollback.state_properties.append_array(_extra_state_properties())
 	_rollback.input_properties = [
@@ -242,7 +259,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	if multiplayer.is_server():
 		_hero_damage.erase(tick)
 		_damage_taken.erase(tick)
-		if not _hits.is_empty():
+		if not _hits.is_empty() or dot_ticks > 0:
 			_apply_hits(tick)
 	_refresh_attributes()
 	hp = mini(hp, attributes.max_hp)  # troca para item com menos HP
@@ -426,9 +443,10 @@ func effective_damage(raw: int) -> int:
 	return mini(CombatRules.mitigated(raw, _defense()), hp)
 
 
-## DEF do momento: atributos + bonus temporario da subclasse (Grito de Guerra).
+## DEF do momento: atributos + bonus temporario da subclasse (Grito de Guerra), menos a Maldicao
+## (F77): o desconto vem depois dos bonus.
 func _defense() -> float:
-	return attributes.defense + _defense_bonus()
+	return OccultistRules.effective_defense(attributes.defense + _defense_bonus(), curse_stacks)
 
 
 ## Velocidade de movimento do momento (u/s): atributos + bonus temporario da subclasse.
@@ -518,6 +536,12 @@ func _die(effect: HitEffect) -> void:
 	interact_ticks = 0
 	zone_ticks = 0
 	cc_immune_ticks = 0
+	curse_stacks = 0
+	curse_ticks = 0
+	dot_ticks = 0
+	dot_left = 0
+	dot_interval = 0
+	dot_source = 0
 
 
 ## Gasta um ponto no slot pedido pelo input (Ctrl+Q/E/R). Valor do cliente: validado aqui.
@@ -643,6 +667,10 @@ func _tick_timers() -> void:
 	reveal_ticks = maxi(reveal_ticks - 1, 0)
 	invuln_ticks = maxi(invuln_ticks - 1, 0)
 	cc_immune_ticks = maxi(cc_immune_ticks - 1, 0)
+	dot_ticks = maxi(dot_ticks - 1, 0)
+	curse_ticks = maxi(curse_ticks - 1, 0)
+	if curse_ticks == 0:
+		curse_stacks = 0  # as marcas caem todas juntas
 	shield_ticks = maxi(shield_ticks - 1, 0)
 	if shield_ticks == 0:
 		shield_hp = 0
@@ -754,55 +782,92 @@ func _miss(other: Combatant, tick: int, slot: HitLedger.Slot) -> void:
 ## Chest). Morto recebe XP e item, nada mais.
 func _apply_hits(tick: int) -> void:
 	var heal := 0
+	# Pulso da Praga antes do ledger: sai so do estado do alvo, entao a ressimulacao o repete igual.
+	if OccultistRules.is_dot_pulse(dot_ticks, dot_interval):
+		heal += _apply_effect(_dot_pulse(), tick, false)
 	for effect: HitEffect in _hits.effects_at(tick):
-		xp += maxi(effect.xp, 0)
-		var item := item_catalog.find(effect.item)
-		if item != null:
-			equipment = Inventory.equip(equipment, item)
-		if not is_alive():
-			continue
-		heal += maxi(effect.heal, 0)
-		if effect.true_damage > 0:
-			zone_ticks = SkillRules.seconds_to_ticks(ZONE_FLAG_SECONDS, NetworkTime.tickrate)
-		var damage := CombatRules.mitigated(effect.damage, _defense())
-		if invuln_ticks > 0:
-			damage = 0
-		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):
-			var split := CombatRules.absorb(damage, shield_hp)
-			damage = split.x
-			shield_hp = split.y
-		if invuln_ticks == 0:
-			damage += maxi(effect.true_damage, 0)
-		if damage > 0:
-			_damage_taken[tick] = _damage_taken.get(tick, 0) + mini(damage, hp)
-		if effect.attacker_id != 0 and damage > 0:
-			_record_hero_damage(tick, effect.attacker_id, mini(damage, hp))
-		hp = maxi(hp - damage, 0)
-		if damage > 0:
-			var pause := match_rules.fountain_damage_pause
-			heal_pause_ticks = SkillRules.seconds_to_ticks(pause, NetworkTime.tickrate)
-		if hp == 0:
-			_die(effect)
-			continue
-		if cc_immune_ticks > 0:
-			continue  # Ragnarok: empurrao, puxao, atordoamento, lentidao e raiz nao se aplicam
-		if not effect.push.is_zero_approx():
-			knockback_ticks = (
-				effect.push_ticks
-				if effect.push_ticks > 0
-				else CombatRules.knockback_ticks(NetworkTime.tickrate)
-			)
-			knockback_velocity = effect.push * NetworkTime.tickrate / knockback_ticks
-		stun_ticks = maxi(stun_ticks, effect.stun_ticks)
-		if effect.slow_ticks > 0:
-			if CombatRules.slow_applies(slow_pct, slow_ticks, effect.slow):
-				slow_pct = effect.slow
-				slow_ticks = maxi(slow_ticks, effect.slow_ticks)
+		heal += _apply_effect(effect, tick)
 	# Cura do tick (saque, roubo de vida) depois de todo o dano: o resultado nao depende da ordem dos
 	# efeitos no ledger (golpe fatal mata mesmo com cura no mesmo tick).
 	if heal > 0 and is_alive():
 		hp = mini(hp + heal, attributes.max_hp)
 	_hits.trim_before(tick - NetworkRollback.history_limit)
+
+
+## Aplica um efeito do tick e devolve a cura que ele traz (somada por quem chama).
+func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
+	xp += maxi(effect.xp, 0)
+	var item := item_catalog.find(effect.item)
+	if item != null:
+		equipment = Inventory.equip(equipment, item)
+	if not is_alive():
+		return 0
+	var heal := maxi(effect.heal, 0)
+	if effect.true_damage > 0:
+		zone_ticks = SkillRules.seconds_to_ticks(ZONE_FLAG_SECONDS, NetworkTime.tickrate)
+	var damage := CombatRules.mitigated(effect.damage, _defense())
+	if invuln_ticks > 0:
+		damage = 0
+	if (
+		blockable
+		and shield_ticks > 0
+		and CombatRules.is_frontal(global_position, forward(), effect.source)
+	):
+		var split := CombatRules.absorb(damage, shield_hp)
+		damage = split.x
+		shield_hp = split.y
+	if invuln_ticks == 0:
+		damage += maxi(effect.true_damage, 0)
+	if damage > 0:
+		_damage_taken[tick] = _damage_taken.get(tick, 0) + mini(damage, hp)
+	if effect.attacker_id != 0 and damage > 0:
+		_record_hero_damage(tick, effect.attacker_id, mini(damage, hp))
+	hp = maxi(hp - damage, 0)
+	if damage > 0:
+		var pause := match_rules.fountain_damage_pause
+		heal_pause_ticks = SkillRules.seconds_to_ticks(pause, NetworkTime.tickrate)
+	if hp == 0:
+		_die(effect)
+		return heal
+	_apply_curse_and_dot(effect)
+	if cc_immune_ticks > 0:
+		return heal  # Ragnarok: empurrao, puxao, atordoamento, lentidao e raiz nao se aplicam
+	if not effect.push.is_zero_approx():
+		knockback_ticks = (
+			effect.push_ticks
+			if effect.push_ticks > 0
+			else CombatRules.knockback_ticks(NetworkTime.tickrate)
+		)
+		knockback_velocity = effect.push * NetworkTime.tickrate / knockback_ticks
+	stun_ticks = maxi(stun_ticks, effect.stun_ticks)
+	if effect.slow_ticks > 0:
+		if CombatRules.slow_applies(slow_pct, slow_ticks, effect.slow):
+			slow_pct = effect.slow
+			slow_ticks = maxi(slow_ticks, effect.slow_ticks)
+	return heal
+
+
+## Marcas da Maldicao (a nova renova todas) e Praga (reaplicar renova e troca o dano, nao acumula).
+## Nao sao controle: valem tambem durante o Ragnarok.
+func _apply_curse_and_dot(effect: HitEffect) -> void:
+	if effect.curse > 0:
+		curse_stacks = OccultistRules.add_stacks(curse_stacks, effect.curse)
+		curse_ticks = effect.curse_ticks
+	if effect.dot_pulses > 0:
+		dot_interval = effect.dot_interval_ticks
+		dot_ticks = OccultistRules.dot_duration_ticks(effect.dot_pulses, dot_interval)
+		dot_left = effect.dot_total
+		dot_source = effect.attacker_id
+
+
+## Um pulso da Praga como golpe de quem a pos: passa pela DEF (com Maldicao) e pelo abate, nao pela
+## Muralha (a Praga ja esta no alvo; a Muralha so bloqueia o projetil).
+func _dot_pulse() -> HitEffect:
+	var damage := OccultistRules.pulse_damage(dot_left, dot_ticks, dot_interval)
+	dot_left -= damage
+	var pulse := HitEffect.new(damage, global_position)
+	pulse.attacker_id = dot_source
+	return pulse
 
 
 func _record_hero_damage(tick: int, attacker_id: int, amount: int) -> void:

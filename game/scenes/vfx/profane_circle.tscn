@@ -1,0 +1,198 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/profane_circle_vfx.gd" id="1_script"]
+[ext_resource type="Shader" path="res://scenes/vfx/area_indicator.gdshader" id="2_area"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/profane_glyph.glb" id="3_glyph"]
+
+[sub_resource type="Gradient" id="G_soft"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.55, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_soft"]
+gradient = SubResource("G_soft")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="G_ring"]
+offsets = PackedFloat32Array(0, 0.74, 0.9, 0.97, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0.15, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_ring"]
+gradient = SubResource("G_ring")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="G_wave"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0.65, 0.35, 1.0, 0.8, 0.35, 0.12, 0.6, 0.56, 0.35, 0.12, 0.6, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_wave"]
+gradient = SubResource("G_wave")
+
+[sub_resource type="Gradient" id="G_bub"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0.8, 0.55, 1.0, 0.85, 0.5, 0.2, 0.9, 0.6, 0.5, 0.2, 0.9, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_bub"]
+gradient = SubResource("G_bub")
+
+[sub_resource type="Gradient" id="G_mist"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0.25, 0.08, 0.4, 0.4, 0.18, 0.05, 0.3, 0.28, 0.18, 0.05, 0.3, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_mist"]
+gradient = SubResource("G_mist")
+
+[sub_resource type="Curve" id="C_wave"]
+_data = [Vector2(0, 0.15), 0.0, 0.0, 0, 0, Vector2(1, 1.0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CT_wave"]
+curve = SubResource("C_wave")
+
+[sub_resource type="Curve" id="C_bub"]
+_data = [Vector2(0, 0.35), 0.0, 0.0, 0, 0, Vector2(0.85, 1.0), 0.0, 0.0, 0, 0, Vector2(1, 0.0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CT_bub"]
+curve = SubResource("C_bub")
+
+[sub_resource type="ShaderMaterial" id="Mat_ring"]
+render_priority = 1
+shader = ExtResource("2_area")
+shader_parameter/fill_color = Color(0.12, 0.04, 0.22, 0.55)
+shader_parameter/rim_color = Color(0.7, 0.4, 1.0, 0.95)
+shader_parameter/rim_width = 0.05
+shader_parameter/dashes = 30.0
+shader_parameter/spin = 0.08
+
+[sub_resource type="PlaneMesh" id="Plane_ring"]
+material = SubResource("Mat_ring")
+size = Vector2(2, 2)
+center_offset = Vector3(0, 0.05, 0)
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_wave"]
+resource_local_to_scene = true
+gravity = Vector3(0, 0, 0)
+scale_min = 10.0
+scale_max = 10.0
+scale_curve = SubResource("CT_wave")
+color_ramp = SubResource("Ramp_wave")
+
+[sub_resource type="StandardMaterial3D" id="Mat_wave"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.5, 1.0, 2.0, 1)
+albedo_texture = SubResource("Tex_ring")
+
+[sub_resource type="QuadMesh" id="Quad_wave"]
+material = SubResource("Mat_wave")
+size = Vector2(1, 1)
+orientation = 1
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_bub"]
+resource_local_to_scene = true
+emission_shape = 3
+emission_box_extents = Vector3(1.75, 0.05, 1.75)
+direction = Vector3(0, 1, 0)
+spread = 15.0
+initial_velocity_min = 0.3
+initial_velocity_max = 0.8
+gravity = Vector3(0, 0, 0)
+scale_min = 0.7
+scale_max = 1.5
+scale_curve = SubResource("CT_bub")
+color_ramp = SubResource("Ramp_bub")
+
+[sub_resource type="StandardMaterial3D" id="Mat_bub"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(1.2, 0.8, 1.8, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="SphereMesh" id="Sphere_bub"]
+material = SubResource("Mat_bub")
+radius = 0.12
+height = 0.24
+radial_segments = 10
+rings = 5
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_mist"]
+resource_local_to_scene = true
+emission_shape = 3
+emission_box_extents = Vector3(1.75, 0.05, 1.75)
+direction = Vector3(0, 1, 0)
+spread = 20.0
+initial_velocity_min = 0.1
+initial_velocity_max = 0.3
+gravity = Vector3(0, 0, 0)
+scale_min = 1.4
+scale_max = 2.2
+color_ramp = SubResource("Ramp_mist")
+
+[sub_resource type="StandardMaterial3D" id="Mat_mist"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.8, 0.6, 1.0, 1)
+albedo_texture = SubResource("Tex_soft")
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="Quad_mist"]
+material = SubResource("Mat_mist")
+size = Vector2(1, 1)
+
+[node name="ProfaneCircle" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 3.0
+light_seconds = 0.01
+fade_seconds = 0.5
+
+[node name="Ring" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("Plane_ring")
+
+[node name="Glyph" parent="." instance=ExtResource("3_glyph")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
+
+[node name="Pulse" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 0.8
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-4, -1, -4, 8, 3, 8)
+process_material = SubResource("PPM_wave")
+draw_pass_1 = SubResource("Quad_wave")
+
+[node name="Bubbles" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+amount = 18
+lifetime = 1.0
+local_coords = false
+visibility_aabb = AABB(-4, -1, -4, 8, 4, 8)
+process_material = SubResource("PPM_bub")
+draw_pass_1 = SubResource("Sphere_bub")
+
+[node name="Mist" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+amount = 10
+lifetime = 2.4
+local_coords = false
+visibility_aabb = AABB(-4, -1, -4, 8, 4, 8)
+process_material = SubResource("PPM_mist")
+draw_pass_1 = SubResource("Quad_mist")

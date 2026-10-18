@@ -16,6 +16,9 @@ const COOLDOWN_VEIL_ALPHA: float = 0.75
 ## Pulso da moldura dourada: opacidade minima.
 const PULSE_MIN_ALPHA: float = 0.35
 
+## Texto da habilidade que ainda nao pode ser aprendida em nivel nenhum.
+const UNAVAILABLE_TEXT: String = "—"
+
 static var _blank: ImageTexture
 
 @export var hotkey: String = "":
@@ -30,6 +33,8 @@ var upgradable: bool = false
 var learn_key: String = ""
 
 var _required_level: int = 0
+## Habilidade sem rank aprendivel (max_rank 0: R do Ocultista ate o F78): fica travada sem nivel.
+var _unavailable: bool = false
 var _locked: bool = false
 var _remaining: float = 0.0
 var _has_icon: bool = false
@@ -65,7 +70,8 @@ static func cooldown_text(remaining: float) -> String:
 
 
 func bind(skill: SkillData, rank: int) -> void:
-	tooltip_text = skill.display_name
+	_unavailable = skill.max_rank < 1
+	tooltip_text = skill.display_name + (tr(" (em breve)") if _unavailable else "")
 	_letter.text = skill.display_name.left(1).to_upper()
 	_has_icon = skill.icon != null
 	texture_under = skill.icon if _has_icon else _blank
@@ -120,6 +126,8 @@ func _refresh() -> void:
 	if state == State.LOCKED:
 		var learnable := upgradable and not learn_key.is_empty()
 		_cooldown.text = learn_key if learnable else tr("Nv%d") % _required_level
+		if _unavailable:
+			_cooldown.text = UNAVAILABLE_TEXT
 		value = 0.0
 	elif state == State.COOLING:
 		_cooldown.text = cooldown_text(_remaining)

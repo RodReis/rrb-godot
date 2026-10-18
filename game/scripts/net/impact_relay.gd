@@ -16,7 +16,7 @@ extends Node
 ## efeito).
 ## Pocao Verde e Pantano do Protetor da Selva (F74, SPEC-074): mesmo caminho da fumaca e da Torreta
 ## (zone_shown, confiavel: a zona vale por 3 e 6 s e o Protetor some de quem esta fora do mato ou da
-## visao).
+## visao). Circulo Profano do Ocultista (F77): o mesmo caminho.
 
 ## Cliente e host: o heroi [param attacker_id] acertou com [param slot] em [param at].
 signal impacted(attacker_id: int, slot: int, at: Vector3)
@@ -86,6 +86,9 @@ func _on_players_child_entered_tree(node: Node) -> void:
 	var druid := node as Druid
 	if druid != null:
 		druid.zone_started.connect(_on_druid_zone_started.bind(druid))
+	var occultist := node as Occultist
+	if occultist != null:
+		occultist.zone_started.connect(_on_occultist_zone_started.bind(occultist))
 
 
 ## O heroi do jogador [param peer] ve o ponto [param at] (time de [param caster] sempre ve).
@@ -152,6 +155,22 @@ func _on_druid_zone_started(kind: Druid.Zone, center: Vector3, tick: int, druid:
 			_show_zone.rpc_id(peer, druid.peer_id, kind, center, tick)
 	if _sees_point(multiplayer.get_unique_id(), center, druid):
 		zone_shown.emit(druid.peer_id, kind, center, tick)
+
+
+## Circulo Profano do Ocultista (F77, SPEC-077): mesmo caminho do Pantano (zone_shown), slot E.
+func _on_occultist_zone_started(
+	_kind: Occultist.Zone, center: Vector3, tick: int, occultist: Occultist
+) -> void:
+	if not multiplayer.is_server():
+		return
+	if not _announced.first(tick, occultist.peer_id, HitLedger.Slot.E, 0):
+		return
+	zones_announced += 1
+	for peer: int in multiplayer.get_peers():
+		if _sees_point(peer, center, occultist):
+			_show_zone.rpc_id(peer, occultist.peer_id, Occultist.Zone.CIRCLE, center, tick)
+	if _sees_point(multiplayer.get_unique_id(), center, occultist):
+		zone_shown.emit(occultist.peer_id, Occultist.Zone.CIRCLE, center, tick)
 
 
 func _on_hero_struck(target: Combatant, slot: HitLedger.Slot, tick: int, hero: Hero) -> void:
