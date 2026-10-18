@@ -167,3 +167,17 @@ func test_protetor_usa_o_cajado_e_nao_mostra_elmo() -> void:
 	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
 	_hero._refresh_attributes()
 	assert_eq(_hero.attributes.defense, 16.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
+
+
+const BERSERKER: String = "res://scenes/heroes/berserker.tscn"
+
+
+func test_berserker_usa_os_dois_machados_e_pecas_do_corpo_large() -> void:
+	_bind(BERSERKER)
+	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t3_epic"])
+	assert_eq(_pieces("berserker_axe_t3_epic__handslot_*").size(), 2, "um machado em cada mao")
+	assert_eq(_pieces("guard_helm_*").size(), 0, "elmo de chifres fica (ADR-0011 item 3)")
+	assert_eq(_pieces("berserker_guard_chest_t3__*").size(), 1)
+	assert_eq(_pieces("berserker_hunter_boots_t2__*").size(), 4)
+	for axe: Node in _hero.find_child("Model").find_children("Axe_*", "Node3D", true, false):
+		assert_false((axe as Node3D).visible, "%s do pack sai com a arma equipada" % axe.name)
