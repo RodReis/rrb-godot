@@ -4,7 +4,7 @@ extends HeroVfx
 ## um lado ou para o outro conforme a mao (Berserker.swing_left); faiscas no impacto confirmado;
 ## machado do Q dando cambalhotas com rastro; onda do Grito de Guerra; brilho do Frenesi que cresce
 ## com o f (brasas e luz vermelhas, Berserker.frenzy); e, no Ragnarok, explosao no uso e aura de
-## fogo enquanto dura (Berserker.is_raging). Arcos e alcances de berserker.tres.
+## fogo e fumaca (sprites macios, nao quadrados: PI 2026-10-18) enquanto dura (Berserker.is_raging). Arcos e alcances de berserker.tres.
 
 const SPARKS: PackedScene = preload("res://scenes/vfx/sparks.tscn")
 const WAR_CRY: PackedScene = preload("res://scenes/vfx/war_cry.tscn")
@@ -35,6 +35,7 @@ var _axe_trails: Array[TrailRibbon] = []
 @onready var _embers: GPUParticles3D = $FrenzyEmbers
 @onready var _frenzy_light: OmniLight3D = $FrenzyLight
 @onready var _aura: GPUParticles3D = $RageAura
+@onready var _smoke: GPUParticles3D = $RageSmoke
 
 
 func impact(_slot: HitLedger.Slot, at: Vector3) -> void:
@@ -69,6 +70,7 @@ func _refresh(shown: bool, delta: float) -> void:
 	_embers.amount_ratio = maxf(f, 0.05)
 	var raging := shown and _berserker.is_raging()
 	_aura.emitting = raging
+	_smoke.emitting = raging
 	_frenzy_light.visible = f > 0.0
 	_frenzy_light.light_energy = rage_light_energy if raging else frenzy_light_energy * f
 	var feet := Transform3D(Basis.IDENTITY, hero.global_position)

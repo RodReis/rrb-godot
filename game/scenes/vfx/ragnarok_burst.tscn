@@ -3,6 +3,66 @@
 [ext_resource type="Script" path="res://scripts/vfx/vfx_one_shot.gd" id="1_script"]
 [ext_resource type="Shader" path="res://scenes/vfx/shockwave.gdshader" id="2_shock"]
 
+[sub_resource type="Gradient" id="Gradient_soft"]
+offsets = PackedFloat32Array(0, 0.35, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.55, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_soft"]
+gradient = SubResource("Gradient_soft")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+[sub_resource type="Gradient" id="Gradient_smoke"]
+offsets = PackedFloat32Array(0, 0.3, 1)
+colors = PackedColorArray(0.55, 0.06, 0.02, 0, 0.35, 0.05, 0.03, 0.55, 0.12, 0.08, 0.08, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_smoke"]
+gradient = SubResource("Gradient_smoke")
+
+[sub_resource type="Curve" id="Curve_smoke"]
+_data = [Vector2(0, 0.4), 0.0, 1.2, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_smoke"]
+curve = SubResource("Curve_smoke")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_smoke"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.3
+emission_ring_radius = 0.7
+emission_ring_inner_radius = 0.2
+angle_min = -180.0
+angle_max = 180.0
+direction = Vector3(0, 1, 0)
+spread = 20.0
+initial_velocity_min = 1.5
+initial_velocity_max = 3.0
+angular_velocity_min = -40.0
+angular_velocity_max = 40.0
+gravity = Vector3(0, 0.6, 0)
+damping_min = 0.4
+damping_max = 0.8
+scale_min = 1.0
+scale_max = 1.8
+scale_curve = SubResource("CurveTexture_smoke")
+color_ramp = SubResource("GradientTexture1D_smoke")
+
+[sub_resource type="StandardMaterial3D" id="Mat_smoke"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("Tex_soft")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_smoke"]
+material = SubResource("Mat_smoke")
+size = Vector2(0.9, 0.9)
 [sub_resource type="Curve" id="Curve_grow"]
 _data = [Vector2(0, 0.08), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
@@ -56,6 +116,8 @@ emission_ring_axis = Vector3(0, 1, 0)
 emission_ring_height = 0.2
 emission_ring_radius = 0.8
 emission_ring_inner_radius = 0.2
+angle_min = -180.0
+angle_max = 180.0
 direction = Vector3(0, 1, 0)
 spread = 35.0
 initial_velocity_min = 4.0
@@ -72,6 +134,7 @@ blend_mode = 1
 shading_mode = 0
 vertex_color_use_as_albedo = true
 albedo_color = Color(3, 1.5, 0.6, 1)
+albedo_texture = SubResource("Tex_soft")
 billboard_mode = 3
 particles_anim_h_frames = 1
 particles_anim_v_frames = 1
@@ -79,7 +142,7 @@ particles_anim_loop = false
 
 [sub_resource type="QuadMesh" id="QuadMesh_fire"]
 material = SubResource("Mat_fire")
-size = Vector2(0.3, 0.3)
+size = Vector2(0.6, 0.6)
 
 [node name="RagnarokBurst" type="Node3D"]
 script = ExtResource("1_script")
@@ -109,6 +172,17 @@ explosiveness = 0.9
 visibility_aabb = AABB(-4, -1, -4, 8, 8, 8)
 process_material = SubResource("PPM_fire")
 draw_pass_1 = SubResource("QuadMesh_fire")
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+amount = 24
+lifetime = 1.1
+one_shot = true
+explosiveness = 0.8
+visibility_aabb = AABB(-4, -1, -4, 8, 8, 8)
+process_material = SubResource("PPM_smoke")
+draw_pass_1 = SubResource("QuadMesh_smoke")
 
 [node name="Flash" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)

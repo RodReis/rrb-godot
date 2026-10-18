@@ -96,6 +96,7 @@ func test_ragnarok_explode_e_acende_a_aura_enquanto_dura() -> void:
 	_frame()
 	assert_eq(_effects(), 1, "explosao no uso")
 	assert_true(_driver._aura.emitting)
+	assert_true(_driver._smoke.emitting, "fumaca junto do fogo")
 	assert_almost_eq(_driver._frenzy_light.light_energy, _driver.rage_light_energy, EPS)
 	_hero.cc_immune_ticks = 0
 	_frame()
