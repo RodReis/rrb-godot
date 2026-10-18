@@ -1,0 +1,78 @@
+# SITE.md — Site público "Loot Start"
+
+Landing page do jogo, em `site/`. **No ar:** https://rodreis.github.io/rrb-godot/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
+
+Não é fatia nem card do board: foi pedido direto pelo PI em 2026-10-18 (PR #218). O nome "Loot Start" vale só no site; o jogo segue "ARENA 1V1".
+
+## Stack
+
+Vite 8 + React 19 + TypeScript 7, CSS puro com custom properties, pnpm. Sem Tailwind, sem biblioteca de UI, sem roteador. Fontes do Google Fonts: Cinzel (títulos e logo), Outfit (corpo), JetBrains Mono (rótulos numéricos). Dependência de build: `sharp` (PNG → WebP).
+
+## Estrutura
+
+```text
+site/
+  index.html  vite.config.ts  tsconfig.json  package.json  pnpm-lock.yaml
+  scripts/extract.mjs    gera src/data/*.json e public/{img,icons} a partir do monorepo
+  scripts/tres.mjs       parser mínimo de .tres (HeroData); teste em tres.test.mjs
+  public/favicon.svg
+  src/main.tsx  src/App.tsx  src/data.ts   data.ts tipa e importa os JSON gerados
+  src/brand/Logo.tsx     logo (ícone + wordmark), variantes horizontal e empilhada
+  src/styles/            tokens.css (TOKENS.md §1) e global.css (base, .glass, .btn, .reveal)
+  src/hooks/useReveal.ts entrada por IntersectionObserver
+  src/components/        Nav, Hero, HowItWorks, Heroes, Arena, Gallery, Roadmap, Footer (+ .css)
+```
+
+`src/data/`, `public/img/`, `public/icons/` e `dist/` são gerados e ficam no `.gitignore`.
+
+## De onde vem cada dado
+
+| No site | Fonte | Observação |
+|---|---|---|
+| Heróis: nome, papel, arma, resumo, Q/E/R | `shared/data/heroes/*.tres` | cresce sozinho quando entra herói novo |
+| Ícones de habilidade | `shared/ui/icons/*.svg` | copiados para `public/icons` |
+| Retrato de cada herói | `shared/assets/ui/heroes/large/<id>.png` | WebP 384 px |
+| Fundos (arena dia, arena noite, lineup) e mapa de cima | `shared/assets/ui/loading/*.png`, `shared/assets/ui/arena_map.png` | WebP ≤ 1920 px |
+| Linha do tempo, regras, bestiário, créditos, tagline | `docs/roadmap/historia.json` | texto público: regras de `docs/roadmap/README.md` |
+| Galeria | `historia.json` → `capitulos.*.imagens` com `tipo: "entregue"` + `docs/roadmap/img/` | mais recentes primeiro; mockups nunca entram |
+| Roadmap por MVP (estado e entregas) | `docs/STATUS.md` §2/§3 + `.proplan/STATUS.md` | `tools/roadmap/status.mjs`; Issues vencem o STATUS |
+| Link de download | `historia.json` → `projeto.release_url` | sem ele: Releases do repo + "em breve" |
+
+## Comandos
+
+| O quê | Comando |
+|---|---|
+| Instalar (uma vez) | `pnpm -C site install` |
+| Desenvolver | `pnpm -C site dev` (extrai e abre `http://localhost:5173`) |
+| Testes | `pnpm -C site test` e `node --test tools/roadmap/build-roadmap.test.mjs` |
+| Build de produção | `pnpm -C site build` (extrai, `tsc --noEmit`, `vite build`) |
+| Ver o build | `pnpm -C site exec vite preview --port 4173` → `http://localhost:4173/rrb-godot/` |
+
+`vite build` e `vite preview` usam `base: /rrb-godot/`; `vite dev` usa `/`.
+
+## Publicação e CI
+
+- **Deploy:** `.github/workflows/site.yml` — em push na `main` que toque `site/`, `tools/roadmap/`, heróis, ícones, fundos, `docs/roadmap/` ou os dois `STATUS.md`; também manual (`gh workflow run site`). Build com `pnpm build`, artefato `site/dist`, `actions/deploy-pages`. Pages configurado com **Source: GitHub Actions**.
+- **CI:** job `site` em `ci.yml` (path filter `site`), com `pnpm test`, o teste do parser de STATUS e `pnpm build`; entra no `needs` do `gate`. `pnpm/action-setup` exige `packageManager` no `site/package.json`.
+- **Domínio próprio:** quando existir, configurar em Settings → Pages e voltar `base` para `/` em `vite.config.ts`.
+
+## Marca e estilo
+
+- **Logo:** `Logo.tsx` (SVG inline) e `public/favicon.svg`. Baú aberto, com um "play" subindo do interior (loot + start); ouro + `TEXT`. Wordmark "LOOT START" em Cinzel 900, caixa alta, gradiente `GOLD_BRIGHT` → `GOLD`.
+- **Tokens:** os de `TOKENS.md` §1 em `tokens.css`. Painel "vidro" (`.glass`) = `PanelCardGlass` da HUD (`BG_PANEL` 85 %, borda `GOLD` 35 %, cantoneiras 8×2 px). Botão primário: ouro, texto `ON_GOLD`, borda 3D `GOLD_EDGE`.
+- **Hero:** arena à noite com o véu roxo do splash do Launcher e neblina em duas camadas. O `splash.png` não é usado porque traz "ARENA 1V1" gravado.
+- **Movimento:** entrada por `IntersectionObserver` e neblina por `transform`; tudo cai para estático em `prefers-reduced-motion`.
+- **Acessibilidade:** landmarks, `h1` único, foco dourado visível, lightbox em `<dialog>` com setas e Esc, sem rolagem horizontal em 375 px.
+
+## Como mexer
+
+- **Novo herói:** nada no site. Entrando em `shared/data/heroes`, ícones e retrato (`shared/ui/icons/<id>_{q,e,r}.svg`, `shared/assets/ui/heroes/large/<id>.png`), o próximo build o mostra. Sem retrato, o card sai sem imagem e o `extract` avisa.
+- **Nova seção:** componente em `src/components/`, tipos em `src/data.ts`, entrada em `App.tsx` e âncora na `Nav`. Dado novo vem do `extract.mjs`, não de texto à mão.
+- **Texto público:** edita-se `docs/roadmap/historia.json`; vale para o site e para o roadmap longo.
+
+## Pendências conhecidas
+
+- Rename do jogo para "Loot Start" (Launcher, README, roadmap): decisão do PI, card futuro.
+- Créditos do rodapé (`historia.json`) não citam a fonte Cinzel.
+- Botão de download sem destino até o primeiro Release (F28, aguarda o VPS do PI).
+- Modos 2x2 e 3x3 só como "em breve" (PRD: pós-M4).

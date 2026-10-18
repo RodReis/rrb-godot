@@ -58,6 +58,7 @@ shared/               comum, sem project.godot: core/, data/, resources/, assets
 backend/              NestJS + Postgres (auth, matchmaking, orchestrator, matches, telemetry)
 art/                  fontes .blend (Blender) — nunca importadas pelo Godot; exporta .glb para shared/assets/ (ADR-0005)
 infra/                Docker do game server, compose, deploy
+site/                 site público (landing "Loot Start", React + Vite, GitHub Pages) — dados extraídos em build de shared/ e docs/roadmap/ (ADR-0017)
 tools/                scripts PowerShell (test, run, link-shared, soak)
 docs/                 ver "Documentação do projeto"
 ```
@@ -77,6 +78,7 @@ docs/                 ver "Documentação do projeto"
 | Servidor Docker (+100 ms, 2% perda) | `$env:NETEM_DELAY_MS=100; $env:NETEM_LOSS_PCT=2; docker compose -f infra/docker-compose.yml up --build` |
 | Editor | `& $env:GODOT_PATH -e --path game` ou `--path launcher` |
 | Roadmap público | `.\tools\build-roadmap.ps1` (gera `docs/roadmap/index.html`) |
+| Site público | `pnpm -C site install` (uma vez) · `pnpm -C site dev` · `pnpm -C site test` · `pnpm -C site build` |
 
 - Para linha de comando use o `*_console.exe` (`$env:GODOT_PATH -replace '\.exe$','_console.exe'`); o `.exe` principal não imprime no terminal.
 - No PowerShell 5.1, stderr de executável nativo vira exceção com `$ErrorActionPreference='Stop'` — use `'Continue'` ao chamar o Godot.
@@ -164,5 +166,6 @@ São adaptados do Claude-Code-Game-Studios (ver `.claude/THIRD_PARTY_NOTICES.md`
 - `docs/APRENDIZADOS.md` — Consolidação da seção **Aprendizado** dos comentários de encerramento, mantida pelo Cowork. Curto, com teto e regra de promoção: leitura obrigatória do Code no passo 1 de todo card.
 - `docs/FORA-DE-ESCOPO.md` — Fonte única dos itens adiados ou excluídos por MVP, com motivo, destino e gatilho de retorno.
 - `docs/RASTREABILIDADE.md` — Matriz normativa que prova para onde cada requisito aprovado foi: mantido, transferido, adiado ou excluído. Ausência na matriz bloqueia aprovação documental.
+- `docs/SITE.md` — Site público "Loot Start" (`site/`): stack, de onde vem cada dado, marca, comandos, deploy no GitHub Pages e CI. Decisão: ADR-0017.
 - `docs/roadmap/` — Roadmap público (sócios, playtesters, público): `historia.json` autoral + `index.html` gerado. Estado vem das Issues e do `STATUS.md`, nunca escrito à mão. Ver `docs/roadmap/README.md`.
 - `docs/PRIVACIDADE.md` — Registro não normativo de achados sobre privacidade, proteção de dados, LGPD e consentimentos, com contexto de origem. Não é citado por SPEC e não produz requisito ou aceite antes da revisão do PI.

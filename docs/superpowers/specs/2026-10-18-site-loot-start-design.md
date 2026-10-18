@@ -1,6 +1,7 @@
 # Site Loot Start — design
 
 **Data:** 2026-10-18 · **Decisões do PI:** mesma data, em pop-up.
+**Estado:** implementado na PR #218 e no ar em https://rodreis.github.io/rrb-godot/. Documento vivo: `docs/SITE.md`; decisão: ADR-0017. Mudanças em relação a este texto: o hero usa `arena_night` com o véu roxo do splash (o `splash.png` tem "ARENA 1V1" gravado), os heróis ganharam retrato por card e a arena mostra dia/noite e o mapa de cima em quadros grandes.
 
 ## 1. O que é
 
