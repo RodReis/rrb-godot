@@ -2,6 +2,7 @@
   "name": "loot-start-site",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.33.2",
   "scripts": {
     "extract": "node scripts/extract.mjs",
     "dev": "pnpm extract && vite",
