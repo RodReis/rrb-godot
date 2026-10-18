@@ -1,0 +1,13 @@
+.heroes { background-size: cover; background-position: center; isolation: isolate; }
+.heroes::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, var(--bg-surface), rgb(11 19 38 / 0.82) 30%, rgb(11 19 38 / 0.82) 70%, var(--bg-surface)); }
+.hero-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; margin: 0; padding: 0; list-style: none; }
+.hero-card { padding: 1.5rem; display: grid; gap: 0.9rem; align-content: start; transition: border-color var(--dur-fast), transform var(--dur-fast) var(--ease-out); }
+.hero-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+.hero-card header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.hero-card h3 { font-size: 1.3rem; color: var(--gold-bright); }
+.hero-card p { color: var(--text-muted); font-size: 0.95rem; }
+.skills { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+.skills li { position: relative; display: grid; justify-items: center; gap: 0.35rem; font-size: 0.78rem; text-align: center; }
+.skills img, .skill-fallback { width: 48px; height: 48px; border-radius: var(--radius-sm); border: 2px solid var(--border); background: var(--bg-card); }
+.skill-key { position: absolute; top: 34px; right: calc(50% - 30px); font-family: var(--font-display); font-size: 0.6rem; padding: 0 4px; background: var(--gold); color: var(--on-gold); border-radius: 3px; }
+.skill-name { color: var(--text); line-height: 1.2; }
