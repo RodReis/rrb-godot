@@ -428,12 +428,13 @@ func _foliage(m: ShaderMaterial) -> ShaderMaterial:
 	return m
 
 
-## Textura importada; na primeira rodada (mascara recem-gravada, ainda sem import) devolve uma
-## referencia vazia com o caminho, que o .tres salva como recurso externo.
+## Mapa [param kind] (albedo, normal, rough) do conjunto PBR [param set_name] (F73).
 func _pbr(set_name: String, kind: String) -> Texture2D:
 	return _texture(TEXTURES % [TEXTURE_AREAS[set_name], set_name, kind])
 
 
+## Textura importada; na primeira rodada (mascara recem-gravada, ainda sem import) devolve uma
+## referencia vazia com o caminho, que o .tres salva como recurso externo.
 func _texture(path: String) -> Texture2D:
 	if ResourceLoader.exists(path):
 		return load(path)
