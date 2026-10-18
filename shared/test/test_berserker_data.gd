@@ -107,5 +107,7 @@ func test_habilidades_tem_descricao_e_icone() -> void:
 
 
 func test_id_no_fim_de_ids_all() -> void:
-	assert_eq(Ids.ALL[Ids.ALL.size() - 1], &"berserker", "id novo so no fim (ordem estavel na rede)")
+	assert_eq(
+		Ids.ALL[Ids.ALL.size() - 1], &"berserker", "id novo so no fim (ordem estavel na rede)"
+	)
 	assert_eq(Ids.to_name(Ids.to_int(&"berserker")), &"berserker")

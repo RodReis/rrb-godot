@@ -272,7 +272,7 @@ func _rollback_tick(_delta: float, tick: int, _is_fresh: bool) -> void:
 	else:
 		_face(movement, aim)
 		var slow := slow_pct if slow_ticks > 0 else 0.0
-		velocity = movement * CombatRules.slowed(move_speed(), slow)
+		velocity = movement * CombatRules.slowed(_move_speed(), slow)
 	velocity *= NetworkTime.physics_factor
 	move_and_slide()
 	velocity /= NetworkTime.physics_factor
@@ -423,16 +423,16 @@ func missing_hp() -> int:
 func effective_damage(raw: int) -> int:
 	if invuln_ticks > 0 or not is_alive():
 		return 0
-	return mini(CombatRules.mitigated(raw, defense()), hp)
+	return mini(CombatRules.mitigated(raw, _defense()), hp)
 
 
 ## DEF do momento: atributos + bonus temporario da subclasse (Grito de Guerra).
-func defense() -> float:
+func _defense() -> float:
 	return attributes.defense + _defense_bonus()
 
 
 ## Velocidade de movimento do momento (u/s): atributos + bonus temporario da subclasse.
-func move_speed() -> float:
+func _move_speed() -> float:
 	return attributes.move_speed * (1.0 + _move_speed_bonus())
 
 
@@ -764,7 +764,7 @@ func _apply_hits(tick: int) -> void:
 		heal += maxi(effect.heal, 0)
 		if effect.true_damage > 0:
 			zone_ticks = SkillRules.seconds_to_ticks(ZONE_FLAG_SECONDS, NetworkTime.tickrate)
-		var damage := CombatRules.mitigated(effect.damage, defense())
+		var damage := CombatRules.mitigated(effect.damage, _defense())
 		if invuln_ticks > 0:
 			damage = 0
 		if shield_ticks > 0 and CombatRules.is_frontal(global_position, forward(), effect.source):

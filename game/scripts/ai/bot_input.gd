@@ -296,9 +296,11 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
 		aim_distance = BotRules.druid_aim_distance(to.length(), skill_r)
-	elif berserker:  # Arremesso para alcancar; Grito ao entrar em Lutar; o Ragnarok no _rage_when_needed
+	elif berserker:  # Arremesso para alcancar; Grito ao entrar em Lutar; Ragnarok: _rage_when_needed
 		var basic_range := data.basic_attack.attack_range
-		use = BotRules.berserker_skills(to.length(), basic_range, _entered_fight, 1.0, false, PROFILE)
+		use = BotRules.berserker_skills(
+			to.length(), basic_range, _entered_fight, 1.0, false, PROFILE
+		)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_e = skills and use.y == 1
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.

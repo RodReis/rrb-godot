@@ -4,7 +4,8 @@ extends HeroVfx
 ## um lado ou para o outro conforme a mao (Berserker.swing_left); faiscas no impacto confirmado;
 ## machado do Q dando cambalhotas com rastro; onda do Grito de Guerra; brilho do Frenesi que cresce
 ## com o f (brasas e luz vermelhas, Berserker.frenzy); e, no Ragnarok, explosao no uso e aura de
-## fogo e fumaca (sprites macios, nao quadrados: PI 2026-10-18) enquanto dura (Berserker.is_raging). Arcos e alcances de berserker.tres.
+## fogo e fumaca (sprites macios, nao quadrados: PI 2026-10-18) enquanto dura (Berserker.is_raging).
+## Arcos e alcances de berserker.tres.
 
 const SPARKS: PackedScene = preload("res://scenes/vfx/sparks.tscn")
 const WAR_CRY: PackedScene = preload("res://scenes/vfx/war_cry.tscn")

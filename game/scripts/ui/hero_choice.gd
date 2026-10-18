@@ -77,8 +77,8 @@ func setup(data: HeroData) -> void:
 	set_active(false)
 
 
-## Retrato do heroi (nulo = vazio); so dentro da arvore. Heroi mais alto que o rig medio traz a altura
-## dele (HeroVisual.portrait_height, Berserker F75).
+## Retrato do heroi (nulo = vazio); so dentro da arvore. Heroi mais alto que o rig medio traz a
+## altura dele (HeroVisual.portrait_height, Berserker F75).
 func show_model(model: Node3D) -> void:
 	var height: float = model.get_meta(&"portrait_height", 0.0) if model != null else 0.0
 	_preview.frame_height = height if height > 0.0 else PORTRAIT_FRAME_HEIGHT

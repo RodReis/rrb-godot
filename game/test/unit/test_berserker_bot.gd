@@ -1,7 +1,7 @@
 extends BerserkerTestBase
-## Bot de Berserker (SPEC-075 regra 6): Arremesso para alcancar (fora do alcance do basico, ate 7 u),
-## Grito de Guerra ao entrar em Lutar, Ragnarok sob controle ou com HP abaixo de 40 % com perigo
-## perto. Limiares do bot_profile.tres.
+## Bot de Berserker (SPEC-075 regra 6): Arremesso para alcancar (fora do alcance do basico, ate
+## 7 u), Grito de Guerra ao entrar em Lutar, Ragnarok sob controle ou com HP abaixo de 40 % com
+## perigo perto. Limiares do bot_profile.tres.
 
 const PROFILE: BotProfile = preload("res://shared/data/rules/bot_profile.tres")
 const BASIC_RANGE: float = 2.4
@@ -13,9 +13,13 @@ func test_limiares_do_berserker_no_perfil() -> void:
 
 func test_arremesso_so_para_alcancar() -> void:
 	assert_eq(BotRules.berserker_skills(5.0, BASIC_RANGE, false, 1.0, false, PROFILE).x, 1)
-	assert_eq(BotRules.berserker_skills(7.0, BASIC_RANGE, false, 1.0, false, PROFILE).x, 1, "limite")
+	assert_eq(
+		BotRules.berserker_skills(7.0, BASIC_RANGE, false, 1.0, false, PROFILE).x, 1, "limite"
+	)
 	assert_eq(BotRules.berserker_skills(7.5, BASIC_RANGE, false, 1.0, false, PROFILE).x, 0, "longe")
-	assert_eq(BotRules.berserker_skills(2.0, BASIC_RANGE, false, 1.0, false, PROFILE).x, 0, "ja no golpe")
+	assert_eq(
+		BotRules.berserker_skills(2.0, BASIC_RANGE, false, 1.0, false, PROFILE).x, 0, "ja no golpe"
+	)
 
 
 func test_grito_ao_entrar_em_lutar() -> void:
@@ -24,9 +28,17 @@ func test_grito_ao_entrar_em_lutar() -> void:
 
 
 func test_ragnarok_sob_controle_ou_com_hp_baixo() -> void:
-	assert_eq(BotRules.berserker_skills(5.0, BASIC_RANGE, false, 1.0, true, PROFILE).z, 1, "controlado")
-	assert_eq(BotRules.berserker_skills(5.0, BASIC_RANGE, false, 0.39, false, PROFILE).z, 1, "HP < 40 %")
-	assert_eq(BotRules.berserker_skills(5.0, BASIC_RANGE, false, 0.4, false, PROFILE).z, 0, "40 % ainda nao")
+	assert_eq(
+		BotRules.berserker_skills(5.0, BASIC_RANGE, false, 1.0, true, PROFILE).z, 1, "controlado"
+	)
+	assert_eq(
+		BotRules.berserker_skills(5.0, BASIC_RANGE, false, 0.39, false, PROFILE).z, 1, "HP < 40 %"
+	)
+	assert_eq(
+		BotRules.berserker_skills(5.0, BASIC_RANGE, false, 0.4, false, PROFILE).z,
+		0,
+		"40 % ainda nao"
+	)
 
 
 func test_lutando_longe_arremessa_e_corre() -> void:

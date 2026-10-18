@@ -114,7 +114,8 @@ func _arrow_struck(arrow: Arrow, other: Combatant, at: Vector3, tick: int) -> bo
 	effect.slow = q.slow
 	# Um tick a mais: o alvo aplica o golpe e desconta o tick no mesmo _rollback_tick (como a raiz).
 	effect.slow_ticks = (
-		1 + SkillRules.seconds_to_ticks(SkillData.at_rank(q.duration, ranks.x), NetworkTime.tickrate)
+		1
+		+ SkillRules.seconds_to_ticks(SkillData.at_rank(q.duration, ranks.x), NetworkTime.tickrate)
 	)
 	_struck_q.append(other)
 	_hit(other, tick, HitLedger.Slot.Q, effect)
@@ -134,9 +135,9 @@ func _ragnarok() -> void:
 	knockback_velocity = Vector3.ZERO
 
 
-## Basico no arco do berserker.tres (Hero._melee) e, no servidor, o roubo de vida do Frenesi. O roubo
-## e medido antes do golpe: o monstro tira o HP na hora (Monster.receive_hit), entao depois o golpe
-## que o mata ja nao "causaria" nada.
+## Basico no arco do berserker.tres (Hero._melee) e, no servidor, o roubo de vida do Frenesi. O
+## roubo e medido antes do golpe: o monstro tira o HP na hora (Monster.receive_hit), entao
+## depois o golpe que o mata ja nao "causaria" nada.
 func _twin_axes(tick: int) -> void:
 	var passive: PassiveData = hero_data.passive
 	if multiplayer.is_server() and passive != null:

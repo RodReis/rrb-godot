@@ -7,7 +7,8 @@ extends SceneTree
 ##   shared/assets/ui/loading/splash.png       "ARENA 1V1" sobre o entardecer (Launcher)
 ## Mesma luz/ceu do ciclo dia/noite do jogo (DayNightProfile). Heroi novo: acrescente em HEROES e
 ## rode de novo. Precisa de janela (GPU) e do projeto do Game; na raiz do repo:
-##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/render_loading.gd [-- --only=<arquivo>]
+##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/render_loading.gd
+##     [-- --only=<arquivo>]
 
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const PROFILE: String = "res://shared/data/visual/day_night.tres"

@@ -16,8 +16,9 @@ const WARMUP_FRAMES: int = 20
 const IDLE: StringName = &"Idle"
 ## Instante da animacao idle usado como pose (s).
 const POSE_TIME: float = 0.4
-## id -> [cena, pecas escondidas] (as mesmas de game/scenes/heroes/<id>.tscn) e, opcionais, a escala do
-## modelo (o Barbarian_Large do Berserker e ~1,9x mais alto que o rig medio) e o clipe de idle.
+## id -> [cena, pecas escondidas] (as mesmas de game/scenes/heroes/<id>.tscn) e, opcionais, a
+## escala do modelo (o Barbarian_Large do Berserker e ~1,9x mais alto que o rig medio) e o clipe
+## de idle.
 const HEROES: Dictionary[String, Array] = {
 	"knight":
 	[

@@ -22,7 +22,14 @@ const FULL_ROSTER: Array[HeroData] = [
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 const ALL_SCENES: Array[StringName] = [
-	&"knight", &"ranger", &"barbarian", &"fire_wizard", &"rogue", &"engineer", &"druid", &"berserker"
+	&"knight",
+	&"ranger",
+	&"barbarian",
+	&"fire_wizard",
+	&"rogue",
+	&"engineer",
+	&"druid",
+	&"berserker"
 ]
 const RATE: int = 30
 const START: int = 1000

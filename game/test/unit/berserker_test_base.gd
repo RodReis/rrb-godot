@@ -1,7 +1,7 @@
 class_name BerserkerTestBase
 extends GutTest
-## Base dos testes do Berserker (test_berserker*.gd): cena, alvos e ticks. Sem testes proprios (o GUT
-## so coleta arquivos test_*).
+## Base dos testes do Berserker (test_berserker*.gd): cena, alvos e ticks. Sem testes proprios (o
+## GUT so coleta arquivos test_*).
 
 const BERSERKER: String = "res://scenes/heroes/berserker.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"

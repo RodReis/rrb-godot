@@ -1,6 +1,6 @@
 extends BerserkerTestBase
-## berserker.tscn (GDB §4.8 e §2.2-E, F75; SPEC-075 aceite): Frenesi (velocidade de ataque e roubo de
-## vida so no basico), Machados Gemeos, Arremesso de Machado, Grito de Guerra e Ragnarok (limpa e
+## berserker.tscn (GDB §4.8 e §2.2-E, F75; SPEC-075 aceite): Frenesi (velocidade de ataque e roubo
+## de vida so no basico), Machados Gemeos, Arremesso de Machado, Grito de Guerra e Ragnarok (limpa e
 ## bloqueia os 5 controles). Servidor = processo do teste (peer offline).
 
 
@@ -47,8 +47,14 @@ func test_frenesi_acelera_o_basico_conforme_o_hp() -> void:
 		b.basic_cooldown = 0
 		b.input.attack = true
 		_run(START + 1, 1)
-		assert_almost_eq(b.frenzy(), case[1] as float, 0.01, "f a %d %% de HP" % roundi(case[0] * 100))
-		assert_eq(b.basic_cooldown, _interval_ticks(case[1]), "intervalo a %d %% de HP" % roundi(case[0] * 100))
+		assert_almost_eq(
+			b.frenzy(), case[1] as float, 0.01, "f a %d %% de HP" % roundi(case[0] * 100)
+		)
+		assert_eq(
+			b.basic_cooldown,
+			_interval_ticks(case[1]),
+			"intervalo a %d %% de HP" % roundi(case[0] * 100)
+		)
 
 
 func test_roubo_de_vida_cura_sobre_o_dano_depois_da_def() -> void:
@@ -129,10 +135,10 @@ func test_grito_de_guerra_soma_def_e_velocidade_por_2_s() -> void:
 	b.input.skill_e = true
 	_run(START, 1)
 	assert_eq(b.shout_ticks, SHOUT_TICKS, "desconta a partir do tick seguinte")
-	assert_almost_eq(b.defense(), BERSERKER_DEF + 1.8 + 30.0, EPS, "DEF do nivel 2 + 30")
-	assert_almost_eq(b.move_speed(), b.attributes.move_speed * 1.15, EPS)
+	assert_almost_eq(b._defense(), BERSERKER_DEF + 1.8 + 30.0, EPS, "DEF do nivel 2 + 30")
+	assert_almost_eq(b._move_speed(), b.attributes.move_speed * 1.15, EPS)
 	_run(START + 1, SHOUT_TICKS)
-	assert_almost_eq(b.defense(), b.attributes.defense, EPS, "acabou")
+	assert_almost_eq(b._defense(), b.attributes.defense, EPS, "acabou")
 
 
 func test_grito_reduz_o_dano_recebido() -> void:
@@ -152,7 +158,7 @@ func test_ragnarok_frenesi_no_maximo_e_velocidade_por_4_s() -> void:
 	_run(START, 1)
 	assert_true(b.is_raging())
 	assert_almost_eq(b.frenzy(), 1.0, EPS, "f = 1 com HP cheio")
-	assert_almost_eq(b.move_speed(), b.attributes.move_speed * 1.25, EPS)
+	assert_almost_eq(b._move_speed(), b.attributes.move_speed * 1.25, EPS)
 	b.input.attack = true
 	_run(START + 1, 1)
 	assert_eq(b.basic_cooldown, _interval_ticks(1.0))
@@ -188,7 +194,11 @@ func test_ragnarok_bloqueia_os_5_controles() -> void:
 	pull.push_ticks = 9
 	var hp := b.hp
 	var slots: Array[HitLedger.Slot] = [
-		HitLedger.Slot.BASIC, HitLedger.Slot.Q, HitLedger.Slot.E, HitLedger.Slot.R, HitLedger.Slot.REWARD
+		HitLedger.Slot.BASIC,
+		HitLedger.Slot.Q,
+		HitLedger.Slot.E,
+		HitLedger.Slot.R,
+		HitLedger.Slot.REWARD
 	]
 	var effects: Array[HitEffect] = [slow, root, stun, push, pull]
 	for i: int in effects.size():
@@ -218,8 +228,8 @@ func test_outro_heroi_nao_tem_frenesi_nem_imunidade() -> void:
 	var knight := _spawn_knight(AHEAD * 10.0)
 	assert_null(knight.hero_data.passive)
 	assert_eq(knight.cc_immune_ticks, 0)
-	assert_almost_eq(knight.defense(), knight.attributes.defense, EPS)
-	assert_almost_eq(knight.move_speed(), knight.attributes.move_speed, EPS)
+	assert_almost_eq(knight._defense(), knight.attributes.defense, EPS)
+	assert_almost_eq(knight._move_speed(), knight.attributes.move_speed, EPS)
 
 
 func test_golpe_que_mata_o_monstro_tambem_cura() -> void:
