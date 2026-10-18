@@ -62,7 +62,9 @@ func _use_skills(tick: int) -> void:
 	if attack_now and basic_cooldown == 0:
 		basic_cooldown = SkillRules.seconds_to_ticks(attributes.attack_interval, rate)
 		var basic := data.basic_attack
-		_shoot(Arrow.Kind.BASIC, basic.attack_range, roundi(SkillRules.amount(basic, 1, attributes)))
+		_shoot(
+			Arrow.Kind.BASIC, basic.attack_range, roundi(SkillRules.amount(basic, 1, attributes))
+		)
 
 
 func _simulate_effects(tick: int) -> void:
@@ -78,7 +80,8 @@ func _simulate_effects(tick: int) -> void:
 		_swamp(tick)
 
 
-## A seiva fere quem tocou; a raiz fere e enraiza (o chefe so toma o dano). As duas param no 1o toque.
+## A seiva fere quem tocou; a raiz fere e enraiza (o chefe so toma o dano). As duas param no 1o
+## toque.
 func _arrow_struck(arrow: Arrow, other: Combatant, at: Vector3, tick: int) -> bool:
 	if not multiplayer.is_server():
 		return true
@@ -88,8 +91,11 @@ func _arrow_struck(arrow: Arrow, other: Combatant, at: Vector3, tick: int) -> bo
 		if DruidRules.roots(_is_boss(other)):
 			effect.slow = q.slow
 			# Um tick a mais: o alvo aplica o golpe e desconta o tick no mesmo _rollback_tick (como a Chuva).
-			effect.slow_ticks = 1 + SkillRules.seconds_to_ticks(
-				SkillData.at_rank(q.duration, ranks.x), NetworkTime.tickrate
+			effect.slow_ticks = (
+				1
+				+ SkillRules.seconds_to_ticks(
+					SkillData.at_rank(q.duration, ranks.x), NetworkTime.tickrate
+				)
 			)
 		_struck_q.append(other)
 		_hit(other, tick, HitLedger.Slot.Q, effect)

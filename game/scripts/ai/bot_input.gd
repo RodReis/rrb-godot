@@ -103,8 +103,8 @@ func _smoke_escape(view: BotView, enemy: Hero) -> void:
 		skill_e = true
 
 
-## Protetor da Selva: Pocao Verde nos pes quando o HP cai abaixo do limiar do perfil com perigo perto
-## (SPEC-074). O Pantano, que tambem usa aim_distance, tem a vez na mira dele (_attack).
+## Protetor da Selva: Pocao Verde nos pes quando o HP cai abaixo do limiar do perfil com perigo
+## perto (SPEC-074). O Pantano, que tambem usa aim_distance, tem a vez na mira dele (_attack).
 func _potion_when_hurt(view: BotView) -> void:
 	if not _hero is Druid or skill_r or not view.in_danger:
 		return

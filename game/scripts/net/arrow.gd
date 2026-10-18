@@ -64,7 +64,9 @@ func _process(delta: float) -> void:
 		_shown_progress = network
 		shown_launched.emit()
 	else:
-		_shown_progress = VfxRules.arrow_progress(_shown_progress, network, flight, delta, max_range)
+		_shown_progress = VfxRules.arrow_progress(
+			_shown_progress, network, flight, delta, max_range
+		)
 	var at := _shown_launch + direction * _shown_progress
 	global_position = at
 	if not direction.is_zero_approx():

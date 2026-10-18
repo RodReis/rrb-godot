@@ -157,6 +157,7 @@ func test_headless_nao_carrega_pecas() -> void:
 	assert_eq(_pieces().size(), 0)
 	assert_true(_part("Knight_Helmet").visible)
 
+
 func test_protetor_usa_o_cajado_e_nao_mostra_elmo() -> void:
 	_bind(DRUID)
 	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t3_epic"])

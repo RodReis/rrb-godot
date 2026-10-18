@@ -1,8 +1,9 @@
 extends GutTest
 ## F48 (SPEC-048 §6 item 1): todo item do catalogo tem peca e icone para cada heroi; cada no
 ## de peca aponta para um osso que existe no rig do heroi e no slot certo; a peca do pack que o
-## slot substitui existe no modelo. Barbaro (F53), Bruxo (F54), Ladina (F58), Engenheiro (F59) e Protetor da Selva (F74),
-## ADR-0011 item 3 e ADR-0013 item 7: elmo sem peca (o capuz e o chapeu ficam), mas com icone.
+## slot substitui existe no modelo. Barbaro (F53), Bruxo (F54), Ladina (F58), Engenheiro (F59) e
+## Protetor da Selva (F74), ADR-0011 item 3 e ADR-0013 item 7: elmo sem peca (o capuz e o chapeu
+## ficam), mas com icone.
 
 const CATALOG: String = "res://shared/data/items/catalog.tres"
 ## Heroi -> modelo (mesmo rig KayKit nos dois).

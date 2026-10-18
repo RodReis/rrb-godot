@@ -117,7 +117,9 @@ func _root_seconds(at: Vector3) -> float:
 	var best := TARGET_REACH
 	for node: Node in get_tree().get_nodes_in_group(Combatant.TARGETS_GROUP):
 		var other := node as Combatant
-		var distance := Vector2(other.global_position.x - at.x, other.global_position.z - at.z).length()
+		var distance := (
+			Vector2(other.global_position.x - at.x, other.global_position.z - at.z).length()
+		)
 		if other != hero and distance <= best:
 			nearest = other
 			best = distance

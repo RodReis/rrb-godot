@@ -2,8 +2,9 @@ class_name PotionZoneVfx
 extends VfxOneShot
 ## Pocao Verde do Protetor da Selva (F74, SPEC-074 §VFX), so cliente: a garrafa do pack
 ## (potion_large_green) sai da mao em arco, gira e quebra no ponto (respingo); a zona fica marcada
-## pelo anel verde do raio de cura (area_indicator) com brilhos subindo; a cada pulso (pulse_interval
-## de druid.tres) uma onda verde corre do centro a borda. Nasce do evento do ImpactRelay
+## pelo anel verde do raio de cura (area_indicator) com brilhos subindo; a cada pulso
+## (pulse_interval de druid.tres) uma onda verde corre do centro a borda. Nasce do evento do
+## ImpactRelay
 ## (zone_shown): quem chega atrasado (elapsed > 0) ve so o que falta e sem o arco.
 
 ## Voo da garrafa (s) e altura do arco (u); giro (rad/s).
@@ -35,7 +36,9 @@ func _process(delta: float) -> void:
 		_arc_left = maxf(_arc_left - delta, 0.0)
 		var t := 1.0 - _arc_left / ARC_SECONDS
 		var ground := global_position
-		_flask.global_position = _from.lerp(ground, t) + Vector3.UP * ARC_HEIGHT * 4.0 * t * (1.0 - t)
+		_flask.global_position = (
+			_from.lerp(ground, t) + Vector3.UP * ARC_HEIGHT * 4.0 * t * (1.0 - t)
+		)
 		_flask.rotate_x(FLASK_SPIN * delta)
 		if _arc_left == 0.0:
 			_flask.visible = false

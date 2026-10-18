@@ -85,9 +85,7 @@ func test_pantano() -> void:
 
 
 func test_habilidades_tem_descricao_e_icone() -> void:
-	for skill: SkillData in [
-		DRUID.basic_attack, DRUID.skill_q, DRUID.skill_e, DRUID.skill_r
-	]:
+	for skill: SkillData in [DRUID.basic_attack, DRUID.skill_q, DRUID.skill_e, DRUID.skill_r]:
 		assert_false(skill.description.is_empty(), "descricao de %s" % skill.id)
 		assert_not_null(skill.icon, "icone de %s" % skill.id)
 

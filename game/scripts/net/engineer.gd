@@ -164,4 +164,3 @@ func _turret_target(reach: float) -> Combatant:
 			_seen_points.append(other.global_position)
 	var at := EngineerRules.nearest(turret_center, _seen_points, reach)
 	return _seen[at] if at >= 0 else null
-

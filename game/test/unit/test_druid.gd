@@ -1,7 +1,7 @@
 extends DruidTestBase
-## druid.tscn (GDB §4.7, F74; SPEC-074 aceite): Seiva (projetil que para no 1o alvo, 6,5 u, bloqueado
-## pela Muralha) e Raizes Vivas (enraiza heroi e monstro comum por 1,5 s, o chefe so toma o dano).
-## Servidor = processo do teste (peer offline).
+## druid.tscn (GDB §4.7, F74; SPEC-074 aceite): Seiva (projetil que para no 1o alvo, 6,5 u,
+## bloqueado pela Muralha) e Raizes Vivas (enraiza heroi e monstro comum por 1,5 s, o chefe so toma
+## o dano). Servidor = processo do teste (peer offline).
 
 
 func test_nivel_1_tem_os_atributos_base() -> void:
@@ -88,7 +88,9 @@ func test_enraizado_nao_anda_por_1_5_s_e_depois_volta_a_andar() -> void:
 	var rooted_at := knight.global_position
 	knight.input.movement = SIDE
 	_run(tick, ROOT_TICKS - 1)
-	assert_almost_eq(knight.global_position, rooted_at, Vector3.ONE * 0.01, "parado enquanto enraizado")
+	assert_almost_eq(
+		knight.global_position, rooted_at, Vector3.ONE * 0.01, "parado enquanto enraizado"
+	)
 	_run(tick + ROOT_TICKS - 1, 15)
 	assert_gt(knight.global_position.x, rooted_at.x + 0.5, "soltou: anda de novo")
 
