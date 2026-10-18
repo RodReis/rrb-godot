@@ -95,9 +95,10 @@ func test_setup_foca_o_campo_do_nickname() -> void:
 func test_grade_de_avatares_sao_os_retratos_reais() -> void:
 	await _open(ProfileScreen.Mode.SETUP)
 	var ids := _screen.preset_ids()
-	assert_eq(ids.size(), 13, "7 herois + 6 monstros com retrato")
+	assert_eq(ids.size(), 14, "8 herois + 6 monstros com retrato")
 	assert_true(ids.has("hero:knight"))
 	assert_true(ids.has("hero:druid"))
+	assert_true(ids.has("hero:berserker"))
 	assert_true(ids.has("monster:wolf_t2"))
 	assert_eq(_screen.preset_tile("hero:knight").tooltip_text, HistoryFormat.hero_name("knight"))
 	var art := _screen.preset_tile("hero:knight").get_child(0) as TextureRect
