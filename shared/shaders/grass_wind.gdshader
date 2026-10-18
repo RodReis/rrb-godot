@@ -18,6 +18,10 @@ uniform float wind_speed = 1.6;
 uniform float wind_scale = 0.35;
 // Rajadas: faixas lentas atravessadas ao vento.
 uniform float gust_scale = 0.05;
+// Fade por distancia da camera (F73): o tufo encolhe ate sumir entre fade_start e fade_end (u).
+// Escala em vez de alpha: sem transparencia, sem ordenacao e o vertice degenerado nao rasteriza.
+uniform float fade_start = 30.0;
+uniform float fade_end = 38.0;
 
 varying float tip;
 varying float tint;
@@ -28,6 +32,7 @@ float hash(vec2 p) {
 
 void vertex() {
 	vec3 origin = MODEL_MATRIX[3].xyz;
+	VERTEX *= 1.0 - smoothstep(fade_start, fade_end, distance(origin, CAMERA_POSITION_WORLD));
 	tip = UV.y;
 	tint = hash(origin.xz);
 	vec2 dir = normalize(wind_direction);

@@ -1,0 +1,15 @@
+ambientCG (https://ambientcg.com) — Creative Commons CC0 1.0 Universal (Public Domain Dedication).
+https://docs.ambientcg.com/license/
+
+Materiais usados (download 2K-JPG em 2026-10-17, F73 / SPEC-073). Recomprimidos em JPEG:
+albedo 2048 px (q86), normal GL 2048 px (q76), rugosidade 2048 px em cinza (q76).
+Mapa por arquivo (<conjunto>_albedo / _normal / _rough):
+  terrain/grass_*   <- Grass004
+  terrain/moss_*    <- Ground037
+  terrain/dirt_*    <- Ground067
+  terrain/paving_*  <- PavingStones138
+  rock/rock_*       <- Rock030
+  castle/bricks_*   <- Bricks076C
+  wood/planks_*     <- Planks023A
+Substitui a pasta shared/assets/ambientcg/ do F40 (mesmos Grass004, Ground037, Ground067,
+PavingStones138, Rock030 e Bricks076C, agora com normal e rugosidade em 2048 px).

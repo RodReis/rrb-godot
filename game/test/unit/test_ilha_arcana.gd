@@ -116,14 +116,14 @@ func test_marcadores_dentro_do_quadrado() -> void:
 		assert_lt(reach, ARENA_HALF - 1.0, "%s fora do quadrado" % m.name)
 
 
-## Moitas tambem por rotacao: a regra do mato (F32) e geometria de jogo. 6 = 2 de ponte + 2 de
-## lagoa + 2 do centro (SPEC-046 §2.7).
-func test_seis_moitas_por_rotacao() -> void:
+## Moitas tambem por rotacao: a regra do mato (F32) e geometria de jogo. 10 = 2 de ponte + 2 de
+## lagoa + 2 do centro (SPEC-046 §2.7) + 4 de emboscada nos corredores TOP/BOT (F73).
+func test_dez_moitas_por_rotacao() -> void:
 	var areas: Array[Area3D] = []
 	for node: Node in _arena.find_children("*", "Area3D", true, false):
 		if node.is_in_group(&"tall_grass"):
 			areas.append(node as Area3D)
-	assert_eq(areas.size(), 6)
+	assert_eq(areas.size(), 10)
 	for a: Area3D in areas:
 		var found := false
 		for b: Area3D in areas:

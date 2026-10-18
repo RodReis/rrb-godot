@@ -152,7 +152,15 @@ pois = Array[Dictionary]([{
 "chests": {},
 "monsters": {}
 }, {
+"anchor": Vector2(-5, -28.5),
+"chests": {},
+"monsters": {}
+}, {
 "anchor": Vector2(18.384775, -9.192389),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(28.5, -6),
 "chests": {},
 "monsters": {}
 }, {
@@ -164,7 +172,15 @@ pois = Array[Dictionary]([{
 "chests": {},
 "monsters": {}
 }, {
+"anchor": Vector2(-28.5, 6),
+"chests": {},
+"monsters": {}
+}, {
 "anchor": Vector2(-18.384775, 9.192389),
+"chests": {},
+"monsters": {}
+}, {
+"anchor": Vector2(5, 28.5),
 "chests": {},
 "monsters": {}
 }, {

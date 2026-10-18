@@ -113,7 +113,7 @@ func test_strip_stats_count_the_real_arena() -> void:
 	var stats := ArenaMapTexts.strip_stats(_data, _catalog)
 	assert_eq(stats[0][1], str(MONSTER_TOTAL))
 	assert_eq(stats[1][1], str(CHEST_TOTAL))
-	assert_eq(stats[2][1], "6")
+	assert_eq(stats[2][1], "10")
 	assert_eq(stats[3][1], "1 Rei Esqueleto")
 
 
@@ -162,7 +162,7 @@ func test_grass_card_uses_the_reveal_and_vision_rules() -> void:
 	var text := _info_text(ArenaMapPois.TALL_GRASS)
 	assert_string_contains(text, "1,5 s")
 	assert_string_contains(text, "12 u")
-	assert_string_contains(text, "6")
+	assert_string_contains(text, "10")
 
 
 func test_terrain_cards_count_the_real_elements() -> void:

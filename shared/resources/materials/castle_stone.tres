@@ -2,11 +2,11 @@
 
 [ext_resource type="Shader" path="res://shared/shaders/triplanar_pbr.gdshader" id="1_c7763"]
 [ext_resource type="Texture2D" path="res://shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png" id="2_tf5yh"]
-[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/bricks_albedo.jpg" id="3_bmxm8"]
-[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/bricks_normal.jpg" id="4_mv6wm"]
-[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/bricks_rough.jpg" id="5_6nwna"]
-[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/moss_albedo.jpg" id="6_sss3y"]
-[ext_resource type="Texture2D" path="res://shared/assets/ambientcg/moss_normal.jpg" id="7_0gcyb"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/castle/bricks_albedo.jpg" id="3_bmxm8"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/castle/bricks_normal.jpg" id="4_mv6wm"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/castle/bricks_rough.jpg" id="5_6nwna"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/terrain/moss_albedo.jpg" id="6_sss3y"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/terrain/moss_normal.jpg" id="7_0gcyb"]
 
 [resource]
 render_priority = 0

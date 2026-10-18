@@ -60,7 +60,7 @@ func test_moitas_usam_o_asset_do_tamanho_certo() -> void:
 		var file := visual.scene_file_path.get_file()
 		assert_true(counts.has(file), "asset inesperado: %s" % file)
 		counts[file] = counts.get(file, 0) + 1
-	assert_eq(counts, {"tall_grass_4x4.glb": 4, "tall_grass_4x3.glb": 2})
+	assert_eq(counts, {"tall_grass_4x4.glb": 8, "tall_grass_4x3.glb": 2})
 
 
 ## Kit do F46 (decisao do PI 2026-10-10): torreao por time no canto e casas de pedra na base.
