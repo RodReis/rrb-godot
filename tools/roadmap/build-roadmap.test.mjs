@@ -78,6 +78,7 @@ function gerar() {
     const escreve = (rel, txt) => { mkdirSync(dirname(join(raiz, rel)), { recursive: true }); writeFileSync(join(raiz, rel), txt); };
     mkdirSync(join(raiz, "tools", "roadmap"), { recursive: true });
     copyFileSync(GERADOR, join(raiz, "tools", "roadmap", "build-roadmap.mjs"));
+    copyFileSync(join(dirname(GERADOR), "status.mjs"), join(raiz, "tools", "roadmap", "status.mjs"));
     escreve("docs/STATUS.md", STATUS_MD);
     escreve(".proplan/STATUS.md", PROPLAN_MD);
     escreve("docs/roadmap/historia.json", JSON.stringify(HISTORIA));
