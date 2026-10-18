@@ -2,6 +2,7 @@
 
 **Status:** aceito — 2026-10-08
 **Decisor:** Rodrigo Reis (PI)
+**Emenda (2026-10-18):** [ADR-0017](0017-site-publico-loot-start.md) acrescenta `site/` (landing pública estática em React). Não muda nada do que está decidido aqui: o Launcher continua em Godot e não há "Launcher web".
 **Relacionados:** [ADR-0003](0003-shared-por-junction.md), [ADR-0004](0004-gdb-vence-numeros.md), PRD §8, `DESIGN-VISUAL-LAUNCHER.md`
 
 ## Contexto

@@ -156,7 +156,7 @@ docs/       PRD, ADRs, arquitetura, status e convenções
 
 ### Site público
 
-Landing page em `site/` (React + Vite). `pnpm -C site install` uma vez, depois `pnpm -C site dev` abre em `http://localhost:5173`. Os dados (heróis, roadmap, capturas) são extraídos em build de `shared/data/heroes`, `docs/roadmap/historia.json` e `docs/STATUS.md`. O merge na `main` publica no GitHub Pages pelo workflow `site`.
+Landing page "Loot Start" em `site/` (React + Vite), no ar em https://rodreis.github.io/rrb-godot/. `pnpm -C site install` uma vez, depois `pnpm -C site dev` abre em `http://localhost:5173`. Os dados (heróis, roadmap, capturas) são extraídos em build de `shared/data/heroes`, `docs/roadmap/historia.json` e `docs/STATUS.md`. O merge na `main` publica no GitHub Pages pelo workflow `site`. Detalhes: `docs/SITE.md`.
 
 ### Argumentos do Game (depois de `--`)
 
@@ -167,4 +167,5 @@ Landing page em `site/` (React + Vite). `pnpm -C site install` uma vez, depois `
 - `docs/ARCHITECTURE-LAUNCHER.md` — Launcher, backend e o contrato Launcher ↔ Game (argumentos, códigos de saída, `settings.cfg`).
 - `docs/ARCHITECTURE-GAME.md` — camadas, FSM da partida, rede.
 - `docs/DEVELOPMENT.md` e `docs/STATUS.md` — ordem de execução e andamento.
+- `docs/SITE.md` — site público (landing Loot Start): dados, marca, deploy e CI.
 - `docs/GITHUB.md`, `docs/PRS.md`, `docs/CI-PR.md` — branches, commits, PRs e CI.

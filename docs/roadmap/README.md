@@ -58,6 +58,8 @@ Quem escreve a narrativa ao fechar cada MVP: **ainda não definido pelo PI** com
 
 ## Publicação
 
+O conteúdo de `historia.json` e as capturas `entregue` também alimentam o **site público** (`site/`, https://rodreis.github.io/rrb-godot/, ver `docs/SITE.md`): o mesmo texto vale nos dois lugares, então siga as regras de texto público acima. O estado das entregas no site sai do mesmo `tools/roadmap/status.mjs` que este gerador usa.
+
 `index.html` funciona aberto direto no navegador (as fontes vêm do Google Fonts; sem internet, cai na fonte do sistema). Para um link compartilhável, gere a versão fragmento e publique como artifact:
 
 ```powershell

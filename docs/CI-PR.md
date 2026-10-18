@@ -14,11 +14,12 @@ Jobs paralelos por módulo, **um gate agregado**, duração medida, limites expl
 
 | Job | Dispara em | O que roda | Alvo |
 |---|---|---|---|
-| `changes` | sempre | `dorny/paths-filter` → saídas `game`, `launcher`, `backend`, `shared`, `infra`, `docs` | 10 s |
+| `changes` | sempre | `dorny/paths-filter` → saídas `game`, `launcher`, `backend`, `shared`, `infra`, `docs`, `site` | 10 s |
 | `lint-gd` | `game`, `launcher`, `shared` | `gdlint` + `gdformat --check` (gdtoolkit 4.x) em `*.gd` tocados; grep de literais numéricos em `scripts/core/` e `shared/core/` (I4); grep de `netfox`/`ENet` em `launcher/` (I9) | 1 min |
 | `test-game` | `game` ou `shared` | `godot --headless --path game --import` → GUT `game/test` + `shared/test` (`-gexit`, saída JUnit) | 3 min |
 | `test-launcher` | `launcher` ou `shared` | idem em `launcher/`; smoke de instanciação das 5 telas e da galeria | 3 min |
 | `test-backend` | `backend` | `pnpm install --frozen-lockfile`, `tsc --noEmit`, `eslint`, `jest` unit, e2e com Postgres (`services:`) | 4 min |
+| `site` | `site` ou `infra` | `pnpm install --frozen-lockfile` em `site/` → `pnpm test` (parser `.tres`) → `node --test tools/roadmap/build-roadmap.test.mjs` → `pnpm build` (extrai dados, `tsc --noEmit`, `vite build`) | 1 min |
 | `build-server` | `game`, `shared`, `infra` (a partir de F5) | `docker build infra/gameserver` (cache de camadas) | 3 min |
 | `export-check` | `game`, `launcher` (a partir de F28) | `--export-debug` dos presets Windows e Linux-server, sem publicar | 4 min |
 | `lint-docs` | `docs` | links internos (`lychee --offline`), `markdownlint` | 30 s |
@@ -38,6 +39,7 @@ Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker
 - **`soak` (F19 #68):** `.github/workflows/soak.yml`, `ubuntu-latest`, `timeout-minutes: 120`, `permissions: contents: read`. Roda `tools/soak.ps1 -Count 50 -Parallel 8` (servidor dedicado com `--bots`, tempo real) e sobe `soak-report/` (CSV, JSON e um log por partida) como artefato por 14 dias. Dispara por `schedule` (06:00 UTC), `workflow_dispatch` (input `count`) e `pull_request` só quando `soak.yml` muda. Fora do `gate`; falha do nightly é card `[FIX]`.
 - **`test-backend` (F21 #77):** em `backend/` ou `infra`; Postgres 16 em `services:`; `pnpm install --frozen-lockfile` → `eslint` → `tsc --noEmit` → `jest --coverage` (limite ≥ 80 % de linhas por `src/**/*.service.ts`, no `package.json`) → e2e supertest (`--runInBand`) → `pnpm build && pnpm openapi && git diff --exit-code openapi.json` (o `openapi.json` versionado tem de bater com o gerado). Node 24, pnpm pelo `packageManager` do `backend/package.json`. Entra no `needs` do `gate`.
 - **`test-launcher` (F24 #80):** em `launcher/`, `shared/` ou `infra`; `tools/test.ps1 -Module launcher` — GUT de `launcher/test/unit` (Router, ScreenStack, SettingsStore, tela Configurações, smoke de cada `.tscn` do Launcher e da galeria) e `shared/test`. Lint e tipagem do `launcher/` já estavam no `lint-gd`. Entra no `needs` do `gate`.
+- **`site` (PR #218):** em `site/`, `tools/roadmap/`, `shared/data/heroes/`, `docs/roadmap/historia.json`, `docs/STATUS.md` ou `infra`; Node 24, pnpm pelo `packageManager` do `site/package.json` (a `pnpm/action-setup` falha sem ele). Roda `pnpm test`, `node --test tools/roadmap/build-roadmap.test.mjs` e `pnpm build`. Entra no `needs` do `gate`. O **deploy** é outro workflow (`.github/workflows/site.yml`, só na `main`, GitHub Pages) e fica fora do `gate`. Ver `docs/SITE.md`.
 - Ainda não implementados: `build-server`, `export-check`, `lint-docs`, medição (§5) — entram por card `[INFRA]`. Até `lint-docs` existir, PR só de `docs/**` roda `changes` + `gate`.
 
 ## 3. Path filter
@@ -49,6 +51,7 @@ shared:   ['shared/**']
 backend:  ['backend/**']
 infra:    ['infra/**', '.github/**', 'tools/ci/**']
 docs:     ['docs/**', '*.md']
+site:     ['site/**', 'tools/roadmap/**', 'shared/data/heroes/**', 'docs/roadmap/historia.json', 'docs/STATUS.md']
 ```
 
 `shared` ⇒ `test-game` **e** `test-launcher`. `infra` ⇒ tudo (mudança de workflow prova tudo).
