@@ -54,7 +54,7 @@ write("roadmap.json", mvps.map((m) => ({
 })));
 
 // ---- fundos PNG → WebP ----
-for (const name of ["splash", "arena_day", "arena_night", "heroes"]) {
+for (const name of ["arena_day", "arena_night", "heroes"]) {
   const src = P("shared", "assets", "ui", "loading", `${name}.png`);
   if (!existsSync(src)) { warn(`${name}.png não encontrado`); continue; }
   await sharp(src).resize({ width: 1920, withoutEnlargement: true }).webp({ quality: 78 }).toFile(join(IMG, `${name}.webp`));

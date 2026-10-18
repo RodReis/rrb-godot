@@ -1,0 +1,25 @@
+.hero { position: relative; min-height: 100svh; display: grid; place-items: center; background-size: cover; background-position: center 40%; isolation: isolate; }
+/* véu roxo do splash do launcher sobre a arena à noite */
+.hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(74 28 60 / 0.6), rgb(52 22 56 / 0.45) 45%, rgb(11 19 38 / 0.7) 80%, var(--bg-surface) 100%); mix-blend-mode: normal; }
+.hero-fog { position: absolute; inset: -20%; pointer-events: none; opacity: 0.6; will-change: transform; }
+.hero-fog-a { background: radial-gradient(60% 40% at 30% 60%, rgb(58 31 58 / 0.55), transparent 70%); animation: fog-a 24s ease-in-out infinite alternate; }
+.hero-fog-b { background: radial-gradient(50% 45% at 70% 40%, rgb(40 20 60 / 0.5), transparent 70%); animation: fog-b 30s ease-in-out infinite alternate; }
+@keyframes fog-a { from { transform: translate3d(-3%, 0, 0); } to { transform: translate3d(3%, 2%, 0); } }
+@keyframes fog-b { from { transform: translate3d(3%, 1%, 0); } to { transform: translate3d(-3%, -2%, 0); } }
+.hero-content { position: relative; z-index: 1; display: grid; justify-items: center; gap: 1.5rem; text-align: center; padding-block: 6rem 5rem; }
+.hero-title { font-size: 1rem; }
+.hero-title .logo-stacked .logo-word { font-size: clamp(2rem, 1rem + 5vw, 4.2rem); text-shadow: 0 0 40px rgb(245 158 11 / 0.35); }
+.hero-tagline { max-width: 36ch; font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.35rem); color: var(--text); text-shadow: 0 2px 12px rgb(0 0 0 / 0.6); }
+.hero-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+.hero-soon { margin-left: 0.5rem; background: var(--on-gold); color: var(--gold-bright); }
+.hero-modes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; width: min(100%, 640px); list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.hero-mode { display: grid; gap: 0.25rem; justify-items: center; padding: 0.9rem 0.6rem; font-size: 0.85rem; color: var(--text-muted); }
+.hero-mode strong { font-family: var(--font-display); font-size: 1.4rem; color: var(--text); letter-spacing: 0.05em; }
+.hero-mode.is-active { border-color: var(--gold); box-shadow: 0 0 24px -6px var(--gold); }
+.hero-mode.is-active strong { color: var(--gold-bright); }
+.hero-mode.is-active .chip { background: var(--gold); color: var(--on-gold); }
+.hero-mode:not(.is-active) { opacity: 0.8; }
+.hero-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
+.hero-scroll { position: absolute; bottom: 1.25rem; left: 50%; translate: -50% 0; color: var(--gold-bright); text-decoration: none; font-size: 1.4rem; animation: bob 1.6s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(6px); } }
+@media (max-width: 480px) { .hero-mode span:not(.chip) { display: none; } }

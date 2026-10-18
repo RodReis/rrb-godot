@@ -1,9 +1,15 @@
-import { Logo } from "./brand/Logo";
+import { Nav } from "./components/Nav";
+import { Hero } from "./components/Hero";
+import { useReveal } from "./hooks/useReveal";
 
 export default function App() {
+  useReveal();
   return (
-    <main style={{ display: "grid", placeItems: "center", minHeight: "100vh" }}>
-      <h1><Logo variant="stacked" size={40} /></h1>
-    </main>
+    <>
+      <Nav />
+      <main>
+        <Hero />
+      </main>
+    </>
   );
 }
