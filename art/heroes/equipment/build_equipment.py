@@ -32,6 +32,7 @@ ROGUE = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "rogue.glb")
 ENGINEER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "engineer.glb")
 DRUID = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "druid.glb")
 BERSERKER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "berserker.glb")
+OCCULTIST = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "occultist.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
@@ -560,6 +561,12 @@ def shotgun_accents(p, rarity):
     p.gem(EPIC, (0.0, -0.35, 0.34), (0.08, 0.09, 0.06))
 
 
+# Ocultista (F77): o `staff` do Extra tem o mesmo desenho do 2H_Staff (haste -0.90 a 0.55, gola em z ~0.60,
+# orbe com gancho em z 0.70-1.30, x -0.25 a 0.33); os enfeites sao os do cajado do Bruxo. A cor da base vem
+# do atlas escuro do Ocultista (material do occultist.glb), entao as tres raridades ficam pretas e roxas.
+occultist_accents = staff_accents
+
+
 def druid_staff_accents(p, rarity):
     # Espaco local do druid_staff (F74): haste em +Z (-0.89 a 0.80; raio 0.04-0.09), no do punho z ~0.2, forquilha
     # de galhos em z 0.8-1.36 (x -0.57 a 0.30, y +-0.33), ponta do pe fina em z -0.89.
@@ -597,7 +604,11 @@ def axe1h_accents(p, rarity):
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
 # Berserker (F75): o par de machados vale um item de arma; o glb tem um machado em cada mao.
 BERSERKER_WEAPONS = ["axe_t1", "axe_t2", "axe_t3_epic"]
-HERO_WEAPON_ITEMS = {"druid": ["staff_t1", "staff_t2", "staff_t3_epic"]}  # F74: o Druida usa cajado, nao espada
+# F74/F77: o Druida e o Ocultista usam cajado, nao espada.
+HERO_WEAPON_ITEMS = {
+    "druid": ["staff_t1", "staff_t2", "staff_t3_epic"],
+    "occultist": ["staff_t1", "staff_t2", "staff_t3_epic"],
+}
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
     "knight": (KNIGHT, "1H_Sword", "handslot.r", sword_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
@@ -607,6 +618,7 @@ WEAPONS = {
     "rogue": (ROGUE, "crossbow_1handed", "handslot.r", crossbow_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
     "engineer": (ENGINEER, "shotgun", "handslot.r", shotgun_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
     "druid": (DRUID, "druid_staff", "handslot.r", druid_staff_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
+    "occultist": (OCCULTIST, "staff", "handslot.r", occultist_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
 }
 
 # ---------------------------------------------------------------------------------------------

@@ -177,6 +177,29 @@ static func berserker_skills(
 	)
 
 
+## Habilidades do Ocultista (SPEC-077) contra um alvo a [param distance] que se aproxima a
+## [param closing_speed] u/s (negativo = afasta): Praga (x) ate plague_range; Circulo Profano (y)
+## ate circle_range com o alvo se aproximando; o R (z) nunca (Servos so no F78). O basico, que
+## acumula as marcas, sai sozinho no alcance. 1 = usa (o Hero ainda confere recarga e rank).
+static func occultist_skills(
+	distance: float, closing_speed: float, profile: BotProfile
+) -> Vector3i:
+	return Vector3i(
+		int(distance <= profile.plague_range),
+		int(distance <= profile.circle_range and closing_speed >= profile.circle_approach_speed),
+		0,
+	)
+
+
+## Velocidade (u/s) com que [param target_velocity] encurta a distancia ate o bot: projecao no eixo
+## do bot ao alvo ([param to_target]); positivo = se aproximando.
+static func closing_speed(target_velocity: Vector3, to_target: Vector3) -> float:
+	var flat := Vector3(to_target.x, 0.0, to_target.z)
+	if flat.is_zero_approx():
+		return 0.0
+	return -Vector3(target_velocity.x, 0.0, target_velocity.z).dot(flat.normalized())
+
+
 ## Habilidade em que o bot gasta o proximo ponto: a primeira de R, Q, E abaixo do rank tipico do
 ## nivel ([param typical], GDB §3.2 — E1 no nivel 2); todas no tipico = R, Q, E na ordem. A
 ## validade do ponto (nivel minimo, rank maximo) e do SkillRules.learn.

@@ -27,4 +27,7 @@ potion_hp_pct = 0.5
 swamp_range = 7.0
 throw_range = 7.0
 rage_hp_pct = 0.4
+plague_range = 8.0
+circle_range = 7.0
+circle_approach_speed = 1.0
 zone_margin = 2.0

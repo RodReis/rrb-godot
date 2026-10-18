@@ -52,6 +52,7 @@ const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"engineer": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"druid": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"berserker": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
+	&"occultist": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 }
 
 var _out: String = "frametime"

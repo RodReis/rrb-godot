@@ -2,11 +2,11 @@ class_name HeroSelect
 extends CanvasLayer
 ## Selecao de herois (F51, prototipo docs/prd/telas/Seleção de Heróis; CONVENTION §3): aberta
 ## pelo main na HERO_PICK e fechada quando ela acaba. Card esquerdo = voce (heroi mostrado),
-## grade = so herois com cena, card direito = oponente quando o servidor confirma. 1-8 escolhem,
+## grade = so herois com cena, card direito = oponente quando o servidor confirma. 1-9 e 0 escolhem,
 ## Espaco ou o botao confirma; o lock-in vai ao servidor por RPC e so vale quando volta como
 ## hero_picked (inclusive o padrao do timeout). So le sinais e dados; quem decide e o servidor.
 
-const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8]
+const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0]
 ## Atributos do HeroData com o nome do PRD §4.2.
 const STAT_NAMES: Array[String] = [
 	"HP (Vida)", "DEF (Defesa)", "ATK (Ataque)", "INT (Inteligência)", "AGI (Agilidade)"

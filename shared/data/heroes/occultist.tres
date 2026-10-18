@@ -1,0 +1,93 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/occultist_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/occultist_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/occultist_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/occultist_r.svg" id="icon_r"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"occultist_basic"
+icon = ExtResource("icon_basic")
+display_name = "Projétil Sombrio"
+description = "Lança um projétil sombrio (7,5 u) que para no primeiro inimigo e soma 1 marca de Maldição: cada marca tira 6 de Defesa do alvo (até 3 marcas, 4 s; a marca nova renova todas). A Muralha bloqueia. Dano: 90% do ATQ."
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.1)
+attack_ratio = 0.9
+attack_range = 7.5
+radius = 0.4
+speed = 15.0
+duration = PackedFloat64Array(4.0)
+curse_marks = 1
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"occultist_q"
+icon = ExtResource("icon_q")
+display_name = "Praga"
+description = "Lança uma praga (8 u) que para no primeiro herói ou monstro e o corrói por 4 s, em 8 pulsos de 0,5 s. Reaplicar renova, sem acumular. A Muralha bloqueia. Dano total: base do rank + 100% do ATQ."
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(8, 7.5, 7, 6.5, 6)
+base_amount = PackedFloat64Array(80, 120, 160, 200, 240)
+attack_ratio = 1.0
+attack_range = 8.0
+radius = 0.4
+speed = 17.0
+duration = PackedFloat64Array(4.0)
+pulse_count = 8
+pulse_interval = 0.5
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"occultist_e"
+icon = ExtResource("icon_e")
+display_name = "Círculo Profano"
+description = "Marca no ponto mirado (até 7 u) um círculo de 2,5 u por 3 s: quem está dentro fica 35% mais lento e toma dano em 6 pulsos de 0,5 s. Dano total: base do rank + 60% do ATQ. Usar de dentro da moita revela."
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(13, 12.5, 12, 11.5, 11)
+base_amount = PackedFloat64Array(60, 90, 120, 150, 180)
+attack_ratio = 0.6
+radius = 2.5
+cast_range = 7.0
+duration = PackedFloat64Array(3.0)
+pulse_count = 6
+pulse_interval = 0.5
+slow = 0.35
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"occultist_r"
+icon = ExtResource("icon_r")
+display_name = "Servos do Vazio"
+description = "Em breve: invoca 2 servos que perseguem o alvo. Ainda sem ponto para aprender."
+max_rank = 0
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(55, 46)
+
+[resource]
+script = ExtResource("1_script")
+id = &"occultist"
+display_name = "Ocultista"
+role = "Mago"
+weapon_name = "Cajado"
+summary = "Mago de dano contínuo: amaldiçoa para derreter a Defesa, corrói com a Praga e prende o alvo no Círculo Profano."
+base_move_speed = 6.0
+base_hp = 370.0
+hp_per_level = 27.0
+base_defense = 9.0
+defense_per_level = 1.0
+base_attack = 42.0
+attack_per_level = 3.8
+base_intelligence = 32.0
+intelligence_per_level = 3.2
+base_agility = 14.0
+agility_per_level = 1.2
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")

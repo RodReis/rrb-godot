@@ -11,6 +11,7 @@ const ROGUE: String = "res://scenes/heroes/rogue.tscn"
 const ENGINEER: String = "res://scenes/heroes/engineer.tscn"
 const DRUID: String = "res://scenes/heroes/druid.tscn"
 const BERSERKER: String = "res://scenes/heroes/berserker.tscn"
+const OCCULTIST: String = "res://scenes/heroes/occultist.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -168,6 +169,18 @@ func test_protetor_usa_o_cajado_e_nao_mostra_elmo() -> void:
 	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
 	_hero._refresh_attributes()
 	assert_eq(_hero.attributes.defense, 16.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
+
+
+func test_ocultista_usa_o_cajado_e_nao_mostra_elmo() -> void:
+	_bind(OCCULTIST)
+	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t3_epic"])
+	assert_eq(_pieces("occultist_staff_t3_epic__handslot_r").size(), 1)
+	assert_false(_part("staff").visible, "cajado novo troca o do pack")
+	assert_true(_part("spellbook_open").visible, "o livro fica sempre")
+	assert_eq(_pieces("guard_helm_*").size(), 0, "capuz fica (ADR-0016 item 8)")
+	assert_true(_part("Occultist_Hood").visible)
+	assert_eq(_pieces("guard_chest_t3__*").size(), 1)
+	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
 
 
 func test_berserker_usa_os_dois_machados_e_pecas_do_corpo_large() -> void:

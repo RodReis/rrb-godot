@@ -3,8 +3,9 @@ extends Node
 ## Cliente (F41): cria os efeitos de cada heroi que entra em Players (HeroVfx da cena do heroi,
 ## por HeroData.id) e entrega o impacto confirmado pelo servidor (ImpactRelay) ao efeito do
 ## atacante, a nuvem da Ladina (F58) ao efeito dela e a Torreta e a caixa do Engenheiro (F59) ao
-## dele e a Pocao Verde e o Pantano do Protetor da Selva (F74) ao dele. Nunca existe no servidor
-## headless (bloco visual regra 1): a main so o cria quando wanted().
+## dele, a Pocao Verde e o Pantano do Protetor da Selva (F74) ao dele e o Circulo Profano do
+## Ocultista (F77) ao dele; as marcas e a Praga sobre o alvo sao do CurseMarks. Nunca existe
+## no servidor headless (bloco visual regra 1): a main so o cria quando wanted().
 ## O heroi nao ganha filho: os efeitos ficam aqui e o seguem.
 
 const NODE_NAME: StringName = &"Vfx"
@@ -18,6 +19,7 @@ const DRIVERS: Dictionary = {
 	&"engineer": preload("res://scenes/vfx/engineer_vfx.tscn"),
 	&"druid": preload("res://scenes/vfx/druid_vfx.tscn"),
 	&"berserker": preload("res://scenes/vfx/berserker_vfx.tscn"),
+	&"occultist": preload("res://scenes/vfx/occultist_vfx.tscn"),
 }
 
 ## Pai dos herois (Main/Players) e o relay de impactos; definidos antes de entrar na arvore.
@@ -37,6 +39,9 @@ func _ready() -> void:
 	_pool = VfxPool.new()
 	_pool.name = "Pool"
 	add_child(_pool)
+	var curses := CurseMarks.new()
+	curses.name = "Curses"
+	add_child(curses)
 	players.child_entered_tree.connect(_on_players_child_entered_tree)
 	relay.impacted.connect(_on_relay_impacted)
 	relay.smoke_shown.connect(_on_relay_smoke_shown)
@@ -93,3 +98,5 @@ func _on_relay_zone_shown(caster_id: int, kind: int, center: Vector3, tick: int)
 	var driver: Object = _drivers.get(caster_id)
 	if is_instance_valid(driver) and driver is DruidVfx:
 		(driver as DruidVfx).zone(kind, center, tick)
+	elif is_instance_valid(driver) and driver is OccultistVfx:
+		(driver as OccultistVfx).zone(kind, center, tick)

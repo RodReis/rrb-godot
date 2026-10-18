@@ -36,6 +36,15 @@ var attack_cooldown: int = 0
 ## No mapa. Falso: invisivel e sem HP (boss antes de 3:30 e depois de sair aos 5:00). Definido
 ## pelo SpawnDirector antes de entrar na arvore.
 var present: bool = true
+## Maldição e Praga do Ocultista (F77), como no Hero. Monstro não tem DEF (GDB §5.1): as marcas só
+## se acumulam (o VFX as mostra) e não mudam o dano. curse_stacks e dot_ticks são replicados;
+## o resto é do servidor.
+var curse_stacks: int = 0
+var curse_ticks: int = 0
+var dot_ticks: int = 0
+var dot_left: int = 0
+var dot_interval: int = 0
+var dot_source: int = 0
 
 var state: MonsterRules.State = MonsterRules.State.IDLE
 var _home: Vector3 = Vector3.ZERO
@@ -70,7 +79,15 @@ func _ready() -> void:
 	var sync := StateSynchronizer.new()
 	sync.name = "StateSynchronizer"
 	sync.root = self
-	sync.properties = [":transform", ":velocity", ":hp", ":attack_cooldown", ":present"]
+	sync.properties = [
+		":transform",
+		":velocity",
+		":hp",
+		":attack_cooldown",
+		":present",
+		":curse_stacks",
+		":dot_ticks",
+	]
 	add_child(sync)
 	_concealment = Concealment.guard(self, seen_by, sync)
 
@@ -137,6 +154,7 @@ func revive() -> void:
 	attack_cooldown = 0
 	_stun_ticks = 0
 	_slow_ticks = 0
+	_clear_curse_and_dot()
 	_target = null
 	_provoker = null
 	collision_mask = _alive_mask
@@ -148,6 +166,7 @@ func leave() -> void:
 	hp = 0
 	velocity = Vector3.ZERO
 	state = MonsterRules.State.IDLE
+	_clear_curse_and_dot()
 	_target = null
 	collision_mask = 0
 
@@ -169,6 +188,15 @@ func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
 	_provoke_camp(effect.attacker_id)
 	if not is_alive():
 		_die(tick, effect.attacker_id)
+		return
+	if effect.curse > 0:
+		curse_stacks = OccultistRules.add_stacks(curse_stacks, effect.curse)
+		curse_ticks = effect.curse_ticks
+	if effect.dot_pulses > 0:
+		dot_interval = effect.dot_interval_ticks
+		dot_ticks = OccultistRules.dot_duration_ticks(effect.dot_pulses, dot_interval)
+		dot_left = effect.dot_total
+		dot_source = effect.attacker_id
 
 
 ## Servidor: [param hero] feriu este monstro ou um do campo dele. Voltando ao spawn, ignora.
@@ -186,6 +214,9 @@ func cancel_hit(_tick: int, _source: int) -> void:
 ## IA so no servidor (no _ready o peer ainda e offline e is_server() mente).
 func _on_network_tick(_delta: float, tick: int) -> void:
 	if not multiplayer.is_server() or not is_alive():
+		return
+	_tick_curse_and_dot(tick)
+	if not is_alive():
 		return
 	attack_cooldown = maxi(attack_cooldown - 1, 0)
 	_stun_ticks = maxi(_stun_ticks - 1, 0)
@@ -228,6 +259,30 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 	velocity /= NetworkTime.physics_factor
 
 
+## Um tick das marcas e da Praga: o pulso tira o dano bruto (sem DEF) e, se mata, credita quem a
+## pos. O desconto vem depois do pulso, como no Hero (OccultistRules.is_dot_pulse).
+func _tick_curse_and_dot(tick: int) -> void:
+	var damage := OccultistRules.pulse_damage(dot_left, dot_ticks, dot_interval)
+	if damage > 0:
+		dot_left -= damage
+		hp = maxi(hp - damage, 0)
+		if not is_alive():
+			_die(tick, dot_source)
+	dot_ticks = maxi(dot_ticks - 1, 0)
+	curse_ticks = maxi(curse_ticks - 1, 0)
+	if curse_ticks == 0:
+		curse_stacks = 0
+
+
+func _clear_curse_and_dot() -> void:
+	curse_stacks = 0
+	curse_ticks = 0
+	dot_ticks = 0
+	dot_left = 0
+	dot_interval = 0
+	dot_source = 0
+
+
 func _chase(tick: int, target_dist: float) -> void:
 	if target_dist > MonsterRules.attack_reach(data):
 		_walk_to(_target.global_position)
@@ -267,6 +322,7 @@ func _die(tick: int, killer_id: int) -> void:
 	state = MonsterRules.State.IDLE
 	velocity = Vector3.ZERO
 	collision_mask = 0
+	_clear_curse_and_dot()
 	died.emit(killer_id, tick)
 	var heroes := get_tree().get_nodes_in_group(Hero.GROUP)
 	var killer: Hero = null

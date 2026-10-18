@@ -19,6 +19,7 @@ const FULL_ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/engineer.tres"),
 	preload("res://shared/data/heroes/druid.tres"),
 	preload("res://shared/data/heroes/berserker.tres"),
+	preload("res://shared/data/heroes/occultist.tres"),
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 const ALL_SCENES: Array[StringName] = [
@@ -29,7 +30,8 @@ const ALL_SCENES: Array[StringName] = [
 	&"rogue",
 	&"engineer",
 	&"druid",
-	&"berserker"
+	&"berserker",
+	&"occultist"
 ]
 const RATE: int = 30
 const START: int = 1000
@@ -161,9 +163,9 @@ func test_close_esconde() -> void:
 	assert_false(_screen.visible)
 
 
-func test_oito_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
+func test_nove_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
 	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
-	assert_eq(screen._choices.get_child_count(), 8)
+	assert_eq(screen._choices.get_child_count(), 9)
 	_press(screen, KEY_4)
 	assert_eq(screen._player_name.text, "BRUXO DE FOGO")
 	assert_eq(screen._player_role.text, "MAGO")
@@ -204,6 +206,15 @@ func test_tecla_8_escolhe_o_berserker_com_os_dados_reais() -> void:
 	assert_eq(screen._player_role.text, "LUTADOR")
 	assert_true(screen._cards[7]._tag.visible)
 	assert_false(screen._cards[6]._tag.visible)
+
+
+func test_tecla_9_escolhe_o_ocultista_com_os_dados_reais() -> void:
+	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
+	_press(screen, KEY_9)
+	assert_eq(screen._player_name.text, "OCULTISTA")
+	assert_eq(screen._player_role.text, "MAGO")
+	assert_true(screen._cards[8]._tag.visible)
+	assert_false(screen._cards[7]._tag.visible)
 
 
 func test_retrato_enquadra_o_corpo_maior_do_berserker_com_o_idle_dele() -> void:

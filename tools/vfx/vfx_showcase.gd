@@ -11,7 +11,8 @@ extends SceneTree
 const MAIN: String = "res://scenes/main.tscn"
 ## Distancia (u) ate o monstro ao comecar: a Investida (6 u) e a flecha alcancam.
 const START_DISTANCE: Dictionary = {
-	"knight": 4.0, "ranger": 6.0, "rogue": 3.5, "engineer": 5.0, "druid": 5.0, "berserker": 2.0
+	"knight": 4.0, "ranger": 6.0, "rogue": 3.5, "engineer": 5.0, "druid": 5.0, "berserker": 2.0,
+	"occultist": 5.0,
 }
 ## Sequencia por heroi: [segundos desde o inicio, acao, segundos apertada]. Acao "end" encerra.
 const SCRIPTS: Dictionary = {
@@ -77,6 +78,17 @@ const SCRIPTS: Dictionary = {
 		[2.6, &"skill_r", 0.1],
 		[3.4, &"primary_attack", 3.0],
 		[8.0, &"end", 0.0],
+	],
+	# Ocultista (F77): 3 Projeteis Sombrios (3 marcas sobre o alvo), Praga (nuvem verde no corpo) e
+	# Circulo Profano nos pes do monstro (E, 5 u: ja no alcance).
+	"occultist":
+	[
+		[0.6, &"primary_attack", 0.1],
+		[1.5, &"primary_attack", 0.1],
+		[2.4, &"primary_attack", 0.1],
+		[3.4, &"skill_q", 0.1],
+		[5.0, &"skill_e", 0.1],
+		[9.5, &"end", 0.0],
 	],
 }
 

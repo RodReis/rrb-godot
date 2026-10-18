@@ -11,6 +11,7 @@ const HEROES: Array[String] = [
 	"res://shared/data/heroes/rogue.tres",
 	"res://shared/data/heroes/engineer.tres",
 	"res://shared/data/heroes/druid.tres",
+	"res://shared/data/heroes/occultist.tres",
 ]
 const EPS: float = 0.0001
 
@@ -106,8 +107,6 @@ func test_habilidades_tem_descricao_e_icone() -> void:
 		assert_not_null(skill.icon, "icone de %s" % skill.id)
 
 
-func test_id_no_fim_de_ids_all() -> void:
-	assert_eq(
-		Ids.ALL[Ids.ALL.size() - 1], &"berserker", "id novo so no fim (ordem estavel na rede)"
-	)
+func test_id_estavel_em_ids_all() -> void:
+	assert_eq(Ids.to_int(&"berserker"), 35, "ordem de Ids.ALL estavel na rede (so acrescenta no fim)")
 	assert_eq(Ids.to_name(Ids.to_int(&"berserker")), &"berserker")

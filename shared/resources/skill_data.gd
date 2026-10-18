@@ -50,6 +50,9 @@ extends Resource
 ## -12/0/+12).
 @export var projectile_count: int
 @export var spread_degrees: float
+## Marcas de Maldicao que o golpe soma ao alvo (basico do Ocultista, F77: 1); a duracao da marca
+## vem de `duration`. A DEF tirada por marca e o teto ficam em OccultistRules.
+@export var curse_marks: int
 ## Fator do dano se a Ladina estava oculta no tick do uso (Emboscada).
 @export var ambush_multiplier: float
 
