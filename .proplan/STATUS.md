@@ -14,7 +14,6 @@ _(vazio)_
 ### [MVP2.8] Heróis 9 e 10 — Paladino Radiante (Tanque reativo) e Ocultista (Mago de dano contínuo) com Servos do Vazio (#213)
 
 - [MVP2.8][SPEC-078][F78] Servos do Vazio (R do Ocultista): 2 servos móveis com IA no servidor, perseguem heróis e monstros visíveis, sem recompensa ao morrer, kill para o dono (#216)
-- [MVP2.8][SPEC-077][F77] Ocultista (Mago de dano contínuo): Projétil Sombrio com Maldição, Praga, Círculo Profano; Mage do Extra com atlas escuro e capuz próprios, bot e VFX (#215)
 - [MVP2.8][SPEC-076][F76] Paladino Radiante (Tanque reativo): Maça, Golpe Consagrado, Retribuição, Bênção Inviolável; Knight do Extra alt_B sem elmo, maça própria, bot e VFX (#214)
 
 ### [MVP3] Meta + deploy (#76)
@@ -31,6 +30,10 @@ _(vazio)_
 _(vazio)_
 
 ## Finalizado
+
+### [MVP2.8] Heróis 9 e 10 — Paladino Radiante (Tanque reativo) e Ocultista (Mago de dano contínuo) com Servos do Vazio (#213)
+
+- [MVP2.8][SPEC-077][F77] Ocultista (Mago de dano contínuo): Projétil Sombrio com Maldição, Praga, Círculo Profano; Mage do Extra com atlas escuro e capuz próprios, bot e VFX (#215, finalizado em: 2026-10-18)
 
 ### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
 
