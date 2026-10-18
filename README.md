@@ -148,10 +148,15 @@ launcher/   projeto Godot B — fora da partida (telas, serviços, fila)
 shared/     comum aos dois (Resources .tres, regras puras, Theme, assets) — junction em game/ e launcher/
 backend/    NestJS + Postgres: auth, fila, orquestrador, partidas
 infra/      Docker do game server, compose de dev e de produção, deploy
+site/       site público (landing Loot Start) — React + Vite, publicado no GitHub Pages
 art/        fontes .blend (Blender); o Godot só importa o .glb exportado
 tools/      scripts PowerShell (setup, testes, servidor, clientes, pacote, roadmap)
 docs/       PRD, ADRs, arquitetura, status e convenções
 ```
+
+### Site público
+
+Landing page em `site/` (React + Vite). `pnpm -C site install` uma vez, depois `pnpm -C site dev` abre em `http://localhost:5173`. Os dados (heróis, roadmap, capturas) são extraídos em build de `shared/data/heroes`, `docs/roadmap/historia.json` e `docs/STATUS.md`. O merge na `main` publica no GitHub Pages pelo workflow `site`.
 
 ### Argumentos do Game (depois de `--`)
 
