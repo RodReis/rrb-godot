@@ -24,7 +24,11 @@ Os previews grandes (`PlayerPreview`/`EnemyPreview`) não definiam `facing` e o 
 costas nos KayKit); a grade e a ficha já definiam 180. Agora `HeroSelect.PREVIEW_FACING = 180.0` nos dois.
 Teste: `test_previews_comecam_de_frente`.
 
+## Verificação
+
+PI aprovou em 2026-10-19, jogo offline contra o bot ao vivo ("ficou bom").
+
 ## Não coberto (`not_run`)
 
-Verificação visual do PI em tela cheia no monitor dele; telas de aspecto mais estreito que 16:9 (o `expand`
+Telas de aspecto mais estreito que 16:9 (o `expand`
 só cresce na vertical, o mínimo de largura 1392 cabe nos 1920 da base).
