@@ -39,7 +39,7 @@ docker logs <backend>                             # orquestrador: alocação, he
 
 ## Pacote do jogador (ZIP no GitHub Release)
 
-- Local: `.\tools\build-package.ps1 -ApiUrl https://<domínio> -Version v0.x.y` → `build\rrb-arena-<versão>-win64.zip`
+- Local: `.\tools\build-package.ps1 -ApiUrl https://<domínio> -Version v0.x.y` → `build\LootStart-<versão>-win64.zip`
   (precisa dos export templates do Godot 4.7.2 e de `tools\link-shared.ps1`).
 - Release: variável de repositório `RRB_API_URL` (Settings → Variables) + tag anotada `v0.x.y` na `main` com CI
   verde → `.github/workflows/release.yml` gera o ZIP e cria o Release (pré-lançamento) com o aviso do SmartScreen.
@@ -51,7 +51,7 @@ docker logs <backend>                             # orquestrador: alocação, he
 - **Site** (`site/Dockerfile`, nginx) é o serviço `site` do compose: no Coolify, domínio `https://lootstart.cloud` no
   serviço `site`, porta 80. Serve o site, `/download/` (pasta do host `/srv/rrb-download`, só leitura) e `/roadmap/`.
 - **Download:** `/srv/rrb-download` pertence ao usuário `rrbdl` (só upload por chave, `restrict`, home fora da pasta
-  servida). O `release.yml` envia o ZIP da tag e aponta `rrb-arena-latest-win64.zip` para ele; precisa do segredo
+  servida). O `release.yml` envia o ZIP da tag e aponta `LootStart-latest-win64.zip` para ele; precisa do segredo
   `VPS_UPLOAD_KEY` (chave privada do `rrbdl`) no repositório. Chave do host em `infra/known_hosts`.
 - **Repositório privado:** o recurso do Coolify precisa de acesso de leitura ao repo. Sem trocar o recurso: um token
   *fine-grained* do GitHub só com **Contents: Read-only** neste repositório, posto na URL do repositório do recurso

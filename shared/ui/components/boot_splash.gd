@@ -1,7 +1,8 @@
 class_name BootSplash
 extends TextureRect
-## Splash "ARENA 1V1" do Launcher (F68, SPEC-068): o boot splash do motor fica sem imagem (so a cor
-## de fundo, sem o logo do Godot) e este controle cobre a janela ate o Launcher estar pronto.
+## Splash "Loot Start" do Launcher (F68, SPEC-068; marca do F82): o boot splash do motor fica sem
+## imagem (so a cor de fundo, sem o logo do Godot) e este controle cobre a janela ate o Launcher
+## estar pronto.
 ## Imagem gerada por tools/ui/render_loading.gd. [method dismiss] some com fade e se liberta;
 ## chamar de novo nao faz nada.
 

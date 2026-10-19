@@ -115,7 +115,7 @@ func test_footer_mostra_um_item_por_atalho() -> void:
 	var hints: Array[HotkeyHint] = [
 		HotkeyHint.make("ESC", "Voltar"), HotkeyHint.make("F1", "Ajuda")
 	]
-	footer.bind(hints, "pronto", "ARENA 1V1")
+	footer.bind(hints, "pronto", BrandLogo.WORDMARK)
 	await wait_process_frames(1)
 	var keys := footer.find_children("*", "Label", true, false).filter(
 		func(label: Node) -> bool: return (label as Label).theme_type_variation == &"LnKeyLabel"

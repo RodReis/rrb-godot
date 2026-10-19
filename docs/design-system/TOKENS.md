@@ -129,8 +129,8 @@ Gerados por `shared/ui/theme/launcher_theme.gd` (chamado no fim do `ThemeBuilder
 
 | Grupo | Tipos |
 |---|---|
-| Texto (`Label`) | `LnHeadlineLg`, `LnHeadlineSm`, `LnHeadlineSmGold`, `LnBrand`, `LnBody`, `LnBodyMuted`, `LnBodyGold`, `LnBodySm`, `LnBodySmMuted`, `LnBodySmError`, `LnNum`, `LnNumText`, `LnNumGold`, `LnNumCyan`; ícones `LnIconGold`, `LnIconCyan`, `LnIconMuted`, `LnIconError`, `LnIconLogo`, `LnIconTitle` |
-| Painéis (`PanelContainer`) | `LnAppBar` (`BG_LOW` 95 %, sombra), `LnCard` / `LnCardRaised` (`BG_LOW`, raio 8, sombra 20/24 px), `LnRibbon`, `LnFooter`, `LnRow` / `LnRowHover` (`BG_PANEL`/`BG_CARD` opacos, raio 2), `LnWell` (`BG_LOWEST` com inset), `LnChip`, `LnIconBox`, `LnLogoBox`, `LnModal`, `LnToast` |
+| Texto (`Label`) | `LnHeadlineLg`, `LnHeadlineSm`, `LnHeadlineSmGold`, `LnBrand`, `LnBody`, `LnBodyMuted`, `LnBodyGold`, `LnBodySm`, `LnBodySmMuted`, `LnBodySmError`, `LnNum`, `LnNumText`, `LnNumGold`, `LnNumCyan`; ícones `LnIconGold`, `LnIconCyan`, `LnIconMuted`, `LnIconError`, `LnIconTitle` |
+| Painéis (`PanelContainer`) | `LnAppBar` (`BG_LOW` 95 %, sombra), `LnCard` / `LnCardRaised` (`BG_LOW`, raio 8, sombra 20/24 px), `LnRibbon`, `LnFooter`, `LnRow` / `LnRowHover` (`BG_PANEL`/`BG_CARD` opacos, raio 2), `LnWell` (`BG_LOWEST` com inset), `LnChip`, `LnIconBox`, `LnModal`, `LnToast` |
 | Botões | `LnTab` (aba e menu; ativo `GOLD` com brilho), `LnButton`, `LnButtonPrimary` (`GOLD`, borda 3D `GOLD_EDGE` 4 px, brilho), `LnButtonDanger` (`ERROR_BG`), `LnIconButton`, `LnIconButtonDanger`, `LnSegment`, `LnKey` / `LnKeyCyan` / `LnKeyUltimate` (tecla; escutando = `GOLD`), `LnKeyLabel` (tecla só leitura) |
 | Controles | `LnSwitch` (`CheckButton`, SVG em `shared/ui/theme/launcher/`), `LnSlider`, `LnOption` + `LnPopup`, `LnScrollBar` |
 | Layout | `LnHGap{Xs,Sm,Md,Lg,Xl}` / `LnVGap{…}` (espaçamento por token, sem override em componente), `LnScreenMargin`, `LnDivider` / `LnDividerV` |

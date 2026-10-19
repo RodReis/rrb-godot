@@ -12,10 +12,10 @@ signal profile_requested
 
 ## h-16 do prototipo.
 const HEIGHT: float = 64.0
-## Caixa do logo (w-9 h-9) e divisor (h-6).
+## Icone da marca (w-9 h-9) e divisor (h-6).
 const LOGO_SIZE: Vector2 = Vector2(36, 36)
 const DIVIDER_HEIGHT: float = 24.0
-const BRAND: String = "ARENA 1V1"
+const BRAND: String = BrandLogo.WORDMARK
 ## Ponto do chip (w-2 h-2 rounded-full animate-pulse: opacidade 1 -> 0,5 em 2 s).
 const DOT_SIZE: Vector2 = Vector2(8, 8)
 const PULSE_SECONDS: float = 1.0
@@ -39,25 +39,7 @@ func _init() -> void:
 	var row := HBoxContainer.new()
 	row.theme_type_variation = &"LnHGapLg"
 	add_child(row)
-	var logo := HBoxContainer.new()
-	logo.theme_type_variation = &"LnHGapSm"
-	row.add_child(logo)
-	var box := PanelContainer.new()
-	box.theme_type_variation = &"LnLogoBox"
-	box.custom_minimum_size = LOGO_SIZE
-	box.size_flags_vertical = SIZE_SHRINK_CENTER
-	logo.add_child(box)
-	var swords := Label.new()
-	swords.theme_type_variation = &"LnIconLogo"
-	swords.text = UiIcons.SWORDS
-	swords.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	swords.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	box.add_child(swords)
-	var brand := Label.new()
-	brand.theme_type_variation = &"LnBrand"
-	brand.text = BRAND
-	brand.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	logo.add_child(brand)
+	row.add_child(BrandLogo.make(LOGO_SIZE.y, UiTokens.TYPE_LN_HEADLINE_SM))
 	_divider.theme_type_variation = &"LnDividerV"
 	_divider.custom_minimum_size.y = DIVIDER_HEIGHT
 	_divider.size_flags_vertical = SIZE_SHRINK_CENTER

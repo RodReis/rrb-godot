@@ -4,7 +4,7 @@ extends SceneTree
 ##   shared/assets/ui/loading/arena_day.png    arena de dia (curva do DayNightProfile, noite = 0)
 ##   shared/assets/ui/loading/arena_night.png  arena de noite (noite = 1)
 ##   shared/assets/ui/loading/heroes.png       os herois em pose, no entardecer
-##   shared/assets/ui/loading/splash.png       "ARENA 1V1" sobre o entardecer (Launcher)
+##   shared/assets/ui/loading/splash.png       marca "Loot Start" sobre o entardecer (Launcher)
 ## Mesma luz/ceu do ciclo dia/noite do jogo (DayNightProfile). Heroi novo: acrescente em HEROES e
 ## rode de novo. Precisa de janela (GPU) e do projeto do Game; na raiz do repo:
 ##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/render_loading.gd
@@ -97,13 +97,10 @@ const HEROES: Dictionary[String, Array] = {
 	"occultist": ["res://shared/assets/rrb/heroes/occultist.glb", []],
 	"paladin": ["res://shared/assets/rrb/heroes/paladin.glb", []],
 }
-const TITLE: String = "ARENA 1V1"
-const TITLE_SIZE: int = 150
-const TITLE_COLOR: Color = Color(1.0, 0.757, 0.455)
-const TITLE_OUTLINE_COLOR: Color = Color(0.043, 0.075, 0.149)
-const TITLE_OUTLINE: int = 10
+## Marca empilhada do splash (BrandLogo, F82): lado do icone e tamanho do wordmark (px @1080p).
+const BRAND_ICON: float = 240.0
+const BRAND_WORD: int = 120
 const SCRIM: Color = Color(0.043, 0.075, 0.149, 0.45)
-const FONT_DISPLAY: String = "res://shared/ui/theme/fonts/font_display.ttf"
 
 var _profile: DayNightProfile
 
@@ -180,17 +177,10 @@ func _splash(file: String, night: float) -> bool:
 	scrim.color = SCRIM
 	scrim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	viewport.add_child(scrim)
-	var title := Label.new()
-	title.text = TITLE
-	title.set_anchors_preset(Control.PRESET_FULL_RECT)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	title.add_theme_font_override(&"font", load(FONT_DISPLAY) as Font)
-	title.add_theme_font_size_override(&"font_size", TITLE_SIZE)
-	title.add_theme_color_override(&"font_color", TITLE_COLOR)
-	title.add_theme_color_override(&"font_outline_color", TITLE_OUTLINE_COLOR)
-	title.add_theme_constant_override(&"outline_size", TITLE_OUTLINE)
-	viewport.add_child(title)
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.add_child(BrandLogo.make(BRAND_ICON, BRAND_WORD, true))
+	viewport.add_child(center)
 	return _save(await _capture(viewport), file)
 
 

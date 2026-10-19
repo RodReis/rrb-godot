@@ -1,4 +1,4 @@
-# rrb-godot — ARENA 1V1
+# rrb-godot — Loot Start
 
 MOBA 3D de 2 tempos (preparação de 5 min → confronto com zona que fecha), 1x1, em **Godot 4.7.2** (Forward+), com **servidor autoritativo** e 10 heróis jogáveis.
 Escopo: `docs/prd/PRD.md`. Andamento: `docs/STATUS.md`. Decisões: `docs/DECISIONS.md`.
@@ -16,9 +16,9 @@ São dois programas independentes que se falam por processo e argumentos (`docs/
 
 **Requisitos:** Windows 64 bits, placa de vídeo com Vulkan (o Game só roda no renderer Forward+), internet.
 
-1. Baixe `rrb-arena-<versão>-win64.zip` em **Releases** do repositório.
+1. Baixe `LootStart-<versão>-win64.zip` em https://lootstart.cloud/download/.
 2. **Extraia o ZIP inteiro** para uma pasta (não rode de dentro do ZIP). Não mova nem renomeie a pasta `game`: o Launcher procura o jogo em `game\game.exe`.
-3. Dê dois cliques em `launcher.exe`.
+3. Dê dois cliques em `LootStart.exe`.
 4. **Aviso do Windows (SmartScreen):** o executável não tem assinatura de código, então aparece "O Windows protegeu seu computador". Clique em **Mais informações** e depois em **Executar assim mesmo**.
 5. **Crie sua conta** (aba "Criar conta"): e-mail e senha com **mínimo de 8 caracteres, ao menos uma letra e um número**. Não há recuperação de senha nem verificação de e-mail.
 6. **Defina o nickname** (obrigatório no 1º login): 3–16 caracteres `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas. Ele aparece com `#` na frente. Você pode escolher um avatar (predefinido ou PNG/JPG até 1 MB, que fica só no seu computador).
@@ -135,10 +135,10 @@ A CI roda também `gdlint` e `gdformat --check` (`pip install 'gdtoolkit==4.*'`)
 ### Gerar o pacote ZIP e publicar
 
 ```powershell
-.\tools\build-package.ps1 -ApiUrl https://<dominio-do-backend> -Version v0.x.y   # → build\rrb-arena-<versão>-win64.zip
+.\tools\build-package.ps1 -ApiUrl https://<dominio-do-backend> -Version v0.x.y   # → build\LootStart-<versão>-win64.zip
 ```
 
-Precisa dos export templates do Godot 4.7.2. O ZIP leva `launcher.exe/.pck`, `game\game.exe/.pck` e `LEIA-ME.txt`, com a URL do backend embutida no Launcher (`--api=` ainda vence). A publicação é por tag anotada `v0.x.y` na `main` com CI verde (`.github/workflows/release.yml`); a variável de repositório `RRB_API_URL` define a URL. Deploy do backend e dos servidores de partida no VPS (Coolify, UDP 7000–7020): `infra/README.md`.
+Precisa dos export templates do Godot 4.7.2. O ZIP leva `LootStart.exe/.pck`, `game\game.exe/.pck` e `LEIA-ME.txt`, com a URL do backend embutida no Launcher (`--api=` ainda vence). A publicação é por tag anotada `v0.x.y` na `main` com CI verde (`.github/workflows/release.yml`); a variável de repositório `RRB_API_URL` define a URL. Deploy do backend e dos servidores de partida no VPS (Coolify, UDP 7000–7020): `infra/README.md`.
 
 ### Estrutura
 

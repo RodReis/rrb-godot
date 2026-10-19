@@ -90,7 +90,7 @@ launcher/
 | Configurações | `settings` | lobby (item AJUSTES) | lobby — abas Controles & Câmera (inclui o zoom, F67), Gráficos & Performance (vídeo e os 4 toggles de `[graphics]`), Áudio e **Créditos** (licenças de `shared/assets/LICENSES.md`, CC-BY obrigatório; decisão do PI 2026-10-10; `credits_view.gd`) |
 | Arena & Mapa | `arena_map` | lobby | lobby ("Praticar vs Bot" = mesma ação do lobby) — DV tela 10; mapa é imagem estática (`shared/assets/ui/arena_map.png`), nunca cena de arena |
 
-Menu da barra superior (`Router.NAV`, na ordem): LOBBY · HERÓIS · ARENA & MAPA · GUIA & BESTIÁRIO · HISTÓRICO · AJUSTES; a Forja é aba do Guia & Bestiário (e o destaca no menu) e o Perfil abre pelo chip do cabeçalho. A rota `gallery` (galeria do design system) só abre com `--gallery` e fica fora do menu. **Splash (F68):** `BootSplash` ("ARENA 1V1") cobre a janela até a 1ª checagem do backend (teto de 2 s). Pilha simples: lobby é a raiz; as demais são `push`; `Esc` = `pop`. Fila é um estado do lobby (card direito), não tela. Enquanto o Game roda, o Launcher mostra overlay (`MatchOverlay`: "Partida em andamento" ou "Treino em andamento") com botão "Encerrar jogo" (mata o processo) e bloqueia navegação.
+Menu da barra superior (`Router.NAV`, na ordem): LOBBY · HERÓIS · ARENA & MAPA · GUIA & BESTIÁRIO · HISTÓRICO · AJUSTES; a Forja é aba do Guia & Bestiário (e o destaca no menu) e o Perfil abre pelo chip do cabeçalho. A rota `gallery` (galeria do design system) só abre com `--gallery` e fica fora do menu. **Splash (F68):** `BootSplash` (marca "Loot Start", F82) cobre a janela até a 1ª checagem do backend (teto de 2 s). Pilha simples: lobby é a raiz; as demais são `push`; `Esc` = `pop`. Fila é um estado do lobby (card direito), não tela. Enquanto o Game roda, o Launcher mostra overlay (`MatchOverlay`: "Partida em andamento" ou "Treino em andamento") com botão "Encerrar jogo" (mata o processo) e bloqueia navegação.
 
 ### 3.5 Lobby: diorama 3D
 
@@ -149,7 +149,7 @@ Este é o **único** lugar onde os dois módulos se tocam. Mudar aqui exige ADR.
 
 ```
 <instalação>/
-  launcher.exe + launcher.pck
+  LootStart.exe + LootStart.pck     (nome do F82, ADR-0022)
   game/game.exe + game.pck
 ```
 

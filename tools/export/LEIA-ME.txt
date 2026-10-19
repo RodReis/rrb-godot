@@ -1,7 +1,7 @@
-ARENA 1V1 — pacote portatil (Windows 64 bits)
+Loot Start — pacote portatil (Windows 64 bits)
 
 1. Extraia o ZIP inteiro para uma pasta (nao rode de dentro do ZIP).
-2. De dois cliques em launcher.exe.
+2. De dois cliques em LootStart.exe.
 3. Crie sua conta, entre na fila e jogue.
 
 Aviso do Windows (SmartScreen)

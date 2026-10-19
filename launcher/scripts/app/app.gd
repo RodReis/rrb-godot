@@ -9,7 +9,8 @@ extends Control
 ## tabela do §5.2 (codigo 0 de partida online volta ao Lobby com o card "Resultado da partida",
 ## F70). Telas emitem; quem navega e confirma e o App.
 ## --gallery (depois do --) abre a galeria do design system, a prova visual dos componentes.
-## Splash "ARENA 1V1" (F68): cobre a janela ate a 1a checagem do backend (teto SPLASH_MAX_SECONDS).
+## Splash "Loot Start" (F68, F82): cobre a janela ate a 1a checagem do backend
+## (teto SPLASH_MAX_SECONDS).
 
 const GALLERY_ARG: String = "--gallery"
 ## Toast no canto inferior direito, acima do rodape.

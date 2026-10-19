@@ -60,8 +60,8 @@ jobs:
         if: github.ref_type != 'tag'
         uses: actions/upload-artifact@v4
         with:
-          name: rrb-arena-dev-win64
-          path: build/rrb-arena-dev-win64.zip
+          name: LootStart-dev-win64
+          path: build/LootStart-dev-win64.zip
           retention-days: 3
 
       - name: Publicar o Release
@@ -72,8 +72,8 @@ jobs:
         run: |
           cat > /tmp/notes.md <<'NOTES'
           ## Como instalar
-          1. Baixe `rrb-arena-*-win64.zip` e **extraia tudo** para uma pasta.
-          2. Abra `launcher.exe`, crie a conta, entre na fila e jogue.
+          1. Baixe `LootStart-*-win64.zip` e **extraia tudo** para uma pasta.
+          2. Abra `LootStart.exe`, crie a conta, entre na fila e jogue.
 
           **Aviso do Windows (SmartScreen):** o executável não tem assinatura de código, então aparece
           "O Windows protegeu seu computador". Clique em **Mais informações** e depois em
@@ -83,10 +83,10 @@ jobs:
 
           ## O que mudou
           NOTES
-          gh release create "$TAG" "build/rrb-arena-${TAG}-win64.zip" \
+          gh release create "$TAG" "build/LootStart-${TAG}-win64.zip" \
             --title "$TAG" --notes-file /tmp/notes.md --generate-notes --prerelease
 
-      # Download publico (#237): https://lootstart.cloud/download/ e o atalho rrb-arena-latest-win64.zip.
+      # Download publico (#237): https://lootstart.cloud/download/ e o atalho LootStart-latest-win64.zip.
       # Chave so de upload (usuario rrbdl no VPS), segredo VPS_UPLOAD_KEY; host fixo em infra/known_hosts.
       - name: Enviar o ZIP para o VPS
         if: github.ref_type == 'tag'
@@ -103,6 +103,6 @@ jobs:
           printf '%s\n' "$UPLOAD_KEY" > ~/.ssh/upload_key
           chmod 600 ~/.ssh/upload_key
           grep -v '^#' infra/known_hosts > ~/.ssh/known_hosts
-          zip="rrb-arena-${TAG}-win64.zip"
+          zip="LootStart-${TAG}-win64.zip"
           scp -i ~/.ssh/upload_key "build/$zip" "rrbdl@${VPS_HOST}:/srv/rrb-download/$zip"
-          ssh -i ~/.ssh/upload_key "rrbdl@${VPS_HOST}" "ln -sfn $zip /srv/rrb-download/rrb-arena-latest-win64.zip"
+          ssh -i ~/.ssh/upload_key "rrbdl@${VPS_HOST}" "ln -sfn $zip /srv/rrb-download/LootStart-latest-win64.zip"

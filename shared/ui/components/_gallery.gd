@@ -419,7 +419,7 @@ func _launcher_chrome() -> void:
 	footer.custom_minimum_size.x = SCREEN_BLOCK_WIDTH
 	_add(row, footer, "ScreenFooter")
 	var hints: Array[HotkeyHint] = [HotkeyHint.make("ESC", "Voltar")]
-	footer.bind(hints, "status", "ARENA 1V1")
+	footer.bind(hints, "status", BrandLogo.WORDMARK)
 	for error: String in ["", "E-mail inválido"]:
 		var form := FormRow.new()
 		form.custom_minimum_size.x = CARD_SIZE.x * 1.5

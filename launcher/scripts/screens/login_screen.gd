@@ -25,6 +25,8 @@ const RIGHT_COLUMNS: float = 5.0
 ## Arte h-72 e paragrafo max-w-xl.
 const ART_HEIGHT: float = 288.0
 const TEXT_MAX_WIDTH: float = 576.0
+## Icone da marca no Login (F82): proporcional ao wordmark de 56 px.
+const BRAND_ICON_SIZE: float = 72.0
 ## Fundo: blur-3xl de tres circulos (cor, centro UV, raio px).
 const GLOW_GOLD: Color = Color(UiTokens.GOLD, 0.10)
 const GLOW_BLUE: Color = Color(UiTokens.BLUE, 0.15)
@@ -134,14 +136,9 @@ func _left_column() -> VBoxContainer:
 	column.size_flags_horizontal = SIZE_EXPAND_FILL
 	column.size_flags_stretch_ratio = LEFT_COLUMNS
 	column.alignment = BoxContainer.ALIGNMENT_CENTER
-	var title := HBoxContainer.new()
-	title.theme_type_variation = &"LnHGapMd"
-	column.add_child(title)
-	for part: Array in [["ARENA", &"LnDisplay"], ["1V1", &"LnDisplayGold"]]:
-		var label := Label.new()
-		label.theme_type_variation = part[1]
-		label.text = part[0]
-		title.add_child(label)
+	var brand := BrandLogo.make(BRAND_ICON_SIZE, UiTokens.TYPE_LN_DISPLAY)
+	brand.size_flags_horizontal = SIZE_SHRINK_BEGIN
+	column.add_child(brand)
 	var text := Label.new()
 	text.theme_type_variation = &"LnBodyLg"
 	text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
