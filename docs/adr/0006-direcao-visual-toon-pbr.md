@@ -4,6 +4,8 @@
 **Decisor:** Rodrigo Reis (PI)
 **Relacionados:** PRD §1.2, §11 · ADR-0005 · ADR-0007 · `CLAUDE.md` §Assets 3D · `TOKENS.md` · `FORA-DE-ESCOPO.md` · `APRENDIZADOS.md` #4 · spec `docs/superpowers/specs/2026-10-10-bloco-visual-design.md` · guia `docs/prd/guia_melhorias_graficas_godot4.md`
 
+> **Nota (2026-10-19):** o toon/outline foi abandonado no aceite do F39 (2026-10-10). Onde este texto diz "toon/outline", leia sem ele — ver [ADR-0018](0018-toon-outline-abandonado.md).
+
 ## Contexto
 
 - O PI trouxe em 2026-10-10 um guia de melhorias gráficas (Rodrigo/Gemini) propondo "Stylized PBR" (SSAO, SSIL, SDFGI, fog volumétrico), shaders de água/chão, VFX de combate, HUD temática, grama e bevel/bake no Blender.

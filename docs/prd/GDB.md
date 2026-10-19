@@ -70,7 +70,7 @@ $$\text{Velocidade de Ataque} \mathrel{+}= 60\% \times f \qquad \text{Roubo de V
 
 #### F. Maldição do Ocultista (debuff, ADR-0016, F77)
 $$\text{DEF}_{\text{efetiva}} = \max\!\left(0,\ \text{DEF} - m \times 6\right), \qquad m \in \{0, 1, 2, 3\}$$
-- Cada acerto do **ataque básico** do Ocultista (§4.10) aplica **1 marca** ($m \mathrel{+}= 1$, teto $m = 3$) em herói ou monstro inimigo (boss incluído). Só o básico aplica marca; Q, E e Servos não.
+- Cada acerto do **ataque básico** do Ocultista (§4.10) aplica **1 marca** ($m \mathrel{+}= 1$, teto $m = 3$) em herói, servo ou monstro inimigo (boss incluído). Só o básico aplica marca; Q, E e Servos não.
 - As marcas duram $4.0\text{ s}$; **a marca nova renova a duração de todas**. Ao expirar, caem todas juntas ($m = 0$).
 - A Defesa efetiva **nunca fica negativa** (piso 0) e entra na fórmula A no lugar da Defesa; bônus temporários de Defesa (Grito de Guerra, itens) somam antes do desconto.
 - Estado no próprio alvo (`curse_stacks`, `curse_ticks`), aplicado no `_rollback_tick` dele pelo ledger (ADR-0001).
@@ -423,6 +423,7 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
   - Cooldown Base: $[60.0, 50.0]\text{ s}$.
 - **Decisões do PI em 2026-10-19 (F76):**
   - O **Bacamarte do Engenheiro (§4.6) não é golpe direto**: é tiro de arma de fogo, e a Retribuição não o devolve. Golpe direto (ADR-0016 item 4) segue sendo o de contato, sem projétil, zona nem pulso: no código, os básicos corpo a corpo, Investida, Execução, Emboscada, Golpe Consagrado, o golpe de monstro de alvo único e o do servo.
+  - **Golpe fatal (decisão do PI em 2026-10-19):** o golpe que leva o Paladino a 0 de HP **não** é devolvido. A Retribuição só devolve golpes que ele sobrevive.
   - **Durante a imunidade da Bênção Inviolável**, a Retribuição devolve **só a parte do ATK** ($0.2 \times \text{ATK}$): o Paladino não tomou dano, e a parte percentual é sobre o dano que ele recebeu (depois da Defesa).
 
 ---
@@ -448,7 +449,7 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
   - Cooldown Base: $1.1\text{ s}$.
   - Dano: $90\%\text{ ATK}$ + **1 marca de Maldição** (§2.2-F).
 - **Q — Praga:**
-  - Projétil (velocidade $17\text{ u/s}$, alcance $8.0\text{ u}$, raio colisão $0.4\text{ u}$) que para no primeiro herói ou monstro: **dano contínuo por $4.0\text{ s}$** ($8$ pulsos a cada $0.5\text{ s}$). Reaplicar renova a duração (não acumula). Bloqueado pela Muralha.
+  - Projétil (velocidade $17\text{ u/s}$, alcance $8.0\text{ u}$, raio colisão $0.4\text{ u}$) que para no primeiro herói, servo inimigo ou monstro: **dano contínuo por $4.0\text{ s}$** ($8$ pulsos a cada $0.5\text{ s}$). Reaplicar renova a duração (não acumula). Bloqueado pela Muralha.
   - Cooldown Base: $[8.0, 7.5, 7.0, 6.5, 6.0]\text{ s}$.
   - Dano Total: $[80, 120, 160, 200, 240] + (1.0 \times \text{ATK})$, dividido pelos pulsos.
 - **E — Círculo Profano:**

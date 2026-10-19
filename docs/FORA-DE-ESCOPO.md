@@ -31,7 +31,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Cinemática de abertura pulável (`Esc`) | ADR-0015 | PI escolheu 5 s mínimo, corta aos 8 s, sem pular | MVP4 | playtest reclamar da espera |
 | Alvo travado que persegue (anda até entrar em alcance) | ADR-0015 | mistura com WASD; mais código no bot e no cliente; PI escolheu "só ataca em alcance" | MVP4 | playtest pedir |
 | Epíteto e lore dos heróis na Tela Heróis (ex.: "dos Ventos") | ADR-0015, protótipo `Tela Herois/` | texto não existe em nenhum documento; regra do F27 (só `shared/data`) | — | PI escrever os textos (vão para `HeroData`) |
-| Realismo fora da ADR-0006 (retexturizar heróis KayKit, tirar toon/outline) | ADR-0015 | semanas de arte e reaceite de tudo; PI manteve a direção | — | nova ADR do PI |
+| Realismo fora da ADR-0006 (retexturizar heróis KayKit; o toon/outline já fora abandonado no F39, ADR-0018) | ADR-0015 | semanas de arte e reaceite de tudo; PI manteve a direção | — | nova ADR do PI |
 | Ajuste dos números dos heróis 7–10 (soak fora do espelho: Protetor 13/43, Berserker 44/44, Paladino 33/45, Ocultista 8/45) | ADR-0015 item 15, ADR-0016 item 11; comentários de encerramento de #202, #203, #214, #215 | números aprovados pelo PI como proposta; PI mandou registrar e seguir | F30 (MVP4) | playtest M4 ou pedido do PI |
 | Rig `Rig_Large` em outros heróis / variante "Large" de outros corpos | ADR-0015 | só o Berserker usa | pós-MVP4 | pedido do PI |
 | Garra do Engenheiro puxando monstro/boss; veneno ou sangramento na Ladina | ADR-0013 | monstro tem leash e IA própria; dano contínuo é mecânica nova no rollback | pós-MVP4 | pedido do PI |

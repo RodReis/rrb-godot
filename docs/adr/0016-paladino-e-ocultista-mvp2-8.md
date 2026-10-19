@@ -6,6 +6,8 @@
 **Mantém:** ADR-0001 (efeito no alvo via ledger) · ADR-0004 (GDB vence o PRD) · ADR-0005 (Blender) · ADR-0006 para todos os outros heróis e monstros · ADR-0015 (controle v2, alvo travado, regra ATK/INT do GDB §2.1) · CONVENTION §4.6 (honestidade), §4.7 (mato alto), §4.9 (neblina) · SPEC-032/F37.
 **Relacionados:** `docs/prd/mvp/MVP-2.8.md` · GDB §2.2-F, §4.9, §4.10 · CONVENTION §2, §4.5 · F76–F78 (o corpo de cada issue vale como spec, como no ADR-0014/0015).
 
+> **Nota (2026-10-19):** o toon/outline foi abandonado no aceite do F39 (2026-10-10). Onde este texto diz "toon/outline", leia sem ele — ver [ADR-0018](0018-toon-outline-abandonado.md).
+
 ## Contexto
 
 - Estado em 2026-10-18: MVP2.7 com 9 de 10 fatias fechadas (F75 Berserker em `doing`); MVP3 aguarda o VPS do PI (F28 parcial, [GATE] #87).
