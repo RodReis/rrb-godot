@@ -334,6 +334,11 @@
           "arquivo": "mvp3-f79-tipo-de-tela.webp",
           "legenda": "Em Configurações, um seletor de tipo de tela: Modo Janela, Janela sem Borda ou Tela Cheia Exclusiva. A resolução só vale no Modo Janela, e o jogo abre do jeito que você escolheu.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f80-sair-do-jogo.webp",
+          "legenda": "Agora dá para sair do jogo sem fechar a janela: o Esc abre um menu com Continuar e Sair, e o jogo pede confirmação. Sair no meio de uma partida online conta como derrota por abandono.",
+          "tipo": "entregue"
         }
       ]
     },
@@ -424,6 +429,7 @@
     "F35": "Perfil de conta: apelido e avatar",
     "F28": "Deploy na nuvem e instalador",
     "F79": "Tipo de tela: janela, sem borda ou tela cheia",
+    "F80": "Sair do jogo pelo menu do Esc",
     "F29": "Telemetria e indicadores",
     "F30": "Ajustes de balanceamento pós-playtest",
     "GATE": "Homologação do marco"
