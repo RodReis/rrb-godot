@@ -3,7 +3,7 @@ extends OccultistTestBase
 ## (prioridade, alcance, so o que o Ocultista ve); dano e abate creditados ao Ocultista; matar o
 ## servo nao da nada; sem o R, nada. (Retribuicao contra servo fica para o F76.)
 
-const LASTS: int = 210  # 7,0 s a 30 ticks/s
+const LASTS: int = 300  # R1: 10 s a 30 ticks/s (PI 2026-10-18)
 const FAR: Vector3 = Vector3(40, 0, 0)
 
 
@@ -43,13 +43,17 @@ func test_r_invoca_os_dois_servos_ao_lado_com_hp_do_gdb() -> void:
 	assert_eq(servants.size(), 2)
 	assert_eq(servants[0].hp, _servant_hp())
 	assert_eq(servants[1].hp, _servant_hp())
-	assert_almost_eq(servants[0].global_position.x, 1.2, EPS, "a direita")
-	assert_almost_eq(servants[1].global_position.x, -1.2, EPS, "a esquerda")
+	assert_almost_eq(
+		servants[0].global_position, Vector3(1.0, 0, -1.5), Vector3.ONE * EPS, "frente-dir."
+	)
+	assert_almost_eq(
+		servants[1].global_position, Vector3(-1.0, 0, -1.5), Vector3.ONE * EPS, "frente-esq."
+	)
 	assert_eq(servants[0].team, _occultist.team)
 	assert_ne(servants[0].combat_id(), servants[1].combat_id())
 
 
-func test_somem_no_fim_dos_7_segundos() -> void:
+func test_somem_no_fim_dos_10_segundos_no_r1() -> void:
 	_spawn_occultist(6)
 	_cast_r()
 	_tick_all(START + 1, LASTS - 2)
@@ -69,7 +73,7 @@ func test_nova_invocacao_substitui_a_anterior() -> void:
 	_occultist.r_cooldown = 0
 	_cast_r(START + 100)
 	assert_eq(servant.hp, _servant_hp(), "HP cheio de novo")
-	assert_almost_eq(servant.global_position.x, 1.2, EPS, "volta ao lado do Ocultista")
+	assert_almost_eq(servant.global_position.x, 1.0, EPS, "volta para a frente do Ocultista")
 	_tick_all(START + 101, LASTS - 2)
 	assert_true(servant.is_alive(), "a duracao conta da invocacao nova")
 
@@ -225,3 +229,32 @@ func test_praga_inimiga_pulsa_no_servo_pela_def() -> void:
 	for tick: int in range(START + 1, START + 1 + 8 * PULSE_INTERVAL):
 		servant._tick_curse_and_dot()
 	assert_eq(servant.hp, _servant_hp() - 8 * CombatRules.mitigated(15, 10.0), "8 pulsos de 15")
+
+
+## Regressao (PI 2026-10-18: "invoca longe"): o teleporte da invocacao grava o ponto novo no
+## interpolador; o laco de ticks seguinte nao devolve o servo para onde ele sumiu.
+func test_invocado_longe_de_onde_sumiu_fica_no_ponto_novo() -> void:
+	_spawn_occultist(6)
+	var servant := _occultist.servants[0]
+	await wait_process_frames(2)  # o TickInterpolator se configura com call_deferred
+	var interpolator := servant._interpolator
+	# Um laco de ticks com o servo longe (onde sumiu), outro com a invocacao, como no NetworkTime.
+	interpolator._before_tick_loop()
+	servant.global_position = Vector3(30, 0, 30)
+	servant._on_network_time_after_tick_loop()
+	interpolator._after_tick_loop()
+	interpolator._before_tick_loop()
+	_cast_r()
+	servant._on_network_time_after_tick_loop()
+	interpolator._after_tick_loop()
+	interpolator._before_tick_loop()
+	assert_almost_eq(servant.global_position.x, 1.0, EPS, "no ponto da invocacao")
+
+
+func test_r2_dura_12_segundos() -> void:
+	_spawn_occultist(10)
+	_cast_r()
+	_tick_all(START + 1, 360 - 2)
+	assert_true(_occultist.servants[0].is_alive())
+	_tick_all(START + 359, 2)
+	assert_false(_occultist.servants[0].is_alive())

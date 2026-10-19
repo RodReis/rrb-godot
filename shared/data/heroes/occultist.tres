@@ -64,11 +64,11 @@ script = ExtResource("2_skill")
 id = &"occultist_r"
 icon = ExtResource("icon_r")
 display_name = "Servos do Vazio"
-description = "Invoca 2 servos ao seu lado por 7 s: perseguem seu alvo travado, o herói inimigo ou o monstro mais perto que você vê."
+description = "Invoca 2 servos à sua frente por 10 s (12 s no rank 2): perseguem seu alvo travado, o herói inimigo ou o monstro mais perto que você vê."
 max_rank = 2
 required_hero_level = PackedInt32Array(6, 10)
 cooldown = PackedFloat64Array(55, 46)
-duration = PackedFloat64Array(7)
+duration = PackedFloat64Array(10, 12)
 
 [resource]
 script = ExtResource("1_script")

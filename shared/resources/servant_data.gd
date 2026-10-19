@@ -20,7 +20,8 @@ extends Resource
 ## Escolha do alvo: alcance (u, a partir do servo) e intervalo da reavaliacao (s).
 @export var target_reach: float
 @export var retarget_interval: float
-## Distancia ao lado do Ocultista em que cada servo nasce (u) e ate onde chega perto dele quando o
-## segue sem alvo (u).
+## Onde cada servo nasce: ahead_offset a frente do Ocultista e side_offset para cada lado (u); e ate
+## onde chega perto dele quando o segue sem alvo (u).
+@export var ahead_offset: float
 @export var side_offset: float
 @export var follow_distance: float

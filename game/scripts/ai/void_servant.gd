@@ -36,8 +36,8 @@ var attack_cooldown: int = 0
 
 var _concealment: Concealment
 var _interpolator: TickInterpolator
-## Cliente: HP e posicao do quadro anterior (0 -> vivo ou salto = invocacao: teleporta sem
-## interpolar).
+## HP e posicao reais no fim do laco de ticks anterior (0 -> vivo ou salto = invocacao: teleporta
+## sem interpolar).
 var _last_hp: int = 0
 var _last_position: Vector3 = Vector3.ZERO
 # Servidor.
@@ -80,6 +80,9 @@ func _ready() -> void:
 	var ack := SpawnAck.guard(self, [sync.visibility_filter])
 	_concealment = Concealment.guard(self, seen_by, sync, ack)
 
+	# Antes do TickInterpolator (que se liga com call_deferred): o teleporte precisa vir antes do
+	# push_state dele no mesmo after_tick_loop.
+	NetworkTime.after_tick_loop.connect(_on_network_time_after_tick_loop)
 	_interpolator = TickInterpolator.new()
 	_interpolator.name = "TickInterpolator"
 	_interpolator.root = self
@@ -90,11 +93,6 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	var jumped := global_position.distance_to(_last_position) > TELEPORT_DISTANCE
-	if (_last_hp == 0 and hp > 0) or jumped:
-		_interpolator.teleport()  # invocado longe de onde sumiu, ou reinvocado vivo
-	_last_hp = hp
-	_last_position = global_position
 	visible = _concealment.is_shown()
 	hp_bar.visible = is_alive() and not PlayerInput.cinematic
 	hp_bar.set_ratio(float(hp) / maxi(max_hp, 1))
@@ -200,6 +198,17 @@ func receive_hit(tick: int, source: int, effect: HitEffect) -> void:
 # desfazer exige rollback no servo.
 func cancel_hit(_tick: int, _source: int) -> void:
 	pass
+
+
+## Nos dois lados, com o estado real do tick (antes de o interpolador mexer): invocado longe de onde
+## sumiu, ou reinvocado vivo, nao desliza ate o ponto novo. No _process o transform ja e o
+## interpolado: teleportar ali gravaria a posicao velha como estado (e o servo voltava para la).
+func _on_network_time_after_tick_loop() -> void:
+	var jumped := global_position.distance_to(_last_position) > TELEPORT_DISTANCE
+	if (_last_hp == 0 and hp > 0) or jumped:
+		_interpolator.teleport()
+	_last_hp = hp
+	_last_position = global_position
 
 
 ## IA so no servidor (no _ready o peer ainda e offline e is_server() mente).

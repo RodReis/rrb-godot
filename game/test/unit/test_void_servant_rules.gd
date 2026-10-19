@@ -71,10 +71,12 @@ func test_alcance_e_inclusivo_e_no_plano() -> void:
 	assert_eq(pick, Vector2i(VoidServantRules.Pick.HERO, 0), "9 u no plano; a altura nao conta")
 
 
-func test_os_dois_servos_nascem_um_de_cada_lado() -> void:
+func test_os_dois_servos_nascem_a_frente_um_de_cada_lado() -> void:
 	var right := Vector3(1, 0, 0)
-	assert_eq(VoidServantRules.side_point(Vector3(5, 0, 5), right, 1.2, 0), Vector3(6.2, 0, 5))
-	assert_eq(VoidServantRules.side_point(Vector3(5, 0, 5), right, 1.2, 1), Vector3(3.8, 0, 5))
+	var ahead := Vector3(0, 0, -1)
+	var at := Vector3(5, 0, 5)
+	assert_eq(VoidServantRules.spawn_point(at, ahead, right, 1.5, 1.0, 0), Vector3(6, 0, 3.5))
+	assert_eq(VoidServantRules.spawn_point(at, ahead, right, 1.5, 1.0, 1), Vector3(4, 0, 3.5))
 
 
 func test_reavalia_o_alvo_a_cada_intervalo_desde_a_invocacao() -> void:

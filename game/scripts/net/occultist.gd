@@ -124,8 +124,8 @@ func _make_circle(tick: int) -> void:
 		zone_started.emit(Zone.CIRCLE, circle_center, tick)
 
 
-## Servidor: os 2 servos ao lado (direita e esquerda, parando no obstaculo), virados como o
-## Ocultista; a invocacao nova substitui a anterior.
+## Servidor: os 2 servos a frente, um de cada lado (parando no obstaculo), virados como o Ocultista;
+## a invocacao nova substitui a anterior.
 func _summon(tick: int) -> void:
 	if not multiplayer.is_server():
 		return
@@ -134,11 +134,15 @@ func _summon(tick: int) -> void:
 		SkillData.at_rank(r.duration, ranks.z), NetworkTime.tickrate
 	)
 	var right := global_basis.x
+	print("[servos] %s invocou no tick %d (R%d, %d ticks)" % [name, tick, ranks.z, lasts])
 	for i: int in servants.size():
 		var servant := servants[i]
-		var side := VoidServantRules.side_point(global_position, right, servant.data.side_offset, i)
+		var data := servant.data
+		var at := VoidServantRules.spawn_point(
+			global_position, forward(), right, data.ahead_offset, data.side_offset, i
+		)
 		servant.summon(
-			tick, _before_obstacle(side), global_basis, ranks.z, attributes.intelligence, lasts
+			tick, _before_obstacle(at), global_basis, ranks.z, attributes.intelligence, lasts
 		)
 
 

@@ -15,5 +15,6 @@ base_damage = PackedFloat64Array(22, 34)
 damage_intelligence_ratio = 0.25
 target_reach = 9.0
 retarget_interval = 0.25
-side_offset = 1.2
+ahead_offset = 1.5
+side_offset = 1.0
 follow_distance = 2.0

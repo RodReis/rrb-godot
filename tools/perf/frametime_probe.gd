@@ -47,8 +47,8 @@ const DRUID_POTION_SECONDS: float = 2.5
 const DRUID_SWAMP_SECONDS: float = 5.5
 ## Circulo novo antes de o anterior (3 s) acabar.
 const OCCULTIST_CIRCLE_SECONDS: float = 2.5
-## Servos novos antes de os anteriores (7 s) acabarem.
-const OCCULTIST_SERVANT_SECONDS: float = 6.5
+## Servos novos antes de os anteriores (10 s no R1) acabarem.
+const OCCULTIST_SERVANT_SECONDS: float = 9.5
 ## Ticks que o --occultist segura nas marcas e na Praga do alvo (qualquer valor > 0 as mantem).
 const CURSE_HOLD_TICKS: int = 120
 ## Timer de imunidade que o --berserker segura (ticks; qualquer valor > 0 mantem o Ragnarok).

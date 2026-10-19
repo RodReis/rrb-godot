@@ -40,10 +40,13 @@ static func choose(
 	return Vector2i(Pick.NONE, -1)
 
 
-## Onde o servo [param index] (0 ou 1) nasce: [param offset] a direita (0) ou a esquerda (1) de
-## [param center].
-static func side_point(center: Vector3, right: Vector3, offset: float, index: int) -> Vector3:
-	return center + right * (offset if index == 0 else -offset)
+## Onde o servo [param index] (0 ou 1) nasce: [param ahead] a frente de [param center] (na direcao
+## [param forward]) e [param side] a direita (0) ou a esquerda (1) (PI 2026-10-18: na frente do
+## heroi).
+static func spawn_point(
+	center: Vector3, forward: Vector3, right: Vector3, ahead: float, side: float, index: int
+) -> Vector3:
+	return center + forward * ahead + right * (side if index == 0 else -side)
 
 
 ## Reavalia o alvo no tick [param elapsed] desde a invocacao (0 = invocacao).

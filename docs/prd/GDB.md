@@ -453,7 +453,7 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
   - Cooldown Base: $[13.0, 12.5, 12.0, 11.5, 11.0]\text{ s}$.
   - Dano Total: $[60, 90, 120, 150, 180] + (0.6 \times \text{ATK})$, dividido pelos pulsos.
 - **R — Servos do Vazio (Ultimate, Nv 6+) — F78:**
-  - Invoca **2 servos** ao lado do Ocultista por $7.0\text{ s}$. Uma invocação por vez (a nova substitui a anterior).
+  - Invoca **2 servos** à frente do Ocultista (um de cada lado) por $[10.0, 12.0]\text{ s}$ (decisão do PI em 2026-10-18, F78; era $7.0\text{ s}$, ao lado). Uma invocação por vez (a nova substitui a anterior).
   - **Servo:** HP $[180, 280] + (2.0 \times \text{INT})$, Defesa $10$, velocidade $5.5\text{ u/s}$, colisão de monstro pequeno; ataque corpo a corpo de alcance $1.2\text{ u}$ a cada $1.0\text{ s}$, dano $[22, 34] + (0.25 \times \text{INT})$.
   - **Alvo:** o alvo travado do Ocultista, se houver e estiver a até $9.0\text{ u}$; senão o herói inimigo mais próximo a até $9.0\text{ u}$; senão o monstro mais próximo (boss incluído) a até $9.0\text{ u}$ — sempre **visível ao Ocultista** (§7.3). Sem alvo: seguem o Ocultista.
   - Podem ser alvo de ataques, skills e do alvo travado; morrem ao zerar o HP ou no fim da duração. **Matar um servo não dá nada** (sem XP, sem drop, não conta kill). **Dano e kill do servo contam para o Ocultista** (como a Torreta, §4.6). O ataque do servo não revela o Ocultista.

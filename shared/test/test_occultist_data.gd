@@ -77,7 +77,7 @@ func test_servos_do_vazio_no_nivel_6_e_10() -> void:
 	assert_eq(r.max_rank, 2, "ligado no F78")
 	assert_eq(r.required_hero_level, PackedInt32Array([6, 10]))
 	assert_eq(r.cooldown, PackedFloat64Array([55.0, 46.0]))
-	assert_eq(r.duration, PackedFloat64Array([7.0]))
+	assert_eq(r.duration, PackedFloat64Array([10.0, 12.0]), "PI 2026-10-18 (GDB era 7 s)")
 	var learned := SkillRules.learn(Vector3i(3, 2, 0), SkillRules.SLOT_R, r, 6)
 	assert_eq(learned, Vector3i(3, 2, 1), "o ponto do Nv 6 vai para o R")
 	assert_true(SkillRules.can_use(r, 1, 6))
