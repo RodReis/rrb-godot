@@ -42,6 +42,7 @@ func test_conjunto_ativo_pelo_nome_do_bonus() -> void:
 func test_motivo_de_fim_em_portugues() -> void:
 	assert_eq(HistoryFormat.end_reason("kill_goal"), "Meta de abates")
 	assert_eq(HistoryFormat.end_reason("collapse_hp"), "Colapso: mais vida")
+	assert_eq(HistoryFormat.end_reason("left"), "Abandono")  # F80: saiu pelo menu
 	assert_eq(HistoryFormat.end_reason("heartbeat_lost"), "Servidor sem sinal")
 	assert_eq(HistoryFormat.end_reason("token_expired"), "Ninguém entrou a tempo")
 	assert_eq(HistoryFormat.end_reason(""), "")

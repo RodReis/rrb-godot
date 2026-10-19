@@ -7,6 +7,8 @@ extends RefCounted
 ## e abandoned. Nunca empate (I2): todo desempate termina no sorteio.
 
 const NO_WINNER: int = 0
+## Jogadores de uma partida 1x1.
+const PLAYERS: int = 2
 const KILL_GOAL: StringName = &"kill_goal"
 const ELIMINATION: StringName = &"elimination"
 const COLLAPSE_HP: StringName = &"collapse_hp"
@@ -14,6 +16,9 @@ const COLLAPSE_KILLS: StringName = &"collapse_kills"
 const COLLAPSE_DAMAGE: StringName = &"collapse_damage"
 const COLLAPSE_DRAW: StringName = &"collapse_draw"
 const ABANDONED: StringName = &"abandoned"
+## Saiu pelo menu com os dois conectados (F80, ADR-0020): o que saiu perde. O endReason do backend
+## e este mesmo texto.
+const LEFT: StringName = &"left"
 
 
 ## Um jogador na avaliacao.
@@ -61,6 +66,29 @@ static func evaluate(
 	if verdict.is_over() and not contenders.any(func(c: Contender) -> bool: return c.connected):
 		verdict.winner = NO_WINNER
 		verdict.reason = ABANDONED
+	return verdict
+
+
+## Sair pelo menu (F80, ADR-0020): so vale com os dois conectados; quem sai perde e o outro vence,
+## sem olhar placar, vida nem fase. Sem adversario conectado ou peer de fora, a partida segue
+## (reason vazio): sair so desconecta.
+static func forfeit(contenders: Array[Contender], leaver: int) -> Verdict:
+	var verdict := Verdict.new()
+	if (
+		contenders.size() != PLAYERS
+		or not contenders.all(func(c: Contender) -> bool: return c.connected)
+	):
+		return verdict
+	var left := false
+	var other: Contender = null
+	for contender: Contender in contenders:
+		if contender.peer == leaver:
+			left = true
+		else:
+			other = contender
+	if left and other != null:
+		verdict.winner = other.peer
+		verdict.reason = LEFT
 	return verdict
 
 

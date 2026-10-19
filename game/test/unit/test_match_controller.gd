@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## MatchController com relogio injetado (ticks falsos a 30 Hz, ARCHITECTURE-GAME §8):
 ## LOBBY_WAIT -> HERO_PICK -> INTRO -> PHASE1 -> TRANSITION (CONVENTION §3), timeout do lobby ->
@@ -233,3 +234,57 @@ func test_relogio_adiantado_de_dev_comeca_a_fase_1_ja_avancada() -> void:
 	_to_phase1()
 	_run(START + INTRO_MIN + 1, START + INTRO_MIN + 10 * RATE)
 	assert_eq(_match.state, MatchState.State.TRANSITION)
+
+
+## F80 / ADR-0020: sair pelo menu com os dois conectados encerra na hora; quem sai perde.
+func test_sair_pelo_menu_na_selecao_da_vitoria_ao_outro_e_fixa_o_heroi_de_quem_saiu() -> void:
+	_to_pick()
+	assert_true(_match.leave_by_menu(P1, START + 1))
+	assert_eq(_ended, [[P2, VictoryRules.LEFT, START + 1]])
+	assert_eq(_match.state, MatchState.State.ENDED)
+	for seat: MatchController.Seat in _match.seats():
+		assert_ne(seat.hero, &"", "quem saiu fica com heroi (o resultado precisa da linha dele)")
+
+
+func test_sair_pelo_menu_na_intro() -> void:
+	_to_intro()
+	assert_eq(_match.state, MatchState.State.INTRO)
+	assert_true(_match.leave_by_menu(P2, START + 2))
+	assert_eq(_ended, [[P1, VictoryRules.LEFT, START + 2]])
+
+
+func test_sair_pelo_menu_na_fase_1() -> void:
+	_to_phase1()
+	assert_eq(_match.state, MatchState.State.PHASE1)
+	assert_true(_match.leave_by_menu(P1, START + INTRO_MIN + 3))
+	assert_eq(_ended.size(), 1)
+	assert_eq(_ended[0][0], P2)
+	assert_eq(_ended[0][1], VictoryRules.LEFT)
+
+
+func test_sair_no_lobby_nao_encerra() -> void:
+	_match.join(P1, GateRules.TEAM_A, false, START)
+	assert_false(_match.leave_by_menu(P1, START + 1))
+	assert_eq(_ended, [])
+	assert_eq(_match.state, MatchState.State.LOBBY_WAIT)
+
+
+func test_sair_duas_vezes_nao_encerra_de_novo() -> void:
+	_to_pick()
+	assert_true(_match.leave_by_menu(P1, START + 1))
+	assert_false(_match.leave_by_menu(P1, START + 2))
+	assert_false(_match.leave_by_menu(P2, START + 2), "ja acabou: o outro nao 'sai' depois")
+	assert_eq(_ended.size(), 1)
+
+
+func test_peer_de_fora_nao_encerra_a_partida() -> void:
+	_to_pick()
+	assert_false(_match.leave_by_menu(P3, START + 1))
+	assert_eq(_ended, [])
+
+
+func test_com_o_adversario_desconectado_sair_so_desconecta() -> void:
+	_to_pick()
+	_match.leave(P2, START + 1)
+	assert_false(_match.leave_by_menu(P1, START + 2))
+	assert_eq(_ended, [])

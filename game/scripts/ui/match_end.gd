@@ -252,6 +252,8 @@ func _reason_text(reason: StringName) -> String:
 	if COLLAPSE_CRITERIA.has(reason):
 		var at := TimerLabel.format_seconds(_rules.max_match_duration, TimerLabel.Format.MM_SS)
 		return tr("COLAPSO DA ZONA AOS %s · %s") % [at, tr(COLLAPSE_CRITERIA[reason])]
+	if reason == VictoryRules.LEFT:
+		return tr("ADVERSÁRIO ABANDONOU A PARTIDA")
 	if reason != VictoryRules.ABANDONED:
 		push_warning("[match_end] motivo de fim sem texto: %s" % reason)
 	return tr("PARTIDA ABANDONADA")
