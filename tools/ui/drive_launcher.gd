@@ -11,8 +11,10 @@ extends SceneTree
 const APP: String = "res://scenes/app.tscn"
 const DEFAULT_TIMEOUT: float = 900.0
 const STEP: float = 0.5
-## Quadros esperando o lobby depois do login (conta buscada no backend).
-const LOBBY_WAIT_FRAMES: int = 600
+## Segundos esperando o lobby depois do login (conta buscada no backend). Por tempo, não por
+## quadros: sem vsync a tela roda a milhares de FPS e 600 quadros acabam antes de uma chamada HTTP
+## a um backend remoto.
+const LOBBY_WAIT_S: float = 15.0
 ## Espera do card de resultado depois que o Game fecha (3 tentativas a 1 s mais a rede).
 const RESULT_TIMEOUT: float = 15.0
 
@@ -38,13 +40,22 @@ func _run() -> void:
 	login.password_field().text = _args.get("password", "")
 	await login.submit()
 	# Depois do login o App ainda busca a conta (F35) antes de abrir o lobby.
-	for i: int in LOBBY_WAIT_FRAMES:
-		if _app.stack().current() is LobbyScreen:
-			break
-		await process_frame
+	await _wait_lobby(true)
+	var profile := _app.stack().current() as ProfileScreen
+	if profile != null:
+		# F35: conta nova escolhe o nickname antes do lobby. Único por conta (derivado do e-mail).
+		var nick: String = "f28_%d" % (absi(str(_args.get("email", "")).hash()) % 100000000)
+		_log("nickname %s" % nick)
+		profile.nickname_field().text = nick
+		await profile.submit()
+		await _wait_lobby(false)
 	var lobby := _app.stack().current() as LobbyScreen
 	if lobby == null:
-		_finish(1, "nao entrou no lobby: %s" % login.error_text())
+		# O Login já foi liberado se o App trocou de tela: só ele tem o texto de erro.
+		var why: String = (
+			login.error_text() if is_instance_valid(login) else str(_app.stack().current())
+		)
+		_finish(1, "nao entrou no lobby: %s" % why)
 		return
 	_log("lobby como %s" % _app.account_email)
 	await _frames(30)
@@ -126,6 +137,16 @@ func _parse() -> Dictionary:
 		var pair := arg.trim_prefix("--").split("=", true, 1)
 		parsed[pair[0]] = pair[1] if pair.size() > 1 else ""
 	return parsed
+
+
+## Espera o Lobby (ou, com `accept_profile`, a tela de nickname) por até LOBBY_WAIT_S segundos.
+func _wait_lobby(accept_profile: bool) -> void:
+	var deadline: float = Time.get_ticks_msec() / 1000.0 + LOBBY_WAIT_S
+	while Time.get_ticks_msec() / 1000.0 < deadline:
+		var current := _app.stack().current()
+		if current is LobbyScreen or (accept_profile and current is ProfileScreen):
+			return
+		await process_frame
 
 
 func _frames(count: int) -> void:
