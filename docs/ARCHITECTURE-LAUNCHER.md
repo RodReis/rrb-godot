@@ -158,7 +158,7 @@ Este é o **único** lugar onde os dois módulos se tocam. Mudar aqui exige ADR.
 | Launcher chama | Significado |
 |---|---|
 | `game.exe -- --connect=<host>:<porta> --token=<match_token>` | partida online (argumentos do Game depois de `--`; F25) |
-| `game.exe -- --offline --bot` | treino contra bot |
+| `game.exe -- --offline --bot [--bot-difficulty=easy|medium|hard]` | treino contra bot; sem o nível (ou inválido) = `medium` (F81, ADR-0021) |
 | `--game-path=` (no launcher) | dev: outro caminho do executável (com `--game-project=<pasta>`, o Launcher chama `<exe> --path <pasta> -- …`, para rodar o Godot em vez do `game.exe`) |
 
 Só esses argumentos (`--connect`, `--token`, `--offline`, `--bot`) fazem parte do contrato; os demais de `game/scripts/core/launch_args.gd` (`--server`, `--port`, `--autopilot`, `--bots`, `--bot-hero`, `--daynight`, `--no-backend`, `--probe`…) são de dev/servidor e o Launcher nunca os envia.
