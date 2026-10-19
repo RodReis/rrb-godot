@@ -46,6 +46,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0017](adr/0017-site-publico-loot-start.md) | Site público "Loot Start": landing em React em `site/` (3º diretório de código, sem relação com Game/Launcher/Backend), dados extraídos em build de `shared/data` e `docs/roadmap`, deploy no GitHub Pages; nome "Loot Start" só no site; emenda o ADR-0002 | aceito | 2026-10-18 |
 | [0018](adr/0018-toon-outline-abandonado.md) | Toon/outline abandonado no aceite do F39 (PI, 2026-10-10): sem cel-shading nem contorno; stylized PBR e heróis "como vêm" seguem; emenda o item 1 do ADR-0006 | aceito | 2026-10-19 |
 | [0019](adr/0019-tipo-de-tela-window-mode.md) | Tipo de tela (PI, 2026-10-19): `[video] window_mode` (windowed/borderless/exclusive) no lugar de `fullscreen`; legado lido, padrão sem borda, resolução só em janela; emenda o §5.3 do contrato `settings.cfg` |
+| [0020](adr/0020-sair-da-partida-abandono.md) | Sair do jogo (PI, 2026-10-19): menu no ESC; sair online = derrota por abandono, `endReason` no resultado; fechar a janela fica fora (lacuna aceita) |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 

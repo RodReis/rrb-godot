@@ -165,6 +165,7 @@ Mesmo binário, `--offline --bot`: o `Main` roda em modo host — este processo 
 | Situação | Comportamento |
 |---|---|
 | Cliente desconecta na partida | Servidor marca `disconnected` e passa a **sintetizar input vazio** para o herói (senão o netfox para de simulá-lo e ele fica imune a zona e dano — §3.2); herói fica parado e morre normalmente; sem reconexão (PRD §8.5). Partida termina pelas regras normais; resultado reportado. |
+| Cliente sai pelo menu (F80, ADR-0020) | RPC discreto de saída: com os **dois** conectados o servidor encerra na hora (`ENDED`, motivo `abandon`), o adversário vence, e reporta ao backend `loss`/`win` com `endReason=abandon`. Com o adversário ausente, é só desconectar (timeout `abandoned`). Fechar a janela/Alt+F4/queda **não** é abandono: continua o caso acima. |
 | Servidor cai | Clientes recebem `server_disconnected` → `ConnectionLostScreen` → encerram com código 4 (o Launcher mostra erro genérico); se a tela de fim já estava aberta, ela permanece. Backend marca partida `aborted` por timeout do heartbeat (ver `ARCHITECTURE-LAUNCHER.md` §6). |
 | Token inválido | Servidor recusa peer no handshake; cliente encerra com código 2. |
 | Backend indisponível ao reportar | `ResultReporter` retenta 3× com backoff; falhou → grava `user://results/<match_id>.json` e encerra com código 3; o orquestrador coleta pelo volume. |

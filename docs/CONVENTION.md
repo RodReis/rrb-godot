@@ -59,7 +59,7 @@ LOBBY_WAIT → HERO_PICK → INTRO → PHASE1 → TRANSITION → PHASE2 → SUDD
 | `SUDDEN_DEATH` | `t_phase2 = 4:00` (9:00 de partida) | último time com vivo **ou** 10:00 → colapso com resolução imediata (GDB §7.2 item 3) | até 10:00 |
 | `ENDED` | vitória ou abandono | servidor encerra após reportar; cliente mostra a tela de fim e volta ao Launcher em ≤ 15 s (F70) | — |
 
-Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** há empate (GDB §7.2 — a única saída sem vencedor é `abandoned`: ninguém conectado); não há transição de volta.
+Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** há empate (GDB §7.2 — a única saída sem vencedor é `abandoned`: ninguém conectado; sair pelo menu com os dois conectados é derrota por abandono do que saiu, ADR-0020); não há transição de volta.
 
 ## 4. Regras por tema (fonte → seção)
 
