@@ -264,6 +264,14 @@ func test_condicao_do_colapso_diz_o_criterio() -> void:
 		assert_eq(_text("%Reason"), "COLAPSO DA ZONA AOS %s · %s" % [collapse, cases[reason]])
 
 
+## F80 / ADR-0020: quem fica ve a vitoria com o motivo dito claramente (nao o texto de partida sem
+## ninguem). O motivo left ja tem texto proprio: sem aviso de motivo desconhecido.
+func test_adversario_abandonou_a_partida() -> void:
+	_end.present(ME, VictoryRules.LEFT, _stats(), ME)
+	assert_eq(_text("%Title"), "VITÓRIA")
+	assert_eq(_text("%Reason"), "ADVERSÁRIO ABANDONOU A PARTIDA")
+
+
 func test_eliminacao_e_abandono() -> void:
 	_end.present(ME, VictoryRules.ELIMINATION, _stats(), ME)
 	assert_eq(_text("%Reason"), "ELIMINAÇÃO NA MORTE SÚBITA")
