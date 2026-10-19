@@ -49,7 +49,9 @@ services:
       # IP/dominio do VPS que o Launcher recebe no MatchAssignment (UDP direto, sem proxy).
       GAMESERVER_PUBLIC_HOST: ${GAMESERVER_PUBLIC_HOST:?defina GAMESERVER_PUBLIC_HOST no Coolify}
       # Os game servers entram na rede do compose e falam com o backend pelo nome do servico.
-      GAMESERVER_NETWORK: rrb-net
+      # No Coolify o `name:` da rede abaixo e ignorado: a rede se chama como o UUID do recurso
+      # (`docker network ls`). Defina GAMESERVER_NETWORK com esse UUID; `rrb-net` vale fora do Coolify.
+      GAMESERVER_NETWORK: ${GAMESERVER_NETWORK:-rrb-net}
       GAMESERVER_BACKEND_URL: http://backend:3000
       LOG_LEVEL: ${LOG_LEVEL:-info}
     volumes:
