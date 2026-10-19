@@ -9,21 +9,30 @@ updated: 2026-10-19
 
 ### [MVP3] Meta + deploy (#76)
 
-- [MVP3][SPEC-025][FIX] Launcher mostra 229 ms de "servidor" (HTTP com conexão nova) em vez do ping real (#233)
+- [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 
 ## A Fazer
 
 ### [MVP3] Meta + deploy (#76)
 
-- [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
+- [MVP3][SPEC-081][F81] Três níveis de bot no treino: Fácil, Médio e Difícil (#239)
+
+### #16 (#16)
+
+- [MVP1][SPEC-012][FIX] Bot do treino fica rodando na base (#238)
 
 ## Em Andamento
 
 ### [MVP3] Meta + deploy (#76)
 
+- [MVP3][SPEC-028][INFRA] Site e download do jogo no VPS (lootstart.cloud) e Coolify lendo o repositório privado (#237)
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 
 ## Feito
+
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-025][FIX] Launcher mostra 229 ms de "servidor" (HTTP com conexão nova) em vez do ping real (#233)
 
 ### #57 (#57)
 
