@@ -66,6 +66,10 @@ const WINDOW_ARGS: Array[String] = [
 	"--resolution", "--position", "--fullscreen", "-f", "--windowed", "-w", "--maximized", "-m"
 ]
 
+## Cliente online que saiu pelo menu (F80): espera o servidor encerrar a partida (match_ended) e,
+## se ele nao responder nesse prazo, sai assim mesmo.
+const LEAVE_TIMEOUT_SECONDS: float = 3.0
+
 ## Nivel dos herois spawnados por este servidor (--level de dev ate o F9).
 var _hero_level: int = LaunchArgs.DEFAULT_LEVEL
 ## --bot: o bot ocupa a vaga do time B assim que o servidor abre.
@@ -87,6 +91,10 @@ var _token: String = ""
 var _navs: Dictionary[int, ArenaNav] = {}
 ## Cliente: erro de servidor perdido (#102); null no servidor dedicado.
 var _connection_lost: ConnectionLostScreen
+## Cliente: menu do Esc (F80, ADR-0020); null no servidor dedicado.
+var _exit_menu: ExitMenu
+## Cliente online que confirmou "Sair do jogo": o proximo match_ended encerra o processo.
+var _leaving: bool = false
 ## Servidor: herois de jogadores que cairam (log periodico).
 var _disconnected: Array[Hero] = []
 var _disconnected_log: Timer
@@ -192,6 +200,11 @@ func _ready() -> void:
 		_connection_lost = ConnectionLostScreen.new()
 		_connection_lost.exit_requested.connect(_on_connection_lost_exit_requested)
 		add_child(_connection_lost)
+		_exit_menu = ExitMenu.new()
+		_exit_menu.set_online(not args["offline"])  # --offline e treino: sair nao tem consequencia
+		_exit_menu.can_open = _can_open_exit_menu
+		_exit_menu.leave_confirmed.connect(_on_exit_confirmed)
+		add_child(_exit_menu)
 
 
 func _process(_delta: float) -> void:
@@ -584,6 +597,9 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 			% [reason, winner, stats.to_dict(), tick]
 		)
 	)
+	if _leaving:
+		get_tree().quit(ExitCodes.OK)  # saiu pelo menu: o resultado ja e do servidor
+		return
 	if _dedicated:
 		# Uma linha em JSON para o tools/soak.ps1 (F19) ler sem depender da prosa acima.
 		var summary := {"winner": winner, "reason": reason, "tick": tick, "stats": stats.to_dict()}
@@ -591,6 +607,31 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 		var code := await _server.report(winner, reason, stats, match_controller.match_seed)
 		await get_tree().create_timer(EXIT_DELAY_SECONDS).timeout
 		get_tree().quit(code)
+
+
+## Esc so abre o menu se nada esta na frente: partida acabada, erro de conexao, outro menu aberto
+## (PlayerInput.suspended) ou alvo selecionado (o 1o Esc solta o alvo, o 2o abre o menu).
+func _can_open_exit_menu() -> bool:
+	if match_controller.state == MatchState.State.ENDED or _connection_lost.visible:
+		return false
+	if PlayerInput.suspended:
+		return false
+	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
+	return hero == null or hero.target_id == TargetRules.NONE
+
+
+## "Sair do jogo" confirmado. Treino (--offline, este processo e o servidor): sai na hora, sem
+## consequencia. Online: o RPC pede ao servidor encerrar a partida com a derrota por abandono
+## (match_ended, tratado acima); sem resposta no prazo, sai assim mesmo (vira desconexao).
+func _on_exit_confirmed() -> void:
+	if multiplayer.is_server():
+		get_tree().quit(ExitCodes.OK)
+		return
+	_leaving = true
+	_exit_menu.show_leaving()
+	match_controller.report_leave.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)
+	await get_tree().create_timer(LEAVE_TIMEOUT_SECONDS).timeout
+	get_tree().quit(ExitCodes.OK)
 
 
 ## "Jogar novamente" e "Voltar": o Game nao tem fila; o processo acaba e o Launcher decide.
