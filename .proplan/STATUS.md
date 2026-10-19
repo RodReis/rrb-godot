@@ -7,24 +7,44 @@ updated: 2026-10-19
 
 ## Backlog
 
-_(vazio)_
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-025][FIX] Launcher mostra 229 ms de "servidor" (HTTP com conexão nova) em vez do ping real (#233)
 
 ## A Fazer
 
 ### [MVP3] Meta + deploy (#76)
 
-- [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
 
 ## Feito
 
-_(vazio)_
+### #57 (#57)
+
+- [MVP2][SPEC-051][FIX] Seleção de heróis: o modelo 3D começa de costas (#229)
+- [MVP2][SPEC-051][FIX] Seleção de heróis em tela cheia: layout grande demais, informações cortadas (#228)
 
 ## Finalizado
+
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-079][F79] Tipo de tela nas Configurações: Modo Janela, Janela sem Borda e Tela Cheia Exclusiva (#226, finalizado em: 2026-10-19)
+- [MVP3][SPEC-080][F80] Sair do jogo: menu no ESC (Continuar / Sair) e derrota por abandono (#230, finalizado em: 2026-10-19)
+- [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86, finalizado em: 2026-10-16)
+- [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85, finalizado em: 2026-10-15)
+- [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84, finalizado em: 2026-10-15)
+- [MVP3][SPEC-026][F26] Histórico de partidas: GET /matches e tela com herói do oponente (#83, finalizado em: 2026-10-15)
+- [MVP3][SPEC-025][F25] Login e cadastro, lobby com diorama, fila por polling, lançar o Game e treino vs bot (#81, finalizado em: 2026-10-15)
+- [MVP3][SPEC-024][F24] Shell do launcher: App, pilha de telas, Theme completo, galeria, Configurações com aba Créditos e settings.cfg (#80, finalizado em: 2026-10-15)
+- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78, finalizado em: 2026-10-15)
+- [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79, finalizado em: 2026-10-15)
+- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77, finalizado em: 2026-10-15)
 
 ### [MVP2.8] Heróis 9 e 10 — Paladino Radiante (Tanque reativo) e Ocultista (Mago de dano contínuo) com Servos do Vazio (#213)
 
@@ -44,18 +64,6 @@ _(vazio)_
 - [MVP2.7][SPEC-068][F68] Splash próprio nos dois projetos e 3 telas de loading sorteadas (renders reais, dica, progresso) do boot do Game até a seleção (#196, finalizado em: 2026-10-16)
 - [MVP2.7][SPEC-067][F67] Câmera com zoom: roda do mouse e teclas remapeáveis, 9–14 u, padrão 11 u, salvo em settings.cfg (#195, finalizado em: 2026-10-16)
 - [MVP2.7][SPEC-066][F66] Controle v2: herói encara o movimento, alvo travado no botão direito com auto-ataque em alcance, moldura do alvo na HUD (#194, finalizado em: 2026-10-16)
-
-### [MVP3] Meta + deploy (#76)
-
-- [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86, finalizado em: 2026-10-16)
-- [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85, finalizado em: 2026-10-15)
-- [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84, finalizado em: 2026-10-15)
-- [MVP3][SPEC-026][F26] Histórico de partidas: GET /matches e tela com herói do oponente (#83, finalizado em: 2026-10-15)
-- [MVP3][SPEC-025][F25] Login e cadastro, lobby com diorama, fila por polling, lançar o Game e treino vs bot (#81, finalizado em: 2026-10-15)
-- [MVP3][SPEC-024][F24] Shell do launcher: App, pilha de telas, Theme completo, galeria, Configurações com aba Créditos e settings.cfg (#80, finalizado em: 2026-10-15)
-- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78, finalizado em: 2026-10-15)
-- [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79, finalizado em: 2026-10-15)
-- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77, finalizado em: 2026-10-15)
 
 ### #160 (#160)
 
