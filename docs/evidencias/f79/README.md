@@ -33,5 +33,5 @@ Windows pode piscar a tela na transição.
 
 ## Não coberto (`not_run`)
 
-- Os 3 modos **em janela real** (Launcher e Game): verificação visual do PI.
+- Os 3 modos em janela real: **aprovados pelo PI em 2026-10-19** (Launcher; o Game abriu em tela cheia no modo salvo). Resolução em Modo Janela no Game e a exclusiva em outro monitor não foram vistas.
 - Exclusiva em monitor com resolução diferente da do jogo: depende do driver (doc 4.7).
