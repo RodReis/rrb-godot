@@ -138,6 +138,24 @@ func leave(peer: int, tick: int) -> void:
 		_end_intro_if_due(tick)
 
 
+## Servidor: saida deliberada pelo menu (F80, ADR-0020). So com os dois conectados e a partida em
+## andamento (da selecao em diante): quem sai perde e o outro vence na hora (VictoryRules.LEFT).
+## Quem ainda nao escolheu heroi fica com o padrao do slot: o resultado do backend precisa da linha
+## dos dois. Devolve false sem mudar nada no lobby, com a partida acabada, peer de fora ou
+## adversario desconectado (ai sair so desconecta, como antes).
+func leave_by_menu(peer: int, tick: int) -> bool:
+	if not _open or state == MatchState.State.LOBBY_WAIT or state == MatchState.State.ENDED:
+		return false
+	var verdict := VictoryRules.forfeit(_contenders(), peer)
+	if not verdict.is_over():
+		return false
+	for seat: Seat in _seats:
+		if seat.hero == &"":
+			_pick_default(seat, tick)
+	_finish(tick, verdict.winner, verdict.reason)
+	return true
+
+
 ## Servidor: lock-in. Recusa fora da selecao, peer de fora, repetido ou heroi indisponivel;
 ## espelho e aceito. Com os dois confirmados, comeca a fase 1.
 func submit_pick(peer: int, hero: StringName, tick: int) -> bool:
@@ -224,6 +242,18 @@ func report_intro_ready() -> void:
 	if peer == 0:
 		peer = multiplayer.get_unique_id()
 	submit_ready(peer, NetworkTime.tick)
+
+
+## Cliente -> servidor: o jogador saiu pelo menu (F80). Evento discreto fora da simulacao; o peer
+## vem do transporte, nunca do argumento (ninguem derrota o outro por RPC).
+@rpc("any_peer", "call_local", "reliable")
+func report_leave() -> void:
+	if not multiplayer.is_server():
+		return
+	var peer := multiplayer.get_remote_sender_id()
+	if peer == 0:
+		peer = multiplayer.get_unique_id()
+	leave_by_menu(peer, NetworkTime.tick)
 
 
 ## Cliente -> servidor: lock-in do heroi (numero de Ids). Valor do cliente: validado aqui.

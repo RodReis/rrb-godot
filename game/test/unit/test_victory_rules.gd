@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## Vitoria na ordem do GDB §7.2: 1) meta de kills; 2) na morte subita, adversario sem vivos;
 ## 3) colapso aos 10:00 — maior HP% e, empatado, mais kills na fase 2, mais dano em herois e
@@ -170,3 +171,44 @@ func test_nunca_empata_em_combinacoes_de_hp_kills_e_dano() -> void:
 				_a.damage = damage_a
 				var verdict := _evaluate(true, true)
 				assert_true(verdict.winner == P1 or verdict.winner == P2)
+
+
+## F80 / ADR-0020: sair pelo menu com os dois conectados = derrota por abandono de quem saiu.
+func test_quem_sai_perde_e_o_adversario_vence() -> void:
+	var verdict := VictoryRules.forfeit(_pair(_a, _b), P1)
+	assert_true(verdict.is_over())
+	assert_eq(verdict.winner, P2)
+	assert_eq(verdict.reason, VictoryRules.LEFT)
+
+
+func test_sair_vale_para_qualquer_um_dos_dois() -> void:
+	var verdict := VictoryRules.forfeit(_pair(_a, _b), P2)
+	assert_eq(verdict.winner, P1)
+	assert_eq(verdict.reason, VictoryRules.LEFT)
+
+
+func test_sair_nao_depende_de_placar_nem_de_vida() -> void:
+	_a.kills = GOAL - 1
+	_a.hp_pct = 1.0
+	_b.hp_pct = 0.1
+	_b.alive = false
+	assert_eq(VictoryRules.forfeit(_pair(_a, _b), P1).winner, P2)
+
+
+func test_sem_adversario_conectado_nao_ha_abandono() -> void:
+	_b.connected = false
+	assert_false(VictoryRules.forfeit(_pair(_a, _b), P1).is_over(), "so desconectar")
+
+
+func test_quem_ja_estava_desconectado_nao_sai_de_novo() -> void:
+	_a.connected = false
+	assert_false(VictoryRules.forfeit(_pair(_a, _b), P1).is_over())
+
+
+func test_peer_de_fora_nao_encerra() -> void:
+	assert_false(VictoryRules.forfeit(_pair(_a, _b), 99).is_over())
+
+
+func test_com_uma_vaga_so_nao_ha_abandono() -> void:
+	var seats: Array[VictoryRules.Contender] = [_a]
+	assert_false(VictoryRules.forfeit(seats, P1).is_over())
