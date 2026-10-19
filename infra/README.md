@@ -45,3 +45,14 @@ docker logs <backend>                             # orquestrador: alocação, he
   verde → `.github/workflows/release.yml` gera o ZIP e cria o Release (pré-lançamento) com o aviso do SmartScreen.
   "Run workflow" manual faz só o ensaio (ZIP como artefato, sem Release).
 - `export_presets.cfg` fica fora do git: vem dos modelos em `tools/export/` (`tools\export-presets.ps1`).
+
+## Site, download e repositório privado (#237)
+
+- **Site** (`site/Dockerfile`, nginx) é o serviço `site` do compose: no Coolify, domínio `https://lootstart.cloud` no
+  serviço `site`, porta 80. Serve o site, `/download/` (pasta do host `/srv/rrb-download`, só leitura) e `/roadmap/`.
+- **Download:** `/srv/rrb-download` pertence ao usuário `rrbdl` (só upload por chave, `restrict`, home fora da pasta
+  servida). O `release.yml` envia o ZIP da tag e aponta `rrb-arena-latest-win64.zip` para ele; precisa do segredo
+  `VPS_UPLOAD_KEY` (chave privada do `rrbdl`) no repositório. Chave do host em `infra/known_hosts`.
+- **Repositório privado:** o recurso do Coolify precisa de acesso de leitura ao repo. Sem trocar o recurso: um token
+  *fine-grained* do GitHub só com **Contents: Read-only** neste repositório, posto na URL do repositório do recurso
+  (`https://<token>@github.com/RodReis/rrb-godot`). O token fica só no Coolify.

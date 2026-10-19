@@ -1,0 +1,4 @@
+# Chave do host do VPS (lootstart.cloud), conferida contra a conexao do deploy em 2026-10-19:
+# SHA256:H1Rh2wVreJ4NQke18rXcs/gCs2GwtnTXd+sxpZJUxXk. Usada pelo release.yml para enviar o ZIP (#237).
+# lootstart.cloud:22 SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.20
+lootstart.cloud ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFeWgCy5vPYsipdQ29Tc5p/rgNi6jU9kgWyyaw+ZydF4

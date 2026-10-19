@@ -1,0 +1,18 @@
+# Contexto do build do site (BuildKit usa este arquivo no lugar do .dockerignore da raiz): so o que o
+# site/scripts/extract.mjs e o vite leem.
+*
+!site
+site/node_modules
+site/dist
+site/src/data
+site/public/img
+site/public/icons
+!docs/roadmap/historia.json
+!docs/roadmap/index.html
+!docs/roadmap/img
+!docs/STATUS.md
+!.proplan/STATUS.md
+!tools/roadmap
+!shared/data/heroes
+!shared/ui/icons
+!shared/assets/ui

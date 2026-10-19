@@ -1,5 +1,5 @@
 import { Logo } from "../brand/Logo";
-import { historia, img, RELEASES_URL, REPO_URL, HAS_RELEASE } from "../data";
+import { historia, img, RELEASES_URL, HAS_RELEASE } from "../data";
 import "./Hero.css";
 
 const MODES = [
@@ -20,7 +20,6 @@ export function Hero() {
           <a className="btn btn-primary" href={RELEASES_URL}>
             Baixar para Windows{!HAS_RELEASE && <span className="chip hero-soon">em breve</span>}
           </a>
-          <a className="btn btn-ghost" href={REPO_URL}>Ver no GitHub</a>
         </div>
         <ul className="hero-modes" aria-label="Modos de jogo">
           {MODES.map((m) => (
