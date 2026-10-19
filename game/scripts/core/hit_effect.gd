@@ -29,6 +29,10 @@ var curse_ticks: int = 0
 var dot_total: int = 0
 var dot_pulses: int = 0
 var dot_interval_ticks: int = 0
+## Golpe direto (corpo a corpo de contato: nao projetil, zona, area nem pulso): combat_id de quem
+## golpeou; TargetRules.NONE = nao direto. So esse golpe a Retribuicao do Paladino devolve (F76), e
+## o dano devolvido nao e direto (sem laco).
+var striker_id: int = TargetRules.NONE
 
 
 func _init(

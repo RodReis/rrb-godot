@@ -193,4 +193,4 @@ func _stab(target: Combatant, tick: int) -> void:
 	var r := hero_data.skill_r
 	var amount := SkillRules.amount(r, ranks.z, attributes)
 	var damage := RogueRules.ambush_damage(amount, ambush_hidden, r.ambush_multiplier)
-	_hit(target, tick, HitLedger.Slot.R, HitEffect.new(damage, global_position))
+	_hit(target, tick, HitLedger.Slot.R, _direct(HitEffect.new(damage, global_position)))

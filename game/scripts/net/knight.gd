@@ -43,7 +43,8 @@ func _while_dashing(tick: int) -> void:
 		if multiplayer.is_server():
 			var damage := roundi(SkillRules.amount(q, ranks.x, attributes))
 			var push := CombatRules.push_vector(dash_direction, q.knockback)
-			_hit(other, tick, HitLedger.Slot.Q, HitEffect.new(damage, global_position, push))
+			var effect := _direct(HitEffect.new(damage, global_position, push))
+			_hit(other, tick, HitLedger.Slot.Q, effect)
 		return
 
 

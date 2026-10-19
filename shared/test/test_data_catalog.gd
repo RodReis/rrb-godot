@@ -133,6 +133,14 @@ func test_papel_e_descricao_dos_herois() -> void:
 				+ "prende o alvo no Círculo Profano."
 			)
 		],
+		&"paladin":
+		[
+			"Tanque",
+			(
+				"Tanque reativo: atordoa o primeiro que chega, devolve o dano de quem bate de "
+				+ "perto e fica imune a dano por um instante."
+			)
+		],
 	}
 	for id: StringName in expected:
 		assert_eq(_hero(id).role, expected[id][0], "role de %s" % id)

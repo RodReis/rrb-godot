@@ -55,6 +55,12 @@ extends Resource
 @export var curse_marks: int
 ## Fator do dano se a Ladina estava oculta no tick do uso (Emboscada).
 @export var ambush_multiplier: float
+## Largura da faixa a frente em que o golpe pega o 1o alvo (Golpe Consagrado do Paladino, F76); o
+## comprimento e `attack_range`.
+@export var strip_width: float
+## Fracao do dano recebido (depois da DEF) devolvida ao atacante, por rank (Retribuicao do Paladino,
+## F76); o alcance da origem do golpe e `attack_range` e o bonus de ATK e `attack_ratio`.
+@export var reflect_ratio: PackedFloat64Array
 
 
 ## Valor de [param values] no [param rank] (1..). Vazio = 0; rank alem do array = ultimo.

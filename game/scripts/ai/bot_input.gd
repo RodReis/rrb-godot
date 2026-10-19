@@ -42,6 +42,8 @@ var _last_cooldowns: Vector3i = Vector3i.ZERO
 var _zone_radius: float = INF
 ## O think atual acabou de entrar em FIGHT (Grito de Guerra do Berserker, SPEC-075).
 var _entered_fight: bool = false
+## HP do heroi no think anterior: caiu = tomou golpe (Retribuicao do Paladino, SPEC-076).
+var _last_hp: int = 0
 
 
 func _gather() -> void:
@@ -97,6 +99,7 @@ func think(tick: int) -> void:
 	_smoke_escape(view, enemy)
 	_potion_when_hurt(view)
 	_rage_when_needed(view)
+	_paladin_reacts(view, enemy)
 
 
 ## Ladina: Bomba de Fumaca para fugir do heroi que o bot ve, com HP baixo (SPEC-058 §7).
@@ -125,6 +128,20 @@ func _rage_when_needed(view: BotView) -> void:
 	var controlled := _hero.slow_ticks > 0 or _hero.stun_ticks > 0 or _hero.knockback_ticks > 0
 	if BotRules.berserker_skills(INF, 0.0, false, view.hp_pct, controlled, PROFILE).z == 1:
 		skill_r = true
+
+
+## Paladino (SPEC-076 regra 5), em qualquer estado: Retribuicao ao entrar em Lutar ou ao tomar
+## golpe com quem bate corpo a corpo ao alcance dela; Bencao com HP baixo ou dentro da zona.
+func _paladin_reacts(view: BotView, enemy: Hero) -> void:
+	if not _hero is Paladin:
+		return
+	var reach := _hero.hero_data.skill_e.attack_range
+	var struck := _hero.hp < _last_hp and _threat_within(enemy, reach)
+	_last_hp = _hero.hp
+	var in_zone := _hero.zone_ticks > 0
+	var use := BotRules.paladin_skills(INF, _entered_fight, struck, view.hp_pct, in_zone, PROFILE)
+	skill_e = skill_e or (use.y == 1 and _skill_ready(SkillRules.SLOT_E))
+	skill_r = skill_r or (use.z == 1 and _skill_ready(SkillRules.SLOT_R))
 
 
 func _reset() -> void:
@@ -256,7 +273,8 @@ func _contest(tick: int) -> void:
 ## perigo perto (_potion_when_hurt). Berserker pelo perfil (BotRules.berserker_skills): Arremesso
 ## para alcancar e Grito ao entrar em Lutar; o Ragnarok vale em qualquer estado (_rage_when_needed).
 ## Ocultista pelo perfil (BotRules.occultist_skills): o basico acumula marcas, Praga no alvo,
-## Circulo se o alvo se aproxima, Servos contra heroi ou boss.
+## Circulo se o alvo se aproxima, Servos contra heroi ou boss. Paladino pelo perfil
+## (BotRules.paladin_skills): Golpe Consagrado colado; Retribuicao e Bencao em _paladin_reacts.
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -275,6 +293,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var druid := _hero is Druid
 	var berserker := _hero is Berserker
 	var occultist := _hero is Occultist
+	var paladin := _hero is Paladin
 	var use := Vector3i.ZERO
 	if barbarian:
 		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
@@ -307,11 +326,14 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_e = skills and use.y == 1
 	elif occultist:  # basico sempre (marcas); Praga no alvo; Circulo se ele se aproxima; Servos
 		var closing := BotRules.closing_speed(target.velocity, to)
-		var worth := target is Hero or Druid._is_boss(target)
+		var worth := target is Hero or Hero._is_boss(target)
 		use = BotRules.occultist_skills(to.length(), closing, worth, PROFILE)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_e = skills and use.y == 1
 		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
+	elif paladin:  # Golpe Consagrado colado; Retribuicao e Bencao: _paladin_reacts
+		use = BotRules.paladin_skills(to.length(), false, false, 1.0, false, PROFILE)
+		skill_q = skills and use.x == 1
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
@@ -323,7 +345,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_r = skills and use.z == 1
 	elif wizard:
 		skill_e = skills and use.y == 1
-	elif rogue or engineer or druid or berserker or occultist:
+	elif rogue or engineer or druid or berserker or occultist or paladin:
 		pass
 	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)
@@ -451,7 +473,11 @@ func _log_skills() -> void:
 
 
 func _in_danger(enemy: Hero) -> bool:
-	var reach := PROFILE.danger_range
+	return _threat_within(enemy, PROFILE.danger_range)
+
+
+## O heroi adversario visto ou um monstro engajado esta a ate [param reach] do bot.
+func _threat_within(enemy: Hero, reach: float) -> bool:
 	if enemy != null and _flat(enemy.global_position).length() <= reach:
 		return true
 	# Monstro parado (sem aggro) nao e perigo: o T1 da base renasce perto da fonte (F36) e

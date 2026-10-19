@@ -738,9 +738,21 @@ func _melee(tick: int) -> void:
 		if CombatRules.is_in_melee_arc(
 			global_position, forward(), other.global_position, basic.attack_range, half_arc
 		):
-			_hit(other, tick, HitLedger.Slot.BASIC, HitEffect.new(damage, global_position))
+			_hit(other, tick, HitLedger.Slot.BASIC, _direct(HitEffect.new(damage, global_position)))
 		else:
 			_miss(other, tick, HitLedger.Slot.BASIC)
+
+
+## O chefe (Raizes Vivas e Golpe Consagrado so o ferem; o bot o caca, F74/F76).
+static func _is_boss(other: Combatant) -> bool:
+	var monster := other as Monster
+	return monster != null and monster.data.tier == MonsterData.Tier.BOSS
+
+
+## Marca [param effect] como golpe direto deste heroi (Retribuicao do Paladino, F76).
+func _direct(effect: HitEffect) -> HitEffect:
+	effect.striker_id = combat_id()
+	return effect
 
 
 ## Heroi do outro time e monstro vivo.

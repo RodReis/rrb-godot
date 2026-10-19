@@ -303,6 +303,7 @@ func _chase(tick: int) -> void:
 func _attack(tick: int) -> void:
 	var effect := HitEffect.new(_damage, global_position)
 	effect.attacker_id = summoner.peer_id
+	effect.striker_id = uid  # golpe direto: a Retribuicao do Paladino devolve ao servo (F76)
 	_target.receive_hit(tick + 1, HitLedger.source_key(uid, HitLedger.Slot.BASIC), effect)
 
 

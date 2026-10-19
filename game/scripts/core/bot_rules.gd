@@ -192,6 +192,26 @@ static func occultist_skills(
 	)
 
 
+## Habilidades do Paladino (SPEC-076 regra 5) contra um alvo a [param distance]: Golpe Consagrado
+## (x) ate consecrate_range; Retribuicao (y) ao entrar em Lutar ([param entered_fight]) ou ao tomar
+## golpe corpo a corpo ([param struck_melee]); Bencao Inviolavel (z) com [param hp_pct] abaixo de
+## blessing_hp_pct ou dentro da zona ([param in_zone]). 1 = usa (o Hero ainda confere recarga e
+## rank).
+static func paladin_skills(
+	distance: float,
+	entered_fight: bool,
+	struck_melee: bool,
+	hp_pct: float,
+	in_zone: bool,
+	profile: BotProfile
+) -> Vector3i:
+	return Vector3i(
+		int(distance <= profile.consecrate_range),
+		int(entered_fight or struck_melee),
+		int(in_zone or hp_pct < profile.blessing_hp_pct),
+	)
+
+
 ## Velocidade (u/s) com que [param target_velocity] encurta a distancia ate o bot: projecao no eixo
 ## do bot ao alvo ([param to_target]); positivo = se aproximando.
 static func closing_speed(target_velocity: Vector3, to_target: Vector3) -> float:

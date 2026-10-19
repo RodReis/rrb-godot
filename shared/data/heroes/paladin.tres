@@ -1,0 +1,87 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/paladin_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/paladin_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/paladin_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/paladin_r.svg" id="icon_r"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"paladin_basic"
+icon = ExtResource("icon_basic")
+display_name = "Maça"
+description = "Golpe corpo a corpo em cone de 60° à frente (2 u). Dano: 120% do ATQ."
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.2)
+attack_ratio = 1.2
+attack_range = 2.0
+arc_degrees = 60.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"paladin_q"
+icon = ExtResource("icon_q")
+display_name = "Golpe Consagrado"
+description = "Golpe de maça à frente: acerta o primeiro herói, servo ou monstro numa faixa de 2,5 u × 1 u e o atordoa por 0,8 s (1,2 s no rank 5). O chefe só toma o dano. Dano: base do rank + 70% do ATQ."
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(10, 9.5, 9, 8.5, 8)
+base_amount = PackedFloat64Array(50, 75, 100, 125, 150)
+attack_ratio = 0.7
+attack_range = 2.5
+stun_duration = PackedFloat64Array(0.8, 0.9, 1, 1.1, 1.2)
+strip_width = 1.0
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"paladin_e"
+icon = ExtResource("icon_e")
+display_name = "Retribuição"
+description = "Por 3 s, cada golpe direto recebido de quem está a até 3 u (não projétil, não zona) devolve ao atacante 25% (45% no rank 5) do dano que você tomou + 20% do ATQ."
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(13, 12.5, 12, 11.5, 11)
+attack_ratio = 0.2
+attack_range = 3.0
+duration = PackedFloat64Array(3.0)
+reflect_ratio = PackedFloat64Array(0.25, 0.3, 0.35, 0.4, 0.45)
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"paladin_r"
+icon = ExtResource("icon_r")
+display_name = "Bênção Inviolável"
+description = "Cura base do rank + 120% da INT e fica imune a todo dano, inclusive da zona, por 1,5 s (2 s no rank 2). Controles continuam valendo."
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(60, 50)
+base_amount = PackedFloat64Array(120, 200)
+intelligence_ratio = 1.2
+radius = 5.0
+duration = PackedFloat64Array(1.5, 2)
+
+[resource]
+script = ExtResource("1_script")
+id = &"paladin"
+display_name = "Paladino Radiante"
+role = "Tanque"
+weapon_name = "Maça"
+summary = "Tanque reativo: atordoa o primeiro que chega, devolve o dano de quem bate de perto e fica imune a dano por um instante."
+base_move_speed = 5.7
+base_hp = 620.0
+hp_per_level = 46.0
+base_defense = 28.0
+defense_per_level = 2.8
+base_attack = 38.0
+attack_per_level = 3.4
+base_intelligence = 16.0
+intelligence_per_level = 1.6
+base_agility = 8.0
+agility_per_level = 0.8
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")

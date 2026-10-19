@@ -54,6 +54,10 @@ extends Resource
 @export var circle_range: float
 @export var circle_approach_speed: float
 @export var servants_range: float
+## Paladino (SPEC-076): Golpe Consagrado com o alvo a ate consecrate_range; Bencao Inviolavel com o
+## HP abaixo de blessing_hp_pct (fracao) ou dentro da zona.
+@export var consecrate_range: float
+@export var blessing_hp_pct: float
 ## Fase 2 (F19): a menos disto da borda da zona (ou fora dela) o bot foge para dentro. Escolha do
 ## Code: nenhum documento fixa o valor; a zona encolhe ~0,15 u/s, 2 u sao ~13 s de folga.
 @export var zone_margin: float

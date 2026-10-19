@@ -172,8 +172,3 @@ func _swamp(tick: int) -> void:
 ## A habilidade de que o projetil [param kind] tira velocidade e raio: Raizes Vivas ou o basico.
 func _flight_skill(kind: Arrow.Kind) -> SkillData:
 	return hero_data.skill_q if kind == Arrow.Kind.ROOT else hero_data.basic_attack
-
-
-static func _is_boss(other: Combatant) -> bool:
-	var monster := other as Monster
-	return monster != null and monster.data.tier == MonsterData.Tier.BOSS
