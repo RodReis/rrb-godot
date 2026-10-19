@@ -253,6 +253,11 @@
           "arquivo": "mvp2.8-f77-ocultista-silhueta.webp",
           "legenda": "Dois magos, duas silhuetas: o Ocultista de capuz e roupa escura, com livro aberto, ao lado do Bruxo de Fogo de chapéu pontudo. Na câmera do jogo, o capuz separa um do outro.",
           "tipo": "em-construcao"
+        },
+        {
+          "arquivo": "mvp2.8-f78-servos-do-vazio.webp",
+          "legenda": "O Servo do Vazio ao lado do Ocultista: no nível seis ele invoca dois desses à sua frente, que correm atrás do inimigo ou do monstro mais perto que ele enxerga. Prévia do modelo no Blender.",
+          "tipo": "em-construcao"
         }
       ]
     },
