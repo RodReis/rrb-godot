@@ -21,6 +21,9 @@ extends SceneTree
 ## ImpactRelay (zone_shown) a cada OCCULTIST_CIRCLE_SECONDS e segura curse_* e dot_ticks no alvo
 ## (dot_left 0: a Praga aparece sem ferir). Cada Ocultista tambem reinvoca os 2 Servos do Vazio a
 ## cada OCCULTIST_SERVANT_SECONDS (SPEC-078 aceite: 4 servos ativos com dois Ocultistas).
+## --paladin: cada Paladino fica com a Retribuicao e a Bencao ativas a medicao inteira (SPEC-076
+## aceite: aro de espinhos, motes, aureola, brilho e luz); a sonda segura retribution_ticks e
+## blessing_ticks (a imunidade nao: invuln_ticks fica como o jogo deixar).
 ## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
 ## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
@@ -53,6 +56,8 @@ const OCCULTIST_SERVANT_SECONDS: float = 9.5
 const CURSE_HOLD_TICKS: int = 120
 ## Timer de imunidade que o --berserker segura (ticks; qualquer valor > 0 mantem o Ragnarok).
 const RAGE_HOLD_TICKS: int = 120
+## Ticks que o --paladin segura na Retribuicao e na Bencao (qualquer valor > 0 as mantem).
+const PALADIN_HOLD_TICKS: int = 120
 ## Itens do --equip, por HeroData.id (um conjunto por heroi, arma epica).
 const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"knight": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
@@ -64,6 +69,7 @@ const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"druid": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"berserker": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
 	&"occultist": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
+	&"paladin": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
 }
 
 var _out: String = "frametime"
@@ -79,6 +85,7 @@ var _engineer: bool = false
 var _druid: bool = false
 var _berserker: bool = false
 var _occultist: bool = false
+var _paladin: bool = false
 var _circle_wait: float = 0.0
 var _servant_wait: float = 0.0
 var _potion_wait: float = 0.0
@@ -108,6 +115,8 @@ func _initialize() -> void:
 			_berserker = true
 		elif arg == "--occultist":
 			_occultist = true
+		elif arg == "--paladin":
+			_paladin = true
 		elif arg == "--grass":
 			_grass = true
 		elif arg.begins_with("--shot="):
@@ -138,6 +147,8 @@ func _process(delta: float) -> bool:
 		_rage_berserkers()
 	if _occultist and _phase > 0:
 		_occultist_effects(delta)
+	if _paladin and _phase > 0:
+		_hold_paladins()
 	if _grass and _phase > 0 and not _grass_linked:
 		_grass_linked = true
 		root.get_node("NetworkRollback").connect(&"after_process_tick", _hold_in_grass)
@@ -236,6 +247,7 @@ func _report() -> void:
 		"grass": _grass,
 		"berserker": _berserker,
 		"occultist": _occultist,
+		"paladin": _paladin,
 	}
 	var text := JSON.stringify(result, "  ")
 	print("[frametime] ", text)
@@ -358,3 +370,12 @@ func _occultist_effects(delta: float) -> void:
 		_circle_wait = OCCULTIST_CIRCLE_SECONDS
 	if _servant_wait <= 0.0:
 		_servant_wait = OCCULTIST_SERVANT_SECONDS
+
+
+## Sem tipos do jogo: Retribuicao e Bencao seguradas em cada Paladino.
+func _hold_paladins() -> void:
+	for hero: Node in _players.get_children():
+		var data: Resource = hero.get(&"hero_data")
+		if data != null and data.get(&"id") == &"paladin":
+			hero.set(&"retribution_ticks", PALADIN_HOLD_TICKS)
+			hero.set(&"blessing_ticks", PALADIN_HOLD_TICKS)

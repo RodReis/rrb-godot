@@ -18,6 +18,7 @@ const START_DISTANCE: Dictionary = {
 	"druid": 5.0,
 	"berserker": 2.0,
 	"occultist": 5.0,
+	"paladin": 1.6,
 }
 ## Sequencia por heroi: [segundos desde o inicio, acao, segundos apertada]. Acao "end" encerra.
 const SCRIPTS: Dictionary = {
@@ -94,6 +95,17 @@ const SCRIPTS: Dictionary = {
 		[3.4, &"skill_q", 0.1],
 		[5.0, &"skill_e", 0.1],
 		[9.5, &"end", 0.0],
+	],
+	# Paladino (F76): Retribuicao (aro no chao), 2 golpes de Maca, Golpe Consagrado (sigilo a frente)
+	# e Bencao Inviolavel (coluna de luz e aureola) — R so com --level=6+.
+	"paladin":
+	[
+		[0.6, &"skill_e", 0.1],
+		[1.2, &"primary_attack", 0.1],
+		[2.6, &"primary_attack", 0.1],
+		[3.8, &"skill_q", 0.1],
+		[5.0, &"skill_r", 0.1],
+		[8.0, &"end", 0.0],
 	],
 }
 
