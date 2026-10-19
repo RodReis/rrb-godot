@@ -12,6 +12,7 @@ const ENGINEER: String = "res://scenes/heroes/engineer.tscn"
 const DRUID: String = "res://scenes/heroes/druid.tscn"
 const BERSERKER: String = "res://scenes/heroes/berserker.tscn"
 const OCCULTIST: String = "res://scenes/heroes/occultist.tscn"
+const PALADIN: String = "res://scenes/heroes/paladin.tscn"
 const FRAME: float = 1.0 / 60.0
 
 var _hero: Hero
@@ -179,6 +180,17 @@ func test_ocultista_usa_o_cajado_e_nao_mostra_elmo() -> void:
 	assert_true(_part("spellbook_open").visible, "o livro fica sempre")
 	assert_eq(_pieces("guard_helm_*").size(), 0, "capuz fica (ADR-0016 item 8)")
 	assert_true(_part("Occultist_Hood").visible)
+	assert_eq(_pieces("guard_chest_t3__*").size(), 1)
+	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
+
+
+func test_paladino_usa_a_maca_mantem_o_escudo_e_nao_mostra_elmo() -> void:
+	_bind(PALADIN)
+	_equip([&"guard_helm_t2", &"guard_chest_t3", &"hunter_boots_t2", &"sword_t3_epic"])
+	assert_eq(_pieces("paladin_mace_t3_epic__handslot_r").size(), 1)
+	assert_false(_part("mace").visible, "maca nova troca a do modelo")
+	assert_true(_part("shield").visible, "o escudo fica sempre")
+	assert_eq(_pieces("guard_helm_*").size(), 0, "sem elmo (ADR-0011 item 3, F76)")
 	assert_eq(_pieces("guard_chest_t3__*").size(), 1)
 	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
 

@@ -33,6 +33,7 @@ ENGINEER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "engineer.glb
 DRUID = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "druid.glb")
 BERSERKER = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "berserker.glb")
 OCCULTIST = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "occultist.glb")
+PALADIN = os.path.join(REPO, "shared", "assets", "rrb", "heroes", "paladin.glb")
 BLEND = os.path.join(REPO, "art", "heroes", "equipment", "equipment.blend")
 OUT = os.path.join(REPO, "shared", "assets", "rrb", "equipment")
 ICONS = os.path.join(REPO, "shared", "ui", "icons", "items")
@@ -601,13 +602,35 @@ def axe1h_accents(p, rarity):
     p.gem(EPIC, (-0.40, 0.0, 1.45), (0.13, 0.21, 0.13))
 
 
+def mace_accents(p, rarity):
+    # Espaco local da maca do Paladino (F76, build_paladin.py): cabo em +Z (-0.30 a 0.52, raio 0.05), pomo em
+    # z -0.33 (raio 0.07), colar em 0.48-0.56, cabeca em 0.56-0.88 (raio 0.14) com 6 flanges ate raio 0.26 e
+    # ponta ate z 1.05. A cor da base vem do atlas alt_B do Paladino (material do paladin.glb).
+    if rarity == 0:
+        return
+    trim = BLUE if rarity == 1 else GOLD
+    p.cylinder(trim, (0.0, 0.0), 0.065, 0.065, 0.08, 0.18, 8, caps=False)  # anel da empunhadura
+    if rarity == 1:
+        p.gem(BLUE, (0.0, 0.0, -0.33), (0.08, 0.08, 0.08))  # pedra no pomo
+        return
+    for i in range(6):  # fio dourado na borda de cada flange (as flanges escondem um aro na cabeca)
+        angle = i * math.pi / 3.0
+        center = (0.25 * math.cos(angle), 0.25 * math.sin(angle), 0.72)
+        p.box(GOLD, center, (0.04, 0.05, 0.34), Matrix.Rotation(angle, 4, "Z"))
+    m = Matrix.Translation((0.0, 0.0, 1.02))
+    r = bmesh.ops.create_cone(p.bm, cap_ends=True, segments=6, radius1=0.07, radius2=0.0, depth=0.24, matrix=m)
+    p.add(r["verts"], GOLD)  # ponta dourada
+    p.gem(EPIC, (0.0, 0.0, -0.33), (0.09, 0.09, 0.09))
+
+
 WEAPON_ITEMS = ["sword_t1", "sword_t2", "sword_t3_epic"]  # indice = raridade
 # Berserker (F75): o par de machados vale um item de arma; o glb tem um machado em cada mao.
 BERSERKER_WEAPONS = ["axe_t1", "axe_t2", "axe_t3_epic"]
-# F74/F77: o Druida e o Ocultista usam cajado, nao espada.
+# F74/F77: o Druida e o Ocultista usam cajado, nao espada; F76: o Paladino usa maca.
 HERO_WEAPON_ITEMS = {
     "druid": ["staff_t1", "staff_t2", "staff_t3_epic"],
     "occultist": ["staff_t1", "staff_t2", "staff_t3_epic"],
+    "paladin": ["mace_t1", "mace_t2", "mace_t3_epic"],
 }
 # heroi: (glb, malha do pack, osso, enfeites, eixo local da arma, eixo local de vista do icone)
 WEAPONS = {
@@ -619,6 +642,7 @@ WEAPONS = {
     "engineer": (ENGINEER, "shotgun", "handslot.r", shotgun_accents, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0)),
     "druid": (DRUID, "druid_staff", "handslot.r", druid_staff_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
     "occultist": (OCCULTIST, "staff", "handslot.r", occultist_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
+    "paladin": (PALADIN, "mace", "handslot.r", mace_accents, (0.0, 0.0, 1.0), (0.0, 1.0, 0.0)),
 }
 
 # ---------------------------------------------------------------------------------------------

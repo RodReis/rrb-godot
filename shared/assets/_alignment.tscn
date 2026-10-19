@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/berserker.glb" id="20_berserker"]
 [ext_resource type="PackedScene" path="res://shared/assets/kaykit/adventurers/Mage.glb" id="21_fire_wizard"]
 [ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/occultist.glb" id="22_occultist"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/heroes/paladin.glb" id="23_paladin"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ref"]
 radius = 0.4
@@ -45,6 +46,9 @@ transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
 
 [node name="Knight" parent="." instance=ExtResource("1_knight")]
 transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, 0, 0, 0)
+
+[node name="Paladin" parent="." instance=ExtResource("23_paladin")]
+transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, -1, 0, 1.5)
 
 [node name="SkeletonMinion" parent="." instance=ExtResource("2_skeleton")]
 transform = Transform3D(0.78, 0, 0, 0, 0.78, 0, 0, 0, 0.78, 2, 0, 0)

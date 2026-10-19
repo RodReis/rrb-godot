@@ -59,6 +59,7 @@ const STAGE_EXTENTS: Dictionary[String, Vector2] = {
 	"druid": Vector2(0.9, 0.6),
 	"berserker": Vector2(0.95, 1.65),
 	"occultist": Vector2(0.85, 0.95),
+	"paladin": Vector2(1.0, 0.95),
 }
 const STAGE_ARC_DEPTH: float = 0.35
 const STAGE_CAMERA_BACK: float = 12.5
@@ -94,6 +95,7 @@ const HEROES: Dictionary[String, Array] = {
 	"druid": ["res://shared/assets/rrb/heroes/druid.glb", []],
 	"berserker": ["res://shared/assets/rrb/heroes/berserker.glb", [], 0.74, &"Idle_A"],
 	"occultist": ["res://shared/assets/rrb/heroes/occultist.glb", []],
+	"paladin": ["res://shared/assets/rrb/heroes/paladin.glb", []],
 }
 const TITLE: String = "ARENA 1V1"
 const TITLE_SIZE: int = 150

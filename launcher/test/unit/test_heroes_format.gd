@@ -57,7 +57,7 @@ func test_maximos_do_catalogo_normalizam_as_barras() -> void:
 	for hero: HeroData in _catalog.heroes:
 		for row: HeroesFormat.StatRow in HeroesFormat.stat_rows(hero):
 			assert_lte(row.high, maxima[row.id] + EPS, "%s %s" % [hero.id, row.id])
-	assert_almost_eq(maxima[&"hp"], 1005.0, EPS, "o Cavaleiro tem a maior vida")
+	assert_almost_eq(maxima[&"hp"], 1034.0, EPS, "o Paladino tem a maior vida")
 
 
 func test_habilidades_na_ordem_ataque_q_e_r_com_teclas() -> void:
