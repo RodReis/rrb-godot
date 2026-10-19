@@ -122,7 +122,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F77 / SPEC-077 | MVP2.8 | game, shared | Slice 2.8.2 — Ocultista (Mago): `Mage` do Extra com atlas escuro e capuz próprios; Projétil Sombrio + Maldição (até 3 marcas, piso 0), Praga, Círculo Profano; R desligado até o F78; bot; VFX (ADR-0016, GDB §2.2-F, §4.10) | finalizado (#215) |
 | F78 / SPEC-078 | MVP2.8 | game, shared | Slice 2.8.3 — Servos do Vazio (R do Ocultista): 2 servos móveis 7 s, IA no servidor (alvo travado → herói → monstro, só o visível ao dono), morrem sem recompensa, dano/kill para o Ocultista, visão como monstro (ADR-0016, GDB §4.10) | finalizado (#216) |
 | F79 / SPEC-079 | MVP3 | launcher, shared | Slice 3.11 — Tipo de tela nas Configurações: Modo Janela, Janela sem Borda e Tela Cheia Exclusiva; `[video] window_mode` (ADR-0019) | done (#226) |
-| F80 / SPEC-080 | MVP3 | game, backend, launcher, shared | Slice 3.12 — Sair do jogo: menu no ESC (Continuar / Sair) e derrota por abandono (`endReason` no resultado, ADR-0020) | todo (#230) |
+| F80 / SPEC-080 | MVP3 | game, backend, launcher, shared | Slice 3.12 — Sair do jogo: menu no ESC (Continuar / Sair) e derrota por abandono (`endReason` no resultado, ADR-0020) | done (#230) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
 Próximo número livre: **F79 / SPEC-079**.
