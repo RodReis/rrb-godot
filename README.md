@@ -1,6 +1,6 @@
 # rrb-godot — ARENA 1V1
 
-MOBA 3D de 2 tempos (preparação de 5 min → confronto com zona que fecha), 1x1, em **Godot 4.7.2** (Forward+), com **servidor autoritativo**.
+MOBA 3D de 2 tempos (preparação de 5 min → confronto com zona que fecha), 1x1, em **Godot 4.7.2** (Forward+), com **servidor autoritativo** e 10 heróis jogáveis.
 Escopo: `docs/prd/PRD.md`. Andamento: `docs/STATUS.md`. Decisões: `docs/DECISIONS.md`.
 
 São dois programas independentes que se falam por processo e argumentos (`docs/ARCHITECTURE-LAUNCHER.md` §5):
@@ -40,7 +40,7 @@ Sem internet ou sem conta, **Treino vs Bot** joga offline (no Login e no lobby).
 | --- | --- |
 | Windows + PowerShell | os scripts de `tools/` |
 | **Godot 4.7.2** (build padrão, não .NET) | Launcher, Game e testes |
-| Node 18+ e pnpm | backend |
+| Node 24+ e pnpm | backend e site (`engines` do `backend/package.json`) |
 | Docker Desktop | Postgres e servidores de partida |
 | `gh` (GitHub CLI) | fluxo de issues e PRs |
 
@@ -160,7 +160,7 @@ Landing page "Loot Start" em `site/` (React + Vite), no ar em https://rodreis.gi
 
 ### Argumentos do Game (depois de `--`)
 
-`--server`, `--port=7000`, `--connect=host:porta`, `--token=<match_token>`, `--offline --bot`, `--autopilot`. Servidor dedicado de dev: `--no-backend` (sem ele exige `BACKEND_URL`, `INTERNAL_SECRET` e `SLOT_PORT` e só aceita cliente com token de partida).
+`--server`, `--port=7000`, `--connect=host:porta`, `--token=<match_token>`, `--offline --bot`, `--autopilot` (`--autopilot=bot` joga pelo `BotInput`), `--bots` (servidor com dois bots, usado pelo soak). Lista completa em `game/scripts/core/launch_args.gd`. Servidor dedicado de dev: `--no-backend` (sem ele exige `BACKEND_URL`, `INTERNAL_SECRET` e `SLOT_PORT` e só aceita cliente com token de partida).
 
 ### Onde ler mais
 

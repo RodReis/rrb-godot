@@ -2,7 +2,7 @@
 
 > **Superada em parte (2026-10-10, ADR-0007):** §2 (topologia), §3 (posições) e §6 itens 1, 2 e 6 foram substituídos pela **SPEC-044** (Ilha Flutuante Arcana: espelho N–S, rio N–S + anel, 4 pontes). §1, §4 e §5 continuam valendo; §5: a imagem panorâmica passou a ser referência de layout.
 
-**Fatia:** F7 / SPEC-007 (MVP1, Slice 1.2) · **Issue:** #19 · **Status:** aprovada pelo PI em 2026-10-09; revisada após F7 (PR #32) com as decisões abaixo
+**Fatia:** F7 / SPEC-007 (MVP1, Slice 1.2) · **Issue:** #19 · **Status:** aprovada pelo PI em 2026-10-09; revisada após F7 (PR #32) com as decisões abaixo · **Entrega:** `finalizado` em 2026-10-09 (#19)
 **Fontes:** PRD §3.1, §3.2, §5, §11 · GDB §5.1, §6.2, §7.1 · conceito `docs/prd/telas/Arena & Mapa — O Vale Rúnico Apocalíptico/` (imagem tática) · referências Astro Arena / Brawl Stars (análise em `STATUS-ARQUIVO.md` 2026-10-09)
 **Decisões do PI (2026-10-09):** escala pelo GDB (raio 35 u); rio bloqueia e só se cruza por 2 pontes; bloqueios = muros/rochas + pilares da cratera + mato alto; cratera plana; **sem** torres, ouro, aura do boss, orbes de XP, fog of war, lama, relevo.
 **Decisões do PI na F7 (2026-10-09):** spawn em `(∓24, ±24)` — o `(∓26, ±26)` original ficava a 36,8 u, fora da arena de 35 u; campos de monstros do centro em **45°/225°** — em 0°/180° não eram equidistantes das pontes.

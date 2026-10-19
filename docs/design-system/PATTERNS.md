@@ -10,13 +10,13 @@ Quando: toda tela que não é o lobby. Estrutura: `FRONTEND-LAUNCHER.md` §3 (`S
 
 Coluna esquerda `SIZE_NAV_COL` (logo, `PanelCard` do jogador, `VBox` de `ButtonPrimary`/`Button` com `SPACE_MD`); centro expande sobre o diorama; coluna direita `SIZE_SIDE_COL` (status do backend, card de fila). Rodapé `ScreenFooter` com região/versão. Fila é **estado do card direito**, não tela (`PULSE_QUEUE` na borda; `TimerLabel`; botão cancelar `ButtonDanger`).
 
-## P3 — Lista + detalhe (bestiário, forja, histórico)
+## P3 — Lista + detalhe (padrão base; bestiário, forja, heróis e histórico viraram grade/feed de cards, §8.4 do `FRONTEND-LAUNCHER.md`)
 
-`CatalogList`/`Tree` à esquerda (`SIZE_LIST_COL`), `DetailCard` à direita expandindo. Seleção por teclado (setas) e mouse; o primeiro item vem selecionado. `StateBox` envolve o detalhe. Não fazer: scroll na tela inteira — só na lista.
+Vale para tela sem protótipo próprio. `CatalogList`/`Tree` à esquerda (`SIZE_LIST_COL`), `DetailCard` à direita expandindo. Seleção por teclado (setas) e mouse; o primeiro item vem selecionado. `StateBox` envolve o detalhe. Não fazer: scroll na tela inteira — só na lista.
 
 ## P4 — Formulário (login, configurações)
 
-`FormRow` empilhados com `SPACE_SM`; botão primário no fim, à direita; secundário à esquerda. Configurações: `TabContainer` com abas Vídeo / Áudio / Controles; "Restaurar padrões" no `%RightSlot` do header com `ModalDialog` de confirmação. Salvar aplica imediatamente e persiste; sem "aplicar" separado.
+`FormRow` empilhados com `SPACE_SM`; botão primário no fim, à direita; secundário à esquerda. Configurações: abas `LnTab` Controles & Câmera / Gráficos & Performance / Áudio / Créditos; "Restaurar padrões" no `%RightSlot` do header com `ModalDialog` de confirmação. Salvar aplica imediatamente e persiste; sem "aplicar" separado.
 
 ## P5 — Estados de dado remoto
 
@@ -48,4 +48,4 @@ Primeiro foco explícito; `focus_neighbor` em toda grade; `Esc`/`B` volta; `Ente
 
 ## P12 — Feedback de ação
 
-Sucesso → `Toast SUCCESS` 3 s; erro recuperável → `Toast ERROR` + estado da tela; ação destrutiva (sair, abandonar partida, restaurar padrões, encerrar jogo) → `ModalDialog` com botão destrutivo `ButtonDanger`. Som de hover/clique por `AudioStreamPlayer` no `App`, não por botão.
+Sucesso → `Toast SUCCESS` 3 s; erro recuperável → `Toast ERROR` + estado da tela; ação destrutiva (sair, abandonar partida, restaurar padrões, encerrar jogo) → `ModalDialog` com botão destrutivo `ButtonDanger`. Som de hover/clique por `AudioStreamPlayer` no `App`, não por botão (ainda sem assets: `DEBITO.md` DS-10).

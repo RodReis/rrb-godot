@@ -358,7 +358,7 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 
 ### 4.8 Berserker (Lutador — Melee) — ADR-0015, SPEC-075
 - **Papel:** lutador corpo a corpo sustentado: quanto menos vida, mais rápido bate e mais rouba vida (Frenesi, §2.2-E); imparável sob controle de grupo no Ragnarök. Classe nova **Lutador** (PRD §4.1).
-- **Modelo:** KayKit Adventurers 2.0 Extra `Barbarian_Large` (textura alternativa `alt_A/B/C` — PI escolhe no aceite do F75), rig `Rig_Large`; armas visíveis = dois `axe_1handed_Large` (F48, 3 raridades nos dois). Sem escudo; elmo não aparece (exceção do ADR-0011 item 3). **Colisão igual aos demais heróis.**
+- **Modelo:** KayKit Adventurers 2.0 Extra `Barbarian_Large`, textura `alt_A` (barba ruiva), rig `Rig_Large`; armas visíveis = dois `axe_1handed_Large` (F48, 3 raridades nos dois). Sem escudo. **Elmo viking de chifres modelado no Blender** (decisão do PI em 2026-10-18 no aceite do F75, contra o "elmo não aparece" da spec e do ADR-0011 item 3). **Colisão igual aos demais heróis.**
 - **Velocidade Base:** $6.1\text{ u/s}$.
 - *Números aprovados pelo PI em 2026-10-16 como proposta, conferidos no soak do F75. Q e E escalam ATK (regra do §2.1).*
 
@@ -385,7 +385,7 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
   - Por $2.0\text{ s}$: $+[30, 40, 50, 60, 70]$ de **Defesa** e $+15\%$ de velocidade de movimento. Sem dano, sem alvo.
   - Cooldown Base: $[14.0, 13.0, 12.0, 11.0, 10.0]\text{ s}$.
 - **R — Ragnarök (Ultimate, Nv 6+):**
-  - Por $4.0\text{ s}$: **imune a controle de grupo** (lentidão, raiz, atordoamento, empurrão e puxão não se aplicam; os já ativos são limpos no uso), $+25\%$ de velocidade de movimento e **Frenesi no máximo** ($f = 1$). Sem dano.
+  - Por $4.0\text{ s}$: **imune a controle de grupo** (lentidão, raiz, atordoamento, empurrão e puxão não se aplicam; os já ativos são limpos no uso), $+25\%$ de velocidade de movimento e **Frenesi no máximo** ($f = 1$). Sem dano. Corpo todo em chamas enquanto dura (visual, visível para todos; decisão do PI em 2026-10-18). Atordoado, o herói não lança skill, então na prática o R não tira o atordoamento (levado ao PI no F75; kit aprovado assim).
   - Cooldown Base: $[70.0, 58.0]\text{ s}$.
 
 ---
@@ -421,6 +421,9 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
 - **R — Bênção Inviolável (Ultimate, Nv 6+):**
   - No uso: cura $[120, 200] + (1.2 \times \text{INT})$ (não passa do HP máximo) e **imunidade a todo dano** por $[1.5, 2.0]\text{ s}$ — **inclusive a zona da fase 2** (ADR-0016 item 5). Controles (atordoamento, lentidão, empurrão, puxão) **continuam** valendo. Reaproveita o estado de invulnerabilidade do Rolamento (§4.2). Vale também para aliados a até $5.0\text{ u}$ (no 1x1, só nele).
   - Cooldown Base: $[60.0, 50.0]\text{ s}$.
+- **Decisões do PI em 2026-10-19 (F76):**
+  - O **Bacamarte do Engenheiro (§4.6) não é golpe direto**: é tiro de arma de fogo, e a Retribuição não o devolve. Golpe direto (ADR-0016 item 4) segue sendo o de contato, sem projétil, zona nem pulso: no código, os básicos corpo a corpo, Investida, Execução, Emboscada, Golpe Consagrado, o golpe de monstro de alvo único e o do servo.
+  - **Durante a imunidade da Bênção Inviolável**, a Retribuição devolve **só a parte do ATK** ($0.2 \times \text{ATK}$): o Paladino não tomou dano, e a parte percentual é sobre o dano que ele recebeu (depois da Defesa).
 
 ---
 
@@ -546,7 +549,7 @@ O inventário possui 4 slots equipáveis: **Arma, Elmo, Peitoral e Botas**.
 - **Baús Comuns (6 por base segura):**
   - Drop: 70% Item Comum, 30% Ouro/Consumível temporário de cura ($+120\text{ HP}$).
 - **Baús Comuns Laterais (2 por campo lateral, 8 no total — decisão do PI em 2026-10-10, F36):**
-  - Mesmo drop do baú comum. Total do mapa: **24 baús** (12 de base + 8 laterais + 4 raros). Baús não reabrem.
+  - Mesmo drop do baú comum. Total do mapa neste ponto: **24 baús** (12 de base + 8 laterais + 4 raros); com os reforçados dos cantos (abaixo) são **28**. Baús não reabrem.
 - **Baús Reforçados (2 por campo de canto, 4 no total — decisão do PI em 2026-10-11, ADR-0011):**
   - Drop: 50% Item Raro, 50% Item Comum. Sem épico, sem ouro/consumível. Total do mapa: **28 baús** (12 de base + 8 laterais + 4 reforçados + 4 raros). Baús não reabrem.
 - **Baús Raros (4 no centro contestado):**
@@ -583,30 +586,38 @@ A transição de 5 s (portões caem, aviso) **já conta como fase 2**: o relógi
 - **Proximidade:** sem revelação por proximidade — quem está fora da moita não vê quem está dentro, a qualquer distância; só vê quem está na mesma moita.
 - **Servos do Ocultista (ADR-0016, F78):** são vistos e escondidos pelas mesmas regras dos monstros (raio de visão, neblina, moita); só atacam o que o Ocultista vê.
 - **Fumaça da Ladina (ADR-0013, F58):** a nuvem da Bomba de Fumaça (§4.5) vale como moita por $3.0\text{ s}$, com as mesmas regras acima; lançar a fumaça não revela. A Torreta do Engenheiro (§4.6) só atira em quem o Engenheiro vê por estas regras.
-- **Alvo travado (ADR-0015, F66):** o botão direito **clicado** sobre um herói inimigo ou monstro trava o alvo; o servidor só aceita alvo **visível para aquele peer** por estas regras e destrava no tick em que ele deixa de ser visível (moita, fumaça, neblina) ou morre. Com alvo travado e dentro do alcance do básico, o básico dispara sozinho na cadência normal; fora do alcance, nada. O auto-ataque de dentro da moita revela como qualquer ataque.
+- **Alvo travado (ADR-0015, F66):** o botão direito **clicado** sobre um herói inimigo, monstro ou servo inimigo (§4.10) trava o alvo; o servidor só aceita alvo **visível para aquele peer** por estas regras e destrava no tick em que ele deixa de ser visível (moita, fumaça, neblina) ou morre. Com alvo travado e dentro do alcance do básico, o básico dispara sozinho na cadência normal; fora do alcance, nada. O auto-ataque de dentro da moita revela como qualquer ataque.
 
 ---
 
 ## 8. Estrutura de Arquivos de Dados no Godot (`data/`)
 
-Para manter a separação estrita de dados exigida no PRD §4.3 e §8.6, todos os parâmetros acima são serializados como Resources (`.tres`) carregados dinamicamente pelo servidor:
+Para manter a separação estrita de dados exigida no PRD §4.3 e §8.6, todos os parâmetros acima são serializados como Resources (`.tres`) em `shared/data/` (a pasta compartilhada com o Launcher, ADR-0003), carregados dinamicamente pelo servidor:
 
 ```
-game/data/
+shared/data/
 ├── heroes/
 │   ├── knight.tres          # Herói Cavaleiro (HP, Def, Atk, Skills Q/E/R)
 │   ├── ranger.tres          # Herói Arqueiro (HP, Def, Atk, Skills Q/E/R)
 │   ├── barbarian.tres       # Herói Bárbaro (ADR-0011, F53)
 │   ├── fire_wizard.tres     # Herói Bruxo de Fogo (ADR-0011, F54)
 │   ├── rogue.tres           # Heroína Ladina (ADR-0013, F58)
-│   └── engineer.tres        # Herói Engenheiro (ADR-0013, F59)
+│   ├── engineer.tres        # Herói Engenheiro (ADR-0013, F59)
+│   ├── druid.tres           # Herói Protetor da Selva (ADR-0015, F74)
+│   ├── berserker.tres       # Herói Berserker, com a passiva Frenesi (ADR-0015, F75)
+│   ├── paladin.tres         # Herói Paladino Radiante (ADR-0016, F76)
+│   └── occultist.tres       # Herói Ocultista (ADR-0016, F77)
+├── servants/
+│   └── void_servant.tres    # Servo do Vazio: HP, Def, velocidade, golpe, alvo (ADR-0016, F78)
 ├── items/
+│   ├── catalog.tres         # catálogo dos 21 itens
 │   ├── weapons/
 │   │   ├── sword_t1.tres
 │   │   ├── sword_t2.tres
 │   │   └── sword_t3_epic.tres
 │   ├── guard_set/           # Elmo, Peitoral, Botas (T1 a T3) + guard_bonus.tres
-│   └── hunter_set/          # Elmo, Peitoral, Botas (T1 a T3) + hunter_bonus.tres
+│   ├── hunter_set/          # Elmo, Peitoral, Botas (T1 a T3) + hunter_bonus.tres
+│   └── visuals/             # peças visíveis por herói (F48)
 ├── monsters/
 │   ├── skeleton_t1.tres
 │   ├── skeleton_warrior_t2.tres
@@ -615,7 +626,10 @@ game/data/
 │   ├── golem_corner.tres    # Golem de canto, sem item (F55)
 │   ├── wolf_t2.tres         # Lobo (F55)
 │   └── skeleton_king_boss.tres
-└── rules/
-    ├── match_pacing.tres    # Timers, raio da zona, curvas de dano
-    └── xp_table.tres        # Vetor de XP por nível (1 a 10)
+├── rules/
+│   ├── match_pacing.tres    # Timers, raio da zona, curvas de dano
+│   ├── xp_table.tres        # Vetor de XP por nível (1 a 10)
+│   └── bot_profile.tres     # Perfil do bot
+├── ui/tips.tres             # Dicas da tela de loading (F68)
+└── visual/day_night.tres    # Ciclo dia/noite (F49)
 ```

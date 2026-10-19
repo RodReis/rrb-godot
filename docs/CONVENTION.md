@@ -11,17 +11,21 @@
 | Ticket de fila | `queue_ticket` | pedido de partida 1x1; `waiting → matched \| cancelled \| expired`. |
 | Partida | `match` | uma execução do Game com 2 jogadores; `assigned → running → finished \| aborted \| abandoned`. |
 | Jogador | `player` | participante de uma partida (peer + conta + herói). |
-| Herói | `hero` | Cavaleiro (`knight`) ou Arqueiro (`ranger`). Dados em `shared/data/heroes/`. |
+| Herói | `hero` | um dos 10 heróis (GDB §4.1–§4.10; ids em `shared/data/heroes/`). |
 | Atributos | `stats` | HP, DEF, ATK, INT, AGI (GDB §2.1). |
-| Habilidade | `skill` | Q, E (5 níveis), R (2 níveis, nível 6+). |
+| Habilidade | `skill` | Q, E (5 níveis), R (2 níveis, nível 6+); mais o ataque básico. |
+| Passiva | `passive` | regra do herói sem botão (`HeroData.passive`); só o Frenesi do Berserker (§4.5). |
 | Nível / XP | `level`, `xp` | 1–10; tabela GDB §3.2. |
 | Monstro | `monster` | 5 tipos, tier 1–3 + boss (GDB §5.1). Não respawna. |
-| Baú | `chest` | comum (base) ou raro (centro); abre uma vez (GDB §6.2). |
-| Item | `item` | 12 itens, 4 slots, 3 raridades (GDB §6.1). |
+| Baú | `chest` | comum, reforçado (campo de canto) ou raro (centro); abre uma vez (GDB §6.2). |
+| Item | `item` | 21 itens, 4 slots, 3 raridades (GDB §6.1). |
 | Conjunto | `set` | Guarda ou Caçador; bônus com 3/3 peças de armadura. |
 | Fase | `phase` | ver §3. |
 | Zona | `zone` | círculo que encolhe na fase 2 (GDB §7.1). |
 | Kill | `kill` | morte de herói **na fase 2**. Na fase 1 não conta. |
+| Servo | `void_servant` | invocação do Ocultista (R, §4.5); entidade móvel do servidor, golpeável, 2 por invocação. |
+| Alvo travado | `target_id` | `combat_id` do adversário que o herói travou (§4.5); 0 = nenhum. |
+| Golpe direto | `striker_id` | golpe de contato (não projétil, zona, área nem pulso); só ele aciona a Retribuição (§4.5). |
 | Servidor de partida | `game_server` | processo headless do Game, 1 por partida. |
 | Pool | `pool` | containers pré-aquecidos do orquestrador. |
 
@@ -31,7 +35,7 @@
 |---|---|---|
 | `user`, `session`, `queue_ticket`, `match` (registro), `match_players` | Backend | Launcher (sua conta), Game server (validar/reportar) |
 | Estado da partida (posições, HP, XP, itens, zona, kills, relógio) | Game **server** | Game client (replicado) |
-| Servo do Vazio (invocação do Ocultista — ADR-0016, F78): posição, HP, alvo, tempo restante | Game **server** | Game client (replicado, filtrado por visão como monstro) |
+| Servo do Vazio (invocação do Ocultista — ADR-0016, F78): posição, HP, alvo, tempo restante | Game **server** | Game client (posição e HP replicados, filtrados por visão como monstro) |
 | `settings.cfg` | Launcher | Game |
 | `shared/data/*.tres` | repositório (Cowork/PI) | ambos |
 
@@ -53,7 +57,7 @@ LOBBY_WAIT → HERO_PICK → INTRO → PHASE1 → TRANSITION → PHASE2 → SUDD
 | `TRANSITION` | 5:00 | +5 s | aviso visual/sonoro; **já conta como fase 2**: `t_phase2` começa às 5:00 (decisão do PI 2026-10-10) |
 | `PHASE2` | 5:05 | meta de kills **ou** `t_phase2 = 4:00` (9:00 de partida) | `t_phase2` 0:05–4:00 |
 | `SUDDEN_DEATH` | `t_phase2 = 4:00` (9:00 de partida) | último time com vivo **ou** 10:00 → colapso com resolução imediata (GDB §7.2 item 3) | até 10:00 |
-| `ENDED` | vitória ou abandono | processo encerra após reportar | — |
+| `ENDED` | vitória ou abandono | servidor encerra após reportar; cliente mostra a tela de fim e volta ao Launcher em ≤ 15 s (F70) | — |
 
 Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** há empate (GDB §7.2 — a única saída sem vencedor é `abandoned`: ninguém conectado); não há transição de volta.
 
@@ -88,14 +92,14 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 ### 4.5 Heróis
 - Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015 —, §4.9 (Paladino Radiante) e §4.10 (Ocultista) — pelo ADR-0016.
 - Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo; Protetor da Selva projétil 20 u/s, 6,5 u, raio 0,35 u; Berserker arco 90°/2,4 u; Paladino Radiante arco 60°/2,0 u; Ocultista projétil 15 u/s, 7,5 u, raio 0,4 u.
-- **Orientação e alvo travado (ADR-0015, F66):** o herói encara a direção do movimento; ao atacar/usar skill vira para o alvo por 0,4 s. `target_id` vem no input e o servidor só aceita alvo vivo, inimigo e **visível para aquele peer** (§4.6, §4.7, §4.9); com alvo em alcance o básico dispara sozinho, fora do alcance não anda. Destrava ao morrer, sumir da visão, `Esc` ou clique no chão.
+- **Orientação e alvo travado (ADR-0015, F66):** o herói encara a direção do movimento; ao atacar/usar skill vira para a mira (ou o alvo travado) por 0,4 s. `target_id` vem no input e o servidor só aceita alvo — herói inimigo, monstro ou servo inimigo — vivo e **visível para aquele peer** (§4.6, §4.7, §4.9); recusado, vale como nenhum alvo. Com alvo em alcance o básico dispara sozinho, fora do alcance não anda. Destrava ao morrer, sumir da visão, `Esc` ou clique no chão.
 - **Passiva (ADR-0015, F75):** `HeroData.passive` (`PassiveData`); só `FRENZY` (Berserker, GDB §2.2-E). Aplicada no `_rollback_tick` do próprio herói.
-- **Raiz = lentidão 100 %** (Raízes Vivas, GDB §4.7): o enraizado mira, ataca e usa skill, só não anda. **Imunidade a controle** (Ragnarök, GDB §4.8): lentidão, raiz, atordoamento, empurrão e puxão não se aplicam e os ativos são limpos.
+- **Raiz = lentidão 100 %** (Raízes Vivas, GDB §4.7): o enraizado mira, ataca e usa skill, só não anda. **Imunidade a controle** (Ragnarök, GDB §4.8): lentidão, raiz, atordoamento, empurrão e puxão não se aplicam e os ativos são limpos; dano, Maldição e Praga continuam valendo.
 - ATK escala básico, Q e E (inclusive a cura da Poção Verde); INT escala só o R — vale para os 10 heróis (GDB §2.1).
 - **Torreta do Engenheiro** (ADR-0013): indestrutível, 6 s, uma por vez; acerta heróis e monstros que o Engenheiro vê (§4.7, §4.9); não dá visão própria; o disparo dela não revela o Engenheiro.
-- **Maldição (ADR-0016, F77):** até 3 marcas, −6 Defesa cada, 4 s renovados a cada marca nova; Defesa efetiva nunca negativa (GDB §2.2-F). **Praga:** dano contínuo preso ao alvo, renova sem acumular. Os dois são estado do próprio alvo, aplicado no `_rollback_tick` dele pelo ledger (ADR-0001).
-- **Retribuição (Paladino, ADR-0016, F76):** devolve dano de golpe direto (não projétil, não zona/pulso) de origem a até 3 u — heróis, servos e monstros; dano devolvido não volta de novo. **Bênção Inviolável:** imunidade a **todo** dano, inclusive a zona da fase 2; controles continuam valendo.
-- **Servos do Vazio (Ocultista, ADR-0016, F78):** 2 por invocação, uma invocação por vez; atacam heróis e monstros (boss incluído) que o Ocultista vê; podem ser mortos; matar servo não dá XP, drop nem kill; dano e kill do servo contam para o Ocultista; o ataque do servo não revela o Ocultista.
+- **Maldição (ADR-0016, F77):** só o básico do Ocultista aplica; até 3 marcas, −6 Defesa cada, 4 s renovados a cada marca nova (caem todas juntas); Defesa efetiva nunca negativa (GDB §2.2-F). **Praga:** dano contínuo preso ao alvo (8 pulsos em 4 s), renova sem acumular; o abate de quem a pôs conta para ele. Os dois são estado do próprio alvo (herói, monstro, servo), aplicado no `_rollback_tick` dele pelo ledger (ADR-0001), e não são controle.
+- **Retribuição (Paladino, ADR-0016, F76):** devolve dano de golpe direto (não projétil, não zona/pulso) de origem a até 3 u — heróis, servos e monstros; dano devolvido não volta de novo. Decisões do PI de 2026-10-19: o **Bacamarte do Engenheiro não é golpe direto** (é tiro), e **sob a Bênção** a Retribuição devolve só a parte do ATK, porque o Paladino não tomou dano (GDB §4.9). **Bênção Inviolável:** imunidade a **todo** dano, inclusive a zona da fase 2; controles continuam valendo.
+- **Servos do Vazio (Ocultista, ADR-0016, F78):** 2 por invocação, uma invocação por vez; atacam heróis e monstros (boss incluído) que o Ocultista vê (o alvo travado dele primeiro; sem alvo, seguem o Ocultista); duram 10 s (R1) ou 12 s (R2); podem ser alvo de ataque, skill e do alvo travado e morrem ao zerar o HP ou no fim da duração; matar servo não dá XP, drop nem kill; dano e kill do servo contam para o Ocultista; o ataque do servo não revela o Ocultista.
 - Tudo validado no servidor; cliente prevê só movimento próprio e disparo visual do projétil (benchmark §4).
 
 ### 4.6 Bot
@@ -108,6 +112,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - **Fumaça da Ladina** (ADR-0013, F58): a nuvem da Bomba de Fumaça vale como moita por 3 s, para qualquer herói dentro dela. Única exceção à revelação ao agir: **lançar a própria fumaça não revela**.
 - Monstros e bot seguem a mesma regra que um jogador (invariante de honestidade do bot, §4.6).
 - **Silhueta do próprio herói (ADR-0015, F72):** só no cliente de quem controla, dentro da moita: herói translúcido e moita semitransparente em volta. Não muda replicação nem `VisibilityRules`; adversário e monstros não ganham silhueta.
+- Dez moitas 4×4 no mapa: as 6 da SPEC-046 e 4 de emboscada rentes aos corredores (F73, pedido do PI em 2026-10-17).
 - Geometria entra no F7; a regra de visibilidade é F32 (MVP2), porque depende de filtro de replicação do netfox.
 
 ### 4.9 Neblina de guerra (decisão do PI 2026-10-10 — reverte a exclusão de 2026-10-09)

@@ -9,6 +9,13 @@ func test_heroi_vem_de_shared_data() -> void:
 	assert_not_null(HistoryFormat.hero("knight"))
 
 
+func test_todo_heroi_do_catalogo_tem_retrato_1x1() -> void:
+	var catalog := CatalogService.new()
+	catalog.load_all()
+	for hero: HeroData in catalog.heroes:
+		assert_not_null(HistoryFormat.portrait(String(hero.id)), "retrato 1:1 de %s" % hero.id)
+
+
 func test_heroi_vazio_ou_desconhecido_nao_quebra() -> void:
 	assert_null(HistoryFormat.hero(""))
 	assert_null(HistoryFormat.hero("nao_existe"))

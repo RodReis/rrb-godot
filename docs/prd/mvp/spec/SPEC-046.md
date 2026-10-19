@@ -1,6 +1,6 @@
 # SPEC-046 — Arena "Rift Medieval adaptado": relayout da Ilha (borda quadrada, rio em S NO–SE, 3 rotas, selva nos quadrantes)
 
-**Fatia:** F46 / SPEC-046 (MVP2, Slice 2.12 — entra **logo depois do F44 e antes do F19**) · **Issue:** #110 · **Status:** aprovada pelo PI em 2026-10-10 (4 pontos do PI + 4 decisões em pop-up, registradas no ADR-0009)
+**Fatia:** F46 / SPEC-046 (MVP2, Slice 2.12 — entra **logo depois do F44 e antes do F19**) · **Issue:** #110 · **Status:** aprovada pelo PI em 2026-10-10 (4 pontos do PI + 4 decisões em pop-up, registradas no ADR-0009) · **Entrega:** `finalizado` em 2026-10-10 (#110)
 **Supera:** SPEC-044 §1 (forma e tamanho da arena), §2 (topologia e posições), §3 (posições do centro e dos campos), §6 itens 1, 2, 4, 6 e 11 (medidas). Mantém SPEC-044 §4 (marcadores), §5 (builder gera a cena; "edite o builder, não a cena") e toda a arte do F40 entregue no F44 (kits Blender, shaders, baú).
 **Fontes:** PRD §3.1, §3.2 · GDB §5.1, §6.2, §7.1 (inalterados) · ADR-0009 (decisão de layout) · imagem tática `docs/prd/telas/Arena & Mapa — O Vale Rúnico Apocalíptico/tactical_overview_battleground_map_view_of_a_futuristic_medieval_apocalyptic.png` · `CONVENTION.md` §4.1, §4.7
 **Escopo desta fatia:** relayout **jogável com a arte atual** — borda quadrada, rio novo, posições novas do builder, chassi da ilha regerado no Blender (`art/arena/build_island.py`), colisão, marcadores, navmesh, aceite por medidas. **Nenhum kit novo**: castelo modular, pontes de pedra, pilares, cristais, pinheiros, torre de vigia, balista, baú e os 4 shaders são os do F44, reposicionados.
@@ -105,7 +105,7 @@ Eixo local da base A: `s` ao longo de centro → spawn (`AXIS_A = (−0,707, 0, 
 | **Moita de lagoa (nova)** | `(−30, −26)` e `(+30, +26)`, 4 × 4 u — ao lado da lagoa, fora do corredor TOP/BOT | 2 |
 | Rochas de selva | §2.5 | 8 |
 
-Total de mato: **6 moitas** (= SPEC-044). Regra do mato = F32; geometria `Area3D` grupo `tall_grass`.
+Total de mato: **6 moitas** (= SPEC-044; o F73 acrescentou 4 moitas de emboscada, 2 por lado: **10 moitas** hoje). Regra do mato = F32; geometria `Area3D` grupo `tall_grass`.
 
 ## 3. Contagens (GDB §5.1 / §6.2 — inalteradas)
 

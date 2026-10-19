@@ -32,6 +32,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Alvo travado que persegue (anda até entrar em alcance) | ADR-0015 | mistura com WASD; mais código no bot e no cliente; PI escolheu "só ataca em alcance" | MVP4 | playtest pedir |
 | Epíteto e lore dos heróis na Tela Heróis (ex.: "dos Ventos") | ADR-0015, protótipo `Tela Herois/` | texto não existe em nenhum documento; regra do F27 (só `shared/data`) | — | PI escrever os textos (vão para `HeroData`) |
 | Realismo fora da ADR-0006 (retexturizar heróis KayKit, tirar toon/outline) | ADR-0015 | semanas de arte e reaceite de tudo; PI manteve a direção | — | nova ADR do PI |
+| Ajuste dos números dos heróis 7–10 (soak fora do espelho: Protetor 13/43, Berserker 44/44, Paladino 33/45, Ocultista 8/45) | ADR-0015 item 15, ADR-0016 item 11; comentários de encerramento de #202, #203, #214, #215 | números aprovados pelo PI como proposta; PI mandou registrar e seguir | F30 (MVP4) | playtest M4 ou pedido do PI |
 | Rig `Rig_Large` em outros heróis / variante "Large" de outros corpos | ADR-0015 | só o Berserker usa | pós-MVP4 | pedido do PI |
 | Garra do Engenheiro puxando monstro/boss; veneno ou sangramento na Ladina | ADR-0013 | monstro tem leash e IA própria; dano contínuo é mecânica nova no rollback | pós-MVP4 | pedido do PI |
 | Pontes nas pontas do rio e pontes de selva (5 travessias) | ADR-0009 | PI escolheu 3 rotas (TOP/MID/BOT) | MVP2 ou MVP4 | F19/[GATE] mostrar funil na MID |
@@ -62,6 +63,8 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Orbes de XP soltos no mapa | Astro Arena | muda a curva GDB §5.2 | pós-MVP4 | fase 1 "chata" (R2) no playtest |
 | Relevo/depressão da cratera, lama −15 %, tier lendário, ouro/economia in-match, câmera isométrica padrão | conceito Vale Rúnico | não estão no PRD; custo de navmesh/câmera/replicação | fase B ou nunca | decisão do PI |
 | "Configurações (ESC)" no menu da engrenagem da HUD; switches de som gravados entre sessões | protótipo `docs/prd/telas/HUD Moderno/` (F57) | o jogo não tem tela de configurações; gravar no `settings.cfg` muda o contrato Launcher ↔ Game (exige ADR) | F24/F27 (MVP3, Configurações do launcher) | tela de configurações do launcher |
+| Renomear o jogo, o Launcher e o README para "Loot Start" | ADR-0017 | o nome vale só no site; rename troca README, Launcher e roadmap | card futuro | decisão do PI |
+| Domínio próprio do site (o `base` do Vite volta a `/`) | ADR-0017 item 5 | o jogo não tem domínio; o site está em `rodreis.github.io/rrb-godot/` | — | PI registrar o domínio |
 | Merge queue no GitHub | `GITHUB.md` §5 | um autor, fila curta | — | mais de um autor concorrente |
 
 ## Excluídos (sem gatilho)
@@ -74,6 +77,9 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Torres de vigia e balistas/canhões **com função** | doc de reforma da arena 2026-10-10 | decisão "sem torres" mantida; entram só como enfeite sem colisão, fora da área jogável (ADR-0007) |
 | Relevo, degraus nas pontes, fosso na cratera | doc de reforma da arena 2026-10-10 | arena plana (V-16); magma é visual (ADR-0007) |
 | Host migration | PRD §8.5 | inexistente — servidor dedicado |
+| Clique para andar (estilo LoL/Dota) e olhar para a frente da câmera (strafe de shooter) | ADR-0015 | clique muda input, bot e pathfinding no cliente; strafe prende skills de área ao eixo da câmera |
+| Escudo do Paladino bloqueando projétil; Maldição aplicada por Q/E; resistência mágica (o jogo só tem Defesa); controle manual dos servos; mais de uma invocação ativa | F76 #214, F77 #215, F78 #216; ADR-0016 itens 7 e 9; GDB §2.1 | projétil é da Muralha do Cavaleiro; só o básico aplica marca; Servos do Vazio têm IA e uma invocação por vez |
+| Site público: login, backend, analytics, i18n | ADR-0017 item 1 | landing estática em pt-BR; 2x2 e 3x3 aparecem só como "em breve" |
 | Launcher web (React/Tauri/Electron) | ADR-0002 | segundo stack sem validar risco do PRD |
 | "Hash de auditoria" / "Audit token" na tela de fim (DV tela 7) | DV | sem requisito; `match_id` do backend cumpre o papel |
 | Telemetria netfox no Launcher (DV tela 8) | DV | Launcher não tem netfox; vive em `net_debug.tscn` do Game |

@@ -3,6 +3,7 @@
 **Objetivo:** provar que Godot 4.7 + netfox entrega movimento com predição e um ataque validado no servidor jogáveis a 100 ms de RTT. É o gate Godot × Unity (PRD §10.3, R1).
 **Módulos:** `game`, `infra`. **Prazo PRD:** 2 semanas. **Passo a passo:** `docs/superpowers/plans/2026-10-08-m0-spike-netcode.md`.
 **Critério de pronto:** 2 clientes + servidor headless em Docker local; cápsula com predição; 1 ataque validado no servidor; jogável a 100 ms simulados sem "borracha" perceptível (avaliação do PI).
+**Estado:** entregue — `[GATE]` #7 aprovado pelo PI em 2026-10-09 (ADR-0001: segue Godot); F1–F5 `finalizado`.
 
 ## Fatias
 

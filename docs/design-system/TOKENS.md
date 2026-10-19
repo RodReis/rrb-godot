@@ -139,7 +139,7 @@ Inset do CSS (`shadow-[inset_…]`) vira borda superior escura de 2 px (o `Style
 
 ### Acréscimos registrados em 2026-10-16 (pendências do F25–F35)
 
-- Tokens de cor: `ON_PRIMARY`, `GOLD_SHADE`, `TEXT_OUTLINE` (F25), `ON_ERROR_CONTAINER` (F26). Fonte da verdade: `shared/ui/theme/ui_tokens.gd` e `launcher_theme.gd`.
-- Tipos de tema: `LnMatchCard*`, `LnResult*`, `LnTag*`, `LnFilter*` (F26); `LnCp*` via `CompendiumTheme` (F27); `LnAm*` via `ArenaMapTheme` (F33); `LnProfileChip*`, `LnAvatar*` (F35). Todos chamados por `LauncherTheme.add`; `theme_moba.tres` regerado a cada acréscimo.
+- Tokens de cor: `ON_PRIMARY`, `GOLD_SHADE`, `TEXT_OUTLINE` (F25), `ON_ERROR_CONTAINER` (F26). Fonte da verdade: `shared/ui/theme/tokens.gd` (`class_name UiTokens`) e `launcher_theme.gd`.
+- Tipos de tema: `LnMatchCard*`, `LnResult*`, `LnTag*`, `LnFilter*` (F26); `LnCp*` via `CompendiumTheme` (F27); `LnAm*` via `ArenaMapTheme` (F33); `LnProfileChip*`, `LnAvatar*` (F35); `LnHeroSide`, `LnHeroCard`, `LnHeroGrid`, `LnHeroBarHigh`/`LnHeroBarLow` via `HeroesTheme` (F71, Tela Heróis). Todos chamados por `LauncherTheme.add`; `theme_moba.tres` regerado a cada acréscimo.
 - Ícones: a fonte recortada (`tools/ui/build_icon_font.py`) ganhou 15 (F25) + 4 (F26) + 12 (F27) + 11 (F33) ícones; lista em `UiIcons`.
 - Fontes: Launcher = protótipo (Space Grotesk / Outfit / JetBrains Mono); HUD do Game = v2 (Cinzel / Montserrat / Barlow Condensed) — R-PEND-14 fechada; a linha "F24 herda Cinzel/metal" deste documento está superada.

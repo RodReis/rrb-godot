@@ -15,6 +15,7 @@ main ──●──────●──────●──────●─
 
 - **`main` é protegida.** Nunca recebe commit direto de código (`CLAUDE.md`).
 - **Exceção única:** o **Cowork** escreve documento de governança direto na `main`, sem PR, sem CI e sem aceite — e só os arquivos da sua lista (`CLAUDE.md`, `docs/prd/`, `docs/adr/`, `docs/APRENDIZADOS.md`, índice do `STATUS.md`, `docs/design-system/`, `docs/ARCHITECTURE-*.md`, `docs/CONVENTION.md`, `docs/DECISIONS.md`, `docs/RASTREABILIDADE.md`, `docs/FORA-DE-ESCOPO.md`, `docs/PRIVACIDADE.md`, `docs/FRONTEND-LAUNCHER.md`).
+- **Automação do board:** o `rrb-proplan[bot]` grava `.proplan/STATUS.md` (projeção das Issues) direto na `main`, em commits `proplan: atualiza STATUS.md`. O arquivo é gerado: não se edita à mão, e o roadmap público e o site o leem.
 - **Branch é curta: um card, idealmente ≤ 2 dias.** Branch viva por uma semana vira conflito, rebase caro e revisão impossível.
 - **Não existe `develop`, `release` nem `hotfix`.** Correção urgente é uma branch curta como qualquer outra.
 - **Worktree por card** (`superpowers:using-git-worktrees`) — evita `stash` e checkout misto.
@@ -51,7 +52,7 @@ refs #<issue>
 
 **Tipos:** `feat`, `fix`, `refactor`, `perf`, `test`, `docs`, `build`, `ci`, `chore`, `revert`.
 
-**Escopo:** o módulo ou a camada — `game`, `launcher`, `backend`, `shared`, `infra`, `tools`, `docs`, `ci`; dentro do game, pode-se precisar: `game/net`, `game/match`, `game/core`, `game/ui`.
+**Escopo:** o módulo ou a camada — `game`, `launcher`, `backend`, `shared`, `infra`, `site`, `tools`, `docs`, `ci`; dentro do game, pode-se precisar: `game/net`, `game/match`, `game/core`, `game/ui`.
 
 **Breaking change:** `!` após o escopo e rodapé `BREAKING CHANGE: <o que quebrou e como migrar>`.
 
@@ -141,7 +142,7 @@ Confirmar `mergedAt`/`mergeSha` na origem antes de declarar integrado (`CLAUDE.m
 ## 8. Tags e release
 
 - Versionamento semântico na tag: `v<major>.<minor>.<patch>`.
-- Tag anotada, criada a partir de um commit da `main` com CI verde.
+- Tag anotada, criada a partir de um commit da `main` com CI verde. O push de uma tag `v*` dispara `release.yml` (ZIP do jogo num GitHub Release; ver `CI-PR.md` §2).
 - Notas de release geradas dos commits do intervalo — daí a exigência de assunto legível (§3).
 - Enquanto o produto estiver pré-MVP, `v0.x` e tag só em marco de MVP (`[GATE]`).
 
@@ -227,7 +228,7 @@ Tudo o mais — nome de campo, ordem de implementação interna, estrutura de pa
 - `.gitignore` cobre `.godot/`, `build/`, `*.exe`, `*.pck`, `export_presets.cfg`, `export_credentials.cfg`, `game/shared`, `launcher/shared`, `backend/node_modules/`, `backend/dist/`, `coverage/`, `.env*` (exceto `.env.example`).
 - **`.env.example` versionado e atualizado** na mesma PR que introduz variável nova. Variável nova sem exemplo quebra o próximo ambiente.
 - Arquivo binário grande (screenshot de evidência, protótipo) fica sob `docs/`, com peso vigiado; acima de ~2MB, justificar na PR. Assets glTF/texturas ficam em `shared/assets/` e passam por `.gitattributes` (LFS se o repo passar de 500 MB — decisão em F6). Fonte `.blend` fica em `art/` (ADR-0005): `*.glb` e `*.blend` marcados `binary`; `*.blend1` e `*.blend2` (backups do Blender) ignorados; importação de `.blend` desligada no `project.godot`.
-- Hook local (`lefthook`) roda `gdlint`/`gdformat --check` e, em `backend/`, `tsc --noEmit` no `pre-push` — **nunca substitui a CI**, que é a única prova válida.
+- Hook local (`lefthook`) com `gdlint`/`gdformat --check` e, em `backend/`, `tsc --noEmit` no `pre-push` está **previsto, mas ainda não existe** no repositório; quando existir, **nunca substitui a CI**, que é a única prova válida.
 ---
 
 ## Referências

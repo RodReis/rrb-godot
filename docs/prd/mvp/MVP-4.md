@@ -3,6 +3,7 @@
 **Objetivo:** validar o core loop com 10+ pessoas externas e decidir câmera, duração e ida para 3x3.
 **Módulos:** todos. **Prazo PRD:** 2 semanas.
 **Critério de pronto (PRD §9.2):** 100 % das partidas ≤ 10 min; ping médio ≤ 80 ms no Brasil, nenhum "teleporte"; ≥ 7/10 pedem segunda partida; líder de nível ao fim da fase 1 vence < 75 %.
+**Estado:** planejado — nenhuma fatia iniciada; depende do `[GATE]` MVP3 #87. O balanceamento dos 10 heróis (soaks fora do espelho: Berserker 44/44, Paladino 33/45, Ocultista 8/45) entra no F30.
 
 ## Fatias
 

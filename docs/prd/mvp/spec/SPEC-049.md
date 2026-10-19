@@ -1,6 +1,6 @@
 # SPEC-049 — Ciclo dia/noite sincronizado com o relógio da partida
 
-**Fatia:** F49 / SPEC-049 (MVP2, Slice 2.15) · **Issue:** #122 · **Status:** decidida pelo PI em 2026-10-11 (pop-up)
+**Fatia:** F49 / SPEC-049 (MVP2, Slice 2.15) · **Issue:** #122 · **Status:** decidida pelo PI em 2026-10-11 (pop-up) · **Entrega:** `finalizado` em 2026-10-11 (#122)
 **ADR:** ADR-0010 — supera o clima fixo "sombrio" aceito no F40 e muda o conteúdo do bake do `LightmapGI` (ADR-0006 item 3)
 **Fontes:** ADR-0006 · ADR-0010 · `match_pacing.tres` (`max_match_duration` = 600 s) · `game/scripts/match/match_clock.gd` · `game/scenes/arena/ilha_arcana.tscn` (`Sun`, `WorldEnvironment`, `LightmapGI`) · `shared/shaders/abyss_sky.gdshader` · `game/scripts/world/arena_environment.gd`
 **Escopo:** só cliente (visual). Regras, visão da neblina (12 u), mato alto e bot não mudam.

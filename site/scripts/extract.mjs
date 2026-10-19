@@ -20,10 +20,17 @@ const read = (f) => readFileSync(f, "utf8").replace(/\r\n/g, "\n");
 const write = (name, obj) => writeFileSync(join(DATA, name), JSON.stringify(obj, null, 2) + "\n");
 const warn = (m) => console.warn("AVISO: " + m);
 
+const historia = JSON.parse(read(P("docs", "roadmap", "historia.json")));
+
 // ---- heróis ----
 const heroesDir = P("shared", "data", "heroes");
 const heroes = readdirSync(heroesDir).filter((f) => f.endsWith(".tres")).sort()
   .map((f) => heroFromTres(read(join(heroesDir, f))));
+// ordem de lançamento = ordem do pilar "Heróis" de historia.json; herói fora da lista vai para o fim (ordem de arquivo)
+const ordem = (historia.pilares ?? []).find((p) => /herói/i.test(p.titulo))?.itens.map((i) => i.nome) ?? [];
+const rank = (h) => { const i = ordem.indexOf(h.name); return i < 0 ? ordem.length : i; };
+heroes.sort((a, b) => rank(a) - rank(b));
+for (const h of heroes) if (!ordem.includes(h.name)) warn(`herói ${h.name} não está no pilar de heróis de historia.json`);
 for (const h of heroes) for (const s of h.skills) {
   const src = P("shared", "ui", "icons", s.icon);
   if (existsSync(src)) copyFileSync(src, join(ICONS, s.icon));
@@ -41,7 +48,6 @@ for (const h of heroes) {
 write("heroes.json", heroes);
 
 // ---- história + capturas ----
-const historia = JSON.parse(read(P("docs", "roadmap", "historia.json")));
 write("historia.json", historia);
 const capturas = [];
 for (const [mvp, cap] of Object.entries(historia.capitulos ?? {}))

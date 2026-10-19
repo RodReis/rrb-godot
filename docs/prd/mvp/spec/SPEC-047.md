@@ -1,6 +1,6 @@
 # SPEC-047 — Baú: F só para item melhor, regra por herói e card de comparação na HUD
 
-**Fatia:** F47 / SPEC-047 (MVP2, Slice 2.13) · **Issue:** #120 · **Status:** decidida pelo PI em 2026-10-11 (pop-up)
+**Fatia:** F47 / SPEC-047 (MVP2, Slice 2.13) · **Issue:** #120 · **Status:** decidida pelo PI em 2026-10-11 (pop-up) · **Entrega:** `finalizado` em 2026-10-11 (#120)
 **Supera:** decisão do PI de 2026-10-09 "raridade menor também vai para o F" (`ItemRules`, F10) e a troca automática por raridade maior (GDB §6.2, `CONVENTION.md` §4.3). GDB §6.2 e `CONVENTION.md` §4.3 atualizados no mesmo commit desta spec.
 **Fontes:** GDB §6.1–6.2 · `CONVENTION.md` §4.3 · PATTERNS P6 · `shared/core/item_rules.gd` · `game/scripts/items/inventory.gd` · `game/scripts/world/chest.gd` · `game/scripts/ui/hero_plate.gd` · `game/scripts/ai/bot_input.gd`
 

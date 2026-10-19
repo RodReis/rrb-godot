@@ -1,6 +1,6 @@
 # SITE.md — Site público "Loot Start"
 
-Landing page do jogo, em `site/`. **No ar:** https://rodreis.github.io/rrb-godot/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
+Landing page do jogo, em `site/`. Atualizada em 2026-10-19 (autorizada pelo PI) para os 10 heróis, o MVP2.8 entregue e o MVP3 em andamento. **No ar:** https://rodreis.github.io/rrb-godot/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
 
 Não é fatia nem card do board: foi pedido direto pelo PI em 2026-10-18 (PR #218). O nome "Loot Start" vale só no site; o jogo segue "ARENA 1V1".
 
@@ -29,7 +29,8 @@ site/
 
 | No site | Fonte | Observação |
 |---|---|---|
-| Heróis: nome, papel, arma, resumo, Q/E/R | `shared/data/heroes/*.tres` | cresce sozinho quando entra herói novo |
+| Heróis: nome, papel, arma, resumo, Q/E/R | `shared/data/heroes/*.tres` | cresce sozinho quando entra herói novo; hoje são 10 |
+| Ordem dos heróis na seção | pilar "Heróis" de `historia.json` (ordem de lançamento) | herói fora da lista vai para o fim e o `extract` avisa |
 | Ícones de habilidade | `shared/ui/icons/*.svg` | copiados para `public/icons` |
 | Retrato de cada herói | `shared/assets/ui/heroes/large/<id>.png` | WebP 384 px |
 | Fundos (arena dia, arena noite, lineup) e mapa de cima | `shared/assets/ui/loading/*.png`, `shared/assets/ui/arena_map.png` | WebP ≤ 1920 px |
@@ -66,7 +67,8 @@ site/
 
 ## Como mexer
 
-- **Novo herói:** nada no site. Entrando em `shared/data/heroes`, ícones e retrato (`shared/ui/icons/<id>_{q,e,r}.svg`, `shared/assets/ui/heroes/large/<id>.png`), o próximo build o mostra. Sem retrato, o card sai sem imagem e o `extract` avisa.
+- **Novo herói:** nada no código do site. Entrando em `shared/data/heroes`, ícones e retrato (`shared/ui/icons/<id>_{q,e,r}.svg`, `shared/assets/ui/heroes/large/<id>.png`), o próximo build o mostra. Sem retrato, o card sai sem imagem e o `extract` avisa. Para ele sair na ordem de lançamento, acrescente-o ao fim do pilar "Heróis" de `docs/roadmap/historia.json` (nome igual ao `display_name`); se faltar, ele aparece por último.
+- **Arena:** o texto da seção (`Arena.tsx`) descreve o mapa à mão (80 × 80 m, castelos em cantos opostos, rio, pontes, cratera central, mato alto, Rei Esqueleto aos 3:30). Se a arena mudar, revisar esse texto e o `shared/assets/ui/arena_map.png`.
 - **Nova seção:** componente em `src/components/`, tipos em `src/data.ts`, entrada em `App.tsx` e âncora na `Nav`. Dado novo vem do `extract.mjs`, não de texto à mão.
 - **Texto público:** edita-se `docs/roadmap/historia.json`; vale para o site e para o roadmap longo.
 
@@ -74,5 +76,6 @@ site/
 
 - Rename do jogo para "Loot Start" (Launcher, README, roadmap): decisão do PI, card futuro.
 - Créditos do rodapé (`historia.json`) não citam a fonte Cinzel.
-- Botão de download sem destino até o primeiro Release (F28, aguarda o VPS do PI).
+- Botão de download sem destino até o primeiro Release (F28, aguarda o VPS do PI). O cartão "1x1 · Disponível agora" do hero (`Hero.tsx`) contradiz o "em breve" do botão até lá: decisão do PI se muda o texto.
+- Galeria só mostra capturas `entregue`; as de F77 (silhueta) e F78 (Servos do Vazio) estão `em-construcao` em `historia.json` e ficam de fora. Os mais recentes primeiro seguem a ordem dos capítulos, então as do Launcher (MVP3) vêm antes das de heróis (MVP2.8); as 90 entram em "Mostrar mais".
 - Modos 2x2 e 3x3 só como "em breve" (PRD: pós-M4).

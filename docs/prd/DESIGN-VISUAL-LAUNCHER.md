@@ -12,6 +12,8 @@
 
 **Engine:** Godot 4.7 (Forward+ Desktop / Netfox 30Hz Autoritative Server)
 
+**Estado em 2026-10-19 (sincronização com o código, PI autorizou):** os wireframes e os valores de exemplo abaixo são **origem histórica**, não fonte (`FRONTEND-LAUNCHER.md` §3.1 e §8.3: número, nome e contagem vêm de `shared/data`, do backend ou do estado real). O jogo tem hoje **10 heróis** (Cavaleiro, Arqueiro, Bárbaro, Bruxo de Fogo, Ladina, Engenheiro, Protetor da Selva, Berserker, Paladino Radiante, Ocultista), não os 2 da fatia (a TELA 2 mostra só Cavaleiro × Arqueiro). Onde cada tela mora: **Launcher** — TELA 1 Lobby (`lobby`, mais o card "Resultado da partida" depois de partida online, F70), TELA 5 Guia & Bestiário (`bestiary`), TELA 6 Forja (`forge`, aba do Guia), TELA 8 Configurações (`settings`: abas Controles & Câmera, Gráficos & Performance, Áudio, Créditos; **sem** telemetria Netfox nem gráfico RTT, que não existem no Launcher), TELA 9 Histórico (`history`: feed de cartões, sem a "Auditoria M4"), TELA 10 Arena & Mapa (`arena_map`); telas **novas** sem wireframe aqui: Login, Perfil (F35) e **Heróis** (`heroes`, F71, protótipo `docs/prd/telas/Tela Herois/`). **Game** — TELA 2 Seleção de Heróis, TELAS 3 e 4 (HUDs das fases 1 e 2), TELA 7 Fim de Partida (F52; volta ao lobby em até 15 s, F70) e o loading (F68). A estrutura de diretórios da §3.1 é só ilustrativa: a real está em `ARCHITECTURE-LAUNCHER.md` §3.1 e `ARCHITECTURE-GAME.md`.
+
 **Documentos de Referência:**
 
 * PRD: `docs/prd/2026-10-08-prd-moba-2-tempos.md`
@@ -1061,7 +1063,7 @@ func _ready() -> void:
 
 * \[x\] **Configurações & Rede:** Abas completas com telemetria Netfox em tempo real e gráfico RTT.
 
-* \[ \] **Arena & Mapa:** Render da arena real com marcadores, regras das duas fases pelos números do GDB (F33).
+* \[x\] **Arena & Mapa:** Render da arena real com marcadores, regras das duas fases pelos números do GDB (F33; imagem e `.tres` regerados no F73).
 
 * \[x\] **Histórico & Auditoria M4:** Monitoramento das 4 metas críticas de sucesso (Snowball < 75%, Ping <= 80ms, Tempo <= 10m).
 

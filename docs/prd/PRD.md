@@ -43,7 +43,7 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | PC | mobile |
 | Arte CC0 (KayKit/Quaternius) + arte própria no Blender quando necessário (ADR-0005) | arte comissionada |
 
-Nada do roadmap entra antes do M4 concluído. Exceções decididas pelo PI: arte própria feita no Blender (2026-10-09, ADR-0005); Bárbaro, Bruxo de Fogo e campos de canto no MVP2 (2026-10-11, ADR-0011).
+Nada do roadmap entra antes do M4 concluído. Exceções decididas pelo PI: arte própria feita no Blender (2026-10-09, ADR-0005); Bárbaro, Bruxo de Fogo e campos de canto no MVP2 (2026-10-11, ADR-0011); Ladina e Engenheiro no MVP2.6 (2026-10-13, ADR-0013); Protetor da Selva e Berserker no MVP2.7 (2026-10-16, ADR-0015); Paladino Radiante e Ocultista no MVP2.8 (2026-10-18, ADR-0016).
 
 ---
 
@@ -56,7 +56,7 @@ Nada do roadmap entra antes do M4 concluído. Exceções decididas pelo PI: arte
 | D3 | Fase 1 em mapa único com bases seguras + centro contestado | mapas separados; mapa totalmente aberto | resolve tempo morto e snowball sem explodir balanceamento |
 | D4 | Fase 2 com zona encolhendo + meta de kills | 10 kills fixo; sem respawn | garante fim de partida; respawn crescente removido (redundante com zona) |
 | D5 | Monetização com sorteios/vales/loja/passe (fase B) | sem aleatoriedade paga; sem economia | decisão do dono; risco regulatório documentado |
-| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011, 2026-10-11) | 3x3 direto; 1x1 com 5 heróis | netcode/zona/loot são o risco técnico; classes e times são conteúdo |
+| D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011, para 6 no MVP2.6 — ADR-0013, para 8 no MVP2.7 — ADR-0015 — e para 10 no MVP2.8 — ADR-0016) | 3x3 direto; 1x1 com 5 heróis | netcode/zona/loot são o risco técnico; classes e times são conteúdo |
 | D7 | Engine: **Godot 4.7** | Unity 6; Godot + servidor Node/Java | ver §10 |
 | D8 | GDScript | C# | iteração, ecossistema (netfox, tutoriais, godot-mcp), export iOS |
 | D9 | Assets KayKit (principal) + Quaternius (secundário) com cena de alinhamento; Blender para ajustes e arte própria (ADR-0005, 2026-10-09) | só KayKit; Synty | variedade sem perder coerência visual |
@@ -295,13 +295,14 @@ O projeto atual (plataforma 2D) é descartado; `tools/setup-godot-mcp.ps1` e `.m
 | **Gate** | decisão Godot × Unity | — | — |
 | **M1 — Arena single-player** | mapa 3 zonas, Cavaleiro, monstros, XP/níveis, baús/itens, boss, bot | fase 1 completa contra bot, offline | 4 sem |
 | **M2 — Partida em rede** | Arqueiro, fase 2 (zona, kills, fim garantido), HUD, transição | 1x1 online termina sempre; 50 partidas bot×bot sem travar | 4 sem |
-| **M2.5 — Bloco visual** | giro 360° da câmera (F45), iluminação e pós, toon/outline, arte da ilha, VFX do Cavaleiro e do Arqueiro, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
+| **M2.5 — Bloco visual** | giro 360° da câmera (F45), iluminação e pós, ~~toon/outline~~ (abandonado pelo PI no aceite do F39, 2026-10-10: entrou smooth shading + luz macia), arte da ilha, VFX do Cavaleiro e do Arqueiro, vegetação, HUD v2 (ADR-0006) | 6 fatias aceitas pelo PI; 3/3 conexões a 100 ms sem `past the history limit` em cada uma | 2 sem |
 | **M2.6 — Heróis 5 e 6** | Ladina e Engenheiro (ADR-0013) | 2 fatias aceitas pelo PI; soak de cada herói verde | — (sem prazo definido pelo PI) |
+| **M2.7 — Acabamento e controle** | controle v2 (herói encara o movimento, alvo travado com auto-ataque), zoom da câmera, splash/loading, cinemática de abertura, volta ao lobby com resultado, Tela Heróis, silhueta no mato alto, cenário PBR, Protetor da Selva e Berserker (ADR-0015) | 10 fatias aceitas pelo PI; soak verde onde mexe em servidor/FSM/input | — (sem prazo definido pelo PI) |
 | **M2.8 — Heróis 9 e 10** | Paladino Radiante, Ocultista e Servos do Vazio (ADR-0016) | 3 fatias aceitas pelo PI; soak de cada fatia verde | — (sem prazo definido pelo PI) |
 | **M3 — Meta + deploy** | backend, pool no VPS, build PC | dois amigos jogam pela internet sem intervenção do dev | 3 sem |
 | **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números | decisão sobre câmera, duração e ir para 3x3 | 2 sem |
 
-Total ≈ 17 semanas (inclui o M2.5, bloco visual de 2 semanas entre o M2 e o M3 — ADR-0006). O M2.6 (ADR-0013) entrou sem prazo definido.
+Total ≈ 17 semanas (inclui o M2.5, bloco visual de 2 semanas entre o M2 e o M3 — ADR-0006). O M2.6, o M2.7 e o M2.8 (ADR-0013, ADR-0015, ADR-0016) entraram sem prazo definido; M0 a M2.8 estão entregues (até 2026-10-19) e restam o M3 (F28 e `[GATE]` dependem do VPS) e o M4.
 
 ### 9.2 Critérios de sucesso (M4)
 
@@ -364,7 +365,7 @@ Fontes: [UGS Pricing](https://unity.com/products/gaming-services/pricing) · [Un
 - **Regra de alinhamento:** todo asset novo entra em `scenes/_alignment.tscn` ao lado do Cavaleiro (altura ≈ 1,8 u), mesma luz, material flat; ajusta escala/cor ou descarta.
 - **Blender (ADR-0005, decisão do PI em 2026-10-09):** usado sempre que necessário para criação (arte própria, feita pelo Claude via Blender MCP), acabamento, ajustes dos packs CC0 e rascunhos (blockout de arena e peças). Fonte `.blend` em `art/`; em `shared/assets/` só entra glTF (pack CC0 como vem; o que passou pelo Blender, exportado em `.glb`).
 - **Pack KayKit Adventurers:** versão grátis (Knight, Barbarian, Mage, Rogue, Ranger); a versão Extra é compra futura do PI.
-- **Direção visual (ADR-0006, 2026-10-10):** toon/outline + stylized PBR; `WorldEnvironment` (ACES, SSAO, SSIL, glow, fog sutil) + `LightmapGI` bakeado; cenário próprio (`shared/assets/rrb/`) pode ter bevel e bake de AO/curvatura; água e chão com malhas próprias e shaders dedicados; VFX de combate só no cliente. Arena = ilha flutuante da imagem panorâmica do conceito (ADR-0007). Spec: `docs/superpowers/specs/2026-10-10-bloco-visual-design.md`.
+- **Direção visual (ADR-0006, 2026-10-10):** toon/outline (abandonado no F39) + stylized PBR; `WorldEnvironment` (ACES, SSAO, SSIL, glow, fog sutil) + `LightmapGI` bakeado; cenário próprio (`shared/assets/rrb/`) pode ter bevel e bake de AO/curvatura; água e chão com malhas próprias e shaders dedicados; VFX de combate só no cliente. Arena = ilha flutuante da imagem panorâmica do conceito (ADR-0007). Spec: `docs/superpowers/specs/2026-10-10-bloco-visual-design.md`.
 
 ---
 
@@ -378,7 +379,7 @@ Chat de voz/texto, replays, espectador, ranked, clãs, eventos sazonais, cross-p
 
 ## 13. Glossário
 
-- **Fatia vertical:** menor versão jogável de ponta a ponta (1x1 online com 2 heróis).
+- **Fatia vertical:** menor versão jogável de ponta a ponta (1x1 online; começou com 2 heróis, hoje 10).
 - **Servidor autoritativo:** o servidor decide todo o estado do jogo; clientes só enviam input.
 - **Predição/rollback:** cliente simula o próprio movimento antes da confirmação do servidor e corrige se divergir.
 - **Zona:** círculo que encolhe na fase 2 e causa dano fora dele.

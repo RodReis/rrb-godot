@@ -1,6 +1,6 @@
 # SPEC-045 — Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito
 
-**Fatia:** F45 / SPEC-045 (MVP2.5, Slice 2.5.7 — **1º card do marco**, antes do F38) · **Issue:** #103 · **Status:** decidida pelo PI em 2026-10-10 ("giro no botão esquerdo"; "mecânica padrão para este tipo de game"; "melhora a mecânica junto com o WASD")
+**Fatia:** F45 / SPEC-045 (MVP2.5, Slice 2.5.7 — **1º card do marco**, antes do F38) · **Issue:** #103 · **Status:** decidida pelo PI em 2026-10-10 ("giro no botão esquerdo"; "mecânica padrão para este tipo de game"; "melhora a mecânica junto com o WASD") · **Entrega:** `finalizado` em 2026-10-11 (#103)
 **Supera:** decisão B-02/F31 de **yaw fixo do time** (`STATUS-ARQUIVO.md`, 2026-10-09) — o yaw inicial continua o do time, mas passa a ser livre depois; PRD §3.6 e DV §3.3 na linha do ataque básico (botão esquerdo → direito); issue #47 (giro no botão direito), fechada como substituída.
 **Fontes:** PRD §3.6 · `CONVENTION.md` §6 · DV §3.3 · `RASTREABILIDADE.md` P-16, P-17, V-20 · `game/scripts/follow_camera.gd`, `game/scripts/core/camera_rig.gd`, `game/scripts/net/player_input.gd`, `shared/core/input_actions.gd`
 **Escopo:** só cliente. O servidor, o rollback e o bot não mudam. O input já vai em coordenadas de mundo (`movement` pelo yaw da câmera, `aim` por raio do cursor ao chão).

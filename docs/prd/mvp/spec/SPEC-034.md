@@ -1,6 +1,6 @@
 # SPEC-034 — Arena: pilares da cratera e mato alto com assets do Blender
 
-**Fatia:** F34 / SPEC-034 (MVP1, Slice 1.10) · **Issue:** #38 · **Status:** aprovada pelo PI em 2026-10-09 ("sim" ao card de integração)
+**Fatia:** F34 / SPEC-034 (MVP1, Slice 1.10) · **Issue:** #38 · **Status:** aprovada pelo PI em 2026-10-09 ("sim" ao card de integração) · **Entrega:** `finalizado` em 2026-10-09 (#38)
 **Fontes:** ADR-0005 (Blender no pipeline) · SPEC-007 §2 (pilares, mato) · PRD §11 (alinhamento) · `CLAUDE.md` "Assets 3D"
 **Depende de:** `[INFRA]` #34 (`.gitattributes`, `.gitignore`, import de `.blend` desligado) e F7 (#19, arena em `tools/arena/build_arena.gd`).
 

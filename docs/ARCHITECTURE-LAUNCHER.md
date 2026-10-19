@@ -4,11 +4,11 @@
 
 ## 1. Responsabilidade e fronteira
 
-O Launcher é **tudo o que acontece fora da partida**: login, lobby, fila 1x1, lançar o jogo, histórico, bestiário, forja (simulador de builds), configurações. O backend NestJS é parte deste módulo: autentica, enfileira, orquestra servidores de partida e guarda resultados.
+O Launcher é **tudo o que acontece fora da partida**: login, lobby, fila 1x1, lançar o jogo, resultado da partida, histórico, catálogo de heróis, arena & mapa, bestiário, forja (simulador de builds), perfil, configurações. O backend NestJS é parte deste módulo: autentica, enfileira, orquestra servidores de partida e guarda resultados.
 
 **O Launcher não sabe como a partida funciona.** Não tem netfox, ENet, física nem cenas de arena. Conhece o Game por três coisas: o caminho do executável, os argumentos que ele aceita e o código de saída que devolve (§5).
 
-Fora do Launcher (ver `ARCHITECTURE-GAME.md`): seleção de heróis, HUDs, fim de partida, telemetria de netfox.
+Fora do Launcher (ver `ARCHITECTURE-GAME.md`): seleção de heróis da partida, HUDs, tela de fim de partida, loading do Game, telemetria de netfox. (A tela **Heróis** do Launcher só *mostra* o catálogo de `shared/data`; escolher o herói é do Game.)
 
 ## 2. Visão geral
 
@@ -36,17 +36,22 @@ launcher/
   shared/ -> ../shared       junction (ADR-0003)
   addons/gut/                NUNCA editar
   scenes/
-    app.tscn                 raiz: ScreenStack + overlays (toast, modal, loading)
-    screens/                 login.tscn, lobby.tscn, bestiary.tscn, forge.tscn, history.tscn, settings.tscn, arena_map.tscn
-    components/              instâncias dos componentes do design system (shared/ui/components)
+    app.tscn                 raiz: barra superior + ScreenStack + rodapé + overlays (toast, modal, loading, partida em andamento, card de resultado, splash)
+    screens/                 login.tscn, lobby.tscn, heroes.tscn, arena_map.tscn, bestiary.tscn, forge.tscn, history.tscn, profile.tscn, settings.tscn
     diorama/                 lobby_diorama.tscn (SubViewport, arena hex, herói idle, tochas)
   scripts/
-    app/                     app.gd (bootstrap), screen_stack.gd, router.gd (nomes de tela → cena)
-    services/                api_client.gd, auth_service.gd, queue_service.gd, game_process.gd,
-                             settings_store.gd, history_service.gd, catalog_service.gd
-    screens/                 um controller por tela (login_screen.gd, lobby_screen.gd, …)
-    models/                  DTOs tipados espelhando o OpenAPI do backend (Session, QueueTicket, MatchSummary)
-  test/unit/                 GUT: services com ApiClient falso, router, settings_store, models
+    app/                     app.gd (bootstrap e dono dos serviços), router.gd (rota → cena e menu NAV), screen_stack.gd,
+                             app_bar.gd, profile_chip.gd, match_overlay.gd, launcher_screen.gd (base das telas)
+    services/                api_client.gd, auth_service.gd, queue_service.gd, game_process.gd, settings_store.gd,
+                             history_service.gd, profile_service.gd, avatar_store.gd, avatar_image.gd,
+                             nickname_rules.gd, catalog_service.gd
+    screens/                 um controller por tela (login_screen.gd, lobby_screen.gd, history_screen.gd, profile_screen.gd,
+                             settings_screen.gd + credits_view.gd, match_result_card.gd, match_card.gd, filter_chip.gd, …);
+                             pastas por tela grande: heroes/, compendium/ (bestiário + forja), arena/
+    diorama/                 lobby_diorama.gd (e ferramenta de arte do login)
+    models/                  DTOs tipados espelhando o OpenAPI do backend (AuthTokens, UserProfile, QueueTicket, MatchAssignment,
+                             MatchHistory/MatchSummary/…) e os da Forja/Bestiário (ForgeBuild, MonsterSpecies)
+  test/unit/                 GUT: services com ApiClient falso, router, settings_store, models, fluxo do App, smoke das cenas
 ```
 
 ### 3.2 Camadas e regra de dependência
@@ -63,15 +68,15 @@ launcher/
 ### 3.3 Serviços (contratos)
 
 - `ApiClient`: `request(method, path, body) -> Response{status, json}`; injeta `Authorization: Bearer`; timeout 10 s; 401 numa chamada autenticada tenta `POST /auth/refresh` uma vez e repete; recusado → limpa a sessão e emite `unauthorized` (volta ao login). **Um `HTTPRequest` por chamada** (sem pool — F25). URL por `--api=` (padrão `http://127.0.0.1:3000`) ou embutida no pacote (`build_config.cfg`, F28). `GET /health` sem conta alimenta o chip de status da barra (10 s).
-- `AuthService`: `login(email, senha)`, `logout()`, `session: Session`. JWT **em memória** e, opcionalmente, refresh token em `user://session.dat` cifrado com `OS.get_unique_id()` — só se o PI aprovar "lembrar-me" (R-PEND-03 em `RASTREABILIDADE.md`); por padrão, sem persistência.
+- `AuthService`: `login(email, senha)`, `register(email, senha)` (validação local antes de chamar o backend), `logout()`, `is_logged_in()`; os tokens ficam no `ApiClient` (`AuthTokens`). JWT **em memória** e, opcionalmente, refresh token em `user://session.dat` cifrado com `OS.get_unique_id()` — só se o PI aprovar "lembrar-me" (R-PEND-03 em `RASTREABILIDADE.md`); por padrão, sem persistência.
 - `QueueService`: `join() -> QueueTicket`, `leave()`, polling `GET /queue/:ticket` a cada 2 s (sem WebSocket na fatia: backend fino, PRD D10) → sinais `searching(elapsed)`, `matched(MatchAssignment{host, port, token})`, `cancelled`, `failed(reason)`.
 - `GameProcess`: `launch(args: PackedStringArray) -> pid`, `is_running()`, sinal `exited(code)` (polling `OS.is_process_running` a 0,5 s). Caminho do executável: `OS.get_executable_path().get_base_dir() + "/game/game.exe"` (layout de instalação, §5.1); sobrescrevível por `--game-path=` para dev.
-- `SettingsStore`: lê/escreve `user://settings.cfg` (seções `video`, `audio`, `controls`); aplica vídeo/áudio no próprio Launcher. Contrato do arquivo em §5.3.
+- `SettingsStore`: lê/escreve `user://settings.cfg` (seções `video`, `audio`, `controls`, `graphics`, `camera`; contrato em `shared/core/user_settings.gd`); aplica vídeo/áudio no próprio Launcher. Contrato do arquivo em §5.3.
 - `HistoryService`: `GET /matches?mine=1` (obrigatório; JWT) → `MatchHistory{totals{wins,losses}, matches[≤50]}` — resultado `win`/`loss`/`interrupted`, `playedAt`, `endReason`, `durationS`, meu lado completo e do oponente **só herói, kills, nível e `#nickname`** (F26/F35); cache em memória por sessão, `clear()` no logout/401/fim de partida online. **F70 (ADR-0015):** `fetch(force)` com espera da partida nova (3 × 1 s) para o card de resultado no lobby.
 - `ProfileService` (F35): `GET /users/me` (`nickname` nulo = falta definir → tela Perfil `SETUP`), `PUT /users/me/nickname` (define uma vez; `INVALID_NICKNAME`/`NICKNAME_TAKEN`/`NICKNAME_ALREADY_SET`). Avatar é só local (`AvatarStore`, `user://avatars/`); nada vai ao backend.
-- `CatalogService`: carrega `res://shared/data/**` e expõe heróis, itens, monstros, regras — fonte do bestiário, da forja e das barras de atributo. Usa `shared/core` para o simulador (mesma fórmula do servidor, por construção).
+- `CatalogService`: carrega `res://shared/data/**` (varre `shared/data/heroes/`: herói novo entra sozinho, sem lista no código) e expõe heróis, itens, monstros, regras — fonte da Tela Heróis, do bestiário, da forja e das barras de atributo; heróis padrão de `MatchRules.default_heroes` primeiro. Usa `shared/core` para o simulador (mesma fórmula do servidor, por construção).
 
-### 3.4 Telas (5) e navegação
+### 3.4 Telas e navegação
 
 | Tela | Rota | Entra por | Sai para |
 |---|---|---|---|
@@ -82,10 +87,10 @@ launcher/
 | Histórico | `history` | lobby; ~~automático após `GameProcess.exited(0)`~~ → **F70 (ADR-0015):** o fim de partida online volta ao **lobby** com o card "Resultado da partida"; o Histórico abre pelo card ("Ver histórico") ou pela barra | lobby |
 | Heróis | `heroes` | lobby (item HERÓIS) — **F71 (ADR-0015)**, fiel a `docs/prd/telas/Tela Herois/`; dados de `CatalogService` | lobby |
 | Perfil | `profile` | 1º login sem nickname (`SETUP`, sem voltar); chip do cabeçalho (`EDIT`, só avatar) — F35 | lobby |
-| Configurações | `settings` | lobby | lobby — inclui a aba **Créditos** (licenças de `shared/assets/LICENSES.md`, CC-BY obrigatório; decisão do PI 2026-10-10) |
+| Configurações | `settings` | lobby (item AJUSTES) | lobby — abas Controles & Câmera (inclui o zoom, F67), Gráficos & Performance (vídeo e os 4 toggles de `[graphics]`), Áudio e **Créditos** (licenças de `shared/assets/LICENSES.md`, CC-BY obrigatório; decisão do PI 2026-10-10; `credits_view.gd`) |
 | Arena & Mapa | `arena_map` | lobby | lobby ("Praticar vs Bot" = mesma ação do lobby) — DV tela 10; mapa é imagem estática (`shared/assets/ui/arena_map.png`), nunca cena de arena |
 
-Pilha simples: lobby é a raiz; as demais são `push`; `Esc` = `pop`. Fila é um estado do lobby (card direito), não tela. Enquanto o Game roda, o Launcher mostra overlay "Partida em andamento" com botão "Encerrar jogo" (mata o processo) e bloqueia navegação.
+Menu da barra superior (`Router.NAV`, na ordem): LOBBY · HERÓIS · ARENA & MAPA · GUIA & BESTIÁRIO · HISTÓRICO · AJUSTES; a Forja é aba do Guia & Bestiário (e o destaca no menu) e o Perfil abre pelo chip do cabeçalho. A rota `gallery` (galeria do design system) só abre com `--gallery` e fica fora do menu. **Splash (F68):** `BootSplash` ("ARENA 1V1") cobre a janela até a 1ª checagem do backend (teto de 2 s). Pilha simples: lobby é a raiz; as demais são `push`; `Esc` = `pop`. Fila é um estado do lobby (card direito), não tela. Enquanto o Game roda, o Launcher mostra overlay (`MatchOverlay`: "Partida em andamento" ou "Treino em andamento") com botão "Encerrar jogo" (mata o processo) e bloqueia navegação.
 
 ### 3.5 Lobby: diorama 3D
 
@@ -154,9 +159,11 @@ Este é o **único** lugar onde os dois módulos se tocam. Mudar aqui exige ADR.
 |---|---|
 | `game.exe -- --connect=<host>:<porta> --token=<match_token>` | partida online (argumentos do Game depois de `--`; F25) |
 | `game.exe -- --offline --bot` | treino contra bot |
-| `--game-path=` (no launcher) | dev: outro caminho do executável |
+| `--game-path=` (no launcher) | dev: outro caminho do executável (com `--game-project=<pasta>`, o Launcher chama `<exe> --path <pasta> -- …`, para rodar o Godot em vez do `game.exe`) |
 
-Códigos de saída do Game (definidos em `ARCHITECTURE-GAME.md` §6): `0` normal → Launcher volta ao lobby com o card de resultado se a partida era online (F70; treino: lobby sem card); `1` argumentos; `2` autenticação → Launcher mostra erro e volta ao lobby; `3` resultado não reportado → Launcher avisa "resultado pode demorar a aparecer"; `4` interno → erro genérico. Processo morto pelo usuário → Launcher trata como `4`.
+Só esses argumentos (`--connect`, `--token`, `--offline`, `--bot`) fazem parte do contrato; os demais de `game/scripts/core/launch_args.gd` (`--server`, `--port`, `--autopilot`, `--bots`, `--bot-hero`, `--daynight`, `--no-backend`, `--probe`…) são de dev/servidor e o Launcher nunca os envia.
+
+Códigos de saída do Game (definidos em `ARCHITECTURE-GAME.md` §6): `0` normal → Launcher volta ao lobby com o card de resultado se a partida era online (F70; treino: lobby sem card; o Game fecha sozinho 15 s depois do fim da partida ou pelo botão "Voltar ao lobby"); `1` argumentos; `2` autenticação → Launcher mostra erro, oferece nova fila e volta ao lobby; `3` resultado não reportado → Launcher avisa "resultado pode demorar a aparecer" (sem card; o histórico é recarregado); `4` interno → erro genérico. Processo morto pelo usuário → Launcher trata como `4`, com aviso neutro "Jogo encerrado."
 
 ### 5.3 `user://settings.cfg` (compartilhado)
 
@@ -195,7 +202,7 @@ Resultado da partida (vai pelo backend), configuração de rede do netfox (é do
 | Alvo | Ferramenta | Quando |
 |---|---|---|
 | `services/`, `models/`, `router` | GUT com `ApiClient` falso | toda PR (`gate-launcher`) |
-| Telas | smoke: instanciar cada `.tscn`, sem erro de nó | toda PR |
+| Telas | smoke: instanciar cada `.tscn`, sem erro de nó; cada tela com seu teste (estados, filtros, teclado); `test_app_flow` cobre o fluxo do `App` (login → lobby → fila → Game → card de resultado) | toda PR |
 | Backend unit | Jest, repositórios falsos | toda PR (`gate-backend`) |
 | Backend e2e | supertest + Postgres em container; orquestrador com Docker mock | toda PR |
 | Fluxo completo | 2 launchers + backend + pool local (`infra/docker-compose.yml`) | gate do MVP3, manual |

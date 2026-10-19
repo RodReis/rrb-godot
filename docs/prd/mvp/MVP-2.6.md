@@ -4,6 +4,7 @@
 **Módulos:** `game`, `shared`. **Prazo PRD:** sem prazo definido pelo PI.
 **Posição:** depois do `[GATE]` do MVP2 (#69, aprovado em 2026-10-13) e **antes** do MVP3 (decisão do PI em 2026-10-13: "Marco novo MVP2.6").
 **Critério de pronto:** as 2 fatias aceitas pelo PI por verificação visual; o soak de cada herói verde (50 partidas bot × bot com o herói novo em todas, ≤ 10 min, nunca empate — SPEC-058/059 §8); o critério de netcode do ADR-0006 item 7 em cada uma.
+**Estado:** entregue — #160: F58 #162 `finalizado` em 2026-10-14, F59 #163 em 2026-10-15; `[INFRA]` #161 `finalizado` em 2026-10-14; sem `[GATE]`.
 
 > Numeração: as fatias deste marco usam `Slice 2.6.n` (três componentes), para não colidir com a Slice 2.6 do MVP2 (F19).
 
@@ -16,7 +17,7 @@
 
 ## Ordem e issues
 
-Issue-pai **[MVP2.6]** (número no `STATUS.md` §1). Ordem: **`[INFRA]` (roadmap público aceita o marco MVP2.6) → F58 → F59**.
+Issue-pai **[MVP2.6] #160**. Ordem: **`[INFRA]` #161 (roadmap público aceita o marco MVP2.6) → F58 #162 → F59 #163**.
 
 Dependências: F58 e F59 dependem do F48 (equipamento visível), do F41 (arquitetura de VFX), do F32/F37 (filtro de visão) e do F51 (seleção) — todos entregues. O F59 reusa a área temporária e o evento de VFX por visão criados no F58.
 

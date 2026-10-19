@@ -1,6 +1,6 @@
 # SPEC-055 — Campos de canto: Golem de canto + 2 Lobos + 2 Baús Reforçados no bolso da curva TOP/BOT
 
-**Fatia:** F55 / SPEC-055 (MVP2, Slice 2.21 — depois do F54, antes do F51) · **Issue:** #137 · **Status:** decidida pelo PI em 2026-10-11 (pop-ups: "Só campos e baús novos"; "São os campos de canto"; "Bolso dentro da curva"; "Intermediário"; "Golem atual + lobo no Blender"; "Golem + 2 lobos, sem item"; "Mover a moita da lagoa"; "Golem 4 u, lobos 3 u")
+**Fatia:** F55 / SPEC-055 (MVP2, Slice 2.21 — depois do F54, antes do F51) · **Issue:** #137 · **Status:** decidida pelo PI em 2026-10-11 (pop-ups: "Só campos e baús novos"; "São os campos de canto"; "Bolso dentro da curva"; "Intermediário"; "Golem atual + lobo no Blender"; "Golem + 2 lobos, sem item"; "Mover a moita da lagoa"; "Golem 4 u, lobos 3 u") · **Entrega:** `finalizado` em 2026-10-12 (#137)
 **ADR:** ADR-0011
 **Supera:** SPEC-046 §2.7 (posição da moita de lagoa) e §3 (contagens). Mantém o resto da SPEC-046 (corredores livres, rotação de 180°, rio, bases, selva, centro).
 **Fontes:** GDB §5.1, §5.2, §6.2 (números — vencem esta spec) · SPEC-046 · ADR-0005, ADR-0006 · `tools/arena/build_arena.gd` · `game/scripts/world/spawn_marker.gd`, `chest.gd` · `game/scripts/match/spawn_director.gd` · `game/scripts/core/chest_rules.gd`, `monster_rules.gd` · `shared/resources/monster_data.gd` · `shared/assets/rrb/monsters/golem.glb`

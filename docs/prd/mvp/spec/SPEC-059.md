@@ -1,6 +1,6 @@
 # SPEC-059 — Engenheiro (classe Engenheiro): modelo, Bacamarte, Garra Mecânica, Torreta, Caixa de Dinamite, equipamento, animações, VFX e bot
 
-**Fatia:** F59 / SPEC-059 (MVP2.6, Slice 2.6.2 — depois do F58) · **Issue:** (criada pelo Cowork) · **Status:** decidida pelo PI em 2026-10-13 (pop-ups: "Depois do [GATE] MVP2"; "Tenho o Extra 2.0"; "Indestrutível, 6 s"; "Aprovar como proposto"; "Classe nova Engenheiro"; "Marco novo MVP2.6"; "Heróis e monstros")
+**Fatia:** F59 / SPEC-059 (MVP2.6, Slice 2.6.2 — depois do F58) · **Issue:** #163 · **Status:** decidida pelo PI em 2026-10-13 (pop-ups: "Depois do [GATE] MVP2"; "Tenho o Extra 2.0"; "Indestrutível, 6 s"; "Aprovar como proposto"; "Classe nova Engenheiro"; "Marco novo MVP2.6"; "Heróis e monstros") · **Entrega:** `finalizado` em 2026-10-15 (#163)
 **ADR:** ADR-0013
 **Fontes:** GDB §2, §4.6, §7.3 (números — vencem esta spec, ADR-0004) · PRD §4.1, §4.3 · CONVENTION §4.5–§4.7, §4.9 · ADR-0005, ADR-0006 item 7, ADR-0010, ADR-0011 item 3 · SPEC-048 · SPEC-054 (empurrão do Anel, marcação do Meteoro) · SPEC-058 (área temporária, eventos de VFX visíveis por visão) · `game/scripts/net/hero.gd`, `knight.gd`, `fire_wizard.gd`, `projectile_hero.gd`, `concealment.gd`, `vision_director.gd`, `impact_relay.gd` · `game/scripts/core/visibility_rules.gd`, `vision_rules.gd`, `hit_ledger.gd` · `game/scripts/vfx/*` (F41, F54)
 **Escopo:** herói jogável completo no Game, escolhível na seleção (F51), jogável pelo bot.
