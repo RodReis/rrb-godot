@@ -18,5 +18,7 @@ if [ -n "$NETEM_DELAY_MS" ]; then
 fi
 
 # GAME_ARGS: argumentos extras do jogo, separados por espaco (ex.: "--probe --seed=20").
+# stdbuf -oL: com o stdout num pipe (docker logs) o Godot so descarrega o buffer a cada ~4 KB e os
+# logs do servidor (PRD §8.5) chegam vazios; so stderr saia. Medido no VPS: 2 linhas sem, 8 com.
 # shellcheck disable=SC2086
-exec /game/game.x86_64 --headless -- --server "--port=${PORT:-7000}" ${GAME_ARGS:-}
+exec stdbuf -oL /game/game.x86_64 --headless -- --server "--port=${PORT:-7000}" ${GAME_ARGS:-}
