@@ -13,15 +13,21 @@ pelo orquestrador do backend). O Launcher fala HTTPS com o backend e UDP direto 
 ## Subir no Coolify (uma vez)
 
 1. **Firewall do VPS:** liberar UDP **7000–7020** (game servers) além de 80/443 (proxy do Coolify).
-2. Novo recurso **Docker Compose** apontando para este repositório e `infra/docker-compose.prod.yml`.
+2. Novo recurso **Public Git Repository** (não o card "Docker Compose", que não clona o repo), build pack
+   **Docker Compose**, **Base Directory `/infra`** e **compose location `/docker-compose.prod.yml`**. Com a base na
+   raiz (`/`) o Coolify roda o compose com `--project-directory` na raiz do repositório e `context: ../backend`
+   sai do repo (`path "/artifacts/backend" not found`).
 3. **Variáveis** (lista em `.env.example`; segredos com `openssl rand -hex 32`, `JWT_SECRET` ≠ `INTERNAL_SECRET`).
-   `GAMESERVER_PUBLIC_HOST` = IP ou domínio do VPS; `DOCKER_GID` = `getent group docker | cut -d: -f3`.
-4. **Domínio** do backend: apontar para o serviço `backend`, porta 3000 (TLS pelo proxy).
+   `GAMESERVER_PUBLIC_HOST` = IP ou domínio do VPS; `DOCKER_GID` = `getent group docker | cut -d: -f3`;
+   `GAMESERVER_NETWORK` = UUID do recurso (ver abaixo).
+4. **Domínio** do backend: serviço `backend`, porta 3000 (TLS pelo proxy). O Coolify acrescenta sozinho
+   `www.<domínio>`; apague essa linha (não há DNS para ela).
 5. Deploy. Conferir: `GET https://<domínio>/health` e, no host, `docker images rrb-gameserver`.
 
-Pontos a validar no primeiro deploy (não testáveis fora do VPS): a rede `rrb-net` precisa existir com esse nome
-(os game servers entram nela por `GAMESERVER_NETWORK` e chegam no backend em `http://backend:3000`); o backend
-precisa ler `/var/run/docker.sock` (`group_add: DOCKER_GID`).
+O Coolify ignora o `name:` da rede do compose e a chama pelo **UUID do recurso** (`docker network ls`). Os game
+servers entram nela por `GAMESERVER_NETWORK` e chegam no backend em `http://backend:3000`. Sem essa variável o
+orquestrador falha com `network rrb-net not found`. O backend também precisa ler `/var/run/docker.sock`
+(`group_add: DOCKER_GID`).
 
 ## Logs dos game servers (PRD §8.5)
 
