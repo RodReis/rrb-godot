@@ -2,7 +2,7 @@
 
 Knight do KayKit Adventurers 2.0 Extra (CC0) com a textura alternativa knight_texture_alt_B (cinza e
 dourado), sem o elmo e sem a viseira (excecao do ADR-0011 item 3: o rosto e o cabelo ficam a mostra).
-Escudo do pack Extra diferente do Badge_Shield do Cavaleiro (escolha do PI no aceite, parametro <shield>),
+Escudo do pack Extra diferente do Badge_Shield do Cavaleiro (escolha do PI em 2026-10-19: spikes_color; parametro <shield>),
 preso em handslot.l na mesma posicao relativa ao osso em que o Knight do Adventurers 1.0 prende os escudos
 (mesma malha de origem). Maca modelada aqui (bmesh, ~260 triangulos, cor pelas celulas do proprio atlas
 do Knight) em handslot.r, no referencial da 1H_Sword do Knight 1.0 (haste em +Z, punho na origem).

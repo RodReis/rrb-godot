@@ -245,6 +245,21 @@
       ],
       "imagens": [
         {
+          "arquivo": "mvp2.8-f76-paladino-retribuicao.webp",
+          "legenda": "O Paladino Radiante liga a Retribuição: um aro dourado de espinhos marca no chão os 3 metros em volta dele. Por 3 segundos, quem bate nele de perto, herói, servo ou monstro, recebe parte do dano de volta. Flecha, magia de longe e zona não voltam.",
+          "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp2.8-f76-paladino-golpe-consagrado.webp",
+          "legenda": "O Golpe Consagrado acerta só o primeiro inimigo numa faixa de dois metros e meio à frente da maça, e o atordoa por quase um segundo. O sigilo dourado no chão mostra a faixa. O chefe só toma o dano.",
+          "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp2.8-f76-paladino-bencao.webp",
+          "legenda": "No nível 6 chega a Bênção Inviolável: uma coluna de luz cura o Paladino e, por um segundo e meio, nenhum dano o atinge, nem o da zona no fim da partida. Atordoamento e lentidão ainda pegam nele.",
+          "tipo": "entregue"
+        },
+        {
           "arquivo": "mvp2.8-f77-ocultista-circulo.webp",
           "legenda": "O Ocultista desenha o Círculo Profano no chão: quem fica dentro anda mais devagar e perde vida a cada meio segundo. A runa sobre o inimigo é a Maldição, que tira defesa a cada acerto do ataque básico.",
           "tipo": "entregue"
