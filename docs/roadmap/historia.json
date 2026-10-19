@@ -316,6 +316,11 @@
           "tipo": "entregue"
         },
         {
+          "arquivo": "mvp3-f28-partida-no-vps.webp",
+          "legenda": "O jogo na internet pela primeira vez: dois jogadores, cada um no seu launcher, entram na fila e são levados para um servidor de verdade, em São Paulo. O pareamento sai em segundos e o servidor responde em cerca de 16 milissegundos.",
+          "tipo": "entregue"
+        },
+        {
           "arquivo": "mvp3-f33-arena-mapa.webp",
           "legenda": "O mapa da arena no launcher: a imagem real do vale, vista de cima, com um marcador para cada base, campo de monstros, ponte, rio, moita e a cratera do Rei Esqueleto. Ao clicar num marcador aparece o que há ali, e ao lado as duas fases da partida com os números do jogo.",
           "tipo": "entregue"
