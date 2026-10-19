@@ -39,8 +39,7 @@ Vitrine: `tools/ui/exit_menu_showcase.gd`.
 
 ## Não coberto (`not_run`)
 
-- O **card do Launcher** e o **histórico** com a derrota por abandono: com o servidor local sem backend o
-  resultado não é reportado; validar contra o backend e o pool exige a partida real (VPS, depois do deploy).
+- Nada do fluxo ficou sem prova; ver "Contra o VPS e o backend reais" abaixo.
 
 ## Verificação do PI (2026-10-19)
 
@@ -48,3 +47,15 @@ Servidor local + 2 clientes: o menu abriu por cima da partida e, ao sair, o outr
 A etiqueta saiu como "PARTIDA ABANDONADA" por cair no fallback do `MatchEnd` (com aviso de motivo sem texto);
 corrigido com o texto próprio "ADVERSÁRIO ABANDONOU A PARTIDA" e teste.
 - Fechar a janela, Alt+F4, queda de conexão e crash **não** viram abandono (lacuna aceita no ADR-0020).
+
+## Contra o VPS e o backend reais (2026-10-19)
+
+Depois do redeploy (`a909991`): 2 Launchers do projeto contra `https://api.lootstart.cloud`, cada um com conta nova,
+com o `game.exe` **do ZIP** gerado da `main`. O PI saiu pelo menu (ESC → Sair do jogo → Sair) em um dos jogos.
+
+- **Quem saiu:** card "Resultado da partida" **Derrota**, "Motivo de fim: Abandono", V-D da conta 0V — 1D
+  (`vps-card-derrota-abandono.webp`).
+- **Quem ficou:** **Vitória**, "Motivo de fim: Abandono", V-D 1V — 0D (`vps-card-vitoria-abandono.webp`).
+- **Banco de produção:** partida `e2ec0f64` `finished`, `end_reason = left`, vencedor = quem ficou; as duas linhas de
+  `match_players` gravadas (herói de cada um).
+- Ping no chip dos dois Launchers: **18 ms** (ICMP 16 ms).
