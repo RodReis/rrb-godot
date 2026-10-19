@@ -11,6 +11,9 @@ const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8
 const STAT_NAMES: Array[String] = [
 	"HP (Vida)", "DEF (Defesa)", "ATK (Ataque)", "INT (Inteligência)", "AGI (Agilidade)"
 ]
+## Giro inicial dos previews grandes: 180 = de frente para a camera nos KayKit (MonsterPreview3D).
+## Sem isso o modelo entrava de costas e so depois girava (#229).
+const PREVIEW_FACING: float = 180.0
 const MSEC_PER_SECOND: float = 1000.0
 ## Barra de atributo (h-3 do prototipo).
 const BAR_HEIGHT: float = 14.0
@@ -79,6 +82,8 @@ func _ready() -> void:
 	visible = false
 	set_process(false)
 	_rival_icon = _enemy_icon.texture
+	_player_preview.facing = PREVIEW_FACING
+	_enemy_preview.facing = PREVIEW_FACING
 	_build_skills()
 	_build_stats()
 	_lock_in.pressed.connect(lock_in)

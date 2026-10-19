@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## Tela de selecao (F51, prototipo "Seleção de Heróis") ligada ao MatchController: abre com o
 ## primeiro heroi disponivel, a grade so tem heroi com cena, o card esquerdo mostra papel,
@@ -94,6 +95,14 @@ func test_abre_com_o_cavaleiro_e_a_grade_so_tem_heroi_com_cena() -> void:
 	assert_true(_screen._cards[0]._tag.visible, "selo ATIVO no escolhido")
 
 
+## #229: os previews grandes (voce e oponente) comecam de frente e so depois giram; 180 = de frente
+## nos KayKit (MonsterPreview3D.facing).
+func test_previews_comecam_de_frente() -> void:
+	assert_eq(HeroSelect.PREVIEW_FACING, 180.0)
+	assert_eq(_screen._player_preview.facing, HeroSelect.PREVIEW_FACING)
+	assert_eq(_screen._enemy_preview.facing, HeroSelect.PREVIEW_FACING)
+
+
 func test_tecla_2_nao_escolhe_heroi_sem_cena() -> void:
 	_press(_screen, KEY_2)
 	assert_eq(_screen._player_name.text, "CAVALEIRO")
@@ -163,6 +172,27 @@ func test_timeout_mostra_o_heroi_padrao_como_meu() -> void:
 func test_close_esconde() -> void:
 	_screen.close()
 	assert_false(_screen.visible)
+
+
+## #228: com os 10 herois a tela inteira cabe na base do projeto (1920x1080, canvas_items): o minimo
+## do conteudo nao passa da base, senao o stretch nao salva e o topo e o rodape somem. Montada numa
+## SubViewport do tamanho da base: o minimo depende da largura (os textos quebram em linhas).
+func test_dez_herois_cabem_na_base_do_projeto() -> void:
+	var base := Vector2i(
+		ProjectSettings.get_setting("display/window/size/viewport_width"),
+		ProjectSettings.get_setting("display/window/size/viewport_height")
+	)
+	var viewport := SubViewport.new()
+	viewport.size = base
+	add_child_autofree(viewport)
+	var screen := (load(SCENE) as PackedScene).instantiate() as HeroSelect
+	viewport.add_child(screen)
+	screen.bind(_match, FULL_ROSTER, ALL_SCENES)
+	screen.open(24.0)
+	await wait_process_frames(2)
+	var need := (screen.get_node("Root/Column") as Control).get_combined_minimum_size()
+	assert_lte(need.y, float(base.y), "altura minima %s da base %s" % [need.y, base.y])
+	assert_lte(need.x, float(base.x), "largura minima %s da base %s" % [need.x, base.x])
 
 
 func test_dez_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
