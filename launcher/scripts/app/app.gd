@@ -53,6 +53,7 @@ var _online: bool = false
 ## A primeira checagem do backend ja voltou?
 var _checked: bool = false
 var _ping_ms: int = AppBar.UNKNOWN_PING
+var _ping_filter: PingFilter = PingFilter.new()
 ## Partida online aberta (para o abandon se o Game nao abrir); vazio = treino ou nada.
 var _match_id: String = ""
 ## O jogador encerrou o Game pelo overlay: sai como 4 (§5.2), mas o aviso nao e de erro.
@@ -131,15 +132,18 @@ func result_card() -> MatchResultCard:
 	return _result
 
 
-## GET /health: online e ping em ms na barra, no rodape e no console do lobby (V-01b).
+## GET /health: online e ping em ms na barra, no rodape e no console do lobby (V-01b). O ping vem
+## do ApiClient.ping (conexao que fica aberta, sem DNS e TLS de cada chamada: o numero se parece com
+## o ping do jogo, #233) e passa pelo PingFilter; backend fora esquece o historico.
 func check_backend() -> void:
-	var started := Time.get_ticks_msec()
-	var response: ApiClient.Response = await api.request(
-		HTTPClient.METHOD_GET, "/health", null, false
-	)
-	_online = response.ok()
+	var sample: int = await api.ping()
+	_online = sample != PingProbe.FAILED
 	_checked = true
-	_ping_ms = Time.get_ticks_msec() - started if _online else AppBar.UNKNOWN_PING
+	if _online:
+		_ping_ms = _ping_filter.add(sample)
+	else:
+		_ping_filter.reset()
+		_ping_ms = AppBar.UNKNOWN_PING
 	_dismiss_splash()
 	_bar.set_backend_status(_online, _ping_ms if _online else 0)
 	var lobby := _stack.current() as LobbyScreen
