@@ -3,6 +3,7 @@
 **Objetivo:** 1x1 online completo (duas máquinas, servidor dedicado) que **sempre** termina em ≤ 10 min.
 **Módulos:** `game`. **Prazo PRD:** 4 semanas.
 **Critério de pronto:** 1x1 online termina sempre (com os 4 heróis — ADR-0011); 50 partidas bot × bot headless sem travar e todas ≤ 10 min (I1); nunca empate (I2).
+**Estado:** entregue — `[GATE]` #69 aprovado pelo PI em 2026-10-13; ajustes pós-gate (F60–F65, ADR-0014) `finalizado` em 2026-10-13/14.
 
 ## Fatias
 

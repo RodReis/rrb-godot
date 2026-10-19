@@ -1,6 +1,6 @@
 # SPEC-054 — Bruxo de Fogo (Mago): modelo, Bola de Fogo, Explosão de Chamas, Anel de Fogo, Meteoro, bot e VFX
 
-**Fatia:** F54 / SPEC-054 (MVP2, Slice 2.20 — depois do F53, antes do F55) · **Issue:** #136 · **Status:** decidida pelo PI em 2026-10-11 (pop-ups: "Dentro do MVP2, antes do F19"; "Bruxo Mago"; "Aprovar como proposto" — sem queimadura; "Chapéu/capuz fica sempre"; "Antes do F51")
+**Fatia:** F54 / SPEC-054 (MVP2, Slice 2.20 — depois do F53, antes do F55) · **Issue:** #136 · **Status:** decidida pelo PI em 2026-10-11 (pop-ups: "Dentro do MVP2, antes do F19"; "Bruxo Mago"; "Aprovar como proposto" — sem queimadura; "Chapéu/capuz fica sempre"; "Antes do F51") · **Entrega:** `finalizado` em 2026-10-12 (#136)
 **ADR:** ADR-0011
 **Fontes:** GDB §2, §4.4 (números — vencem esta spec, ADR-0004) · PRD §4.1, §4.3 · ADR-0005, ADR-0006 item 7, ADR-0010 · SPEC-048 · SPEC-053 (mesmo padrão de herói novo) · `game/scripts/net/arrow.gd` · `game/scripts/core/ranger_rules.gd` · `shared/data/heroes/ranger.tres`
 **Escopo:** herói jogável completo no Game, escolhível no pick, jogável pelo bot. Seleção fiel ao protótipo é do F51.

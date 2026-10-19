@@ -10,7 +10,7 @@ export function Arena() {
         <div className="section-head reveal">
           <span className="eyebrow">Arena</span>
           <h2>Um vale, dois portões, um centro disputado</h2>
-          <p>Cada lado tem a própria base e metade do mapa para farmar. No meio, o Rei Esqueleto surge aos 3:30 e o centro vira disputa. O dia vira noite ao longo da partida.</p>
+          <p>Um quadrado de 80 × 80 m com um castelo em cada canto oposto. Cada lado tem a própria base e metade do mapa para farmar, com moitas de mato alto para esperar o adversário. No meio, o Rei Esqueleto surge aos 3:30 na cratera e o centro vira disputa. O dia vira noite ao longo da partida.</p>
         </div>
 
         <div className="arena-showcase">
@@ -23,7 +23,7 @@ export function Arena() {
           </figure>
           <figure className="arena-frame glass reveal">
             <img src={img("arena_map.webp")} alt="Mapa da arena visto de cima, com duas bases, o rio e o centro" loading="lazy" />
-            <figcaption>Vista de cima: duas bases nos cantos, rio em volta do centro e três caminhos entre elas.</figcaption>
+            <figcaption>Vista de cima: duas bases nos cantos, rio em volta da cratera central, pontes e três caminhos entre as bases.</figcaption>
           </figure>
         </div>
 

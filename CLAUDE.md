@@ -28,38 +28,43 @@ Você atua como **engenheiro sênior de Godot 4 / GDScript** neste repositório.
 ## Projeto
 
 - MOBA 3D de 2 tempos (preparação 5 min → confronto com zona), multiplayer com **servidor autoritativo**.
-- Fonte de verdade de escopo: `docs/prd/PRD.md`. Layout da arena: `docs/prd/mvp/spec/SPEC-044.md` (ADR-0007). Números e fórmulas: `docs/prd/GDB.md` (vence o PRD — ADR-0004). Telas: `docs/prd/DESIGN-VISUAL-LAUNCHER.md`. Benchmark: `docs/prd/REFER.md`. Plano ativo: `docs/superpowers/plans/`. Decisões: `docs/adr/` (índice em `docs/DECISIONS.md`).
-- Marco atual: **MVP0 / M0 — spike de netcode** (`docs/superpowers/plans/2026-10-08-m0-spike-netcode.md`). MVP-n = marco M-n do PRD.
-- Stack: **Godot 4.7.2** (Forward+ **only** — ADR-0006), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, a partir do MVP3), **Blender 5.2 LTS + Blender MCP** (assets 3D, ADR-0005). Windows + PowerShell.
+- Fonte de verdade de escopo: `docs/prd/PRD.md`. Layout da arena: `docs/prd/mvp/spec/SPEC-046.md` (ADR-0009; em vale sem abismo, ADR-0012). Números e fórmulas: `docs/prd/GDB.md` (vence o PRD — ADR-0004). Telas: `docs/prd/DESIGN-VISUAL-LAUNCHER.md`. Benchmark: `docs/prd/REFER.md`. Planos e specs de trabalho: `docs/superpowers/`. Decisões: `docs/adr/` (índice em `docs/DECISIONS.md`).
+- Marco atual: **MVP3 — Meta + deploy** (issue-pai #76): restam **F28** (#82, deploy no VPS do PI) e o **[GATE] #87**. MVP0 a MVP2.8 entregues (F66–F78 `finalizado`); próximo, **MVP4 — Playtest**. MVP-n = marco M-n do PRD. Estado em `docs/STATUS.md`, ordem de execução em `docs/DEVELOPMENT.md`.
+- **10 heróis jogáveis:** Cavaleiro, Arqueiro, Bárbaro, Bruxo de Fogo, Ladina, Engenheiro, Protetor da Selva, Berserker, Paladino Radiante e Ocultista (`shared/data/heroes/`, números no GDB §4).
+- Stack: **Godot 4.7.2** (Forward+ **only** — ADR-0006), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, MVP3; Node ≥ 24, pnpm), **Blender 5.2 LTS + Blender MCP** (assets 3D, ADR-0005), **React 19 + Vite + TypeScript** (só o site público, ADR-0017). Versões fixadas: netfox 1.35.3, GUT 9.7.1. Windows + PowerShell.
 - **Dois módulos independentes** (ADR-0002), mesmo monorepo, sem importar nada um do outro:
   - **Game** (`game/`): partida — cliente + servidor dedicado. Seleção de heróis, HUDs, fim de partida. `docs/ARCHITECTURE-GAME.md`.
   - **Launcher** (`launcher/` + `backend/`): fora da partida — login, lobby, fila, histórico, bestiário, forja, arena & mapa, configurações; backend de auth/fila/orquestração. `docs/ARCHITECTURE-LAUNCHER.md`.
   - Comum: `shared/` (Resources `.tres`, regras puras, Theme, assets), montado nos dois por junction (`tools/link-shared.ps1`, ADR-0003). Contrato Launcher ↔ Game: processo + argumentos + `settings.cfg` (`ARCHITECTURE-LAUNCHER.md` §5). Mudar o contrato exige ADR.
-- Estrutura alvo (`game/` vale depois da Tarefa 1 do M0; `shared/` a partir de F6; `launcher/` e `backend/` a partir do MVP3):
+  - **Site público** (`site/`, ADR-0017, emenda ao ADR-0002): landing "Loot Start" em React + Vite no GitHub Pages, sem relação de código com Game, Launcher ou Backend; lê `shared/data/heroes`, `docs/roadmap/` e `docs/STATUS.md` em build. `docs/SITE.md`. O nome "Loot Start" vale só no site; o jogo segue "ARENA 1V1".
+- Estrutura (`shared/` entra nos dois projetos por junction — `tools/link-shared.ps1`):
 
 ```
 game/                 projeto Godot A — partida (cliente + servidor dedicado)
   scripts/core/       regras puras de partida (arco, mira, zona, vitória) — sem nodes, 100% testadas
-  scripts/net/        nodes de rede (player, input, projétil) — usam core e shared/core
+  scripts/net/        nodes de rede (heróis, input, projéteis) — usam core e shared/core
   scripts/match/      MatchController (FSM), relógio, zona, kills
-  scripts/ai/         bot (BotInput) e monstros
+  scripts/ai/         bot (BotInput), monstros e Servos do Vazio
+  scripts/world/      arena: baús, portões, zona, fonte, neblina, dia/noite, vegetação
+  scripts/vfx/        efeitos visuais — só cliente, nada no servidor headless
   scripts/items/      inventário e aplicação de atributos
   scripts/ui/         HUDs, pick, fim de partida — só consomem sinais
-  scripts/server/ client/   bootstrap por papel
+  scripts/server/     integração do servidor dedicado com o backend (auth, heartbeat, resultado)
+  scripts/client/     warm-up de shaders e lineup de equipamento
   test/unit/          testes GUT
   addons/             terceiros (netfox, gut) — NUNCA editar
   shared/ -> ../shared      junction, ignorada no git
 launcher/             projeto Godot B — fora da partida
   scripts/app/        pilha de telas, router
-  scripts/services/   ApiClient, Auth, Queue, GameProcess, SettingsStore, Catalog
-  scripts/screens/    login, lobby, bestiary, forge, history, settings
+  scripts/services/   ApiClient, Auth, Queue, GameProcess, SettingsStore, Catalog, Profile, History
+  scripts/screens/    login, lobby, perfil, heróis, compêndio (bestiário e forja), arena & mapa, histórico, configurações
   shared/ -> ../shared
 shared/               comum, sem project.godot: core/, data/, resources/, assets/, ui/theme, ui/components, test/
-backend/              NestJS + Postgres (auth, matchmaking, orchestrator, matches, telemetry)
+backend/              NestJS + Postgres (auth, users, matchmaking, orchestrator, matches; telemetria só no MVP4)
 art/                  fontes .blend (Blender) — nunca importadas pelo Godot; exporta .glb para shared/assets/ (ADR-0005)
 infra/                Docker do game server, compose, deploy
 site/                 site público (landing "Loot Start", React + Vite, GitHub Pages) — dados extraídos em build de shared/ e docs/roadmap/ (ADR-0017)
-tools/                scripts PowerShell (test, run, link-shared, soak)
+tools/                scripts PowerShell (test, run, link-shared, soak, pacote) e geradores em .gd (arena, ui, vfx, perf), roadmap em .mjs
 docs/                 ver "Documentação do projeto"
 ```
 
@@ -67,17 +72,22 @@ docs/                 ver "Documentação do projeto"
 
 | O quê | Comando |
 |---|---|
-| Testes (game + shared) | `.\tools\test.ps1 -Module game` (até F1: `.\tools\test.ps1`) |
+| Testes (game + shared) | `.\tools\test.ps1 -Module game` |
 | Testes (launcher + shared) | `.\tools\test.ps1 -Module launcher` |
 | Testes (backend) | `pnpm -C backend test` |
-| Junctions de `shared/` | `.\tools\link-shared.ps1` (uma vez por clone; a partir de F6) |
+| Junctions de `shared/` | `.\tools\link-shared.ps1` (uma vez por clone) |
 | Servidor local | `.\tools\run-server.ps1` |
-| Treino offline vs bot | `& $env:GODOT_PATH --path game -- --offline --bot` (a partir de F12) |
-| Launcher | `& $env:GODOT_PATH --path launcher` (a partir de F24) |
+| Treino offline vs bot | `& $env:GODOT_PATH --path game -- --offline --bot` |
+| Launcher | `& $env:GODOT_PATH --path launcher` (em dev, `-- --api=<url> --game-path=... --game-project=...`; ver `README.md`) |
 | 2 clientes (2º em autopilot) | `.\tools\run-clients.ps1 -Autopilot` |
 | Servidor Docker (+100 ms, 2% perda) | `$env:NETEM_DELAY_MS=100; $env:NETEM_LOSS_PCT=2; docker compose -f infra/docker-compose.yml up --build` |
 | Editor | `& $env:GODOT_PATH -e --path game` ou `--path launcher` |
 | Roadmap público | `.\tools\build-roadmap.ps1` (gera `docs/roadmap/index.html`) |
+| Soak (N partidas bot × bot headless; obrigatório nas fatias que mexem em servidor, FSM, input ou herói) | `.\tools\soak.ps1 -Count 50 -Parallel 8` (`-Require <herói>` para herói novo) |
+| Medição de rede (servidor em Docker com netem + 2 clientes) | `.\tools\net-measure.ps1 -OutDir logs\<nome> -DelayMs 100 -LossPct 2` |
+| Frame time e captura só do viewport | `& $env:GODOT_PATH --path game --resolution 1920x1080 -s <repo>/tools/perf/frametime_probe.gd -- --offline --bot --autopilot=bot --out=<saida> [--shot=<png>]` |
+| Bake do lightmap da arena | `.\tools\bake-lightmap.ps1` |
+| Pacote ZIP do jogo | `.\tools\build-package.ps1 -ApiUrl <url> -Version v0.x.y` |
 | Site público | `pnpm -C site install` (uma vez) · `pnpm -C site dev` · `pnpm -C site test` · `pnpm -C site build` |
 
 - Para linha de comando use o `*_console.exe` (`$env:GODOT_PATH -replace '\.exe$','_console.exe'`); o `.exe` principal não imprime no terminal.
@@ -90,7 +100,7 @@ docs/                 ver "Documentação do projeto"
 - Fonte `.blend` em `art/`. Em `shared/assets/` só entra glTF: pack CC0 como vem; o que passou pelo Blender, exportado em `.glb`. Nunca coloque `.blend` em `game/`, `launcher/` ou `shared/` (importação de `.blend` desligada no `project.godot`).
 - Colisão, navegação e occluder pelos sufixos de nome do importador: `-col`, `-convcol`, `-colonly`, `-convcolonly`, `-navmesh`, `-occ`, `-occonly`; `-noimp` remove nó auxiliar; `-loop` em animação de laço.
 - Asset novo ou alterado passa pela cena de alinhamento (PRD §11).
-- Estilo (ADR-0006): personagens e props dos packs CC0 ficam como vêm (faces planas, cor por UV no atlas do KayKit `shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png`). Cenário próprio em `shared/assets/rrb/` pode ter bevel de 1–2 segmentos e bake de AO/curvatura (máscara em UV2), cor-base ainda pelo atlas. Toon/outline aplicado por pós-import, nunca editando o glTF. Referência de orçamento: prop/cenário 50–800 triângulos, personagem 500–3.000. Conferir a silhueta na distância da câmera do jogo.
+- Estilo (ADR-0006): personagens e props dos packs CC0 ficam como vêm (faces planas, cor por UV no atlas do KayKit `shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png`). Cenário próprio em `shared/assets/rrb/` pode ter bevel de 1–2 segmentos, smooth shading por ângulo e bake de AO/curvatura (máscara em UV2); terreno, rocha, muralha e madeira usam texturas PBR CC0 de `shared/assets/textures/` (F40, F73; licenças em `shared/assets/LICENSES.md`), o resto tem cor-base pelo atlas. **Toon/outline foi abandonado** (PI, F39, 2026-10-10): não aplique cel-shading nem contorno. Exceção à regra "como vêm": o Ocultista, com atlas próprio e capuz (ADR-0016), e o Berserker, com elmo de chifres (F75). Referência de orçamento: prop/cenário 50–800 triângulos, personagem 500–3.000. Conferir a silhueta na distância da câmera do jogo.
 - Quando a colisão vem do código (medidas da SPEC), a malha visual cobre a colisão — nunca menor, senão vira parede invisível. Não use convenções `COL_`/`UCX_` (Unreal/Unity): no Godot valem os sufixos acima.
 - Arte própria exportada em `shared/assets/rrb/<área>/`; fonte em `art/<área>/`.
 - MCP: modo interativo exige o Blender aberto com o servidor do addon ligado (porta 9876); modo em segundo plano (`*_for_cli`) usa `BLENDER_PATH`. O MCP executa código sem proteção (risco aceito pelo PI): trabalhe só sobre arquivos versionados.
@@ -168,4 +178,5 @@ São adaptados do Claude-Code-Game-Studios (ver `.claude/THIRD_PARTY_NOTICES.md`
 - `docs/RASTREABILIDADE.md` — Matriz normativa que prova para onde cada requisito aprovado foi: mantido, transferido, adiado ou excluído. Ausência na matriz bloqueia aprovação documental.
 - `docs/SITE.md` — Site público "Loot Start" (`site/`): stack, de onde vem cada dado, marca, comandos, deploy no GitHub Pages e CI. Decisão: ADR-0017.
 - `docs/roadmap/` — Roadmap público (sócios, playtesters, público): `historia.json` autoral + `index.html` gerado. Estado vem das Issues e do `STATUS.md`, nunca escrito à mão. Ver `docs/roadmap/README.md`.
+- `docs/evidencias/f<n>/` — evidência de aceite por fatia (capturas, frame time, logs de soak e de rede); `docs/superpowers/` — planos e specs de trabalho.
 - `docs/PRIVACIDADE.md` — Registro não normativo de achados sobre privacidade, proteção de dados, LGPD e consentimentos, com contexto de origem. Não é citado por SPEC e não produz requisito ou aceite antes da revisão do PI.

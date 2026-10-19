@@ -1,6 +1,6 @@
 # SPEC-048 — Equipamento visível: armas e armaduras no herói 3D e ícones dos itens
 
-**Fatia:** F48 / SPEC-048 (MVP2, Slice 2.14) · **Issue:** #121 · **Status:** decidida pelo PI em 2026-10-11 (pop-up: "Arma + armadura modeladas no Blender agora")
+**Fatia:** F48 / SPEC-048 (MVP2, Slice 2.14) · **Issue:** #121 · **Status:** decidida pelo PI em 2026-10-11 (pop-up: "Arma + armadura modeladas no Blender agora") · **Entrega:** `finalizado` em 2026-10-11 (#121)
 **ADR:** ADR-0010 (equipamento visível no herói; ciclo dia/noite)
 **Fontes:** GDB §6.1 · ADR-0005 (pipeline Blender) · ADR-0006 (toon/outline por pós-import) · PATTERNS P6 · `DEBITO.md` DS-06 · `game/scripts/net/hero_visual.gd` · `game/scenes/heroes/knight.tscn`, `ranger.tscn` · `shared/resources/item_data.gd`, `item_catalog.gd` · `shared/ui/components/slot_item.gd`
 **Escopo:** só cliente e arte. Servidor, rollback, regras e números não mudam.

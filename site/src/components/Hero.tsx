@@ -3,7 +3,7 @@ import { historia, img, RELEASES_URL, REPO_URL, HAS_RELEASE } from "../data";
 import "./Hero.css";
 
 const MODES = [
-  { nome: "1x1", detalhe: "Duelo. Disponível agora.", ativo: true },
+  { nome: "1x1", detalhe: "Duelo. O modo atual.", ativo: true },
   { nome: "2x2", detalhe: "Duplas. Em breve.", ativo: false },
   { nome: "3x3", detalhe: "Trios. Em breve.", ativo: false },
 ];

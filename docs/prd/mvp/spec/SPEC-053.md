@@ -1,6 +1,6 @@
 # SPEC-053 — Bárbaro (Algoz): modelo, ataque básico, Salto Brutal, Rodopio, Execução, bot e VFX
 
-**Fatia:** F53 / SPEC-053 (MVP2, Slice 2.19 — depois do F50, antes do F54) · **Issue:** #135 · **Status:** decidida pelo PI em 2026-10-11 (pop-ups: "Dentro do MVP2, antes do F19"; "Bárbaro Algoz"; "Aprovar como proposto"; "Chapéu/capuz fica sempre"; "Antes do F51")
+**Fatia:** F53 / SPEC-053 (MVP2, Slice 2.19 — depois do F50, antes do F54) · **Issue:** #135 · **Status:** decidida pelo PI em 2026-10-11 (pop-ups: "Dentro do MVP2, antes do F19"; "Bárbaro Algoz"; "Aprovar como proposto"; "Chapéu/capuz fica sempre"; "Antes do F51") · **Entrega:** `finalizado` em 2026-10-12 (#135)
 **ADR:** ADR-0011
 **Fontes:** GDB §2, §4.3 (números — vencem esta spec, ADR-0004) · PRD §4.1, §4.3 · ADR-0005, ADR-0006 item 7, ADR-0010 · SPEC-048 (equipamento visível) · `shared/resources/hero_data.gd`, `skill_data.gd` · `shared/data/heroes/knight.tres` · `game/scenes/heroes/knight.tscn` · `game/scripts/net/hero.gd`, `hero_visual.gd` · `game/scripts/ai/bot_input.gd`, `game/scripts/core/bot_rules.gd` · `game/scripts/core/pick_rules.gd`
 **Escopo:** herói jogável completo no Game (servidor autoritativo + cliente), escolhível no pick do F15, jogável pelo bot. Seleção fiel ao protótipo é do F51.

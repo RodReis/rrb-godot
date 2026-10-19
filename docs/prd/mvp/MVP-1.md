@@ -3,6 +3,7 @@
 **Objetivo:** fase 1 completa contra bot, offline, com a arquitetura autoritativa já em uso (servidor embutido no processo — `ARCHITECTURE-GAME.md` §4).
 **Módulos:** `game`, `shared`. **Prazo PRD:** 4 semanas. **Pré-condição:** gate M0 aprovado.
 **Critério de pronto:** partida de 5:00 contra bot do início ao fim: Cavaleiro farma, sobe de nível, abre baús, equipa, enfrenta o boss aos 3:30, com HUD. Nenhum número fora de `.tres`.
+**Estado:** entregue — `[GATE]` #27 `finalizado` em 2026-10-10; F6–F13, F31, F34 e o `[INFRA]` #17 `finalizado`.
 
 ## Fatias
 

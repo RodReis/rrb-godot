@@ -4,7 +4,7 @@ extends SubViewportContainer
 ## SubViewport com arena hexagonal reduzida, o heroi em destaque em idle sobre um pedestal com aro
 ## dourado, tochas e cristais. E o fundo do lobby no enquadramento do prototipo (Menu Principal:
 ## heroi a esquerda, arena ao crepusculo). Renderiza a 30 fps e para sem foco ou invisivel.
-## DUEL: Cavaleiro x Arqueira frente a frente (arte do Login, tools/launcher/render_login_art.gd).
+## DUEL: Cavaleiro x Arqueiro frente a frente (arte do Login, diorama/render_login_art.gd).
 
 enum Mode { LOBBY, DUEL }
 

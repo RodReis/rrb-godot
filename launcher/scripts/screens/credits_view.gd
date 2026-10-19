@@ -12,7 +12,7 @@ const GROUPS: Array[Array] = [
 		UiIcons.LICENSE,
 		[
 			[
-				"KayKit — Medieval Hexagon, Adventurers 1.0 e 2.0, Skeletons",
+				"KayKit — Medieval Hexagon, Adventurers 1.0, 2.0 e 2.0 Extra, Skeletons",
 				"Kay Lousberg",
 				"CC0 1.0",
 				"kaylousberg.com"

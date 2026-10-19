@@ -8,7 +8,7 @@ Jobs paralelos por módulo, **um gate agregado**, duração medida, limites expl
 2. **Só roda o que a PR tocou** (path filter). `shared/` toca `game` e `launcher`. `docs/**` sozinho roda só `lint-docs`.
 3. **Duração-alvo: ≤ 8 min do push ao `gate` verde.** Medida em todo run (`§5`); acima de 12 min em 3 PRs seguidas é card `[INFRA]`.
 4. **Sem flake tolerado:** teste intermitente é desativado com `[FIX]` aberto no mesmo dia, nunca re-rodado "até passar".
-5. **CI é a única prova.** Hook local (`lefthook`) roda lint rápido no `pre-push`, mas não substitui nada.
+5. **CI é a única prova.** Um hook local de `pre-push` (`lefthook`: lint rápido) está previsto, mas **ainda não existe** no repositório; mesmo quando existir, não substitui nada.
 
 ## 2. Jobs (GitHub Actions, `.github/workflows/ci.yml`)
 
@@ -17,7 +17,7 @@ Jobs paralelos por módulo, **um gate agregado**, duração medida, limites expl
 | `changes` | sempre | `dorny/paths-filter` → saídas `game`, `launcher`, `backend`, `shared`, `infra`, `docs`, `site` | 10 s |
 | `lint-gd` | `game`, `launcher`, `shared` | `gdlint` + `gdformat --check` (gdtoolkit 4.x) em `*.gd` tocados; grep de literais numéricos em `scripts/core/` e `shared/core/` (I4); grep de `netfox`/`ENet` em `launcher/` (I9) | 1 min |
 | `test-game` | `game` ou `shared` | `godot --headless --path game --import` → GUT `game/test` + `shared/test` (`-gexit`, saída JUnit) | 3 min |
-| `test-launcher` | `launcher` ou `shared` | idem em `launcher/`; smoke de instanciação das 5 telas e da galeria | 3 min |
+| `test-launcher` | `launcher` ou `shared` | idem em `launcher/`; smoke de instanciação das telas e da galeria | 3 min |
 | `test-backend` | `backend` | `pnpm install --frozen-lockfile`, `tsc --noEmit`, `eslint`, `jest` unit, e2e com Postgres (`services:`) | 4 min |
 | `site` | `site` ou `infra` | `pnpm install --frozen-lockfile` em `site/` → `pnpm test` (parser `.tres`) → `node --test tools/roadmap/build-roadmap.test.mjs` → `pnpm build` (extrai dados, `tsc --noEmit`, `vite build`) | 1 min |
 | `build-server` | `game`, `shared`, `infra` (a partir de F5) | `docker build infra/gameserver` (cache de camadas) | 3 min |
@@ -26,7 +26,7 @@ Jobs paralelos por módulo, **um gate agregado**, duração medida, limites expl
 | `gate` | sempre, `needs: [todos]`, `if: always()` | falha se qualquer job necessário falhou ou foi cancelado; **sucesso se os jobs pulados foram pulados por path filter** | 5 s |
 | `soak` (workflow separado, nightly + manual) | cron 03:00 BRT | `tools/soak.ps1` (pwsh, igual no Windows): 50 partidas bot × bot headless, 8 em paralelo | ~46 min medidos local, fora do gate |
 
-Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker própria em `infra/ci/` se a action não oferecer a versão — decidir em F1, registrar aqui). Cache: `~/.cache/pnpm`, `.godot/imported` por módulo (chave = hash dos `.import`).
+Godot na CI: binário oficial `4.7.2` pela action local `.github/actions/godot` (ver "Implementado" abaixo; sem action de terceiro nem imagem própria). Cache do binário por `actions/cache`; cache de `~/.cache/pnpm` nos jobs Node.
 
 **Implementado (F1 #2, INFRA #17):**
 
@@ -40,6 +40,7 @@ Godot na CI: `chickensoft-games/setup-godot` fixado em `4.7.2` (ou imagem Docker
 - **`test-backend` (F21 #77):** em `backend/` ou `infra`; Postgres 16 em `services:`; `pnpm install --frozen-lockfile` → `eslint` → `tsc --noEmit` → `jest --coverage` (limite ≥ 80 % de linhas por `src/**/*.service.ts`, no `package.json`) → e2e supertest (`--runInBand`) → `pnpm build && pnpm openapi && git diff --exit-code openapi.json` (o `openapi.json` versionado tem de bater com o gerado). Node 24, pnpm pelo `packageManager` do `backend/package.json`. Entra no `needs` do `gate`.
 - **`test-launcher` (F24 #80):** em `launcher/`, `shared/` ou `infra`; `tools/test.ps1 -Module launcher` — GUT de `launcher/test/unit` (Router, ScreenStack, SettingsStore, tela Configurações, smoke de cada `.tscn` do Launcher e da galeria) e `shared/test`. Lint e tipagem do `launcher/` já estavam no `lint-gd`. Entra no `needs` do `gate`.
 - **`site` (PR #218):** em `site/`, `tools/roadmap/`, `shared/data/heroes/`, `docs/roadmap/historia.json`, `docs/STATUS.md` ou `infra`; Node 24, pnpm pelo `packageManager` do `site/package.json` (a `pnpm/action-setup` falha sem ele). Roda `pnpm test`, `node --test tools/roadmap/build-roadmap.test.mjs` e `pnpm build`. Entra no `needs` do `gate`. O **deploy** é outro workflow (`.github/workflows/site.yml`, só na `main`, GitHub Pages) e fica fora do `gate`. Ver `docs/SITE.md`.
+- **`release` (F28, PR #186, `.github/workflows/release.yml`):** tag `v*` (anotada, criada na `main` com CI verde) exporta o cliente Windows a partir do Linux (só o template `windows_release_x86_64`), roda `tools/build-package.ps1` com a variável de repositório `RRB_API_URL` e publica o ZIP num GitHub Release; `workflow_dispatch` faz o ensaio e anexa o ZIP ao run por 3 dias. Fora do `gate`. Não reverifica se a tag saiu de uma `main` verde. O servidor de partida **não** é exportado aqui (o Docker usa `infra/gameserver/Dockerfile`).
 - Ainda não implementados: `build-server`, `export-check`, `lint-docs`, medição (§5) — entram por card `[INFRA]`. Até `lint-docs` existir, PR só de `docs/**` roda `changes` + `gate`.
 
 ## 3. Path filter
@@ -69,10 +70,12 @@ site:     ['site/**', 'tools/roadmap/**', 'shared/data/heroes/**', 'docs/roadmap
 | Tamanho da imagem do game server | ≤ 300 MB | `build-server` |
 | Duração do `gate` | ≤ 12 min (aviso em 8) | `§5` |
 
+**Checados hoje:** GDScript sem tipo, literal numérico em `core/`, referência ao Game em `launcher/` (I9) e cobertura do backend. Função pública sem teste, orphan nodes, tamanho da imagem do game server e duração do `gate` ainda não têm verificação automática (entram por card `[INFRA]`).
+
 ## 5. Medição
 
 Cada run grava em `docs/ci/durations.csv` (via job `measure`, commit de bot **não** — artefato do run; o Code consolida mensalmente em `PRS.md` §métricas): `run_id, pr, sha, job, started, duration_s, result`. Métricas derivadas: p50/p95 por job, rodadas de CI por PR (quantos pushes até verde), taxa de flake.
 
 ## 6. O que a CI não faz
 
-Verificação visual (do PI), teste de rede com 2 máquinas reais (manual, roteiro em `game/test/net`), publicar release (manual, `GITHUB.md` §8), deploy (Coolify, manual até F28).
+Verificação visual (do PI), teste de rede com 2 máquinas reais (manual, roteiro em `game/test/net`), medição de rede com netem (`tools/net-measure.ps1`, local), deploy (Coolify, manual até F28). Publicar release é por tag (`release.yml`, `GITHUB.md` §8).

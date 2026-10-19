@@ -24,7 +24,7 @@
 - Dados que entram na tela: um método público `bind(model: X) -> void` tipado. Tela sem `bind` é tela estática.
 - Strings de UI em `tr()` desde o início (só pt-BR na fatia, PRD §12 — mas `tr()` custa zero e evita refatoração).
 
-## 3. Padrão de tela (todas as 5)
+## 3. Padrão de tela (todas as telas do Launcher)
 
 ```
 <Nome>Screen (Control, Full Rect, theme = theme_moba)
@@ -43,7 +43,7 @@
 
 ### 3.1 Tela de catálogo (Bestiário, Forja, Heróis) — padrão "lista + detalhe" **ou grade de cards (vence o protótipo, §8.4)**
 
-> Atualizado em 2026-10-16 (pendência do F27): Bestiário e Forja saíram como **grade de cards** com filtros e busca, porque o protótipo manda assim (§8.4 vence este padrão). O texto abaixo vale para tela cuja pasta de protótipo tenha lista + detalhe. A Tela Heróis (F71, ADR-0015) segue o protótipo `Tela Herois/`.
+> Atualizado em 2026-10-16 (pendência do F27): Bestiário e Forja saíram como **grade de cards** com filtros e busca, porque o protótipo manda assim (§8.4 vence este padrão). O texto abaixo vale para tela cuja pasta de protótipo tenha lista + detalhe. A Tela Heróis (F71, ADR-0015) segue o protótipo `Tela Herois/`: coluna de busca + filtro por classe (`FilterChip` com a contagem real), grade de 4 colunas de `HeroCard` e `HeroDetail` (atributos Nv 1 → Nv 10 por `Stats.attributes`, 4 habilidades, arma e alcance); todos os dados vêm de `CatalogService` (`shared/data/heroes/`, sem lista de ids no código) e os retratos de `shared/assets/ui/heroes/large/<id>.png`.
 
 
 Esquerda `ItemList`/`VBox` de botões (largura fixa `TOKENS.size.list_col`), direita `DetailCard` que recebe `bind(resource)`. Seleção por sinal `selected(id)`. Dados de `CatalogService` (`shared/data`), nunca hardcoded na cena — **o DV traz valores de exemplo nos wireframes; eles não são fonte**.
@@ -123,7 +123,7 @@ Composição e layout, hierarquia, cores, tipografia, espaçamentos, raios, bord
 
 ### 8.4 Estrutura e resolução
 
-O protótipo **vence o DV na composição** (emenda da R-PEND-11 em 2026-10-10). Os protótipos são páginas web com rolagem; a tela é adaptada a 1920×1080 **sem rolagem de página** (rolagem só dentro de listas), mantendo ordem, proporções e agrupamentos. O DV continua valendo para comportamento, sinais e navegação (`ARCHITECTURE-LAUNCHER.md` §3.4): abas do cabeçalho apontam só para rotas que existem.
+O protótipo **vence o DV na composição** (emenda da R-PEND-11 em 2026-10-10). Os protótipos são páginas web com rolagem; a tela é adaptada a 1920×1080 **sem rolagem de página** (rolagem só dentro de listas; as telas de catálogo — Bestiário, Forja e Heróis — rolam o corpo dentro da própria tela, com barra própria, porque o protótipo é uma página longa), mantendo ordem, proporções e agrupamentos. O DV continua valendo para comportamento, sinais e navegação (`ARCHITECTURE-LAUNCHER.md` §3.4): abas do cabeçalho apontam só para rotas que existem.
 
 ### 8.5 Aceite
 

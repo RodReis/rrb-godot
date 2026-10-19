@@ -3,6 +3,7 @@
 **Objetivo:** dois amigos jogam pela internet sem intervenção do dev: criam conta, entram na fila, o launcher abre o jogo, a partida roda num servidor do pool no VPS, o resultado aparece no histórico.
 **Módulos:** `backend`, `launcher`, `game`, `infra`, `shared`. **Prazo PRD:** 3 semanas. O bloco visual (F38–F43) saiu daqui para o **MVP2.5** (`MVP-2.5.md`), que vem antes.
 **Critério de pronto:** o cenário acima executado por duas pessoas externas, do zero, só com o pacote de instalação.
+**Estado:** em andamento — F21–F27, F33, F35 e o `[FIX]` SPEC-023 #181 `finalizado` (2026-10-15/16); restam **F28 #82** (`todo`, parcial: deploy no Coolify, medição e aceite com 2 clientes dependem do VPS/domínio do PI) e o **`[GATE]` #87** (`todo`).
 
 ## Fatias
 

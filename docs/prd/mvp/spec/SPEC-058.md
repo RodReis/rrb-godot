@@ -1,6 +1,6 @@
 # SPEC-058 — Ladina (Algoz, besta): modelo, Virote, Rajada em Leque, Bomba de Fumaça, Emboscada, equipamento, animações, VFX e bot
 
-**Fatia:** F58 / SPEC-058 (MVP2.6, Slice 2.6.1 — 1ª fatia do marco, depois do `[INFRA]` do roadmap) · **Issue:** (criada pelo Cowork) · **Status:** decidida pelo PI em 2026-10-13 (pop-ups: "Depois do [GATE] MVP2"; "Marco novo MVP2.6"; "Aprovar como proposto"; "Rogue_Hooded, cor original")
+**Fatia:** F58 / SPEC-058 (MVP2.6, Slice 2.6.1 — 1ª fatia do marco, depois do `[INFRA]` do roadmap) · **Issue:** #162 · **Status:** decidida pelo PI em 2026-10-13 (pop-ups: "Depois do [GATE] MVP2"; "Marco novo MVP2.6"; "Aprovar como proposto"; "Rogue_Hooded, cor original") · **Entrega:** `finalizado` em 2026-10-14 (#162)
 **ADR:** ADR-0013
 **Fontes:** GDB §2, §4.5, §7.3 (números — vencem esta spec, ADR-0004) · PRD §4.1, §4.3 · CONVENTION §4.5, §4.6, §4.7 · ADR-0005, ADR-0006 item 7, ADR-0010, ADR-0011 item 3 · SPEC-048 (equipamento visível) · SPEC-053/054 (padrão de herói novo) · `game/scripts/net/hero.gd`, `hero_visual.gd`, `projectile_hero.gd`, `arrow.gd`, `concealment.gd`, `vision_director.gd` · `game/scripts/core/visibility_rules.gd`, `vision_rules.gd`, `hit_ledger.gd` · `game/scripts/vfx/*` (F41) · `art/heroes/build_ranger.py`
 **Escopo:** heroína jogável completa no Game (servidor autoritativo + cliente), escolhível na seleção (F51), jogável pelo bot.

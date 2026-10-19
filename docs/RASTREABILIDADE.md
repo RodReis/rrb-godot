@@ -28,7 +28,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-18 | Gamepad | PRD §3.6 | F31, F66 | game | MVP1 | mantido — `RT` toca = trava alvo (F66) |
 | P-19 | Plano B câmera isométrica + mira assistida | PRD §3.6 | decisão M4 | game | MVP4 | adiado (gatilho: playtest) |
 | P-20 | Bot FSM fase 1 e fase 2 | PRD §3.7 | F12, F19 | game | MVP1/2 | mantido |
-| P-21 | 2 heróis: Cavaleiro, Arqueiro | PRD §4.3 | F8, F14 | game | MVP1/2 | mantido — ampliado para 4 pelo PI em 2026-10-11 (ADR-0011): Bárbaro F53, Bruxo de Fogo F54; e para 6 em 2026-10-13 (ADR-0013): Ladina F58, Engenheiro F59 |
+| P-21 | 2 heróis: Cavaleiro, Arqueiro | PRD §4.3 | F8, F14 | game | MVP1/2 | mantido — ampliado para 4 pelo PI em 2026-10-11 (ADR-0011): Bárbaro F53, Bruxo de Fogo F54; para 6 em 2026-10-13 (ADR-0013): Ladina F58, Engenheiro F59; para 8 em 2026-10-16 (ADR-0015): Protetor da Selva F74, Berserker F75; e para 10 em 2026-10-18 (ADR-0016): Paladino Radiante F76, Ocultista F77 |
 | P-21a | Classe Algoz (Bárbaro) e classe nova Mago (Bruxo de Fogo); elmo não aparece nesses 2 heróis | PRD §4.1, §4.3; ADR-0011 | F53, F54 | game, shared | MVP2 | mantido — requisito novo aprovado pelo PI em 2026-10-11 |
 | P-21b | Ladina (Algoz, besta, `Rogue_Hooded` cor original) e classe nova Engenheiro (Adventurers 2.0 Extra); fumaça = moita temporária que não revela ao lançar; Torreta indestrutível 6 s contra heróis e monstros vistos pelo Engenheiro; elmo não aparece nos 2; nome do Ranger = "Arqueiro" | PRD §4.1, §4.3; ADR-0013 | F58, F59; `[FIX]` do Code (nome) | game, shared | MVP2.6 | mantido — requisito novo aprovado pelo PI em 2026-10-13 |
 | P-22 | Valores de skill em `.tres`, não no doc | PRD §4.3 | F6 | shared | MVP1 | mantido |
@@ -58,13 +58,16 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-44 | Silhueta do próprio herói no mato alto (só cliente) | ADR-0015 item 10 | F72 | game, shared | MVP2.7 | mantido — regra de visibilidade (SPEC-032) inalterada |
 | P-45 | Acabamento PBR do cenário dentro da ADR-0006; GPU ≤ +1,5 ms | ADR-0015 item 11 | F73 | game, shared | MVP2.7 | mantido — "realista" fora da ADR-0006 excluído |
 | P-46 | Protetor da Selva, classe Controle (redesenho do pedido "Suporte") | ADR-0015 item 12; PRD §4.1; GDB §4.7 | F74 | game, shared | MVP2.7 | mantido com mudança — Suporte segue no roadmap |
-| P-47 | Berserker, classe nova Lutador, primeira passiva (Frenesi) | ADR-0015 item 13; PRD §4.1; GDB §2.2-E, §4.8 | F75 | game, shared | MVP2.7 | mantido — requisito novo do PI (2026-10-16) |
+| P-47 | Berserker, classe nova Lutador, primeira passiva (Frenesi) | ADR-0015 item 13; PRD §4.1; GDB §2.2-E, §4.8 | F75 | game, shared | MVP2.7 | mantido — requisito novo do PI (2026-10-16); **mudança do PI em 2026-10-18 no aceite do F75:** textura `alt_A` e elmo viking de chifres (contra o "elmo não aparece" da spec) |
 | P-48 | "Personagens maiores" | pedido do PI 2026-10-16 | F67 (câmera 11 u) | game | MVP2.7 | **transferido** para o zoom da câmera; escala visual adiada (FORA-DE-ESCOPO, gatilho: aceite do F67) |
 | P-49 | Paladino Radiante, Tanque reativo (redesenho do pedido "Suporte tanque") | ADR-0016 itens 3–5; PRD §4.1; GDB §4.9 | F76 | game, shared | MVP2.8 | mantido com mudança — kit de time vale só nele no 1x1; aliados no 2x2 (FORA-DE-ESCOPO) |
 | P-50 | Ocultista, 2º Mago, dano contínuo + Maldição (−Defesa) | ADR-0016 itens 6–8; PRD §4.1; GDB §2.2-F, §4.10 | F77 | game, shared | MVP2.8 | mantido com mudança — "reduzir resistência" = reduzir Defesa (só existe Defesa) |
-| P-51 | Invocação de pequenas unidades (Servos do Vazio) | ADR-0016 item 9; GDB §4.10 | F78 | game, shared | MVP2.8 | mantido — partido em fatia própria por decisão do PI |
+| P-51 | Invocação de pequenas unidades (Servos do Vazio) | ADR-0016 item 9; GDB §4.10 | F78 | game, shared | MVP2.8 | mantido — partido em fatia própria por decisão do PI; na verificação visual (2026-10-18) o PI pediu os servos à frente e mais duração: 10 s no R1 e 12 s no R2 (GDB §4.10 atualizado) |
 | P-52 | Textura escura do Ocultista e Mage diferente do Bruxo | ADR-0016 item 8 | F77 | game, shared | MVP2.8 | mantido com mudança — não existe Mage escuro no pack: atlas próprio + capuz, exceção à ADR-0006 |
-| P-40 | Fora de escopo explícito (§12) | PRD §12 | `FORA-DE-ESCOPO.md` | — | — | excluído |
+| P-53 | Minimapa fixo (não gira com a câmera) | pedido do PI no F67 (pop-up); SPEC-045 deixava em aberto | F67 | game | MVP2.7 | mantido — requisito novo do PI, feito na mesma PR do zoom (F67) |
+| P-54 | 4 moitas de emboscada nos corredores (6 → 10 moitas de mato alto), mesma regra do mato (F32) | pedido do PI em 2026-10-17 | F73 | game, shared | MVP2.7 | mantido — requisito novo do PI; entrou no F73 sem fatia própria |
+| P-55 | Fora de escopo explícito (§12) | PRD §12 | `FORA-DE-ESCOPO.md` | — | — | excluído |
+| P-56 | Site público de apresentação (landing "Loot Start"): heróis, arena, roadmap e download, dados extraídos do repositório em build, GitHub Pages | pedido do PI em 2026-10-18; ADR-0017 | PR #218 (sem fatia, fora do board); `docs/SITE.md` | site | — | mantido — requisito novo do PI; o nome "Loot Start" vale só no site (rename do jogo é decisão do PI, `FORA-DE-ESCOPO.md`) |
 
 ## 2. GDB
 

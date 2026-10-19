@@ -14,7 +14,7 @@ Complementa `GITHUB.md` (branches, commits, merge) e `CI-PR.md` (jobs e limites)
 
 PR grande demais não se "aprova com ressalva": parte-se. Exceção documentada: `.tres` gerados em massa (F6), import de assets (F7/F8).
 
-## 2. Descrição (template `.github/pull_request_template.md`)
+## 2. Descrição (estrutura abaixo; o arquivo `.github/pull_request_template.md` ainda não existe no repositório)
 
 ```
 ## Problema

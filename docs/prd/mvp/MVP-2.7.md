@@ -4,6 +4,7 @@
 **Módulos:** `game`, `shared`, `launcher`. **Prazo PRD:** sem prazo definido pelo PI.
 **Posição:** depois do MVP2.6 (fechado em 2026-10-14) e **antes do `[GATE]` do MVP3** (#87). F28 (#82) e o gate seguem em paralelo quando o PI liberar o VPS (decisão do PI em 2026-10-16: "Novo marco MVP2.7 com tudo").
 **Critério de pronto:** as 10 fatias aceitas pelo PI por verificação visual; soak verde (50 partidas bot × bot, ≤ 10 min, nunca empate) nas fatias que mexem em servidor, input ou FSM (F66, F69, F74, F75); o critério de netcode do ADR-0006 item 7 nas fatias de `game`; frame time dentro do orçamento (F72, F73).
+**Estado:** entregue — #193, 10/10 `finalizado` (F66–F68 em 2026-10-16, F69–F72 em 2026-10-17, F73–F75 em 2026-10-18); sem `[GATE]`.
 
 > Numeração: as fatias deste marco usam `Slice 2.7.n` (três componentes), como no MVP2.5/2.6.
 
@@ -12,7 +13,7 @@
 | Slice | F / SPEC | Mód. | Entrega | Fontes |
 |---|---|---|---|---|
 | 2.7.1 | F66 / SPEC-066 | game, shared | **Controle v2:** herói encara a direção do movimento (janela de encarar 0,4 s ao atacar/usar skill); botão direito **clicado** num herói inimigo ou monstro trava alvo (`target_id` no input, validado por visão no servidor); auto-ataque em alcance (não anda); moldura do alvo (nome, HP, nível/tier) e anel no chão; `RT` no gamepad; bot usa alvo; **segurar** no chão continua o ataque contínuo | ADR-0015 itens 3–4; PRD §3.6; GDB §7.3; CONVENTION §4.5, §4.6, §6 |
-| 2.7.2 | F67 / SPEC-067 | game, shared | **Câmera com zoom:** roda do mouse + `camera_zoom_in`/`camera_zoom_out` (padrão `=`/`-`, remapeáveis em Configurações), 9–14 u em passos de 1 u, padrão 11 u, pitch/FOV iguais; `settings.cfg` `[camera] distance`; só cliente | ADR-0015 item 5; SPEC-031; SPEC-045; `ARCHITECTURE-LAUNCHER.md` §5.3 |
+| 2.7.2 | F67 / SPEC-067 | game, shared | **Câmera com zoom:** roda do mouse + `camera_zoom_in`/`camera_zoom_out` (padrão `=`/`-`, remapeáveis em Configurações), 9–14 u em passos de 1 u, padrão 11 u, pitch/FOV iguais; `settings.cfg` `[camera] distance`; só cliente; na calibração o PI manteve 11 u e o **minimapa e o radar da fase 2 deixaram de girar** (travados no yaw inicial do time) | ADR-0015 item 5; SPEC-031; SPEC-045; `ARCHITECTURE-LAUNCHER.md` §5.3 |
 | 2.7.3 | F68 / SPEC-068 | game, launcher, shared | **Splash e loading:** logo do Godot fora nos dois projetos; splash "ARENA 1V1" renderizado; no Game, 1 de 3 telas sorteadas (renders reais: arena dia, arena noite, heróis em pose) com dica das regras documentadas e progresso real (warm-up + conexão), do boot até a seleção de heróis, na fila e no treino | ADR-0015 item 6; `FRONTEND-LAUNCHER.md` §8 |
 | 2.7.4 | F69 / SPEC-069 | game | **Cinemática de abertura:** estado `INTRO` na FSM (≥ 5 s, até os dois `ready`, corta aos 8 s; relógio da fase 1 começa no fim); cliente: voo pela arena 3 s → close no próprio herói 2 s → blend; sem pular; vale no treino | ADR-0015 item 7; CONVENTION §3 |
 | 2.7.5 | F70 / SPEC-070 | game, launcher | **Fim de partida → lobby:** "Voltar ao lobby" + fechamento automático em 15 s no Game; Launcher volta ao LOBBY com card "Resultado da partida" (resultado, heróis e `#nickname`, kills/mortes, nível, duração, motivo, V–D) com "Jogar de novo" e "Ver histórico"; espera a partida aparecer no `GET /matches` (3 × 1 s); treino sem card | ADR-0015 item 8; F18; F26; `ARCHITECTURE-LAUNCHER.md` §4.2, §5.2 |
@@ -31,8 +32,8 @@ Dependências: F66 depende do F45 (câmera/ataque no botão direito), do F57 (HU
 ## Pendências
 
 - **Gate do MVP2.7:** sem card `[GATE]` (decisão do PI em 2026-10-16, como MVP2.5 e MVP2.6); cada fatia tem aceite visual e, quando mexe em servidor/FSM/input, soak próprio.
-- **Textura do Berserker:** `alt_A`, `alt_B` ou `alt_C` — o PI escolhe no aceite visual do F75.
-- **Distância padrão da câmera (11 u):** o PI calibra ao vivo no F67; se não bastar, decide a escala visual dos personagens (FORA-DE-ESCOPO).
+- **Textura do Berserker:** decidida — `alt_A` (escolha do PI no aceite visual do F75, 2026-10-18).
+- **Distância padrão da câmera (11 u):** decidida — calibrada ao vivo no F67 (2026-10-16); a escala visual dos personagens segue em `FORA-DE-ESCOPO.md`.
 
 ## Fora deste MVP
 
