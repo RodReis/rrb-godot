@@ -23,6 +23,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Servo do Vazio dar XP ou drop ao ser morto | pop-up do PI 2026-10-18 | mexe na economia da fase 1 (GDB §5.2); PI escolheu "nada" | excluído | — |
 | Ajuste do Rei Esqueleto (knockback 2,5 u > alcance 2,2 u do Cavaleiro; HP 2.400 às 3:30) | ADR-0011 (análise apresentada ao PI) | PI escolheu só campos e baús novos | F30 (MVP4) | medição do F55 (nível do bot aos 3:30) ou soak do F19 mostrar boss ainda inviável, ou pedido do PI |
 | Queimadura (dano contínuo) no Bruxo de Fogo | ADR-0011 | mecânica nova no rollback; PI aprovou o kit sem | pós-MVP4 | pedido do PI |
+| Resolução em tela cheia (escala de render), escolha de monitor e Alt+Enter | F79 / ADR-0019 | a engine não troca o modo de vídeo em nenhuma tela cheia (doc 4.7); resolução em tela cheia exige `scaling_3d_scale` | pós-MVP4 | pedido do PI |
 | Necromante e Golem do KayKit Skeletons Extra (pago) | ADR-0011 | PI escolheu não usar agora (golem atual + lobo no Blender) | pós-MVP4 | compra do pack Extra pelo PI |
 | Torreta do Engenheiro com HP (destrutível) ou com visão própria | ADR-0013 | mecânica nova (alvo que não é herói nem monstro, kill credit, bot que ataca estrutura); PI escolheu indestrutível, 6 s | pós-MVP4 | playtest M4 mostrar Torreta forte demais ou sem resposta |
 | Textura alternativa do Extra na Ladina; `Rogue` sem capuz; besta de 2 mãos | ADR-0013 | PI escolheu `Rogue_Hooded` com a cor original | pós-MVP4 | pedido do PI (skins) |
