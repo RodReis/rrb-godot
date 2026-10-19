@@ -32,7 +32,7 @@ func test_padroes_cobrem_as_secoes_do_contrato() -> void:
 
 func test_round_trip_pelo_arquivo() -> void:
 	var values := UserSettings.defaults()
-	values[UserSettings.VIDEO][UserSettings.FULLSCREEN] = true
+	values[UserSettings.VIDEO][UserSettings.WINDOW_MODE] = UserSettings.EXCLUSIVE
 	values[UserSettings.VIDEO][UserSettings.FPS_CAP] = 144
 	values[UserSettings.AUDIO][UserSettings.MUSIC] = 0.25
 	values[UserSettings.CONTROLS][UserSettings.MOUSE_SENSITIVITY] = 1.5
@@ -40,6 +40,68 @@ func test_round_trip_pelo_arquivo() -> void:
 	values = UserSettings.rebind(values, InputActions.SKILL_Q, KEY_1)
 	assert_eq(UserSettings.save_file(values, TMP_PATH), OK)
 	assert_eq(UserSettings.load_file(TMP_PATH), values)
+
+
+## F79 / ADR-0019: [video] window_mode no lugar de fullscreen.
+func test_tipo_de_tela_padrao_e_janela_sem_borda() -> void:
+	assert_eq(UserSettings.defaults()[UserSettings.VIDEO][UserSettings.WINDOW_MODE], "borderless")
+	assert_eq(
+		UserSettings.load_file("user://nao_existe_f79.cfg")[UserSettings.VIDEO][
+			UserSettings.WINDOW_MODE
+		],
+		"borderless"
+	)
+
+
+func test_tipo_de_tela_valido_e_lido() -> void:
+	for mode: String in [UserSettings.WINDOWED, UserSettings.BORDERLESS, UserSettings.EXCLUSIVE]:
+		var values := UserSettings.read(
+			_config(UserSettings.VIDEO, {UserSettings.WINDOW_MODE: mode})
+		)
+		assert_eq(values[UserSettings.VIDEO][UserSettings.WINDOW_MODE], mode)
+
+
+func test_tipo_de_tela_invalido_vira_o_padrao() -> void:
+	for raw: Variant in ["lixo", "", 2, true, 1.5]:
+		var values := UserSettings.read(
+			_config(UserSettings.VIDEO, {UserSettings.WINDOW_MODE: raw})
+		)
+		assert_eq(
+			values[UserSettings.VIDEO][UserSettings.WINDOW_MODE], UserSettings.BORDERLESS, str(raw)
+		)
+
+
+func test_fullscreen_antigo_true_vira_janela_sem_borda() -> void:
+	var values := UserSettings.read(_config(UserSettings.VIDEO, {UserSettings.FULLSCREEN: true}))
+	assert_eq(values[UserSettings.VIDEO][UserSettings.WINDOW_MODE], UserSettings.BORDERLESS)
+
+
+func test_fullscreen_antigo_false_vira_modo_janela() -> void:
+	var values := UserSettings.read(_config(UserSettings.VIDEO, {UserSettings.FULLSCREEN: false}))
+	assert_eq(values[UserSettings.VIDEO][UserSettings.WINDOW_MODE], UserSettings.WINDOWED)
+
+
+func test_fullscreen_antigo_de_tipo_errado_e_ignorado() -> void:
+	var values := UserSettings.read(_config(UserSettings.VIDEO, {UserSettings.FULLSCREEN: "sim"}))
+	assert_eq(values[UserSettings.VIDEO][UserSettings.WINDOW_MODE], UserSettings.BORDERLESS)
+
+
+func test_window_mode_vence_o_fullscreen_antigo() -> void:
+	var video := {UserSettings.FULLSCREEN: true, UserSettings.WINDOW_MODE: UserSettings.WINDOWED}
+	var values := UserSettings.read(_config(UserSettings.VIDEO, video))
+	assert_eq(values[UserSettings.VIDEO][UserSettings.WINDOW_MODE], UserSettings.WINDOWED)
+
+
+func test_window_mode_invalido_nao_cai_no_fullscreen_antigo() -> void:
+	var video := {UserSettings.FULLSCREEN: false, UserSettings.WINDOW_MODE: "lixo"}
+	var values := UserSettings.read(_config(UserSettings.VIDEO, video))
+	assert_eq(values[UserSettings.VIDEO][UserSettings.WINDOW_MODE], UserSettings.BORDERLESS)
+
+
+func test_escrita_grava_window_mode_e_nao_o_fullscreen_antigo() -> void:
+	var config := UserSettings.write(UserSettings.defaults())
+	assert_eq(config.get_value(UserSettings.VIDEO, UserSettings.WINDOW_MODE), "borderless")
+	assert_false(config.has_section_key(UserSettings.VIDEO, UserSettings.FULLSCREEN))
 
 
 func test_arquivo_grava_schema() -> void:

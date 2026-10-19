@@ -35,6 +35,51 @@ func _keycap(text: String) -> Button:
 	return null
 
 
+## F79: o seletor "Tipo de tela" tem as 3 opcoes; a resolucao so vale em Modo Janela.
+func _picker_with(first_item: String) -> OptionButton:
+	for node: Node in _screen.find_children("*", "OptionButton", true, false):
+		var picker := node as OptionButton
+		if picker.item_count > 0 and picker.get_item_text(0) == first_item:
+			return picker
+	return null
+
+
+func _window_mode() -> String:
+	return _screen.draft()[UserSettings.VIDEO][UserSettings.WINDOW_MODE]
+
+
+func test_tipo_de_tela_lista_as_tres_opcoes() -> void:
+	var picker := _picker_with("Modo Janela")
+	assert_not_null(picker, "seletor Tipo de tela")
+	var texts: Array[String] = []
+	for i: int in picker.item_count:
+		texts.append(picker.get_item_text(i))
+	assert_eq(texts, ["Modo Janela", "Janela sem Borda", "Tela Cheia Exclusiva"] as Array[String])
+	assert_eq(picker.selected, 1, "padrao: janela sem borda")
+
+
+func test_escolher_o_tipo_de_tela_grava_no_rascunho_e_desabilita_a_resolucao() -> void:
+	var mode := _picker_with("Modo Janela")
+	var resolution := _picker_with("1280 x 720")
+	assert_not_null(resolution, "seletor de resolucao")
+	assert_true(resolution.disabled, "janela sem borda (padrao) nao usa a resolucao")
+	mode.item_selected.emit(0)
+	assert_eq(_window_mode(), UserSettings.WINDOWED)
+	assert_false(resolution.disabled, "modo janela usa a resolucao")
+	mode.item_selected.emit(2)
+	assert_eq(_window_mode(), UserSettings.EXCLUSIVE)
+	assert_true(resolution.disabled, "tela cheia exclusiva nao usa a resolucao")
+
+
+func test_tipo_de_tela_salvo_volta_selecionado() -> void:
+	var values := UserSettings.defaults()
+	values[UserSettings.VIDEO][UserSettings.WINDOW_MODE] = UserSettings.EXCLUSIVE
+	_store.save(values)
+	_screen.bind(_store)
+	await wait_process_frames(1)
+	assert_eq(_picker_with("Modo Janela").selected, 2)
+
+
 func test_remapear_tecla_troca_no_rascunho() -> void:
 	_keycap("Q").pressed.emit()
 	_screen._input(_key(KEY_E))
