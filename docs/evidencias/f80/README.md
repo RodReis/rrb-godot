@@ -39,7 +39,12 @@ Vitrine: `tools/ui/exit_menu_showcase.gd`.
 
 ## Não coberto (`not_run`)
 
-- Fluxo de ponta a ponta com **2 clientes** (um sai, o outro vê a vitória) e o **card do Launcher** com a
-  derrota por abandono: com o servidor sem backend o resultado não é reportado; validar contra o backend e o
-  pool exige a partida real (PI / VPS depois do deploy).
+- O **card do Launcher** e o **histórico** com a derrota por abandono: com o servidor local sem backend o
+  resultado não é reportado; validar contra o backend e o pool exige a partida real (VPS, depois do deploy).
+
+## Verificação do PI (2026-10-19)
+
+Servidor local + 2 clientes: o menu abriu por cima da partida e, ao sair, o outro cliente mostrou **Vitória**.
+A etiqueta saiu como "PARTIDA ABANDONADA" por cair no fallback do `MatchEnd` (com aviso de motivo sem texto);
+corrigido com o texto próprio "ADVERSÁRIO ABANDONOU A PARTIDA" e teste.
 - Fechar a janela, Alt+F4, queda de conexão e crash **não** viram abandono (lacuna aceita no ADR-0020).
