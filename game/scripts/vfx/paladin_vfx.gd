@@ -72,10 +72,12 @@ func _refresh(shown: bool, delta: float) -> void:
 		pool.spawn(BLESSING, Transform3D(Basis.IDENTITY, hero.global_position))
 	_swing_step(delta)
 	var retributing := shown and _paladin.is_retributing()
-	_ring_alpha = move_toward(_ring_alpha, float(retributing), delta / ring_fade_seconds)
-	_ring.visible = _ring_alpha > 0.0
-	for mesh: MeshInstance3D in _ring_meshes:
-		mesh.transparency = 1.0 - _ring_alpha
+	var alpha := move_toward(_ring_alpha, float(retributing), delta / ring_fade_seconds)
+	if alpha != _ring_alpha:  # so escreve na transicao, nao a cada quadro parado
+		_ring_alpha = alpha
+		_ring.visible = _ring_alpha > 0.0
+		for mesh: MeshInstance3D in _ring_meshes:
+			mesh.transparency = 1.0 - _ring_alpha
 	_ring_motes.emitting = retributing
 	if _ring.visible:
 		_ring.rotate_y(TAU * RING_SPIN * delta)

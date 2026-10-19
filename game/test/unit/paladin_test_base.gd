@@ -103,7 +103,7 @@ func _q_damage() -> int:
 ## Dano bruto que a Retribuicao devolve de um golpe bruto [param raw] no Paladino.
 func _reflected(raw: int) -> int:
 	var e := _paladin.hero_data.skill_e
-	var taken := CombatRules.mitigated(raw, _paladin._defense())
+	var taken := 0 if _paladin.invuln_ticks > 0 else CombatRules.mitigated(raw, _paladin._defense())
 	return PaladinRules.reflected_damage(
 		taken,
 		SkillData.at_rank(e.reflect_ratio, _paladin.ranks.y),

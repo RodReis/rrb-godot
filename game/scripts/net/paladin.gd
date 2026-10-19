@@ -16,6 +16,8 @@ var blessing_ticks: int = 0
 ## Servidor: dano bruto a devolver no tick, combat_id do atacante -> dano. Refeito a cada
 ## _apply_hits, entao ressimular o tick devolve o mesmo (o ledger do atacante sobrescreve).
 var _reflections: Dictionary[int, int] = {}
+## Ultimo atacante achado (cache proprio: o do alvo travado, Hero._lookup_target, fica intacto).
+var _striker_cache: Combatant
 
 
 func _extra_state_properties() -> Array[String]:
@@ -107,16 +109,17 @@ func _apply_hits(tick: int) -> void:
 	_reflections.clear()
 	super(tick)
 	for striker_id: int in _reflections:
-		var striker := _lookup_target(striker_id)
+		var striker := _striker(striker_id)
 		if striker == null or not striker.is_alive():
 			continue
 		var effect := HitEffect.new(_reflections[striker_id], global_position)
 		_hit(striker, tick, HitLedger.Slot.E, effect)
 
 
-## Mede o dano depois da DEF (antes da imunidade) e, com a Retribuicao, guarda o que volta.
+## Mede o dano tomado depois da DEF (0 imune: so o que tomou volta, PI 2026-10-19) e, com a
+## Retribuicao, guarda o que volta. O golpe que mata o Paladino nao volta (morto nao retribui).
 func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
-	var taken := CombatRules.mitigated(effect.damage, _defense())
+	var taken := 0 if invuln_ticks > 0 else CombatRules.mitigated(effect.damage, _defense())
 	var heal := super(effect, tick, blockable)
 	var e := hero_data.skill_e
 	var flat := effect.source - global_position
@@ -130,3 +133,15 @@ func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
 		)
 		_reflections[effect.striker_id] = _reflections.get(effect.striker_id, 0) + amount
 	return heal
+
+
+# ponytail: percorre o grupo so quando o atacante muda; cacheia o ultimo achado.
+func _striker(id: int) -> Combatant:
+	if is_instance_valid(_striker_cache) and _striker_cache.combat_id() == id:
+		return _striker_cache
+	for node: Node in get_tree().get_nodes_in_group(TARGETS_GROUP):
+		var other := node as Combatant
+		if other.combat_id() == id:
+			_striker_cache = other
+			return other
+	return null

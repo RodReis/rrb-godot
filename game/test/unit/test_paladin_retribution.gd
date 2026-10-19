@@ -116,3 +116,16 @@ func test_ressimular_o_tick_nao_dobra_o_devolvido() -> void:
 		assert_not_null(back)
 		assert_eq(back.damage, _reflected(100), "passada %d" % pass_index)
 		assert_eq(back.striker_id, TargetRules.NONE, "o devolvido nao e direto")
+
+
+func test_imune_na_bencao_devolve_so_o_atk() -> void:
+	# PI 2026-10-19: volta so o que o Paladino tomou; imune, so os 20 % do ATK.
+	_retributing()
+	_paladin.invuln_ticks = 30
+	var knight := _spawn_enemy(KNIGHT, AHEAD * 1.5)
+	_strike_paladin(START + 1, VICTIM, _direct_hit(100, AHEAD * 1.5, VICTIM))
+	_run(START, 4)
+	assert_eq(_paladin.hp, _paladin.attributes.max_hp, "imune")
+	var atk_only := roundi(0.2 * _paladin.attributes.attack)
+	assert_eq(_reflected(100), atk_only)
+	assert_eq(KNIGHT_HP - knight.hp, CombatRules.mitigated(atk_only, KNIGHT_DEF))

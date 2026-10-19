@@ -717,6 +717,12 @@ func _extra_state_properties() -> Array[String]:
 	return []
 
 
+## O basico em arco e golpe direto (Retribuicao do Paladino, F76); o Bacamarte do Engenheiro e tiro
+## de arma de fogo e nao e (decisao do PI em 2026-10-19).
+func _basic_is_direct() -> bool:
+	return true
+
+
 ## DEF somada agora (Grito de Guerra do Berserker); sai do estado de rollback da subclasse.
 func _defense_bonus() -> float:
 	return 0.0
@@ -738,7 +744,10 @@ func _melee(tick: int) -> void:
 		if CombatRules.is_in_melee_arc(
 			global_position, forward(), other.global_position, basic.attack_range, half_arc
 		):
-			_hit(other, tick, HitLedger.Slot.BASIC, _direct(HitEffect.new(damage, global_position)))
+			var effect := HitEffect.new(damage, global_position)
+			if _basic_is_direct():
+				_direct(effect)
+			_hit(other, tick, HitLedger.Slot.BASIC, effect)
 		else:
 			_miss(other, tick, HitLedger.Slot.BASIC)
 
