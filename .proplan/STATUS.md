@@ -15,6 +15,7 @@ updated: 2026-10-19
 
 ### [MVP3] Meta + deploy (#76)
 
+- [MVP3][SPEC-083][F83] Instalador Windows e atualização automática (obrigatória para jogar online) (#242)
 - [MVP3][SPEC-081][F81] Três níveis de bot no treino: Fácil, Médio e Difícil (#239)
 
 ### #16 (#16)
@@ -25,14 +26,32 @@ updated: 2026-10-19
 
 ### [MVP3] Meta + deploy (#76)
 
-- [MVP3][SPEC-028][INFRA] Site e download do jogo no VPS (lootstart.cloud) e Coolify lendo o repositório privado (#237)
-- [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82)
+- [MVP3][SPEC-082][F82] Nome "Loot Start" no jogo: janelas, marca do Launcher, splash e executável (#241)
 
 ## Feito
 
-_(vazio)_
+### Sem épico
+
+- [MVP3][SPEC-028][FIX] Galeria do site com 80+ capturas que não mostram o jogo: vitrine de no máximo 10 (#243)
 
 ## Finalizado
+
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82, finalizado em: 2026-10-19)
+- [MVP3][SPEC-028][INFRA] Site e download do jogo no VPS (lootstart.cloud) e Coolify lendo o repositório privado (#237, finalizado em: 2026-10-19)
+- [MVP3][SPEC-025][FIX] Launcher mostra 229 ms de "servidor" (HTTP com conexão nova) em vez do ping real (#233, finalizado em: 2026-10-19)
+- [MVP3][SPEC-079][F79] Tipo de tela nas Configurações: Modo Janela, Janela sem Borda e Tela Cheia Exclusiva (#226, finalizado em: 2026-10-19)
+- [MVP3][SPEC-080][F80] Sair do jogo: menu no ESC (Continuar / Sair) e derrota por abandono (#230, finalizado em: 2026-10-19)
+- [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86, finalizado em: 2026-10-16)
+- [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85, finalizado em: 2026-10-15)
+- [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84, finalizado em: 2026-10-15)
+- [MVP3][SPEC-026][F26] Histórico de partidas: GET /matches e tela com herói do oponente (#83, finalizado em: 2026-10-15)
+- [MVP3][SPEC-025][F25] Login e cadastro, lobby com diorama, fila por polling, lançar o Game e treino vs bot (#81, finalizado em: 2026-10-15)
+- [MVP3][SPEC-024][F24] Shell do launcher: App, pilha de telas, Theme completo, galeria, Configurações com aba Créditos e settings.cfg (#80, finalizado em: 2026-10-15)
+- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78, finalizado em: 2026-10-15)
+- [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79, finalizado em: 2026-10-15)
+- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77, finalizado em: 2026-10-15)
 
 ### #57 (#57)
 
@@ -73,21 +92,6 @@ _(vazio)_
 - [MVP2][SPEC-036][F36] Economia de campo: 4 campos laterais de monstros e baús e respawn de 90 s na fase 1 (#59, finalizado em: 2026-10-10)
 - [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58, finalizado em: 2026-10-10)
 - [MVP2][SPEC-012][FIX] Bot contesta o Rei Esqueleto em loop e morre sem parar (#74, finalizado em: 2026-10-10)
-
-### [MVP3] Meta + deploy (#76)
-
-- [MVP3][SPEC-025][FIX] Launcher mostra 229 ms de "servidor" (HTTP com conexão nova) em vez do ping real (#233, finalizado em: 2026-10-19)
-- [MVP3][SPEC-079][F79] Tipo de tela nas Configurações: Modo Janela, Janela sem Borda e Tela Cheia Exclusiva (#226, finalizado em: 2026-10-19)
-- [MVP3][SPEC-080][F80] Sair do jogo: menu no ESC (Continuar / Sair) e derrota por abandono (#230, finalizado em: 2026-10-19)
-- [MVP3][SPEC-035][F35] Perfil de conta: nickname único obrigatório no 1º login e avatar local (#86, finalizado em: 2026-10-16)
-- [MVP3][SPEC-033][F33] Tela Arena & Mapa: render estático da arena real, marcadores e regras das 2 fases pelos números do GDB (#85, finalizado em: 2026-10-15)
-- [MVP3][SPEC-027][F27] Bestiário e Forja no launcher com simulador de builds sobre shared/core (#84, finalizado em: 2026-10-15)
-- [MVP3][SPEC-026][F26] Histórico de partidas: GET /matches e tela com herói do oponente (#83, finalizado em: 2026-10-15)
-- [MVP3][SPEC-025][F25] Login e cadastro, lobby com diorama, fila por polling, lançar o Game e treino vs bot (#81, finalizado em: 2026-10-15)
-- [MVP3][SPEC-024][F24] Shell do launcher: App, pilha de telas, Theme completo, galeria, Configurações com aba Créditos e settings.cfg (#80, finalizado em: 2026-10-15)
-- [MVP3][SPEC-022][F22] Fila 1x1 FIFO e orquestrador: pool Docker, token de partida, heartbeat e endpoints internos (#78, finalizado em: 2026-10-15)
-- [MVP3][SPEC-023][F23] Game server: --token, validação no backend, report do resultado, heartbeat e códigos de saída (#79, finalizado em: 2026-10-15)
-- [MVP3][SPEC-021][F21] Backend NestJS: cadastro e login por e-mail/senha, JWT, usuários, migrações e OpenAPI (#77, finalizado em: 2026-10-15)
 
 ### [MVP2.8] Heróis 9 e 10 — Paladino Radiante (Tanque reativo) e Ocultista (Mago de dano contínuo) com Servos do Vazio (#213)
 
