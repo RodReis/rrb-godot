@@ -1,29 +1,49 @@
 extends OccultistTestBase
 ## Bot de Ocultista (SPEC-077): o basico sai sozinho no alcance (marcas); Praga no alvo do Lutar ate
-## 8 u; Circulo Profano com o alvo a ate 7 u e se aproximando; o R nunca. Limiares do
-## bot_profile.tres.
+## 8 u; Circulo Profano com o alvo a ate 7 u e se aproximando; Servos do Vazio (F78) contra heroi
+## ou boss a ate 9 u. Limiares do bot_profile.tres.
 
 const PROFILE: BotProfile = preload("res://shared/data/rules/bot_profile.tres")
 
 
 func test_limiares_do_ocultista_no_perfil() -> void:
 	assert_eq(
-		[PROFILE.plague_range, PROFILE.circle_range, PROFILE.circle_approach_speed], [8.0, 7.0, 1.0]
+		[
+			PROFILE.plague_range,
+			PROFILE.circle_range,
+			PROFILE.circle_approach_speed,
+			PROFILE.servants_range
+		],
+		[8.0, 7.0, 1.0, 9.0]
 	)
 
 
 func test_praga_ate_8_u_e_circulo_so_se_aproximando_ate_7_u() -> void:
-	assert_eq(BotRules.occultist_skills(5.0, 2.0, PROFILE), Vector3i(1, 1, 0))
-	assert_eq(BotRules.occultist_skills(7.0, 2.0, PROFILE), Vector3i(1, 1, 0), "limite inclusivo")
-	assert_eq(BotRules.occultist_skills(7.5, 2.0, PROFILE), Vector3i(1, 0, 0), "Circulo a 7 u")
-	assert_eq(BotRules.occultist_skills(8.0, 2.0, PROFILE), Vector3i(1, 0, 0))
-	assert_eq(BotRules.occultist_skills(8.5, 2.0, PROFILE), Vector3i(0, 0, 0), "longe demais")
-	assert_eq(BotRules.occultist_skills(5.0, 0.0, PROFILE), Vector3i(1, 0, 0), "parado")
-	assert_eq(BotRules.occultist_skills(5.0, -3.0, PROFILE), Vector3i(1, 0, 0), "fugindo")
+	assert_eq(BotRules.occultist_skills(5.0, 2.0, false, PROFILE), Vector3i(1, 1, 0))
+	assert_eq(BotRules.occultist_skills(7.0, 2.0, false, PROFILE), Vector3i(1, 1, 0), "inclusivo")
+	assert_eq(BotRules.occultist_skills(7.5, 2.0, false, PROFILE), Vector3i(1, 0, 0), "Circulo 7 u")
+	assert_eq(BotRules.occultist_skills(8.0, 2.0, false, PROFILE), Vector3i(1, 0, 0))
+	assert_eq(BotRules.occultist_skills(8.5, 2.0, false, PROFILE), Vector3i(0, 0, 0), "longe")
+	assert_eq(BotRules.occultist_skills(5.0, 0.0, false, PROFILE), Vector3i(1, 0, 0), "parado")
+	assert_eq(BotRules.occultist_skills(5.0, -3.0, false, PROFILE), Vector3i(1, 0, 0), "fugindo")
 
 
-func test_o_r_nunca_e_pedido() -> void:
-	assert_eq(BotRules.occultist_skills(1.0, 9.0, PROFILE).z, 0)
+func test_servos_so_contra_heroi_ou_boss_a_ate_9_u() -> void:
+	assert_eq(BotRules.occultist_skills(9.0, 0.0, true, PROFILE).z, 1, "limite inclusivo")
+	assert_eq(BotRules.occultist_skills(9.5, 0.0, true, PROFILE).z, 0, "longe")
+	assert_eq(BotRules.occultist_skills(1.0, 0.0, false, PROFILE).z, 0, "farm: nao gasta o R")
+
+
+func test_lutando_contra_monstro_comum_nao_invoca_e_contra_o_boss_invoca() -> void:
+	var brain := _bot_brain()
+	var golem := _spawn_monster(GOLEM, -3, AHEAD * 4.0)
+	await wait_physics_frames(2)
+	brain._attack(START, golem, true)
+	assert_false(brain.skill_r, "monstro comum")
+	var boss := _spawn_monster(BOSS, -4, AHEAD * 4.0)
+	await wait_physics_frames(2)
+	brain._attack(START, boss, true)
+	assert_true(brain.skill_r, "boss")
 
 
 func test_velocidade_de_aproximacao_e_a_projecao_no_eixo_do_bot() -> void:
@@ -42,7 +62,7 @@ func test_lutando_lanca_praga_e_circulo_no_alvo_que_se_aproxima() -> void:
 	brain._attack(START, knight, true)
 	assert_true(brain.skill_q, "Praga no alcance")
 	assert_true(brain.skill_e, "Circulo: alvo a 6 u e se aproximando")
-	assert_false(brain.skill_r)
+	assert_true(brain.skill_r, "Servos contra heroi a 6 u")
 	assert_almost_eq(brain.aim_distance, 6.0, EPS, "o Circulo cai no alvo")
 	assert_eq(brain.target_id, knight.combat_id())
 
@@ -88,12 +108,11 @@ func test_sem_linha_de_tiro_nao_atira_a_praga() -> void:
 	assert_false(brain.skill_q)
 
 
-func test_gasta_o_ponto_do_nivel_6_em_q_ou_e_nunca_no_r() -> void:
+func test_gasta_o_ponto_do_nivel_6_no_r() -> void:
 	var brain := _bot_brain(5)
 	_occultist.xp = XpTable.xp_for_level(_occultist.xp_curve, 6)
 	_occultist._refresh_attributes()
 	_occultist.ranks = Vector3i(3, 2, 0)
 	brain._reset()
 	brain._learn_points()
-	assert_ne(brain.learn, SkillRules.SLOT_R)
-	assert_true([SkillRules.SLOT_Q, SkillRules.SLOT_E].has(brain.learn))
+	assert_eq(brain.learn, SkillRules.SLOT_R, "F78: o R tem ponto")

@@ -3,7 +3,8 @@ extends ProjectileHero
 ## Ocultista (GDB §4.10, F77, SPEC-077): basico Projetil Sombrio (projetil que para no 1o alvo e
 ## soma 1 marca de Maldicao); Q Praga (projetil que para no 1o heroi ou monstro e o corroi por 4 s,
 ## em 8 pulsos); E Circulo Profano (zona no ponto mirado ate cast_range: lentidao e dano por pulso);
-## R Servos do Vazio fica desligado (max_rank 0) ate o F78. Maldicao e Praga sao estado do ALVO
+## R Servos do Vazio (F78, SPEC-078): liga os 2 servos do pool da cena (Servants/Servant0 e 1),
+## um de cada lado; a IA, o golpe e a visao sao do VoidServant. Maldicao e Praga sao estado do ALVO
 ## (Hero/Monster: curse_stacks, dot_ticks...), aplicadas por ele a partir do ledger; aqui so se
 ## monta o HitEffect. A zona e estado do Ocultista (nao node), como o Pantano do Protetor; chega ao
 ## cliente que nao o ve pelo ImpactRelay (zone_started). Numeros de occultist.tres.
@@ -18,6 +19,17 @@ enum Zone { CIRCLE }
 ## Ticks restantes do Circulo Profano; o ponto fica onde foi posto.
 var circle_ticks: int = 0
 var circle_center: Vector3 = Vector3.ZERO
+
+## Pool fixo de servos (filhos de um Node simples: nao herdam posicao nem visibilidade do heroi).
+var servants: Array[VoidServant] = []
+
+
+func _ready() -> void:
+	super()
+	for node: Node in $Servants.get_children():
+		var servant := node as VoidServant
+		servant.setup(self, servants.size())
+		servants.append(servant)
 
 
 func _extra_state_properties() -> Array[String]:
@@ -51,6 +63,9 @@ func _use_skills(tick: int) -> void:
 	if input.skill_e and e_cooldown == 0 and SkillRules.can_use(data.skill_e, ranks.y, level):
 		e_cooldown = SkillRules.cooldown_ticks(data.skill_e, ranks.y, attributes.intelligence, rate)
 		_make_circle(tick)
+	if input.skill_r and r_cooldown == 0 and SkillRules.can_use(data.skill_r, ranks.z, level):
+		r_cooldown = SkillRules.cooldown_ticks(data.skill_r, ranks.z, attributes.intelligence, rate)
+		_summon(tick)
 	if attack_now and basic_cooldown == 0:
 		basic_cooldown = SkillRules.seconds_to_ticks(attributes.attack_interval, rate)
 		var basic := data.basic_attack
@@ -107,6 +122,28 @@ func _make_circle(tick: int) -> void:
 	)
 	if multiplayer.is_server():
 		zone_started.emit(Zone.CIRCLE, circle_center, tick)
+
+
+## Servidor: os 2 servos a frente, um de cada lado (parando no obstaculo), virados como o Ocultista;
+## a invocacao nova substitui a anterior.
+func _summon(tick: int) -> void:
+	if not multiplayer.is_server():
+		return
+	var r := hero_data.skill_r
+	var lasts := SkillRules.seconds_to_ticks(
+		SkillData.at_rank(r.duration, ranks.z), NetworkTime.tickrate
+	)
+	var right := global_basis.x
+	print("[servos] %s invocou no tick %d (R%d, %d ticks)" % [name, tick, ranks.z, lasts])
+	for i: int in servants.size():
+		var servant := servants[i]
+		var data := servant.data
+		var at := VoidServantRules.spawn_point(
+			global_position, forward(), right, data.ahead_offset, data.side_offset, i
+		)
+		servant.summon(
+			tick, _before_obstacle(at), global_basis, ranks.z, attributes.intelligence, lasts
+		)
 
 
 ## Um tick do Circulo: nos pulsos, quem esta na area toma dano e lentidao ate o pulso seguinte.

@@ -170,7 +170,7 @@ func _ready() -> void:
 	attributes = Inventory.attributes(hero_data, level, equipment, item_catalog)
 	_attributes_equipment = equipment
 	ranks = XpTable.typical_ranks(xp_curve, level)
-	ranks.z = mini(ranks.z, hero_data.skill_r.max_rank)  # R desligado (Ocultista, F77): sem rank
+	ranks.z = mini(ranks.z, hero_data.skill_r.max_rank)  # rank tipico nunca passa do maximo
 	hp = attributes.max_hp
 	set_multiplayer_authority(1)
 	input.set_multiplayer_authority(1 if is_bot else peer_id)

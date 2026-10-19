@@ -72,20 +72,15 @@ func test_circulo_profano() -> void:
 	assert_eq(e.required_hero_level, PackedInt32Array([2]))
 
 
-func test_servos_do_vazio_existe_mas_sem_ponto() -> void:
+func test_servos_do_vazio_no_nivel_6_e_10() -> void:
 	var r := OCCULTIST.skill_r
-	assert_not_null(r, "R nao fica nulo: ficha, HUD e bot leem")
-	assert_eq(r.max_rank, 0, "desligado ate o F78")
+	assert_eq(r.max_rank, 2, "ligado no F78")
 	assert_eq(r.required_hero_level, PackedInt32Array([6, 10]))
 	assert_eq(r.cooldown, PackedFloat64Array([55.0, 46.0]))
-	assert_false(SkillRules.can_use(r, 1, 10))
+	assert_eq(r.duration, PackedFloat64Array([10.0, 12.0]), "PI 2026-10-18 (GDB era 7 s)")
 	var learned := SkillRules.learn(Vector3i(3, 2, 0), SkillRules.SLOT_R, r, 6)
-	assert_eq(learned, Vector3i(3, 2, 0), "o ponto do Nv 6 nao vai para o R")
-
-
-func test_ponto_do_nivel_6_vai_para_q_ou_e() -> void:
-	var learned := SkillRules.learn(Vector3i(3, 2, 0), SkillRules.SLOT_Q, OCCULTIST.skill_q, 6)
-	assert_eq(learned, Vector3i(4, 2, 0))
+	assert_eq(learned, Vector3i(3, 2, 1), "o ponto do Nv 6 vai para o R")
+	assert_true(SkillRules.can_use(r, 1, 6))
 
 
 func test_habilidades_tem_descricao_e_icone() -> void:
