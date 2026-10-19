@@ -255,6 +255,14 @@ describe('MatchesService', () => {
       expect(repo.rows.get(id)).toMatchObject({ status: 'finished', winnerUserId: null, endReason: 'abandoned' });
     });
 
+    it('saiu pelo menu (left, F80): o adversário vence e o motivo fica guardado', async () => {
+      const id = await running();
+
+      await service.result(id, { ...RESULT, winnerUserId: B, endReason: 'left' });
+
+      expect(repo.rows.get(id)).toMatchObject({ status: 'finished', winnerUserId: B, endReason: 'left' });
+    });
+
     it('partida inexistente → 404', async () => {
       expect(await code(service.result('99999999-9999-4999-8999-999999999999', RESULT))).toBe('MATCH_NOT_FOUND');
     });
