@@ -2,7 +2,8 @@ extends SceneTree
 ## Vitrine do menu do Esc (F80): sobe a selecao de herois (fundo), abre o ExitMenu e grava um PNG do
 ## menu e outro da confirmacao online. Ferramenta de autoria (evidencia, captura do roadmap), fora
 ## do jogo. Precisa de janela (nao roda em --headless). Uso, na raiz:
-##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/exit_menu_showcase.gd -- --out <pasta>
+##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/exit_menu_showcase.gd
+##     -- --out <pasta>
 ## Sai sozinha no fim.
 
 ## Tudo carregado em tempo de execucao: script de SceneTree compila antes dos autoloads.
