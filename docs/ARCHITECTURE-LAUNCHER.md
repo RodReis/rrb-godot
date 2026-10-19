@@ -170,7 +170,7 @@ Códigos de saída do Game (definidos em `ARCHITECTURE-GAME.md` §6): `0` normal
 Ambos os projetos: `application/config/use_custom_user_dir=true`, `custom_user_dir_name="rrb-moba"`.
 
 ```ini
-[video]   fullscreen=bool  width=int  height=int  vsync=bool  fps_cap=int
+[video]   window_mode="windowed"|"borderless"|"exclusive"  width=int  height=int  vsync=bool  fps_cap=int   ; padrão borderless (ADR-0019); fullscreen=bool só é lido (legado) se window_mode faltar: true→borderless, false→windowed; width/height só valem em windowed
 [audio]   master=float  music=float  sfx=float  voice=float   ; 0.0–1.0
 [controls] move_forward="W" ... skill_q="Q" ... interact="F"   ; nomes de ação do InputMap = os de shared/core/input_actions.gd
           mouse_sensitivity=float  gamepad=bool

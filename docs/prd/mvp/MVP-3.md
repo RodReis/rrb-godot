@@ -19,11 +19,12 @@
 | 3.8 | F28 / SPEC-028 | deploy VPS, exports, pacote ZIP portátil em GitHub Release | PRD §8.5; decisão PI 2026-10-10 |
 | 3.9 | F33 / SPEC-033 | tela Arena & Mapa: render da arena real, marcadores, regras das 2 fases (números do GDB) | DV tela 10; SPEC-007; decisão PI 2026-10-09 |
 | 3.10 | F35 / SPEC-035 | perfil de conta (`launcher`, `backend`): nickname obrigatório no 1º login, 3–16 `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas, prefixo `#` só de exibição; avatar predefinido ou upload PNG/JPG ≤ 1 MB recortado 256×256, só local; sem XP de conta, sem data de nascimento | R-PEND-02 (`RASTREABILIDADE.md` §5) |
+| 3.11 | F79 / SPEC-079 | tipo de tela nas Configurações (`launcher`, `shared`): Modo Janela, Janela sem Borda e Tela Cheia Exclusiva; contrato `[video] window_mode` no lugar de `fullscreen`, padrão sem borda; resolução só em janela | pedido do PI 2026-10-19; ADR-0019 |
 | gate | `[GATE]` | dois amigos jogam pela internet | PRD §9.1 |
 
 ## Ordem e issues
 
-Issue-pai **#76**. Ordem: F21 #77 → F22 #78 → F23 #79 → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → [GATE] #87. O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
+Issue-pai **#76**. Ordem: F21 #77 → F22 #78 → F23 #79 → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → **F79 #226** → [GATE] #87. O F79 (decisão do PI em 2026-10-19) entra antes do Release v0.x do F28. O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
 
 **Herança do MVP2.5 (ADR-0006, revisão de 2026-10-10):** o MVP3 começa com o bloco visual já entregue. O F24 nasce no design system v2 (fontes e molduras do F43) e consome as chaves gráficas do `settings.cfg` definidas no F38; o F33 renderiza a ilha pronta (F40). Se o MVP2.5 não estiver fechado, F24 e F33 ficam bloqueados nesses pontos.
 
