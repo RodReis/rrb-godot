@@ -35,7 +35,7 @@ site/
 | Retrato de cada herói | `shared/assets/ui/heroes/large/<id>.png` | WebP 384 px |
 | Fundos (arena dia, arena noite, lineup) e mapa de cima | `shared/assets/ui/loading/*.png`, `shared/assets/ui/arena_map.png` | WebP ≤ 1920 px |
 | Linha do tempo, regras, bestiário, créditos, tagline | `docs/roadmap/historia.json` | texto público: regras de `docs/roadmap/README.md` |
-| Galeria | `historia.json` → `capitulos.*.imagens` com `tipo: "entregue"` + `docs/roadmap/img/` | mais recentes primeiro; mockups nunca entram |
+| Galeria | `historia.json` → `capitulos.*.imagens` com o campo `vitrine` (legenda do site) + `docs/roadmap/img/` | no máximo 10 (o `extract` falha acima disso), escolhidas para mostrar o jogo; o roadmap longo segue com todas |
 | Roadmap por MVP (estado e entregas) | `docs/STATUS.md` §2/§3 + `.proplan/STATUS.md` | `tools/roadmap/status.mjs`; Issues vencem o STATUS |
 | Link de download | `historia.json` → `projeto.release_url` | sem ele: Releases do repo + "em breve" |
 
@@ -79,5 +79,5 @@ O `base` é `/` (site na raiz do domínio); `SITE_BASE` troca, se o site voltar 
 - Rename do jogo para "Loot Start" (Launcher, README, roadmap): decisão do PI, card futuro.
 - Créditos do rodapé (`historia.json`) não citam a fonte Cinzel.
 - Botão de download sem destino até o primeiro Release (F28, aguarda o VPS do PI). O cartão "1x1 · Disponível agora" do hero (`Hero.tsx`) contradiz o "em breve" do botão até lá: decisão do PI se muda o texto.
-- Galeria só mostra capturas `entregue`; as de F77 (silhueta) e F78 (Servos do Vazio) estão `em-construcao` em `historia.json` e ficam de fora. Os mais recentes primeiro seguem a ordem dos capítulos, então as do Launcher (MVP3) vêm antes das de heróis (MVP2.8); as 90 entram em "Mostrar mais".
+- Galeria = vitrine curada (PI, 2026-10-19: "no máximo 10 imagens que mostram o que é o jogo"). Tela do Launcher, antes/depois e captura de arte antiga não entram; para trocar uma, mova o campo `vitrine` em `historia.json`.
 - Modos 2x2 e 3x3 só como "em breve" (PRD: pós-M4).

@@ -52,7 +52,9 @@ write("historia.json", historia);
 const capturas = [];
 for (const [mvp, cap] of Object.entries(historia.capitulos ?? {}))
   for (const img of cap.imagens ?? [])
-    if (img.tipo === "entregue" && /\.webp$/.test(img.arquivo)) capturas.push({ ...img, mvp });
+    // Só a vitrine (no máximo 10, escolhidas para mostrar o jogo); a legenda é a do site.
+    if (img.vitrine && /\.webp$/.test(img.arquivo)) capturas.push({ ...img, legenda: img.vitrine, mvp });
+if (capturas.length > 10) throw new Error(`vitrine com ${capturas.length} capturas (máximo 10)`);
 for (const c of capturas) {
   const src = P("docs", "roadmap", "img", c.arquivo);
   if (existsSync(src)) copyFileSync(src, join(IMG, c.arquivo));
