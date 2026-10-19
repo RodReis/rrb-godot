@@ -9,6 +9,24 @@ const MUSIC_BUS: StringName = &"Music"
 const MASTER_BUS: StringName = &"Master"
 
 
+## Tipo de tela do contrato (UserSettings.WINDOW_MODES) -> modo da janela da engine. Os dois modos
+## de tela cheia cobrem o monitor e nao trocam o modo de video (doc 4.7, Window.Mode). Valor
+## desconhecido = janela sem borda, o padrao do contrato.
+static func window_mode_of(mode: String) -> Window.Mode:
+	match mode:
+		UserSettings.WINDOWED:
+			return Window.MODE_WINDOWED
+		UserSettings.EXCLUSIVE:
+			return Window.MODE_EXCLUSIVE_FULLSCREEN
+		_:
+			return Window.MODE_FULLSCREEN
+
+
+## So o Modo Janela usa a resolucao escolhida: nas telas cheias a janela vira o tamanho do monitor.
+static func uses_resolution(mode: String) -> bool:
+	return mode == UserSettings.WINDOWED
+
+
 ## Janela (modo e tamanho) so com window = true: o Game rodado com --resolution/--position
 ## (run-clients.ps1) mantem o que a linha de comando pediu.
 static func apply_video(values: Dictionary, root: Window, window: bool = true) -> void:
@@ -22,10 +40,12 @@ static func apply_video(values: Dictionary, root: Window, window: bool = true) -
 	Engine.max_fps = video[UserSettings.FPS_CAP]
 	if not window:
 		return
-	if video[UserSettings.FULLSCREEN]:
-		root.mode = Window.MODE_FULLSCREEN
+	var mode: Window.Mode = window_mode_of(video[UserSettings.WINDOW_MODE])
+	if mode != Window.MODE_WINDOWED:
+		root.mode = mode
 		return
 	root.mode = Window.MODE_WINDOWED
+	root.borderless = false  # entrar em tela cheia forca borderless=true (doc 4.7)
 	var wanted := Vector2i(video[UserSettings.WIDTH], video[UserSettings.HEIGHT])
 	var usable := DisplayServer.screen_get_usable_rect(root.current_screen).size
 	root.size = wanted.min(usable)

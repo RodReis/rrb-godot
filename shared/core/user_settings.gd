@@ -12,6 +12,14 @@ const META: String = "meta"
 const SCHEMA_KEY: String = "schema"
 
 const VIDEO: String = "video"
+## Tipo de tela (F79, ADR-0019): modo da janela. O padrao e a janela sem borda.
+const WINDOW_MODE: String = "window_mode"
+const WINDOWED: String = "windowed"
+const BORDERLESS: String = "borderless"
+const EXCLUSIVE: String = "exclusive"
+const WINDOW_MODES: Array[String] = [WINDOWED, BORDERLESS, EXCLUSIVE]
+## Chave antiga ([video] fullscreen=bool), so lida: sem window_mode, true = BORDERLESS e false =
+## WINDOWED. Nunca mais e gravada.
 const FULLSCREEN: String = "fullscreen"
 const WIDTH: String = "width"
 const HEIGHT: String = "height"
@@ -85,7 +93,7 @@ static func defaults() -> Dictionary:
 	return {
 		VIDEO:
 		{
-			FULLSCREEN: false,
+			WINDOW_MODE: BORDERLESS,
 			WIDTH: MIN_WINDOW.x,
 			HEIGHT: MIN_WINDOW.y,
 			VSYNC: true,
@@ -110,6 +118,7 @@ static func read(config: ConfigFile) -> Dictionary:
 			var raw: Variant = config.get_value(section, key, fields[key])
 			fields[key] = _valid(section, key, raw, fields[key])
 	var video: Dictionary = values[VIDEO]
+	video[WINDOW_MODE] = _migrated_window_mode(config, video[WINDOW_MODE])
 	if video[WIDTH] < MIN_WINDOW.x or video[HEIGHT] < MIN_WINDOW.y:
 		video[WIDTH] = MIN_WINDOW.x
 		video[HEIGHT] = MIN_WINDOW.y
@@ -161,6 +170,17 @@ static func rebind(values: Dictionary, action: StringName, key: Key) -> Dictiona
 	return copy
 
 
+## Arquivo gravado antes do F79: sem window_mode, o fullscreen booleano manda. Com window_mode
+## presente (valido ou nao) o fullscreen e ignorado; fullscreen de tipo errado tambem.
+static func _migrated_window_mode(config: ConfigFile, current: String) -> String:
+	if config.has_section_key(VIDEO, WINDOW_MODE) or not config.has_section_key(VIDEO, FULLSCREEN):
+		return current
+	var legacy: Variant = config.get_value(VIDEO, FULLSCREEN)
+	if typeof(legacy) != TYPE_BOOL:
+		return current
+	return BORDERLESS if legacy else WINDOWED
+
+
 static func _valid(section: String, key: String, raw: Variant, fallback: Variant) -> Variant:
 	if fallback is float:
 		if not (raw is float or raw is int):
@@ -176,6 +196,8 @@ static func _valid(section: String, key: String, raw: Variant, fallback: Variant
 		return raw if code != KEY_NONE and code not in RESERVED_KEYS else fallback
 	if section == VIDEO and key == FPS_CAP:
 		return raw if raw in FPS_CAPS else fallback
+	if section == VIDEO and key == WINDOW_MODE:
+		return raw if raw in WINDOW_MODES else fallback
 	return raw
 
 

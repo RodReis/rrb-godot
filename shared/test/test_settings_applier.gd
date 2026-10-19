@@ -44,6 +44,25 @@ func _has_joypad(action: StringName) -> bool:
 	return false
 
 
+## F79 / ADR-0019: tipo de tela -> Window.Mode (doc 4.7). O video e no-op em headless.
+func test_tipo_de_tela_vira_o_modo_da_janela() -> void:
+	assert_eq(SettingsApplier.window_mode_of(UserSettings.WINDOWED), Window.MODE_WINDOWED)
+	assert_eq(SettingsApplier.window_mode_of(UserSettings.BORDERLESS), Window.MODE_FULLSCREEN)
+	assert_eq(
+		SettingsApplier.window_mode_of(UserSettings.EXCLUSIVE), Window.MODE_EXCLUSIVE_FULLSCREEN
+	)
+
+
+func test_tipo_de_tela_desconhecido_vira_janela_sem_borda() -> void:
+	assert_eq(SettingsApplier.window_mode_of("lixo"), Window.MODE_FULLSCREEN)
+
+
+func test_so_o_modo_janela_usa_a_resolucao_escolhida() -> void:
+	assert_true(SettingsApplier.uses_resolution(UserSettings.WINDOWED))
+	assert_false(SettingsApplier.uses_resolution(UserSettings.BORDERLESS))
+	assert_false(SettingsApplier.uses_resolution(UserSettings.EXCLUSIVE))
+
+
 func test_tecla_remapeada_substitui_a_padrao() -> void:
 	var values := UserSettings.rebind(UserSettings.defaults(), InputActions.SKILL_Q, KEY_1)
 	SettingsApplier.apply_controls(values)

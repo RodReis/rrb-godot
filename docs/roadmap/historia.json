@@ -329,6 +329,11 @@
           "arquivo": "mvp3-f35-perfil.webp",
           "legenda": "Ao entrar pela primeira vez, o jogador escolhe o seu apelido: de 3 a 16 caracteres, único na arena (\"RodReis\" e \"rodreis\" são o mesmo nome) e mostrado com um # na frente. Escolhe também um avatar entre os retratos dos heróis e dos monstros, ou envia uma imagem própria, que fica só no computador dele.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f79-tipo-de-tela.webp",
+          "legenda": "Em Configurações, um seletor de tipo de tela: Modo Janela, Janela sem Borda ou Tela Cheia Exclusiva. A resolução só vale no Modo Janela, e o jogo abre do jeito que você escolheu.",
+          "tipo": "entregue"
         }
       ]
     },
@@ -418,6 +423,7 @@
     "F33": "Tela Arena & Mapa",
     "F35": "Perfil de conta: apelido e avatar",
     "F28": "Deploy na nuvem e instalador",
+    "F79": "Tipo de tela: janela, sem borda ou tela cheia",
     "F29": "Telemetria e indicadores",
     "F30": "Ajustes de balanceamento pós-playtest",
     "GATE": "Homologação do marco"

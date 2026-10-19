@@ -307,18 +307,12 @@ func _controls_card(column: VBoxContainer) -> void:
 
 func _graphics_card(column: VBoxContainer) -> void:
 	var video: Dictionary = _draft[UserSettings.VIDEO]
+	var window_mode := SettingRow.new(tr("Tipo de tela"), tr("A resolução só vale em Modo Janela"))
+	window_mode.controls.add_child(_window_mode_picker(video))
+	column.add_child(window_mode)
 	var resolution := SettingRow.new(tr("Resolução de exibição"))
 	resolution.controls.add_child(_resolution_picker(video))
 	column.add_child(resolution)
-	column.add_child(
-		_switch(
-			tr("Tela cheia"),
-			tr("Sem bordas, na resolução da tela"),
-			UserSettings.VIDEO,
-			UserSettings.FULLSCREEN,
-			video
-		)
-	)
 	var fps := SettingRow.new(tr("Limite de quadros"))
 	var group := ButtonGroup.new()
 	for cap: int in UserSettings.FPS_CAPS:
@@ -417,12 +411,29 @@ func _resolution_picker(video: Dictionary) -> OptionButton:
 		picker.set_item_metadata(picker.item_count - 1, res_size)
 		if res_size == current:
 			picker.select(picker.item_count - 1)
-	picker.disabled = video[UserSettings.FULLSCREEN]
+	picker.disabled = not SettingsApplier.uses_resolution(video[UserSettings.WINDOW_MODE])
 	picker.item_selected.connect(
 		func(index: int) -> void:
 			var chosen: Vector2i = picker.get_item_metadata(index)
 			_set_value(UserSettings.VIDEO, UserSettings.WIDTH, chosen.x)
 			_set_value(UserSettings.VIDEO, UserSettings.HEIGHT, chosen.y)
+	)
+	return picker
+
+
+## Tipo de tela (F79, ADR-0019): uma opcao por UserSettings.WINDOW_MODES, na mesma ordem.
+func _window_mode_picker(video: Dictionary) -> OptionButton:
+	var picker := OptionButton.new()
+	picker.theme_type_variation = &"LnOption"
+	picker.get_popup().theme_type_variation = &"LnPopup"
+	for label: String in [tr("Modo Janela"), tr("Janela sem Borda"), tr("Tela Cheia Exclusiva")]:
+		picker.add_item(label)
+	picker.select(UserSettings.WINDOW_MODES.find(video[UserSettings.WINDOW_MODE]))
+	picker.item_selected.connect(
+		func(index: int) -> void:
+			_set_value(
+				UserSettings.VIDEO, UserSettings.WINDOW_MODE, UserSettings.WINDOW_MODES[index]
+			)
 	)
 	return picker
 
@@ -493,8 +504,8 @@ func _set_value(section: String, key: String, value: Variant) -> void:
 	var copy := _draft.duplicate(true)
 	copy[section][key] = value
 	_draft = copy
-	if section == UserSettings.VIDEO and key == UserSettings.FULLSCREEN:
-		_resolution.disabled = value  # a resolucao so vale em janela
+	if section == UserSettings.VIDEO and key == UserSettings.WINDOW_MODE:
+		_resolution.disabled = not SettingsApplier.uses_resolution(value)  # so vale em janela
 
 
 func _key_text(action: StringName) -> String:
