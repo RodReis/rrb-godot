@@ -1,6 +1,6 @@
 # SITE.md — Site público "Loot Start"
 
-Landing page do jogo, em `site/`. Atualizada em 2026-10-19 (autorizada pelo PI) para os 10 heróis, o MVP2.8 entregue e o MVP3 em andamento. **No ar:** https://rodreis.github.io/rrb-godot/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
+Landing page do jogo, em `site/`. Atualizada em 2026-10-19 (autorizada pelo PI) para os 10 heróis, o MVP2.8 entregue e o MVP3 em andamento. **No ar:** https://lootstart.cloud (VPS, desde 2026-10-19, #237; antes GitHub Pages em `rodreis.github.io/rrb-godot`). Download do jogo em https://lootstart.cloud/download/ e roadmap completo em https://lootstart.cloud/roadmap/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
 
 Não é fatia nem card do board: foi pedido direto pelo PI em 2026-10-18 (PR #218). O nome "Loot Start" vale só no site; o jogo segue "ARENA 1V1".
 
@@ -47,15 +47,17 @@ site/
 | Desenvolver | `pnpm -C site dev` (extrai e abre `http://localhost:5173`) |
 | Testes | `pnpm -C site test` e `node --test tools/roadmap/build-roadmap.test.mjs` |
 | Build de produção | `pnpm -C site build` (extrai, `tsc --noEmit`, `vite build`) |
-| Ver o build | `pnpm -C site exec vite preview --port 4173` → `http://localhost:4173/rrb-godot/` |
+| Ver o build | `pnpm -C site exec vite preview --port 4173` → `http://localhost:4173/` |
+| Imagem do VPS | `docker build -f site/Dockerfile -t rrb-site .` (da raiz; contexto em `site/Dockerfile.dockerignore`) |
 
-`vite build` e `vite preview` usam `base: /rrb-godot/`; `vite dev` usa `/`.
+O `base` é `/` (site na raiz do domínio); `SITE_BASE` troca, se o site voltar a um subcaminho.
 
 ## Publicação e CI
 
-- **Deploy:** `.github/workflows/site.yml` — em push na `main` que toque `site/`, `tools/roadmap/`, heróis, ícones, fundos, `docs/roadmap/` ou os dois `STATUS.md`; também manual (`gh workflow run site`). Build com `pnpm build`, artefato `site/dist`, `actions/deploy-pages`. Pages configurado com **Source: GitHub Actions**.
+- **Deploy (VPS, #237):** serviço `site` do `infra/docker-compose.prod.yml` no Coolify (domínio `https://lootstart.cloud`, porta 80). `site/Dockerfile` constrói da raiz do repo (o extract lê `shared/` e `docs/`) e serve com nginx (`site/nginx.conf`): o site, `/download/` (pasta do host `/srv/rrb-download`, só leitura) e `/roadmap/` (`docs/roadmap/index.html`). Atualiza a cada Redeploy do recurso. O workflow `site.yml` (GitHub Pages) saiu: o repositório é privado.
+- **Download:** o `release.yml` envia o ZIP da tag para `/srv/rrb-download` (usuário `rrbdl`, só upload; segredo `VPS_UPLOAD_KEY`; chave do host em `infra/known_hosts`) e aponta `rrb-arena-latest-win64.zip` para ele. O botão "Baixar" usa `historia.json` → `projeto.release_url`.
+- **Links para o GitHub** ("Ver no GitHub", "Código no GitHub", roadmap no repo) saíram: o repo é privado.
 - **CI:** job `site` em `ci.yml` (path filter `site`), com `pnpm test`, o teste do parser de STATUS e `pnpm build`; entra no `needs` do `gate`. `pnpm/action-setup` exige `packageManager` no `site/package.json`.
-- **Domínio próprio:** quando existir, configurar em Settings → Pages e voltar `base` para `/` em `vite.config.ts`.
 
 ## Marca e estilo
 

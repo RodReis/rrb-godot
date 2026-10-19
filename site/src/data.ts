@@ -23,8 +23,9 @@ export const historia = historiaJson as Historia;
 export const capturas = capturasJson as Captura[];
 export const roadmap = roadmapJson as Mvp[];
 
-export const REPO_URL = "https://github.com/RodReis/rrb-godot";
-export const RELEASES_URL = historia.projeto.release_url ?? `${REPO_URL}/releases`;
+// Download e roadmap completo sao servidos pelo VPS junto com o site (#237); o repositorio e privado.
+export const RELEASES_URL = historia.projeto.release_url ?? `${import.meta.env.BASE_URL}download/`;
 export const HAS_RELEASE = Boolean(historia.projeto.release_url);
+export const ROADMAP_URL = `${import.meta.env.BASE_URL}roadmap/`;
 export const img = (file: string) => `${import.meta.env.BASE_URL}img/${file}`;
 export const icon = (file: string) => `${import.meta.env.BASE_URL}icons/${file}`;

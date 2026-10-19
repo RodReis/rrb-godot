@@ -62,6 +62,19 @@ services:
     expose:
       - "3000"
 
+  # Site publico + download do jogo + roadmap completo (#237): o repo e privado, o GitHub Pages saiu.
+  # Dominio no Coolify: https://lootstart.cloud no servico `site`, porta 80. Os ZIPs ficam em
+  # /srv/rrb-download no host (o release.yml envia o da tag pelo usuario rrbdl).
+  site:
+    build:
+      context: ..
+      dockerfile: site/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - /srv/rrb-download:/srv/download:ro
+    expose:
+      - "80"
+
   gameserver-image:
     build:
       context: ..

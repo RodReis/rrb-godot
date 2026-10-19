@@ -1,4 +1,4 @@
-import { roadmap, REPO_URL } from "../data";
+import { roadmap, ROADMAP_URL } from "../data";
 import "./Roadmap.css";
 
 const LABEL = { concluido: "Concluído", andamento: "Em andamento", planejado: "Planejado" } as const;
@@ -28,7 +28,7 @@ export function Roadmap() {
         ))}
       </ol>
       <p className="roadmap-more reveal">
-        Versão longa, com capturas e aprendizados: <a href={`${REPO_URL}/tree/main/docs/roadmap`}>roadmap completo no repositório</a>.
+        Versão longa, com capturas e aprendizados: <a href={ROADMAP_URL}>roadmap completo</a>.
       </p>
     </section>
   );

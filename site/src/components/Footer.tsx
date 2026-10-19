@@ -1,5 +1,5 @@
 import { Logo } from "../brand/Logo";
-import { historia, REPO_URL } from "../data";
+import { historia } from "../data";
 import "./Footer.css";
 
 export function Footer() {
@@ -9,7 +9,6 @@ export function Footer() {
         <div>
           <Logo size={20} />
           <p>Projeto solo de aprendizado e portfólio. Godot 4, GDScript, servidor autoritativo.</p>
-          <a href={REPO_URL}>Código no GitHub</a>
         </div>
         <div>
           <span className="eyebrow">Créditos</span>
