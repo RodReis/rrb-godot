@@ -67,3 +67,18 @@ ping em ~14×. Está de acordo com o desenho do F25 (V-08a, "ping HTTP"), mas é
 
 - `launcher-a-01-lobby.webp`, `-02-procurando.webp`, `-03-partida.webp`, `-04-volta.webp`: Launcher A em
   cada etapa (capturas do próprio driver).
+
+## Release v0.1.0 (2026-10-19)
+
+Tag anotada `v0.1.0` em `25e2cb3` (CI da `main` verde); `release.yml` publicou o pré-lançamento
+<https://github.com/RodReis/rrb-godot/releases/tag/v0.1.0> com `rrb-arena-v0.1.0-win64.zip` (289 MB).
+
+Verificado com o ZIP **baixado do Release** numa pasta limpa fora do repositório:
+
+- `launcher.exe` sem argumentos: o backend do VPS recebeu 3 `GET /health` com o User-Agent do Godot em 14 s (a URL
+  embutida no pacote funciona; o chip de ping mostra o valor real, 18 ms).
+- 2 Launchers (cadastro → fila → partida) com o `game.exe` do Release: os dois jogos abriram, conectaram por UDP ao
+  servidor do VPS (2 `validate` + 5 heartbeats no backend) e voltaram ao lobby (`fim (0): ok`).
+
+Redeploy final em `a909991`: logs dos game servers legíveis, F79 e F80 no servidor, teste de abandono real
+(`docs/evidencias/f80/`). Contas de teste removidas do banco de produção (ficou só a do PI).
