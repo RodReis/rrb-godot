@@ -30,6 +30,8 @@ var base_url: String = DEFAULT_BASE_URL
 var access_token: String = ""
 var refresh_token: String = ""
 
+var _probe: PingProbe
+
 
 ## Resposta: status HTTP (0 = sem resposta) e o JSON do corpo (null se vazio ou invalido).
 class Response:
@@ -86,6 +88,15 @@ func clear_tokens() -> void:
 
 func has_session() -> bool:
 	return not access_token.is_empty()
+
+
+## Round trip do GET /health numa conexao que fica aberta (#233), em ms; PingProbe.FAILED se o
+## backend nao respondeu. E o que o jogador ve como ping: sem DNS e TLS de cada chamada.
+func ping() -> int:
+	if _probe == null:
+		_probe = PingProbe.new()
+		add_child(_probe)  # filho: some junto com o ApiClient
+	return await _probe.measure(base_url)
 
 
 func request(

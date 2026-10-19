@@ -11,6 +11,9 @@ const METHOD_NAMES: Dictionary[HTTPClient.Method, String] = {
 	HTTPClient.METHOD_DELETE: "DELETE",
 }
 
+## Ping devolvido por ping() quando ha resposta de "GET /health".
+const FAKE_PING_MS: int = 12
+
 var calls: Array[String] = []
 var bodies: Array = []
 ## Token Bearer enviado em cada chamada ("" = sem Authorization).
@@ -20,6 +23,13 @@ var bearers: Array[String] = []
 var during_call: Callable = Callable()
 
 var _replies: Dictionary[String, Array] = {}
+
+
+## Ping falso: consome a resposta de "GET /health" (como o ping de verdade consome a rede) e devolve
+## FAKE_PING_MS; sem resposta, FAILED.
+func ping() -> int:
+	var response: Response = await _send(HTTPClient.METHOD_GET, "/health", null, false)
+	return FAKE_PING_MS if response.ok() else PingProbe.FAILED
 
 
 func reply(call: String, status: int, json: Variant = null) -> void:

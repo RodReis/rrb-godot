@@ -193,6 +193,22 @@ func test_status_do_backend_vem_do_health() -> void:
 	assert_string_contains(bar.backend_status_text(), "ONLINE")
 
 
+## #233: o chip mostra o ping da conexao aberta (nao o tempo de uma chamada com DNS e TLS) e o menor
+## das ultimas amostras; backend fora some com o numero.
+func test_chip_mostra_o_ping_da_conexao_aberta() -> void:
+	_api.reply("GET /health", 200, {"status": "ok"})
+	await _app.check_backend()
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	assert_string_contains(bar.backend_status_text(), "%d ms" % FakeApiClient.FAKE_PING_MS)
+
+
+func test_backend_fora_tira_o_ping_do_chip() -> void:
+	await _app.check_backend()  # sem resposta de /health
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	assert_false(bar.backend_status_text().contains(" ms"))
+	assert_false(bar.backend_status_text().contains("ONLINE"))
+
+
 func test_splash_some_na_primeira_checagem_e_a_periodica_nao_o_toca() -> void:
 	# A checagem do _ready ja voltou (before_each): o splash esta em fade, bem antes do teto de 2 s.
 	var splash := _app.find_children("*", "BootSplash", true, false)[0] as BootSplash
