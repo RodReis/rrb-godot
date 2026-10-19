@@ -717,6 +717,12 @@ func _extra_state_properties() -> Array[String]:
 	return []
 
 
+## O basico em arco e golpe direto (Retribuicao do Paladino, F76); o Bacamarte do Engenheiro e tiro
+## de arma de fogo e nao e (decisao do PI em 2026-10-19).
+func _basic_is_direct() -> bool:
+	return true
+
+
 ## DEF somada agora (Grito de Guerra do Berserker); sai do estado de rollback da subclasse.
 func _defense_bonus() -> float:
 	return 0.0
@@ -738,9 +744,24 @@ func _melee(tick: int) -> void:
 		if CombatRules.is_in_melee_arc(
 			global_position, forward(), other.global_position, basic.attack_range, half_arc
 		):
-			_hit(other, tick, HitLedger.Slot.BASIC, HitEffect.new(damage, global_position))
+			var effect := HitEffect.new(damage, global_position)
+			if _basic_is_direct():
+				_direct(effect)
+			_hit(other, tick, HitLedger.Slot.BASIC, effect)
 		else:
 			_miss(other, tick, HitLedger.Slot.BASIC)
+
+
+## O chefe (Raizes Vivas e Golpe Consagrado so o ferem; o bot o caca, F74/F76).
+static func _is_boss(other: Combatant) -> bool:
+	var monster := other as Monster
+	return monster != null and monster.data.tier == MonsterData.Tier.BOSS
+
+
+## Marca [param effect] como golpe direto deste heroi (Retribuicao do Paladino, F76).
+func _direct(effect: HitEffect) -> HitEffect:
+	effect.striker_id = combat_id()
+	return effect
 
 
 ## Heroi do outro time e monstro vivo.

@@ -1,0 +1,80 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/vfx_one_shot.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/holy_sigil.glb" id="2_sigil"]
+
+[sub_resource type="Gradient" id="G_soft"]
+offsets = PackedFloat32Array(0, 0.35, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.55, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_soft"]
+gradient = SubResource("G_soft")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="Gradient" id="G_gold"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 0.97, 0.8, 1, 1, 0.8, 0.35, 0.85, 1, 0.6, 0.15, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_gold"]
+gradient = SubResource("G_gold")
+
+[sub_resource type="StandardMaterial3D" id="Mat_mote"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(2.6, 2.1, 1.2, 1)
+albedo_texture = SubResource("Tex_soft")
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="Quad_mote"]
+material = SubResource("Mat_mote")
+size = Vector2(0.16, 0.16)
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_motes"]
+emission_shape = 3
+emission_box_extents = Vector3(0.45, 0.05, 1.2)
+direction = Vector3(0, 1, 0)
+spread = 18.0
+initial_velocity_min = 1.8
+initial_velocity_max = 3.6
+gravity = Vector3(0, -1.5, 0)
+damping_min = 1.0
+damping_max = 2.0
+scale_min = 0.7
+scale_max = 1.4
+color_ramp = SubResource("Ramp_gold")
+
+[node name="ConsecratedStrike" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 0.65
+light_seconds = 0.25
+fade_seconds = 0.4
+
+[node name="Sigil" parent="." instance=ExtResource("2_sigil")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, -1.25)
+
+[node name="Motes" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, -1.25)
+cast_shadow = 0
+emitting = false
+amount = 36
+lifetime = 0.55
+one_shot = true
+explosiveness = 0.9
+visibility_aabb = AABB(-1.5, -0.5, -2, 3, 3.5, 4)
+process_material = SubResource("PPM_motes")
+draw_pass_1 = SubResource("Quad_mote")
+
+[node name="Flash" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.2)
+light_color = Color(1, 0.82, 0.4, 1)
+light_energy = 3.0
+omni_range = 3.5

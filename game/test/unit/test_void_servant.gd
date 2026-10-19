@@ -1,7 +1,7 @@
 extends OccultistTestBase
 ## F78: R Servos do Vazio (GDB §4.10, SPEC-078). Invocacao, duracao e substituicao; escolha do alvo
 ## (prioridade, alcance, so o que o Ocultista ve); dano e abate creditados ao Ocultista; matar o
-## servo nao da nada; sem o R, nada. (Retribuicao contra servo fica para o F76.)
+## servo nao da nada; sem o R, nada.
 
 const LASTS: int = 300  # R1: 10 s a 30 ticks/s (PI 2026-10-18)
 const FAR: Vector3 = Vector3(40, 0, 0)

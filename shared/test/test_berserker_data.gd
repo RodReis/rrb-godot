@@ -12,6 +12,7 @@ const HEROES: Array[String] = [
 	"res://shared/data/heroes/engineer.tres",
 	"res://shared/data/heroes/druid.tres",
 	"res://shared/data/heroes/occultist.tres",
+	"res://shared/data/heroes/paladin.tres",
 ]
 const EPS: float = 0.0001
 

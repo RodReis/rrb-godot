@@ -119,6 +119,6 @@ func _execute(tick: int) -> void:
 			var damage := BarbarianRules.execution_damage(
 				amount, r.missing_hp_ratio, other.missing_hp()
 			)
-			_hit(other, tick, HitLedger.Slot.R, HitEffect.new(damage, global_position))
+			_hit(other, tick, HitLedger.Slot.R, _direct(HitEffect.new(damage, global_position)))
 		else:
 			_miss(other, tick, HitLedger.Slot.R)

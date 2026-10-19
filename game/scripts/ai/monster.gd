@@ -300,7 +300,9 @@ func _chase(tick: int, target_dist: float) -> void:
 func _attack(tick: int) -> void:
 	var source := HitLedger.source_key(uid, HitLedger.Slot.BASIC)
 	if not data.area_attack:
-		_target.receive_hit(tick + 1, source, _effect_on(_target))
+		var effect := _effect_on(_target)
+		effect.striker_id = uid  # golpe direto (Retribuicao do Paladino, F76); o em area nao e
+		_target.receive_hit(tick + 1, source, effect)
 		return
 	for node: Node in get_tree().get_nodes_in_group(Hero.GROUP):
 		var hero := node as Hero

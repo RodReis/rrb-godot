@@ -61,6 +61,11 @@ func _use_skills(tick: int) -> void:
 		_melee(tick)
 
 
+## Bacamarte: tiro, nao golpe direto (a Retribuicao do Paladino nao o devolve; PI 2026-10-19).
+func _basic_is_direct() -> bool:
+	return false
+
+
 func _simulate_effects(tick: int) -> void:
 	var flying := _arrows_flying()
 	if not flying and turret_ticks == 0 and crate_ticks == 0:

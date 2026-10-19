@@ -20,6 +20,7 @@ const FULL_ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/druid.tres"),
 	preload("res://shared/data/heroes/berserker.tres"),
 	preload("res://shared/data/heroes/occultist.tres"),
+	preload("res://shared/data/heroes/paladin.tres"),
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 const ALL_SCENES: Array[StringName] = [
@@ -31,7 +32,8 @@ const ALL_SCENES: Array[StringName] = [
 	&"engineer",
 	&"druid",
 	&"berserker",
-	&"occultist"
+	&"occultist",
+	&"paladin"
 ]
 const RATE: int = 30
 const START: int = 1000
@@ -163,14 +165,21 @@ func test_close_esconde() -> void:
 	assert_false(_screen.visible)
 
 
-func test_nove_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
+func test_dez_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
 	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
-	assert_eq(screen._choices.get_child_count(), 9)
+	assert_eq(screen._choices.get_child_count(), 10)
 	_press(screen, KEY_4)
 	assert_eq(screen._player_name.text, "BRUXO DE FOGO")
 	assert_eq(screen._player_role.text, "MAGO")
 	assert_true(screen._cards[3]._tag.visible)
 	assert_false(screen._cards[0]._tag.visible)
+
+
+func test_tecla_0_escolhe_o_paladino() -> void:
+	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
+	_press(screen, KEY_0)
+	assert_eq(screen._player_name.text, "PALADINO RADIANTE")
+	assert_eq(screen._player_role.text, "TANQUE")
 
 
 func test_tecla_5_escolhe_a_ladina() -> void:

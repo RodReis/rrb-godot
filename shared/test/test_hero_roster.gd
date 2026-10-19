@@ -1,6 +1,6 @@
 extends GutTest
 ## F71: o que a Tela Heróis lê de cada HeroData — nome, classe, papel curto e arma visível — está
-## preenchido nos 9 heróis (GDB §4, PRD §4.1) e o Ranger se chama "Arqueiro" (ADR-0013 item 9).
+## preenchido nos 10 heróis (GDB §4, PRD §4.1) e o Ranger se chama "Arqueiro" (ADR-0013 item 9).
 
 const HEROES_DIR: String = "res://shared/data/heroes/"
 ## id -> [nome, classe, arma visível] (GDB §4.x "Modelo" e "Ataque Básico"; PRD §4.1).
@@ -14,6 +14,7 @@ const ROSTER: Dictionary[StringName, Array] = {
 	&"druid": ["Protetor da Selva", "Controle", "Cajado"],
 	&"berserker": ["Berserker", "Lutador", "Machados"],
 	&"occultist": ["Ocultista", "Mago", "Cajado"],
+	&"paladin": ["Paladino Radiante", "Tanque", "Maça"],
 }
 
 
