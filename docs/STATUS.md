@@ -124,6 +124,8 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F79 / SPEC-079 | MVP3 | launcher, shared | Slice 3.11 — Tipo de tela nas Configurações: Modo Janela, Janela sem Borda e Tela Cheia Exclusiva; `[video] window_mode` (ADR-0019) | done (#226) |
 | F80 / SPEC-080 | MVP3 | game, backend, launcher, shared | Slice 3.12 — Sair do jogo: menu no ESC (Continuar / Sair) e derrota por abandono (`endReason` no resultado, ADR-0020) | done (#230) |
 | F81 / SPEC-081 | MVP3 | game, launcher, shared | Slice 3.13 — Três níveis de bot no treino (Fácil, Médio = bot atual, Difícil), escolha no card Treino vs Bot; `--bot-difficulty` (ADR-0021) | todo (#239) |
+| F82 / SPEC-082 | MVP3 | launcher, game, shared, tools | Slice 3.14 — Nome "Loot Start" em tudo que o jogador vê; marca e splash no visual do site; `LootStart.exe` (ADR-0022) | todo (#241) |
+| F83 / SPEC-083 | MVP3 | launcher, backend, tools | Slice 3.15 — Instalador `LootStart-Setup.exe` e atualização ao abrir; obrigatória para fila online, treino livre (ADR-0023) | todo (#242) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
 
 Próximo número livre: **F79 / SPEC-079**.

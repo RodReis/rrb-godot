@@ -48,6 +48,8 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0019](adr/0019-tipo-de-tela-window-mode.md) | Tipo de tela (PI, 2026-10-19): `[video] window_mode` (windowed/borderless/exclusive) no lugar de `fullscreen`; legado lido, padrão sem borda, resolução só em janela; emenda o §5.3 do contrato `settings.cfg` |
 | [0020](adr/0020-sair-da-partida-abandono.md) | Sair do jogo (PI, 2026-10-19): menu no ESC; sair online = derrota por abandono, `endReason` no resultado; fechar a janela fica fora (lacuna aceita) |
 | [0021](adr/0021-dificuldade-do-bot.md) | Dificuldade do bot (PI, 2026-10-19): `--bot-difficulty=easy|medium|hard` no contrato (padrão medium = bot atual); parâmetros em Resource; escolha no card Treino vs Bot |
+| [0022](adr/0022-nome-loot-start.md) | Nome "Loot Start" no jogo (PI, 2026-10-19): tudo que o jogador vê, marca no visual do site; repo, pastas, código e pasta de dados `rrb-moba` ficam; emenda o ADR-0017 item 2 |
+| [0023](adr/0023-instalador-e-atualizacao.md) | Instalador e atualização (PI, 2026-10-19): `LootStart-Setup.exe` (NSIS, pasta do usuário), só instalador no site, `latest.json` + SHA-256, atualização obrigatória para a fila online (`426` < `MIN_CLIENT_VERSION`), treino livre |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 

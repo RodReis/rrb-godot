@@ -64,8 +64,8 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Orbes de XP soltos no mapa | Astro Arena | muda a curva GDB §5.2 | pós-MVP4 | fase 1 "chata" (R2) no playtest |
 | Relevo/depressão da cratera, lama −15 %, tier lendário, ouro/economia in-match, câmera isométrica padrão | conceito Vale Rúnico | não estão no PRD; custo de navmesh/câmera/replicação | fase B ou nunca | decisão do PI |
 | "Configurações (ESC)" no menu da engrenagem da HUD; switches de som gravados entre sessões | protótipo `docs/prd/telas/HUD Moderno/` (F57) | o jogo não tem tela de configurações; gravar no `settings.cfg` muda o contrato Launcher ↔ Game (exige ADR) | F24/F27 (MVP3, Configurações do launcher) | tela de configurações do launcher |
-| Renomear o jogo, o Launcher e o README para "Loot Start" | ADR-0017 | o nome vale só no site; rename troca README, Launcher e roadmap | card futuro | decisão do PI |
-| Domínio próprio do site (o `base` do Vite volta a `/`) | ADR-0017 item 5 | o jogo não tem domínio; o site está em `rodreis.github.io/rrb-godot/` | — | PI registrar o domínio |
+| Assinatura de código do instalador e do `.exe` (sem aviso do SmartScreen) | ADR-0023 | certificado pago; o playtest aceita o aviso "Executar assim mesmo" | pós-MVP4 | jogador fora do círculo do PI desistindo no aviso |
+| Atualização por patch (só o `.pck` que mudou) | ADR-0023 | o instalador inteiro (~300 MB) resolve com menos código | pós-MVP4 | tamanho do download incomodar no playtest |
 | Merge queue no GitHub | `GITHUB.md` §5 | um autor, fila curta | — | mais de um autor concorrente |
 
 ## Excluídos (sem gatilho)

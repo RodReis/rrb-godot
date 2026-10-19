@@ -22,11 +22,13 @@
 | 3.11 | F79 / SPEC-079 | tipo de tela nas Configurações (`launcher`, `shared`): Modo Janela, Janela sem Borda e Tela Cheia Exclusiva; contrato `[video] window_mode` no lugar de `fullscreen`, padrão sem borda; resolução só em janela | pedido do PI 2026-10-19; ADR-0019 |
 | 3.12 | F80 / SPEC-080 | sair do jogo (`game`, `backend`, `launcher`, `shared`): menu no ESC (Continuar / Sair), sair online = derrota por abandono, `endReason` no resultado; fechar a janela fica fora | pedido do PI 2026-10-19; ADR-0020 |
 | 3.13 | F81 / SPEC-081 | três níveis de bot no treino (`game`, `launcher`, `shared`): Fácil, Médio (= bot atual) e Difícil, só a inteligência muda; escolha no card Treino vs Bot; `--bot-difficulty` | pedido do PI 2026-10-19; ADR-0021 |
+| 3.14 | F82 / SPEC-082 | nome "Loot Start" no jogo (`launcher`, `game`, `shared`, `tools`): título das janelas, marca do Launcher e splash no visual do site, rodapé, LEIA-ME, README, `LootStart.exe` e metadados do `.exe`; repo, pastas, código e pasta de dados ficam | pedido do PI 2026-10-19; ADR-0022 |
+| 3.15 | F83 / SPEC-083 | instalador Windows e atualização (`launcher`, `backend`, `tools`, CI): `LootStart-Setup.exe` (NSIS, pasta do usuário, atalhos, desinstalador), só o instalador no site, `latest.json` + SHA-256, Launcher atualiza ao abrir; obrigatória para fila online (`426` abaixo de `MIN_CLIENT_VERSION`), treino livre | pedido do PI 2026-10-19; ADR-0023 |
 | gate | `[GATE]` | dois amigos jogam pela internet | PRD §9.1 |
 
 ## Ordem e issues
 
-Issue-pai **#76**. Ordem: F21 #77 → F22 #78 → F23 #79 → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → **F79 #226** → **F80 #230** → **F81 #239** → [GATE] #87. F79 e F80 (decisões do PI em 2026-10-19) entram antes do Release v0.x do F28; junto vão os `[FIX]` #228 e #229 (seleção de heróis). O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
+Issue-pai **#76**. Ordem: F21 #77 → F22 #78 → F23 #79 → F24 #80 → F25 #81 → **F28 #82** → F26 #83 → F27 #84 → F33 #85 → F35 #86 → **F79 #226** → **F80 #230** → **F82 #241** → **F83 #242** → `[FIX]` #238 → **F81 #239** → [GATE] #87. F82 e F83 (PI, 2026-10-19) vêm antes dos bots: o instalador já sai com o nome novo. F79 e F80 (decisões do PI em 2026-10-19) entram antes do Release v0.x do F28; junto vão os `[FIX]` #228 e #229 (seleção de heróis). O deploy vem logo depois do fluxo mínimo (conta + fila + jogo) para expor cedo o risco de UDP no VPS; as telas secundárias vêm depois.
 
 **Herança do MVP2.5 (ADR-0006, revisão de 2026-10-10):** o MVP3 começa com o bloco visual já entregue. O F24 nasce no design system v2 (fontes e molduras do F43) e consome as chaves gráficas do `settings.cfg` definidas no F38; o F33 renderiza a ilha pronta (F40). Se o MVP2.5 não estiver fechado, F24 e F33 ficam bloqueados nesses pontos.
 
