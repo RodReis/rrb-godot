@@ -127,9 +127,10 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F81 / SPEC-081 | MVP3 | game, launcher, shared | Slice 3.13 — Três níveis de bot no treino (Fácil, Médio = bot atual, Difícil), escolha no card Treino vs Bot; `--bot-difficulty=1..N` (ADR-0021; formato numérico pelo ADR-0027) | todo (#239) |
 | F82 / SPEC-082 | MVP3 | launcher, game, shared, tools | Slice 3.14 — Nome "Loot Start" em tudo que o jogador vê; marca e splash no visual do site; `LootStart.exe` (ADR-0022) | done (#241) |
 | F83 / SPEC-083 | MVP3 | launcher, backend, tools | Slice 3.15 — Instalador `LootStart-Setup.exe` e atualização ao abrir; obrigatória para fila online, treino livre (ADR-0023) | todo (#242) |
-| F84 / SPEC-084 | MVP4 | game, shared, art | Slice 4.3 — Spike visual: 1 herói + 1 canto da arena com arte de qualidade maior no pipeline atual; decide o caminho visual (ADR-0024) | — |
+| F84 / SPEC-084 | MVP4 | game, shared, art | Slice 4.3 — Spike visual, parte 1: canto SO (base A + pátio) no estilo Eternal Return, feito no Blender, em cena variante jogável; frame time medido (ADR-0024) | — |
 | F85 / SPEC-085 | MVP4 | game, launcher, backend, shared | Slice 4.4 — Tutorial guiado offline: obrigatório na 1ª vez, pulável; fila online após tutorial ou 1 vitória vs bot (ADR-0026) | — |
 | F86 / SPEC-086 | MVP4 | infra, tools | Slice 4.5 — Publicação no itch.io: página e build a cada Release (ADR-0024) | — |
+| F93 / SPEC-093 | MVP4 | game, shared, art | Slice 4.6 — Spike visual, parte 2: Cavaleiro comissionado (estilo Eternal Return, rig e 8 animações novos) jogável na cena do F84; F84 partido pelo PI em 2026-10-19 (ADR-0024) | — |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3; abrir ou não o EA | — |
 | F87 / SPEC-087 | MVP5 | backend, launcher, game, shared | Slice 5.1 — Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre; pick online validado no servidor (ADR-0026) | — |
 | F88 / SPEC-088 | MVP5 | backend, launcher, shared | Slice 5.2 — Recompensas de Patente e de login diário/semanal/mensal: emblemas e molduras de perfil (ADR-0025, ADR-0026) | — |
@@ -139,7 +140,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F92 / SPEC-092 | MVP5 | shared, art | Slice 5.6 — Primeiras skins (variantes KayKit Extra) + skin do Pacote de Fundador (ADR-0025) | — |
 | [GATE] | MVP5 | — | Abertura do Early Access no site e no itch.io (ADR-0024) | — |
 
-Próximo número livre: **F93 / SPEC-093**.
+Próximo número livre: **F94 / SPEC-094**.
 
 ## 4. Regras deste índice
 
