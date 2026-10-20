@@ -12,6 +12,9 @@ const MAX_TICKS: int = 5400
 const MAP_FRAMES: int = 30
 ## XP do ultimo abate entra pelo ledger no tick seguinte.
 const SETTLE_TICKS: int = 5
+## Ponto lembrado a 20 u de casa; o bot fica a 4 u dele (ve o ponto, nao ve a casa).
+const EMPTY_SPOT_OFFSET: float = 20.0
+const EMPTY_SPOT_BOT_GAP: float = 4.0
 
 var _arena: Node3D
 var _director: SpawnDirector
@@ -333,6 +336,33 @@ func test_bau_aberto_fora_da_visao_segue_fechado_ate_o_bot_ver() -> void:
 	_bot.global_position = chest.global_position + Vector3(2.0, 0.0, 0.0)
 	_brain().think(3)
 	assert_true(_brain()._known_opened(chest), "viu: aberto")
+
+
+## #238: o bot via o monstro fora de casa (perseguindo) e o monstro voltou ao acampamento fora da
+## visao; parado no alcance do ponto vazio, "atirava" nele ate o respawn. Vendo o ponto vazio, o
+## bot procura na casa do monstro (lugar publico do mapa).
+func test_ponto_lembrado_vazio_a_vista_manda_procurar_na_casa_do_monstro() -> void:
+	var monster := _far_base_monster()
+	var home := monster.global_position
+	var stale := home + Vector3(EMPTY_SPOT_OFFSET, 0.0, 0.0)
+	monster.global_position = stale
+	_bot.global_position = stale + Vector3(EMPTY_SPOT_BOT_GAP, 0.0, 0.0)
+	_brain().think(1)
+	assert_eq(_brain()._where(monster), stale, "viu o monstro fora de casa")
+	monster.global_position = home  # voltou ao acampamento, a mais de 12 u do bot
+	_brain().think(2)
+	assert_eq(_brain()._where(monster), home, "viu o ponto vazio: procura em casa")
+
+
+## #238: acampamento a vista e vazio (o monstro esta longe): nao conta mais como alvo vivo.
+func test_casa_do_monstro_a_vista_e_vazia_tira_o_monstro_dos_alvos() -> void:
+	var monster := _far_base_monster()
+	_bot.global_position = monster.global_position + Vector3(EMPTY_SPOT_BOT_GAP, 0.0, 0.0)
+	_brain().think(1)
+	assert_true(_brain()._alive_monsters(GateRules.TEAM_B).has(monster), "viu o monstro")
+	monster.global_position += Vector3(EMPTY_SPOT_OFFSET, 0.0, 0.0)  # longe da visao
+	_brain().think(2)
+	assert_false(_brain()._alive_monsters(GateRules.TEAM_B).has(monster), "casa vazia a vista")
 
 
 ## Direcao a partir do centro sem moita entre 5 e 21 u (o mato decide sozinho no F32).
