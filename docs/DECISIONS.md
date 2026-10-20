@@ -16,7 +16,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | D2 | Fase A de aprendizado com arquitetura de produto | ambos |
 | D3 | Fase 1 em mapa único: bases seguras + centro contestado | game |
 | D4 | Fase 2 com zona encolhendo + meta de kills; sem respawn crescente | game |
-| D5 | Monetização por sorteios/vales/loja/passe só na fase B | launcher/backend (futuro) |
+| D5 | Monetização por loja cosmética e passe na fase B; sorteios retirados (ADR-0025) | launcher/backend (MVP5) |
 | D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011 —, para 6 no MVP2.6 — ADR-0013 — para 8 no MVP2.7 — ADR-0015 — e para 10 no MVP2.8 — ADR-0016) | game |
 | D7 | Engine Godot 4.7, condicionada ao gate M0 | ambos |
 | D8 | GDScript (não C#) | ambos |
@@ -50,13 +50,18 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0021](adr/0021-dificuldade-do-bot.md) | Dificuldade do bot (PI, 2026-10-19): `--bot-difficulty=easy|medium|hard` no contrato (padrão medium = bot atual); parâmetros em Resource; escolha no card Treino vs Bot |
 | [0022](adr/0022-nome-loot-start.md) | Nome "Loot Start" no jogo (PI, 2026-10-19): tudo que o jogador vê, marca no visual do site; repo, pastas, código e pasta de dados `rrb-moba` ficam; emenda o ADR-0017 item 2 |
 | [0023](adr/0023-instalador-e-atualizacao.md) | Instalador e atualização (PI, 2026-10-19): `LootStart-Setup.exe` (NSIS, pasta do usuário), só instalador no site, `latest.json` + SHA-256, atualização obrigatória para a fila online (`426` < `MIN_CLIENT_VERSION`), treino livre |
+| [0024](adr/0024-early-access-canal-e-modelo.md) | Early Access depois do gate do MVP4, no site próprio + itch.io (Steam fora por agora), F2P + Pacote de Fundador; marco MVP5; engine segue Godot com spike visual (F84) | aceito | 2026-10-19 |
+| [0025](adr/0025-loja-inicial-sem-sorteio.md) | Loja inicial só cosmética, em reais, sem moeda virtual e sem sorteio pago; Mercado Pago; Fundador R$ 29,90, skin R$ 9,90, emblemas grátis, passe na 2ª leva; runas/atributos grátis e só laterais; supera D5 (sorteios) e PRD §7 | aceito | 2026-10-19 |
+| [0026](adr/0026-patente-herois-e-tutorial.md) | Patente 1–10 grátis; 1 herói inicial + 1 por Patente com escolha livre; emblemas/molduras por Patente e login; tutorial obrigatório na 1ª vez, pulável; fila online após tutorial ou 1 vitória vs bot; supera R-PEND-02 (sem XP de conta) | aceito | 2026-10-19 |
+| [0027](adr/0027-bot-nivel-numerico-e-bot-na-fila.md) | `--bot-difficulty=<n>` numérico 1..N (supera o formato do ADR-0021); bot completa a fila online após 30 s, com aviso | aceito | 2026-10-19 |
+| [0028](adr/0028-skin-no-contrato-da-partida.md) | Skin na partida: o backend devolve heróis liberados e skin equipada na validação do token; game server replica; nada de skin por argumento do Launcher | aceito | 2026-10-19 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 
 | Decisão | Onde |
 |---|---|
 | Trunk-based, squash merge, `main` protegida, sem merge queue | `GITHUB.md`, `CI-PR.md` |
-| MVP-n = marco M-n do PRD (MVP0..MVP4) | `STATUS.md`, `docs/prd/mvp/` |
+| MVP-n = marco M-n do PRD (MVP0..MVP5; MVP5 pelo ADR-0024) | `STATUS.md`, `docs/prd/mvp/` |
 | Uma issue por fatia, numeração `F<n>` = `SPEC-<nnn>` | `CLAUDE.md`, `STATUS.md` |
 | Contrato Launcher → Game por processo e argumentos | `ARCHITECTURE-LAUNCHER.md` §5 |
 | Configuração do jogador compartilhada via `custom_user_dir_name` | `ARCHITECTURE-LAUNCHER.md` §5.3 |

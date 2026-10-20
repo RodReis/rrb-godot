@@ -29,7 +29,7 @@ Você atua como **engenheiro sênior de Godot 4 / GDScript** neste repositório.
 
 - MOBA 3D de 2 tempos (preparação 5 min → confronto com zona), multiplayer com **servidor autoritativo**.
 - Fonte de verdade de escopo: `docs/prd/PRD.md`. Layout da arena: `docs/prd/mvp/spec/SPEC-046.md` (ADR-0009; em vale sem abismo, ADR-0012). Números e fórmulas: `docs/prd/GDB.md` (vence o PRD — ADR-0004). Telas: `docs/prd/DESIGN-VISUAL-LAUNCHER.md`. Benchmark: `docs/prd/REFER.md`. Planos e specs de trabalho: `docs/superpowers/`. Decisões: `docs/adr/` (índice em `docs/DECISIONS.md`).
-- Marco atual: **MVP3 — Meta + deploy** (issue-pai #76): restam **F28** (#82, deploy no VPS do PI) e o **[GATE] #87**. MVP0 a MVP2.8 entregues (F66–F78 `finalizado`); próximo, **MVP4 — Playtest**. MVP-n = marco M-n do PRD. Estado em `docs/STATUS.md`, ordem de execução em `docs/DEVELOPMENT.md`.
+- Marco atual: **MVP3 — Meta + deploy** (issue-pai #76): restam **F28** (#82, deploy no VPS do PI) e o **[GATE] #87**. MVP0 a MVP2.8 entregues (F66–F78 `finalizado`); próximo, **MVP4 — Playtest**, e depois **MVP5 — Early Access** (ADR-0024 a ADR-0028). MVP-n = marco M-n do PRD. Estado em `docs/STATUS.md`, ordem de execução em `docs/DEVELOPMENT.md`.
 - **10 heróis jogáveis:** Cavaleiro, Arqueiro, Bárbaro, Bruxo de Fogo, Ladina, Engenheiro, Protetor da Selva, Berserker, Paladino Radiante e Ocultista (`shared/data/heroes/`, números no GDB §4).
 - Stack: **Godot 4.7.2** (Forward+ **only** — ADR-0006), GDScript, **netfox** (rollback/predição), **GUT** (testes), Docker (game server headless), **NestJS 11 + Postgres** (backend, MVP3; Node ≥ 24, pnpm), **Blender 5.2 LTS + Blender MCP** (assets 3D, ADR-0005), **React 19 + Vite + TypeScript** (só o site público, ADR-0017). Versões fixadas: netfox 1.35.3, GUT 9.7.1. Windows + PowerShell.
 - **Dois módulos independentes** (ADR-0002), mesmo monorepo, sem importar nada um do outro:
@@ -167,7 +167,7 @@ São adaptados do Claude-Code-Game-Studios (ver `.claude/THIRD_PARTY_NOTICES.md`
 - `docs/CONVENTION.md` — Documento de domínio: entidades, estados, invariantes e regras de negócio (o coração do produto). Números: GDB.
 - `docs/FRONTEND-LAUNCHER.md` — Contrato de engenharia da interface (Godot `Control` + Theme): stack fixada, tipagem, padrão de tela, 5 estados, performance, prova por tela. Toda tarefa de UI (Launcher **e** HUD) começa por ele.
 - `docs/design-system/DESIGN-SYSTEM-LAUNCHER.md` + `TOKENS.md`, `COMPONENTS.md`, `PATTERNS.md`, `DEBITO.md` — contrato da verdade para aparência e comportamento visual (Launcher e HUD).
-- `docs/prd/mvp/MVP-0..4.md` — um por marco, com as fatias (Slice N.M) e o critério de pronto.
+- `docs/prd/mvp/MVP-0..5.md` — um por marco, com as fatias (Slice N.M) e o critério de pronto.
 - `docs/GITHUB.md` — Documento de referencia das melhores praticas de commits, merges, branchs.
 - `docs/PRS.md` — Boas práticas de pull request, rotina de revisão e **métricas do fluxo** (DORA, tamanho e idade de PR, rodadas de CI).
 - `docs/CI-PR.md`— Documento política de PR rápida: jobs paralelos, gate único, medição de duração e limites. Melhores praticas do GitHub

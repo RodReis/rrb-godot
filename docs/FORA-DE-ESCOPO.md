@@ -9,6 +9,7 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 - Ladina (Algoz) e Engenheiro (classe nova) entraram em 2026-10-13 por decisão do PI (ADR-0013): marco MVP2.6. A "Ladina" do protótipo da seleção volta com dado real (F58).
 - Protetor da Selva (classe Controle, `Druid` do Extra) e Berserker (classe nova Lutador, `Barbarian_Large` do Extra, primeira passiva) entraram em 2026-10-16 por decisão do PI (ADR-0015): marco MVP2.7. Saem daqui as linhas "Heróis Controle", "Druida e `BARBARIAN_LARGE`" e "passivas" (Suporte continua).
 - Paladino Radiante (Tanque reativo, redesenho do pedido "Suporte") e Ocultista (Mago, com Servos do Vazio) entraram em 2026-10-18 por decisão do PI (ADR-0016): marco MVP2.8. Suporte continua no roadmap.
+- Loja cosmética, skins, Pacote de Fundador, Patente de conta e recompensas de login saíram desta lista em 2026-10-19 por decisão do PI (ADR-0024 a ADR-0028): marco MVP5 — Early Access. Sorteios pagos e venda de poder passaram a excluídos.
 - Arte própria saiu desta lista em 2026-10-09 por decisão do PI (ADR-0005): entra em qualquer MVP quando a fatia precisar.
 - Item do design visual ou do benchmark que não está no PRD **não é requisito** — fica aqui ou em `RASTREABILIDADE.md` §5 até o PI decidir.
 - "Adiado" tem MVP ou fase de destino; "excluído" tem motivo.
@@ -43,14 +44,15 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Vale Rúnico (SPEC-007) como arena 1x1 alternativa | ADR-0008 | uma arena oficial na fatia; o PI quer preservá-lo sem gastar recurso agora. Congelado em `game/scenes/arena/legacy/` + tag `arena-vale-runico` | fase B (junto com "Mais arenas") | "Mais arenas" aprovado ou seleção de mapa entrar no escopo |
 | Bestiário maior, tabela de loot completa | PRD §1.3 | 5 monstros/12 itens bastam | fase B | snowball e TTK calibrados |
 | IA de time | PRD §1.3 | só com times | pós-MVP4 | 3x3 |
-| Steam, ranked, amigos | PRD §1.3 | fatia usa e-mail/senha e fila FIFO | fase B | decisão comercial |
-| Moedas, gemas, vales, sorteios, loja, passe, skins | PRD §1.3, §7 | monetização é fase B; risco regulatório R5 | fase B | revisão regulatória + decisão do PI |
+| Steam, ranked, amigos | PRD §1.3; ADR-0024 | fatia usa e-mail/senha e fila FIFO; em 2026-10-19 o PI escolheu site próprio + itch.io para o EA, Steam fora | pós-MVP5 | decisão comercial do PI (análise de lojas no doc "Loot Start — Early Access, monetização, lojas e engine") |
+| Moeda virtual (grátis ou gemas pagas) e vales | PRD §7; ADR-0025 | loja inicial em reais, sem moeda (loja, skins e Fundador entram no MVP5) | pós-MVP5 | heróis além dos 10 |
+| Passe de temporada | ADR-0025 | sem recompensas suficientes para uma trilha | MVP5 2ª leva | ≥ 10 recompensas prontas |
+| Runas e atributos de conta | pedido do PI 2026-10-19; ADR-0025 | não existem; quando existirem, grátis e só trocas laterais | pós-MVP5 | decisão do PI com design de runas |
 | Mobile (câmera/controles revisados, **perfil gráfico próprio** — Game é Forward+ only, ADR-0006) | PRD §1.2, §8.2 | PC primeiro (D1) | fase B | PC validado + decisão de porte |
 | Arte comissionada | PRD §1.3, R6 | CC0 + arte própria no Blender bastam (ADR-0005) | fase B | produto comercial |
 | Câmera isométrica + mira assistida (plano B) | PRD §3.6 | decidir com dados | MVP4 | playtest mostrar perda de visão/aversão |
 | Armas específicas por herói | PRD §6 | dado genérico basta | fase B | — |
 | N partidas por processo (custo R7) | PRD §9.3 | irrelevante na fase A | fase B | custo medido no M3 ultrapassar meta |
-| Nível/XP de conta, "14V–6D" como progressão | DV tela 1; R-PEND-02 | decidido: perfil mostra só V–D | pós-MVP4 | decisão do PI após playtest |
 | Avatar no backend / visível a outros jogadores | R-PEND-02 | exige armazenamento e moderação de imagem; público 10+ | fase B | decisão do PI + moderação definida |
 | Recuperação de senha, verificação de e-mail | R-PEND-07 (decidido 2026-10-09: roadmap) | backend fino | pós-MVP4 | primeiro pedido real de reset de senha |
 | Reconexão à partida | PRD §8.5 | fora da fatia | fase B | relato de desconexão frequente no playtest |
@@ -73,6 +75,8 @@ Fonte única. Cada linha tem motivo, destino e **gatilho de retorno** (o que pre
 | Item | Fonte | Motivo |
 |---|---|---|
 | Chat de voz/texto, replays, espectador, clãs, eventos sazonais, cross-play, web export, anti-cheat dedicado, localização além de pt-BR | PRD §12 | explícito no PRD |
+| Sorteios pagos (caixa ou prêmio aleatório comprado com dinheiro) | PRD §7, D5; ADR-0025 | ECA Digital veta caixas de recompensa em jogos acessíveis a menores; decisão do PI em 2026-10-19 |
+| Venda de poder de combate (atributos, runas, trava paga na Patente) | pedido do PI 2026-10-19; ADR-0025, ADR-0026 | pay-to-win num PvP 1x1; decisão do PI em 2026-10-19 |
 | SDFGI e SSIL dinâmico como GI principal | guia gráfico 2026-10-10 | arena estática: `LightmapGI` bakeado entrega o mesmo sem custo contínuo; vazamento em paredes finas (ADR-0006) |
 | Shaders procedurais sobre os hexes KayKit (`hex_water`/`hex_grass`) | guia gráfico 2026-10-10 | UV em atlas; substituído por malhas próprias (F40, ADR-0006) |
 | Torres de vigia e balistas/canhões **com função** | doc de reforma da arena 2026-10-10 | decisão "sem torres" mantida; entram só como enfeite sem colisão, fora da área jogável (ADR-0007) |

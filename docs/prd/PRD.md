@@ -19,14 +19,14 @@ Referências: Brawl Stars (ritmo, acessibilidade, estética), Eternal Return (fa
 ### 1.1 Objetivo do projeto
 
 - **Fase A (agora):** aprendizado e portfólio — dominar Godot 3D e multiplayer autoritativo, dev solo.
-- **Fase B (condicional):** produto comercial F2P, se a fatia vertical validar o core loop (ver §9).
+- **Fase B (condicional):** produto comercial F2P, se a fatia vertical validar o core loop (ver §9). Começa pelo **Early Access** (marco M5), aberto só depois do gate do M4, F2P com Pacote de Fundador (ADR-0024).
 
 A arquitetura é de produto desde o início (servidor autoritativo, dados do jogador fora do cliente); o escopo é de aprendizado (fatia vertical).
 
 ### 1.2 Público e plataforma
 
-- Público-alvo: casual/família, 10+ anos. **Nota de risco:** a monetização escolhida (§7) com sorteios pagos tende a elevar a classificação indicativa e exige exibição de probabilidades em lojas mobile. O rótulo "para toda a família" fica condicionado a essa revisão na fase B.
-- **PC primeiro** (Windows; Steam/itch na fase B). Mobile depois, com câmera/controles revisados — a decisão de câmera (§3.6) já considera isso. **O Game roda só no renderer Forward+ (ADR-0006, 2026-10-10)**: o porte mobile exigirá um perfil gráfico próprio (adiado em `FORA-DE-ESCOPO.md`).
+- Público-alvo: casual/família, 10+ anos. **Nota de risco:** a monetização escolhida (§7) com sorteios pagos tendia a elevar a classificação indicativa; em 2026-10-19 o PI retirou os sorteios pagos (ADR-0025, ECA Digital). O rótulo "para toda a família" segue condicionado à revisão da fase B.
+- **PC primeiro** (Windows; na fase B, site próprio + itch.io — Steam fora por agora, ADR-0024). Mobile depois, com câmera/controles revisados — a decisão de câmera (§3.6) já considera isso. **O Game roda só no renderer Forward+ (ADR-0006, 2026-10-10)**: o porte mobile exigirá um perfil gráfico próprio (adiado em `FORA-DE-ESCOPO.md`).
 
 ### 1.3 Escopo: fatia vertical × roadmap
 
@@ -38,12 +38,12 @@ A arquitetura é de produto desde o início (servidor autoritativo, dados do jog
 | 7 monstros (incl. boss; Lobo e Golem de canto pelo ADR-0011) | bestiário maior |
 | 21 itens (3 armas + 2 conjuntos × 3 slots × 3 raridades), 2 conjuntos | tabela de loot completa |
 | Bot básico | IA de time |
-| Contas e-mail/senha, fila 1x1 | Steam, ranked, amigos |
-| Sem economia | moedas, gemas, vales, sorteios, loja, passe semanal, skins |
+| Contas e-mail/senha, fila 1x1 | Steam, ranked, amigos (Steam fora por agora — ADR-0024) |
+| Sem economia | loja cosmética em reais, skins, Pacote de Fundador, Patente de conta (M5 — ADR-0025, ADR-0026); passe (2ª leva); **sem sorteios pagos** |
 | PC | mobile |
 | Arte CC0 (KayKit/Quaternius) + arte própria no Blender quando necessário (ADR-0005) | arte comissionada |
 
-Nada do roadmap entra antes do M4 concluído. Exceções decididas pelo PI: arte própria feita no Blender (2026-10-09, ADR-0005); Bárbaro, Bruxo de Fogo e campos de canto no MVP2 (2026-10-11, ADR-0011); Ladina e Engenheiro no MVP2.6 (2026-10-13, ADR-0013); Protetor da Selva e Berserker no MVP2.7 (2026-10-16, ADR-0015); Paladino Radiante e Ocultista no MVP2.8 (2026-10-18, ADR-0016).
+Nada do roadmap entra antes do M4 concluído. Exceções decididas pelo PI: arte própria feita no Blender (2026-10-09, ADR-0005); Bárbaro, Bruxo de Fogo e campos de canto no MVP2 (2026-10-11, ADR-0011); Ladina e Engenheiro no MVP2.6 (2026-10-13, ADR-0013); Protetor da Selva e Berserker no MVP2.7 (2026-10-16, ADR-0015); Paladino Radiante e Ocultista no MVP2.8 (2026-10-18, ADR-0016); spike visual, tutorial e publicação no itch.io no M4, antes do playtest, e o Early Access (M5) depois do M4 (2026-10-19, ADR-0024 a ADR-0028).
 
 ---
 
@@ -55,7 +55,7 @@ Nada do roadmap entra antes do M4 concluído. Exceções decididas pelo PI: arte
 | D2 | Fase A aprendizado com arquitetura de produto | protótipo descartável | evitar reescrever netcode ao monetizar |
 | D3 | Fase 1 em mapa único com bases seguras + centro contestado | mapas separados; mapa totalmente aberto | resolve tempo morto e snowball sem explodir balanceamento |
 | D4 | Fase 2 com zona encolhendo + meta de kills | 10 kills fixo; sem respawn | garante fim de partida; respawn crescente removido (redundante com zona) |
-| D5 | Monetização com sorteios/vales/loja/passe (fase B) | sem aleatoriedade paga; sem economia | decisão do dono; risco regulatório documentado |
+| D5 | Monetização com loja cosmética e passe (fase B); **sorteios retirados** pelo ADR-0025 (2026-10-19, ECA Digital) | sem economia; sorteios com verificação de idade | decisão do dono; nada que dê poder é vendido |
 | D6 | Fatia 1x1 com 2 heróis (ampliada para 4 no MVP2 — ADR-0011, para 6 no MVP2.6 — ADR-0013, para 8 no MVP2.7 — ADR-0015 — e para 10 no MVP2.8 — ADR-0016) | 3x3 direto; 1x1 com 5 heróis | netcode/zona/loot são o risco técnico; classes e times são conteúdo |
 | D7 | Engine: **Godot 4.7** | Unity 6; Godot + servidor Node/Java | ver §10 |
 | D8 | GDScript | C# | iteração, ecossistema (netfox, tutoriais, godot-mcp), export iOS |
@@ -207,12 +207,16 @@ Monstros não-boss renascem 90 s após morrer durante a fase 1 e não renascem n
 
 ## 7. Economia e monetização (roadmap — fase B)
 
-Não implementado na fatia. Registrado para orientar a arquitetura (inventário e moedas ficam no backend, nunca no cliente).
+Não implementado na fatia. Entra no M5 — Early Access (`docs/prd/mvp/MVP-5.md`). Inventário e posse ficam no backend, nunca no cliente.
 
-- **Moedas** (grátis, por partida) e **gemas** (pagas).
-- **Desbloqueio de heróis:** vales, sorteios, compra na loja, passe semanal.
-- **Skins:** por moedas ou gemas.
-- **Riscos documentados:** sorteios pagos elevam classificação indicativa; Google Play/App Store exigem probabilidades publicadas; alguns mercados restringem loot boxes. Decisão revisitada antes do lançamento da fase B.
+**Atualizado pelo PI em 2026-10-19 (ADR-0025, ADR-0026):**
+
+- **Loja só cosmética**, preço em reais, **sem moeda virtual** e **sem sorteio pago**; pagamento por Mercado Pago (Pix e cartão).
+- **Catálogo inicial:** Pacote de Fundador R$ 29,90 (skin exclusiva + emblema), skin avulsa R$ 9,90; emblemas e molduras de perfil são recompensa grátis; passe de temporada na 2ª leva.
+- **Nada que dê poder é vendido:** runas e atributos de conta, se existirem, são grátis e só trocas laterais.
+- **Heróis:** liberados jogando pela **Patente** (1–10, grátis): 1 inicial e 1 por Patente, com escolha livre.
+- ~~Moedas e gemas; desbloqueio por vales, sorteios e passe semanal; skins por moedas ou gemas~~ — superado pelo ADR-0025.
+- **Risco:** o ECA Digital (Lei 15.211/2025, vigente desde 17/03/2026) veta caixas de recompensa em jogos acessíveis a menores; por isso os sorteios saíram.
 
 ---
 
@@ -300,7 +304,8 @@ O projeto atual (plataforma 2D) é descartado; `tools/setup-godot-mcp.ps1` e `.m
 | **M2.7 — Acabamento e controle** | controle v2 (herói encara o movimento, alvo travado com auto-ataque), zoom da câmera, splash/loading, cinemática de abertura, volta ao lobby com resultado, Tela Heróis, silhueta no mato alto, cenário PBR, Protetor da Selva e Berserker (ADR-0015) | 10 fatias aceitas pelo PI; soak verde onde mexe em servidor/FSM/input | — (sem prazo definido pelo PI) |
 | **M2.8 — Heróis 9 e 10** | Paladino Radiante, Ocultista e Servos do Vazio (ADR-0016) | 3 fatias aceitas pelo PI; soak de cada fatia verde | — (sem prazo definido pelo PI) |
 | **M3 — Meta + deploy** | backend, pool no VPS, build PC | dois amigos jogam pela internet sem intervenção do dev | 3 sem |
-| **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números | decisão sobre câmera, duração e ir para 3x3 | 2 sem |
+| **M4 — Playtest** | 10+ pessoas externas, questionário, ajuste de números; spike visual, tutorial e itch.io antes do teste (ADR-0024, ADR-0026) | decisão sobre câmera, duração e ir para 3x3; abrir ou não o EA | 2 sem |
+| **M5 — Early Access** | Patente e liberação de heróis, recompensas de login, bot na fila online, loja cosmética com Mercado Pago, skins (ADR-0024 a ADR-0028) | jogador novo instala, faz o tutorial, acha partida em ≤ 30 s e compra o Fundador vendo a skin na partida | — (sem prazo definido pelo PI) |
 
 Total ≈ 17 semanas (inclui o M2.5, bloco visual de 2 semanas entre o M2 e o M3 — ADR-0006). O M2.6, o M2.7 e o M2.8 (ADR-0013, ADR-0015, ADR-0016) entraram sem prazo definido; M0 a M2.8 estão entregues (até 2026-10-19) e restam o M3 (F28 e `[GATE]` dependem do VPS) e o M4.
 
@@ -319,7 +324,7 @@ Total ≈ 17 semanas (inclui o M2.5, bloco visual de 2 semanas entre o M2 e o M3
 | R2 | Fase 1 chata | centro contestado + boss; reduzir para 3–4 min se playtest confirmar |
 | R3 | Câmera 3ª pessoa afasta casuais | plano B isométrico + mira assistida (M4) |
 | R4 | Scope creep | separação fatia × roadmap; roadmap só após M4 |
-| R5 | Sorteios pagos × público infantil | risco regulatório documentado; revisão na fase B |
+| R5 | Sorteios pagos × público infantil | **resolvido em 2026-10-19:** sorteios pagos retirados (ADR-0025, ECA Digital) |
 | R6 | Arte CC0 genérica | ajustes e arte própria no Blender quando necessário (ADR-0005); arte comissionada na fase B |
 | R7 | Custo 1 container/partida | irrelevante na fase A; medir na B; N partidas/processo se preciso |
 | R8 | Tempo do dev (solo, meio período) | marcos fixos, prazos elásticos; nada paralelo |

@@ -9,7 +9,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | Marco / MVP ativo | **MVP3 — Meta + deploy** (issue-pai `#76`): F21–F27, F33 e F35 `finalizado` pelo PI (2026-10-15/16); **F28 #82** `done` (VPS no ar, Release `v0.1.0` publicado em 2026-10-19; aguarda aceite do PI), mais F79 #226, F80 #230 e os `[FIX]` #228, #229 e #233 `done` na mesma data; resta o **[GATE] #87** (`todo`). **MVP2.7 — Acabamento e controle** (F66–F75, ADR-0015) e **MVP2.8 — Heróis 9 e 10** (F76–F78, ADR-0016) entregues e `finalizado` pelo PI (2026-10-16 a 2026-10-19): 10 heróis jogáveis. MVP2.6 fechado em 2026-10-14; [GATE] MVP2 #69 aprovado em 2026-10-13; MVP2.5 entregue; MVP1 gate 2026-10-10; MVP0 2026-10-09 (ADR-0001) |
 | Site público | `site/` — landing **Loot Start** (React + Vite) **no ar** em https://rodreis.github.io/rrb-godot/ desde 2026-10-18 (PR #218, GitHub Pages por Actions), pedido do PI, fora do board; ADR-0017, `docs/SITE.md`. Nome "Loot Start" só no site; o rename do jogo é decisão do PI (card futuro). Dados extraídos em build de `shared/data/heroes`, `docs/roadmap/historia.json` e deste arquivo (§2/§3, `tools/roadmap/status.mjs`) |
 | Módulo em foco | `infra/` e `backend/` (F28, [GATE] MVP3); último trabalho em `game/` (F76–F78) e `launcher/` (F68, F70, F71) |
-| Próximo marco | **MVP4 — Playtest** (planejado); antes, o [GATE] MVP3 #87 depende do VPS do PI (F28). Balanceamento dos 10 heróis fica para o F30: nos soaks fora do espelho o Berserker venceu 44/44 (F75), o Ocultista 8/45 (F77) e o Paladino 33/45 (F76) |
+| Próximo marco | **MVP4 — Playtest** (planejado; ganhou F84 spike visual, F85 tutorial e F86 itch.io em 2026-10-19), depois **MVP5 — Early Access** (ADR-0024 a ADR-0028); antes, o [GATE] MVP3 #87 depende do VPS do PI (F28). Balanceamento dos 10 heróis fica para o F30: nos soaks fora do espelho o Berserker venceu 44/44 (F75), o Ocultista 8/45 (F77) e o Paladino 33/45 (F76) |
 | Próximo gate | [GATE] MVP3 #87: dois amigos jogam pela internet pelo Release `v0.1.0` (VPS no ar); MVP2.5 a MVP2.8 não têm `[GATE]` (aceite visual + soak por fatia) |
 | Documentação de governança | criada em 2026-10-08 (ADR-0002/0003/0004, arquitetura dos dois módulos); ADR-0006 (direção visual) e ADR-0007 (layout da arena) em 2026-10-10; **ADR-0016** (MVP2.8: Paladino Radiante, Ocultista e Servos do Vazio) em 2026-10-18; **ADR-0015** (MVP2.7: controle v2, câmera, loading/cinemática, lobby, Tela Heróis, silhueta, cenário, Protetor da Selva e Berserker) em 2026-10-16 |
 | Board | **2026-10-19:** MVP2.7 (`#193`: F66–F75) e MVP2.8 (`#213`: F76 #214, F77 #215, F78 #216) com todas as fatias `finalizado`; MVP3 (`#76`): F28 #82 e [GATE] #87 em `todo`, F21–F27, F33, F35 e o `[FIX]` SPEC-023 `finalizado`; MVP4 `planejado`. Histórico do board (ADR-0010 a ADR-0016, ordem de cada marco) em `STATUS-ARQUIVO.md` § Board. |
@@ -27,7 +27,8 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | MVP2.7 | Acabamento e controle: herói encara o movimento + alvo travado com auto-ataque, zoom da câmera, splash/loading, cinemática de abertura, volta ao lobby com resultado, Tela Heróis, silhueta no mato alto, cenário PBR, Protetor da Selva (Controle) e Berserker (Lutador) — ADR-0015 | game, shared, launcher | 10 fatias aceitas pelo PI; soak verde onde mexe em servidor/FSM/input; GPU dentro do orçamento | **entregue** (#193, 10/10 `finalizado`) |
 | MVP2.8 | Heróis 9 e 10: Paladino Radiante (Tanque reativo), Ocultista (Mago de dano contínuo) e Servos do Vazio — ADR-0016 | game, shared | 3 fatias aceitas pelo PI; soak verde em cada uma; critério de netcode do ADR-0006 item 7 | **entregue** (#213, 3/3 `finalizado`; 10 heróis) |
 | MVP3 | Meta + deploy: backend, launcher, pool no VPS, build PC | launcher, backend, infra | dois amigos jogam pela internet sem o dev | **em andamento** (#76): F21–F27, F33, F35 finalizados; F28, F79, F80 e 3 `[FIX]` feitos (Release `v0.1.0` publicado); gate #87 `todo` |
-| MVP4 | Playtest: telemetria, 10+ pessoas, ajuste de números | todos | decisão câmera/duração/3x3; critérios PRD §9.2 | planejado |
+| MVP4 | Playtest: telemetria, 10+ pessoas, ajuste de números; spike visual, tutorial e itch.io antes do teste | todos | decisão câmera/duração/3x3; critérios PRD §9.2; abrir ou não o EA | planejado |
+| MVP5 | Early Access F2P no site + itch.io: Patente e heróis, recompensas de login, bot na fila, loja cosmética, skins (ADR-0024 a ADR-0028) | backend, launcher, game, shared, infra | jogador novo instala, faz o tutorial, acha partida em ≤ 30 s e compra o Fundador vendo a skin na partida | planejado |
 
 ## 3. Índice Fatia ↔ SPEC (fonte única)
 
@@ -123,12 +124,22 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F78 / SPEC-078 | MVP2.8 | game, shared | Slice 2.8.3 — Servos do Vazio (R do Ocultista): 2 servos móveis 7 s, IA no servidor (alvo travado → herói → monstro, só o visível ao dono), morrem sem recompensa, dano/kill para o Ocultista, visão como monstro (ADR-0016, GDB §4.10) | finalizado (#216) |
 | F79 / SPEC-079 | MVP3 | launcher, shared | Slice 3.11 — Tipo de tela nas Configurações: Modo Janela, Janela sem Borda e Tela Cheia Exclusiva; `[video] window_mode` (ADR-0019) | done (#226) |
 | F80 / SPEC-080 | MVP3 | game, backend, launcher, shared | Slice 3.12 — Sair do jogo: menu no ESC (Continuar / Sair) e derrota por abandono (`endReason` no resultado, ADR-0020) | done (#230) |
-| F81 / SPEC-081 | MVP3 | game, launcher, shared | Slice 3.13 — Três níveis de bot no treino (Fácil, Médio = bot atual, Difícil), escolha no card Treino vs Bot; `--bot-difficulty` (ADR-0021) | todo (#239) |
+| F81 / SPEC-081 | MVP3 | game, launcher, shared | Slice 3.13 — Três níveis de bot no treino (Fácil, Médio = bot atual, Difícil), escolha no card Treino vs Bot; `--bot-difficulty=1..N` (ADR-0021; formato numérico pelo ADR-0027) | todo (#239) |
 | F82 / SPEC-082 | MVP3 | launcher, game, shared, tools | Slice 3.14 — Nome "Loot Start" em tudo que o jogador vê; marca e splash no visual do site; `LootStart.exe` (ADR-0022) | todo (#241) |
 | F83 / SPEC-083 | MVP3 | launcher, backend, tools | Slice 3.15 — Instalador `LootStart-Setup.exe` e atualização ao abrir; obrigatória para fila online, treino livre (ADR-0023) | todo (#242) |
-| [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3 | — |
+| F84 / SPEC-084 | MVP4 | game, shared, art | Slice 4.3 — Spike visual: 1 herói + 1 canto da arena com arte de qualidade maior no pipeline atual; decide o caminho visual (ADR-0024) | — |
+| F85 / SPEC-085 | MVP4 | game, launcher, backend, shared | Slice 4.4 — Tutorial guiado offline: obrigatório na 1ª vez, pulável; fila online após tutorial ou 1 vitória vs bot (ADR-0026) | — |
+| F86 / SPEC-086 | MVP4 | infra, tools | Slice 4.5 — Publicação no itch.io: página e build a cada Release (ADR-0024) | — |
+| [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3; abrir ou não o EA | — |
+| F87 / SPEC-087 | MVP5 | backend, launcher, game, shared | Slice 5.1 — Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre; pick online validado no servidor (ADR-0026) | — |
+| F88 / SPEC-088 | MVP5 | backend, launcher, shared | Slice 5.2 — Recompensas de Patente e de login diário/semanal/mensal: emblemas e molduras de perfil (ADR-0025, ADR-0026) | — |
+| F89 / SPEC-089 | MVP5 | backend, game, infra, launcher | Slice 5.3 — Bot na fila online após 30 s sem humano, com aviso (ADR-0027) | — |
+| F90 / SPEC-090 | MVP5 | backend, launcher | Slice 5.4 — Loja: catálogo, pedido, Mercado Pago (Pix e cartão), inventário, tela Loja (ADR-0025) | — |
+| F91 / SPEC-091 | MVP5 | backend, game, launcher, shared | Slice 5.5 — Skin na partida: token devolve heróis liberados e skin equipada; game server replica (ADR-0028) | — |
+| F92 / SPEC-092 | MVP5 | shared, art | Slice 5.6 — Primeiras skins (variantes KayKit Extra) + skin do Pacote de Fundador (ADR-0025) | — |
+| [GATE] | MVP5 | — | Abertura do Early Access no site e no itch.io (ADR-0024) | — |
 
-Próximo número livre: **F79 / SPEC-079**.
+Próximo número livre: **F93 / SPEC-093**.
 
 ## 4. Regras deste índice
 

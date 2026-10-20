@@ -33,7 +33,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-21b | Ladina (Algoz, besta, `Rogue_Hooded` cor original) e classe nova Engenheiro (Adventurers 2.0 Extra); fumaça = moita temporária que não revela ao lançar; Torreta indestrutível 6 s contra heróis e monstros vistos pelo Engenheiro; elmo não aparece nos 2; nome do Ranger = "Arqueiro" | PRD §4.1, §4.3; ADR-0013 | F58, F59; `[FIX]` do Code (nome) | game, shared | MVP2.6 | mantido — requisito novo aprovado pelo PI em 2026-10-13 |
 | P-22 | Valores de skill em `.tres`, não no doc | PRD §4.3 | F6 | shared | MVP1 | mantido |
 | P-23 | 5 monstros incl. boss; tier 3 = **Golem de Pedra** (decisão PI 2026-10-09) | PRD §5 | F9, F11 | game | MVP1 | mantido — +Lobo e Golem de canto (7 monstros) pelo ADR-0011, F55 |
-| P-24 | Economia/monetização | PRD §7 | — | launcher/backend | fase B | adiado |
+| P-24 | Economia/monetização | PRD §7 | F90, F92 (loja e skins); sorteios excluídos | launcher/backend | MVP5 | **substituído** pelo PI em 2026-10-19 (ADR-0025): loja só cosmética em reais, sem moeda virtual e sem sorteio pago; passe na 2ª leva |
 | P-25 | Export cliente Windows e servidor headless | PRD §8.2 | F1, F28 | game, infra | MVP0/3 | mantido |
 | P-26 | netfox 30 Hz, predição, rollback, interpolação, lag comp | PRD §8.3 | F3–F5 | game | MVP0 | mantido |
 | P-27 | Eventos discretos por RPC confiável; estado contínuo não confiável | PRD §8.3 | F15 | game | MVP2 | mantido |
@@ -67,6 +67,13 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-53 | Minimapa fixo (não gira com a câmera) | pedido do PI no F67 (pop-up); SPEC-045 deixava em aberto | F67 | game | MVP2.7 | mantido — requisito novo do PI, feito na mesma PR do zoom (F67) |
 | P-54 | 4 moitas de emboscada nos corredores (6 → 10 moitas de mato alto), mesma regra do mato (F32) | pedido do PI em 2026-10-17 | F73 | game, shared | MVP2.7 | mantido — requisito novo do PI; entrou no F73 sem fatia própria |
 | P-55 | Fora de escopo explícito (§12) | PRD §12 | `FORA-DE-ESCOPO.md` | — | — | excluído |
+| P-57 | Early Access depois do gate do M4, F2P + Pacote de Fundador, no site próprio + itch.io (Steam fora) | pedido do PI em 2026-10-19; ADR-0024 | MVP5 (`[GATE]`), F86 | infra, todos | MVP4/MVP5 | mantido — requisito novo do PI |
+| P-58 | Patente de conta 1–10 grátis; 1 herói inicial + 1 por Patente com escolha livre | pedido do PI em 2026-10-19; ADR-0026 | F87 | backend, launcher, game | MVP5 | mantido — requisito novo do PI; supera R-PEND-02 (sem XP de conta) |
+| P-59 | Emblemas e molduras como recompensa de Patente e de login diário/semanal/mensal | pedido do PI em 2026-10-19; ADR-0025, ADR-0026 | F88 | backend, launcher | MVP5 | mantido — requisito novo do PI |
+| P-60 | Tutorial guiado, obrigatório na 1ª vez e pulável; fila online após tutorial ou 1 vitória vs bot | pedido do PI em 2026-10-19; ADR-0026 | F85 | game, launcher, backend | MVP4 | mantido — requisito novo do PI |
+| P-61 | Nível do bot numérico 1..N; bot completa a fila online após 30 s, com aviso | pedido do PI em 2026-10-19; ADR-0027 | F81 (formato), F89 | game, launcher, backend | MVP3/MVP5 | mantido — requisito novo do PI |
+| P-62 | Skin visível na partida pelos dois jogadores, posse decidida no backend | ADR-0028 | F91, F92 | backend, game, launcher | MVP5 | mantido — consequência do P-24 aprovada pelo PI |
+| P-63 | Spike visual (1 herói + 1 canto) antes do playtest; engine segue Godot | pedido do PI em 2026-10-19; ADR-0024 | F84 | game, shared, art | MVP4 | mantido — requisito novo do PI |
 | P-56 | Site público de apresentação (landing "Loot Start"): heróis, arena, roadmap e download, dados extraídos do repositório em build, GitHub Pages | pedido do PI em 2026-10-18; ADR-0017 | PR #218 (sem fatia, fora do board); `docs/SITE.md` | site | — | mantido — requisito novo do PI; o nome "Loot Start" vale só no site (rename do jogo é decisão do PI, `FORA-DE-ESCOPO.md`) |
 
 ## 2. GDB
@@ -147,7 +154,7 @@ Nenhum agente decide estas. Até decisão, o Code implementa o que o PRD diz; se
 | ID | Pendência | Opções | Impacto se não decidir |
 |---|---|---|---|
 | ~~R-PEND-01~~ | **Decidido 2026-10-09:** GDB — baú raro 10 % | — | — |
-| ~~R-PEND-02~~ | **Decidido 2026-10-09:** sem nível/XP de conta (só V–D do histórico). Perfil no Launcher (fatia F35): nickname **único**, prefixo `#` **automático** (ex.: `#RodReis`); avatar por imagem predefinida ou upload, **guardado só local no Launcher** (não vai ao backend, não aparece para outros jogadores). **Sem data de nascimento.** **Completado em 2026-10-10:** nickname obrigatório no 1º login, 3–16 `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas; upload PNG/JPG ≤ 1 MB recortado 256×256; F35 entra no gate do MVP3. PRD ainda não editado | — | — |
+| ~~R-PEND-02~~ | **Decidido 2026-10-09:** sem nível/XP de conta (só V–D do histórico). Perfil no Launcher (fatia F35): nickname **único**, prefixo `#` **automático** (ex.: `#RodReis`); avatar por imagem predefinida ou upload, **guardado só local no Launcher** (não vai ao backend, não aparece para outros jogadores). **Sem data de nascimento.** **Completado em 2026-10-10:** nickname obrigatório no 1º login, 3–16 `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas; upload PNG/JPG ≤ 1 MB recortado 256×256; F35 entra no gate do MVP3. PRD ainda não editado. **Superado em parte em 2026-10-19 (ADR-0026):** a conta ganha Patente 1–10 no MVP5 | — | — |
 | ~~R-PEND-03~~ | **Decidido 2026-10-09:** não — sem "lembrar-me"; JWT só em memória, login a cada abertura | — | — |
 | ~~R-PEND-04~~ | **Decidido 2026-10-10:** herói padrão do slot (P1 Cavaleiro, P2 Arqueiro). Espelho permitido no pick | — | — |
 | ~~R-PEND-05~~ | **Decidido 2026-10-09:** incluir (F13) | — | — |
