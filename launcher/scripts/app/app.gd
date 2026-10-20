@@ -275,6 +275,13 @@ func offer_update() -> void:
 	show_toast(tr("Não foi possível atualizar. Tente de novo mais tarde."), Toast.Kind.ERROR)
 
 
+## Argumentos do treino vs bot com o nivel lembrado (F81, ADR-0027).
+func practice_args() -> PackedStringArray:
+	var args := OFFLINE_ARGS.duplicate()
+	args.append("--bot-difficulty=%d" % settings.bot_difficulty())
+	return args
+
+
 func _start_practice() -> void:
 	if game.is_running():
 		return
@@ -284,7 +291,7 @@ func _start_practice() -> void:
 	if lobby != null:
 		lobby.reset_queue()
 	_match_id = ""
-	if not launch_game(OFFLINE_ARGS, true):
+	if not launch_game(practice_args(), true):
 		show_toast(tr("Instalação incompleta: o jogo não foi encontrado."), Toast.Kind.ERROR)
 
 
@@ -322,7 +329,6 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 	if login != null:
 		login.bind(auth, catalog)
 		login.authenticated.connect(_on_login_authenticated)
-		login.practice_requested.connect(_start_practice)
 	var profile_screen := screen as ProfileScreen
 	if profile_screen != null:
 		var mode := (
@@ -350,6 +356,8 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 		lobby.bind(queue, account_email)
 		lobby.set_backend_status(_online, _ping_ms, _checked)
 		lobby.practice_requested.connect(_start_practice)
+		lobby.bind_bot_difficulty(settings.bot_difficulty())
+		lobby.bot_difficulty_changed.connect(settings.remember_bot_difficulty)
 		lobby.settings_requested.connect(_stack.push.bind(Router.SETTINGS))
 		lobby.logout_requested.connect(_logout)
 		lobby.update_requested.connect(offer_update)

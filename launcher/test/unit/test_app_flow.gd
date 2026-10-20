@@ -544,3 +544,22 @@ func test_sessao_expirada_fecha_o_card() -> void:
 	await _wait_result_card()
 	_api.unauthorized.emit()
 	assert_false(_app.result_card().visible)
+
+
+func test_treino_manda_o_nivel_lembrado() -> void:
+	_app.settings.values = UserSettings.defaults()
+	assert_eq(_app.practice_args(), PackedStringArray(["--offline", "--bot", "--bot-difficulty=2"]))
+	_app.settings.path = "user://test_f81_app_settings.cfg"
+	_app.settings.remember_bot_difficulty(3)
+	assert_eq(_app.practice_args()[2], "--bot-difficulty=3")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(_app.settings.path))
+
+
+func test_escolha_do_lobby_fica_lembrada() -> void:
+	_app.settings.values = UserSettings.defaults()
+	_app.settings.path = "user://test_f81_app_settings.cfg"
+	var lobby := await _enter_lobby()
+	lobby.bot_difficulty_changed.emit(1)
+	assert_eq(_app.settings.bot_difficulty(), 1)
+	assert_eq(_app.practice_args()[2], "--bot-difficulty=1")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(_app.settings.path))

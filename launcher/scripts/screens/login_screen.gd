@@ -4,13 +4,12 @@ extends LauncherScreen
 ## Autenticacao/). Fundo: a arena de noite (render real) sob um veu. Esquerda: marca, descricao, a
 ## arte com os herois na arena (render dos assets reais) e a faixa de numeros reais (F82);
 ## direita: cartao de vidro com as abas Entrar / Criar conta, e-mail, senha (com olho), regra de
-## senha no cadastro, envio e o treino offline vs bot (sem conta). Fora do prototipo (issue #81,
-## §8.3): lembrar credenciais, esqueceu, regiao, badges tecnicos, patch e numeros de exemplo.
+## senha no cadastro e envio. O treino vs bot fica no Lobby, depois do login (PI, F81). Fora do
+## prototipo (issue #81, §8.3): lembrar credenciais, esqueceu, regiao, badges tecnicos, patch e
+## numeros de exemplo.
 ## Chama o AuthService; com sessao aberta emite authenticated e o App leva ao lobby.
 
 signal authenticated
-## Treino offline vs bot (nao depende do backend, ARCHITECTURE-LAUNCHER §6).
-signal practice_requested
 
 enum Mode { LOGIN, REGISTER }
 
@@ -47,7 +46,6 @@ var _email: IconField = IconField.new()
 var _password: IconField = IconField.new()
 var _rule: Label = Label.new()
 var _submit: Button = Button.new()
-var _practice: Button = Button.new()
 var _hero_count: Label = Label.new()
 var _hero_stat: PanelContainer
 
@@ -265,10 +263,6 @@ func _card() -> GlassPanel:
 	_submit.theme_type_variation = &"LnButtonSubmit"
 	_submit.pressed.connect(submit)
 	form.add_child(_submit)
-	_practice.theme_type_variation = &"LnButtonCyan"
-	_practice.text = "%s  %s" % [UiIcons.SMART_TOY, tr("Treinar contra o bot (offline, sem conta)")]
-	_practice.pressed.connect(practice_requested.emit)
-	form.add_child(_practice)
 	return card
 
 
@@ -295,7 +289,6 @@ func _tab_track() -> PanelContainer:
 
 func _set_busy(busy: bool) -> void:
 	_submit.disabled = busy
-	_practice.disabled = busy
 	for tab: Button in _tabs:
 		tab.disabled = busy
 	if busy:

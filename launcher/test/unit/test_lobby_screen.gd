@@ -130,3 +130,61 @@ func test_backend_recusa_versao_velha_com_mensagem_propria() -> void:
 	_api.reply("POST /queue", 426, {"code": "CLIENT_OUTDATED", "message": "Atualize"})
 	await _lobby.toggle_queue()
 	assert_string_contains(_lobby.banner_text(), "versão nova")
+
+
+func _level_buttons() -> Array:
+	return _lobby.find_children("*", "Button", true, false).filter(
+		func(b: Button) -> bool: return ["Fácil", "Médio", "Difícil"].has(b.text)
+	)
+
+
+func _levels_visible() -> bool:
+	return _level_buttons().all(func(b: Button) -> bool: return b.is_visible_in_tree())
+
+
+func test_jogar_nao_mostra_nivel_do_bot_nem_botao_iniciar() -> void:
+	assert_eq(_lobby.mode(), LobbyScreen.Mode.PLAY)
+	assert_false(_levels_visible())
+	var iniciar := _lobby.find_children("*", "Button", true, false).filter(
+		func(b: Button) -> bool: return b.text == "Iniciar"
+	)
+	assert_eq(iniciar.size(), 0, "o botao azul Iniciar saiu; vale o amarelo")
+
+
+func test_aba_treino_mostra_niveis_e_o_amarelo_inicia_o_treino() -> void:
+	_lobby.select_mode(LobbyScreen.Mode.TRAIN)
+	assert_true(_levels_visible())
+	assert_eq(
+		_level_buttons().map(func(b: Button) -> String: return b.text),
+		["Fácil", "Médio", "Difícil"]
+	)
+	assert_eq(_lobby.bot_difficulty(), 2)
+	assert_true((_level_buttons()[1] as Button).button_pressed)
+	assert_string_contains(_lobby.cta().text, "INICIAR TREINO")
+	assert_eq(_lobby.cta().variant, CtaButton.Variant.GOLD)
+	_lobby.cta().pressed.emit()
+	assert_signal_emitted(_lobby, "practice_requested")
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.IDLE, "treino nao entra na fila")
+	assert_eq(_api.calls.size(), 0)
+
+
+func test_voltar_para_jogar_restaura_o_botao_da_fila() -> void:
+	_lobby.select_mode(LobbyScreen.Mode.TRAIN)
+	_lobby.select_mode(LobbyScreen.Mode.PLAY)
+	assert_string_contains(_lobby.cta().text, "BUSCAR PARTIDA")
+	assert_false(_levels_visible())
+
+
+func test_escolher_nivel_avisa_e_nao_inicia_o_treino() -> void:
+	_lobby.select_mode(LobbyScreen.Mode.TRAIN)
+	(_level_buttons()[2] as Button).pressed.emit()
+	assert_signal_emitted_with_parameters(_lobby, "bot_difficulty_changed", [3])
+	assert_signal_not_emitted(_lobby, "practice_requested")
+	assert_eq(_lobby.bot_difficulty(), 3)
+
+
+func test_bind_do_nivel_lembrado_marca_sem_avisar() -> void:
+	_lobby.bind_bot_difficulty(1)
+	assert_eq(_lobby.bot_difficulty(), 1)
+	assert_true((_level_buttons()[0] as Button).button_pressed)
+	assert_signal_not_emitted(_lobby, "bot_difficulty_changed")
