@@ -1,0 +1,47 @@
+[gd_resource type="Resource" script_class="BotLevels" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/bot_levels.gd" id="1_levels"]
+[ext_resource type="Script" path="res://shared/resources/bot_level.gd" id="2_level"]
+
+[sub_resource type="Resource" id="Resource_easy"]
+script = ExtResource("2_level")
+label = "Fácil"
+reaction_ticks = 15
+aim_error_deg = 25.0
+skill_chance = 0.4
+chases = false
+lead_seconds = 0.0
+farm_skills = false
+level_slack = 0
+retreat_hp_pct = 0.15
+fight_range = 6.0
+
+[sub_resource type="Resource" id="Resource_medium"]
+script = ExtResource("2_level")
+label = "Médio"
+reaction_ticks = 1
+aim_error_deg = 0.0
+skill_chance = 1.0
+chases = true
+lead_seconds = 0.0
+farm_skills = false
+level_slack = 0
+retreat_hp_pct = 0.3
+fight_range = 8.0
+
+[sub_resource type="Resource" id="Resource_hard"]
+script = ExtResource("2_level")
+label = "Difícil"
+reaction_ticks = 1
+aim_error_deg = 0.0
+skill_chance = 1.0
+chases = true
+lead_seconds = 0.25
+farm_skills = true
+level_slack = 1
+retreat_hp_pct = 0.3
+fight_range = 8.0
+
+[resource]
+script = ExtResource("1_levels")
+levels = Array[ExtResource("2_level")]([SubResource("Resource_easy"), SubResource("Resource_medium"), SubResource("Resource_hard")])

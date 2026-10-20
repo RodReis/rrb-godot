@@ -9,7 +9,8 @@ extends RefCounted
 ## cena = padrao do slot.
 ## --bots: as duas vagas sao bots no servidor, sem cliente (soak bot x bot, F19; fora do contrato
 ## com o Launcher). --bot-heroes=<time A>,<time B>: o heroi de cada bot; so vale com dois ids,
-## senao o padrao do slot.
+## senao o padrao do slot. --bot-levels=<a>,<b>: o nivel de cada bot com --bots (soak por nivel,
+## F81; fora do contrato com o Launcher).
 ## --token=<match_token>: o cliente online apresenta o token da partida ao servidor (contrato com
 ## o Launcher, ARCHITECTURE-LAUNCHER §5.2). --no-backend: servidor dedicado de dev, sem backend:
 ## admite qualquer peer e nao reporta resultado (fora do contrato com o Launcher).
@@ -26,7 +27,10 @@ const DEFAULT_TIME: float = 0.0
 const DAYNIGHT_AUTO: String = ""
 const DAYNIGHT_DAY: String = "day"
 const DAYNIGHT_NIGHT: String = "night"
-## --bot-heroes: um heroi por time.
+## --bot-difficulty=<n>: nivel do bot do treino (F81, ADR-0021/0027); 0 = ausente (BotLevels
+## normaliza para o Medio, tambem fora de 1..N).
+const NO_DIFFICULTY: int = 0
+## --bot-heroes e --bot-levels: um valor por time.
 const HERO_PAIR_SIZE: int = 2
 ## --intro-ready-delay=S: o cliente atrasa o ready da cinematica de abertura em S segundos (dev,
 ## F69: prova o corte aos 8 s com um dos dois atrasado).
@@ -47,8 +51,10 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"offline": false,
 		"bot": false,
 		"bot_hero": &"",
+		"bot_difficulty": NO_DIFFICULTY,
 		"bots": false,
 		"bot_heroes": [] as Array[StringName],
+		"bot_levels": [] as Array[int],
 		"bot_pilot": false,
 		"probe": false,
 		"token": "",
@@ -63,6 +69,11 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["bot"] = true
 		elif arg == "--bots":
 			result["bots"] = true
+		elif arg.begins_with("--bot-difficulty="):
+			var text := arg.trim_prefix("--bot-difficulty=")
+			result["bot_difficulty"] = text.to_int() if text.is_valid_int() else NO_DIFFICULTY
+		elif arg.begins_with("--bot-levels="):
+			result["bot_levels"] = _level_pair(arg.trim_prefix("--bot-levels="))
 		elif arg.begins_with("--bot-heroes="):
 			result["bot_heroes"] = _hero_pair(arg.trim_prefix("--bot-heroes="))
 		elif arg.begins_with("--bot-hero="):
@@ -115,6 +126,19 @@ static func _hero_pair(text: String) -> Array[StringName]:
 			return []
 		ids.append(StringName(part.strip_edges()))
 	return ids
+
+
+## Dois inteiros separados por virgula; qualquer outra forma = vazio (nivel padrao).
+static func _level_pair(text: String) -> Array[int]:
+	var levels: Array[int] = []
+	var parts := text.split(",")
+	if parts.size() != HERO_PAIR_SIZE:
+		return levels
+	for part: String in parts:
+		if not part.strip_edges().is_valid_int():
+			return []
+		levels.append(part.strip_edges().to_int())
+	return levels
 
 
 static func _port_or_default(text: String) -> int:

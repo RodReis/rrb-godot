@@ -256,3 +256,16 @@ func test_teclas_de_zoom_sao_remapeaveis_com_padrao_igual_e_menos() -> void:
 	assert_eq(UserSettings.keycode(after, InputActions.CAMERA_ZOOM_IN), KEY_PAGEUP)
 	var swapped := UserSettings.rebind(values, InputActions.CAMERA_ZOOM_IN, KEY_MINUS)
 	assert_eq(UserSettings.keycode(swapped, InputActions.CAMERA_ZOOM_OUT), KEY_EQUAL, "troca")
+
+
+func test_nivel_do_bot_padrao_e_medio_e_volta_do_arquivo() -> void:
+	assert_eq(UserSettings.defaults()[UserSettings.TRAINING][UserSettings.BOT_DIFFICULTY], 2)
+	var read := UserSettings.read(_config(UserSettings.TRAINING, {UserSettings.BOT_DIFFICULTY: 3}))
+	assert_eq(read[UserSettings.TRAINING][UserSettings.BOT_DIFFICULTY], 3)
+
+
+func test_nivel_do_bot_de_tipo_errado_vira_o_padrao() -> void:
+	var read := UserSettings.read(
+		_config(UserSettings.TRAINING, {UserSettings.BOT_DIFFICULTY: "hard"})
+	)
+	assert_eq(read[UserSettings.TRAINING][UserSettings.BOT_DIFFICULTY], 2)

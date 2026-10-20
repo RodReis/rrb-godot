@@ -15,6 +15,9 @@
   Heroi que entra em todo confronto (soak de heroi novo: -Require engineer); vazio = todos os pares.
 .PARAMETER Parallel
   Servidores ao mesmo tempo.
+.PARAMETER BotLevels
+  Nivel do bot de cada lado, "a,b" (F81, --bot-levels): 1 Facil, 2 Medio, 3 Dificil. Vazio = Medio nos dois.
+  Os lados trocam de heroi, nao de nivel: compare com a linha-base "2,2" para descontar o lado.
 .PARAMETER Seed
   Seed da partida 0; a partida k usa Seed + k (baus e sorteio do colapso).
 .PARAMETER BasePort
@@ -30,6 +33,7 @@ param(
     [int]$Parallel = 6,
     [string[]]$Heroes = @('knight', 'ranger', 'barbarian', 'fire_wizard', 'rogue', 'engineer', 'druid', 'berserker', 'occultist', 'paladin'),
     [string]$Require = '',
+    [string]$BotLevels = '',
     [int]$Seed = 1,
     [int]$BasePort = 7100,
     [int]$StartTime = 0,
@@ -91,6 +95,7 @@ function Start-Match($m) {
         "--bot-heroes=$($m.HeroA),$($m.HeroB)", "--port=$($m.Port)", "--seed=$($m.Seed)",
         "--time=$StartTime"
     )
+    if ($BotLevels) { $argList += "--bot-levels=$BotLevels" }
     $p = Start-Process -FilePath $cli -ArgumentList $argList -PassThru -NoNewWindow `
         -RedirectStandardOutput $log -RedirectStandardError $err
     # PowerShell 5.1: sem tocar no Handle agora, ExitCode volta $null depois que o processo sai.
