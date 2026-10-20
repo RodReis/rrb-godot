@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-19
+updated: 2026-10-20
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -30,9 +30,7 @@ updated: 2026-10-19
 
 ## Feito
 
-### Sem épico
-
-- [MVP3][SPEC-028][FIX] Galeria do site com 80+ capturas que não mostram o jogo: vitrine de no máximo 10 (#243)
+_(vazio)_
 
 ## Finalizado
 
@@ -162,6 +160,7 @@ updated: 2026-10-19
 
 ### Sem épico
 
+- [MVP3][SPEC-028][FIX] Galeria do site com 80+ capturas que não mostram o jogo: vitrine de no máximo 10 (#243, finalizado em: 2026-10-20)
 - [MVP3][SPEC-023][FIX] Container do game server não é preso à partida atribuída (#181, finalizado em: 2026-10-16)
 - [FIX] test_components deixa 14 nós órfãos (DetailCard) (#184, finalizado em: 2026-10-16)
 - Câmera: pilares e muros tapam o herói (oclusão) (#70, finalizado em: 2026-10-14)
