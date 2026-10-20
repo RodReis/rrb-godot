@@ -1,7 +1,7 @@
 # MVP4 — Playtest (= marco M4)
 
 **Objetivo:** validar o core loop com 10+ pessoas externas e decidir câmera, duração e ida para 3x3.
-**Módulos:** todos. **Prazo PRD:** 2 semanas.
+**Módulos:** todos. **Prazo PRD:** 2 semanas. **Issue-pai:** #246.
 **Critério de pronto (PRD §9.2):** 100 % das partidas ≤ 10 min; ping médio ≤ 80 ms no Brasil, nenhum "teleporte"; ≥ 7/10 pedem segunda partida; líder de nível ao fim da fase 1 vence < 75 %.
 **Estado:** planejado — nenhuma fatia iniciada; depende do `[GATE]` MVP3 #87. Em 2026-10-19 o PI acrescentou o spike visual (F84), o tutorial (F85) e a publicação no itch.io (F86), antes do playtest (ADR-0024, ADR-0026). O balanceamento dos 10 heróis (soaks fora do espelho: Berserker 44/44, Paladino 33/45, Ocultista 8/45) entra no F30.
 

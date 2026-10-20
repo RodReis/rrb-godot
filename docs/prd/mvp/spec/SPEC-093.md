@@ -1,6 +1,6 @@
 # SPEC-093 — Spike visual, parte 2: Cavaleiro comissionado no estilo Eternal Return, jogável na cena do F84
 
-**Fatia:** F93 / SPEC-093 (MVP4, Slice 4.6 — depois do F84 e da entrega do artista) · **Status:** decidida pelo PI em 2026-10-19 (pop-ups do Cowork: "Herói comissionado, cenário no Blender"; "Partir em 2"; "As 8 do Cavaleiro de hoje"; ".glb + .blend fonte"; "Cowork escreve, você envia")
+**Fatia:** F93 / SPEC-093 (MVP4, Slice 4.6 — depois do F84 e da entrega do artista) · **Issue:** #248 (issue-pai #246) · **Status:** decidida pelo PI em 2026-10-19 (pop-ups do Cowork: "Herói comissionado, cenário no Blender"; "Partir em 2"; "As 8 do Cavaleiro de hoje"; ".glb + .blend fonte"; "Cowork escreve, você envia")
 **ADR:** ADR-0024 item 5 · **Par:** SPEC-084 (F84) · **Briefing do artista:** `docs/prd/BRIEFING-ARTISTA-CAVALEIRO.md`
 **Fontes:** ADR-0005, ADR-0006 (não muda nesta fatia), ADR-0010 (equipamento preso a ossos) · `game/scenes/heroes/knight.tscn` (cápsula r 0,4 × 1,8 u; modelo KayKit em escala 0,78, girado 180°) · `game/scripts/net/hero_visual.gd` (clipes exportados por nome)
 **Escopo:** só visual do Cavaleiro, só na cena variante do F84. Gameplay, números, colisão, rede e o Cavaleiro da arena oficial não mudam.

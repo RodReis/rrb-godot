@@ -1,6 +1,6 @@
 # SPEC-084 — Spike visual, parte 1: canto SO (base A + pátio) no estilo Eternal Return, em cena separada e jogável
 
-**Fatia:** F84 / SPEC-084 (MVP4, Slice 4.3) · **Status:** decidida pelo PI em 2026-10-19 (pop-ups do Cowork: "Cavaleiro"; "Base SO + pátio"; "Blender pelo Claude"; "Cena separada, só comparação"; "Pode passar, medindo"; "Eternal Return"; "Jogando a cena"; "Herói comissionado, cenário no Blender"; "Partir em 2")
+**Fatia:** F84 / SPEC-084 (MVP4, Slice 4.3) · **Issue:** #247 (issue-pai #246) · **Status:** decidida pelo PI em 2026-10-19 (pop-ups do Cowork: "Cavaleiro"; "Base SO + pátio"; "Blender pelo Claude"; "Cena separada, só comparação"; "Pode passar, medindo"; "Eternal Return"; "Jogando a cena"; "Herói comissionado, cenário no Blender"; "Partir em 2")
 **ADR:** ADR-0024 item 5 · **Par:** SPEC-093 (F93, Cavaleiro comissionado — parte 2 do spike)
 **Fontes:** ADR-0005 (pipeline Blender), ADR-0006 (direção visual atual — **não muda** nesta fatia), ADR-0009/SPEC-046 (layout e colisão da base SO), ADR-0012 (vale), F50 (pátio, Medieval Village MegaKit), F64 (fonte de cura), F73 (PBR CC0 ≤ 2K e baseline de GPU) · `tools/perf/frametime_probe.gd` · `tools/bake-lightmap.ps1`
 **Escopo:** só visual, só numa cena variante da arena carregada por argumento de dev. A arena oficial, o Launcher, o servidor e os números não mudam.
