@@ -38,6 +38,12 @@ const EnvSchema = z
     .string()
     .optional()
     .transform((value) => (value ? value : undefined)),
+  /** Versão mínima do Launcher para entrar na fila (`vX.Y.Z`, F83/ADR-0023). Vazio = aceita todas. */
+  MIN_CLIENT_VERSION: z
+    .string()
+    .optional()
+    .transform((value) => (value ? value : undefined))
+    .refine((value) => value === undefined || /^v?\d+\.\d+\.\d+$/.test(value), 'MIN_CLIENT_VERSION fora de vX.Y.Z'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   })
   .refine((env) => env.INTERNAL_SECRET !== env.JWT_SECRET, {

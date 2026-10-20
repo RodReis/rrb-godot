@@ -1,13 +1,14 @@
 name: release
 
-# Publica o pacote portatil (ZIP) num GitHub Release ao empurrar uma tag v* (GITHUB.md §8).
+# Publica o instalador do Loot Start (F83, ADR-0023) num GitHub Release e no VPS ao empurrar uma tag v*
+# (GITHUB.md §8): pacote do build-package.ps1 -> makensis (tools/installer/lootstart.nsi) -> latest.json.
 # A tag e anotada, criada na main com CI verde — este workflow nao reverifica isso.
 # Antes da primeira tag: Settings > Variables > RRB_API_URL = URL publica do backend (https://...).
 
 on:
   push:
     tags: ['v*']
-  # Ensaio manual: gera o ZIP e o anexa ao run como artefato, sem criar Release.
+  # Ensaio manual: gera o instalador e o anexa ao run como artefato, sem criar Release.
   workflow_dispatch:
 
 permissions:
@@ -15,7 +16,7 @@ permissions:
 
 env:
   GODOT_VERSION: 4.7.2
-  # Download publico do jogo (#237): o repo e o Release do GitHub sao privados; o ZIP vai para o VPS.
+  # Download publico do jogo (#237): o repo e o Release do GitHub sao privados; o instalador vai para o VPS.
   VPS_HOST: lootstart.cloud
 
 jobs:
@@ -48,7 +49,7 @@ jobs:
           unzip -q /tmp/tpl.tpz 'templates/version.txt' 'templates/windows_release_x86_64.exe' -d /tmp/tpl
           mv /tmp/tpl/templates/* "$dir/"
 
-      - name: Gerar o ZIP
+      - name: Gerar o pacote
         shell: pwsh
         env:
           RRB_API_URL: ${{ vars.RRB_API_URL }}
@@ -56,12 +57,23 @@ jobs:
           RRB_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}
         run: ./tools/build-package.ps1 -ApiUrl $env:RRB_API_URL -Version $env:RRB_VERSION
 
-      - name: Anexar o ZIP (ensaio)
+      # NSIS no proprio runner Linux; VERSION_NUM (X.Y.Z.0) vai para os metadados do Setup.exe.
+      - name: Gerar o instalador
+        env:
+          RRB_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq nsis
+          num=$(printf '%s' "$RRB_VERSION" | sed -nE 's/^v?([0-9]+\.[0-9]+\.[0-9]+)$/\1.0/p')
+          makensis -V2 -DVERSION="$RRB_VERSION" -DVERSION_NUM="${num:-0.0.0.0}" \
+            -DSRC="$PWD/build/package" -DOUT="$PWD/build/LootStart-Setup-$RRB_VERSION.exe" \
+            tools/installer/lootstart.nsi
+
+      - name: Anexar o instalador (ensaio)
         if: github.ref_type != 'tag'
         uses: actions/upload-artifact@v4
         with:
-          name: LootStart-dev-win64
-          path: build/LootStart-dev-win64.zip
+          name: LootStart-Setup-dev
+          path: build/LootStart-Setup-dev.exe
           retention-days: 3
 
       - name: Publicar o Release
@@ -72,23 +84,25 @@ jobs:
         run: |
           cat > /tmp/notes.md <<'NOTES'
           ## Como instalar
-          1. Baixe `LootStart-*-win64.zip` e **extraia tudo** para uma pasta.
-          2. Abra `LootStart.exe`, crie a conta, entre na fila e jogue.
+          1. Baixe `LootStart-Setup-*.exe` e abra.
+          2. O jogo instala na sua pasta de usuário, sem pedir administrador, e cria atalhos no Menu
+             Iniciar e na Área de Trabalho. Abra o Loot Start, crie a conta, entre na fila e jogue.
+          3. Versões novas: o Launcher avisa ao abrir e se atualiza sozinho.
 
           **Aviso do Windows (SmartScreen):** o executável não tem assinatura de código, então aparece
           "O Windows protegeu seu computador". Clique em **Mais informações** e depois em
           **Executar assim mesmo**.
 
-          Não mova nem renomeie a pasta `game`: o Launcher procura o jogo em `game\game.exe`.
-
           ## O que mudou
           NOTES
-          gh release create "$TAG" "build/LootStart-${TAG}-win64.zip" \
+          gh release create "$TAG" "build/LootStart-Setup-${TAG}.exe" \
             --title "$TAG" --notes-file /tmp/notes.md --generate-notes --prerelease
 
-      # Download publico (#237): https://lootstart.cloud/download/ e o atalho LootStart-latest-win64.zip.
+      # Download publico (#237, F83): https://lootstart.cloud/download/LootStart-Setup.exe (atalho) e o
+      # manifesto latest.json que o Launcher le. O manifesto vai por ultimo (rename atomico): nunca
+      # aponta para um instalador que ainda nao subiu.
       # Chave so de upload (usuario rrbdl no VPS), segredo VPS_UPLOAD_KEY; host fixo em infra/known_hosts.
-      - name: Enviar o ZIP para o VPS
+      - name: Enviar o instalador para o VPS
         if: github.ref_type == 'tag'
         env:
           UPLOAD_KEY: ${{ secrets.VPS_UPLOAD_KEY }}
@@ -103,6 +117,11 @@ jobs:
           printf '%s\n' "$UPLOAD_KEY" > ~/.ssh/upload_key
           chmod 600 ~/.ssh/upload_key
           grep -v '^#' infra/known_hosts > ~/.ssh/known_hosts
-          zip="LootStart-${TAG}-win64.zip"
-          scp -i ~/.ssh/upload_key "build/$zip" "rrbdl@${VPS_HOST}:/srv/rrb-download/$zip"
-          ssh -i ~/.ssh/upload_key "rrbdl@${VPS_HOST}" "ln -sfn $zip /srv/rrb-download/LootStart-latest-win64.zip"
+          setup="LootStart-Setup-${TAG}.exe"
+          sha=$(sha256sum "build/$setup" | cut -d' ' -f1)
+          printf '{"version":"%s","installer":"%s","sha256":"%s"}\n' "$TAG" "$setup" "$sha" > build/latest.json
+          dir=/srv/rrb-download
+          scp -i ~/.ssh/upload_key "build/$setup" "rrbdl@${VPS_HOST}:$dir/$setup"
+          scp -i ~/.ssh/upload_key build/latest.json "rrbdl@${VPS_HOST}:$dir/latest.json.tmp"
+          ssh -i ~/.ssh/upload_key "rrbdl@${VPS_HOST}" \
+            "ln -sfn $setup $dir/LootStart-Setup.exe && mv -f $dir/latest.json.tmp $dir/latest.json"

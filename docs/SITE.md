@@ -55,7 +55,7 @@ O `base` é `/` (site na raiz do domínio); `SITE_BASE` troca, se o site voltar 
 ## Publicação e CI
 
 - **Deploy (VPS, #237):** serviço `site` do `infra/docker-compose.prod.yml` no Coolify (domínio `https://lootstart.cloud`, porta 80). `site/Dockerfile` constrói da raiz do repo (o extract lê `shared/` e `docs/`) e serve com nginx (`site/nginx.conf`): o site, `/download/` (pasta do host `/srv/rrb-download`, só leitura) e `/roadmap/` (`docs/roadmap/index.html`). Atualiza a cada Redeploy do recurso. O workflow `site.yml` (GitHub Pages) saiu: o repositório é privado.
-- **Download:** o `release.yml` envia o ZIP da tag para `/srv/rrb-download` (usuário `rrbdl`, só upload; segredo `VPS_UPLOAD_KEY`; chave do host em `infra/known_hosts`) e aponta `LootStart-latest-win64.zip` para ele. O botão "Baixar" usa `historia.json` → `projeto.release_url`.
+- **Download (F83, ADR-0023):** só o instalador. O `release.yml` envia `LootStart-Setup-<tag>.exe` para `/srv/rrb-download` (usuário `rrbdl`, só upload; segredo `VPS_UPLOAD_KEY`; chave do host em `infra/known_hosts`), aponta `LootStart-Setup.exe` para ele e publica o `latest.json` do Launcher. O botão "Baixar" usa `historia.json` → `projeto.release_url` (`.../download/LootStart-Setup.exe`).
 - **Links para o GitHub** ("Ver no GitHub", "Código no GitHub", roadmap no repo) saíram: o repo é privado.
 - **CI:** job `site` em `ci.yml` (path filter `site`), com `pnpm test`, o teste do parser de STATUS e `pnpm build`; entra no `needs` do `gate`. `pnpm/action-setup` exige `packageManager` no `site/package.json`.
 

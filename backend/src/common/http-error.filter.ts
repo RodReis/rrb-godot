@@ -19,6 +19,7 @@ const DEFAULT_CODES: Record<number, string> = {
   404: 'NOT_FOUND',
   409: 'CONFLICT',
   413: 'PAYLOAD_TOO_LARGE',
+  426: 'CLIENT_OUTDATED',
   429: 'RATE_LIMITED',
 };
 

@@ -34,6 +34,8 @@ var history: HistoryService = HistoryService.new(api)
 var profile: ProfileService = ProfileService.new(api)
 var avatars: AvatarStore = AvatarStore.new()
 var catalog: CatalogService = CatalogService.new()
+## Atualizacao (F83): criado no _ready com o ApiClient final (o teste troca o api antes).
+var updates: UpdateService
 var queue: QueueService = QueueService.new()
 var game: GameProcess = GameProcess.new()
 ## Espera entre as tentativas de achar a partida no historico (teste zera).
@@ -54,6 +56,8 @@ var _match: MatchOverlay = MatchOverlay.new()
 var _result: MatchResultCard = MatchResultCard.new()
 var _splash: BootSplash = BootSplash.new()
 var _splash_min_done: bool = false
+## Versao nova vista no manifesto (vazio = em dia); barra a fila online.
+var _update: Dictionary = {}
 var _health: Timer = Timer.new()
 var _online: bool = false
 ## A primeira checagem do backend ja voltou?
@@ -100,6 +104,9 @@ func _ready() -> void:
 	add_child(_health)
 	_health.start()
 	check_backend()
+	if updates == null:
+		updates = UpdateService.new(api)
+	_check_update()
 	var gallery := GALLERY_ARG in OS.get_cmdline_user_args()
 	_stack.push(Router.GALLERY if gallery else Router.LOGIN)
 
@@ -220,7 +227,52 @@ func _refresh_footer() -> void:
 	if _stack.depth() > 1:
 		hints.append(HotkeyHint.make("ESC", tr("Voltar")))
 	var status := tr("SERVIDOR %s") % _bar.backend_status_text().strip_edges()
-	_footer.bind(hints, status, AppBar.BRAND)
+	_footer.bind(hints, status, "%s %s" % [AppBar.BRAND, api.client_version])
+
+
+## Versao nova no site (F83, ADR-0023): barra a fila e oferece a atualizacao quando o splash sai.
+func _check_update() -> void:
+	var manifest := await updates.check()
+	if manifest.is_empty():
+		return
+	_update = manifest
+	var lobby := _stack.current() as LobbyScreen
+	if lobby != null:
+		lobby.set_update_required(manifest["version"])
+	if is_instance_valid(_splash):
+		await _splash.tree_exited
+	offer_update()
+
+
+## Aviso "Atualizacao disponivel": Atualizar baixa, confere e abre o instalador e fecha o Launcher
+## (o instalador o reabre); Depois deixa jogar o treino, com a fila barrada.
+func offer_update() -> void:
+	if _update.is_empty() or game.is_running():
+		return
+	var actions: Array[DialogAction] = [
+		DialogAction.make(tr("Depois")),
+		DialogAction.make(tr("Atualizar"), DialogAction.Kind.PRIMARY)
+	]
+	var body := (
+		tr(
+			(
+				"A versão %s do Loot Start saiu. A atualização baixa e instala sozinha; o Launcher fecha e "
+				+ "abre de novo. Suas configurações e seu login continuam."
+			)
+		)
+		% _update["version"]
+	)
+	if await confirm(tr("Atualização disponível"), body, actions) != 1:
+		return
+	show_loading(tr("Baixando a atualização…"))
+	api.download_progressed.connect(_on_api_download_progressed)
+	var ok := await updates.install(_update)
+	api.download_progressed.disconnect(_on_api_download_progressed)
+	if ok:
+		get_tree().quit()
+		return
+	hide_loading()
+	show_toast(tr("Não foi possível atualizar. Tente de novo mais tarde."), Toast.Kind.ERROR)
 
 
 func _start_practice() -> void:
@@ -253,6 +305,11 @@ func _on_splash_min_timeout() -> void:
 	_splash_min_done = true
 	if _checked:
 		_dismiss_splash()
+
+
+func _on_api_download_progressed(received: int, total: int) -> void:
+	if total > 0:
+		show_loading(tr("Baixando a atualização… %d%%") % roundi(100.0 * received / total))
 
 
 func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
@@ -295,6 +352,8 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 		lobby.practice_requested.connect(_start_practice)
 		lobby.settings_requested.connect(_stack.push.bind(Router.SETTINGS))
 		lobby.logout_requested.connect(_logout)
+		lobby.update_requested.connect(offer_update)
+		lobby.set_update_required(_update.get("version", ""))
 
 
 func _on_stack_screen_changed(route: StringName) -> void:

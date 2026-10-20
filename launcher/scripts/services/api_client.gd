@@ -7,6 +7,8 @@ extends Node
 
 ## Sessao expirada e sem renovacao: o App volta ao login.
 signal unauthorized
+## Download em andamento (F83): bytes recebidos e total (-1 enquanto o servidor nao disse).
+signal download_progressed(received: int, total: int)
 
 ## Resultado do refresh: renovou, recusado (sessao acabou) ou sem resposta (rede).
 enum Refresh { OK, DENIED, OFFLINE }
@@ -25,10 +27,15 @@ const BUILD_CONFIG_PATH: String = "res://build_config.cfg"
 const STATUS_UNAUTHORIZED: int = 401
 const STATUS_OK_MIN: int = 200
 const STATUS_OK_MAX: int = 299
+## Versao do Launcher em toda chamada (F83): o backend recusa a fila abaixo de MIN_CLIENT_VERSION.
+const CLIENT_VERSION_HEADER: String = "X-Client-Version"
+## Intervalo do progresso do download.
+const PROGRESS_SECONDS: float = 0.25
 
 var base_url: String = DEFAULT_BASE_URL
 var access_token: String = ""
 var refresh_token: String = ""
+var client_version: String = BuildInfo.version()
 
 var _probe: PingProbe
 
@@ -138,19 +145,52 @@ func _refresh() -> Refresh:
 	return Refresh.OK
 
 
+## GET de um JSON fora do backend (manifesto de atualizacao, F83), sem sessao.
+func fetch_json(url: String) -> Response:
+	return await _send_url(HTTPClient.METHOD_GET, url, null, false)
+
+
+## Baixa [param url] para o arquivo [param path] (instalador, F83), sem timeout (o arquivo e grande)
+## e emitindo download_progressed; false se a rede falhou ou o status nao e 2xx.
+func download(url: String, path: String) -> bool:
+	var http := HTTPRequest.new()
+	http.download_file = path
+	add_child(http)
+	var done := [false, 0]
+	http.request_completed.connect(
+		func(result: int, status: int, _h: PackedStringArray, _b: PackedByteArray) -> void:
+			done[1] = status if result == HTTPRequest.RESULT_SUCCESS else NO_RESPONSE
+			done[0] = true
+	)
+	if http.request(url) != OK:
+		http.queue_free()
+		return false
+	while not done[0]:
+		await get_tree().create_timer(PROGRESS_SECONDS).timeout
+		download_progressed.emit(http.get_downloaded_bytes(), http.get_body_size())
+	http.queue_free()
+	return done[1] >= STATUS_OK_MIN and done[1] <= STATUS_OK_MAX
+
+
 ## Um HTTPRequest por chamada, liberado no fim; timeout de 10 s.
 func _send(method: HTTPClient.Method, path: String, body: Variant, authed: bool) -> Response:
+	return await _send_url(method, base_url + path, body, authed)
+
+
+func _send_url(method: HTTPClient.Method, url: String, body: Variant, authed: bool) -> Response:
 	var http := HTTPRequest.new()
 	http.timeout = TIMEOUT_SECONDS
 	add_child(http)
-	var headers := PackedStringArray(["Accept: application/json"])
+	var headers := PackedStringArray(
+		["Accept: application/json", "%s: %s" % [CLIENT_VERSION_HEADER, client_version]]
+	)
 	var payload := ""
 	if body != null:
 		headers.append("Content-Type: application/json")
 		payload = JSON.stringify(body)
 	if authed and has_session():
 		headers.append("Authorization: Bearer " + access_token)
-	if http.request(base_url + path, headers, method, payload) != OK:
+	if http.request(url, headers, method, payload) != OK:
 		http.queue_free()
 		return Response.make(NO_RESPONSE, null)
 	var result: Array = await http.request_completed

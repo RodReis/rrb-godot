@@ -114,3 +114,19 @@ func test_diorama_desenha_visivel_e_para_sem_foco() -> void:
 	assert_true(diorama.is_running())
 	_lobby.visible = false
 	assert_false(diorama.is_running())
+
+
+func test_versao_nova_barra_a_fila_e_pede_atualizacao() -> void:
+	_lobby.set_update_required("v0.3.0")
+	_api.reply("POST /queue", 201, TICKET_JSON)
+	await _lobby.toggle_queue()
+	assert_does_not_have(_api.calls, "POST /queue", "nem chega ao backend")
+	assert_signal_emitted(_lobby, "update_requested")
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.ERROR)
+	assert_string_contains(_lobby.banner_text(), "v0.3.0")
+
+
+func test_backend_recusa_versao_velha_com_mensagem_propria() -> void:
+	_api.reply("POST /queue", 426, {"code": "CLIENT_OUTDATED", "message": "Atualize"})
+	await _lobby.toggle_queue()
+	assert_string_contains(_lobby.banner_text(), "versão nova")

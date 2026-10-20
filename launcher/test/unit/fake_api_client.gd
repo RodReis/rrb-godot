@@ -22,6 +22,11 @@ var bearers: Array[String] = []
 ## resposta nao volta, como o logout durante o refresh).
 var during_call: Callable = Callable()
 
+## download(): grava estes bytes no destino e devolve download_ok (sem rede).
+var download_bytes: PackedByteArray = PackedByteArray()
+var download_ok: bool = true
+var downloads: Array[String] = []
+
 var _replies: Dictionary[String, Array] = {}
 
 
@@ -30,6 +35,20 @@ var _replies: Dictionary[String, Array] = {}
 func ping() -> int:
 	var response: Response = await _send(HTTPClient.METHOD_GET, "/health", null, false)
 	return FAKE_PING_MS if response.ok() else PingProbe.FAILED
+
+
+## Manifesto falso: resposta de "GET <url absoluta>".
+func fetch_json(url: String) -> Response:
+	return await _send(HTTPClient.METHOD_GET, url, null, false)
+
+
+func download(url: String, path: String) -> bool:
+	downloads.append(url)
+	if download_ok:
+		var file := FileAccess.open(path, FileAccess.WRITE)
+		file.store_buffer(download_bytes)
+		file.close()
+	return download_ok
 
 
 func reply(call: String, status: int, json: Variant = null) -> void:

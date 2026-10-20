@@ -2,13 +2,16 @@
 .SYNOPSIS
   Gera o ZIP portatil do jogo (F28, ARCHITECTURE-LAUNCHER §5.1):
     LootStart.exe + LootStart.pck + game/game.exe + game/game.pck + LEIA-ME.txt
-  com a URL publica do backend embutida no Launcher (build_config.cfg dentro do .pck).
+  com a URL publica do backend embutida no Launcher (build_config.cfg dentro do .pck) e, desde o F83
+  (ADR-0023), a versao do pacote e a URL do manifesto de atualizacao ([build] version/update_url).
+  Versao fora de vX.Y.Z (ex.: dev) nunca procura atualizacao.
 .EXAMPLE
   .\tools\build-package.ps1 -ApiUrl https://api.exemplo.com -Version v0.3.0
 #>
 param(
     [Parameter(Mandatory)][ValidatePattern('^https?://[^\s/]+[^\s]*$')][string]$ApiUrl,
-    [ValidatePattern('^[A-Za-z0-9._-]+$')][string]$Version = 'dev'
+    [ValidatePattern('^[A-Za-z0-9._-]+$')][string]$Version = 'dev',
+    [ValidatePattern('^https?://[^\s/]+[^\s]*$')][string]$UpdateUrl = 'https://lootstart.cloud/download/latest.json'
 )
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
@@ -32,7 +35,9 @@ New-Item -ItemType Directory -Force (Join-Path $package 'game'), (Join-Path $bui
 
 $config = Join-Path $repo 'launcher/build_config.cfg'
 try {
-    Set-Content -Path $config -Encoding utf8 -Value "[backend]`nurl=`"$($ApiUrl.TrimEnd('/'))`"`n"
+    Set-Content -Path $config -Encoding utf8 -Value (
+        "[backend]`nurl=`"$($ApiUrl.TrimEnd('/'))`"`n`n" +
+        "[build]`nversion=`"$Version`"`nupdate_url=`"$UpdateUrl`"`n")
     $ErrorActionPreference = 'Continue'   # Godot escreve avisos em stderr
     foreach ($module in 'game', 'launcher') {
         & $cli --headless --path (Join-Path $repo $module) --import 2>&1 | Out-Null

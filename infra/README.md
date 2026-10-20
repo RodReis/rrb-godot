@@ -51,8 +51,13 @@ docker logs <backend>                             # orquestrador: alocação, he
 - **Site** (`site/Dockerfile`, nginx) é o serviço `site` do compose: no Coolify, domínio `https://lootstart.cloud` no
   serviço `site`, porta 80. Serve o site, `/download/` (pasta do host `/srv/rrb-download`, só leitura) e `/roadmap/`.
 - **Download:** `/srv/rrb-download` pertence ao usuário `rrbdl` (só upload por chave, `restrict`, home fora da pasta
-  servida). O `release.yml` envia o ZIP da tag e aponta `LootStart-latest-win64.zip` para ele; precisa do segredo
-  `VPS_UPLOAD_KEY` (chave privada do `rrbdl`) no repositório. Chave do host em `infra/known_hosts`.
+  servida). O `release.yml` (F83, ADR-0023) envia `LootStart-Setup-<tag>.exe`, aponta `LootStart-Setup.exe` para ele
+  e troca o `latest.json` (`{version, installer, sha256}`) por último, que é o que o Launcher lê para se atualizar;
+  precisa do segredo `VPS_UPLOAD_KEY` (chave privada do `rrbdl`) no repositório. Chave do host em `infra/known_hosts`.
+- **Atualização obrigatória:** depois de publicar uma versão que muda a partida ou o contrato, ponha
+  `MIN_CLIENT_VERSION=<tag>` nas variáveis do backend no Coolify e faça Redeploy: o backend recusa a fila (`426
+  CLIENT_OUTDATED`) de Launcher mais velho. Vazio = aceita todos. O Launcher já barra a fila sozinho quando vê versão nova
+  no `latest.json`; a variável cobre quem não sabe se atualizar (o ZIP v0.1.0).
 - **Repositório privado:** o recurso do Coolify precisa de acesso de leitura ao repo. Sem trocar o recurso: um token
   *fine-grained* do GitHub só com **Contents: Read-only** neste repositório, posto na URL do repositório do recurso
   (`https://<token>@github.com/RodReis/rrb-godot`). O token fica só no Coolify.
