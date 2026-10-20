@@ -237,6 +237,9 @@
           "409": {
             "description": "ALREADY_QUEUED (ticket ativo ou partida em andamento)"
           },
+          "426": {
+            "description": "CLIENT_OUTDATED (X-Client-Version < MIN_CLIENT_VERSION)"
+          },
           "429": {
             "description": "RATE_LIMITED"
           }

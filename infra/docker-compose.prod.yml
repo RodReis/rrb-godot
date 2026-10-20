@@ -54,6 +54,7 @@ services:
       GAMESERVER_NETWORK: ${GAMESERVER_NETWORK:-rrb-net}
       GAMESERVER_BACKEND_URL: http://backend:3000
       LOG_LEVEL: ${LOG_LEVEL:-info}
+      MIN_CLIENT_VERSION: ${MIN_CLIENT_VERSION:-}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     # O processo roda como `node`; o socket pertence ao grupo docker do host (getent group docker).

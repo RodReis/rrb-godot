@@ -67,9 +67,10 @@ launcher/
 
 ### 3.3 Serviços (contratos)
 
-- `ApiClient`: `request(method, path, body) -> Response{status, json}`; injeta `Authorization: Bearer`; timeout 10 s; 401 numa chamada autenticada tenta `POST /auth/refresh` uma vez e repete; recusado → limpa a sessão e emite `unauthorized` (volta ao login). **Um `HTTPRequest` por chamada** (sem pool — F25). URL por `--api=` (padrão `http://127.0.0.1:3000`) ou embutida no pacote (`build_config.cfg`, F28). `GET /health` sem conta alimenta o chip de status da barra (10 s).
+- `ApiClient`: `request(method, path, body) -> Response{status, json}`; injeta `Authorization: Bearer` e `X-Client-Version` (versão do pacote, F83); timeout 10 s; 401 numa chamada autenticada tenta `POST /auth/refresh` uma vez e repete; recusado → limpa a sessão e emite `unauthorized` (volta ao login). **Um `HTTPRequest` por chamada** (sem pool — F25). URL por `--api=` (padrão `http://127.0.0.1:3000`) ou embutida no pacote (`build_config.cfg`, F28). `GET /health` sem conta alimenta o chip de status da barra (10 s).
 - `AuthService`: `login(email, senha)`, `register(email, senha)` (validação local antes de chamar o backend), `logout()`, `is_logged_in()`; os tokens ficam no `ApiClient` (`AuthTokens`). JWT **em memória** e, opcionalmente, refresh token em `user://session.dat` cifrado com `OS.get_unique_id()` — só se o PI aprovar "lembrar-me" (R-PEND-03 em `RASTREABILIDADE.md`); por padrão, sem persistência.
 - `QueueService`: `join() -> QueueTicket`, `leave()`, polling `GET /queue/:ticket` a cada 2 s (sem WebSocket na fatia: backend fino, PRD D10) → sinais `searching(elapsed)`, `matched(MatchAssignment{host, port, token})`, `cancelled`, `failed(reason)`.
+- `UpdateService` (F83, ADR-0023): ao abrir, lê o `latest.json` (`[build] update_url` do `build_config.cfg`) por `ApiClient.fetch_json`; versão mais nova (`UpdateRules`, regra pura) barra a fila no Lobby e o App oferece "Atualizar": `ApiClient.download` para `user://update/`, confere o SHA-256 e roda o instalador com `/S /UPDATE` (o App fecha; o instalador reabre o Launcher). Build de dev (versão fora de `vX.Y.Z`) nunca atualiza. `BuildInfo` lê `[build] version` (rodapé) e `update_url`.
 - `GameProcess`: `launch(args: PackedStringArray) -> pid`, `is_running()`, sinal `exited(code)` (polling `OS.is_process_running` a 0,5 s). Caminho do executável: `OS.get_executable_path().get_base_dir() + "/game/game.exe"` (layout de instalação, §5.1); sobrescrevível por `--game-path=` para dev.
 - `SettingsStore`: lê/escreve `user://settings.cfg` (seções `video`, `audio`, `controls`, `graphics`, `camera`; contrato em `shared/core/user_settings.gd`); aplica vídeo/áudio no próprio Launcher. Contrato do arquivo em §5.3.
 - `HistoryService`: `GET /matches?mine=1` (obrigatório; JWT) → `MatchHistory{totals{wins,losses}, matches[≤50]}` — resultado `win`/`loss`/`interrupted`, `playedAt`, `endReason`, `durationS`, meu lado completo e do oponente **só herói, kills, nível e `#nickname`** (F26/F35); cache em memória por sessão, `clear()` no logout/401/fim de partida online. **F70 (ADR-0015):** `fetch(force)` com espera da partida nova (3 × 1 s) para o card de resultado no lobby.
@@ -120,7 +121,7 @@ backend/
 
 ### 4.2 Fluxo de partida
 
-1. Launcher `POST /queue` → `QueueTicket`.
+1. Launcher `POST /queue` → `QueueTicket` (`426 CLIENT_OUTDATED` se `X-Client-Version` < `MIN_CLIENT_VERSION`, F83).
 2. Matchmaker pareia os dois primeiros tickets → pede ao orquestrador um servidor do pool.
 3. Orquestrador: escolhe container ocioso (ou sobe um se o pool estiver vazio), gera `match_token` (JWT interno com `match_id`, `player_ids`, `exp` 2 min), grava `matches` (`status=assigned`), devolve `host:porta`.
 4. `GET /queue/:ticket` passa a responder `matched` com `MatchAssignment` **e `matchId`** (o `abandon` precisa dele — F25).
@@ -148,9 +149,10 @@ Este é o **único** lugar onde os dois módulos se tocam. Mudar aqui exige ADR.
 ### 5.1 Layout de instalação
 
 ```
-<instalação>/
+<instalação>/                         (instalador do F83: %LOCALAPPDATA%\Programs\Loot Start, ADR-0023)
   LootStart.exe + LootStart.pck     (nome do F82, ADR-0022)
   game/game.exe + game.pck
+  Desinstalar.exe
 ```
 
 ### 5.2 Argumentos e códigos de saída

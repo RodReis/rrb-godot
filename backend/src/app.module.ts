@@ -9,6 +9,7 @@ import { APP_CONFIG } from './common/app-config';
 import { Clock, SystemClock } from './common/clock';
 import { HttpErrorFilter, ZodValidationPipe } from './common/http-error.filter';
 import { InternalGuard } from './common/internal.guard';
+import { ClientVersionGuard } from './common/client-version.guard';
 import { JwtGuard } from './common/jwt.guard';
 import { AppConfig } from './config';
 import { Database } from './db/database';
@@ -81,6 +82,7 @@ export class AppModule {
         SweeperService,
         JwtGuard,
         InternalGuard,
+        ClientVersionGuard,
       ],
     };
   }

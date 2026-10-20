@@ -12,14 +12,13 @@ São dois programas independentes que se falam por processo e argumentos (`docs/
 
 ## Para jogar (instalação do pacote)
 
-> **Estado:** o pacote ZIP sai num GitHub Release (card F28, #82) e depende do servidor no VPS. Enquanto não houver Release publicado, use a seção "Para desenvolver".
+> **Estado:** o instalador sai a cada Release (F83, #242) em https://lootstart.cloud e depende do servidor no VPS. Enquanto não houver Release publicado, use a seção "Para desenvolver".
 
 **Requisitos:** Windows 64 bits, placa de vídeo com Vulkan (o Game só roda no renderer Forward+), internet.
 
-1. Baixe `LootStart-<versão>-win64.zip` em https://lootstart.cloud/download/.
-2. **Extraia o ZIP inteiro** para uma pasta (não rode de dentro do ZIP). Não mova nem renomeie a pasta `game`: o Launcher procura o jogo em `game\game.exe`.
-3. Dê dois cliques em `LootStart.exe`.
-4. **Aviso do Windows (SmartScreen):** o executável não tem assinatura de código, então aparece "O Windows protegeu seu computador". Clique em **Mais informações** e depois em **Executar assim mesmo**.
+1. Baixe o instalador `LootStart-Setup.exe` em https://lootstart.cloud (botão de download).
+2. Abra o instalador. **Aviso do Windows (SmartScreen):** sem assinatura de código, aparece "O Windows protegeu seu computador"; clique em **Mais informações** e depois em **Executar assim mesmo**. O jogo instala em `%LOCALAPPDATA%\Programs\Loot Start`, sem pedir administrador, com atalhos no Menu Iniciar e na Área de Trabalho; desinstala por "Aplicativos instalados".
+3. Abra o **Loot Start**. Versão nova: o Launcher avisa ao abrir e se atualiza sozinho (obrigatório para a fila online; o treino segue liberado).
 5. **Crie sua conta** (aba "Criar conta"): e-mail e senha com **mínimo de 8 caracteres, ao menos uma letra e um número**. Não há recuperação de senha nem verificação de e-mail.
 6. **Defina o nickname** (obrigatório no 1º login): 3–16 caracteres `A–Z a–z 0–9 _`, único sem diferenciar maiúsculas. Ele aparece com `#` na frente. Você pode escolher um avatar (predefinido ou PNG/JPG até 1 MB, que fica só no seu computador).
 7. No lobby, clique em **BUSCAR PARTIDA 1V1**. Quando o oponente aparece, o Launcher abre o Game sozinho. Ao fim da partida o Game fecha (sozinho em 15 s, ou em "Voltar ao lobby") e o Launcher volta ao lobby com o **resultado**; o **Histórico** guarda todas as partidas.

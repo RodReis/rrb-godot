@@ -6,6 +6,7 @@ import {
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiResponse,
   ApiTags,
   ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
@@ -14,6 +15,7 @@ import { SkipThrottle, ThrottlerGuard } from '@nestjs/throttler';
 import { ParseUuidPipe } from '../common/parse-uuid.pipe';
 import type { AuthenticatedRequest } from '../common/jwt.guard';
 import { JwtGuard } from '../common/jwt.guard';
+import { ClientVersionGuard } from '../common/client-version.guard';
 import { QueueTicketBody, QueueTicketDto, TicketStatusDto } from './queue.dto';
 import { QueueService, TicketView } from './queue.service';
 
@@ -34,7 +36,9 @@ export class QueueController {
   constructor(private readonly queue: QueueService) {}
 
   @Post()
+  @UseGuards(ClientVersionGuard)
   @ApiCreatedResponse({ type: QueueTicketDto })
+  @ApiResponse({ status: 426, description: 'CLIENT_OUTDATED (X-Client-Version < MIN_CLIENT_VERSION)' })
   @ApiConflictResponse({ description: 'ALREADY_QUEUED (ticket ativo ou partida em andamento)' })
   async join(@Req() req: AuthenticatedRequest): Promise<QueueTicketBody> {
     const ticket = await this.queue.join(req.userId);

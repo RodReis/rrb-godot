@@ -12,6 +12,8 @@ extends LauncherScreen
 signal practice_requested
 signal settings_requested
 signal logout_requested
+## Fila barrada por versao nova (F83): o App reabre o aviso de atualizacao.
+signal update_requested
 
 enum QueueState { IDLE, JOINING, SEARCHING, MATCHED, ERROR }
 
@@ -48,6 +50,7 @@ var _elapsed: int = 0
 var _tick: Timer = Timer.new()
 var _diorama: LobbyDiorama
 var _cta: CtaButton = CtaButton.new()
+var _update_version: String = ""
 var _play: Button = Button.new()
 var _status_cell: Label = Label.new()
 var _time_cell: Label = Label.new()
@@ -135,6 +138,11 @@ func banner_text() -> String:
 
 
 ## BUSCAR PARTIDA (ou JOGAR / Tentar de novo) e CANCELAR FILA no mesmo botao.
+## Versao nova publicada (F83, ADR-0023): a fila online fica barrada ate atualizar; o treino nao.
+func set_update_required(version: String) -> void:
+	_update_version = version
+
+
 func toggle_queue() -> void:
 	if _queue == null:
 		return
@@ -143,6 +151,10 @@ func toggle_queue() -> void:
 		await _queue.leave()
 		_cta.disabled = _state in [QueueState.JOINING, QueueState.MATCHED]
 	elif _state in [QueueState.IDLE, QueueState.ERROR]:
+		if not _update_version.is_empty():
+			_show_state(QueueState.ERROR, _outdated_text())
+			update_requested.emit()
+			return
 		_show_state(QueueState.JOINING)
 		await _queue.join()
 		if _state == QueueState.JOINING:  # join falhou sem sinal de busca (failed ja tratou)
@@ -484,10 +496,18 @@ func _on_queue_matched() -> void:
 	_show_state(QueueState.MATCHED)
 
 
+func _outdated_text() -> String:
+	return (
+		tr("A versão %s do jogo saiu. Atualize para jogar online; o treino continua liberado.")
+		% (_update_version)
+	)
+
+
 func _on_queue_failed(reason: String) -> void:
 	var messages: Dictionary[String, String] = {
 		ApiClient.OFFLINE: "Servidor fora do ar. A fila não foi mantida.",
 		"ALREADY_QUEUED": "Esta conta já está na fila ou em uma partida.",
+		"CLIENT_OUTDATED": "Há uma versão nova do jogo. Atualize para jogar online.",
 		QueueService.MATCH_GONE: "A partida encontrada não está mais disponível.",
 	}
 	_show_state(QueueState.ERROR, tr(messages.get(reason, "Não foi possível entrar na fila.")))
