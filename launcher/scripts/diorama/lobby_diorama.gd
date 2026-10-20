@@ -4,13 +4,9 @@ extends SubViewportContainer
 ## SubViewport com arena hexagonal reduzida, o heroi em destaque em idle sobre um pedestal com aro
 ## dourado, tochas e cristais. E o fundo do lobby no enquadramento do prototipo (Menu Principal:
 ## heroi a esquerda, arena ao crepusculo). Renderiza a 30 fps e para sem foco ou invisivel.
-## DUEL: Cavaleiro x Arqueiro frente a frente (arte do Login, diorama/render_login_art.gd).
-
-enum Mode { LOBBY, DUEL }
 
 const FPS: float = 30.0
 const KNIGHT_SCENE: String = "res://shared/assets/kaykit/adventurers/Knight.glb"
-const RANGER_SCENE: String = "res://shared/assets/rrb/heroes/ranger.glb"
 ## Pecas do pack que o Cavaleiro nao usa (mesma lista do visual do heroi no Game).
 const KNIGHT_HIDDEN: Array[StringName] = [
 	&"1H_Sword_Offhand", &"2H_Sword", &"Rectangle_Shield", &"Round_Shield", &"Spike_Shield"
@@ -51,9 +47,6 @@ const CRYSTAL_ENERGY: float = 1.6
 const CAMERA_FOV: float = 38.0
 const LOBBY_EYE: Vector3 = Vector3(4.4, 3.2, 11.0)
 const LOBBY_TARGET: Vector3 = Vector3(3.6, 1.4, 0.0)
-const DUEL_EYE: Vector3 = Vector3(0.0, 1.9, 5.0)
-const DUEL_TARGET: Vector3 = Vector3(0.0, 0.9, 0.0)
-const DUEL_GAP: float = 1.5
 ## Heroi levemente virado para a camera.
 const HERO_FACING_DEG: float = 18.0
 ## Pontos de tochas, muralhas, torres e cristais (x, z; giro em graus) atras do heroi.
@@ -63,8 +56,6 @@ const WALLS: Array[Vector3] = [
 ]
 const TOWERS: Array[Vector3] = [Vector3(-8.0, -6.0, 0.0), Vector3(12.0, -6.0, 0.0)]
 const CRYSTALS: Array[Vector2] = [Vector2(-5.5, -4.0), Vector2(9.5, -3.5)]
-
-@export var mode: Mode = Mode.LOBBY
 
 var _viewport: SubViewport = SubViewport.new()
 var _world: Node3D = Node3D.new()
@@ -131,16 +122,9 @@ func _refresh_running() -> void:
 func _build() -> void:
 	_environment()
 	_floor()
-	if mode == Mode.LOBBY:
-		_pedestal(Vector3.ZERO)
-		_hero(KNIGHT_SCENE, KNIGHT_HIDDEN, Vector3(0.0, PEDESTAL_HEIGHT, 0.0), HERO_FACING_DEG)
-		_camera(LOBBY_EYE, LOBBY_TARGET)
-	else:
-		var left := Vector3(-DUEL_GAP, 0.0, 0.0)
-		var right := Vector3(DUEL_GAP, 0.0, 0.0)
-		_hero(KNIGHT_SCENE, KNIGHT_HIDDEN, left, 90.0 - HERO_FACING_DEG)
-		_hero(RANGER_SCENE, [] as Array[StringName], right, -90.0 + HERO_FACING_DEG)
-		_camera(DUEL_EYE, DUEL_TARGET)
+	_pedestal(Vector3.ZERO)
+	_hero(KNIGHT_SCENE, KNIGHT_HIDDEN, Vector3(0.0, PEDESTAL_HEIGHT, 0.0), HERO_FACING_DEG)
+	_camera(LOBBY_EYE, LOBBY_TARGET)
 	for spot: Vector2 in TORCHES:
 		_torch(Vector3(spot.x, 0.0, spot.y))
 	for wall: Vector3 in WALLS:

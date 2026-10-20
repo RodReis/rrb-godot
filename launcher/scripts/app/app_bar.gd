@@ -25,6 +25,7 @@ const UNKNOWN_PING: int = -1
 
 var _nav: Dictionary[StringName, Button] = {}
 var _nav_box: HBoxContainer = HBoxContainer.new()
+var _brand: BrandLogo = BrandLogo.make(LOGO_SIZE.y, UiTokens.TYPE_LN_HEADLINE_SM)
 var _divider: VSeparator = VSeparator.new()
 var _dot: Panel = Panel.new()
 var _status: Label = Label.new()
@@ -39,7 +40,7 @@ func _init() -> void:
 	var row := HBoxContainer.new()
 	row.theme_type_variation = &"LnHGapLg"
 	add_child(row)
-	row.add_child(BrandLogo.make(LOGO_SIZE.y, UiTokens.TYPE_LN_HEADLINE_SM))
+	row.add_child(_brand)
 	_divider.theme_type_variation = &"LnDividerV"
 	_divider.custom_minimum_size.y = DIVIDER_HEIGHT
 	_divider.size_flags_vertical = SIZE_SHRINK_CENTER
@@ -90,6 +91,15 @@ func set_nav_visible(nav_visible: bool) -> void:
 
 
 ## Status real do backend (GET /health): online com o ping em ms, offline ou ainda verificando.
+## No Login a marca ja esta grande no meio da tela (F82): a barra a esconde.
+func set_brand_visible(brand_visible: bool) -> void:
+	_brand.visible = brand_visible
+
+
+func brand_visible() -> bool:
+	return _brand.visible
+
+
 func set_backend_status(online: bool, ping_ms: int = UNKNOWN_PING) -> void:
 	var checking := not online and ping_ms == UNKNOWN_PING
 	_status.text = tr("VERIFICANDO") if checking else tr("ONLINE" if online else "OFFLINE")

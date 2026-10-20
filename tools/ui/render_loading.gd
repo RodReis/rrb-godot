@@ -5,6 +5,7 @@ extends SceneTree
 ##   shared/assets/ui/loading/arena_night.png  arena de noite (noite = 1)
 ##   shared/assets/ui/loading/heroes.png       os herois em pose, no entardecer
 ##   shared/assets/ui/loading/splash.png       marca "Loot Start" sobre o entardecer (Launcher)
+##   shared/assets/ui/login_duel.png           os herois em faixa larga para a arte do Login (F82)
 ## Mesma luz/ceu do ciclo dia/noite do jogo (DayNightProfile). Heroi novo: acrescente em HEROES e
 ## rode de novo. Precisa de janela (GPU) e do projeto do Game; na raiz do repo:
 ##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/render_loading.gd
@@ -66,6 +67,12 @@ const STAGE_CAMERA_BACK: float = 12.5
 const STAGE_CAMERA_HEIGHT: float = 1.5
 const STAGE_TARGET_HEIGHT: float = 0.4
 const STAGE_FOV: float = 34.0
+## Arte do Login (F82): ~2x a moldura de ~1067 x 360 px; mesma largura de cena do heroes.png (FOV
+## horizontal equivalente a STAGE_FOV em 16:9) e a vista sobe para a fileira caber na faixa.
+const LOGIN_ART: String = "res://shared/assets/ui/login_duel.png"
+const LOGIN_SIZE: Vector2i = Vector2i(2080, 704)
+const LOGIN_FOV_H: float = 57.0
+const LOGIN_V_OFFSET: float = 0.7
 ## Luz de frente nos herois (no entardecer o sol fica atras deles e a frente some na sombra).
 const KEY_COLOR: Color = Color(1.0, 0.88, 0.72)
 const KEY_ENERGY: float = 1.0
@@ -122,7 +129,9 @@ func _run() -> void:
 	if only.is_empty() or only == "arena_night":
 		failed = not await _arena_shot("arena_night", NIGHT_NIGHT) or failed
 	if only.is_empty() or only == "heroes":
-		failed = not await _heroes_shot("heroes", NIGHT_DUSK) or failed
+		failed = not await _heroes_shot(OUT_DIR + "heroes.png", NIGHT_DUSK) or failed
+	if only.is_empty() or only == "login_duel":
+		failed = not await _heroes_shot(LOGIN_ART, NIGHT_DUSK, LOGIN_SIZE) or failed
 	if only.is_empty() or only == "splash":
 		failed = not await _splash("splash", NIGHT_DUSK) or failed
 	quit(1 if failed else 0)
@@ -135,8 +144,9 @@ func _arena_shot(file: String, night: float) -> bool:
 	return _save(await _capture(viewport), file)
 
 
-func _heroes_shot(file: String, night: float) -> bool:
-	var viewport := _new_viewport()
+## Fileira dos herois; [param size] diferente de SIZE = faixa larga do Login (largura fixa).
+func _heroes_shot(path: String, night: float, size: Vector2i = SIZE) -> bool:
+	var viewport := _new_viewport(size)
 	_new_arena(viewport, night)
 	var facing := STAGE_FACING.normalized()
 	var across := Vector3.UP.cross(facing).normalized()
@@ -155,6 +165,10 @@ func _heroes_shot(file: String, night: float) -> bool:
 		_place_hero(viewport, ids[i], at, facing, POSE_TIMES[i % POSE_TIMES.size()])
 	var camera := Camera3D.new()
 	camera.fov = STAGE_FOV
+	if size != SIZE:
+		camera.keep_aspect = Camera3D.KEEP_WIDTH
+		camera.fov = LOGIN_FOV_H
+		camera.v_offset = LOGIN_V_OFFSET
 	camera.far = CAMERA_FAR
 	viewport.add_child(camera)
 	var eye := STAGE_CENTER + facing * STAGE_CAMERA_BACK + Vector3.UP * STAGE_CAMERA_HEIGHT
@@ -165,7 +179,7 @@ func _heroes_shot(file: String, night: float) -> bool:
 	key.light_energy = KEY_ENERGY
 	viewport.add_child(key)
 	key.look_at_from_position(eye - across * KEY_SIDE + Vector3.UP * KEY_HEIGHT, STAGE_CENTER)
-	return _save(await _capture(viewport), file)
+	return _save_to(await _capture(viewport), path)
 
 
 ## O splash e o entardecer da arena com o nome do jogo por cima (Control no proprio viewport).
@@ -193,9 +207,9 @@ func _wide_camera(viewport: SubViewport) -> void:
 	camera.current = true
 
 
-func _new_viewport() -> SubViewport:
+func _new_viewport(size: Vector2i = SIZE) -> SubViewport:
 	var viewport := SubViewport.new()
-	viewport.size = SIZE
+	viewport.size = size
 	viewport.msaa_3d = Viewport.MSAA_4X
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(viewport)
@@ -271,7 +285,10 @@ func _capture(viewport: SubViewport) -> Image:
 
 
 func _save(image: Image, file: String) -> bool:
-	var path := "%s%s.png" % [OUT_DIR, file]
+	return _save_to(image, "%s%s.png" % [OUT_DIR, file])
+
+
+func _save_to(image: Image, path: String) -> bool:
 	var err := image.save_png(path)
 	print("[loading] %s %s (%s)" % [path, image.get_size(), error_string(err)])
 	return err == OK

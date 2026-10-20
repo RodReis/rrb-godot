@@ -340,6 +340,11 @@
           "arquivo": "mvp3-f80-sair-do-jogo.webp",
           "legenda": "Agora dá para sair do jogo sem fechar a janela: o Esc abre um menu com Continuar e Sair, e o jogo pede confirmação. Sair no meio de uma partida online conta como derrota por abandono.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f82-loot-start-login.webp",
+          "legenda": "O jogo agora se chama Loot Start, com a mesma marca do site: o baú com o play e o nome em dourado. A tela de entrada ganhou a arena de fundo, os dez heróis lado a lado e uma faixa com os números do jogo.",
+          "tipo": "entregue"
         }
       ]
     },

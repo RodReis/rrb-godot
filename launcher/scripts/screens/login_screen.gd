@@ -1,7 +1,8 @@
 class_name LoginScreen
 extends LauncherScreen
 ## Login e cadastro (DV tela 1; FRONTEND-LAUNCHER §8: fiel a docs/prd/telas/Tela de Login &
-## Autenticacao/). Esquerda: marca, descricao e a arte do duelo (render dos assets reais);
+## Autenticacao/). Fundo: a arena de noite (render real) sob um veu. Esquerda: marca, descricao, a
+## arte com os herois na arena (render dos assets reais) e a faixa de numeros reais (F82);
 ## direita: cartao de vidro com as abas Entrar / Criar conta, e-mail, senha (com olho), regra de
 ## senha no cadastro, envio e o treino offline vs bot (sem conta). Fora do prototipo (issue #81,
 ## §8.3): lembrar credenciais, esqueceu, regiao, badges tecnicos, patch e numeros de exemplo.
@@ -13,17 +14,18 @@ signal practice_requested
 
 enum Mode { LOGIN, REGISTER }
 
-## Arte do duelo (render do diorama com os herois reais, tools/launcher/render_login_art.gd).
+## Arte: os herois na arena (tools/ui/render_loading.gd --only=login_duel). Fundo: a arena de noite
+## da tela de loading, sob o veu BG_VEIL (o formulario precisa de contraste).
 const ART_PATH: String = "res://shared/assets/ui/login_duel.png"
-const KNIGHT: HeroData = preload("res://shared/data/heroes/knight.tres")
-const RANGER: HeroData = preload("res://shared/data/heroes/ranger.tres")
+const BG_PATH: String = "res://shared/assets/ui/loading/arena_night.png"
+const BG_VEIL: Color = Color(0.043, 0.075, 0.149, 0.78)
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 const SECONDS_PER_MINUTE: float = 60.0
 ## lg:grid-cols-12: 7 colunas de texto e arte, 5 do cartao; gap space-xl.
 const LEFT_COLUMNS: float = 7.0
 const RIGHT_COLUMNS: float = 5.0
-## Arte h-72 e paragrafo max-w-xl.
-const ART_HEIGHT: float = 288.0
+## Arte (maior que o h-72 do prototipo desde o F82: ocupa o vazio da tela) e paragrafo max-w-xl.
+const ART_HEIGHT: float = 360.0
 const TEXT_MAX_WIDTH: float = 576.0
 ## Icone da marca no Login (F82): proporcional ao wordmark de 56 px.
 const BRAND_ICON_SIZE: float = 72.0
@@ -46,9 +48,21 @@ var _password: IconField = IconField.new()
 var _rule: Label = Label.new()
 var _submit: Button = Button.new()
 var _practice: Button = Button.new()
+var _hero_count: Label = Label.new()
+var _hero_stat: PanelContainer
 
 
 func _ready() -> void:
+	var arena := TextureRect.new()
+	arena.texture = load(BG_PATH) as Texture2D
+	arena.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	arena.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	arena.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	add_child(arena)
+	var veil := ColorRect.new()
+	veil.color = BG_VEIL
+	veil.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	add_child(veil)
 	var backdrop := Backdrop.new()
 	backdrop.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	backdrop.glow(0, GLOW_GOLD, Vector2(0.03, 0.06), 256.0)
@@ -69,8 +83,17 @@ func _ready() -> void:
 	_email.line_edit.grab_focus.call_deferred()
 
 
-func bind(auth: AuthService) -> void:
+## [param catalog]: numero de herois da faixa (sem catalogo, o bloco some).
+func bind(auth: AuthService, catalog: CatalogService = null) -> void:
 	_auth = auth
+	var heroes := catalog.heroes.size() if catalog != null else 0
+	_hero_count.text = str(heroes)
+	_hero_stat.visible = heroes > 0
+
+
+## Numero de herois da faixa; vazio se o bloco esta escondido.
+func hero_count_text() -> String:
+	return _hero_count.text if _hero_stat.visible else ""
 
 
 func select_mode(mode: Mode) -> void:
@@ -157,10 +180,11 @@ func _left_column() -> VBoxContainer:
 	)
 	column.add_child(text)
 	column.add_child(_art())
+	column.add_child(_stats())
 	return column
 
 
-## Arte do duelo (h-72 rounded-xl shadow-xl) com o gradiente to-t e os chips dos dois herois.
+## Arte (h-72 rounded-xl shadow-xl) com o gradiente to-t de baixo para cima.
 func _art() -> PanelContainer:
 	var frame := PanelContainer.new()
 	frame.theme_type_variation = &"LnArtFrame"
@@ -174,34 +198,38 @@ func _art() -> PanelContainer:
 	var fade := Backdrop.new()
 	fade.gradient(ART_FADE, Color(ART_FADE, 0.4), Color(ART_FADE, 0.0))
 	frame.add_child(fade)
-	var chips := MarginContainer.new()
-	chips.theme_type_variation = &"LnInsetMd"
-	frame.add_child(chips)
-	var row := HBoxContainer.new()
-	row.theme_type_variation = &"LnHGapXs"
-	row.size_flags_vertical = SIZE_SHRINK_BEGIN
-	row.size_flags_horizontal = SIZE_SHRINK_BEGIN
-	chips.add_child(row)
-	row.add_child(_hero_chip(UiIcons.SHIELD_WITH_HEART, &"LnIconGold", KNIGHT.display_name))
-	row.add_child(_hero_chip(UiIcons.CRISIS_ALERT, &"LnIconCyan", RANGER.display_name))
 	return frame
 
 
-func _hero_chip(icon: String, icon_type: StringName, hero_name: String) -> GlassPanel:
-	var chip := GlassPanel.new(GlassPanel.BLUR_MD)
-	chip.theme_type_variation = &"LnChipGlass"
+## Faixa de 3 numeros do prototipo, so com dado real: herois do catalogo, o modo e a duracao maxima.
+func _stats() -> HBoxContainer:
 	var row := HBoxContainer.new()
-	row.theme_type_variation = &"LnHGapXs"
-	chip.add_child(row)
-	var glyph := Label.new()
-	glyph.theme_type_variation = icon_type
-	glyph.text = icon
-	row.add_child(glyph)
+	row.theme_type_variation = &"LnHGapMd"
+	_hero_stat = _stat(_hero_count, tr("HERÓIS JOGÁVEIS"))
+	_hero_stat.visible = false  # aparece no bind, com o catalogo
+	row.add_child(_hero_stat)
+	var duel := Label.new()
+	duel.text = "1V1"
+	row.add_child(_stat(duel, tr("DUELO ONLINE")))
+	var minutes := Label.new()
+	minutes.text = tr("%d MIN") % roundi(RULES.max_match_duration / SECONDS_PER_MINUTE)
+	row.add_child(_stat(minutes, tr("PARTIDA MÁXIMA")))
+	return row
+
+
+func _stat(value: Label, caption: String) -> PanelContainer:
+	var box := PanelContainer.new()
+	box.theme_type_variation = &"LnCard"
+	box.size_flags_horizontal = SIZE_EXPAND_FILL
+	var column := VBoxContainer.new()
+	box.add_child(column)
+	value.theme_type_variation = &"LnHeadlineMdGold"
+	column.add_child(value)
 	var label := Label.new()
-	label.theme_type_variation = &"LnNumText"
-	label.text = hero_name
-	row.add_child(label)
-	return chip
+	label.theme_type_variation = &"LnBodySmMuted"
+	label.text = caption
+	column.add_child(label)
+	return box
 
 
 func _card() -> GlassPanel:

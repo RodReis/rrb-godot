@@ -97,3 +97,12 @@ func test_treino_nao_precisa_de_conta() -> void:
 	(practice[0] as Button).pressed.emit()
 	assert_signal_emitted(_login, "practice_requested")
 	assert_eq(_api.calls.size(), 0)
+
+
+func test_faixa_mostra_os_herois_do_catalogo() -> void:
+	assert_eq(_login.hero_count_text(), "", "sem catalogo o bloco de herois some")
+	var catalog := CatalogService.new()
+	catalog.load_all()
+	_login.bind(AuthService.new(_api), catalog)
+	assert_eq(_login.hero_count_text(), str(catalog.heroes.size()))
+	assert_gt(catalog.heroes.size(), 0)
