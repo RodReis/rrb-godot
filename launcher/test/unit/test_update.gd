@@ -110,3 +110,12 @@ func test_check_apaga_instalador_que_ja_rodou() -> void:
 	FileAccess.open(old, FileAccess.WRITE).close()
 	await _service().check()
 	assert_false(FileAccess.file_exists(old))
+
+
+func test_check_sem_pasta_de_download_nao_da_erro() -> void:
+	var dir := ProjectSettings.globalize_path(UpdateService.DOWNLOAD_DIR)
+	_service().clean()
+	DirAccess.remove_absolute(dir)
+	assert_false(DirAccess.dir_exists_absolute(dir))
+	assert_eq(await _service().check(), {})
+	assert_engine_error_count(0)

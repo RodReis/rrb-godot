@@ -45,6 +45,8 @@ func check() -> Dictionary:
 ## Apaga os instaladores baixados; o que ainda estiver rodando fica para a proxima abertura.
 func clean() -> void:
 	var dir := ProjectSettings.globalize_path(DOWNLOAD_DIR)
+	if not DirAccess.dir_exists_absolute(dir):
+		return  # nunca baixou nada (get_files_at numa pasta que nao existe da erro de engine)
 	for file: String in DirAccess.get_files_at(dir):
 		DirAccess.remove_absolute(dir.path_join(file))
 
