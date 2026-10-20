@@ -6,9 +6,12 @@
   Rode depois de mudar a arena (tools/arena/build_arena.gd ou os .glb do Blender).
   Uso (na raiz): .\tools\bake-lightmap.ps1
   Saida: game/scenes/arena/ilha_arcana.lmbake + textura .exr (versionados) e a cena regerada.
+  Variante do spike F84: .\tools\bake-lightmap.ps1 -Scene res://scenes/arena/spike_f84.tscn
+    -Builder tools\arena\build_spike_f84.gd (o builder dela liga o spike_f84.lmbake).
 #>
 param(
     [string]$Scene = 'res://scenes/arena/ilha_arcana.tscn',
+    [string]$Builder = 'tools\arena\build_arena.gd',
     [int]$TimeoutSec = 300
 )
 $ErrorActionPreference = 'Continue'   # Godot escreve avisos em stderr (APRENDIZADOS)
@@ -51,7 +54,7 @@ try {
 if (-not $ok) { Write-Host "bake falhou; log em $log" -ForegroundColor Red; exit 1 }
 
 # O builder regera a cena e liga o .lmbake (nada salvo pelo editor).
-& $cli --headless --path $project -s (Join-Path $repo 'tools\arena\build_arena.gd') 2>&1 | Select-String '\[arena\]'
+& $cli --headless --path $project -s (Join-Path $repo $Builder) 2>&1 | Select-String '\[arena\]|\[spike\]'
 if ($LASTEXITCODE -ne 0) { Write-Host 'builder falhou' -ForegroundColor Red; exit 1 }
 & $cli --headless --path $project --import 2>&1 | Out-Null
 Write-Host 'bake OK' -ForegroundColor Green
