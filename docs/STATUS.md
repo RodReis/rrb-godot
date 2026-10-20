@@ -128,7 +128,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F82 / SPEC-082 | MVP3 | launcher, game, shared, tools | Slice 3.14 — Nome "Loot Start" em tudo que o jogador vê; marca e splash no visual do site; `LootStart.exe` (ADR-0022) | done (#241) |
 | F83 / SPEC-083 | MVP3 | launcher, backend, tools | Slice 3.15 — Instalador `LootStart-Setup.exe` e atualização ao abrir; obrigatória para fila online, treino livre (ADR-0023) | done (#242) |
 | F84 / SPEC-084 | MVP4 | game, shared, art | Slice 4.3 — Spike visual, parte 1: canto SO (base A + pátio) no estilo Eternal Return, feito no Blender, em cena variante jogável; frame time medido (ADR-0024) | todo (#247) |
-| F85 / SPEC-085 | MVP4 | game, launcher, backend, shared | Slice 4.4 — Tutorial guiado offline: obrigatório na 1ª vez, pulável; fila online após tutorial ou 1 vitória vs bot (ADR-0026) | planejado (#251) |
+| F85 / SPEC-085 | MVP4 | game, launcher, backend, shared | Slice 4.4 — Tutorial guiado offline (Cavaleiro, arena real, 6 passos): obrigatório na 1ª vez após o nickname, pulável; fila online liberada na conta após tutorial ou 1 vitória vs bot de qualquer nível; `--tutorial` + `offline_result.cfg` (ADR-0026, ADR-0029) | todo (#251) |
 | F86 / SPEC-086 | MVP4 | infra, tools | Slice 4.5 — Publicação no itch.io: página e build a cada Release (ADR-0024) | planejado (#252) |
 | F93 / SPEC-093 | MVP4 | game, shared, art | Slice 4.6 — Spike visual, parte 2: Cavaleiro comissionado (estilo Eternal Return, rig e 8 animações novos) jogável na cena do F84; F84 partido pelo PI em 2026-10-19 (ADR-0024) | backlog (#248) — aguarda o artista |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3; abrir ou não o EA | planejado (#255) |

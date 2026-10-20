@@ -160,10 +160,11 @@ Este é o **único** lugar onde os dois módulos se tocam. Mudar aqui exige ADR.
 | Launcher chama | Significado |
 |---|---|
 | `game.exe -- --connect=<host>:<porta> --token=<match_token>` | partida online (argumentos do Game depois de `--`; F25) |
+| `game.exe -- --offline --tutorial` | tutorial roteirizado com o Cavaleiro; não combina com `--bot` (F85, ADR-0029) |
 | `game.exe -- --offline --bot [--bot-difficulty=<n>]` | treino contra bot; `<n>` de 1 a N níveis do Resource (hoje 1 Fácil, 2 Médio, 3 Difícil); ausente ou fora da faixa = `2` (F81, ADR-0021, formato do ADR-0027) |
 | `--game-path=` (no launcher) | dev: outro caminho do executável (com `--game-project=<pasta>`, o Launcher chama `<exe> --path <pasta> -- …`, para rodar o Godot em vez do `game.exe`) |
 
-Só esses argumentos (`--connect`, `--token`, `--offline`, `--bot`) fazem parte do contrato; os demais de `game/scripts/core/launch_args.gd` (`--server`, `--port`, `--autopilot`, `--bots`, `--bot-hero`, `--daynight`, `--no-backend`, `--probe`…) são de dev/servidor e o Launcher nunca os envia.
+Só esses argumentos (`--connect`, `--token`, `--offline`, `--bot`, `--bot-difficulty`, `--tutorial`) fazem parte do contrato; os demais de `game/scripts/core/launch_args.gd` (`--server`, `--port`, `--autopilot`, `--bots`, `--bot-hero`, `--daynight`, `--no-backend`, `--probe`…) são de dev/servidor e o Launcher nunca os envia.
 
 Códigos de saída do Game (definidos em `ARCHITECTURE-GAME.md` §6): `0` normal → Launcher volta ao lobby com o card de resultado se a partida era online (F70; treino: lobby sem card; o Game fecha sozinho 15 s depois do fim da partida ou pelo botão "Voltar ao lobby"); `1` argumentos; `2` autenticação → Launcher mostra erro, oferece nova fila e volta ao lobby; `3` resultado não reportado → Launcher avisa "resultado pode demorar a aparecer" (sem card; o histórico é recarregado); `4` interno → erro genérico. Processo morto pelo usuário → Launcher trata como `4`, com aviso neutro "Jogo encerrado."
 
@@ -183,7 +184,11 @@ Ambos os projetos: `application/config/use_custom_user_dir=true`, `custom_user_d
 
 Launcher escreve; Game lê no boot. **Exceção (F67):** o Game grava só `[camera] distance` quando o jogador dá zoom (relê o arquivo antes, para não desfazer o que o Launcher salvou). Teclas `camera_zoom_in`/`camera_zoom_out` (padrão `=`/`-`, além da roda do mouse) entram em `[controls]` como as demais. Chave desconhecida é ignorada; `schema` diferente → Game usa padrões e loga.
 
-### 5.4 O que **não** faz parte do contrato
+### 5.4 `user://offline_result.cfg` (Game grava, Launcher lê e apaga — ADR-0029)
+
+Ao terminar um treino ou o tutorial, o Game grava na pasta de dados comum (`rrb-moba`) a seção `[result]`: `kind` = `tutorial` | `bot`; `outcome` = `completed` | `win` | `loss` | `quit`; `bot_difficulty` (só `kind=bot`); `finished_at` (ISO 8601). O Launcher lê ao fim do processo do Game, apaga, e com sessão envia `tutorial/completed` ou `bot/win` ao backend para liberar a fila (F85, ADR-0026). Aditivo: códigos de saída não mudam.
+
+### 5.5 O que **não** faz parte do contrato
 
 Resultado da partida (vai pelo backend), configuração de rede do netfox (é do Game), escolha de herói (é do Game), qualquer arquivo além de `settings.cfg`.
 

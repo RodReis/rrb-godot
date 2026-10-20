@@ -54,6 +54,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0025](adr/0025-loja-inicial-sem-sorteio.md) | Loja inicial só cosmética, em reais, sem moeda virtual e sem sorteio pago; Mercado Pago; Fundador R$ 29,90, skin R$ 9,90, emblemas grátis, passe na 2ª leva; runas/atributos grátis e só laterais; supera D5 (sorteios) e PRD §7 | aceito | 2026-10-19 |
 | [0026](adr/0026-patente-herois-e-tutorial.md) | Patente 1–10 grátis; 1 herói inicial + 1 por Patente com escolha livre; emblemas/molduras por Patente e login; tutorial obrigatório na 1ª vez, pulável; fila online após tutorial ou 1 vitória vs bot; supera R-PEND-02 (sem XP de conta) | aceito | 2026-10-19 |
 | [0027](adr/0027-bot-nivel-numerico-e-bot-na-fila.md) | `--bot-difficulty=<n>` numérico 1..N (supera o formato do ADR-0021); bot completa a fila online após 30 s, com aviso | aceito | 2026-10-19 |
+| [0029](adr/0029-tutorial-e-resultado-offline-no-contrato.md) | Contrato: `--offline --tutorial` e `user://offline_result.cfg` (Game grava tipo e resultado do treino/tutorial; Launcher lê, apaga e envia ao backend para liberar a fila) | aceito | 2026-10-19 |
 | [0028](adr/0028-skin-no-contrato-da-partida.md) | Skin na partida: o backend devolve heróis liberados e skin equipada na validação do token; game server replica; nada de skin por argumento do Launcher | aceito | 2026-10-19 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
