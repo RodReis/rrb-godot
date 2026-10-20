@@ -28,7 +28,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | MVP2.8 | Heróis 9 e 10: Paladino Radiante (Tanque reativo), Ocultista (Mago de dano contínuo) e Servos do Vazio — ADR-0016 | game, shared | 3 fatias aceitas pelo PI; soak verde em cada uma; critério de netcode do ADR-0006 item 7 | **entregue** (#213, 3/3 `finalizado`; 10 heróis) |
 | MVP3 | Meta + deploy: backend, launcher, pool no VPS, build PC | launcher, backend, infra | dois amigos jogam pela internet sem o dev | **em andamento** (#76): F21–F27, F33, F35 finalizados; F28, F79, F80 e 3 `[FIX]` feitos (Release `v0.1.0` publicado); gate #87 `todo` |
 | MVP4 | Playtest: telemetria, 10+ pessoas, ajuste de números; spike visual, tutorial e itch.io antes do teste | todos | decisão câmera/duração/3x3; critérios PRD §9.2; abrir ou não o EA | planejado |
-| MVP5 | Early Access F2P no site + itch.io: Patente e heróis, recompensas de login, bot na fila, loja cosmética, skins (ADR-0024 a ADR-0028) | backend, launcher, game, shared, infra | jogador novo instala, faz o tutorial, acha partida em ≤ 30 s e compra o Fundador vendo a skin na partida | planejado |
+| MVP5 | Early Access F2P no site + itch.io (issue-pai #250): Patente e heróis, recompensas de login, bot na fila, loja cosmética, skins (ADR-0024 a ADR-0028) | backend, launcher, game, shared, infra | jogador novo instala, faz o tutorial, acha partida em ≤ 30 s e compra o Fundador vendo a skin na partida | planejado |
 
 ## 3. Índice Fatia ↔ SPEC (fonte única)
 
@@ -84,8 +84,8 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F45 / SPEC-045 | MVP2.5 | game, shared | Slice 2.5.7 — Câmera: giro 360° com o botão esquerdo segurado; ataque básico no botão direito (só cliente; substitui #47) | finalizado (#103) |
 | [INFRA] | MVP2.5 | infra | Roadmap público (`build-roadmap.mjs`) e `GITHUB.md` passam a aceitar o marco `MVP2.5` — antes da 1ª fatia do marco ser entregue | finalizado (#100) |
 | [GATE] | MVP3 | — | Dois amigos jogam pela internet sem intervenção do dev | todo (#87) |
-| F29 / SPEC-029 | MVP4 | backend, launcher, game | Slice 4.1 — Telemetria: ping médio, duração, líder de nível F1 × vencedor; painel de KPIs no histórico | — |
-| F30 / SPEC-030 | MVP4 | shared | Slice 4.2 — Ajustes de balanceamento pós-playtest (só `.tres`) | — |
+| F29 / SPEC-029 | MVP4 | backend, launcher, game | Slice 4.1 — Telemetria: ping médio, duração, líder de nível F1 × vencedor; painel de KPIs no histórico | planejado (#253) |
+| F30 / SPEC-030 | MVP4 | shared | Slice 4.2 — Ajustes de balanceamento pós-playtest (só `.tres`) | planejado (#254) |
 | F32 / SPEC-032 | MVP2 | game | Slice 2.8 — Mato alto: herói dentro da moita não é replicado para o adversário (visibilidade no servidor); regra em `CONVENTION.md` §4.7, números em GDB §7.3 (revelação 1,5 s) | finalizado (#66) |
 | F44 / SPEC-044 | MVP2 | game, shared | Slice 2.11 — Arena "Ilha Flutuante Arcana": layout novo (espelho N–S, rio N–S + anel, 4 pontes), builder, colisão, marcadores, navmesh **+ a arte do F40 no mesmo card** (decisão do PI 2026-10-10: kits Blender, shaders de rio/magma/cristal/céu, baú novo) | finalizado (#92) |
 | F46 / SPEC-046 | MVP2 | game, shared | Slice 2.12 — Arena "Rift Medieval adaptado": borda quadrada 80×80, rio em S NO–SE com lagoas, bases SO/NE (rotação 180°), 2 pontes na MID, 3 corredores de 8 u, selva nos quadrantes; builder, chassi Blender, marcadores, navmesh; kits do F44 reposicionados (ADR-0009) | finalizado (#110) |
@@ -128,17 +128,17 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F82 / SPEC-082 | MVP3 | launcher, game, shared, tools | Slice 3.14 — Nome "Loot Start" em tudo que o jogador vê; marca e splash no visual do site; `LootStart.exe` (ADR-0022) | done (#241) |
 | F83 / SPEC-083 | MVP3 | launcher, backend, tools | Slice 3.15 — Instalador `LootStart-Setup.exe` e atualização ao abrir; obrigatória para fila online, treino livre (ADR-0023) | done (#242) |
 | F84 / SPEC-084 | MVP4 | game, shared, art | Slice 4.3 — Spike visual, parte 1: canto SO (base A + pátio) no estilo Eternal Return, feito no Blender, em cena variante jogável; frame time medido (ADR-0024) | todo (#247) |
-| F85 / SPEC-085 | MVP4 | game, launcher, backend, shared | Slice 4.4 — Tutorial guiado offline: obrigatório na 1ª vez, pulável; fila online após tutorial ou 1 vitória vs bot (ADR-0026) | — |
-| F86 / SPEC-086 | MVP4 | infra, tools | Slice 4.5 — Publicação no itch.io: página e build a cada Release (ADR-0024) | — |
+| F85 / SPEC-085 | MVP4 | game, launcher, backend, shared | Slice 4.4 — Tutorial guiado offline: obrigatório na 1ª vez, pulável; fila online após tutorial ou 1 vitória vs bot (ADR-0026) | planejado (#251) |
+| F86 / SPEC-086 | MVP4 | infra, tools | Slice 4.5 — Publicação no itch.io: página e build a cada Release (ADR-0024) | planejado (#252) |
 | F93 / SPEC-093 | MVP4 | game, shared, art | Slice 4.6 — Spike visual, parte 2: Cavaleiro comissionado (estilo Eternal Return, rig e 8 animações novos) jogável na cena do F84; F84 partido pelo PI em 2026-10-19 (ADR-0024) | backlog (#248) — aguarda o artista |
-| [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3; abrir ou não o EA | — |
-| F87 / SPEC-087 | MVP5 | backend, launcher, game, shared | Slice 5.1 — Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre; pick online validado no servidor (ADR-0026) | — |
-| F88 / SPEC-088 | MVP5 | backend, launcher, shared | Slice 5.2 — Recompensas de Patente e de login diário/semanal/mensal: emblemas e molduras de perfil (ADR-0025, ADR-0026) | — |
-| F89 / SPEC-089 | MVP5 | backend, game, infra, launcher | Slice 5.3 — Bot na fila online após 30 s sem humano, com aviso (ADR-0027) | — |
-| F90 / SPEC-090 | MVP5 | backend, launcher | Slice 5.4 — Loja: catálogo, pedido, Mercado Pago (Pix e cartão), inventário, tela Loja (ADR-0025) | — |
-| F91 / SPEC-091 | MVP5 | backend, game, launcher, shared | Slice 5.5 — Skin na partida: token devolve heróis liberados e skin equipada; game server replica (ADR-0028) | — |
-| F92 / SPEC-092 | MVP5 | shared, art | Slice 5.6 — Primeiras skins (variantes KayKit Extra) + skin do Pacote de Fundador (ADR-0025) | — |
-| [GATE] | MVP5 | — | Abertura do Early Access no site e no itch.io (ADR-0024) | — |
+| [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3; abrir ou não o EA | planejado (#255) |
+| F87 / SPEC-087 | MVP5 | backend, launcher, game, shared | Slice 5.1 — Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre; pick online validado no servidor (ADR-0026) | planejado (#256) |
+| F88 / SPEC-088 | MVP5 | backend, launcher, shared | Slice 5.2 — Recompensas de Patente e de login diário/semanal/mensal: emblemas e molduras de perfil (ADR-0025, ADR-0026) | planejado (#257) |
+| F89 / SPEC-089 | MVP5 | backend, game, infra, launcher | Slice 5.3 — Bot na fila online após 30 s sem humano, com aviso (ADR-0027) | planejado (#258) |
+| F90 / SPEC-090 | MVP5 | backend, launcher | Slice 5.4 — Loja: catálogo, pedido, Mercado Pago (Pix e cartão), inventário, tela Loja (ADR-0025) | planejado (#259) |
+| F91 / SPEC-091 | MVP5 | backend, game, launcher, shared | Slice 5.5 — Skin na partida: token devolve heróis liberados e skin equipada; game server replica (ADR-0028) | planejado (#260) |
+| F92 / SPEC-092 | MVP5 | shared, art | Slice 5.6 — Primeiras skins (variantes KayKit Extra) + skin do Pacote de Fundador (ADR-0025) | planejado (#261) |
+| [GATE] | MVP5 | — | Abertura do Early Access no site e no itch.io (ADR-0024) | planejado (#262) |
 
 Próximo número livre: **F94 / SPEC-094**.
 

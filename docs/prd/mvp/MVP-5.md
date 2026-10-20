@@ -1,7 +1,7 @@
 # MVP5 — Early Access (= marco M5)
 
 **Objetivo:** abrir o Early Access free-to-play no site próprio e no itch.io, com progressão de conta grátis, bot completando a fila online e loja só cosmética (ADR-0024 a ADR-0028).
-**Módulos:** `backend`, `launcher`, `game`, `shared`, `infra`, `art`. **Prazo:** sem prazo definido pelo PI.
+**Módulos:** `backend`, `launcher`, `game`, `shared`, `infra`, `art`. **Prazo:** sem prazo definido pelo PI. **Issue-pai:** #250.
 **Critério de pronto:** um jogador novo instala pelo site ou pelo itch.io, faz o tutorial, sobe de Patente e libera heróis, encontra partida em ≤ 30 s (humano ou bot avisado) e compra o Pacote de Fundador por Mercado Pago, vendo a skin na partida dos dois lados.
 **Estado:** planejado — depende do `[GATE]` do MVP4 (ADR-0024 item 1). Nenhuma SPEC escrita: cada fatia tem dúvidas em aberto que o Cowork leva ao PI antes da issue.
 
