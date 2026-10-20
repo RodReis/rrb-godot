@@ -568,13 +568,21 @@ func _nearest(candidates: Array[Combatant]) -> Combatant:
 
 
 ## Neblina (F37): atualiza a memoria com o que esta no raio de visao do bot; o que nunca entrou
-## nela fica com o estado do inicio da partida (1o think).
+## nela fica com o estado do inicio da partida (1o think). Ponto lembrado a vista e vazio (#238):
+## o monstro saiu de la (voltou ao acampamento); procura em casa e, com a casa vazia a vista,
+## deixa de contar com ele; senao o bot para no alcance do ponto vazio e "ataca" o nada.
 func _remember() -> void:
 	for node: Node in get_tree().get_nodes_in_group(Monster.GROUP):
 		var monster := node as Monster
 		if not _known_alive.has(monster) or _sees(monster):
 			_known_alive[monster] = monster.is_alive()
 			_known_where[monster] = monster.global_position
+		elif _known_alive[monster] and _sees_point(_known_where[monster]):
+			var home := monster.home_position()
+			if _known_where[monster].is_equal_approx(home):
+				_known_alive[monster] = false
+			else:
+				_known_where[monster] = home
 	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
 		var chest := node as Chest
 		if not _known_chest.has(chest) or _sees(chest):
@@ -582,8 +590,12 @@ func _remember() -> void:
 
 
 func _sees(node: Node3D) -> bool:
+	return _sees_point(node.global_position)
+
+
+func _sees_point(point: Vector3) -> bool:
 	var radius := _hero.match_rules.vision_radius
-	return VisionRules.in_sight(_hero.global_position, node.global_position, radius)
+	return VisionRules.in_sight(_hero.global_position, point, radius)
 
 
 ## Onde o bot acha que o alvo esta: o agora, se o ve; senao, onde o viu por ultimo.

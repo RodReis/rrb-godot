@@ -129,6 +129,11 @@ func combat_id() -> int:
 	return uid
 
 
+## Marcador onde nasce e para onde volta (leash): lugar fixo do mapa, nao estado de partida.
+func home_position() -> Vector3:
+	return _home
+
+
 ## O jogador deste processo ve o monstro (neblina; minimapa).
 func is_shown() -> bool:
 	return _concealment.is_shown()
