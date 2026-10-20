@@ -7,15 +7,22 @@ updated: 2026-10-20
 
 ## Backlog
 
+### [MVP4] Playtest (#246)
+
+- [MVP4][SPEC-093][F93] Spike visual: Cavaleiro comissionado estilo Eternal Return jogável na cena do F84 (#248)
+
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 
 ## A Fazer
 
+### [MVP4] Playtest (#246)
+
+- [MVP4][SPEC-084][F84] Spike visual: canto SO estilo Eternal Return em cena jogável (#247)
+
 ### [MVP3] Meta + deploy (#76)
 
-- [MVP3][SPEC-083][F83] Instalador Windows e atualização automática (obrigatória para jogar online) (#242)
 - [MVP3][SPEC-081][F81] Três níveis de bot no treino: Fácil, Médio e Difícil (#239)
 
 ### #16 (#16)
@@ -24,18 +31,19 @@ updated: 2026-10-20
 
 ## Em Andamento
 
-### [MVP3] Meta + deploy (#76)
-
-- [MVP3][SPEC-082][F82] Nome "Loot Start" no jogo: janelas, marca do Launcher, splash e executável (#241)
+_(vazio)_
 
 ## Feito
 
-_(vazio)_
+### [MVP3] Meta + deploy (#76)
+
+- [MVP3][SPEC-082][F82] Nome "Loot Start" no jogo: janelas, marca do Launcher, splash e executável (#241)
 
 ## Finalizado
 
 ### [MVP3] Meta + deploy (#76)
 
+- [MVP3][SPEC-083][F83] Instalador Windows e atualização automática (obrigatória para jogar online) (#242, finalizado em: 2026-10-20)
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82, finalizado em: 2026-10-19)
 - [MVP3][SPEC-028][INFRA] Site e download do jogo no VPS (lootstart.cloud) e Coolify lendo o repositório privado (#237, finalizado em: 2026-10-19)
 - [MVP3][SPEC-025][FIX] Launcher mostra 229 ms de "servidor" (HTTP com conexão nova) em vez do ping real (#233, finalizado em: 2026-10-19)
