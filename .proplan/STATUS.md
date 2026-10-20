@@ -35,14 +35,13 @@ _(vazio)_
 
 ## Feito
 
-### [MVP3] Meta + deploy (#76)
-
-- [MVP3][SPEC-082][F82] Nome "Loot Start" no jogo: janelas, marca do Launcher, splash e executável (#241)
+_(vazio)_
 
 ## Finalizado
 
 ### [MVP3] Meta + deploy (#76)
 
+- [MVP3][SPEC-082][F82] Nome "Loot Start" no jogo: janelas, marca do Launcher, splash e executável (#241, finalizado em: 2026-10-20)
 - [MVP3][SPEC-083][F83] Instalador Windows e atualização automática (obrigatória para jogar online) (#242, finalizado em: 2026-10-20)
 - [MVP3][SPEC-028][F28] Deploy no VPS (Coolify, compose, UDP 7000–7020), export presets e pacote ZIP no GitHub Release (#82, finalizado em: 2026-10-19)
 - [MVP3][SPEC-028][INFRA] Site e download do jogo no VPS (lootstart.cloud) e Coolify lendo o repositório privado (#237, finalizado em: 2026-10-19)
