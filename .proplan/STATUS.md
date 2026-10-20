@@ -7,8 +7,22 @@ updated: 2026-10-20
 
 ## Backlog
 
+### [MVP5] Early Access (#250)
+
+- [MVP5][GATE] Abertura do Early Access no site e no itch.io (#262)
+- [MVP5][SPEC-092][F92] Primeiras skins (variantes KayKit Extra) e skin do Pacote de Fundador (#261)
+- [MVP5][SPEC-091][F91] Skin na partida: token devolve heróis liberados e skin; game server replica (#260)
+- [MVP5][SPEC-090][F90] Loja: catálogo, pedido, Mercado Pago (Pix e cartão), inventário e tela Loja (#259)
+- [MVP5][SPEC-089][F89] Bot na fila online: sem humano em 30 s, partida contra bot com aviso (#258)
+- [MVP5][SPEC-088][F88] Recompensas de Patente e de login diário, semanal e mensal: emblemas e molduras (#257)
+- [MVP5][SPEC-087][F87] Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre (#256)
+
 ### [MVP4] Playtest (#246)
 
+- [MVP4][GATE] Playtest com 10+ pessoas: critérios do PRD §9.2 e decisão de abrir o Early Access (#255)
+- [MVP4][SPEC-030][F30] Balanceamento pós-playtest dos 10 heróis (só .tres) (#254)
+- [MVP4][SPEC-029][F29] Telemetria: ping, duração, líder F1 × vencedor e KPIs no histórico (#253)
+- [MVP4][SPEC-086][F86] Publicação no itch.io: página do jogo e build a cada Release (#252)
 - [MVP4][SPEC-093][F93] Spike visual: Cavaleiro comissionado estilo Eternal Return jogável na cena do F84 (#248)
 
 ### [MVP3] Meta + deploy (#76)
@@ -19,15 +33,12 @@ updated: 2026-10-20
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-085][F85] Tutorial guiado: obrigatório na 1ª vez, pulável, libera a fila online (#251)
 - [MVP4][SPEC-084][F84] Spike visual: canto SO estilo Eternal Return em cena jogável (#247)
 
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][SPEC-081][F81] Três níveis de bot no treino: Fácil, Médio e Difícil (#239)
-
-### #16 (#16)
-
-- [MVP1][SPEC-012][FIX] Bot do treino fica rodando na base (#238)
 
 ## Em Andamento
 
@@ -38,6 +49,25 @@ _(vazio)_
 _(vazio)_
 
 ## Finalizado
+
+### #16 (#16)
+
+- [MVP1][SPEC-012][FIX] Bot do treino fica rodando na base (#238, finalizado em: 2026-10-20)
+- [MVP1][SPEC-011][FIX] test_boss: empurrão do boss intermitente (física sem frame após montar a arena) (#71, finalizado em: 2026-10-10)
+- [MVP1][GATE] Homologação: fase 1 completa contra bot, offline (#27, finalizado em: 2026-10-10)
+- [MVP1][SPEC-013][F13] HUD da fase 1, aviso do boss aos 3:00, bestiário por B e componentes base do design system (#26, finalizado em: 2026-10-10)
+- [MVP1][SPEC-011][F11] Rei Esqueleto aos 3:30, drop épico e relógio de partida (#24, finalizado em: 2026-10-10)
+- [MVP1][SPEC-012][F12] Bot da fase 1 (BotInput) e modo offline com servidor embutido (#25, finalizado em: 2026-10-10)
+- [MVP1][SPEC-010][F10] Baús, itens, inventário de 4 slots, substituição e bônus de conjunto (#23, finalizado em: 2026-10-09)
+- [MVP1][SPEC-009][F9] Monstros tier 1–3 com IA, XP, níveis, pontos de skill e catch-up (#22, finalizado em: 2026-10-09)
+- [MVP1][FIX] Herói é puxado de volta (rollback) ao passar pelo portão/muro da base (#41, finalizado em: 2026-10-09)
+- [MVP1][SPEC-005][FIX] Servidor Docker sobe sem shared/ e o herói não compila (#42, finalizado em: 2026-10-09)
+- [MVP1][SPEC-034][F34] Arena: pilares da cratera e mato alto com assets do Blender (#38, finalizado em: 2026-10-09)
+- [MVP1][SPEC-008][F8] Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha e R Terremoto lendo shared/data (#21, finalizado em: 2026-10-09)
+- [INFRA] CI: lint-gd, path filter por módulo e shared/test no test-game (#17, finalizado em: 2026-10-09)
+- [MVP1][SPEC-006][F6] shared/ por junction, classes Resource, .tres do GDB e fórmulas compartilhadas (#18, finalizado em: 2026-10-09)
+- [MVP1][SPEC-007][F7] Arena "Vale Rúnico": layout da SPEC-007, rio com pontes, cratera, portões, mato e marcadores (#19, finalizado em: 2026-10-09)
+- [MVP1][SPEC-031][F31] Câmera 3ª pessoa, controles teclado/mouse/gamepad e cena de alinhamento KayKit (#20, finalizado em: 2026-10-09)
 
 ### [MVP3] Meta + deploy (#76)
 
@@ -98,13 +128,13 @@ _(vazio)_
 - [MVP2][SPEC-015][F15] Ciclo de partida: MatchController (FSM), seleção de heróis, PvP na fase 1, respawn e eventos por RPC (#58, finalizado em: 2026-10-10)
 - [MVP2][SPEC-012][FIX] Bot contesta o Rei Esqueleto em loop e morre sem parar (#74, finalizado em: 2026-10-10)
 
-### [MVP2.8] Heróis 9 e 10 — Paladino Radiante (Tanque reativo) e Ocultista (Mago de dano contínuo) com Servos do Vazio (#213)
+### #213 (#213)
 
 - [MVP2.8][SPEC-076][F76] Paladino Radiante (Tanque reativo): Maça, Golpe Consagrado, Retribuição, Bênção Inviolável; Knight do Extra alt_B sem elmo, maça própria, bot e VFX (#214, finalizado em: 2026-10-19)
 - [MVP2.8][SPEC-078][F78] Servos do Vazio (R do Ocultista): 2 servos móveis com IA no servidor, perseguem heróis e monstros visíveis, sem recompensa ao morrer, kill para o dono (#216, finalizado em: 2026-10-19)
 - [MVP2.8][SPEC-077][F77] Ocultista (Mago de dano contínuo): Projétil Sombrio com Maldição, Praga, Círculo Profano; Mage do Extra com atlas escuro e capuz próprios, bot e VFX (#215, finalizado em: 2026-10-18)
 
-### [MVP2.7] Acabamento e controle — controle v2, câmera, loading/cinemática, lobby, Tela Heróis, mato alto, cenário, Protetor da Selva e Berserker (#193)
+### #193 (#193)
 
 - [MVP2.7][SPEC-075][F75] Berserker (classe nova Lutador): passiva Frenesi, Machados Gêmeos, Arremesso de Machado, Grito de Guerra, Ragnarök; Barbarian_Large do Extra, Rig_Large, bot e VFX (#203, finalizado em: 2026-10-18)
 - [MVP2.7][SPEC-074][F74] Protetor da Selva (Controle): Seiva, Raízes Vivas, Poção Verde, Pântano; Druid do Extra, cajado visível, bot e VFX (#202, finalizado em: 2026-10-18)
@@ -136,24 +166,6 @@ _(vazio)_
 - [MVP2.5][SPEC-040][F40] Arte da Ilha Flutuante Arcana sobre o layout da SPEC-044: kits Blender, shaders de rio, magma, cristal e céu (#95, finalizado em: 2026-10-11)
 - [MVP2.5][SPEC-039][F39] Toon e outline por pós-import em heróis, monstros e cenário (#94, finalizado em: 2026-10-11)
 - [MVP2.5][SPEC-038][F38] Iluminação, pós-processamento, LightmapGI e aquecimento de shaders (#93, finalizado em: 2026-10-11)
-
-### #16 (#16)
-
-- [MVP1][SPEC-011][FIX] test_boss: empurrão do boss intermitente (física sem frame após montar a arena) (#71, finalizado em: 2026-10-10)
-- [MVP1][GATE] Homologação: fase 1 completa contra bot, offline (#27, finalizado em: 2026-10-10)
-- [MVP1][SPEC-013][F13] HUD da fase 1, aviso do boss aos 3:00, bestiário por B e componentes base do design system (#26, finalizado em: 2026-10-10)
-- [MVP1][SPEC-011][F11] Rei Esqueleto aos 3:30, drop épico e relógio de partida (#24, finalizado em: 2026-10-10)
-- [MVP1][SPEC-012][F12] Bot da fase 1 (BotInput) e modo offline com servidor embutido (#25, finalizado em: 2026-10-10)
-- [MVP1][SPEC-010][F10] Baús, itens, inventário de 4 slots, substituição e bônus de conjunto (#23, finalizado em: 2026-10-09)
-- [MVP1][SPEC-009][F9] Monstros tier 1–3 com IA, XP, níveis, pontos de skill e catch-up (#22, finalizado em: 2026-10-09)
-- [MVP1][FIX] Herói é puxado de volta (rollback) ao passar pelo portão/muro da base (#41, finalizado em: 2026-10-09)
-- [MVP1][SPEC-005][FIX] Servidor Docker sobe sem shared/ e o herói não compila (#42, finalizado em: 2026-10-09)
-- [MVP1][SPEC-034][F34] Arena: pilares da cratera e mato alto com assets do Blender (#38, finalizado em: 2026-10-09)
-- [MVP1][SPEC-008][F8] Cavaleiro: modelo KayKit, ataque básico, Q Investida, E Muralha e R Terremoto lendo shared/data (#21, finalizado em: 2026-10-09)
-- [INFRA] CI: lint-gd, path filter por módulo e shared/test no test-game (#17, finalizado em: 2026-10-09)
-- [MVP1][SPEC-006][F6] shared/ por junction, classes Resource, .tres do GDB e fórmulas compartilhadas (#18, finalizado em: 2026-10-09)
-- [MVP1][SPEC-007][F7] Arena "Vale Rúnico": layout da SPEC-007, rio com pontes, cratera, portões, mato e marcadores (#19, finalizado em: 2026-10-09)
-- [MVP1][SPEC-031][F31] Câmera 3ª pessoa, controles teclado/mouse/gamepad e cena de alinhamento KayKit (#20, finalizado em: 2026-10-09)
 
 ### #1 (#1)
 
