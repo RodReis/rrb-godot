@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dgibt2xnqtn11"
+uid="uid://dnka5bxapxw31"
 path="res://.godot/imported/spike_bush.glb-68008604863294b35f3f1e871ba4a600.scn"
 
 [deps]
@@ -26,7 +26,7 @@ nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
 meshes/create_shadow_meshes=true
-meshes/light_baking=2
+meshes/light_baking=1
 meshes/lightmap_texel_size=0.2
 meshes/force_disable_compression=false
 skins/use_named_skins=true
@@ -46,6 +46,11 @@ _subresources={
 "use_external/fallback_path": "res://shared/resources/materials/fountain_water.tres",
 "use_external/path": "res://shared/resources/materials/fountain_water.tres"
 },
+"spike_blossom": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_blossom.tres",
+"use_external/path": "res://shared/resources/materials/spike_f84/spike_blossom.tres"
+},
 "spike_cloth": {
 "use_external/enabled": true,
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_cloth.tres",
@@ -61,6 +66,11 @@ _subresources={
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_door.tres",
 "use_external/path": "res://shared/resources/materials/spike_f84/spike_door.tres"
 },
+"spike_foliage": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_foliage.tres",
+"use_external/path": "res://shared/resources/materials/spike_f84/spike_foliage.tres"
+},
 "spike_glow": {
 "use_external/enabled": true,
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_glow.tres",
@@ -70,11 +80,6 @@ _subresources={
 "use_external/enabled": true,
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_hay.tres",
 "use_external/path": "res://shared/resources/materials/spike_f84/spike_hay.tres"
-},
-"spike_leaves": {
-"use_external/enabled": true,
-"use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_leaves.tres",
-"use_external/path": "res://shared/resources/materials/spike_f84/spike_leaves.tres"
 },
 "spike_metal": {
 "use_external/enabled": true,

@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://qt6l7hlb821c"
+uid="uid://crcid6c71vwd8"
 path="res://.godot/imported/spike_gate.glb-9eca54260de7efe60ab269a843e432ce.scn"
 
 [deps]
@@ -46,6 +46,11 @@ _subresources={
 "use_external/fallback_path": "res://shared/resources/materials/fountain_water.tres",
 "use_external/path": "res://shared/resources/materials/fountain_water.tres"
 },
+"spike_blossom": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_blossom.tres",
+"use_external/path": "res://shared/resources/materials/spike_f84/spike_blossom.tres"
+},
 "spike_cloth": {
 "use_external/enabled": true,
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_cloth.tres",
@@ -61,6 +66,11 @@ _subresources={
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_door.tres",
 "use_external/path": "res://shared/resources/materials/spike_f84/spike_door.tres"
 },
+"spike_foliage": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_foliage.tres",
+"use_external/path": "res://shared/resources/materials/spike_f84/spike_foliage.tres"
+},
 "spike_glow": {
 "use_external/enabled": true,
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_glow.tres",
@@ -70,11 +80,6 @@ _subresources={
 "use_external/enabled": true,
 "use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_hay.tres",
 "use_external/path": "res://shared/resources/materials/spike_f84/spike_hay.tres"
-},
-"spike_leaves": {
-"use_external/enabled": true,
-"use_external/fallback_path": "res://shared/resources/materials/spike_f84/spike_leaves.tres",
-"use_external/path": "res://shared/resources/materials/spike_f84/spike_leaves.tres"
 },
 "spike_metal": {
 "use_external/enabled": true,

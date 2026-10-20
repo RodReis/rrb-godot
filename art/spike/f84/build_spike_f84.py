@@ -47,9 +47,10 @@ MATERIALS = {
     "spike_metal": ("metal", 0.8, None),
     "spike_cloth": (None, 1.0, (0.05, 0.55, 0.62)),
     "spike_hay": (None, 1.0, (0.78, 0.64, 0.32)),
-    "spike_leaves": (None, 1.0, (0.18, 0.36, 0.12)),
     "spike_glow": (None, 1.0, (1.0, 0.7, 0.35)),
     "fountain_water": (None, 1.0, (0.16, 0.42, 0.42)),
+    "spike_foliage": ("leaves", 1.0, None),
+    "spike_blossom": ("blossom", 1.0, None),
 }
 # Materiais com sujeira de chao na cor de vertice (escurece ate ~1,5 m).
 GRIMY = {"spike_stone", "spike_rubble", "spike_plaster", "spike_planks", "spike_door"}
@@ -123,16 +124,6 @@ class Piece:
             self.bm, cap_ends=True, cap_tris=False, segments=segs, radius1=r1, radius2=r2, depth=h, matrix=m
         )["verts"]
         return self._take(verts, mat, tint, bevel)
-
-    def blob(self, mat, at, radius, squash=0.8, seed=0.0, tint=None, detail=1):
-        """Tufo de folhagem: icosfera deformada por ruido."""
-        verts = bmesh.ops.create_icosphere(self.bm, subdivisions=detail + 1, radius=radius,
-                                           matrix=Matrix.Translation(Vector(at)))["verts"]
-        for v in verts:
-            d = v.co - Vector(at)
-            k = 1.0 + 0.28 * noise.noise(d * 2.3 + Vector((seed, seed * 0.7, seed * 1.3)))
-            v.co = Vector(at) + Vector((d.x * k, d.y * k * squash, d.z * k))
-        return self._take(verts, mat, tint, False)
 
     def prism(self, mat, pts, axis, a0, a1, bevel=False, tint=None):
         """Poligono 2D (u, v) extrudado de a0 a a1 no eixo: 'z' -> (x, y), 'x' -> (z, y),
@@ -242,7 +233,7 @@ def unwrap(mesh):
 
 def paint(mesh):
     """Cor de vertice (multiplica o albedo no Godot): tinta da face, sujeira perto do chao,
-    baixo escuro (oclusao) e topo de pedra mais claro; folhagem escurece para dentro e para baixo."""
+    baixo escuro (oclusao) e topo de pedra mais claro (a folhagem pinta a sua: Foliage)."""
     col = mesh.color_attributes.new("Col", "BYTE_COLOR", "CORNER")
     tint = mesh.attributes["tint"].data
     for poly in mesh.polygons:
@@ -253,15 +244,22 @@ def paint(mesh):
             c = tint[poly.index].value
             if name in GRIMY:
                 c *= 0.74 + 0.26 * smoothstep(0.0, 1.5, co.y)
-            if name == "spike_leaves":
-                c *= 0.5 + 0.6 * smoothstep(-0.2, 1.4, co.y)
-            elif n.y < -0.5:
+            if n.y < -0.5:
                 c *= 0.6
             elif n.y > 0.8 and name in ("spike_stone", "spike_rubble"):
                 c *= 1.06
             c = min(max(c, 0.0), 1.0)
             col.data[li].color = (c, c, c, 1.0)
     mesh.color_attributes.active_color = col
+
+
+def tex_file(folder, kind):
+    """Textura do spike: .jpg (PBR do Poly Haven) ou .png (folhas com alpha)."""
+    for ext in (".jpg", ".png"):
+        path = os.path.join(TEX, folder, "%s_%s%s" % (folder, kind, ext))
+        if os.path.exists(path):
+            return path
+    return os.path.join(TEX, folder, "%s_%s.jpg" % (folder, kind))
 
 
 def material(name):
@@ -285,14 +283,17 @@ def material(name):
     links.new(mix.outputs["Result"], bsdf.inputs["Base Color"])
     if folder:
         albedo = nodes.new("ShaderNodeTexImage")
-        albedo.image = bpy.data.images.load(os.path.join(TEX, folder, folder + "_albedo.jpg"), check_existing=True)
+        albedo.image = bpy.data.images.load(tex_file(folder, "albedo"), check_existing=True)
         links.new(albedo.outputs["Color"], mix.inputs["A"])
+        if name in ("spike_foliage", "spike_blossom"):
+            links.new(albedo.outputs["Alpha"], bsdf.inputs["Alpha"])
         rough = nodes.new("ShaderNodeTexImage")
-        rough.image = bpy.data.images.load(os.path.join(TEX, folder, folder + "_rough.jpg"), check_existing=True)
-        rough.image.colorspace_settings.name = "Non-Color"
-        links.new(rough.outputs["Color"], bsdf.inputs["Roughness"])
+        if os.path.exists(tex_file(folder, "rough")):
+            rough.image = bpy.data.images.load(tex_file(folder, "rough"), check_existing=True)
+            rough.image.colorspace_settings.name = "Non-Color"
+            links.new(rough.outputs["Color"], bsdf.inputs["Roughness"])
         normal = nodes.new("ShaderNodeTexImage")
-        normal.image = bpy.data.images.load(os.path.join(TEX, folder, folder + "_normal.jpg"), check_existing=True)
+        normal.image = bpy.data.images.load(tex_file(folder, "normal"), check_existing=True)
         normal.image.colorspace_settings.name = "Non-Color"
         nmap = nodes.new("ShaderNodeNormalMap")
         links.new(normal.outputs["Color"], nmap.inputs["Color"])
@@ -460,8 +461,9 @@ def roof_pair(p, ridge, half_span, length, axis, slope_deg, overhang=0.4, thick=
     p.box("spike_roof", (ridge[0], ridge[1] + 0.02, ridge[2]), size, rot=(45.0 if axis == "x" else 0.0, 0.0, 0.0 if axis == "x" else 45.0), bevel=False, tint=0.8)
 
 
-def window(p, at, yaw, w=0.6, h=0.9, shutters=True, glow=False, flowers=False):
-    """Janela numa face: vao escuro, peitoril e verga de pedra, portadas abertas e floreira."""
+def window(p, at, yaw, w=0.6, h=0.9, shutters=True, glow=False, flowers=False, planters=None):
+    """Janela numa face: vao escuro, peitoril e verga de pedra, portadas abertas e floreira (a
+    caixa entra em [param p]; as plantas, em [param planters], para a folhagem da casa)."""
     rot = Matrix.Rotation(math.radians(yaw), 4, "Y")
     base = Vector(at)
 
@@ -476,9 +478,125 @@ def window(p, at, yaw, w=0.6, h=0.9, shutters=True, glow=False, flowers=False):
             put((sx * (w / 2 + 0.17), 0.0, 0.05), (0.3, h, 0.05), "spike_planks", tint=0.75)
     if flowers:
         put((0.0, -h / 2 - 0.22, 0.2), (w + 0.1, 0.22, 0.22), "spike_planks", tint=0.7)
+        if planters is not None:
+            planters.append((base + rot @ Vector((0.0, -h / 2 - 0.1, 0.2)), yaw, w + 0.05))
+
+
+# --- folhagem: cartoes de folha com balanco de vento ---------------------------------------
+
+# Atlas CC0 do ambientCG (shared/assets/textures/spike_f84/leaves e blossom): LeafSet024 em 3x3
+# com a ponta para cima; LeafSet028 em 4x4 com a ponta para a direita.
+LEAF_CELLS = 3
+BLOSSOM_CELLS = 4
+
+
+class Foliage:
+    """Folhagem por cartoes: cada cartao e uma folha do atlas (2 triangulos), espalhada na casca
+    de elipsoides. Normal de cada vertice puxada para fora do centro da touceira (luz macia, sem
+    cara de plano), cor de vertice com sombra por dentro e por baixo e, no alpha, o peso do
+    balanco (0 no pe, 1 na ponta) que o spike_foliage.gdshader usa para o vento."""
+
+    def __init__(self, name):
+        self.name = name
+        self.verts = []
+        self.faces = []
+        self.uvs = []
+        self.cols = []
+        self.normals = []
+        self.mats = []
+        self.face_mats = []
+
+    def _card(self, mat, base, out, along, length, width, cell, cells, tip_up, center, height, rng):
+        side = out.cross(along).normalized()
+        tip = base + along * length
+        corners = [base - side * width / 2, base + side * width / 2, tip + side * width / 2, tip - side * width / 2]
+        cx, cy = cell
+        u0, u1 = cx / cells, (cx + 1) / cells
+        v0, v1 = 1.0 - (cy + 1) / cells, 1.0 - cy / cells
+        if tip_up:
+            uv = [(u0, v0), (u1, v0), (u1, v1), (u0, v1)]
+        else:  # ponta para a direita: o comprimento corre em u
+            uv = [(u0, v1), (u0, v0), (u1, v0), (u1, v1)]
+        if mat not in self.mats:
+            self.mats.append(mat)
+        start = len(self.verts)
+        shade = 0.85 + 0.15 * rng.random()
+        warm = rng.uniform(-0.07, 0.07)
+        for k, p in enumerate(corners):
+            radial = p - Vector(center)
+            n = (radial.normalized() * 0.75 + out * 0.25).normalized()
+            depth = min(radial.length / max(height, 0.01), 1.0)
+            lift = min(max((p.y - center[1] + height * 0.5) / height, 0.0), 1.0)
+            ao = (0.45 + 0.55 * depth) * (0.65 + 0.35 * lift) * shade
+            sway = min(max(p.y / max(height * 1.6, 0.01), 0.0), 1.0) * (0.4 + 0.6 * depth)
+            self.verts.append(p)
+            self.normals.append(n)
+            self.uvs.append(uv[k])
+            self.cols.append((ao * (1.0 + warm), ao, ao * (1.0 - warm), sway))
+        self.faces.append((start, start + 1, start + 2, start + 3))
+        self.face_mats.append(self.mats.index(mat))
+
+    def clump(self, center, radii, count, size, seed, mat="spike_foliage", up_bias=0.5):
+        """[param count] folhas na casca do elipsoide [param radii] em volta de [param center]."""
+        rng = random.Random(seed)
+        c = Vector(center)
+        cells = LEAF_CELLS if mat == "spike_foliage" else BLOSSOM_CELLS
+        for _ in range(count):
+            d = Vector((rng.gauss(0, 1), abs(rng.gauss(0, 1)) * 0.8 + 0.15, rng.gauss(0, 1))).normalized()
+            shell = 0.62 + 0.38 * rng.random() ** 0.5
+            base = c + Vector((d.x * radii[0], d.y * radii[1], d.z * radii[2])) * shell
+            out = (d + Vector((0.0, up_bias, 0.0)) + Vector((rng.gauss(0, 0.35), rng.gauss(0, 0.35), rng.gauss(0, 0.35)))).normalized()
+            tangent = (d - out * d.dot(out))
+            if tangent.length < 1e-3:
+                tangent = Vector((1.0, 0.0, 0.0))
+            twist = Matrix.Rotation(rng.uniform(-0.9, 0.9), 3, out)
+            along = (twist @ tangent.normalized()).normalized()
+            s = size * rng.uniform(0.75, 1.25)
+            cell = (rng.randrange(cells), rng.randrange(cells))
+            self._card(mat, base - along * s * 0.15, out, along, s, s * 0.78, cell, cells,
+                       mat == "spike_foliage", center, max(radii), rng)
+
+    def build(self):
+        g2b = lambda v: Vector((v.x, -v.z, v.y))  # Godot -> Blender
+        mesh = bpy.data.meshes.new(self.name)
+        mesh.from_pydata([g2b(v) for v in self.verts], [], self.faces)
+        for name in self.mats:
+            mesh.materials.append(material(name))
+        for poly, mi in zip(mesh.polygons, self.face_mats):
+            poly.material_index = mi
+        uv = mesh.uv_layers.new(name="UVMap")
+        col = mesh.color_attributes.new("Col", "FLOAT_COLOR", "CORNER")
+        loop_normals = []
+        for poly in mesh.polygons:
+            for li in poly.loop_indices:
+                vi = mesh.loops[li].vertex_index
+                uv.data[li].uv = self.uvs[vi]
+                col.data[li].color = self.cols[vi]
+                loop_normals.append(g2b(self.normals[vi]))
+        mesh.color_attributes.active_color = col
+        mesh.shade_smooth()
+        mesh.normals_split_custom_set(loop_normals)
+        mesh.update()
+        obj = bpy.data.objects.new(self.name, mesh)
+        bpy.context.scene.collection.objects.link(obj)
+        mesh.calc_loop_triangles()
+        TRIS[self.name] = len(mesh.loop_triangles)
+        if TRIS[self.name] > MAX_TRIS:
+            print("  AVISO %s: %d triangulos (> %d)" % (self.name, TRIS[self.name], MAX_TRIS))
+        return obj
+
+
+def planter_plants(name, planters, seed):
+    """Plantas das floreiras: folhas pendendo da caixa e flores por cima."""
+    f = Foliage(name)
+    for i, (at, yaw, w) in enumerate(planters):
+        across = Matrix.Rotation(math.radians(yaw), 3, "Y") @ Vector((1.0, 0.0, 0.0))
         for k in range(3):
-            x = (k - 1) * w * 0.33
-            p.blob("spike_leaves", base + rot @ Vector((x, -h / 2 - 0.02, 0.22)), 0.15, seed=at[0] + k, detail=0)
+            c = at + across * (k - 1) * w * 0.3 + Vector((0.0, 0.08, 0.0))
+            f.clump(c, (w * 0.22, 0.16, 0.15), 44, 0.09, seed + i * 7 + k, up_bias=0.2)
+            f.clump(c + Vector((0.0, 0.08, 0.0)), (w * 0.18, 0.09, 0.11), 9, 0.075, seed + i * 11 + k,
+                    mat="spike_blossom", up_bias=1.0)
+    return f.build()
 
 
 def build_keep():
@@ -563,6 +681,7 @@ def build_house_stone():
     na face +z com floreiras."""
     walls = Piece("spike_house_stone_walls", bevel=0.04)
     deco = Piece("spike_house_stone_deco", bevel=0.02)
+    plants = []
     walls.box("spike_rubble", (0, 0.25, 0), (4.24, 0.5, 3.64))
     walls.box("spike_stone", (0, 1.5, 0), (4.0, 2.9, 3.4), bevel=False)
     gable = [(-1.75, 2.95), (1.75, 2.95), (0.0, 4.45)]
@@ -576,14 +695,14 @@ def build_house_stone():
     walls.box("spike_planks", (0.0, 1.15, 1.72), (1.15, 2.3, 0.14), bevel=False, tint=0.45)
     walls.box("spike_door", (0.0, 1.05, 1.74), (0.95, 2.1, 0.12), tint=0.9)
     walls.box("spike_planks", (0.0, 2.45, 1.95), (1.4, 0.1, 0.55), rot=(-18.0, 0.0, 0.0), tint=0.6)
-    window(deco, (1.3, 1.6, 1.72), 0.0, flowers=True)
-    window(deco, (-1.3, 1.6, 1.72), 0.0, flowers=True, glow=True)
+    window(deco, (1.3, 1.6, 1.72), 0.0, flowers=True, planters=plants)
+    window(deco, (-1.3, 1.6, 1.72), 0.0, flowers=True, planters=plants, glow=True)
     window(deco, (0.0, 1.6, -1.72), 180.0)
     roof = Piece("spike_house_stone_roof", bevel=0.0)
     roof_pair(roof, (0.0, 4.55, 0.0), 1.85, 4.7, "x", math.degrees(math.atan2(1.5, 1.75)))
     roof.box("spike_stone", (-1.2, 4.4, -0.7), (0.6, 2.0, 0.6), bevel=False)
     roof.box("spike_stone", (-1.2, 5.45, -0.7), (0.72, 0.14, 0.72), bevel=False)
-    return [walls.build(), deco.build(), roof.build()]
+    return [walls.build(), deco.build(), roof.build()], planter_plants("spike_house_stone_plants", plants, 21)
 
 
 def build_house_long():
@@ -592,6 +711,7 @@ def build_house_long():
     de telha, chamine, porta em arco e janelas com floreiras na frente."""
     walls = Piece("spike_house_long_walls", bevel=0.04)
     deco = Piece("spike_house_long_deco", bevel=0.02)
+    plants = []
     walls.box("spike_rubble", (0, 0.25, 0), (4.24, 0.5, 6.24))
     walls.box("spike_stone", (0, 1.45, 0), (4.0, 2.9, 6.0), bevel=False)
     walls.box("spike_plaster", (0, 4.12, 0), (4.3, 2.4, 6.3), bevel=False)
@@ -602,7 +722,7 @@ def build_house_long():
     for z in (-1.9, 1.9):
         window(deco, (2.02, 1.55, z), 90.0, w=0.7, h=0.9)
     for z in (-2.0, 0.0, 2.0):
-        window(deco, (2.17, 4.1, z), 90.0, w=0.6, h=0.9, flowers=True, glow=(z == 0.0))
+        window(deco, (2.17, 4.1, z), 90.0, w=0.6, h=0.9, flowers=True, planters=plants, glow=(z == 0.0))
         window(walls, (-2.17, 4.1, z), -90.0, w=0.6, h=0.9)
     timber = Piece("spike_house_long_timber", bevel=0.0)
     timber.box("spike_planks", (0, 2.95, 0), (4.4, 0.22, 6.4), bevel=False, tint=0.42)
@@ -613,7 +733,7 @@ def build_house_long():
     roof_pair(roof, (0.0, 7.3, 0.0), 2.2, 7.1, "z", math.degrees(math.atan2(1.9, 2.15)))
     roof.box("spike_stone", (1.1, 7.3, -2.2), (0.7, 2.4, 0.7), bevel=False)
     roof.box("spike_stone", (1.1, 8.55, -2.2), (0.84, 0.14, 0.84), bevel=False)
-    return [walls.build(), deco.build(), timber.build(), roof.build()]
+    return [walls.build(), deco.build(), timber.build(), roof.build()], planter_plants("spike_house_long_plants", plants, 31)
 
 
 def build_house_small():
@@ -621,18 +741,19 @@ def build_house_small():
     em +x): reboco com enxaimel sobre plinto, empenas em z, telhado de telha, porta e janela."""
     walls = Piece("spike_house_small_walls", bevel=0.04)
     deco = Piece("spike_house_small_deco", bevel=0.02)
+    plants = []
     walls.box("spike_rubble", (0, 0.3, 0), (4.24, 0.6, 4.24))
     walls.box("spike_plaster", (0, 1.65, 0), (4.0, 2.7, 4.0), bevel=False)
     walls.prism("spike_plaster", [(-2.0, 3.0), (2.0, 3.0), (0.0, 4.5)], "z", -2.0, 2.0)
     walls.box("spike_door", (2.02, 1.15, -0.8), (0.12, 2.0, 0.95), tint=0.9)
-    window(deco, (2.02, 1.7, 0.9), 90.0, flowers=True)
+    window(deco, (2.02, 1.7, 0.9), 90.0, flowers=True, planters=plants)
     window(deco, (-2.02, 1.7, 0.0), -90.0)
     for sx in (1.0, -1.0):
         timber_face(deco, "x", sx * 2.03, 2.0, 0.6, 3.0, 4)
         timber_face(deco, "z", sx * 2.03, 2.0, 0.6, 3.0, 3, braces=False)
     roof = Piece("spike_house_small_roof", bevel=0.0)
     roof_pair(roof, (0.0, 4.6, 0.0), 2.05, 4.8, "z", math.degrees(math.atan2(1.6, 2.0)))
-    return [walls.build(), deco.build(), roof.build()]
+    return [walls.build(), deco.build(), roof.build()], planter_plants("spike_house_small_plants", plants, 41)
 
 
 def build_yard():
@@ -768,27 +889,38 @@ def barrel(p, at, tint=None):
         p.cyl("spike_metal", (x, y + hy, z), 0.335, 0.335, 0.05, 12)
 
 
+def foliage_layers(name, plan, seed, layers=2):
+    """Folhagem densa em [param layers] objetos intercalados (cada um no teto de triangulos):
+    a mesma forma com sementes diferentes, no mesmo .glb."""
+    out = []
+    for layer in range(layers):
+        f = Foliage(name if layer == 0 else "%s_%d" % (name, layer + 1))
+        plan(f, seed + 1000 * layer)
+        out.append(f.build())
+    return out
+
+
 def build_props():
     """Props do canto (origem no chao): barril, caixote, estandarte do time, poste de lanterna,
     moita, carroca e suporte de armas."""
-    out = []
+    out = {}
     b = Piece("spike_barrel", bevel=0.0)
     barrel(b, (0.0, 0.0, 0.0))
-    out.append(b.build())
+    out[b.name] = [b.build()]
     c = Piece("spike_crate", bevel=0.02)
     c.box("spike_planks", (0, 0.35, 0), (0.7, 0.7, 0.7))
     for sx in (-1.0, 1.0):
         for sz in (-1.0, 1.0):
             c.box("spike_planks", (sx * 0.33, 0.35, sz * 0.33), (0.08, 0.72, 0.08), tint=0.55)
     c.box("spike_planks", (0.1, 0.92, -0.05), (0.5, 0.44, 0.5), rot=(0.0, 18.0, 0.0), tint=0.85)
-    out.append(c.build())
+    out[c.name] = [c.build()]
     s = Piece("spike_banner", bevel=0.01)
     s.cyl("spike_planks", (0, 0, 0), 0.06, 0.05, 3.3, 8, tint=0.45)
     s.box("spike_planks", (0, 3.05, 0), (1.0, 0.07, 0.07), tint=0.45)
     s.cyl("spike_metal", (0, 3.3, 0), 0.08, 0.0, 0.25, 6)
     s.prism("spike_cloth", [(-0.42, 3.0), (-0.42, 1.25), (0.0, 1.5), (0.42, 1.25), (0.42, 3.0)], "z", -0.015, 0.015, tint=1.0)
     s.box("spike_metal", (0, 2.2, 0.02), (0.3, 0.3, 0.02), rot=(0.0, 0.0, 45.0), tint=1.0)
-    out.append(s.build())
+    out[s.name] = [s.build()]
     lp = Piece("spike_lantern", bevel=0.015)
     lp.box("spike_rubble", (0, 0.15, 0), (0.4, 0.3, 0.4))
     lp.box("spike_planks", (0, 1.4, 0), (0.16, 2.6, 0.16), tint=0.4)
@@ -797,14 +929,26 @@ def build_props():
     lp.box("spike_glow", (0.55, 2.18, 0), (0.2, 0.3, 0.2), tint=1.0)
     lp.cyl("spike_metal", (0.55, 2.32, 0), 0.17, 0.02, 0.14, 4, yaw=45.0)
     lp.box("spike_metal", (0.55, 2.02, 0), (0.24, 0.04, 0.24), bevel=False)
-    out.append(lp.build())
-    bush = Piece("spike_bush", bevel=0.0, smooth=180.0)
-    rng = random.Random(7)
-    for k in range(4):
-        a = k * 1.6
-        r = 0.3 + 0.12 * (k % 2)
-        bush.blob("spike_leaves", (math.cos(a) * r, 0.38 + 0.12 * (k % 3), math.sin(a) * r), 0.5 + rng.uniform(-0.06, 0.08), seed=k * 3.1, detail=2)
-    out.append(bush.build())
+    out[lp.name] = [lp.build()]
+    # Moita redonda (~1,1 m): 3 touceiras sobrepostas, uma mais alta atras; 2 camadas.
+    def bush(f, seed):
+        for k, (c, r) in enumerate((((0.0, 0.45, 0.0), (0.55, 0.45, 0.55)), ((0.32, 0.36, 0.22), (0.4, 0.36, 0.4)),
+                                    ((-0.28, 0.6, -0.18), (0.42, 0.42, 0.42)))):
+            f.clump(c, r, 230, 0.2, seed + k)
+    out["spike_bush"] = foliage_layers("spike_bush", bush, 70)
+    # Arbusto alto (~1,7 m), para os cantos e o pe das torres.
+    def shrub(f, seed):
+        for k, (c, r) in enumerate((((0.0, 0.55, 0.0), (0.45, 0.5, 0.45)), ((0.05, 1.15, 0.0), (0.38, 0.5, 0.38)),
+                                    ((-0.04, 1.55, 0.04), (0.26, 0.3, 0.26)))):
+            f.clump(c, r, 240, 0.19, seed + k, up_bias=0.8)
+    out["spike_shrub"] = foliage_layers("spike_shrub", shrub, 90)
+    # Touceira florida (~0,6 m), para beira de casa, fonte e poste.
+    def flowers(f, seed):
+        for k, (c, r) in enumerate((((0.0, 0.26, 0.0), (0.56, 0.28, 0.5)), ((0.42, 0.2, 0.3), (0.36, 0.2, 0.36)))):
+            f.clump(c, r, 200, 0.16, seed + k, up_bias=0.6)
+            f.clump((c[0], c[1] + 0.14, c[2]), (r[0] * 0.9, r[1] * 0.6, r[2] * 0.9), 40, 0.1, seed + 10 + k,
+                    mat="spike_blossom", up_bias=1.2)
+    out["spike_flowers"] = foliage_layers("spike_flowers", flowers, 110)
     cart = Piece("spike_cart", bevel=0.02)
     cart.box("spike_planks", (0, 0.75, 0), (1.3, 0.1, 2.0))
     for sx in (-1.0, 1.0):
@@ -814,7 +958,7 @@ def build_props():
     cart.box("spike_planks", (0, 0.5, 0.1), (1.5, 0.1, 0.1), tint=0.5)
     barrel(cart, (0.25, 0.8, -0.45))
     cart.box("spike_hay", (-0.3, 0.98, 0.3), (0.6, 0.36, 0.9), tint=1.0)
-    out.append(cart.build())
+    out[cart.name] = [cart.build()]
     rack = Piece("spike_rack", bevel=0.015)
     for x in (-0.7, 0.7):
         rack.box("spike_planks", (x, 0.8, 0), (0.1, 1.6, 0.1), tint=0.5)
@@ -824,7 +968,7 @@ def build_props():
         rack.cyl("spike_planks", (x, 0.3, -0.06), 0.025, 0.025, 1.6, 6, tint=0.5)
         rack.cyl("spike_metal", (x, 1.9, -0.06), 0.05, 0.0, 0.22, 4)
     rack.cyl("spike_cloth", (0.5, 0.95, 0.08), 0.32, 0.32, 0.06, 12, tint=1.0, axis="z")
-    out.append(rack.build())
+    out[rack.name] = [rack.build()]
     return out
 
 
@@ -902,20 +1046,28 @@ def preview(name, objects):
     bpy.data.objects.remove(sun, do_unlink=True)
 
 
+def houses_kit():
+    """Casas e galpao; as plantas das floreiras de cada casa saem num .glb proprio (folhagem com
+    vento, sem lightmap), posto pelo builder no mesmo transform da casa."""
+    out = {}
+    for name, make in (("spike_house_stone", build_house_stone), ("spike_house_long", build_house_long),
+                       ("spike_house_small", build_house_small)):
+        objects, plants = make()
+        out[name] = objects
+        out[name + "_plants"] = [plants]
+    out["spike_yard"] = build_yard()
+    return out
+
+
 GROUPS = {
     "wall": lambda: {"spike_wall": build_wall(), "spike_wall_low": build_wall_low()},
     "tower": lambda: {"spike_tower": build_tower()},
     "gate": lambda: {"spike_gate": build_gate(), "spike_door_l": build_door("l"), "spike_door_r": build_door("r")},
     "keep": lambda: {"spike_keep": build_keep()},
-    "houses": lambda: {
-        "spike_house_stone": build_house_stone(),
-        "spike_house_long": build_house_long(),
-        "spike_house_small": build_house_small(),
-        "spike_yard": build_yard(),
-    },
+    "houses": lambda: houses_kit(),
     "fountain": lambda: {"spike_fountain": build_fountain()},
     "plaza": lambda: {"spike_plaza": build_plaza()},
-    "props": lambda: {o.name: [o] for o in build_props()},
+    "props": build_props,
 }
 
 

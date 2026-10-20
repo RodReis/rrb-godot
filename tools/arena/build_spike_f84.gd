@@ -52,19 +52,36 @@ const PROPS: Array[Array] = [
 	["spike_barrel", Vector2(-34.70, 29.00), 10.0],
 	["spike_crate", Vector2(-29.00, 34.60), 5.0],
 ]
-## Moitas: anel rente ao arco por dentro (raio, azimute em graus a partir da direcao spawn ->
-## centro; -80 e a fonte) e pontos soltos do patio em (x, z) do mundo, fora das casas.
-const BUSH_RING_RADIUS: float = 11.6
-const BUSH_RING_DEG: Array[float] = [-46.0, -24.0, 24.0, 46.0, 80.0]
-const BUSHES: Array[Vector2] = [
-	Vector2(-35.0, 23.0),
-	Vector2(-23.0, 35.0),
-	Vector2(-39.0, 21.5),
-	Vector2(-21.5, 39.0),
-	Vector2(-34.0, 34.0),
-	Vector2(-38.0, 28.5),
-	Vector2(-28.5, 38.0),
+## Casa do spike -> plantas das floreiras dela (.glb proprio: folhagem com vento, sem lightmap),
+## postas no mesmo transform da casa.
+const PLANTS: Dictionary[String, String] = {
+	"spike_house_stone": "spike_house_stone_plants",
+	"spike_house_long": "spike_house_long_plants",
+	"spike_house_small": "spike_house_small_plants",
+}
+## Folhagem rente ao arco por dentro: raio e azimute em graus a partir da direcao spawn -> centro
+## (-80 e a fonte), alternando moita e arbusto alto.
+const RING_RADIUS: float = 11.6
+const RING_DEG: Array[float] = [-46.0, -24.0, 24.0, 46.0, 80.0]
+const RING_ASSETS: Array[String] = ["spike_bush", "spike_shrub"]
+## Folhagem solta, fora das casas, dos baus e do spawn: [asset, (x, z) do mundo].
+const FOLIAGE: Array[Array] = [
+	["spike_shrub", Vector2(-39.0, 21.5)],
+	["spike_shrub", Vector2(-21.5, 39.0)],
+	["spike_bush", Vector2(-34.0, 34.0)],
+	["spike_bush", Vector2(-38.0, 28.5)],
+	["spike_bush", Vector2(-28.5, 38.0)],
+	["spike_flowers", Vector2(-34.8, 24.3)],
+	["spike_flowers", Vector2(-34.9, 30.2)],
+	["spike_flowers", Vector2(-31.0, 34.8)],
+	["spike_flowers", Vector2(-24.3, 34.8)],
 ]
+## Touceiras floridas da base em (s, l) da base A: ao lado da fonte e dos postes do spawn.
+const FLOWERS_BASE: Array[Vector2] = [Vector2(33.5, 12.0), Vector2(34.5, 4.2), Vector2(34.5, -4.2)]
+## Escala-base por asset (a touceira florida baixa sumia na camera do jogo; PI 2026-10-20).
+const FOLIAGE_SCALE: Dictionary[String, float] = {"spike_flowers": 1.4}
+const AXIS_A: Vector2 = Vector2(-0.70710678, 0.70710678)
+const LATERAL_A: Vector2 = Vector2(-0.70710678, -0.70710678)
 const LANTERN_LIGHT_RANGE: float = 5.5
 const LANTERN_LIGHT_ENERGY: float = 1.0
 const LANTERN_LIGHT_COLOR: Color = Color(1.0, 0.66, 0.34)
@@ -110,6 +127,8 @@ func _swap_pieces(group: Node3D) -> int:
 			if _is_inner_wall(piece.name):
 				kit = INNER_WALL
 			_add_kit(group, kit, "Spike" + piece.name, piece.transform)
+			if PLANTS.has(kit):
+				_add_kit(group, PLANTS[kit], "Spike%sPlants" % piece.name, piece.transform)
 			count += 1
 	return count
 
@@ -157,15 +176,27 @@ func _place_props(group: Node3D) -> void:
 			light.light_energy = LANTERN_LIGHT_ENERGY
 			light.omni_range = LANTERN_LIGHT_RANGE
 			_add(ambience, light)
+	_place_foliage(group)
+
+
+## Folhagem: anel do arco, pontos soltos do patio e touceiras floridas da base, com giro e
+## tamanho variando pela posicao (a mesma moita nao se repete igual).
+func _place_foliage(group: Node3D) -> void:
+	var spots: Array[Array] = FOLIAGE.duplicate()
 	var to_center := (-SPAWN_A).normalized()
-	var bushes: Array[Vector2] = BUSHES.duplicate()
-	for deg: float in BUSH_RING_DEG:
-		bushes.append(SPAWN_A + to_center.rotated(deg_to_rad(deg)) * BUSH_RING_RADIUS)
-	for i: int in range(bushes.size()):
-		var at := bushes[i]
+	for i: int in range(RING_DEG.size()):
+		var at := SPAWN_A + to_center.rotated(deg_to_rad(RING_DEG[i])) * RING_RADIUS
+		spots.append([RING_ASSETS[i % RING_ASSETS.size()], at])
+	for local: Vector2 in FLOWERS_BASE:
+		spots.append(["spike_flowers", AXIS_A * local.x + LATERAL_A * local.y])
+	for i: int in range(spots.size()):
+		var asset: String = spots[i][0]
+		var at: Vector2 = spots[i][1]
 		var size := 0.85 + 0.35 * fposmod(at.x * 0.37 + at.y * 0.61, 1.0)
+		size *= FOLIAGE_SCALE.get(asset, 1.0)
 		var basis := Basis(Vector3.UP, at.x * 1.3 + at.y * 0.7).scaled(Vector3.ONE * size)
-		_add_kit(group, "spike_bush", "SpikeBush%d" % i, Transform3D(basis, Vector3(at.x, 0, at.y)))
+		var label := "Spike%s%d" % [asset.trim_prefix("spike_").capitalize(), i]
+		_add_kit(group, asset, label, Transform3D(basis, Vector3(at.x, 0, at.y)))
 
 
 ## Yaw que vira o +x do prop (braco da lanterna, frente do estandarte) para o spawn A.
