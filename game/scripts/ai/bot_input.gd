@@ -49,6 +49,8 @@ var _last_cooldowns: Vector3i = Vector3i.ZERO
 var _zone_radius: float = INF
 ## O think atual acabou de entrar em FIGHT (Grito de Guerra do Berserker, SPEC-075).
 var _entered_fight: bool = false
+## O alvo do think vale o R (heroi ou boss); monstro comum nao (farm_skills, F81).
+var _ultimate_ok: bool = true
 ## HP do heroi no think anterior: caiu = tomou golpe (Retribuicao do Paladino, SPEC-076).
 var _last_hp: int = 0
 
@@ -114,13 +116,19 @@ func think(tick: int) -> void:
 			_flee_zone(tick)
 		_:
 			_farm(tick)
-	if state == BotRules.State.FARM:
-		skill_r = false  # o R fica para heroi e boss; Q e E ajudam no farm (farm_skills)
+	_hold_ultimate()
 	_smoke_escape(view, enemy)
 	_potion_when_hurt(view)
 	_rage_when_needed(view)
 	_paladin_reacts(view, enemy)
 	_apply_level()
+
+
+## O R fica para heroi e boss: contra monstro comum (farm, saque, invasao) so Q e E (farm_skills).
+## As reacoes (Ragnarok, Bencao...) rodam depois e nao passam por aqui.
+func _hold_ultimate() -> void:
+	if not _ultimate_ok:
+		skill_r = false
 
 
 ## Erro de mira e habilidades que o nivel nao deixa sair. Niveis sem erro (chance 1, erro 0) nao
@@ -187,6 +195,7 @@ func _paladin_reacts(view: BotView, enemy: Hero) -> void:
 
 
 func _reset() -> void:
+	_ultimate_ok = true
 	movement = Vector3.ZERO
 	aim = Vector3.ZERO
 	aim_distance = 0.0
@@ -323,7 +332,9 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
 	var data := _hero.hero_data
-	# So a mira da habilidade antecipa o alvo; alcance e caminho seguem a posicao dele.
+	# So a direcao da mira antecipa o alvo; alcance e caminho seguem a posicao dele (a distancia da
+	# Dinamite e do Pantano continua a do alvo parado).
+	_ultimate_ok = target is Hero or Hero._is_boss(target)
 	var led := _flat(where + BotRules.lead_offset(target.velocity, _level.lead_seconds))
 	aim = led.normalized()
 	aim_distance = led.length()

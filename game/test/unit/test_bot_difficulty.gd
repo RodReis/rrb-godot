@@ -27,12 +27,25 @@ func _press_q(aim: Vector3) -> void:
 	_input._apply_level()
 
 
-func test_medio_e_dificil_nao_tocam_na_saida() -> void:
+func test_medio_e_dificil_nao_tocam_na_saida_nem_sorteiam() -> void:
 	for number: int in [MEDIUM, HARD, 0]:
 		_input.set_difficulty(number)
+		var state := _input._rng.state
 		_press_q(Vector3.FORWARD)
 		assert_true(_input.skill_q, "n=%d" % number)
 		assert_eq(_input.aim, Vector3.FORWARD, "n=%d" % number)
+		assert_eq(_input._rng.state, state, "n=%d nao consome sorteio" % number)
+
+
+func test_r_fica_para_heroi_e_boss() -> void:
+	_input.skill_r = true
+	_input._ultimate_ok = false
+	_input._hold_ultimate()
+	assert_false(_input.skill_r, "contra monstro comum o R e solto")
+	_input.skill_r = true
+	_input._ultimate_ok = true
+	_input._hold_ultimate()
+	assert_true(_input.skill_r, "contra heroi ou boss o R fica")
 
 
 func test_facil_deixa_sair_so_parte_das_habilidades() -> void:

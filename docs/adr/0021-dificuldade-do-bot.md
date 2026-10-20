@@ -18,7 +18,7 @@ O treino contra o bot tem um nível só. O PI pediu três (Fácil, Médio, Difí
 
 ## Emenda (PI, 2026-10-20, F81)
 
-O soak mediu o Fácil bem abaixo do Médio (2 de 20 vitórias contra o Médio). Com limiar e mira o Difícil ficou em empate com o Médio; o PI jogou no Difícil e achou o bot "fugindo" e farmando mal. O Difícil final usa Q e E nos monstros do farm (o R fica para herói e boss, `farm_skills`), briga em nível igual (`level_slack`) e mira antecipada nas habilidades (`lead_seconds`): 28 de 40 contra o Médio (linha-base 23 de 40) e nível 7,2 contra 5,8 aos 5:00. Critério de prova: **Fácil < Médio < Difícil**. Dados em `docs/evidencias/f81/soak-por-nivel.md`.
+O soak mediu o Fácil bem abaixo do Médio (2 de 20 vitórias contra o Médio). Com limiar e mira o Difícil ficou em empate com o Médio; o PI jogou no Difícil e achou o bot "fugindo" e farmando mal. O Difícil final usa Q e E nos monstros do farm (o R fica para herói e boss, `farm_skills`), briga em nível igual (`level_slack`) e mira antecipada nas habilidades (`lead_seconds`): 27 de 40 contra o Médio (linha-base 23 de 40) e nível 7,17 contra 5,83 aos 5:00. Critério de prova: **Fácil < Médio < Difícil**. Dados em `docs/evidencias/f81/soak-por-nivel.md`.
 
 ## Consequências
 
