@@ -38,8 +38,18 @@ const POSES: Array[Array] = [
 	["grama", "", GRASS_STANDOFF],
 	["vale", "", VALLEY_AT],
 ]
+## --poses=f84: closes da base A (SO) para o spike visual (SPEC-084 aceite 4), com a camera vinda
+## de dentro da base; servem a oficial e a variante (--arena=spike_f84), mesmo enquadramento.
+const POSES_F84: Array[Array] = [
+	["portao", "GateA", Vector3(-6.0, 4.0, 6.0)],
+	["fonte", "FountainA", Vector3(3.5, 3.0, 5.0)],
+	["casa", "HouseA0", Vector3(5.5, 4.0, 2.0)],
+	["patio", "VillageA0", Vector3(7.0, 5.0, -4.0)],
+	["torreao", "KeepA", Vector3(14.0, 9.0, -14.0)],
+]
 
 var _out: String = "scenery"
+var _poses: Array[Array] = POSES
 var _main: Node
 var _players: Node
 var _camera: Camera3D
@@ -53,6 +63,8 @@ func _initialize() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out = arg.trim_prefix("--out=")
+		elif arg == "--poses=f84":
+			_poses = POSES_F84
 	_main = (load(MAIN) as PackedScene).instantiate()
 	root.add_child(_main)
 	current_scene = _main
@@ -93,16 +105,16 @@ func _start() -> void:
 
 
 func _step() -> bool:
-	if _shot >= POSES.size():
+	if _shot >= _poses.size():
 		quit(0)
 		return true
 	if _settle == 0:
-		_place(POSES[_shot])
+		_place(_poses[_shot])
 	_settle += 1
 	if _settle < SETTLE_FRAMES:
 		return false
 	_settle = 0
-	var path := "%s_%s.png" % [_out, POSES[_shot][0]]
+	var path := "%s_%s.png" % [_out, _poses[_shot][0]]
 	var error := root.get_viewport().get_texture().get_image().save_png(path)
 	print("[scenery] %s (%s)" % [path, error_string(error)])
 	_shot += 1

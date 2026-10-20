@@ -353,6 +353,13 @@
       "pergunta": "O jogo é divertido para quem não o fez?",
       "narrativa": [
         "Dez pessoas ou mais jogam, e a telemetria mede ping, duração e quem vence. Daqui saem as decisões grandes: câmera, duração da preparação e se o jogo vai para 3x3."
+      ],
+      "imagens": [
+        {
+          "arquivo": "mvp4-f84-spike-base-so.webp",
+          "legenda": "Teste de arte antes do playtest: a base de um dos times refeita num estilo mais realista, com muralhas de cantaria, telhados de telha, praça calçada e casas de enxaimel (à direita), ao lado da arena atual (à esquerda). Por enquanto existe só numa cena separada, para comparar; a arena da partida continua a mesma.",
+          "tipo": "em-construcao"
+        }
       ]
     }
   },
@@ -436,6 +443,7 @@
     "F28": "Deploy na nuvem e instalador",
     "F79": "Tipo de tela: janela, sem borda ou tela cheia",
     "F80": "Sair do jogo pelo menu do Esc",
+    "F84": "Teste de arte: base de um time num estilo mais realista",
     "F29": "Telemetria e indicadores",
     "F30": "Ajustes de balanceamento pós-playtest",
     "GATE": "Homologação do marco"
