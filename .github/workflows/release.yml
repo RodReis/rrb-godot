@@ -66,7 +66,7 @@ jobs:
           num=$(printf '%s' "$RRB_VERSION" | sed -nE 's/^v?([0-9]+\.[0-9]+\.[0-9]+)$/\1.0/p')
           makensis -V2 -DVERSION="$RRB_VERSION" -DVERSION_NUM="${num:-0.0.0.0}" \
             -DSRC="$PWD/build/package" -DOUT="$PWD/build/LootStart-Setup-$RRB_VERSION.exe" \
-            tools/installer/lootstart.nsi
+            "$PWD/tools/installer/lootstart.nsi"  # absoluto: o makensis muda para a pasta do script
 
       - name: Anexar o instalador (ensaio)
         if: github.ref_type != 'tag'
