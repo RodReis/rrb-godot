@@ -8,6 +8,8 @@ extends GutTest
 
 const SCENE: PackedScene = preload("res://scenes/app.tscn")
 const MATCH: String = "0b7e9f00-1111-4222-8333-444455556666"
+## Minimo do splash nos testes (o do produto e 3 s).
+const SPLASH_MIN_TEST: float = 0.3
 const TOKENS: Dictionary = {"accessToken": "acesso", "refreshToken": "refresh"}
 const ME: Dictionary = {
 	"id": "9c2d1a77-aaaa-4bbb-8ccc-ddddeeeeffff",
@@ -29,6 +31,7 @@ func before_each() -> void:
 	_app.history = HistoryService.new(_api)
 	_app.profile = ProfileService.new(_api)
 	_app.avatars = AvatarStore.new("user://test_app_avatars/")
+	_app.splash_min_seconds = SPLASH_MIN_TEST
 	add_child_autofree(_app)
 	await wait_process_frames(1)
 
@@ -91,12 +94,16 @@ func _enter_lobby() -> LobbyScreen:
 
 func test_sem_sessao_abre_no_login() -> void:
 	assert_eq(_app.stack().current_route(), Router.LOGIN)
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	assert_false(bar.brand_visible(), "no Login a marca fica so no meio da tela")
 
 
 func test_login_leva_ao_lobby_como_raiz() -> void:
 	var lobby := await _enter_lobby()
 	assert_not_null(lobby)
 	assert_eq(_app.stack().depth(), 1)
+	var bar := _app.find_children("*", "AppBar", true, false)[0] as AppBar
+	assert_true(bar.brand_visible())
 	assert_eq(_app.account_email, "duelista@rrb.dev")
 
 
@@ -209,9 +216,11 @@ func test_backend_fora_tira_o_ping_do_chip() -> void:
 	assert_false(bar.backend_status_text().contains("ONLINE"))
 
 
-func test_splash_some_na_primeira_checagem_e_a_periodica_nao_o_toca() -> void:
-	# A checagem do _ready ja voltou (before_each): o splash esta em fade, bem antes do teto de 2 s.
+func test_splash_espera_o_minimo_mesmo_com_o_backend_ja_respondido() -> void:
+	# A checagem do _ready ja voltou (before_each), mas o minimo do splash ainda nao passou.
 	var splash := _app.find_children("*", "BootSplash", true, false)[0] as BootSplash
+	assert_false(splash.is_dismissed())
+	await wait_seconds(SPLASH_MIN_TEST + 0.1)
 	assert_true(splash.is_dismissed())
 	await wait_seconds(BootSplash.FADE_SECONDS + 0.3)
 	assert_eq(_app.find_children("*", "BootSplash", true, false).size(), 0)

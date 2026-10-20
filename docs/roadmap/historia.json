@@ -3,7 +3,7 @@
   "projeto": {
     "nome": "MOBA de 2 Tempos",
     "nome_nota": "nome provisório",
-    "release_url": "https://lootstart.cloud/download/rrb-arena-latest-win64.zip",
+    "release_url": "https://lootstart.cloud/download/LootStart-latest-win64.zip",
     "tagline": "Arena 3D 1x1 com partidas de até 10 minutos: cinco minutos para crescer, cinco para decidir.",
     "pitch": [
       "Cada partida tem dois tempos. Na preparação, você explora a sua metade do mapa, mata monstros para subir de nível, abre baús e equipa itens. Aos 5:00 os portões caem, uma zona começa a fechar e o confronto obriga os dois lados a lutar.",
@@ -339,6 +339,11 @@
         {
           "arquivo": "mvp3-f80-sair-do-jogo.webp",
           "legenda": "Agora dá para sair do jogo sem fechar a janela: o Esc abre um menu com Continuar e Sair, e o jogo pede confirmação. Sair no meio de uma partida online conta como derrota por abandono.",
+          "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp3-f82-loot-start-login.webp",
+          "legenda": "O jogo agora se chama Loot Start, com a mesma marca do site: o baú com o play e o nome em dourado. A tela de entrada ganhou a arena de fundo, os dez heróis lado a lado e uma faixa com os números do jogo.",
           "tipo": "entregue"
         }
       ]

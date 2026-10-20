@@ -127,15 +127,9 @@ const LABELS: Dictionary[StringName, Array] = {
 	&"LnIconMuted":
 	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_XL, &"TEXT_MUTED"],
 	&"LnIconError": [UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_XL, &"ERROR"],
-	&"LnIconLogo":
-	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_LG, &"GOLD_BRIGHT"],
 	&"LnIconTitle":
 	[UiTokens.FONT_ICONS_PATH, UiTokens.WEIGHT_REGULAR, UiTokens.ICON_XL, &"GOLD_BRIGHT"],
 	# Login e Lobby (F25).
-	&"LnDisplay":
-	[UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_DISPLAY, &"TEXT"],
-	&"LnDisplayGold":
-	[UiTokens.FONT_LN_DISPLAY_PATH, UiTokens.WEIGHT_BOLD, UiTokens.TYPE_LN_DISPLAY, &"GOLD_BRIGHT"],
 	&"LnHeadlineMd":
 	[
 		UiTokens.FONT_LN_DISPLAY_PATH,
@@ -301,10 +295,6 @@ static func _panels(theme: Theme) -> void:
 	var icon_box := _box(UiTokens.BG_HIGHEST, UiTokens.RADIUS_XS)
 	icon_box.set_content_margin_all(UiTokens.SPACE_XS)
 	_panel(theme, &"LnIconBox", icon_box)
-	var logo := _box(UiTokens.BG_HIGHEST, UiTokens.RADIUS_SM)
-	_inset(logo)
-	logo.set_content_margin_all(UiTokens.SPACE_XS)
-	_panel(theme, &"LnLogoBox", logo)
 	var modal := card.duplicate() as StyleBoxFlat
 	modal.border_color = UiTokens.BORDER
 	modal.set_border_width_all(1)

@@ -36,7 +36,7 @@ Você atua como **engenheiro sênior de Godot 4 / GDScript** neste repositório.
   - **Game** (`game/`): partida — cliente + servidor dedicado. Seleção de heróis, HUDs, fim de partida. `docs/ARCHITECTURE-GAME.md`.
   - **Launcher** (`launcher/` + `backend/`): fora da partida — login, lobby, fila, histórico, bestiário, forja, arena & mapa, configurações; backend de auth/fila/orquestração. `docs/ARCHITECTURE-LAUNCHER.md`.
   - Comum: `shared/` (Resources `.tres`, regras puras, Theme, assets), montado nos dois por junction (`tools/link-shared.ps1`, ADR-0003). Contrato Launcher ↔ Game: processo + argumentos + `settings.cfg` (`ARCHITECTURE-LAUNCHER.md` §5). Mudar o contrato exige ADR.
-  - **Site público** (`site/`, ADR-0017, emenda ao ADR-0002): landing "Loot Start" em React + Vite no GitHub Pages, sem relação de código com Game, Launcher ou Backend; lê `shared/data/heroes`, `docs/roadmap/` e `docs/STATUS.md` em build. `docs/SITE.md`. O nome "Loot Start" vale só no site; o jogo segue "ARENA 1V1".
+  - **Site público** (`site/`, ADR-0017, emenda ao ADR-0002): landing "Loot Start" em React + Vite no GitHub Pages, sem relação de código com Game, Launcher ou Backend; lê `shared/data/heroes`, `docs/roadmap/` e `docs/STATUS.md` em build. `docs/SITE.md`. "Loot Start" é o nome do jogo inteiro desde o F82 (ADR-0022): janelas, Launcher, splash, `LootStart.exe`; repo, pastas e código seguem `rrb-*`.
 - Estrutura (`shared/` entra nos dois projetos por junction — `tools/link-shared.ps1`):
 
 ```

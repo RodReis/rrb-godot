@@ -2,7 +2,7 @@
 
 Landing page do jogo, em `site/`. Atualizada em 2026-10-19 (autorizada pelo PI) para os 10 heróis, o MVP2.8 entregue e o MVP3 em andamento. **No ar:** https://lootstart.cloud (VPS, desde 2026-10-19, #237; antes GitHub Pages em `rodreis.github.io/rrb-godot`). Download do jogo em https://lootstart.cloud/download/ e roadmap completo em https://lootstart.cloud/roadmap/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
 
-Não é fatia nem card do board: foi pedido direto pelo PI em 2026-10-18 (PR #218). O nome "Loot Start" vale só no site; o jogo segue "ARENA 1V1".
+Não é fatia nem card do board: foi pedido direto pelo PI em 2026-10-18 (PR #218). Desde o F82 (ADR-0022), "Loot Start" é o nome do jogo inteiro, não só do site.
 
 ## Stack
 
@@ -55,7 +55,7 @@ O `base` é `/` (site na raiz do domínio); `SITE_BASE` troca, se o site voltar 
 ## Publicação e CI
 
 - **Deploy (VPS, #237):** serviço `site` do `infra/docker-compose.prod.yml` no Coolify (domínio `https://lootstart.cloud`, porta 80). `site/Dockerfile` constrói da raiz do repo (o extract lê `shared/` e `docs/`) e serve com nginx (`site/nginx.conf`): o site, `/download/` (pasta do host `/srv/rrb-download`, só leitura) e `/roadmap/` (`docs/roadmap/index.html`). Atualiza a cada Redeploy do recurso. O workflow `site.yml` (GitHub Pages) saiu: o repositório é privado.
-- **Download:** o `release.yml` envia o ZIP da tag para `/srv/rrb-download` (usuário `rrbdl`, só upload; segredo `VPS_UPLOAD_KEY`; chave do host em `infra/known_hosts`) e aponta `rrb-arena-latest-win64.zip` para ele. O botão "Baixar" usa `historia.json` → `projeto.release_url`.
+- **Download:** o `release.yml` envia o ZIP da tag para `/srv/rrb-download` (usuário `rrbdl`, só upload; segredo `VPS_UPLOAD_KEY`; chave do host em `infra/known_hosts`) e aponta `LootStart-latest-win64.zip` para ele. O botão "Baixar" usa `historia.json` → `projeto.release_url`.
 - **Links para o GitHub** ("Ver no GitHub", "Código no GitHub", roadmap no repo) saíram: o repo é privado.
 - **CI:** job `site` em `ci.yml` (path filter `site`), com `pnpm test`, o teste do parser de STATUS e `pnpm build`; entra no `needs` do `gate`. `pnpm/action-setup` exige `packageManager` no `site/package.json`.
 
@@ -63,7 +63,7 @@ O `base` é `/` (site na raiz do domínio); `SITE_BASE` troca, se o site voltar 
 
 - **Logo:** `Logo.tsx` (SVG inline) e `public/favicon.svg`. Baú aberto, com um "play" subindo do interior (loot + start); ouro + `TEXT`. Wordmark "LOOT START" em Cinzel 900, caixa alta, gradiente `GOLD_BRIGHT` → `GOLD`.
 - **Tokens:** os de `TOKENS.md` §1 em `tokens.css`. Painel "vidro" (`.glass`) = `PanelCardGlass` da HUD (`BG_PANEL` 85 %, borda `GOLD` 35 %, cantoneiras 8×2 px). Botão primário: ouro, texto `ON_GOLD`, borda 3D `GOLD_EDGE`.
-- **Hero:** arena à noite com o véu roxo do splash do Launcher e neblina em duas camadas. O `splash.png` não é usado porque traz "ARENA 1V1" gravado.
+- **Hero:** arena à noite com o véu roxo do splash do Launcher e neblina em duas camadas. O `splash.png` do Launcher (marca "Loot Start" desde o F82) não é usado no hero.
 - **Movimento:** entrada por `IntersectionObserver` e neblina por `transform`; tudo cai para estático em `prefers-reduced-motion`.
 - **Acessibilidade:** landmarks, `h1` único, foco dourado visível, lightbox em `<dialog>` com setas e Esc, sem rolagem horizontal em 375 px.
 

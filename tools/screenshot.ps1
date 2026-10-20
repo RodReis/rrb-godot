@@ -3,12 +3,12 @@
   Captura so a janela do jogo (titulo contendo -Title) num PNG, recortando a tela pelo retangulo
   da janela (Win32 GetWindowRect). Serve para a verificacao do Code e para as capturas do roadmap
   (docs/roadmap/README.md: nunca gravar a tela inteira em docs/).
-  Uso: .\tools\screenshot.ps1 -Out logs\captura.png [-Title 'rrb-godot']
+  Uso: .\tools\screenshot.ps1 -Out logs\captura.png [-Title 'Loot Start']
 #>
 param(
     [Parameter(Mandatory = $true)][string]$Out,
     # Titulo exato da janela do jogo (o do editor/console e diferente).
-    [string]$Title = 'rrb-godot (DEBUG)'
+    [string]$Title = 'Loot Start (DEBUG)'
 )
 Add-Type -AssemblyName System.Drawing
 Add-Type @'
@@ -22,11 +22,11 @@ public static class Win32Window {
     [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr hWnd);
 }
 '@
-# Entre os processos do Godot com esse titulo (o *_console.exe tem dois), fica a maior janela.
+# Entre os processos do Godot ou do pacote (LootStart.exe, game.exe) com esse titulo (o *_console.exe tem dois), fica a maior janela.
 $hwnd = [IntPtr]::Zero
 $best = 0
 $rect = New-Object Win32Window+RECT
-foreach ($proc in Get-Process | Where-Object { $_.ProcessName -like 'Godot*' -and $_.MainWindowTitle -like "$Title*" }) {
+foreach ($proc in Get-Process | Where-Object { $_.ProcessName -match '^(Godot|LootStart|game)' -and $_.MainWindowTitle -like "$Title*" }) {
     # Janela minimizada (jogo aberto por processo em segundo plano): restaura antes de medir.
     if ([Win32Window]::IsIconic($proc.MainWindowHandle)) { [Win32Window]::ShowWindow($proc.MainWindowHandle, 9) | Out-Null; Start-Sleep -Milliseconds 500 }
     $r = New-Object Win32Window+RECT

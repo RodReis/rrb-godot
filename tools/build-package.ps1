@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
   Gera o ZIP portatil do jogo (F28, ARCHITECTURE-LAUNCHER §5.1):
-    launcher.exe + launcher.pck + game/game.exe + game/game.pck + LEIA-ME.txt
+    LootStart.exe + LootStart.pck + game/game.exe + game/game.pck + LEIA-ME.txt
   com a URL publica do backend embutida no Launcher (build_config.cfg dentro do .pck).
 .EXAMPLE
   .\tools\build-package.ps1 -ApiUrl https://api.exemplo.com -Version v0.3.0
@@ -23,10 +23,10 @@ foreach ($module in 'game', 'launcher') {
 
 $build = Join-Path $repo 'build'
 $package = Join-Path $build 'package'
-$zip = Join-Path $build "rrb-arena-$Version-win64.zip"
+$zip = Join-Path $build "LootStart-$Version-win64.zip"
 Remove-Item $package, $zip -Recurse -Force -ErrorAction SilentlyContinue
 foreach ($dir in 'game', 'launcher') { Remove-Item (Join-Path $build $dir) -Recurse -Force -ErrorAction SilentlyContinue }
-Remove-Item (Join-Path $build 'launcher.*') -Force -ErrorAction SilentlyContinue
+Remove-Item (Join-Path $build 'LootStart.*'), (Join-Path $build 'launcher.*') -Force -ErrorAction SilentlyContinue
 # O Godot exige que a pasta de destino do export ja exista.
 New-Item -ItemType Directory -Force (Join-Path $package 'game'), (Join-Path $build 'game') | Out-Null
 
@@ -49,7 +49,7 @@ finally {
     Remove-Item $config -Force -ErrorAction SilentlyContinue
 }
 
-Copy-Item (Join-Path $build 'launcher.exe'), (Join-Path $build 'launcher.pck') $package
+Copy-Item (Join-Path $build 'LootStart.exe'), (Join-Path $build 'LootStart.pck') $package
 Copy-Item (Join-Path $build 'game/game.exe'), (Join-Path $build 'game/game.pck') (Join-Path $package 'game')
 Copy-Item (Join-Path $PSScriptRoot 'export/LEIA-ME.txt') $package
 Compress-Archive -Path (Join-Path $package '*') -DestinationPath $zip -Force

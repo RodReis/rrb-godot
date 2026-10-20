@@ -9,7 +9,8 @@ extends Control
 ## tabela do §5.2 (codigo 0 de partida online volta ao Lobby com o card "Resultado da partida",
 ## F70). Telas emitem; quem navega e confirma e o App.
 ## --gallery (depois do --) abre a galeria do design system, a prova visual dos componentes.
-## Splash "ARENA 1V1" (F68): cobre a janela ate a 1a checagem do backend (teto SPLASH_MAX_SECONDS).
+## Splash "Loot Start" (F68, F82): cobre a janela ate a 1a checagem do backend
+## (minimo SPLASH_MIN_SECONDS, teto SPLASH_MAX_SECONDS).
 
 const GALLERY_ARG: String = "--gallery"
 ## Toast no canto inferior direito, acima do rodape.
@@ -17,8 +18,10 @@ const TOAST_WIDTH: float = 360.0
 ## Status e ping do backend (GET /health) a cada 10 s.
 const HEALTH_SECONDS: float = 10.0
 const OFFLINE_ARGS: PackedStringArray = ["--offline", "--bot"]
-## Teto do splash se o backend demorar a responder.
-const SPLASH_MAX_SECONDS: float = 2.0
+## Splash: fica no minimo SPLASH_MIN_SECONDS (PI, 2026-10-19: "aparecendo muito rapido") e sai na
+## 1a checagem do backend depois disso; teto SPLASH_MAX_SECONDS se o backend demorar a responder.
+const SPLASH_MIN_SECONDS: float = 3.0
+const SPLASH_MAX_SECONDS: float = 6.0
 ## Fim de partida online (F70): o servidor pode ainda estar gravando o resultado, entao o
 ## GET /matches?mine=1 e repetido ate a partida nova aparecer (3 tentativas, 1 s entre elas).
 const RESULT_ATTEMPTS: int = 3
@@ -35,6 +38,8 @@ var queue: QueueService = QueueService.new()
 var game: GameProcess = GameProcess.new()
 ## Espera entre as tentativas de achar a partida no historico (teste zera).
 var result_retry_seconds: float = RESULT_RETRY_SECONDS
+## Tempo minimo do splash (os testes encurtam).
+var splash_min_seconds: float = SPLASH_MIN_SECONDS
 ## E-mail da sessao aberta (cartao "Sua conta" do lobby), o do backend; vazio sem sessao.
 var account_email: String = ""
 
@@ -48,6 +53,7 @@ var _loading_box: StateBox = StateBox.new()
 var _match: MatchOverlay = MatchOverlay.new()
 var _result: MatchResultCard = MatchResultCard.new()
 var _splash: BootSplash = BootSplash.new()
+var _splash_min_done: bool = false
 var _health: Timer = Timer.new()
 var _online: bool = false
 ## A primeira checagem do backend ja voltou?
@@ -144,7 +150,8 @@ func check_backend() -> void:
 	else:
 		_ping_filter.reset()
 		_ping_ms = AppBar.UNKNOWN_PING
-	_dismiss_splash()
+	if _splash_min_done:
+		_dismiss_splash()
 	_bar.set_backend_status(_online, _ping_ms if _online else 0)
 	var lobby := _stack.current() as LobbyScreen
 	if lobby != null:
@@ -193,6 +200,7 @@ func _build() -> void:
 	add_child(_result)
 	add_child(_modal)
 	add_child(_splash)
+	get_tree().create_timer(splash_min_seconds).timeout.connect(_on_splash_min_timeout)
 	get_tree().create_timer(SPLASH_MAX_SECONDS).timeout.connect(_dismiss_splash)
 
 
@@ -241,6 +249,12 @@ func _logout() -> void:
 	_stack.reset(Router.LOGIN)
 
 
+func _on_splash_min_timeout() -> void:
+	_splash_min_done = true
+	if _checked:
+		_dismiss_splash()
+
+
 func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 	var settings_screen := screen as SettingsScreen
 	if settings_screen != null:
@@ -249,7 +263,7 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 		settings_screen.save_failed.connect(show_toast.bind(Toast.Kind.ERROR))
 	var login := screen as LoginScreen
 	if login != null:
-		login.bind(auth)
+		login.bind(auth, catalog)
 		login.authenticated.connect(_on_login_authenticated)
 		login.practice_requested.connect(_start_practice)
 	var profile_screen := screen as ProfileScreen
@@ -288,6 +302,7 @@ func _on_stack_screen_changed(route: StringName) -> void:
 	# Sem sessao (Login) e antes do 1o nickname nao ha para onde ir alem do que a tela oferece.
 	var gated := route == Router.LOGIN or (route == Router.PROFILE and profile.needs_nickname())
 	_bar.set_nav_visible(not gated)
+	_bar.set_brand_visible(route != Router.LOGIN)
 	_refresh_footer()
 
 
