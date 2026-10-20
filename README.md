@@ -76,7 +76,7 @@ Argumentos do Launcher (depois de `--`):
 
 Para ver saída e erros no terminal use o `*_console.exe`; o `.exe` principal não imprime.
 
-**Sem backend** (só telas e treino): abra o Launcher e use **Treinar contra o bot** no Login. O Game roda offline:
+**Sem backend** (só o Game): o treino vs bot fica no Lobby, depois do login (F81); para rodar o Game offline direto:
 
 ```powershell
 & $env:GODOT_PATH --path game -- --offline --bot

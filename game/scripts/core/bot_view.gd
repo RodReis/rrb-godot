@@ -30,3 +30,7 @@ var zone_edge: float = INF
 var enemy_alive: bool = false
 ## O adversario esta dentro da zona; sem ve-lo, supoe que sim (a zona o empurra ao centro).
 var enemy_in_zone: bool = true
+## Folga de nivel do nivel do bot ao medir vantagem (F81); 0 = o bot de antes.
+var level_slack: int = 0
+## O nivel do bot persegue na fase 2 (F81); o Facil nao.
+var can_chase: bool = true

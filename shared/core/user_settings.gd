@@ -52,6 +52,12 @@ const DISTANCE_MAX: float = 14.0
 const DISTANCE_STEP: float = 1.0
 const DISTANCE_DEFAULT: float = 11.0
 
+## [training] do F81 (ADR-0021/0027): ultimo nivel do bot escolhido no Launcher (1..N de
+## shared/data/rules/bot_levels.tres). O Launcher manda `--bot-difficulty`; o Game nao le a chave.
+## Fora de 1..N o BotLevels.normalize devolve o Medio.
+const TRAINING: String = "training"
+const BOT_DIFFICULTY: String = "bot_difficulty"
+
 ## Limites de quadros oferecidos; 0 = sem limite (Engine.max_fps).
 const FPS_UNLIMITED: int = 0
 const FPS_CAPS: Array[int] = [60, 120, 144, FPS_UNLIMITED]
@@ -103,6 +109,7 @@ static func defaults() -> Dictionary:
 		CONTROLS: controls,
 		GRAPHICS: graphics,
 		CAMERA: {DISTANCE: DISTANCE_DEFAULT},
+		TRAINING: {BOT_DIFFICULTY: BotLevels.DEFAULT_NUMBER},
 	}
 
 

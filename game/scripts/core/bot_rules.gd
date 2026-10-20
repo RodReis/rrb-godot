@@ -57,7 +57,7 @@ static func wants_flee_zone(view: BotView, profile: BotProfile) -> bool:
 
 ## Fase 2: adversario vivo e dentro da zona (fora dela ele toma dano sozinho).
 static func wants_chase(view: BotView) -> bool:
-	return view.phase2 and view.enemy_alive and view.enemy_in_zone
+	return view.phase2 and view.can_chase and view.enemy_alive and view.enemy_in_zone
 
 
 ## Para onde correr ao fugir da zona: no rumo do centro, a FLEE_DEPTH_MARGINS margens dentro da
@@ -86,8 +86,9 @@ static func wants_contest(view: BotView, profile: BotProfile) -> bool:
 
 ## Nivel maior, ou nivel igual com HP% maior (PI 2026-10-09).
 static func has_advantage(view: BotView) -> bool:
-	if view.level != view.enemy_level:
-		return view.level > view.enemy_level
+	var level := view.level + view.level_slack
+	if level != view.enemy_level:
+		return level > view.enemy_level
 	return view.hp_pct > view.enemy_hp_pct
 
 
@@ -243,3 +244,33 @@ static func retreat_spent_after(
 	if hp_pct >= profile.retreat_hp_pct:
 		return false
 	return spent or (previous == State.RETREAT and current != State.RETREAT)
+
+
+## Perfil do bot neste nivel (F81): copia do [param base] com o recuo e a distancia de briga do
+## nivel; o .tres compartilhado nao muda.
+static func profile_for(base: BotProfile, level: BotLevel) -> BotProfile:
+	var profile := base.duplicate() as BotProfile
+	profile.retreat_hp_pct = level.retreat_hp_pct
+	profile.fight_range = level.fight_range
+	return profile
+
+
+## O bot decide neste [param tick] (a cada reaction_ticks; entre decisoes repete o ultimo input).
+static func is_think_tick(tick: int, level: BotLevel) -> bool:
+	return tick % maxi(level.reaction_ticks, 1) == 0
+
+
+## A mira [param aim] girada no plano por [param roll] (-1 a 1) do erro maximo do nivel.
+static func aim_with_error(aim: Vector3, error_deg: float, roll: float) -> Vector3:
+	return aim.rotated(Vector3.UP, deg_to_rad(error_deg * roll))
+
+
+## Deslocamento (plano) que o alvo faz em [param seconds] com [param velocity]; o nivel que antecipa
+## mira nesse ponto (lead_seconds).
+static func lead_offset(velocity: Vector3, seconds: float) -> Vector3:
+	return Vector3(velocity.x, 0.0, velocity.z) * seconds
+
+
+## A habilidade pedida sai se o [param roll] (0 a 1) cai abaixo da chance do nivel.
+static func keeps_skill(level: BotLevel, roll: float) -> bool:
+	return roll < level.skill_chance

@@ -12,6 +12,7 @@ extends PlayerInput
 ## o mesmo calculo do cliente) e o adversario, pela morte (aviso global) e por onde o bot o ve.
 
 const PROFILE: BotProfile = preload("res://shared/data/rules/bot_profile.tres")
+const LEVELS: BotLevels = preload("res://shared/data/rules/bot_levels.tres")
 ## Recalcula o caminho a cada este tempo (s) ou quando o alvo muda.
 const REPATH_SECONDS: float = 0.5
 ## Ponto do caminho dado como alcancado (u).
@@ -20,6 +21,12 @@ const WAYPOINT_REACHED: float = 0.5
 const REACH_MARGIN: float = 0.4
 
 var state: BotRules.State = BotRules.State.FARM
+
+## Nivel do bot (F81, ADR-0021/0027) e o perfil dele; o padrao e o Medio, o bot de antes do F81.
+var _level: BotLevel = LEVELS.pick(BotLevels.DEFAULT_NUMBER)
+var _profile: BotProfile = BotRules.profile_for(PROFILE, _level)
+## Sorteio do erro de mira e das habilidades do nivel (nao entra nos niveis sem erro).
+var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 
 var _hero: Hero
 var _retreat_spent: bool = false
@@ -42,8 +49,16 @@ var _last_cooldowns: Vector3i = Vector3i.ZERO
 var _zone_radius: float = INF
 ## O think atual acabou de entrar em FIGHT (Grito de Guerra do Berserker, SPEC-075).
 var _entered_fight: bool = false
+## O alvo do think vale o R (heroi ou boss); monstro comum nao (farm_skills, F81).
+var _ultimate_ok: bool = true
 ## HP do heroi no think anterior: caiu = tomou golpe (Retribuicao do Paladino, SPEC-076).
 var _last_hp: int = 0
+
+
+## Nivel numerico (`--bot-difficulty`); ausente ou fora de 1..N = Medio.
+func set_difficulty(number: int) -> void:
+	_level = LEVELS.pick(number)
+	_profile = BotRules.profile_for(PROFILE, _level)
 
 
 func _gather() -> void:
@@ -57,12 +72,17 @@ func _gather() -> void:
 func think(tick: int) -> void:
 	_hero = get_parent() as Hero
 	_tick = tick
+	if not BotRules.is_think_tick(tick, _level):
+		_clear_one_shots()  # entre decisoes repete movimento e mira, sem apertar habilidade
+		return
 	_reset()
 	_remember()
 	var enemy := _enemy_hero()
 	var view := _view(tick, enemy)
-	var next := BotRules.next_state(state, view, PROFILE)
-	_retreat_spent = BotRules.retreat_spent_after(state, next, view.hp_pct, _retreat_spent, PROFILE)
+	var next := BotRules.next_state(state, view, _profile)
+	_retreat_spent = BotRules.retreat_spent_after(
+		state, next, view.hp_pct, _retreat_spent, _profile
+	)
 	if next != state:
 		print(
 			(
@@ -96,17 +116,47 @@ func think(tick: int) -> void:
 			_flee_zone(tick)
 		_:
 			_farm(tick)
+	_hold_ultimate()
 	_smoke_escape(view, enemy)
 	_potion_when_hurt(view)
 	_rage_when_needed(view)
 	_paladin_reacts(view, enemy)
+	_apply_level()
+
+
+## O R fica para heroi e boss: contra monstro comum (farm, saque, invasao) so Q e E (farm_skills).
+## As reacoes (Ragnarok, Bencao...) rodam depois e nao passam por aqui.
+func _hold_ultimate() -> void:
+	if not _ultimate_ok:
+		skill_r = false
+
+
+## Erro de mira e habilidades que o nivel nao deixa sair. Niveis sem erro (chance 1, erro 0) nao
+## sorteiam nada.
+func _apply_level() -> void:
+	var casting := skill_q or skill_e or skill_r
+	if casting and _level.aim_error_deg > 0.0:
+		aim = BotRules.aim_with_error(aim, _level.aim_error_deg, _rng.randf_range(-1.0, 1.0))
+	if _level.skill_chance < 1.0:
+		skill_q = skill_q and BotRules.keeps_skill(_level, _rng.randf())
+		skill_e = skill_e and BotRules.keeps_skill(_level, _rng.randf())
+		skill_r = skill_r and BotRules.keeps_skill(_level, _rng.randf())
+
+
+## Tick sem decisao do bot lento: nada de habilidade, aprender ponto ou escolher item de novo.
+func _clear_one_shots() -> void:
+	skill_q = false
+	skill_e = false
+	skill_r = false
+	learn = LEARN_NONE
+	chest_pick = PICK_NONE
 
 
 ## Ladina: Bomba de Fumaca para fugir do heroi que o bot ve, com HP baixo (SPEC-058 §7).
 func _smoke_escape(view: BotView, enemy: Hero) -> void:
 	if not _hero is Rogue or enemy == null:
 		return
-	if BotRules.rogue_skills(view.enemy_distance, view.hp_pct, PROFILE).y == 1:
+	if BotRules.rogue_skills(view.enemy_distance, view.hp_pct, _profile).y == 1:
 		skill_e = true
 
 
@@ -115,7 +165,7 @@ func _smoke_escape(view: BotView, enemy: Hero) -> void:
 func _potion_when_hurt(view: BotView) -> void:
 	if not _hero is Druid or skill_r or not view.in_danger:
 		return
-	if BotRules.druid_skills(INF, view.hp_pct, PROFILE).y == 1 and _skill_ready(SkillRules.SLOT_E):
+	if BotRules.druid_skills(INF, view.hp_pct, _profile).y == 1 and _skill_ready(SkillRules.SLOT_E):
 		skill_e = true
 		aim_distance = 0.0
 
@@ -126,7 +176,7 @@ func _rage_when_needed(view: BotView) -> void:
 	if not _hero is Berserker or not view.in_danger or not _skill_ready(SkillRules.SLOT_R):
 		return
 	var controlled := _hero.slow_ticks > 0 or _hero.stun_ticks > 0 or _hero.knockback_ticks > 0
-	if BotRules.berserker_skills(INF, 0.0, false, view.hp_pct, controlled, PROFILE).z == 1:
+	if BotRules.berserker_skills(INF, 0.0, false, view.hp_pct, controlled, _profile).z == 1:
 		skill_r = true
 
 
@@ -139,12 +189,13 @@ func _paladin_reacts(view: BotView, enemy: Hero) -> void:
 	var struck := _hero.hp < _last_hp and _threat_within(enemy, reach)
 	_last_hp = _hero.hp
 	var in_zone := _hero.zone_ticks > 0
-	var use := BotRules.paladin_skills(INF, _entered_fight, struck, view.hp_pct, in_zone, PROFILE)
+	var use := BotRules.paladin_skills(INF, _entered_fight, struck, view.hp_pct, in_zone, _profile)
 	skill_e = skill_e or (use.y == 1 and _skill_ready(SkillRules.SLOT_E))
 	skill_r = skill_r or (use.z == 1 and _skill_ready(SkillRules.SLOT_R))
 
 
 func _reset() -> void:
+	_ultimate_ok = true
 	movement = Vector3.ZERO
 	aim = Vector3.ZERO
 	aim_distance = 0.0
@@ -164,6 +215,8 @@ func _view(tick: int, enemy: Hero) -> BotView:
 	v.hp_pct = float(_hero.hp) / _hero.attributes.max_hp
 	v.level = _hero.level
 	v.retreat_spent = _retreat_spent
+	v.can_chase = _level.chases
+	v.level_slack = _level.level_slack
 	v.in_danger = _in_danger(enemy)
 	if v.in_danger:
 		_last_danger_tick = tick
@@ -214,7 +267,7 @@ func _chase(tick: int, enemy: Hero) -> void:
 ## Fase 2: volta para dentro da zona, no rumo do centro (BotRules.flee_point).
 func _flee_zone(tick: int) -> void:
 	var point := BotRules.flee_point(
-		_hero.global_position, ZoneController.CENTER, _zone_radius, PROFILE.zone_margin
+		_hero.global_position, ZoneController.CENTER, _zone_radius, _profile.zone_margin
 	)
 	_go(tick, point)
 
@@ -224,7 +277,7 @@ func _farm(tick: int) -> void:
 	if monster == null:
 		monster = _nearest(_alive_monsters(GateRules.TEAM_NEUTRAL))
 	if monster != null:
-		_attack(tick, monster, false)
+		_attack(tick, monster, _level.farm_skills)
 		return
 	var chest := _nearest_chest(GateRules.TEAM_NEUTRAL)
 	if chest != null:
@@ -279,8 +332,12 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
 	var data := _hero.hero_data
-	aim = to.normalized()
-	aim_distance = to.length()
+	# So a direcao da mira antecipa o alvo; alcance e caminho seguem a posicao dele (a distancia da
+	# Dinamite e do Pantano continua a do alvo parado).
+	_ultimate_ok = target is Hero or Hero._is_boss(target)
+	var led := _flat(where + BotRules.lead_offset(target.velocity, _level.lead_seconds))
+	aim = led.normalized()
+	aim_distance = led.length()
 	var q_range := data.skill_q.attack_range
 	skill_q = skills and q_range > 0.0 and to.length() <= q_range
 	var shooter := _hero as ProjectileHero
@@ -296,43 +353,43 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var paladin := _hero is Paladin
 	var use := Vector3i.ZERO
 	if barbarian:
-		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, PROFILE)
+		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, _profile)
 		skill_q = skills and use.x == 1
 	elif wizard:  # Q e Meteoro ja chegando: o Meteoro cai onde o alvo esta (aim_distance)
-		use = BotRules.fire_wizard_skills(to.length(), PROFILE)
+		use = BotRules.fire_wizard_skills(to.length(), _profile)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1
 	elif rogue:  # Emboscada na direcao do alvo; a fumaca de fuga fica no _smoke_escape
-		use = BotRules.rogue_skills(to.length(), 1.0, PROFILE)
+		use = BotRules.rogue_skills(to.length(), 1.0, _profile)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1 and not blocked
 	elif engineer:  # Garra fora do cone; Dinamite no alvo; a Torreta tambem ajuda a farmar
-		use = BotRules.engineer_skills(to.length(), data.basic_attack.attack_range, PROFILE)
+		use = BotRules.engineer_skills(to.length(), data.basic_attack.attack_range, _profile)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
 		skill_e = use.y == 1 and not skill_r and _skill_ready(SkillRules.SLOT_E)
 		aim_distance = BotRules.engineer_aim_distance(to.length(), skill_r)
 	elif druid:  # Raizes prendem; o Pantano cai no alvo (a Pocao fica no _potion_when_hurt)
-		use = BotRules.druid_skills(to.length(), 1.0, PROFILE)
+		use = BotRules.druid_skills(to.length(), 1.0, _profile)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
 		aim_distance = BotRules.druid_aim_distance(to.length(), skill_r)
 	elif berserker:  # Arremesso para alcancar; Grito ao entrar em Lutar; Ragnarok: _rage_when_needed
 		var basic_range := data.basic_attack.attack_range
 		use = BotRules.berserker_skills(
-			to.length(), basic_range, _entered_fight, 1.0, false, PROFILE
+			to.length(), basic_range, _entered_fight, 1.0, false, _profile
 		)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_e = skills and use.y == 1
 	elif occultist:  # basico sempre (marcas); Praga no alvo; Circulo se ele se aproxima; Servos
 		var closing := BotRules.closing_speed(target.velocity, to)
 		var worth := target is Hero or Hero._is_boss(target)
-		use = BotRules.occultist_skills(to.length(), closing, worth, PROFILE)
+		use = BotRules.occultist_skills(to.length(), closing, worth, _profile)
 		skill_q = skills and use.x == 1 and not blocked
 		skill_e = skills and use.y == 1
 		skill_r = skills and use.z == 1 and _skill_ready(SkillRules.SLOT_R)
 	elif paladin:  # Golpe Consagrado colado; Retribuicao e Bencao: _paladin_reacts
-		use = BotRules.paladin_skills(to.length(), false, false, 1.0, false, PROFILE)
+		use = BotRules.paladin_skills(to.length(), false, false, 1.0, false, _profile)
 		skill_q = skills and use.x == 1
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
@@ -473,7 +530,7 @@ func _log_skills() -> void:
 
 
 func _in_danger(enemy: Hero) -> bool:
-	return _threat_within(enemy, PROFILE.danger_range)
+	return _threat_within(enemy, _profile.danger_range)
 
 
 ## O heroi adversario visto ou um monstro engajado esta a ate [param reach] do bot.

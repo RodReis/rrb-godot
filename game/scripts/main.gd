@@ -77,6 +77,9 @@ var _wants_bot: bool = false
 ## --bots: os dois slots sao bots (soak); --bot-heroes=a,b escolhe o heroi de cada um.
 var _wants_bots: bool = false
 var _bot_heroes: Array[StringName] = []
+## --bot-difficulty=<n> (treino, F81) e --bot-levels=<a>,<b> (soak): nivel dos bots; 0 = Medio.
+var _bot_difficulty: int = LaunchArgs.NO_DIFFICULTY
+var _bot_levels: Array[int] = []
 ## --bot-hero=<id> (dev): heroi do bot e do heroi local com --autopilot=bot; vazio = padrao.
 var _bot_hero: StringName = &""
 ## --autopilot=bot: o heroi local e jogado pelo BotInput.
@@ -162,6 +165,8 @@ func _ready() -> void:
 	_wants_bot = args["bot"]
 	_wants_bots = args["bots"]
 	_bot_heroes = args["bot_heroes"]
+	_bot_difficulty = args["bot_difficulty"]
+	_bot_levels = args["bot_levels"]
 	_bot_hero = args["bot_hero"]
 	_bot_pilot = args["bot_pilot"]
 	_token = args["token"]
@@ -490,11 +495,18 @@ func _spawn_player(data: Dictionary) -> Node:
 	var piloted: bool = _bot_pilot and data["id"] == multiplayer.get_unique_id()
 	if hero.is_bot or piloted:
 		hero.get_node("Input").set_script(BotInput)
+		(hero.get_node("Input") as BotInput).set_difficulty(_bot_level_of(team))
 	if piloted:
 		_bake_bot_nav(team)
 	hero.collision_mask = GateRules.hero_mask(team)
 	hero.transform = _hero_spawn(team)
 	return hero
+
+
+## Nivel do bot do [param team]: o par do --bot-levels (soak) ou o --bot-difficulty (treino).
+func _bot_level_of(team: int) -> int:
+	var slot := MatchController.SLOT_TEAMS.find(team)
+	return _bot_levels[slot] if _bot_levels.size() > slot else _bot_difficulty
 
 
 func _hero_spawn(team: int) -> Transform3D:

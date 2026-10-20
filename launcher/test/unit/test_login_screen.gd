@@ -90,13 +90,12 @@ func test_enter_no_email_vai_para_a_senha() -> void:
 	assert_eq(_api.calls.size(), 0)
 
 
-func test_treino_nao_precisa_de_conta() -> void:
+func test_login_nao_oferece_treino() -> void:
 	var practice := _login.find_children("*", "Button", true, false).filter(
 		func(button: Button) -> bool: return button.text.contains("Treinar")
 	)
-	(practice[0] as Button).pressed.emit()
-	assert_signal_emitted(_login, "practice_requested")
-	assert_eq(_api.calls.size(), 0)
+	assert_eq(practice.size(), 0, "o treino vs bot fica no Lobby, depois do login (PI, F81)")
+	assert_false(_login.has_signal("practice_requested"))
 
 
 func test_faixa_mostra_os_herois_do_catalogo() -> void:

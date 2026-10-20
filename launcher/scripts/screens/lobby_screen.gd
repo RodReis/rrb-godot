@@ -10,15 +10,20 @@ extends LauncherScreen
 ## A fila e um estado do lobby: chama o QueueService; o App lanca o Game no matched.
 
 signal practice_requested
+## O jogador escolheu o nivel do bot do treino (1..N de bot_levels.tres, F81).
+signal bot_difficulty_changed(number: int)
 signal settings_requested
 signal logout_requested
 ## Fila barrada por versao nova (F83): o App reabre o aviso de atualizacao.
 signal update_requested
 
 enum QueueState { IDLE, JOINING, SEARCHING, MATCHED, ERROR }
+## Aba do sub-menu: JOGAR (fila) ou TREINO VS BOT (nivel do bot e INICIAR TREINO no mesmo CTA).
+enum Mode { PLAY, TRAIN }
 
 const HERO: HeroData = preload("res://shared/data/heroes/knight.tres")
 const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
+const BOT_LEVELS: BotLevels = preload("res://shared/data/rules/bot_levels.tres")
 const DIORAMA: PackedScene = preload("res://scenes/diorama/lobby_diorama.tscn")
 const SECONDS_PER_MINUTE: float = 60.0
 ## lg:col-span-6 xl:col-span-7 / 5; area do heroi h-[580px].
@@ -45,6 +50,15 @@ const PING_SECONDS: float = 0.8
 const TICK_SECONDS: float = 1.0
 
 var _queue: QueueService
+var _bot_difficulty: int = BotLevels.DEFAULT_NUMBER
+var _level_buttons: Array[Button] = []
+var _mode: Mode = Mode.PLAY
+var _train_tab: Button = Button.new()
+var _kicker: Label = Label.new()
+var _title: Label = Label.new()
+var _subtitle: Label = Label.new()
+var _cells: PanelContainer = PanelContainer.new()
+var _levels_box: VBoxContainer = VBoxContainer.new()
 var _state: QueueState = QueueState.IDLE
 var _elapsed: int = 0
 var _tick: Timer = Timer.new()
@@ -125,6 +139,40 @@ func queue_state() -> QueueState:
 	return _state
 
 
+## Nivel do bot do treino escolhido (1..N).
+func bot_difficulty() -> int:
+	return _bot_difficulty
+
+
+## Marca o nivel lembrado (settings.cfg) sem avisar: nao e uma escolha nova.
+func bind_bot_difficulty(number: int) -> void:
+	_bot_difficulty = BOT_LEVELS.normalize(number)
+	for index: int in _level_buttons.size():
+		_level_buttons[index].set_pressed_no_signal(index + 1 == _bot_difficulty)
+
+
+func mode() -> Mode:
+	return _mode
+
+
+## Troca a aba (JOGAR / TREINO VS BOT): o console mostra o nivel do bot e o CTA vira INICIAR TREINO.
+func select_mode(new_mode: Mode) -> void:
+	_mode = new_mode
+	var training := new_mode == Mode.TRAIN
+	_play.theme_type_variation = &"LnSubNav" if training else &"LnSubNavPlay"
+	_train_tab.theme_type_variation = &"LnSubNavPlay" if training else &"LnSubNav"
+	_kicker.text = (
+		"%s %s" % [UiIcons.SMART_TOY, tr("TREINO VS BOT")]
+		if training
+		else "%s %s" % [UiIcons.BOLT, tr("MODO PRINCIPAL ATIVO")]
+	)
+	_title.text = tr("Treino vs Bot") if training else tr("Duelo 1v1")
+	_subtitle.text = tr("O bot farma, saqueia, contesta e luta.") if training else _arena_text()
+	_cells.visible = not training
+	_levels_box.visible = training
+	_refresh_cta()
+
+
 func cta() -> CtaButton:
 	return _cta
 
@@ -161,17 +209,49 @@ func toggle_queue() -> void:
 			_show_state(QueueState.IDLE)
 
 
-func _show_state(state: QueueState, message: String = "") -> void:
-	_state = state
-	var searching := state == QueueState.SEARCHING
+## CTA amarelo: INICIAR TREINO na aba de treino; na de jogo, BUSCAR PARTIDA / CANCELAR FILA.
+func _refresh_cta() -> void:
+	if _mode == Mode.TRAIN:
+		_cta.variant = CtaButton.Variant.GOLD
+		_cta.text = "%s  %s  %s" % [UiIcons.SMART_TOY, tr("INICIAR TREINO"), UiIcons.CHEVRON_RIGHT]
+		_cta.disabled = false
+		return
+	var searching := _state == QueueState.SEARCHING
 	_cta.variant = CtaButton.Variant.DANGER if searching else CtaButton.Variant.GOLD
 	_cta.text = (
 		"%s  %s" % [UiIcons.CLOSE, tr("CANCELAR FILA")]
 		if searching
 		else "%s  %s  %s" % [UiIcons.SWORDS, tr("BUSCAR PARTIDA 1V1"), UiIcons.CHEVRON_RIGHT]
 	)
-	_cta.disabled = state in [QueueState.JOINING, QueueState.MATCHED]
-	_play.disabled = _cta.disabled
+	_cta.disabled = _state in [QueueState.JOINING, QueueState.MATCHED]
+
+
+func _arena_text() -> String:
+	return (
+		tr("Arena de 2 tempos (limite de %d minutos)")
+		% roundi(RULES.max_match_duration / SECONDS_PER_MINUTE)
+	)
+
+
+func _on_cta_pressed() -> void:
+	if _mode == Mode.TRAIN:
+		practice_requested.emit()
+	else:
+		toggle_queue()
+
+
+func _on_play_pressed() -> void:
+	if _mode == Mode.TRAIN:
+		select_mode(Mode.PLAY)
+	else:
+		toggle_queue()
+
+
+func _show_state(state: QueueState, message: String = "") -> void:
+	_state = state
+	var searching := state == QueueState.SEARCHING
+	_play.disabled = state in [QueueState.JOINING, QueueState.MATCHED]
+	_refresh_cta()
 	if state != QueueState.SEARCHING:
 		_tick.stop()
 	if state in [QueueState.IDLE, QueueState.JOINING]:
@@ -230,17 +310,17 @@ func _sub_nav() -> CenterContainer:
 	track.add_child(row)
 	_play.theme_type_variation = &"LnSubNavPlay"
 	_play.text = "%s %s" % [UiIcons.SWORDS, tr("JOGAR")]
-	_play.pressed.connect(toggle_queue)
+	_play.pressed.connect(_on_play_pressed)
 	row.add_child(_play)
-	for item: Array in [
-		[UiIcons.SMART_TOY, "TREINO VS BOT", practice_requested],
-		[UiIcons.TUNE, "CONFIGURAÇÕES", settings_requested],
-	]:
-		var button := Button.new()
-		button.theme_type_variation = &"LnSubNav"
-		button.text = "%s %s" % [item[0], tr(item[1])]
-		button.pressed.connect((item[2] as Signal).emit)
-		row.add_child(button)
+	_train_tab.theme_type_variation = &"LnSubNav"
+	_train_tab.text = "%s %s" % [UiIcons.SMART_TOY, tr("TREINO VS BOT")]
+	_train_tab.pressed.connect(select_mode.bind(Mode.TRAIN))
+	row.add_child(_train_tab)
+	var settings := Button.new()
+	settings.theme_type_variation = &"LnSubNav"
+	settings.text = "%s %s" % [UiIcons.TUNE, tr("CONFIGURAÇÕES")]
+	settings.pressed.connect(settings_requested.emit)
+	row.add_child(settings)
 	return center
 
 
@@ -309,35 +389,36 @@ func _console() -> GlassPanel:
 	titles.theme_type_variation = &"LnVGapNone"
 	titles.size_flags_horizontal = SIZE_EXPAND_FILL
 	head.add_child(titles)
-	var kicker := Label.new()
-	kicker.theme_type_variation = &"LnNumGold"
-	kicker.text = "%s %s" % [UiIcons.BOLT, tr("MODO PRINCIPAL ATIVO")]
-	titles.add_child(kicker)
-	var title := Label.new()
-	title.theme_type_variation = &"LnHeadlineLg"
-	title.text = tr("Duelo 1v1")
-	titles.add_child(title)
-	var subtitle := Label.new()
-	subtitle.theme_type_variation = &"LnBodyMuted"
-	subtitle.text = (
-		tr("Arena de 2 tempos (limite de %d minutos)")
-		% roundi(RULES.max_match_duration / SECONDS_PER_MINUTE)
-	)
-	titles.add_child(subtitle)
+	_kicker.theme_type_variation = &"LnNumGold"
+	_kicker.text = "%s %s" % [UiIcons.BOLT, tr("MODO PRINCIPAL ATIVO")]
+	titles.add_child(_kicker)
+	_title.theme_type_variation = &"LnHeadlineLg"
+	_title.text = tr("Duelo 1v1")
+	titles.add_child(_title)
+	_subtitle.theme_type_variation = &"LnBodyMuted"
+	_subtitle.text = _arena_text()
+	titles.add_child(_subtitle)
 	var timer_box := _icon_box(UiIcons.TIMER, &"LnIconMdGold", &"LnIconBoxHigh", ICON_BOX_MD)
 	timer_box.size_flags_vertical = SIZE_SHRINK_BEGIN
 	head.add_child(timer_box)
-	var cells := PanelContainer.new()
-	cells.theme_type_variation = &"LnCellTrack"
-	body.add_child(cells)
+	_cells.theme_type_variation = &"LnCellTrack"
+	body.add_child(_cells)
 	var row := HBoxContainer.new()
 	row.theme_type_variation = &"LnHGapXs"
-	cells.add_child(row)
+	_cells.add_child(row)
 	row.add_child(_cell(tr("STATUS"), _status_cell))
 	row.add_child(_cell(tr("NA FILA"), _time_cell))
 	row.add_child(_cell(tr("SERVIDOR"), _server_cell))
 	set_backend_status(false, -1, false)
-	_cta.pressed.connect(toggle_queue)
+	_levels_box.theme_type_variation = &"LnVGapXs"
+	_levels_box.visible = false
+	var levels_caption := Label.new()
+	levels_caption.theme_type_variation = &"LnNumOutline"
+	levels_caption.text = tr("NÍVEL DO BOT")
+	_levels_box.add_child(levels_caption)
+	_levels_box.add_child(_level_track())
+	body.add_child(_levels_box)
+	_cta.pressed.connect(_on_cta_pressed)
 	body.add_child(_cta)
 	body.add_child(_queue_banner())
 	return card
@@ -421,27 +502,40 @@ func _modes() -> GlassPanel:
 	return card
 
 
-## Cartoes de baixo: treino vs bot (Iniciar) e a conta (Sair).
+## Cartao de baixo: a conta (sair). O treino vs bot e uma aba do sub-menu (F81).
 func _bento() -> HBoxContainer:
 	var row := HBoxContainer.new()
 	row.theme_type_variation = &"LnHGapMd"
-	var practice := Button.new()
-	practice.theme_type_variation = &"LnButtonSmallBlue"
-	practice.text = tr("Iniciar")
-	practice.pressed.connect(practice_requested.emit)
-	var practice_detail := Label.new()
-	practice_detail.text = tr("Offline, sem fila: o bot farma, saqueia, contesta e luta.")
-	row.add_child(
-		_bento_card(
-			UiIcons.PSYCHOLOGY, &"LnIconMdCyan", tr("Treino vs Bot"), practice_detail, practice
-		)
-	)
 	var logout := Button.new()
 	logout.theme_type_variation = &"LnButtonSmall"
 	logout.text = "%s %s" % [UiIcons.LOGOUT, tr("Sair")]
 	logout.pressed.connect(logout_requested.emit)
 	row.add_child(_bento_card(UiIcons.PERSON, &"LnIconMdGold", tr("Sua conta"), _account, logout))
 	return row
+
+
+## Nivel do bot do treino (Facil / Medio / Dificil); vale para o INICIAR TREINO da aba.
+func _level_track() -> PanelContainer:
+	var track := PanelContainer.new()
+	track.theme_type_variation = &"LnTabTrack"
+	var row := HBoxContainer.new()
+	row.theme_type_variation = &"LnHGapNone"
+	track.add_child(row)
+	var group := ButtonGroup.new()
+	group.allow_unpress = false
+	for index: int in BOT_LEVELS.count():
+		var number := index + 1
+		var button := Button.new()
+		button.theme_type_variation = &"LnAuthTab"
+		button.text = tr(BOT_LEVELS.pick(number).label)
+		button.toggle_mode = true
+		button.button_group = group
+		button.size_flags_horizontal = SIZE_EXPAND_FILL
+		button.button_pressed = number == _bot_difficulty
+		button.pressed.connect(_on_level_pressed.bind(number))
+		row.add_child(button)
+		_level_buttons.append(button)
+	return track
 
 
 func _bento_card(
@@ -481,6 +575,11 @@ func _icon_box(icon: String, icon_type: StringName, box_type: StringName, box: V
 	glyph.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	panel.add_child(glyph)
 	return panel
+
+
+func _on_level_pressed(number: int) -> void:
+	_bot_difficulty = number
+	bot_difficulty_changed.emit(number)
 
 
 func _on_queue_searching(elapsed_s: int) -> void:

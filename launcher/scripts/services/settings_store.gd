@@ -31,5 +31,21 @@ func save(new_values: Dictionary) -> Error:
 	return OK
 
 
+## Lembra o nivel do bot do treino (F81). Grava sem avisar: nao muda janela nem audio.
+func remember_bot_difficulty(number: int) -> Error:
+	var next := values.duplicate(true)
+	next[UserSettings.TRAINING][UserSettings.BOT_DIFFICULTY] = number
+	var err := UserSettings.save_file(next, path)
+	if err != OK:
+		push_warning("[settings] falha ao gravar %s: %s" % [path, error_string(err)])
+		return err
+	values = next
+	return OK
+
+
+func bot_difficulty() -> int:
+	return values[UserSettings.TRAINING][UserSettings.BOT_DIFFICULTY]
+
+
 func reset() -> Error:
 	return save(UserSettings.defaults())

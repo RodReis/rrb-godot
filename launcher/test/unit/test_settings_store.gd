@@ -70,3 +70,14 @@ func test_restaurar_grava_os_padroes() -> void:
 	store.save(values)
 	assert_eq(store.reset(), OK)
 	assert_eq(SettingsStore.new(TMP_PATH).load_values(), UserSettings.defaults())
+
+
+func test_lembra_o_nivel_do_bot_sem_avisar_a_janela() -> void:
+	var store := SettingsStore.new(TMP_PATH)
+	store.load_values()
+	watch_signals(store)
+	assert_eq(store.bot_difficulty(), 2)
+	assert_eq(store.remember_bot_difficulty(3), OK)
+	assert_eq(store.bot_difficulty(), 3)
+	assert_signal_not_emitted(store, "saved")
+	assert_eq(SettingsStore.new(TMP_PATH).load_values()[UserSettings.TRAINING]["bot_difficulty"], 3)
