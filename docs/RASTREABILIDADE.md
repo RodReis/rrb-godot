@@ -74,6 +74,7 @@ Fontes: `PRD` = `docs/prd/PRD.md` · `GDB` = `docs/prd/GDB.md` · `DV` = `docs/p
 | P-61 | Nível do bot numérico 1..N; bot completa a fila online após 30 s, com aviso | pedido do PI em 2026-10-19; ADR-0027 | F81 (formato), F89 | game, launcher, backend | MVP3/MVP5 | mantido — requisito novo do PI |
 | P-62 | Skin visível na partida pelos dois jogadores, posse decidida no backend | ADR-0028 | F91, F92 | backend, game, launcher | MVP5 | mantido — consequência do P-24 aprovada pelo PI |
 | P-63 | Spike visual (Cavaleiro + canto SO, estilo Eternal Return) antes do playtest; engine segue Godot | pedido do PI em 2026-10-19; ADR-0024 | F84 (cenário), F93 (herói comissionado) | game, shared, art | MVP4 | mantido — requisito novo do PI |
+| P-64 | Arena inteira no estilo do spike (Blender pelo Claude), antes do playtest; mato alto com visual novo e a mesma leitura | pedido do PI em 2026-10-20; ADR-0030 | F94 (bases), F95 (meio do mapa), F96 (borda e vale) | game, shared, art | MVP4 | mantido — requisito novo do PI |
 | P-56 | Site público de apresentação (landing "Loot Start"): heróis, arena, roadmap e download, dados extraídos do repositório em build, GitHub Pages | pedido do PI em 2026-10-18; ADR-0017 | PR #218 (sem fatia, fora do board); `docs/SITE.md` | site | — | mantido — requisito novo do PI; o nome "Loot Start" vale só no site (rename do jogo é decisão do PI, `FORA-DE-ESCOPO.md`) |
 
 ## 2. GDB

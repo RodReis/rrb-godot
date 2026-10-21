@@ -131,6 +131,9 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F85 / SPEC-085 | MVP4 | game, launcher, backend, shared | Slice 4.4 — Tutorial guiado offline (Cavaleiro, arena real, 6 passos): obrigatório na 1ª vez após o nickname, pulável; fila online liberada na conta após tutorial ou 1 vitória vs bot de qualquer nível; `--tutorial` + `offline_result.cfg` (ADR-0026, ADR-0029) | todo (#251) |
 | F86 / SPEC-086 | MVP4 | infra, tools | Slice 4.5 — Publicação no itch.io: página e build a cada Release (ADR-0024) | planejado (#252) |
 | F93 / SPEC-093 | MVP4 | game, shared, art | Slice 4.6 — Spike visual, parte 2: Cavaleiro comissionado (estilo Eternal Return, rig e 8 animações novos) jogável na cena do F84; F84 partido pelo PI em 2026-10-19 (ADR-0024) | backlog (#248) — aguarda o artista |
+| F94 / SPEC-094 | MVP4 | game, shared, art | Slice 4.7 — Arena nova, parte 1: bases A e B da arena oficial com o kit do F84 (cor do time B dourada) e folhagem com vento; sai a variante do spike (ADR-0030) | todo (#266) |
+| F95 / SPEC-095 | MVP4 | game, shared, art | Slice 4.8 — Arena nova, parte 2: rio, lagoas, pontes, centro, rochas, selva, mato alto (mesma área e leitura) e chão (ADR-0030) | todo (#267) |
+| F96 / SPEC-096 | MVP4 | game, shared, art | Slice 4.9 — Arena nova, parte 3: borda da ilha (floresta, tochas, cristais, defesas, bastiões, cascatas) e vale (ADR-0030) | todo (#268) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3; abrir ou não o EA | planejado (#255) |
 | F87 / SPEC-087 | MVP5 | backend, launcher, game, shared | Slice 5.1 — Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre; pick online validado no servidor (ADR-0026) | planejado (#256) |
 | F88 / SPEC-088 | MVP5 | backend, launcher, shared | Slice 5.2 — Recompensas de Patente e de login diário/semanal/mensal: emblemas e molduras de perfil (ADR-0025, ADR-0026) | planejado (#257) |
@@ -140,7 +143,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F92 / SPEC-092 | MVP5 | shared, art | Slice 5.6 — Primeiras skins (variantes KayKit Extra) + skin do Pacote de Fundador (ADR-0025) | planejado (#261) |
 | [GATE] | MVP5 | — | Abertura do Early Access no site e no itch.io (ADR-0024) | planejado (#262) |
 
-Próximo número livre: **F94 / SPEC-094**.
+Próximo número livre: **F97 / SPEC-097**.
 
 ## 4. Regras deste índice
 
