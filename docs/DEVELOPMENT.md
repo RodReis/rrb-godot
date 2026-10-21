@@ -210,7 +210,8 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
   - **Prova:**
     - `test_arena_rim.gd` (novo) e `test_arena_valley.gd`; `test_arena_colisao_fixa` igual (sem colisão nova);
     - frame time alternado: borda +0,07, canto NO +0,01 e cinemática +0,08 ms;
-    - capturas, soak e rede em `docs/evidencias/f96/`. Verificação do PI aprovada em 2026-10-21.
+    - soak 50/50; rede 3/3 a 100 ms (0 `past the history limit`, warm-up de 446 instâncias, checkpoints 6/6);
+    - capturas em `docs/evidencias/f96/`. Verificação do PI aprovada em 2026-10-21.
 - [ ] **F29** — telemetria (ping médio, duração, líder F1 × vencedor, "teleportes" reportados) no backend; painel de KPIs no Histórico; `tools/export-matches.ps1`.
 - [ ] **F30** — ajustes de balanceamento (só `.tres`).
 - [ ] **[GATE] MVP4** — critérios PRD §9.2; decisões câmera/duração/3x3.
