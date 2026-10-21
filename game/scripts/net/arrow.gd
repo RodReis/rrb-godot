@@ -3,7 +3,8 @@ extends Node3D
 ## Projetil do pool de um ProjectileHero: flecha da Arqueira (F14), bola de fogo do Bruxo (F54;
 ## EXPLODE = Explosao de Chamas, explode onde o voo acaba), virote da Ladina (F58; FAN = virote da
 ## Rajada em Leque), garra do Engenheiro (F59; CLAW = Garra Mecanica), projetil sombrio e praga do
-## Ocultista (F77; SHADOW = basico, PLAGUE = Q). O netfox 1.35.3 nao tem spawn dentro do rollback
+## Ocultista (F77; SHADOW = basico, PLAGUE = Q), espinhos e correntes do Carrasco (F98; THORNS =
+## recast do Q, CHAINS = R). O netfox 1.35.3 nao tem spawn dentro do rollback
 ## (so o NetworkWeapon, por RPC e fora da ressimulacao): a flecha que nasce num tick ressimulado nao
 ## teria historico. Por isso o pool e fixo, filho do heroi, nasce com ele pelo MultiplayerSpawner, e
 ## o estado de cada flecha (STATE) entra no RollbackSynchronizer do heroi: disparar e ocupar um
@@ -15,7 +16,7 @@ extends Node3D
 ## Visual: disparo novo neste slot (o rastro do VFX recomeca daqui).
 signal shown_launched
 
-enum Kind { NONE, BASIC, PIERCE, EXPLODE, FAN, CLAW, ROOT, AXE, SHADOW, PLAGUE }
+enum Kind { NONE, BASIC, PIERCE, EXPLODE, FAN, CLAW, ROOT, AXE, SHADOW, PLAGUE, THORNS, CHAINS }
 
 ## Propriedades de estado de rollback (caminho "Arrows/<nome>:<prop>" no heroi).
 const STATE: Array[String] = [
