@@ -1,4 +1,4 @@
-extends "arena_vegetation.gd"
+extends "arena_river.gd"
 ## Vale em volta da arena (F56, ADR-0012): faixa externa so visual no lugar do abismo. Relevo,
 ## riacho e pinheiros saem de art/arena/build_valley.py (valley_terrain.glb, valley_stream.glb,
 ## pine_valley.glb e tools/arena/valley_trees.json); aqui so se monta: o terreno e o riacho

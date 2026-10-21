@@ -45,6 +45,8 @@ func _initialize() -> void:
 	_build_jungle(walls)
 	_build_jungle_visuals()
 	_build_vegetation()
+	_build_river_dressing()
+	_build_crater_rim()
 	_build_valley()
 	_build_ambience()
 	var violations := _corridor_violations()
@@ -146,7 +148,7 @@ func _build_river() -> void:
 	var bridges := _group("Bridges")
 	for azimuth: float in BRIDGE_AZIMUTHS:
 		var axis := _polar(azimuth, 1.0)
-		var bridge := _asset(bridges, RRB_ARENA + "bridge_stone.glb", "Bridge%d" % int(azimuth))
+		var bridge := _asset(bridges, KIT + "kit_bridge.glb", "Bridge%d" % int(azimuth))
 		bridge.transform = Transform3D(
 			_tangent_basis(Vector3(-axis.z, 0, axis.x)), axis * BRIDGE_CENTER
 		)
@@ -391,15 +393,15 @@ func _build_yard(walls: StaticBody3D, flip: float) -> void:
 	var side := Vector3(-axis.z, 0, axis.x)
 	var grass_at := _rotate_if(axis * YARD_GRASS_LOCAL.x + side * YARD_GRASS_LOCAL.y, flip)
 	var basis := _tangent_basis(_rotate_if(side, flip))
-	_tall_grass(grass_at, YARD_GRASS_SIZE, basis, "GrassBridge%s" % tag, "tall_grass_4x4")
+	_tall_grass(grass_at, YARD_GRASS_SIZE, basis, "GrassBridge%s" % tag, "kit_grass_4x4")
 	var rock_at := _rotate_if(axis * YARD_ROCK_LOCAL.x + side * YARD_ROCK_LOCAL.y, flip)
 	_rock(walls, rock_at, "Yard%s" % tag)
 	var lagoon_grass := _world(LAGOON_GRASS_A, flip)
-	_tall_grass(lagoon_grass, YARD_GRASS_SIZE, Basis(), "GrassLagoon%s" % tag, "tall_grass_4x4")
+	_tall_grass(lagoon_grass, YARD_GRASS_SIZE, Basis(), "GrassLagoon%s" % tag, "kit_grass_4x4")
 	for i: int in range(AMBUSH_GRASS_A.size()):
 		var ambush := _world(AMBUSH_GRASS_A[i], flip)
 		_tall_grass(
-			ambush, YARD_GRASS_SIZE, Basis(), "GrassAmbush%s%d" % [tag, i], "tall_grass_4x4"
+			ambush, YARD_GRASS_SIZE, Basis(), "GrassAmbush%s%d" % [tag, i], "kit_grass_4x4"
 		)
 
 
@@ -460,7 +462,7 @@ func _build_center(walls: StaticBody3D) -> void:
 		var g: Vector2 = CENTER_GRASS[i]
 		var at := _polar(g.x, g.y)
 		var basis := _tangent_basis(Vector3(-at.z, 0, at.x))
-		_tall_grass(at, CENTER_GRASS_SIZE, basis, "GrassCenter%d" % i, "tall_grass_4x3")
+		_tall_grass(at, CENTER_GRASS_SIZE, basis, "GrassCenter%d" % i, "kit_grass_4x3")
 
 
 # --- selva (F40, PI 2026-10-11): colisao dos bolsoes e provas ------------------------------
@@ -681,16 +683,17 @@ func _rock(walls: StaticBody3D, at: Vector3, label: String) -> void:
 	cylinder.radius = ROCK_RADIUS
 	cylinder.height = WALL_HEIGHT
 	_shape(walls, cylinder, at + Vector3.UP * WALL_HEIGHT / 2)
-	var visual := _asset(_group("RockDecor"), RRB_ARENA + "boulder.glb", label)
+	var visual := _asset(_group("RockDecor"), KIT + "kit_boulder.glb", label)
 	visual.transform = Transform3D(Basis(Vector3.UP, at.x * 0.7 + at.z * 0.3), at)
-	# Cristal pequeno encostado na rocha, dentro do cilindro de colisao (so visual).
+	# Tufo de cristal no topo chato da rocha (kit_boulder, topo em y 2,57), so visual.
 	var yaw := at.x * 0.7 + at.z * 0.3
 	_crystal(
 		_group("RockDecor"),
-		at + Vector3(cos(yaw), 0, sin(yaw)) * 1.0,
+		at + Vector3(cos(yaw) * 0.25, 2.55, sin(yaw) * 0.25),
 		false,
 		label + "Crystal",
-		yaw
+		yaw,
+		true
 	)
 
 
@@ -706,7 +709,7 @@ func _tall_grass(at: Vector3, size: Vector2, basis: Basis, label: String, model:
 	var box := BoxShape3D.new()
 	box.size = Vector3(size.x, GRASS_HEIGHT * 2, size.y)
 	_shape(area, box, Vector3.UP * GRASS_HEIGHT)
-	_asset(area, RRB_ARENA + model + ".glb", "Visual")
+	_asset(area, KIT + model + ".glb", "Visual")
 
 
 func _monster(

@@ -51,7 +51,7 @@ func test_centro_sem_pilares_e_com_magma() -> void:
 
 
 func test_moitas_usam_o_asset_do_tamanho_certo() -> void:
-	var counts: Dictionary = {"tall_grass_4x4.glb": 0, "tall_grass_4x3.glb": 0}
+	var counts: Dictionary = {"kit_grass_4x4.glb": 0, "kit_grass_4x3.glb": 0}
 	for node: Node in _arena.find_children("*", "Area3D", true, false):
 		if not node.is_in_group(&"tall_grass"):
 			continue
@@ -60,7 +60,7 @@ func test_moitas_usam_o_asset_do_tamanho_certo() -> void:
 		var file := visual.scene_file_path.get_file()
 		assert_true(counts.has(file), "asset inesperado: %s" % file)
 		counts[file] = counts.get(file, 0) + 1
-	assert_eq(counts, {"tall_grass_4x4.glb": 8, "tall_grass_4x3.glb": 2})
+	assert_eq(counts, {"kit_grass_4x4.glb": 8, "kit_grass_4x3.glb": 2})
 
 
 ## Kit do F46 (decisao do PI 2026-10-10) no estilo do ADR-0030 (F94): torreao por time no canto,
@@ -125,7 +125,7 @@ func test_patio_cobrindo_a_colisao() -> void:
 
 
 func test_duas_pontes_de_pedra_e_um_piso_unico() -> void:
-	assert_eq(_instances_of("bridge_stone.glb").size(), 2)
+	assert_eq(_instances_of("kit/kit_bridge.glb").size(), 2)
 	assert_eq(_instances_of("island_chassis.glb").size(), 1)
 	assert_eq(_instances_of("hex_grass.gltf").size(), 0, "piso proprio, sem hexes (ADR-0006)")
 
@@ -136,8 +136,8 @@ func test_terreno_e_cenario_com_material_realista() -> void:
 	var expected := {
 		"island_chassis.glb": "terrain.tres",
 		"kit/kit_wall.glb": "kit_stone.tres",
-		"rock_outcrop_a.glb": "rock_moss.tres",
-		"pine_dark.glb": "pine_foliage.tres",
+		"kit/kit_outcrop_a.glb": "kit_cliff.tres",
+		"kit/kit_pine.glb": "kit_pine.tres",
 	}
 	for file: String in expected:
 		var instances := _instances_of(file)
@@ -165,7 +165,7 @@ func test_cena_nao_tem_placeholder_geometrico() -> void:
 ## Blender — sem os triangulos marcados do sombreamento chapado. Terreno e pecas organicas ficam
 ## lisos; o castelo (quinas de 90 graus) continua de quina viva.
 func test_terreno_e_cenario_com_smooth_shading() -> void:
-	for asset: String in ["island_chassis", "boulder"]:
+	for asset: String in ["island_chassis", "kit/kit_boulder"]:
 		var root := (
 			(load("res://shared/assets/rrb/arena/%s.glb" % asset) as PackedScene).instantiate()
 		)

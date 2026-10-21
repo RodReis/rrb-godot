@@ -11,3 +11,11 @@ JPEG (q82) pelo Godot, mesmo tamanho. Mapa por arquivo (<conjunto>_albedo / _nor
   planks/planks_*   <- wood_planks_dirt
   cobble/cobble_*   <- cobblestone_floor_04
   metal/metal_*     <- rusty_metal_02
+Meio do mapa (F95; ADR-0030) (download 2K-JPG em 2026-10-21). Recomprimidos em JPEG pelo Godot
+(albedo q82, normal e rugosidade q76; rugosidade em cinza), mesmo tamanho. Mapa por arquivo:
+  cliff/cliff_*     <- mossy_rock            (rochas, afloramentos e pedras da margem)
+  bark/bark_*       <- pine_bark             (tronco dos pinheiros)
+  grass/grass_*     <- grass_ground          (chao: grama)
+  forest/forest_*   <- forest_ground_04      (chao: musgo/selva)
+  trail/trail_*     <- rocky_trail           (chao: trilhas e clareiras)
+  crater/crater_*   <- dark_rock             (chao da cratera e colunas de basalto)

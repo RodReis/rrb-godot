@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" format=3]
+
+[ext_resource type="Shader" path="res://shared/shaders/tall_grass.gdshader" id="1_shader"]
+
+[resource]
+resource_name = "kit_reeds"
+shader = ExtResource("1_shader")
+shader_parameter/root_color = Color(0.1, 0.14, 0.05, 1)
+shader_parameter/tip_color = Color(0.58, 0.58, 0.26, 1)
+shader_parameter/wind_strength = 0.18
+shader_parameter/ripple = 0.03

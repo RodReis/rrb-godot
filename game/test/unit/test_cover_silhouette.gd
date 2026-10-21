@@ -1,6 +1,7 @@
 extends GutTest
-## F72 (SPEC-072, ADR-0015 item 10): no cliente, o heroi de quem controla vira silhueta translucida
-## e a moita abre em volta dele enquanto ele esta na moita ou na fumaca. So visual: regra, servidor
+## F72 (SPEC-072, ADR-0015 item 10; F95, PI 2026-10-21): no cliente, o heroi de quem controla fica
+## translucido com o proprio visual e a moita abre em volta dele enquanto ele esta na moita ou na
+## fumaca. So visual: regra, servidor
 ## e replicacao (SPEC-032) ficam como estao. O runner e headless, entao o HeroVisual e ligado a mao
 ## (no jogo, so quem desenha e controla liga).
 
@@ -45,17 +46,17 @@ func _grass_at(at: Vector3, size: Vector3) -> void:
 	add_child_autofree(area)
 
 
-func _overlays() -> Array[Material]:
-	var found: Array[Material] = []
+func _overlays() -> Array[MeshInstance3D]:
+	var found: Array[MeshInstance3D] = []
 	for mesh: Node in _visual.model.find_children("*", "MeshInstance3D", true, false):
-		found.append((mesh as MeshInstance3D).material_overlay)
+		found.append(mesh as MeshInstance3D)
 	return found
 
 
 func _silhouetted() -> int:
 	var count := 0
-	for overlay: Material in _overlays():
-		count += 1 if overlay != null else 0
+	for mesh: MeshInstance3D in _overlays():
+		count += 1 if mesh.transparency > 0.0 else 0
 	return count
 
 
@@ -97,17 +98,15 @@ func test_a_abertura_acompanha_o_heroi_dentro_da_moita() -> void:
 	assert_eq(GRASS.get_shader_parameter(&"hero_pos"), moved)
 
 
-func test_silhueta_e_translucida_sem_profundidade_e_na_cor_do_aliado() -> void:
+## F95 (PI 2026-10-21): o proprio visual translucido, sem a silhueta azul por cima.
+func test_heroi_translucido_com_o_proprio_visual() -> void:
 	_bind(INSIDE)
 	_visual.use_cover_silhouette(true)
 	_visual._process(FRAME)
-	var silhouette := _overlays()[0] as StandardMaterial3D
-	assert_true(silhouette.no_depth_test, "aparece por cima da moita")
-	assert_eq(silhouette.shading_mode, BaseMaterial3D.SHADING_MODE_UNSHADED)
-	assert_eq(silhouette.transparency, BaseMaterial3D.TRANSPARENCY_ALPHA)
-	assert_eq(silhouette.render_priority, HeroVisual.SILHOUETTE_PRIORITY)
-	assert_eq(silhouette.albedo_color, Color(UiTokens.BLUE, HeroVisual.SILHOUETTE_ALPHA))
-	assert_almost_eq(HeroVisual.SILHOUETTE_ALPHA, 0.35, 0.0001)
+	for mesh: MeshInstance3D in _overlays():
+		assert_almost_eq(mesh.transparency, HeroVisual.COVER_TRANSPARENCY, 0.0001, mesh.name)
+		assert_null(mesh.material_overlay, "sem passe de cor por cima: %s" % mesh.name)
+	assert_almost_eq(HeroVisual.COVER_TRANSPARENCY, 0.45, 0.0001)
 	assert_almost_eq(HeroVisual.REVEAL_RADIUS, 2.5, 0.0001)
 
 
