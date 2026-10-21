@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-20
+updated: 2026-10-21
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -33,18 +33,25 @@ updated: 2026-10-20
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-096][F96] Arena nova, parte 3: borda da ilha e vale (#268)
 - [MVP4][SPEC-085][F85] Tutorial guiado: obrigatório na 1ª vez, pulável, libera a fila online (#251)
-- [MVP4][SPEC-084][F84] Spike visual: canto SO estilo Eternal Return em cena jogável (#247)
 
 ## Em Andamento
 
-_(vazio)_
+### [MVP4] Playtest (#246)
+
+- [MVP4][SPEC-095][F95] Arena nova, parte 2: rio, pontes, centro, selva e mato alto (#267)
 
 ## Feito
 
 _(vazio)_
 
 ## Finalizado
+
+### [MVP4] Playtest (#246)
+
+- [MVP4][SPEC-084][F84] Spike visual: canto SO estilo Eternal Return em cena jogável (#247, finalizado em: 2026-10-21)
+- [MVP4][SPEC-094][F94] Arena nova, parte 1: bases A e B com o kit do F84 (#266, finalizado em: 2026-10-21)
 
 ### [MVP3] Meta + deploy (#76)
 
