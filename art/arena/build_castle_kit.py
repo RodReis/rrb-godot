@@ -286,7 +286,7 @@ def material(name):
         albedo = nodes.new("ShaderNodeTexImage")
         albedo.image = bpy.data.images.load(tex_file(folder, "albedo"), check_existing=True)
         links.new(albedo.outputs["Color"], mix.inputs["A"])
-        if name in ("kit_foliage", "kit_blossom"):
+        if name in LEAF_MATS or name in BLOSSOM_MATS:
             links.new(albedo.outputs["Alpha"], bsdf.inputs["Alpha"])
         rough = nodes.new("ShaderNodeTexImage")
         if os.path.exists(tex_file(folder, "rough")):
@@ -489,6 +489,10 @@ def window(p, at, yaw, w=0.6, h=0.9, shutters=True, glow=False, flowers=False, p
 # com a ponta para cima; LeafSet028 em 4x4 com a ponta para a direita.
 LEAF_CELLS = 3
 BLOSSOM_CELLS = 4
+# Materiais de folha (atlas LeafSet024 em 3x3) e de flor (LeafSet028 em 4x4); o kit do meio do mapa
+# acrescenta os seus.
+LEAF_MATS = {"kit_foliage"}
+BLOSSOM_MATS = {"kit_blossom"}
 
 
 class Foliage:
@@ -541,7 +545,7 @@ class Foliage:
         """[param count] folhas na casca do elipsoide [param radii] em volta de [param center]."""
         rng = random.Random(seed)
         c = Vector(center)
-        cells = LEAF_CELLS if mat == "kit_foliage" else BLOSSOM_CELLS
+        cells = BLOSSOM_CELLS if mat in BLOSSOM_MATS else LEAF_CELLS
         for _ in range(count):
             d = Vector((rng.gauss(0, 1), abs(rng.gauss(0, 1)) * 0.8 + 0.15, rng.gauss(0, 1))).normalized()
             shell = 0.62 + 0.38 * rng.random() ** 0.5
@@ -555,7 +559,7 @@ class Foliage:
             s = size * rng.uniform(0.75, 1.25)
             cell = (rng.randrange(cells), rng.randrange(cells))
             self._card(mat, base - along * s * 0.15, out, along, s, s * 0.78, cell, cells,
-                       mat == "kit_foliage", center, max(radii), rng)
+                       mat not in BLOSSOM_MATS, center, max(radii), rng)
 
     def build(self):
         g2b = lambda v: Vector((v.x, -v.z, v.y))  # Godot -> Blender
@@ -1095,4 +1099,5 @@ def main():
             print("  %-28s %6d" % (name, TRIS[name]))
 
 
-main()
+if __name__ == "__main__":
+    main()

@@ -15,7 +15,7 @@ pois = Array[Dictionary]([{
 "common": 6
 },
 "monsters": {
-"skeleton_t1": 4,
+"skeleton_t1": 6,
 "skeleton_warrior_t2": 1
 }
 }],
@@ -27,7 +27,7 @@ pois = Array[Dictionary]([{
 "common": 6
 },
 "monsters": {
-"skeleton_t1": 4,
+"skeleton_t1": 6,
 "skeleton_warrior_t2": 1
 }
 }],
@@ -152,7 +152,7 @@ pois = Array[Dictionary]([{
 "chests": {},
 "monsters": {}
 }, {
-"anchor": Vector2(-5, -28.5),
+"anchor": Vector2(-11.5, -28.5),
 "chests": {},
 "monsters": {}
 }, {
@@ -180,7 +180,7 @@ pois = Array[Dictionary]([{
 "chests": {},
 "monsters": {}
 }, {
-"anchor": Vector2(5, 28.5),
+"anchor": Vector2(11.5, 28.5),
 "chests": {},
 "monsters": {}
 }, {

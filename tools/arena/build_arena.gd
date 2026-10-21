@@ -19,6 +19,12 @@ const AGENT_CLEARANCE: float = 0.5
 const JUNGLE_HEIGHT: float = 2.2
 ## Comprimento do modulo castle_wall (art/arena/build_island.py, build_wall: x de -1 a 1).
 const WALL_MODULE: float = 2.0
+## Raios do centro do campo que acham a boca do bolsao (alcance em u, quantidade).
+const MOUTH_REACH: float = 12.0
+const MOUTH_RAYS: int = 48
+
+## Celulas andaveis a partir do spawn A (_walkable_from), para a boca dos campos.
+var _reach: Dictionary = {}
 
 
 func _initialize() -> void:
@@ -45,6 +51,8 @@ func _initialize() -> void:
 	_build_jungle(walls)
 	_build_jungle_visuals()
 	_build_vegetation()
+	_build_river_dressing()
+	_build_crater_rim()
 	_build_valley()
 	_build_ambience()
 	var violations := _corridor_violations()
@@ -146,7 +154,7 @@ func _build_river() -> void:
 	var bridges := _group("Bridges")
 	for azimuth: float in BRIDGE_AZIMUTHS:
 		var axis := _polar(azimuth, 1.0)
-		var bridge := _asset(bridges, RRB_ARENA + "bridge_stone.glb", "Bridge%d" % int(azimuth))
+		var bridge := _asset(bridges, KIT + "kit_bridge.glb", "Bridge%d" % int(azimuth))
 		bridge.transform = Transform3D(
 			_tangent_basis(Vector3(-axis.z, 0, axis.x)), axis * BRIDGE_CENTER
 		)
@@ -264,11 +272,25 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	hero.kind = SpawnMarker.Kind.HERO
 	hero.team = team
 	hero.basis = Basis.looking_at(-hero.position.normalized())
+	# Os de dentro da base olham para o portao, como o heroi (F95).
 	for i: int in range(BASE_T1.size()):
-		_monster(markers, "T1%s%d" % [tag, i], _local(BASE_T1[i], flip), team, 1, &"skeleton_t1")
-	_monster(markers, "T2%s" % tag, _local(BASE_T2, flip), team, 2, &"skeleton_warrior_t2")
+		var t1_at := _local(BASE_T1[i], flip)
+		_monster(markers, "T1%s%d" % [tag, i], t1_at, team, 1, &"skeleton_t1").basis = hero.basis
+	var t2 := _monster(
+		markers, "T2%s" % tag, _local(BASE_T2, flip), team, 2, &"skeleton_warrior_t2"
+	)
+	t2.basis = hero.basis
+	for i: int in range(GATE_GUARDS_T1.size()):
+		var guard_at := _local(GATE_GUARDS_T1[i], flip)
+		var guard := _monster(markers, "T1Gate%s%d" % [tag, i], guard_at, team, 1, &"skeleton_t1")
+		guard.basis = Basis.looking_at(_rotate_if(OUTSIDE_FACING_A[i], flip))
+	var outside_first := BASE_CHESTS.size() - GATE_GUARDS_T1.size()
 	for i: int in range(BASE_CHESTS.size()):
-		_common_chest(markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team)
+		var chest := _common_chest(
+			markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team
+		)
+		if i >= outside_first:
+			chest.basis = Basis.looking_at(_rotate_if(OUTSIDE_FACING_A[i - outside_first], flip))
 	var fountain := _scene(FOUNTAIN_SCENE).instantiate() as Fountain
 	fountain.name = "Fountain%s" % tag
 	fountain.team = team
@@ -356,11 +378,13 @@ func _build_side_field(markers: Node3D, flip: float, index: int) -> void:
 	var field: Array = SIDE_FIELDS[index]
 	var tag := "%s%s" % [_team_tag(flip), field[0]]
 	var center: Vector2 = field[1]
+	var facing := _camp_facing(_world(center, flip))
 	for i: int in range(SIDE_T1_OFFSETS.size()):
 		var at := _world(center + SIDE_T1_OFFSETS[i], flip)
-		_monster(markers, "T1%s%d" % [tag, i], at, team, 1, &"skeleton_t1")
+		_monster(markers, "T1%s%d" % [tag, i], at, team, 1, &"skeleton_t1").basis = facing
 	var warrior_at := _world(center + SIDE_T2_OFFSET, flip)
-	_monster(markers, "T2%s" % tag, warrior_at, team, 2, &"skeleton_warrior_t2")
+	var t2 := _monster(markers, "T2%s" % tag, warrior_at, team, 2, &"skeleton_warrior_t2")
+	t2.basis = facing
 	for i: int in range(SIDE_CHEST_OFFSETS.size()):
 		var at := _world(center + SIDE_CHEST_OFFSETS[i], flip)
 		_common_chest(markers, "Chest%s%d" % [tag, i], at, team)
@@ -371,10 +395,12 @@ func _build_corner_field(flip: float) -> void:
 	var markers := _group("Markers")
 	var tag := "NO" if flip > 0 else "SE"
 	var neutral := GateRules.TEAM_NEUTRAL
-	_monster(markers, "Golem%s" % tag, _world(CORNER_FIELD, flip), neutral, 3, &"golem_corner")
+	var facing := _camp_facing(_world(CORNER_FIELD, flip))
+	var golem_at := _world(CORNER_FIELD, flip)
+	_monster(markers, "Golem%s" % tag, golem_at, neutral, 3, &"golem_corner").basis = facing
 	for i: int in range(CORNER_WOLF_OFFSETS.size()):
 		var at := _world(CORNER_FIELD + CORNER_WOLF_OFFSETS[i], flip)
-		_monster(markers, "Wolf%s%d" % [tag, i], at, neutral, 2, &"wolf_t2")
+		_monster(markers, "Wolf%s%d" % [tag, i], at, neutral, 2, &"wolf_t2").basis = facing
 	for i: int in range(CORNER_CHEST_OFFSETS.size()):
 		var at := _world(CORNER_FIELD + CORNER_CHEST_OFFSETS[i], flip)
 		var m := _marker(markers, "Reinforced%s%d" % [tag, i], at)
@@ -391,16 +417,14 @@ func _build_yard(walls: StaticBody3D, flip: float) -> void:
 	var side := Vector3(-axis.z, 0, axis.x)
 	var grass_at := _rotate_if(axis * YARD_GRASS_LOCAL.x + side * YARD_GRASS_LOCAL.y, flip)
 	var basis := _tangent_basis(_rotate_if(side, flip))
-	_tall_grass(grass_at, YARD_GRASS_SIZE, basis, "GrassBridge%s" % tag, "tall_grass_4x4")
+	_tall_grass(grass_at, YARD_GRASS_SIZE, basis, "GrassBridge%s" % tag, "kit_grass_4x4")
 	var rock_at := _rotate_if(axis * YARD_ROCK_LOCAL.x + side * YARD_ROCK_LOCAL.y, flip)
 	_rock(walls, rock_at, "Yard%s" % tag)
 	var lagoon_grass := _world(LAGOON_GRASS_A, flip)
-	_tall_grass(lagoon_grass, YARD_GRASS_SIZE, Basis(), "GrassLagoon%s" % tag, "tall_grass_4x4")
+	_tall_grass(lagoon_grass, YARD_GRASS_SIZE, Basis(), "GrassLagoon%s" % tag, "kit_grass_4x4")
 	for i: int in range(AMBUSH_GRASS_A.size()):
 		var ambush := _world(AMBUSH_GRASS_A[i], flip)
-		_tall_grass(
-			ambush, YARD_GRASS_SIZE, Basis(), "GrassAmbush%s%d" % [tag, i], "tall_grass_4x4"
-		)
+		_tall_grass(ambush, YARD_GRASS_SIZE, Basis(), "GrassAmbush%s%d" % [tag, i], "kit_grass_4x4")
 
 
 ## Muro em arco em volta do spawn, raio = spawn -> portao, com a abertura do portao, ate os
@@ -445,11 +469,17 @@ func _build_center(walls: StaticBody3D) -> void:
 	for i: int in range(FIELD_AZIMUTHS.size()):
 		var az: float = FIELD_AZIMUTHS[i]
 		var neutral := GateRules.TEAM_NEUTRAL
-		_monster(markers, "Golem%d" % i, _polar(az, FIELD_RADIUS), neutral, 3, &"golem_t3")
+		# De costas para a cratera, de frente para o anel por onde se chega das pontes (F95).
+		var facing := Basis.looking_at(_polar(az, 1.0))
+		var golem_at := _polar(az, FIELD_RADIUS)
+		_monster(markers, "Golem%d" % i, golem_at, neutral, 3, &"golem_t3").basis = facing
 		var warrior_at := _polar(az + FIELD_SPREAD_DEG, FIELD_RADIUS)
-		_monster(markers, "Warrior%d" % i, warrior_at, neutral, 2, &"skeleton_warrior_t2")
+		var warrior := _monster(
+			markers, "Warrior%d" % i, warrior_at, neutral, 2, &"skeleton_warrior_t2"
+		)
+		warrior.basis = facing
 		var mage_at := _polar(az - FIELD_SPREAD_DEG, FIELD_RADIUS)
-		_monster(markers, "Mage%d" % i, mage_at, neutral, 2, &"skeleton_mage_t2")
+		_monster(markers, "Mage%d" % i, mage_at, neutral, 2, &"skeleton_mage_t2").basis = facing
 		_rare_chest(markers, "RareField%d" % i, _polar(az, FIELD_CHEST_RADIUS))
 	for i: int in range(LATERAL_CHESTS.size()):
 		var c: Vector2 = LATERAL_CHESTS[i]
@@ -460,7 +490,7 @@ func _build_center(walls: StaticBody3D) -> void:
 		var g: Vector2 = CENTER_GRASS[i]
 		var at := _polar(g.x, g.y)
 		var basis := _tangent_basis(Vector3(-at.z, 0, at.x))
-		_tall_grass(at, CENTER_GRASS_SIZE, basis, "GrassCenter%d" % i, "tall_grass_4x3")
+		_tall_grass(at, CENTER_GRASS_SIZE, basis, "GrassCenter%d" % i, "kit_grass_4x3")
 
 
 # --- selva (F40, PI 2026-10-11): colisao dos bolsoes e provas ------------------------------
@@ -681,16 +711,17 @@ func _rock(walls: StaticBody3D, at: Vector3, label: String) -> void:
 	cylinder.radius = ROCK_RADIUS
 	cylinder.height = WALL_HEIGHT
 	_shape(walls, cylinder, at + Vector3.UP * WALL_HEIGHT / 2)
-	var visual := _asset(_group("RockDecor"), RRB_ARENA + "boulder.glb", label)
+	var visual := _asset(_group("RockDecor"), KIT + "kit_boulder.glb", label)
 	visual.transform = Transform3D(Basis(Vector3.UP, at.x * 0.7 + at.z * 0.3), at)
-	# Cristal pequeno encostado na rocha, dentro do cilindro de colisao (so visual).
+	# Tufo de cristal no topo chato da rocha (kit_boulder, topo em y 2,57), so visual.
 	var yaw := at.x * 0.7 + at.z * 0.3
 	_crystal(
 		_group("RockDecor"),
-		at + Vector3(cos(yaw), 0, sin(yaw)) * 1.0,
+		at + Vector3(cos(yaw) * 0.25, 2.55, sin(yaw) * 0.25),
 		false,
 		label + "Crystal",
-		yaw
+		yaw,
+		true
 	)
 
 
@@ -706,24 +737,48 @@ func _tall_grass(at: Vector3, size: Vector2, basis: Basis, label: String, model:
 	var box := BoxShape3D.new()
 	box.size = Vector3(size.x, GRASS_HEIGHT * 2, size.y)
 	_shape(area, box, Vector3.UP * GRASS_HEIGHT)
-	_asset(area, RRB_ARENA + model + ".glb", "Visual")
+	_asset(area, KIT + model + ".glb", "Visual")
 
 
 func _monster(
 	parent: Node3D, label: String, at: Vector3, team: int, tier: int, id: StringName
-) -> void:
+) -> SpawnMarker:
 	var m := _marker(parent, label, at)
 	m.kind = SpawnMarker.Kind.MONSTER
 	m.team = team
 	m.tier = tier
 	m.monster_id = id
+	return m
 
 
-func _common_chest(parent: Node3D, label: String, at: Vector3, team: int) -> void:
+## Para onde olham os monstros do campo em [param center]: a boca do bolsao de selva, por onde o
+## heroi chega (PI 2026-10-21, F95: nasciam e voltavam de costas). Raios a partir do centro andam
+## pelas celulas livres ate bater; a media pesa os mais longos (a boca). Ao voltar para casa o
+## monstro retoma essa rotacao (Monster._home_basis).
+func _camp_facing(center: Vector3) -> Basis:
+	if _reach.is_empty():
+		_reach = _walkable_from(_flat(AXIS_A * SPAWN_S), _polylines("walls"))
+	var sum := Vector2.ZERO
+	for i: int in range(MOUTH_RAYS):
+		var dir := Vector2.from_angle(TAU * i / MOUTH_RAYS)
+		var run := 0.0
+		while run < MOUTH_REACH:
+			var key := Vector2i(((_flat(center) + dir * run) / JUNGLE_CHECK_STEP).round())
+			if not _reach.has(key):
+				break
+			run += JUNGLE_CHECK_STEP
+		sum += dir * pow(run / MOUTH_REACH, 4.0)
+	if sum.is_zero_approx():
+		return Basis.looking_at(-center.normalized())
+	return Basis.looking_at(Vector3(sum.x, 0, sum.y))
+
+
+func _common_chest(parent: Node3D, label: String, at: Vector3, team: int) -> SpawnMarker:
 	var m := _marker(parent, label, at)
 	m.kind = SpawnMarker.Kind.CHEST
 	m.team = team
 	m.chest_kind = ChestRules.Kind.COMMON
+	return m
 
 
 func _rare_chest(parent: Node3D, label: String, at: Vector3) -> void:

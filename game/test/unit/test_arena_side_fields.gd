@@ -7,6 +7,8 @@ extends GutTest
 const ARENA: String = "res://scenes/arena/ilha_arcana.tscn"
 const SPAWN_A: Vector3 = Vector3(-24, 0, 24)
 const BASE_RADIUS: float = 12.7
+## Base com os baus de fora do muro e os esqueletos de guarda do portao (PI 2026-10-21, F95).
+const BASE_REACH: float = 16.5
 const RIVER_RING_IN: float = 14.0
 const RIVER_RING_OUT: float = 18.0
 const ARENA_HALF: float = 40.0
@@ -56,7 +58,7 @@ func _lateral(team: int) -> Array[SpawnMarker]:
 	var result: Array[SpawnMarker] = []
 	for m: SpawnMarker in _markers():
 		var content := m.kind == SpawnMarker.Kind.MONSTER or m.kind == SpawnMarker.Kind.CHEST
-		if content and m.team == team and m.position.distance_to(_spawn_of(team)) > BASE_RADIUS:
+		if content and m.team == team and m.position.distance_to(_spawn_of(team)) > BASE_REACH:
 			result.append(m)
 	return result
 

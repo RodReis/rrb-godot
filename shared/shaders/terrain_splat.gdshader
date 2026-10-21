@@ -80,13 +80,18 @@ vec3 unpack_normal(vec4 texel) {
 	return vec3(t.x, -t.y, sqrt(clamp(1.0 - dot(t, t), 0.0, 1.0)));
 }
 
-// Camada projetada de cima (xz): albedo, rugosidade e normal em mundo (whiteout).
+// Camada projetada de cima (xz): albedo, rugosidade e normal em mundo (whiteout). O albedo e lido
+// em duas escalas e as duas se misturam pelo ruido grande (F95): a repeticao do tile some de
+// longe, onde a camera do jogo olha o chao inteiro. So o albedo: normal e rugosidade em duas
+// escalas custaram +1,5 ms de GPU no spawn A.
 void planar(
 	sampler2D albedo_tex, sampler2D normal_tex, sampler2D rough_tex, float tile, vec3 tint,
 	vec3 pos, vec3 n, out vec3 albedo, out float rough, out vec3 normal
 ) {
 	vec2 uv = pos.xz * tile;
-	albedo = texture(albedo_tex, uv).rgb * tint;
+	vec2 uv_far = uv * 0.79 + vec2(0.31, 0.57);
+	float far_mix = smoothstep(0.3, 0.7, texture(macro_noise, pos.xz * 0.045).r);
+	albedo = mix(texture(albedo_tex, uv).rgb, texture(albedo_tex, uv_far).rgb, far_mix) * tint;
 	rough = texture(rough_tex, uv).r;
 	vec3 t = unpack_normal(texture(normal_tex, uv));
 	normal = normalize(vec3(t.xy + n.xz, abs(t.z) * n.y).xzy);

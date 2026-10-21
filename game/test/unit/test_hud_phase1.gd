@@ -41,25 +41,25 @@ func _node(path: String) -> Node:
 	return _hud.get_node(path)
 
 
-## Contador da fase 1 com a arena real (F36, F55): 28 baus, 34 monstros (sem o boss); morto sai
-## da conta e o renascido volta.
+## Contador da fase 1 com a arena real (F36, F55): 28 baus, 38 monstros (sem o boss; +4 guardas do
+## portao no F95); morto sai da conta e o renascido volta.
 func test_loot_counter_counts_lateral_fields_and_respawned_monsters() -> void:
 	add_child_autofree(ARENA.instantiate())
 	var spawns := add_child_autofree(SpawnDirector.new()) as SpawnDirector
 	_hud.bind(_hero, _clock, spawns, _players)
 	await wait_process_frames(1)
 	var loot := _node("%LootText") as Label
-	assert_eq(loot.text, "Baús abertos 0/28 · Monstros 34")
+	assert_eq(loot.text, "Baús abertos 0/28 · Monstros 38")
 	var monster: Monster = null
 	for node: Node in spawns.get_children():
 		if node is Monster and node.name != SpawnDirector.BOSS_NAME:
 			monster = node as Monster
 	monster.hp = 0
 	await wait_process_frames(1)
-	assert_eq(loot.text, "Baús abertos 0/28 · Monstros 33")
+	assert_eq(loot.text, "Baús abertos 0/28 · Monstros 37")
 	monster.revive()
 	await wait_process_frames(1)
-	assert_eq(loot.text, "Baús abertos 0/28 · Monstros 34")
+	assert_eq(loot.text, "Baús abertos 0/28 · Monstros 38")
 
 
 func test_hidden_until_bound() -> void:

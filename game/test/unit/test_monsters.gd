@@ -72,7 +72,7 @@ func test_um_monstro_por_marcador_na_quantidade_do_gdb() -> void:
 		assert_eq(monster.hp, roundi(monster.data.hp), monster.name)
 	for monster: Monster in _monsters():
 		assert_eq(counts[monster.data.id], monster.data.count, monster.data.id)
-	assert_eq(_monsters().size(), 34)
+	assert_eq(_monsters().size(), 38, "34 do GDB + 4 guardas do portao (F95, PI 2026-10-21)")
 
 
 func test_uid_negativo_e_unico() -> void:
@@ -152,6 +152,20 @@ func test_leash_volta_com_hp_cheio() -> void:
 	monster._on_network_tick(DT, _tick + 1)
 	assert_eq(monster.state, MonsterRules.State.RESET)
 	assert_eq(monster.hp, roundi(monster.data.hp))
+
+
+## PI 2026-10-21 (F95): ao chegar em casa depois da volta, o monstro olha de novo para onde olhava
+## ao nascer, nao de costas para quem chega.
+func test_volta_para_casa_olhando_como_nasceu() -> void:
+	var monster := _base_monsters(GateRules.TEAM_A)[0]
+	var born := monster.global_basis
+	_hero.global_position = monster.global_position + Vector3(80.0, 0.0, 0.0)
+	_rival.global_position = _hero.global_position
+	monster.state = MonsterRules.State.RESET
+	monster.global_basis = Basis(Vector3.UP, 2.0)
+	monster._on_network_tick(DT, _tick)
+	assert_eq(monster.state, MonsterRules.State.IDLE)
+	assert_true(monster.global_basis.is_equal_approx(born), str(monster.global_basis))
 
 
 ## Campo (PI 2026-10-12): ferir um monstro da base de longe acorda so quem tem o spawn a ate

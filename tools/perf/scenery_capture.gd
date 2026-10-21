@@ -48,6 +48,16 @@ const POSES_BASE: Array[Array] = [
 	["torreao", "KeepA", Vector3(14.0, 9.0, -14.0)],
 ]
 
+## --poses=meio: closes do meio do mapa (F95: antes x depois da arte nova, mesmo enquadramento).
+const POSES_MEIO: Array[Array] = [
+	["ponte", "Bridge135", Vector3(7.0, 5.0, 9.0)],
+	["moita", "GrassAmbush", Vector3(4.0, 3.0, 6.0)],
+	["centro", "Center0", Vector3(5.0, 3.5, 6.5)],
+	["cratera", "LavaLake", Vector3(9.0, 5.0, 3.0)],
+	["selva", "Rock0", Vector3(6.0, 4.0, 7.0)],
+	["margem", "Bank10", Vector3(4.0, 3.0, 5.0)],
+]
+
 var _out: String = "scenery"
 var _poses: Array[Array] = POSES
 var _main: Node
@@ -65,6 +75,8 @@ func _initialize() -> void:
 			_out = arg.trim_prefix("--out=")
 		elif arg == "--poses=base":
 			_poses = POSES_BASE
+		elif arg == "--poses=meio":
+			_poses = POSES_MEIO
 	_main = (load(MAIN) as PackedScene).instantiate()
 	root.add_child(_main)
 	current_scene = _main

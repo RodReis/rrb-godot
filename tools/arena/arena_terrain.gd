@@ -17,6 +17,7 @@ const MOSS_CHANNEL: int = 2
 
 ## Conjuntos PBR CC0 (ambientCG, 2K, F73): pasta por area em shared/assets/textures/<area>/.
 const TEXTURES: String = "res://shared/assets/textures/%s/%s_%s.jpg"
+const TERRAIN_TEXTURE: String = "res://shared/assets/textures/%s_%s.jpg"
 const TEXTURE_AREAS: Dictionary[String, String] = {
 	"grass": "terrain",
 	"moss": "terrain",
@@ -27,6 +28,20 @@ const TEXTURE_AREAS: Dictionary[String, String] = {
 	"planks": "wood",
 }
 const TERRAIN_LAYERS: Array[String] = ["grass", "moss", "dirt", "paving", "rock"]
+## Chao no estilo novo (F95, ADR-0030): conjuntos PBR CC0 do Poly Haven em
+## shared/assets/textures/kit/ (grass_ground, forest_ground_04, rocky_trail, cobblestone_floor_04,
+## dark_rock) e repeticao por u (1 / metros reais da textura). As rochas e a folhagem triplanar
+## seguem nos conjuntos do F73.
+const TERRAIN_SETS: Dictionary[String, String] = {
+	"grass": "kit/grass/grass",
+	"moss": "kit/forest/forest",
+	"dirt": "kit/trail/trail",
+	"paving": "kit/cobble/cobble",
+	"rock": "kit/crater/crater",
+}
+const TERRAIN_TILES: Dictionary[String, float] = {
+	"grass": 0.4, "moss": 0.32, "dirt": 0.45, "paving": 0.67, "rock": 0.41
+}
 const TERRAIN_SHADER: String = "res://shared/shaders/terrain_splat.gdshader"
 const TRIPLANAR_SHADER: String = "res://shared/shaders/triplanar_pbr.gdshader"
 const ATLAS: String = "res://shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png"
@@ -76,7 +91,7 @@ const LAGOON_WATER_VISUAL: float = 4.7
 const BASE_ARC_RADIUS: float = 12.7
 
 # Visual dos bolsoes: rochas a cada ROCK_STEP ao longo da polilinha, pinheiros por cima.
-const OUTCROPS: Array[String] = ["rock_outcrop_a", "rock_outcrop_b", "rock_outcrop_c"]
+const OUTCROPS: Array[String] = ["kit_outcrop_a", "kit_outcrop_b", "kit_outcrop_c"]
 ## Raio da pegada de cada rocha com escala 1 (u): a escala cobre a meia largura + folga.
 const OUTCROP_RADIUS: float = 1.0
 const OUTCROP_MARGIN: float = 0.35
@@ -94,6 +109,14 @@ const DIRT_TINT: Color = Color(0.72, 0.66, 0.6)
 const ROCK_TINT: Color = Color(0.7, 0.72, 0.75)
 const MOSS_TINT: Color = Color(0.5, 0.62, 0.4)
 const PAVING_TINT: Color = Color(0.72, 0.72, 0.74)
+# Tintas do chao novo (o piso do F95 tem texturas mais claras e saturadas que as do F73).
+const GROUND_BRIGHTNESS: float = 0.95
+const GROUND_SATURATION: float = 0.9
+const GROUND_GRASS_TINT: Color = Color(0.95, 1.0, 0.85)
+const GROUND_MOSS_TINT: Color = Color(0.8, 0.9, 0.7)
+const GROUND_DIRT_TINT: Color = Color(0.85, 0.8, 0.72)
+const GROUND_PAVING_TINT: Color = Color(0.8, 0.8, 0.82)
+const GROUND_ROCK_TINT: Color = Color(1.0, 0.95, 0.95)
 const FOLIAGE_ROUGHNESS: float = 0.85
 const FOLIAGE_SPECULAR: float = 0.15
 
@@ -349,21 +372,24 @@ func _terrain_material() -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = load(TERRAIN_SHADER)
 	for layer: String in TERRAIN_LAYERS:
-		m.set_shader_parameter("%s_albedo" % layer, _pbr(layer, "albedo"))
-		m.set_shader_parameter("%s_normal" % layer, _pbr(layer, "normal"))
-		m.set_shader_parameter("%s_rough" % layer, _pbr(layer, "rough"))
+		for kind: String in ["albedo", "normal", "rough"]:
+			var stem: String = TERRAIN_SETS[layer]
+			m.set_shader_parameter(
+				"%s_%s" % [layer, kind], _texture(TERRAIN_TEXTURE % [stem, kind])
+			)
+		m.set_shader_parameter("%s_tile" % layer, TERRAIN_TILES[layer])
 	m.set_shader_parameter("splat_map", _texture(SPLAT_PATH))
 	m.set_shader_parameter(
 		"splat_rect", Vector4(SPLAT_ORIGIN.x, SPLAT_ORIGIN.y, SPLAT_EXTENT, SPLAT_EXTENT)
 	)
 	m.set_shader_parameter("macro_noise", _noise())
-	m.set_shader_parameter("grass_tint", GRASS_TINT)
-	m.set_shader_parameter("dirt_tint", DIRT_TINT)
-	m.set_shader_parameter("rock_tint", ROCK_TINT)
-	m.set_shader_parameter("moss_tint", MOSS_TINT)
-	m.set_shader_parameter("paving_tint", PAVING_TINT)
-	m.set_shader_parameter("brightness", TERRAIN_BRIGHTNESS)
-	m.set_shader_parameter("saturation", TERRAIN_SATURATION)
+	m.set_shader_parameter("grass_tint", GROUND_GRASS_TINT)
+	m.set_shader_parameter("dirt_tint", GROUND_DIRT_TINT)
+	m.set_shader_parameter("rock_tint", GROUND_ROCK_TINT)
+	m.set_shader_parameter("moss_tint", GROUND_MOSS_TINT)
+	m.set_shader_parameter("paving_tint", GROUND_PAVING_TINT)
+	m.set_shader_parameter("brightness", GROUND_BRIGHTNESS)
+	m.set_shader_parameter("saturation", GROUND_SATURATION)
 	return m
 
 
@@ -415,8 +441,10 @@ func _valley_pine_material() -> ShaderMaterial:
 	return m
 
 
+## Mato alto por cartoes de lamina (F95): a cor e o formato vem do shader; a abertura do heroi
+## (hero_pos, reveal_*) e o vento ficam nos padroes do shader e o HeroVisual liga a abertura.
 func _tall_grass_material() -> ShaderMaterial:
-	var m := _foliage(_triplanar("grass", Color(0.85, 0.88, 0.62), 0.9, 1.0, 1.0))
+	var m := ShaderMaterial.new()
 	m.shader = load(TALL_GRASS_SHADER)
 	m.render_priority = TALL_GRASS_RENDER_PRIORITY
 	return m
@@ -472,7 +500,7 @@ func _build_jungle_visuals() -> void:
 		for at: Vector2 in _along(points, ROCK_STEP):
 			var h := _hash(at)
 			var model: String = OUTCROPS[int(h * OUTCROPS.size()) % OUTCROPS.size()]
-			var rock := _asset(group, RRB_ARENA + model + ".glb", "Rock%d" % index)
+			var rock := _asset(group, KIT + model + ".glb", "Rock%d" % index)
 			var s := scale * (1.0 + 0.25 * _hash(at + Vector2(3.1, 7.7)))
 			var sy := lerpf(OUTCROP_HEIGHT_SCALE.x, OUTCROP_HEIGHT_SCALE.y, h)
 			var basis := Basis(Vector3.UP, TAU * h).scaled(Vector3(s, sy, s))
@@ -481,7 +509,7 @@ func _build_jungle_visuals() -> void:
 		for at: Vector2 in _along(points, PINE_STEP):
 			var h := _hash(at + Vector2(11.0, 5.0))
 			var offset := Vector2(h - 0.5, _hash(at + Vector2(2.0, 9.0)) - 0.5) * half
-			var pine := _asset(group, RRB_ARENA + "pine_dark.glb", "Pine%d" % index)
+			var pine := _asset(group, KIT + "kit_pine.glb", "Pine%d" % index)
 			var s := lerpf(PINE_SCALE.x, PINE_SCALE.y, h)
 			var spot := at + offset
 			pine.transform = Transform3D(

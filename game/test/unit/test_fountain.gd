@@ -141,14 +141,18 @@ func test_modelo_com_pedra_realista_e_agua_do_f63() -> void:
 	scene.free()
 
 
-## F64: agua caindo da taca para a bacia e respingo no impacto (particulas).
-func test_agua_caindo_em_particulas() -> void:
+## F64 com a queda do F95 (PI 2026-10-21): cortina de agua continua da taca para a bacia (malha
+## com o shader de fios descendo), jato e respingo em particulas de sprite redondo.
+func test_agua_caindo_da_taca_e_respingo() -> void:
 	var scene := (load(FOUNTAIN) as PackedScene).instantiate()
 	var names: Array[String] = []
 	for node: Node in scene.get_node("Spray").get_children():
 		assert_is(node, GPUParticles3D)
 		names.append(String(node.name))
-	assert_eq(names, ["Jet", "Overflow", "Splash"])
+	assert_eq(names, ["Jet", "Splash"])
+	var fall := scene.get_node("Fall").find_children("*", "MeshInstance3D")[0] as MeshInstance3D
+	var material := fall.get_active_material(0) as ShaderMaterial
+	assert_eq(material.shader.resource_path, "res://shared/shaders/fountain_fall.gdshader")
 	scene.free()
 
 
@@ -157,5 +161,6 @@ func test_agua_caindo_em_particulas() -> void:
 func test_headless_descarta_as_particulas() -> void:
 	assert_eq(DisplayServer.get_name(), "headless", "GUT roda headless (tools/test.ps1)")
 	assert_null(_fountain.get_node_or_null("Spray"))
+	assert_null(_fountain.get_node_or_null("Fall"))
 	assert_not_null(_fountain.get_node_or_null("Model"))
 	assert_not_null(_fountain.get_node_or_null("Body/Shape"))

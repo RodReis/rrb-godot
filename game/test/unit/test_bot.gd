@@ -215,7 +215,7 @@ func test_navmesh_alcanca_os_campos_laterais() -> void:
 			var gap := path[path.size() - 1].distance_to(marker.global_position)
 			assert_lt(gap, 1.0, "%s fora do navmesh (%.1f u)" % [marker.name, gap])
 		checked += 1
-	assert_eq(checked, 20)
+	assert_eq(checked, 28, "20 dos campos + 4 baus e 4 guardas de fora do muro (F95)")
 
 
 func _opened_base_chests() -> int:

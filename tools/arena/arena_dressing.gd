@@ -118,7 +118,12 @@ const TORCH_LIGHT_RANGE: float = 6.0
 const RIM_TORCH_LIGHT_ENERGY: float = 1.1
 const CRYSTAL_LIGHT_RANGE: float = 7.0
 const LAGOON_LIGHT_RANGE: float = 9.0
-const EMBERS_AMOUNT: int = 60
+const EMBERS_AMOUNT: int = 40
+## Fumaca do lago de magma (F95): puffs redondos e macios que sobem, crescem e somem.
+const SMOKE_AMOUNT: int = 64
+const SMOKE_LIFETIME: float = 8.0
+const SMOKE_SIZE: float = 3.0
+const PUFF_TEXTURE_SIZE: int = 64
 const WATERFALL_AMOUNT: int = 70
 
 # Luz e pos (SPEC-038; valores iniciais do guia, ajuste final na verificacao visual do PI).
@@ -391,10 +396,14 @@ func _inward(p: Vector2) -> Vector3:
 	return Vector3(0, 0, 1) if absf(p.y) > absf(p.x) else Vector3(1, 0, 0)
 
 
-## Cristal arcano: material por variante (magenta, ciano, verde) em rodizio; so visual.
-func _crystal(parent: Node3D, at: Vector3, large: bool, label: String, yaw: float) -> void:
-	var model := "crystal_large" if large else "crystal_small"
-	var crystal := _asset(parent, RRB_ARENA + model + ".glb", label)
+## Cristal arcano: material por variante (magenta, ciano, verde) em rodizio; so visual. [param kit]
+## usa o cristal do kit do meio do mapa (F95); sem ele, o da borda.
+func _crystal(
+	parent: Node3D, at: Vector3, large: bool, label: String, yaw: float, kit: bool = false
+) -> void:
+	var size := "large" if large else "small"
+	var path := KIT + "kit_crystal_%s.glb" % size if kit else RRB_ARENA + "crystal_%s.glb" % size
+	var crystal := _asset(parent, path, label)
 	crystal.transform = Transform3D(Basis(Vector3.UP, yaw), at)
 	var variant: String = CRYSTAL_MATERIALS[_crystal_count % CRYSTAL_MATERIALS.size()]
 	_crystal_count += 1
@@ -457,6 +466,7 @@ func _build_ambience() -> void:
 		var color := Color(1.0, 0.66, 0.34)
 		var label := "Lantern%d" % i
 		_light(ambience, label, _lanterns[i], color, LANTERN_LIGHT_RANGE, LANTERN_LIGHT_ENERGY)
+	_lava_smoke(ambience)
 	_embers(ambience)
 
 
@@ -492,7 +502,61 @@ func _embers(parent: Node3D) -> void:
 	material.scale_max = 1.2
 	material.color = Color(1.0, 0.55, 0.15)
 	particles.process_material = material
-	particles.draw_pass_1 = _spark_mesh(0.12, Color(1.0, 0.6, 0.2))
+	particles.draw_pass_1 = _puff_mesh(0.16, Color(1.0, 0.6, 0.2), true)
+	_add(parent, particles)
+
+
+## Fumaca suave saindo da lava: nasce quente (laranja fraco) sobre o magma, esfria para cinza,
+## sobe devagar com turbulencia, cresce e some. Sprite redondo de borda macia, sem quina de quad.
+func _lava_smoke(parent: Node3D) -> void:
+	var particles := GPUParticles3D.new()
+	particles.name = "LavaSmoke"
+	particles.position = Vector3(0, 0.2, 0)
+	particles.amount = SMOKE_AMOUNT
+	particles.lifetime = SMOKE_LIFETIME
+	particles.preprocess = SMOKE_LIFETIME
+	particles.visibility_aabb = AABB(Vector3(-8, -1, -8), Vector3(16, 12, 16))
+	var material := ParticleProcessMaterial.new()
+	material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
+	material.emission_sphere_radius = CRATER_RADIUS - 1.0
+	material.direction = Vector3.UP
+	material.spread = 10.0
+	material.initial_velocity_min = 0.35
+	material.initial_velocity_max = 0.8
+	material.gravity = Vector3(0.12, 0.08, 0.06)
+	material.damping_min = 0.05
+	material.damping_max = 0.15
+	material.angle_min = -180.0
+	material.angle_max = 180.0
+	material.angular_velocity_min = -8.0
+	material.angular_velocity_max = 8.0
+	material.turbulence_enabled = true
+	material.turbulence_noise_strength = 0.5
+	material.turbulence_noise_scale = 1.6
+	material.scale_min = 0.8
+	material.scale_max = 1.3
+	var grow := Curve.new()
+	grow.add_point(Vector2(0.0, 0.45))
+	grow.add_point(Vector2(1.0, 1.9))
+	var grow_texture := CurveTexture.new()
+	grow_texture.curve = grow
+	material.scale_curve = grow_texture
+	var ramp := Gradient.new()
+	ramp.offsets = PackedFloat32Array([0.0, 0.15, 0.55, 1.0])
+	ramp.colors = PackedColorArray(
+		[
+			Color(1.0, 0.5, 0.2, 0.0),
+			Color(0.8, 0.45, 0.3, 0.45),
+			Color(0.42, 0.38, 0.38, 0.36),
+			Color(0.28, 0.28, 0.3, 0.0),
+		]
+	)
+	var ramp_texture := GradientTexture1D.new()
+	ramp_texture.gradient = ramp
+	material.color_ramp = ramp_texture
+	particles.process_material = material
+	particles.draw_pass_1 = _puff_mesh(SMOKE_SIZE, Color.WHITE, false)
+	particles.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_add(parent, particles)
 
 
@@ -520,6 +584,46 @@ func _waterfall(parent: Node3D, flip: float) -> void:
 	particles.process_material = material
 	particles.draw_pass_1 = _spark_mesh(0.22, Color(0.4, 1.0, 0.9))
 	_add(parent, particles)
+
+
+## Sprite redondo e macio (alpha radial) para fumaca e brasa: [param glow] acende (aditivo,
+## emissivo); sem ele a cor vem da rampa da particula e a luz da cena nao interfere (unshaded).
+func _puff_mesh(size: float, color: Color, glow: bool) -> QuadMesh:
+	var mesh := QuadMesh.new()
+	mesh.size = Vector2(size, size)
+	var material := StandardMaterial3D.new()
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	material.blend_mode = BaseMaterial3D.BLEND_MODE_ADD if glow else BaseMaterial3D.BLEND_MODE_MIX
+	material.vertex_color_use_as_albedo = true
+	material.albedo_color = color
+	material.albedo_texture = _puff_texture()
+	material.disable_receive_shadows = true
+	if glow:
+		material.emission_enabled = true
+		material.emission = color
+		material.emission_energy_multiplier = 2.0
+		material.emission_texture = material.albedo_texture
+	mesh.material = material
+	return mesh
+
+
+## Alpha radial: branco opaco no centro, transparente na borda (curva suave, sem aresta de quad).
+func _puff_texture() -> GradientTexture2D:
+	var gradient := Gradient.new()
+	gradient.offsets = PackedFloat32Array([0.0, 0.45, 1.0])
+	gradient.colors = PackedColorArray(
+		[Color(1, 1, 1, 1.0), Color(1, 1, 1, 0.35), Color(1, 1, 1, 0.0)]
+	)
+	var texture := GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	texture.width = PUFF_TEXTURE_SIZE
+	texture.height = PUFF_TEXTURE_SIZE
+	return texture
 
 
 func _spark_mesh(size: float, color: Color) -> QuadMesh:

@@ -26,6 +26,7 @@ extends SceneTree
 ## blessing_ticks (a imunidade nao: invuln_ticks fica como o jogo deixar).
 ## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
+## --at=<x>,<z>: o heroi controlado fica nesse ponto do mundo a medicao inteira (F95: MID e centro).
 ## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
 ## Sai com 1 se os herois nao nascerem em SPAWN_TIMEOUT segundos.
 
@@ -93,6 +94,8 @@ var _swamp_wait: float = 0.0
 var _grass: bool = false
 var _grass_linked: bool = false
 var _patch: Node3D
+## --at: ponto onde o heroi fica; NAN = sem --at.
+var _at: Vector3 = Vector3(NAN, 0, NAN)
 var _shot: String = ""
 var _turret_wait: float = 0.0
 var _shot_wait: float = 0.0
@@ -119,6 +122,9 @@ func _initialize() -> void:
 			_paladin = true
 		elif arg == "--grass":
 			_grass = true
+		elif arg.begins_with("--at="):
+			var xz := arg.trim_prefix("--at=").split_floats(",")
+			_at = Vector3(xz[0], 0, xz[1])
 		elif arg.begins_with("--shot="):
 			_shot = arg.trim_prefix("--shot=")
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
@@ -149,7 +155,7 @@ func _process(delta: float) -> bool:
 		_occultist_effects(delta)
 	if _paladin and _phase > 0:
 		_hold_paladins()
-	if _grass and _phase > 0 and not _grass_linked:
+	if (_grass or not is_nan(_at.x)) and _phase > 0 and not _grass_linked:
 		_grass_linked = true
 		root.get_node("NetworkRollback").connect(&"after_process_tick", _hold_in_grass)
 	match _phase:
@@ -214,6 +220,9 @@ func _hold_in_grass(_tick: int) -> void:
 	var hero := _players.get_node_or_null(str(get_multiplayer().get_unique_id())) as Node3D
 	if hero == null:
 		return
+	if not is_nan(_at.x):
+		hero.global_position = _at
+		return
 	if _patch == null:
 		var best := INF
 		for node: Node in get_nodes_in_group(&"tall_grass"):
@@ -245,6 +254,7 @@ func _report() -> void:
 		"equip": _equip,
 		"smoke": _smoke,
 		"grass": _grass,
+		"at": "" if is_nan(_at.x) else "%.1f,%.1f" % [_at.x, _at.z],
 		"berserker": _berserker,
 		"occultist": _occultist,
 		"paladin": _paladin,

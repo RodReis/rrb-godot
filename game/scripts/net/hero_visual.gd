@@ -4,15 +4,15 @@ extends Node
 ## estado do Hero (replicado/previsto) e mostra o equipamento (SPEC-048): cada item equipado
 ## vira pecas presas aos ossos por BoneAttachment3D (ItemVisuals). So le estado; nunca o altera.
 ## Morto: cai uma vez e fica. Servidor headless nao carrega peca nenhuma.
-## Silhueta no mato alto (F72, ADR-0015 item 10): so no cliente de quem controla o heroi, dentro de
-## moita ou fumaca, as malhas ganham um passe translucido sem teste de profundidade e a moita abre
-## em volta. Le a regra (Hero.zones_at); nao toca em VisibilityRules, estado nem replicacao.
+## Heroi no mato alto (F72, ADR-0015 item 10; visual do F95, PI 2026-10-21): so no cliente de quem
+## controla o heroi, dentro de moita ou fumaca, o heroi fica translucido com o proprio visual (sem a
+## silhueta azul do F72) e a moita abre em volta. Le a regra (Hero.zones_at); nao toca em
+## VisibilityRules, estado nem replicacao.
 
-## Raio da abertura da moita em volta do heroi (u) e alpha da silhueta.
+## Raio da abertura da moita em volta do heroi (u).
 const REVEAL_RADIUS: float = 2.5
-const SILHOUETTE_ALPHA: float = 0.35
-## Por cima de tudo o que e transparente (a moita fica em -10, as barras em 0).
-const SILHOUETTE_PRIORITY: int = 100
+## Transparencia das malhas do heroi dentro do mato (GeometryInstance3D.transparency: 0 opaco).
+const COVER_TRANSPARENCY: float = 0.45
 ## Material unico das moitas (o glTF aponta para ele): o mesmo recurso em todas as malhas.
 const GRASS: ShaderMaterial = preload("res://shared/resources/materials/tall_grass.tres")
 
@@ -59,8 +59,7 @@ var _skeleton: Skeleton3D
 var _shown_equipment: Vector4i = Inventory.NONE
 var _tracks_cover: bool = false
 var _covered: bool = false
-var _silhouette: StandardMaterial3D
-## Sobreposicao de estado em todas as malhas (Ragnarok do Berserker, F75); a silhueta do mato vence.
+## Sobreposicao de estado em todas as malhas (Ragnarok do Berserker, F75); vale tambem no mato.
 var _status_overlay: Material
 var _attachments: Array[Array] = [[], [], [], []]  # indice = ItemData.Slot -> BoneAttachment3D
 
@@ -142,8 +141,8 @@ func use_items(items: ItemVisuals) -> void:
 		_show_equipment(_hero.equipment)
 
 
-## Liga (ou desliga) a silhueta no mato alto. O jogo liga so para o heroi controlado neste cliente;
-## o runner headless liga a mao.
+## Liga (ou desliga) o heroi translucido no mato alto. O jogo liga so para o heroi controlado neste
+## cliente; o runner headless liga a mao.
 func use_cover_silhouette(enabled: bool) -> void:
 	_tracks_cover = enabled
 	if not enabled:
@@ -156,9 +155,9 @@ func _show_equipment(equipment: Vector4i) -> void:
 			_show_slot(slot, Inventory.item_at(equipment, slot, _hero.item_catalog))
 	_shown_equipment = equipment
 	if _covered:
-		_apply_silhouette(_silhouette)  # peca nova tambem entra na silhueta
-	elif _status_overlay != null:
-		_apply_silhouette(_status_overlay)
+		_apply_cover(COVER_TRANSPARENCY)  # peca nova tambem fica translucida
+	if _status_overlay != null:
+		_apply_overlay(_status_overlay)
 
 
 ## Troca as pecas do slot pelas de [param item] (nulo = vazio) e esconde a peca do pack que elas
@@ -199,13 +198,12 @@ func _show_slot(slot: int, item: ItemData) -> void:
 
 
 ## Liga (material) ou desliga (nulo) a sobreposicao de estado em todas as malhas do heroi, pecas de
-## equipamento incluidas (Ragnarok do Berserker, F75). Dentro do mato a silhueta fica por cima.
+## equipamento incluidas (Ragnarok do Berserker, F75).
 func set_status_overlay(material: Material) -> void:
 	if material == _status_overlay:
 		return
 	_status_overlay = material
-	if not _covered:
-		_apply_silhouette(material)
+	_apply_overlay(material)
 
 
 ## Animacao do golpe basico que acabou de sair (Machados Gemeos alternam a mao, F75).
@@ -218,7 +216,8 @@ func _controlled_here() -> bool:
 	return not _hero.is_bot and _hero.name.to_int() == multiplayer.get_unique_id()
 
 
-## Entra ou sai do mato: liga ou desliga a silhueta e a abertura. Dentro, a abertura segue o heroi.
+## Entra ou sai do mato: liga ou desliga a transparencia e a abertura. Dentro, a abertura segue o
+## heroi.
 func _set_covered(covered: bool) -> void:
 	if covered:
 		GRASS.set_shader_parameter(&"hero_pos", _hero.global_position)
@@ -226,22 +225,18 @@ func _set_covered(covered: bool) -> void:
 		return
 	_covered = covered
 	GRASS.set_shader_parameter(&"reveal_radius", REVEAL_RADIUS if covered else 0.0)
-	if not covered:
-		_apply_silhouette(_status_overlay)  # fora do mato volta a sobreposicao de estado, se houver
-		return
-	if _silhouette == null:
-		_silhouette = StandardMaterial3D.new()
-		_silhouette.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		_silhouette.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		_silhouette.no_depth_test = true
-		_silhouette.disable_receive_shadows = true
-		_silhouette.render_priority = SILHOUETTE_PRIORITY
-		_silhouette.albedo_color = Color(UiTokens.BLUE, SILHOUETTE_ALPHA)
-	_apply_silhouette(_silhouette if covered else null)
+	_apply_cover(COVER_TRANSPARENCY if covered else 0.0)
 
 
-## Passe de silhueta em todas as malhas do heroi, pecas de equipamento incluidas.
-func _apply_silhouette(material: Material) -> void:
+## Transparencia em todas as malhas do heroi, pecas de equipamento incluidas (o material fica o
+## mesmo: o heroi segue com o proprio visual).
+func _apply_cover(transparency: float) -> void:
+	for mesh: Node in model.find_children("*", "MeshInstance3D", true, false):
+		(mesh as MeshInstance3D).transparency = transparency
+
+
+## Sobreposicao de estado em todas as malhas do heroi, pecas de equipamento incluidas.
+func _apply_overlay(material: Material) -> void:
 	for mesh: Node in model.find_children("*", "MeshInstance3D", true, false):
 		(mesh as MeshInstance3D).material_overlay = material
 

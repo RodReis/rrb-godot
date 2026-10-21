@@ -13,8 +13,9 @@ const KIND_HERO: int = 0
 const KIND_MONSTER: int = 1
 const KIND_CHEST: int = 2
 const KIND_BOSS: int = 3
-## Marcadores da base: ate esta distancia do proprio spawn (GDB: base e o raio de 12,7 u).
-const BASE_RADIUS: float = 13.0
+## Marcadores da base: ate esta distancia do proprio spawn (GDB: base e o raio de 12,7 u; com os
+## baus de fora do muro e os esqueletos de guarda, PI 2026-10-21, F95: ate 16,4 u).
+const BASE_RADIUS: float = 16.5
 ## Marcadores de um mesmo campo ficam a ate esta distancia do vizinho mais proximo.
 const FIELD_LINK: float = 7.0
 ## Campo a ate esta distancia do centro da arena = centro contestado (a ilha, SPEC-046 §2.2).

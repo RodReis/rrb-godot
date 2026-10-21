@@ -169,6 +169,34 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
 
 - [x] **F84** (#247) — **Spike visual, parte 1: canto SO no estilo Eternal Return** (ADR-0024 item 5, SPEC-084). **Arte:** `art/spike/f84/build_spike_f84.py` (Blender por script) gera 19 `.glb` em `shared/assets/rrb/spike/f84/` (muralha, mureta, torre, portão e folhas, torreão, 3 casas, galpão, fonte, praça e props; até 1.432 triângulos por objeto), sem imagem: o `.import` troca cada material pelo `shared/resources/materials/spike_f84/*.tres` (PBR CC0 do Poly Haven, 2K, `shared/assets/textures/spike_f84/`). **Cena:** `tools/arena/build_spike_f84.gd` gera `game/scenes/arena/spike_f84.tscn`, uma cópia da oficial (o Godot 4.7 não cria cena herdada por script) com as 77 peças do SO escondidas e as do spike no mesmo transform, o modelo do portão A e da fonte A trocado, praça, props, 4 luzes de lanterna e lightmap próprio (`bake-lightmap.ps1 -Builder`). **Jogo:** `--arena=spike_f84` (dev, `LaunchArgs.ARENA_VARIANTS`; o `main.gd` troca a Arena no `NOTIFICATION_SCENE_INSTANTIATED`). **Prova:** `test_arena_spike_f84` (colisão e marcadores iguais aos da oficial, arte sem colisão e dentro do orçamento); frame time GPU oficial 3,64 × variante 3,76 ms (+3 %, quase todo da folhagem; 3 rodadas alternadas); capturas lado a lado em `docs/evidencias/f84/`. **Folhagem:** cartões de folha CC0 (ambientCG LeafSet024/028) com normais esféricas, alpha scissor e vento suave (`shared/shaders/spike_foliage.gdshader`), duas camadas por moita (pedido do PI). **Decisão do PI (2026-10-20):** cenário segue no Blender pelo Claude (ADR do Cowork).
 - [x] **F94** (#266) — **Arena nova, parte 1: bases A e B** (ADR-0030, SPEC-094). **Kit:** `art/arena/build_castle_kit.py` (o script do F84, agora oficial) gera `shared/assets/rrb/arena/kit/*.glb`, com materiais em `shared/resources/materials/kit/` e texturas em `shared/assets/textures/kit/`; a folhagem usa `shared/shaders/foliage_wind.gdshader` e entra no import com GI dinâmico (`light_baking=3`, iluminada pelas sondas). **Builder:** `build_arena.gd` monta muralha (`kit_wall`), mureta interna (`kit_wall_low`), torres, portal, torreão, casas e pátio com as plantas das floreiras; `arena_dressing.gd` põe praça, props, folhagem e lanternas nas duas bases (`_build_base_dressing`, a B pela rotação) e troca o tecido do time pelo dourado na B (`_team_cloth`, `kit_cloth_b.tres`). `gate.tscn` e `fountain.tscn` usam o kit. Saíram a variante `spike_f84` e o `--arena`. **Prova:** `test_arena_colisao_fixa` (colisão e marcadores = fixture de antes, `tools/arena/collision_fixture.gd`); soak 50/50; rede 3/3 a 100 ms; frame time GPU +0,18 ms no spawn e +0,21 ms na partida (`docs/evidencias/f94/`).
+- [x] **F95** (#267) — **Arena nova, parte 2: rio, pontes, centro, selva e mato alto** (ADR-0030, SPEC-095).
+  - **Kit:** `art/arena/build_world_kit.py` (Blender por script, reaproveita o `build_castle_kit.py`) gera estas peças em `shared/assets/rrb/arena/kit/`, todas com até 1.600 triângulos:
+    - ponte de cantaria (parapeito só sobre a água);
+    - rocha com cristal;
+    - afloramentos;
+    - pinheiro de cartões;
+    - pedras e juncos de margem;
+    - mato alto de lâminas;
+    - colunas de basalto da cratera;
+    - cortina de água da fonte.
+  - **Texturas:** CC0 do Poly Haven em `shared/assets/textures/kit/` (penhasco, casca, grama, chão de floresta, trilha e cratera).
+  - **Shaders:**
+    - `tall_grass.gdshader`: lâminas procedurais com balanço; abertura e caixa da moita iguais.
+    - `terrain_splat.gdshader`: anti-repetição só no albedo.
+    - `fountain_fall.gdshader`: novo.
+  - **Builder:**
+    - `arena_river.gd` (novo, na cadeia do `build_arena`) espalha pedras e juncos pela margem e monta a borda da cratera.
+    - `arena_dressing.gd` troca as partículas da lava por fumaça suave e brasas redondas.
+  - **Herói no mato:** `HeroVisual` deixa o herói translúcido com o próprio visual (`COVER_TRANSPARENCY`), no lugar da silhueta azul do F72.
+  - **Monstros:** nascem virados para quem chega e retomam a rotação ao voltar para casa (`Monster._home_basis`):
+    - na base, para o portão;
+    - nos campos lateral e de canto, para a boca do bolsão (`_camp_facing`);
+    - no centro, para o anel do rio.
+  - **Decisões do PI (2026-10-21):** baús de dentro da muralha vão para fora, no capim rente ao muro de fechamento, com 4 esqueletos T1 de guarda (`GATE_GUARDS_T1`; monstros 34 → 38, `ArenaMapPois.BASE_RADIUS` 16,5); a moita de emboscada N sai de cima do campo lateral Bot da B.
+  - **Prova:**
+    - `test_arena_colisao_fixa` (369 formas iguais; marcadores 65 → 69 pela decisão do PI);
+    - frame time alternado: MID +0,02, centro −0,01, moita −0,02 e spawn −0,03 ms;
+    - capturas em `docs/evidencias/f95/`.
 - [ ] **F29** — telemetria (ping médio, duração, líder F1 × vencedor, "teleportes" reportados) no backend; painel de KPIs no Histórico; `tools/export-matches.ps1`.
 - [ ] **F30** — ajustes de balanceamento (só `.tres`).
 - [ ] **[GATE] MVP4** — critérios PRD §9.2; decisões câmera/duração/3x3.

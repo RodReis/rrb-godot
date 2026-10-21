@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3]
+
+[ext_resource type="Shader" path="res://shared/shaders/fountain_fall.gdshader" id="1_shader"]
+
+[sub_resource type="FastNoiseLite" id="noise_streak"]
+noise_type = 1
+frequency = 0.018
+fractal_octaves = 2
+
+[sub_resource type="NoiseTexture2D" id="tex_streak"]
+width = 256
+height = 256
+seamless = true
+noise = SubResource("noise_streak")
+
+[resource]
+resource_name = "fountain_fall"
+render_priority = 1
+shader = ExtResource("1_shader")
+shader_parameter/streak_noise = SubResource("tex_streak")
