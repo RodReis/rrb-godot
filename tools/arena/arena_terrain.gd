@@ -47,9 +47,7 @@ const TRIPLANAR_SHADER: String = "res://shared/shaders/triplanar_pbr.gdshader"
 const ATLAS: String = "res://shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png"
 ## Materiais gerados aqui e ligados aos .glb pelo .import (use_external do "kaykit_atlas").
 const TERRAIN_MATERIAL: String = MATERIALS + "terrain.tres"
-const ROCK_MATERIAL: String = MATERIALS + "rock_moss.tres"
 const STONE_MATERIAL: String = MATERIALS + "castle_stone.tres"
-const PINE_MATERIAL: String = MATERIALS + "pine_foliage.tres"
 ## Madeira (F73): cavalo-de-frisa, balista e baus; a cor da celula do atlas entra como matiz.
 const WOOD_MATERIAL: String = MATERIALS + "wood_planks.tres"
 const WOOD_TINT: Color = Color(1.0, 0.95, 0.9)
@@ -63,21 +61,19 @@ const TALL_GRASS_MATERIAL: String = MATERIALS + "tall_grass.tres"
 const TALL_GRASS_SHADER: String = "res://shared/shaders/tall_grass.gdshader"
 ## Antes dos outros transparentes (VFX, barras), que desenham por cima da moita.
 const TALL_GRASS_RENDER_PRIORITY: int = -10
-## Piso e encostas do vale (F56, ADR-0012): pedra nas faces inclinadas, musgo nas de cima.
+## Piso e encostas do vale (F56, ADR-0012): pedra nas faces inclinadas, chao de floresta nas de
+## cima. Desde o F96 com os conjuntos do kit (ADR-0030): a rocha do kit_cliff e o chao de floresta
+## do terreno da arena com o tom de musgo, em repeticao mais larga (o vale e visto de longe).
 const VALLEY_MATERIAL: String = MATERIALS + "valley_ground.tres"
-const VALLEY_ROCK_TILE: float = 0.12
-const VALLEY_MOSS_TILE: float = 0.22
+const KIT_TEXTURE: String = "res://shared/assets/textures/kit/%s/%s_%s.jpg"
+const VALLEY_ROCK_TILE: float = 0.14
+const VALLEY_MOSS_TILE: float = 0.2
 const VALLEY_MOSS_FROM: float = 0.55
 const VALLEY_MOSS_AMOUNT: float = 0.92
-const VALLEY_PINE_MATERIAL: String = MATERIALS + "valley_pine.tres"
 ## Preenchimento do vale (shader `ambient_lift`, multiplica o albedo): o que nao entra no bake nao
-## recebe o indireto do lightmap e a sombra do sol ficaria preta. O chao tem albedo baixo e pede
-## mais; a copa ja e verde e satura com pouco.
+## recebe o indireto do lightmap e a sombra do sol ficaria preta. A copa do vale (kit_pine_far)
+## tem o seu no proprio .tres.
 const VALLEY_GROUND_LIFT: Color = Color(0.8, 0.88, 1.12)
-const VALLEY_PINE_LIFT: Color = Color(0.5, 0.55, 0.7)
-## A copa do vale e vista de longe e em massa: mais escura e menos saturada que a da selva.
-const VALLEY_PINE_BRIGHTNESS: float = 0.6
-const VALLEY_PINE_SATURATION: float = 0.6
 
 # Mascara: o que vira cada camada (metade A; a B e a rotacao).
 const CENTER_CLEARING: float = 3.5
@@ -117,8 +113,6 @@ const GROUND_MOSS_TINT: Color = Color(0.8, 0.9, 0.7)
 const GROUND_DIRT_TINT: Color = Color(0.85, 0.8, 0.72)
 const GROUND_PAVING_TINT: Color = Color(0.8, 0.8, 0.82)
 const GROUND_ROCK_TINT: Color = Color(1.0, 0.95, 0.95)
-const FOLIAGE_ROUGHNESS: float = 0.85
-const FOLIAGE_SPECULAR: float = 0.15
 
 var _jungle: Dictionary = {}
 ## Canais da mascara em float (terra, pedra, musgo, rocha), guardados para a grama (F42).
@@ -352,13 +346,9 @@ func _stamp_bases(channel: PackedFloat32Array) -> void:
 
 func _save_materials() -> void:
 	_save(_terrain_material(), TERRAIN_MATERIAL)
-	_save(_triplanar("rock", ROCK_TINT, 0.15, 0.62, 0.0), ROCK_MATERIAL)
 	_save(_valley_material(), VALLEY_MATERIAL)
-	_save(_valley_pine_material(), VALLEY_PINE_MATERIAL)
 	_save(_triplanar("bricks", Color(0.78, 0.78, 0.8), 0.45, 0.78, 0.65), STONE_MATERIAL)
 	_save(_wood_material(), WOOD_MATERIAL)
-	# Folhagem: detalhe da grama, cor (tronco marrom, galho verde-escuro) pela celula do atlas.
-	_save(_foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0)), PINE_MATERIAL)
 	# Mato alto: mesma receita, mais claro que o pinheiro (leitura a distancia da camera).
 	_save(_tall_grass_material(), TALL_GRASS_MATERIAL)
 
@@ -427,17 +417,13 @@ func _wood_material() -> ShaderMaterial:
 
 func _valley_material() -> ShaderMaterial:
 	var m := _triplanar("rock", ROCK_TINT, VALLEY_ROCK_TILE, VALLEY_MOSS_FROM, 0.0)
+	for kind: String in ["albedo", "normal", "rough"]:
+		m.set_shader_parameter("base_" + kind, _texture(KIT_TEXTURE % ["cliff", "cliff", kind]))
+	for kind: String in ["albedo", "normal"]:
+		m.set_shader_parameter("moss_" + kind, _texture(KIT_TEXTURE % ["forest", "forest", kind]))
 	m.set_shader_parameter("moss_amount", VALLEY_MOSS_AMOUNT)
 	m.set_shader_parameter("moss_tile", VALLEY_MOSS_TILE)
 	m.set_shader_parameter("ambient_lift", VALLEY_GROUND_LIFT)
-	return m
-
-
-func _valley_pine_material() -> ShaderMaterial:
-	var m := _foliage(_triplanar("grass", Color(0.55, 0.6, 0.5), 0.9, 1.0, 1.0))
-	m.set_shader_parameter("ambient_lift", VALLEY_PINE_LIFT)
-	m.set_shader_parameter("brightness", VALLEY_PINE_BRIGHTNESS)
-	m.set_shader_parameter("saturation", VALLEY_PINE_SATURATION)
 	return m
 
 
@@ -447,12 +433,6 @@ func _tall_grass_material() -> ShaderMaterial:
 	var m := ShaderMaterial.new()
 	m.shader = load(TALL_GRASS_SHADER)
 	m.render_priority = TALL_GRASS_RENDER_PRIORITY
-	return m
-
-
-func _foliage(m: ShaderMaterial) -> ShaderMaterial:
-	m.set_shader_parameter("min_roughness", FOLIAGE_ROUGHNESS)
-	m.set_shader_parameter("specular_amount", FOLIAGE_SPECULAR)
 	return m
 
 

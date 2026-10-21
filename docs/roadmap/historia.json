@@ -369,6 +369,11 @@
           "arquivo": "mvp4-f95-meio-arena.webp",
           "legenda": "O meio do mapa também ganhou o visual novo: ponte de pedra lavrada, margem do rio com pedras e juncos, borda da cratera em colunas de basalto, fumaça suave saindo da lava, rochas com cristal e mato alto que balança com o vento. A esquerda mostra como era.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp4-f96-borda-vale.webp",
+          "legenda": "A moldura em volta da partida fechou o visual novo: torre de vigia de madeira, tochas, cavalo-de-frisa e balista na beira da ilha, árvores com folhas que balançam, e a poça do canto com cantaria e uma cascata que cai no riacho do vale, agora com pedras e juncos na margem. A esquerda mostra como era.",
+          "tipo": "entregue"
         }
       ]
     }

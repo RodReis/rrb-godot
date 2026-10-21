@@ -77,6 +77,9 @@ FIELD_TOP_A = (-26.0, -4.0)
 FIELD_BOT_A = (4.0, 26.0)
 FALLS_A = (-43.0, -43.0)
 POOL_RADIUS = 1.8
+# Vertedouro da poca (F96): canal pela diagonal ate depois do labio, onde a agua cai no riacho do vale.
+SPILL_LENGTH = 4.2
+SPILL_HALF = 0.6
 # Cor das runas por time (SPEC-007 §5): ciano na base A, dourado na B; magma na cratera.
 RUNE_A = (0.1, 0.9, 1.0)
 RUNE_B = (1.0, 0.75, 0.2)
@@ -520,6 +523,8 @@ def groove_distance(x, z):
             d = min(d, arm_distance(px, pz) - WATER_HALF)
         d = min(d, math.hypot(px - LAGOON_A[0], pz - LAGOON_A[1]) - LAGOON_WATER)
         d = min(d, math.hypot(px - FALLS_A[0], pz - FALLS_A[1]) - POOL_RADIUS)
+        reach = FALLS_A[0] - SPILL_LENGTH * 0.70710678
+        d = min(d, segment_distance(px, pz, FALLS_A[0], FALLS_A[1], reach, reach) - SPILL_HALF)
     return d
 
 
@@ -639,6 +644,14 @@ def build_island():
                 for i in range(n):
                     a = 2 * math.pi * i / n
                     add((center[0] + math.cos(a) * rr) * sx, (center[1] + math.sin(a) * rr) * sx)
+        # Vertedouro da poca: bordas da agua e do barranco ao longo do canal, ate o labio.
+        for k in range(int(SPILL_LENGTH / 0.5) + 1):
+            t = POOL_RADIUS * 0.5 + 0.5 * k
+            for off in (-SPILL_HALF - BANK, -SPILL_HALF, 0.0, SPILL_HALF, SPILL_HALF + BANK):
+                x = FALLS_A[0] - t * 0.70710678 + off * 0.70710678
+                z = FALLS_A[1] - t * 0.70710678 - off * 0.70710678
+                if island_sd(x, z) < LIP - 0.05:
+                    add(x * sx, z * sx)
     # Arco da base (r 12,7 em volta do spawn) e muros de fechamento: borda crispa do patio.
     for sx in (1.0, -1.0):
         for k in range(37):
@@ -762,17 +775,6 @@ def build_river():
                 kit.faces.append((c, c + 1 + i, c + 1 + j))
                 kit.cells.append((STONE_BLUE, (0.5, 0.5)))
             pieces.append((c, m, "disc"))
-        # Cascata de enfeite: da poca do canto, pela diagonal, caindo no abismo.
-        dx, dz = -0.70710678 * sx, -0.70710678 * sx
-        px, pz = 0.70710678 * sx, -0.70710678 * sx  # perpendicular
-        strip = []
-        half = 1.1
-        run = [(0.0, WATER_Y - 0.03), (1.2, WATER_Y - 0.03), (2.4, WATER_Y - 0.03), (3.2, WATER_Y - 0.05), (3.9, WATER_Y - 2.0),
-               (4.6, WATER_Y - 4.5), (5.2, WATER_Y - 8.0), (5.6, WATER_Y - 12.0), (5.8, WATER_Y - 16.5)]
-        for s, y in run:
-            cx, cz = FALLS_A[0] * sx + dx * s, FALLS_A[1] * sx + dz * s
-            strip.append(((cx - px * half, y, cz - pz * half), (cx + px * half, y, cz + pz * half)))
-        pieces.append(strip_faces(kit, strip) + ("falls",))
     obj = build(kit)
     # UV proprio do rio: u ao longo do fluxo (0..1 por trecho), v atravessado.
     mesh = obj.data
@@ -936,45 +938,6 @@ def build_door_leaf(side):
 # --- kit 4: pontes, rochas, barricadas ------------------------------------------------------
 
 
-def build_bridge():
-    kit = Kit("bridge_stone")
-    profile = [(-3.0, 0.0), (3.0, 0.0), (3.0, -1.6), (2.3, -1.55), (1.5, -1.1), (0.7, -0.55), (0.0, -0.3),
-               (-0.7, -0.55), (-1.5, -1.1), (-2.3, -1.55), (-3.0, -1.6)]
-    kit.add(extrude_profile(profile, -3.1, 3.1), STONE, (0.3, 0.65))
-    for sx in (-1.0, 1.0):
-        x0 = 2.6 if sx > 0 else -3.1
-        for z0 in (-3.0, -1.0, 1.0):
-            kit.add(box(x0, 0.0, z0, 0.5, 0.45, 1.6), STONE, (0.45, 0.8))
-        for z0 in (-3.0, 2.6):
-            kit.add(box(x0 - 0.05, 0.0, z0, 0.6, 0.7, 0.5), STONE_DARK, (0.4, 0.75))
-    return build(kit, bevel=0.05)
-
-
-def build_boulder():
-    kit = Kit("boulder")
-    kit.add(prism(0, 0, -0.2, 0.9, 1.55, 1.72, 7, phase=12.0, jitter=0.22, seed=4), STONE_DARK, (0.25, 0.55))
-    kit.add(prism(0, 0, 0.9, 1.9, 1.72, 1.2, 7, phase=12.0, jitter=0.22, seed=5), STONE_DARK, (0.35, 0.65))
-    kit.add(prism(0.1, -0.1, 1.9, 2.65, 1.2, 0.0, 7, phase=12.0, jitter=0.15, seed=6), STONE, (0.4, 0.7))
-    kit.add(prism(1.2, 0.9, -0.1, 0.7, 0.6, 0.0, 6, phase=30.0, jitter=0.1, seed=7), STONE_DARK, (0.3, 0.55))
-    return build(kit, bevel=0.06)
-
-
-def build_barricade():
-    """Cavalo-de-frisa (referencia do PI): estacas afiadas cruzadas em X sobre uma viga."""
-    kit = Kit("barricade")
-    for i in range(6):
-        x = -1.0 + 0.4 * i
-        for lean in (34.0, -34.0):
-            stake = prism(0, 0, -0.15, 1.35, 0.085, 0.085, 6, phase=i * 7.0)
-            tip = prism(0, 0, 1.35, 1.6, 0.085, 0.0, 6, phase=i * 7.0)
-            for geo in (stake, tip):
-                kit.add(translate(rot_x(geo, lean, (0.0, 0.75, 0.0)), x, 0.0, 0.0), WOOD, (0.35, 0.7))
-    kit.add(prism(0, 0, 0.0, 2.4, 0.07, 0.07, 6), WOOD_DARK, (0.4, 0.7))
-    beam = rot_z(prism(0, 0, -1.2, 1.2, 0.07, 0.07, 6), 90.0)
-    kit.add(translate(beam, 0.0, 0.78, 0.0), WOOD_DARK, (0.4, 0.7))
-    return build(kit, bevel=0.02)
-
-
 def build_chest_body(name="chest_body", reinforced=False):
     """Corpo do bau (madeira + cintas de ferro; referencia do PI). Origem no chao, centro.
     [reinforced]: bau reforcado do campo de canto (SPEC-055) com cantoneiras nos 8 cantos, cinta
@@ -1072,41 +1035,6 @@ def build_crystal(name, shards):
     # .import (use_external); a rocha da base continua no atlas.
     for h, r, tx, tz, dx, dz in shards:
         kit.add(shard(h, r, tx, tz, dx, dz), MAGENTA, (0.2, 0.6), rune=CRYSTAL)
-    return build(kit)
-
-
-def build_pine():
-    kit = Kit("pine_tree")
-    kit.add(prism(0, 0, 0.0, 0.9, 0.2, 0.16, 6), BROWN_DARK, (0.3, 0.6))
-    for y, r, h in ((0.7, 1.15, 1.2), (1.5, 0.9, 1.15), (2.25, 0.6, 1.05)):
-        kit.add(prism(0, 0, y, y + h, r, 0.0, 7, phase=10.0 + y * 30.0), GREEN_DARK, (0.3, 0.8))
-    return build(kit)
-
-
-def build_watchtower():
-    kit = Kit("watchtower")
-    for x in (-0.8, 0.65):
-        for z in (-0.8, 0.65):
-            kit.add(box(x, 0.0, z, 0.16, 3.2, 0.16), WOOD_DARK, (0.3, 0.6))
-    kit.add(box(-1.1, 3.0, -1.1, 2.2, 0.18, 2.2), WOOD, (0.4, 0.7))
-    kit.add(box(-0.8, 1.2, -0.7, 0.1, 0.1, 1.4), WOOD, (0.4, 0.7))
-    kit.add(box(0.7, 1.2, -0.7, 0.1, 0.1, 1.4), WOOD, (0.4, 0.7))
-    for x in (-1.05, 0.95):
-        for z in (-1.05, 0.95):
-            kit.add(box(x, 3.18, z, 0.1, 1.2, 0.1), WOOD_DARK, (0.3, 0.6))
-    for z in (-1.05, 0.95):
-        kit.add(box(-1.05, 3.7, z, 2.1, 0.08, 0.08), WOOD, (0.4, 0.7))
-    kit.add(prism(0, 0, 4.3, 5.3, 1.7, 0.0, 4, phase=45.0), WOOD_DARK, (0.3, 0.6))
-    return build(kit)
-
-
-def build_ballista():
-    kit = Kit("ballista")
-    kit.add(box(-0.8, 0.0, -0.5, 1.6, 0.3, 1.0), WOOD_DARK, (0.3, 0.6))
-    kit.add(box(-0.12, 0.3, -0.12, 0.24, 0.6, 0.24), WOOD_DARK, (0.3, 0.6))
-    kit.add(rot_x(box(-0.1, 0.9, -1.0, 0.2, 0.14, 2.0), 12.0, (0, 0.9, 0)), WOOD, (0.4, 0.7))
-    kit.add(rot_y(box(-1.1, 0.95, -0.95, 2.2, 0.12, 0.12), 0.0), WOOD, (0.4, 0.7))
-    kit.add(box(-0.03, 1.02, -0.95, 0.06, 0.06, 1.6), CHARCOAL, (0.3, 0.5))
     return build(kit)
 
 
@@ -1275,89 +1203,6 @@ def build_house():
 # --- kit 7 (F40, PI 2026-10-11: realista e sombrio): bolsoes de selva -----------------------
 
 
-def icosphere(subdivisions):
-    """Icosfera unitaria: (vertices, faces) com vertices normalizados."""
-    t = (1.0 + math.sqrt(5.0)) / 2.0
-    verts = [Vector(v).normalized() for v in (
-        (-1, t, 0), (1, t, 0), (-1, -t, 0), (1, -t, 0), (0, -1, t), (0, 1, t),
-        (0, -1, -t), (0, 1, -t), (t, 0, -1), (t, 0, 1), (-t, 0, -1), (-t, 0, 1))]
-    faces = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11), (1, 5, 9), (5, 11, 4), (11, 10, 2),
-             (10, 7, 6), (7, 1, 8), (3, 9, 4), (3, 4, 2), (3, 2, 6), (3, 6, 8), (3, 8, 9), (4, 9, 5),
-             (2, 4, 11), (6, 2, 10), (8, 6, 7), (9, 8, 1)]
-    for _ in range(subdivisions):
-        cache = {}
-
-        def mid(a, b):
-            key = (min(a, b), max(a, b))
-            if key not in cache:
-                verts.append(((verts[a] + verts[b]) / 2.0).normalized())
-                cache[key] = len(verts) - 1
-            return cache[key]
-
-        new = []
-        for a, b, c in faces:
-            ab, bc, ca = mid(a, b), mid(b, c), mid(c, a)
-            new += [(a, ab, ca), (b, bc, ab), (c, ca, bc), (ab, bc, ca)]
-        faces = new
-    return verts, faces
-
-
-def build_outcrop(name, seed, stretch):
-    """Afloramento de rocha dos bolsoes: icosfera achatada e deslocada por ruido. No pe (y ate
-    0,4) o raio horizontal nunca fica abaixo de 1,05 u: com a escala do builder a pegada cobre a
-    colisao do bolsao (meia largura + folga). Altura ~1,6 u; base enterrada 0,3 u. A textura e
-    do material triplanar (rock_moss.tres no .import); a celula do atlas so marca o UV."""
-    verts, faces = icosphere(3)
-    out = []
-    for v in verts:
-        n = noise.fractal(Vector((v.x * 1.6 + seed, v.y * 1.6, v.z * 1.6 - seed)), 0.7, 2.1, 4)
-        ridges = abs(noise.noise(Vector((v.x * 3.1, v.y * 4.7 + seed, v.z * 3.1))))
-        r = 1.05 + 0.32 * abs(n) + 0.12 * ridges
-        x, y, z = v.x * r * stretch, v.y * r, v.z * r / stretch
-        if y < 0.0:
-            y *= 0.25
-        horizontal = math.hypot(x, z)
-        if y < 0.4 and horizontal < 1.05:
-            k = 1.05 / max(horizontal, 1e-4)
-            x, z = x * k, z * k
-        out.append((x, y * 1.25 + 0.05, z))
-    kit = Kit(name)
-    kit.add(translate((out, faces), 0.0, -0.3, 0.0), STONE, (0.4, 0.7))
-    return build(kit)
-
-
-def build_pine_dark():
-    """Pinheiro dos bolsoes (substitui o cone do pine_tree na selva): tronco e 7 saias de galhos
-    serrilhadas, ~4,6 u. Cor por celula do atlas (marrom/verde-escuro) usada como matiz pelo
-    material triplanar (pine_foliage.tres no .import)."""
-    kit = Kit("pine_dark")
-    kit.add(prism(0, 0, 0.0, 1.4, 0.2, 0.12, 8, jitter=0.02, seed=31), BROWN_DARK, (0.3, 0.6))
-    layers = ((0.8, 1.45, 1.3), (1.35, 1.25, 1.2), (1.9, 1.05, 1.1), (2.45, 0.85, 1.0), (2.95, 0.66, 0.9),
-              (3.4, 0.48, 0.8), (3.8, 0.3, 0.8))
-    for k, (y, r, h) in enumerate(layers):
-        kit.add(star_cone(y, y + h, r, 9, 37.0 * k, 40.0 + k), GREEN_DARK, (0.25, 0.75))
-    return build(kit)
-
-
-def star_cone(y0, y1, r, points, phase, seed):
-    """Saia de galhos: base em estrela (pontas em r, reentrancias em 0,55 r) com as pontas caidas
-    e apice em y1; silhueta recortada vista de cima."""
-    verts, faces = [], []
-    n = points * 2
-    for i in range(n):
-        a = math.radians(phase + 360.0 * i / n)
-        tip = i % 2 == 0
-        rr = r * (1.0 if tip else 0.55) * (1.0 + 0.15 * n3(math.cos(a) * 2.0, seed, math.sin(a) * 2.0))
-        verts.append((math.cos(a) * rr, y0 - (0.18 * r if tip else -0.05), math.sin(a) * rr))
-    verts.append((0.0, y1, 0.0))
-    verts.append((0.0, y0 + 0.1, 0.0))
-    for i in range(n):
-        j = (i + 1) % n
-        faces.append((i, n, j))
-        faces.append((j, n + 1, i))
-    return verts, faces
-
-
 # --- montagem -------------------------------------------------------------------------------
 
 
@@ -1399,18 +1244,17 @@ def main():
     preview("castle_keep", keep, spread=12.0)
 
     reset_scene()
-    ruins = [build_bridge(), build_boulder(), build_barricade(), build_chest_body(), build_chest_lid()]
+    ruins = [build_chest_body(), build_chest_lid()]
     for obj in ruins:
         export(obj, obj.name)
     save("ruins_bridges")
     preview("ruins_bridges", ruins, spread=8.0)
 
     reset_scene()
-    small = [(0.9, 0.22, 8.0, -6.0, 0.0, 0.0), (0.6, 0.16, -18.0, 10.0, 0.42, 0.25), (0.5, 0.13, 12.0, 22.0, -0.35, 0.3)]
+    # So o cristal grande: o diorama do lobby (launcher) ainda usa; a borda da arena usa o do kit (F96).
     large = [(2.6, 0.5, 5.0, -4.0, 0.0, 0.0), (1.7, 0.36, -22.0, 12.0, 0.7, 0.3), (1.3, 0.3, 15.0, 25.0, -0.6, 0.45),
              (1.0, 0.24, 28.0, -14.0, 0.2, -0.7), (0.8, 0.2, -10.0, -28.0, -0.55, -0.5)]
-    props = [build_crystal("crystal_small", small), build_crystal("crystal_large", large), build_pine(), build_watchtower(),
-             build_ballista()]
+    props = [build_crystal("crystal_large", large)]
     for obj in props:
         export(obj, obj.name)
     save("props_crystals")
@@ -1502,8 +1346,8 @@ def build_reinforced_chest_kit():
 
 def build_jungle_kit():
     reset_scene()
-    jungle = [build_outcrop("rock_outcrop_a", 1.0, 1.25), build_outcrop("rock_outcrop_b", 7.0, 1.0),
-              build_outcrop("rock_outcrop_c", 13.0, 1.45), build_pine_dark(), build_torch_post()]
+    # So a tocha: o diorama do lobby (launcher) ainda usa; a selva e a borda da arena usam o kit (F95, F96).
+    jungle = [build_torch_post()]
     for obj in jungle:
         export(obj, obj.name)
     save("jungle")

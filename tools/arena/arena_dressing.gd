@@ -38,10 +38,11 @@ const RIM: float = 41.3
 ## Floresta da borda (moldura do F40, PI 2026-10-11): fileiras de pinheiros nos lados N e O da
 ## metade A (a B e a rotacao), de RIM_SPAN.x a RIM_SPAN.y ao longo do lado, fora dos castelos.
 const RIM_FOREST_ROWS: Array[float] = [40.9, 41.9]
-const RIM_FOREST_STEP: float = 1.7
+## Passo e folga do F96: a copa de cartoes do kit_pine e mais larga que a do pine_dark do F40.
+const RIM_FOREST_STEP: float = 2.3
 const RIM_SPAN: Vector2 = Vector2(-38.5, 14.0)
 ## Folga entre pinheiro e enfeite/tocha da borda; poca da cascata tem folga propria.
-const RIM_CLEAR: float = 1.6
+const RIM_CLEAR: float = 2.4
 const FALLS_CLEAR: float = 4.2
 ## Tochas da borda, a cada RIM_TORCH_STEP ao longo do lado; luz em uma sim, outra nao.
 const RIM_TORCH_ROW: float = 40.5
@@ -55,7 +56,9 @@ const RIM_BARRICADES_A: Array[Array] = [
 const RIM_WATCHTOWER_A: Vector2 = Vector2(-41.6, -9)
 const RIM_BALLISTA_A: Vector2 = Vector2(-6, -41.2)
 ## Cascata de enfeite (decisao do PI 2026-10-10): poca no bastiao do canto NO (e SE, por
-## rotacao); desde o F56 (ADR-0012) cai num degrau curto e vira o riacho do vale.
+## rotacao); desde o F56 (ADR-0012) cai num degrau curto e vira o riacho do vale. No F96 a
+## cantaria e a cortina de agua do vertedouro (art/arena/build_rim_kit.py) vem nas coordenadas
+## do mundo do canto NO.
 const FALLS_A: Vector2 = Vector2(-43.0, -43.0)
 const CRYSTAL_MATERIALS: Array[String] = ["magenta", "cyan", "green"]
 
@@ -124,7 +127,6 @@ const SMOKE_AMOUNT: int = 64
 const SMOKE_LIFETIME: float = 8.0
 const SMOKE_SIZE: float = 3.0
 const PUFF_TEXTURE_SIZE: int = 64
-const WATERFALL_AMOUNT: int = 70
 
 # Luz e pos (SPEC-038; valores iniciais do guia, ajuste final na verificacao visual do PI).
 # F39 (PI 2026-10-10, sem toon): sombra mais macia, AO mais leve. F40 (PI 2026-10-11, realista e
@@ -252,13 +254,13 @@ func _build_rim_decor(flip: float) -> void:
 	var forest := _rim_forest_points()
 	for i: int in range(forest.size()):
 		var at := _world(forest[i], flip)
-		var pine := _asset(decor, RRB_ARENA + "pine_dark.glb", "Pine%s%d" % [tag, i])
+		var pine := _asset(decor, KIT + "kit_pine.glb", "Pine%s%d" % [tag, i])
 		var size := 0.9 + 0.5 * fposmod(at.x * 0.73 + at.z * 0.29, 1.0)
 		var basis := Basis(Vector3.UP, at.x * 0.37 + at.z * 0.61).scaled(Vector3.ONE * size)
 		pine.transform = Transform3D(basis, at)
 	var torches := _rim_torch_points()
 	for i: int in range(torches.size()):
-		var torch := _asset(decor, RRB_ARENA + "torch_post.glb", "Torch%s%d" % [tag, i])
+		var torch := _asset(decor, KIT + "kit_torch.glb", "Torch%s%d" % [tag, i])
 		var at := _world(torches[i], flip)
 		# Braco da tocha voltado para dentro da arena.
 		torch.transform = Transform3D(_tangent_basis(_inward(torches[i]) * flip), at)
@@ -269,13 +271,18 @@ func _build_rim_decor(flip: float) -> void:
 	for i: int in range(RIM_BARRICADES_A.size()):
 		var b: Array = RIM_BARRICADES_A[i]
 		var at := _world(b[0], flip)
-		var fence := _asset(decor, RRB_ARENA + "barricade.glb", "Barricade%s%d" % [tag, i])
+		var fence := _asset(decor, KIT + "kit_barricade.glb", "Barricade%s%d" % [tag, i])
 		fence.transform = Transform3D(Basis(Vector3.UP, deg_to_rad(b[1])), at)
-	var tower := _asset(decor, RRB_ARENA + "watchtower.glb", "Watchtower%s" % tag)
-	tower.position = _world(RIM_WATCHTOWER_A, flip)
-	var ballista := _asset(decor, RRB_ARENA + "ballista.glb", "Ballista%s" % tag)
+	var turn := Basis() if flip > 0 else Basis(Vector3.UP, PI)
+	# Escada da torre (+x do kit) virada para dentro da arena; a B gira junto.
+	var tower := _asset(decor, KIT + "kit_watchtower.glb", "Watchtower%s" % tag)
+	tower.transform = Transform3D(turn, _world(RIM_WATCHTOWER_A, flip))
+	var ballista := _asset(decor, KIT + "kit_ballista.glb", "Ballista%s" % tag)
 	var ballista_at := _world(RIM_BALLISTA_A, flip)
 	ballista.transform = Transform3D(Basis.looking_at(-ballista_at.normalized()), ballista_at)
+	for piece: String in ["kit_falls_curb", "kit_falls_sheet"]:
+		var label := "%s%s" % [piece.trim_prefix("kit_").to_pascal_case(), tag]
+		_asset(decor, KIT + piece + ".glb", label).transform = Transform3D(turn, Vector3.ZERO)
 
 
 ## Praca, props e folhagem da base de [param flip] (F94): a praca vem em coordenadas do mundo da
@@ -396,14 +403,11 @@ func _inward(p: Vector2) -> Vector3:
 	return Vector3(0, 0, 1) if absf(p.y) > absf(p.x) else Vector3(1, 0, 0)
 
 
-## Cristal arcano: material por variante (magenta, ciano, verde) em rodizio; so visual. [param kit]
-## usa o cristal do kit do meio do mapa (F95); sem ele, o da borda.
-func _crystal(
-	parent: Node3D, at: Vector3, large: bool, label: String, yaw: float, kit: bool = false
-) -> void:
+## Cristal arcano do kit (F95; a borda desde o F96): material por variante (magenta, ciano,
+## verde) em rodizio; so visual.
+func _crystal(parent: Node3D, at: Vector3, large: bool, label: String, yaw: float) -> void:
 	var size := "large" if large else "small"
-	var path := KIT + "kit_crystal_%s.glb" % size if kit else RRB_ARENA + "crystal_%s.glb" % size
-	var crystal := _asset(parent, path, label)
+	var crystal := _asset(parent, KIT + "kit_crystal_%s.glb" % size, label)
 	crystal.transform = Transform3D(Basis(Vector3.UP, yaw), at)
 	var variant: String = CRYSTAL_MATERIALS[_crystal_count % CRYSTAL_MATERIALS.size()]
 	_crystal_count += 1
@@ -455,7 +459,6 @@ func _build_ambience() -> void:
 		var lagoon_at := _world(LAGOON_A, flip) + Vector3.UP * 1.0
 		var lagoon_color := Color(0.3, 0.9, 1.0)
 		_light(ambience, "LagoonLight%s" % tag, lagoon_at, lagoon_color, LAGOON_LIGHT_RANGE, 1.1)
-		_waterfall(ambience, flip)
 		var torches := _rim_torch_points()
 		for i: int in range(0, torches.size(), 2):
 			var at := _world(torches[i], flip) + Vector3.UP * 2.5 + _inward(torches[i]) * flip * 0.5
@@ -560,32 +563,6 @@ func _lava_smoke(parent: Node3D) -> void:
 	_add(parent, particles)
 
 
-## Cascata de enfeite do bastiao do canto NO (flip 1) / SE (flip -1): degrau curto da poca para o
-## riacho do vale (F56).
-func _waterfall(parent: Node3D, flip: float) -> void:
-	var particles := GPUParticles3D.new()
-	particles.name = "Waterfall%s" % ("NO" if flip > 0 else "SE")
-	var outward := Vector3(-1, 0, -1).normalized() * flip
-	particles.position = _world(FALLS_A, flip) + outward * 1.6 + Vector3.UP * -0.4
-	particles.amount = WATERFALL_AMOUNT
-	particles.lifetime = 1.1
-	particles.preprocess = 1.1
-	var material := ParticleProcessMaterial.new()
-	material.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_BOX
-	material.emission_box_extents = Vector3(0.9, 0.2, 0.9)
-	material.direction = outward * 0.5 + Vector3.DOWN * 0.4
-	material.spread = 12.0
-	material.initial_velocity_min = 0.8
-	material.initial_velocity_max = 1.6
-	material.gravity = Vector3(0, -4.0, 0)
-	material.scale_min = 0.8
-	material.scale_max = 1.6
-	material.color = Color(0.5, 1.0, 0.95)
-	particles.process_material = material
-	particles.draw_pass_1 = _spark_mesh(0.22, Color(0.4, 1.0, 0.9))
-	_add(parent, particles)
-
-
 ## Sprite redondo e macio (alpha radial) para fumaca e brasa: [param glow] acende (aditivo,
 ## emissivo); sem ele a cor vem da rampa da particula e a luz da cena nao interfere (unshaded).
 func _puff_mesh(size: float, color: Color, glow: bool) -> QuadMesh:
@@ -624,22 +601,6 @@ func _puff_texture() -> GradientTexture2D:
 	texture.width = PUFF_TEXTURE_SIZE
 	texture.height = PUFF_TEXTURE_SIZE
 	return texture
-
-
-func _spark_mesh(size: float, color: Color) -> QuadMesh:
-	var mesh := QuadMesh.new()
-	mesh.size = Vector2(size, size)
-	var material := StandardMaterial3D.new()
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.vertex_color_use_as_albedo = true
-	material.albedo_color = color
-	material.emission_enabled = true
-	material.emission = color
-	material.emission_energy_multiplier = 2.0
-	mesh.material = material
-	return mesh
 
 
 # --- construtores ------------------------------------------------------------------------

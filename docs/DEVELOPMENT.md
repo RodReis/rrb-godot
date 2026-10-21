@@ -197,6 +197,21 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
     - `test_arena_colisao_fixa` (369 formas iguais; marcadores 65 → 69 pela decisão do PI);
     - frame time alternado: MID +0,02, centro −0,01, moita −0,02 e spawn −0,03 ms;
     - capturas em `docs/evidencias/f95/`.
+- [x] **F96** (#268) — **Arena nova, parte 3: borda da ilha e vale** (ADR-0030, SPEC-096).
+  - **Kit:** `art/arena/build_rim_kit.py` (Blender por script, reaproveita os helpers dos kits do F94 e do F95) gera em `shared/assets/rrb/arena/kit/`, todas com até 1.600 triângulos:
+    - tocha da borda (`kit_torch`);
+    - cavalo-de-frisa, torre de vigia (escada virada para a arena) e balista;
+    - cantaria e cortina d'água da poça dos bastiões NO/SE (`kit_falls_curb`, `kit_falls_sheet`, coordenadas do mundo do canto NO, a SE pela rotação);
+    - pinheiro leve do vale (`kit_pine_far`, 280 triângulos, só a copa).
+  - **Borda:** floresta com o `kit_pine` e cristais do kit (F95); passo da floresta 1,7 → 2,3 u e folga dos enfeites 1,6 → 2,4 u (a copa de cartões é mais larga). As partículas da cascata saíram.
+  - **Chassi e vale:** `build_island.py` abre um vertedouro da poça até o lábio; `build_valley.py` aprofunda o leito do riacho logo na beira (a água cai, não sobe), começa a fita do riacho depois da queda e grava pedras e juncos da margem no `valley_trees.json` (`arena_valley.gd` monta o `Valley/StreamBank`). Chão do vale com a rocha e o chão de floresta do kit (`valley_ground.tres`); a floresta do vale usa o `kit_pine_far` com `ambient_lift` no `foliage_wind.gdshader` (fora do bake).
+  - **Limpeza:** saíram `bridge_stone`, `boulder`, `rock_outcrop_*` (prometidos no F95), `pine_dark`, `pine_tree`, `pine_valley`, `barricade`, `watchtower`, `ballista`, `crystal_small` e os materiais `rock_moss`, `pine_foliage` e `valley_pine`. `torch_post` e `crystal_large` ficam (diorama do lobby do Launcher).
+  - **Ferramentas:** `scenery_capture.gd --poses=borda`; `frametime_probe.gd --intro` (mede a cinemática de abertura).
+  - **Prova:**
+    - `test_arena_rim.gd` (novo) e `test_arena_valley.gd`; `test_arena_colisao_fixa` igual (sem colisão nova);
+    - frame time alternado: borda +0,07, canto NO +0,01 e cinemática +0,08 ms;
+    - soak 50/50; rede 3/3 a 100 ms (0 `past the history limit`, warm-up de 446 instâncias, checkpoints 6/6);
+    - capturas em `docs/evidencias/f96/`. Verificação do PI aprovada em 2026-10-21.
 - [ ] **F29** — telemetria (ping médio, duração, líder F1 × vencedor, "teleportes" reportados) no backend; painel de KPIs no Histórico; `tools/export-matches.ps1`.
 - [ ] **F30** — ajustes de balanceamento (só `.tres`).
 - [ ] **[GATE] MVP4** — critérios PRD §9.2; decisões câmera/duração/3x3.

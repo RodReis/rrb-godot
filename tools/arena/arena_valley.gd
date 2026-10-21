@@ -1,22 +1,26 @@
 extends "arena_river.gd"
 ## Vale em volta da arena (F56, ADR-0012): faixa externa so visual no lugar do abismo. Relevo,
-## riacho e pinheiros saem de art/arena/build_valley.py (valley_terrain.glb, valley_stream.glb,
-## pine_valley.glb e tools/arena/valley_trees.json); aqui so se monta: o terreno e o riacho
-## entram na arena e as arvores vao como dado numa cena propria, que o ValleyForest transforma
-## em MultiMesh no cliente (o servidor de renderizacao headless nao guarda buffer de MultiMesh,
-## mesmo caso do Vegetation). Sem colisao, sem navmesh, fora do bake: o vale nao entra na regra.
+## riacho, arvores e margem saem de art/arena/build_valley.py (valley_terrain.glb,
+## valley_stream.glb e tools/arena/valley_trees.json); aqui so se monta: o terreno, o riacho e as
+## pedras e juncos da margem (kit do F95) entram na arena e as arvores (kit_pine_far, F96) vao
+## como dado numa cena propria, que o ValleyForest transforma em MultiMesh no cliente (o servidor
+## de renderizacao headless nao guarda buffer de MultiMesh, mesmo caso do Vegetation). Sem
+## colisao, sem navmesh, fora do bake: o vale nao entra na regra.
 
 const VALLEY_TERRAIN: String = RRB_ARENA + "valley_terrain.glb"
 const VALLEY_STREAM: String = RRB_ARENA + "valley_stream.glb"
 const TREES_FILE: String = "valley_trees.json"
 const FOREST_OUT: String = "res://scenes/arena/valley_forest.tscn"
 const FOREST_SCRIPT: String = "res://scripts/world/valley_forest.gd"
+## Peca da margem do riacho por kind do JSON (0 pedra, 1 junco).
+const STREAM_BANK: Array[String] = ["kit_bank_stones.glb", "kit_reeds.glb"]
 
 
 func _build_valley() -> void:
 	var valley := _group("Valley")
 	_asset(valley, VALLEY_TERRAIN, "Terrain")
 	_asset(valley, VALLEY_STREAM, "Stream")
+	_build_stream_bank(valley)
 	var trees := _load_valley_trees()
 	var node := Node3D.new()
 	node.name = "Forest"
@@ -32,15 +36,36 @@ func _build_valley() -> void:
 	_add(valley, (scene as PackedScene).instantiate())
 
 
+## Pedras e juncos da margem do riacho (x, y, z, escala, kind), giro pelo hash da posicao.
+func _build_stream_bank(valley: Node3D) -> void:
+	var bank := Node3D.new()
+	bank.name = "StreamBank"
+	_add(valley, bank)
+	var pieces: Array = _valley_data().get("banks", [])
+	for i: int in range(pieces.size()):
+		var piece: Array = pieces[i]
+		var at := Vector3(piece[0], piece[1], piece[2])
+		var node := _asset(bank, KIT + STREAM_BANK[int(piece[4])], "Bank%d" % i)
+		var yaw := TAU * _hash(Vector2(at.x, at.z) + Vector2(5.5, 1.1))
+		node.transform = Transform3D(Basis(Vector3.UP, yaw).scaled(Vector3.ONE * piece[3]), at)
+	print("[arena] margem do riacho do vale: %d pedras e juncos" % pieces.size())
+
+
 ## Arvores (x, y, z, escala) de tools/arena/valley_trees.json; vazio e erro (o vale sem floresta
 ## nao e o que o PI aprovou).
 func _load_valley_trees() -> PackedVector4Array:
+	var out := PackedVector4Array()
+	for tree: Array in _valley_data().get("trees", []):
+		out.append(Vector4(tree[0], tree[1], tree[2], tree[3]))
+	if out.is_empty():
+		push_error("[arena] %s sem arvores: rode art/arena/build_valley.py" % TREES_FILE)
+	return out
+
+
+func _valley_data() -> Dictionary:
 	var path := (get_script() as Script).resource_path.get_base_dir().path_join(TREES_FILE)
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	var out := PackedVector4Array()
-	if not parsed is Dictionary or not (parsed as Dictionary).has("trees"):
+	if not parsed is Dictionary:
 		push_error("[arena] %s invalido: rode art/arena/build_valley.py" % path)
-		return out
-	for tree: Array in (parsed as Dictionary)["trees"]:
-		out.append(Vector4(tree[0], tree[1], tree[2], tree[3]))
-	return out
+		return {}
+	return parsed

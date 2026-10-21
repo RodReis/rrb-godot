@@ -57,6 +57,19 @@ const POSES_MEIO: Array[Array] = [
 	["selva", "Rock0", Vector3(6.0, 4.0, 7.0)],
 	["margem", "Bank10", Vector3(4.0, 3.0, 5.0)],
 ]
+## --poses=borda: borda da ilha e vale (F96: antes x depois da arte nova). Prefixo vazio com 4o
+## item: camera fixa no 3o item olhando o 4o (cascata, bastiao, vale e vista aberta).
+const POSES_BORDA: Array[Array] = [
+	["torre", "WatchtowerA", Vector3(9.0, 6.0, 5.0)],
+	["balista", "BallistaA", Vector3(4.0, 5.0, 8.0)],
+	["frisa", "BarricadeA1", Vector3(3.0, 4.0, 6.0)],
+	["cristal", "CrystalA0", Vector3(7.0, 4.0, 4.0)],
+	["floresta", "TorchA1", Vector3(7.0, 4.5, 6.0)],
+	["cascata", "", Vector3(-39.5, 4.5, -39.5), Vector3(-46.5, -1.0, -46.5)],
+	["bastiao", "", Vector3(-58.0, 15.0, -22.0), Vector3(-44.0, -1.0, -40.0)],
+	["vale", "", Vector3(0.0, 16.0, 40.0), Vector3(0.0, 0.0, 70.0)],
+	["aberta", "", Vector3(0.0, 55.0, 75.0), Vector3(0.0, 0.0, 0.0)],
+]
 
 var _out: String = "scenery"
 var _poses: Array[Array] = POSES
@@ -77,6 +90,8 @@ func _initialize() -> void:
 			_poses = POSES_BASE
 		elif arg == "--poses=meio":
 			_poses = POSES_MEIO
+		elif arg == "--poses=borda":
+			_poses = POSES_BORDA
 	_main = (load(MAIN) as PackedScene).instantiate()
 	root.add_child(_main)
 	current_scene = _main
@@ -137,6 +152,9 @@ func _place(pose: Array) -> void:
 	var target := Vector3.ZERO
 	var offset: Vector3 = pose[2]
 	var prefix: String = pose[1]
+	if prefix == "" and pose.size() > 3:
+		_camera.look_at_from_position(offset, pose[3])
+		return
 	if prefix != "":
 		var found := _find(prefix)
 		if found == null:

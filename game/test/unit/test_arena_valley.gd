@@ -30,6 +30,17 @@ func test_arena_tem_terreno_riacho_e_floresta_do_vale() -> void:
 		assert_not_null(_arena.get_node_or_null("Valley/%s" % node_name), node_name)
 
 
+## F96: pedras e juncos na margem do riacho do vale, como no rio da arena (F95).
+func test_riacho_do_vale_tem_margem_do_kit() -> void:
+	var bank := _arena.get_node_or_null("Valley/StreamBank")
+	assert_not_null(bank)
+	if bank == null:
+		return
+	assert_gt(bank.get_child_count(), 30)
+	for node: Node in bank.get_children():
+		assert_string_starts_with(node.scene_file_path, "res://shared/assets/rrb/arena/kit/kit_")
+
+
 func test_vale_nao_tem_colisao() -> void:
 	var valley := _arena.get_node("Valley")
 	assert_eq(valley.find_children("*", "CollisionObject3D", true, false).size(), 0)
@@ -89,12 +100,17 @@ func test_group_by_tile_da_floresta_nao_perde_arvore() -> void:
 
 
 ## O _ready sai cedo no headless; _pine() e _tile() funcionam sem entrar na arvore.
+func test_pinheiro_do_vale_e_o_do_kit_com_o_material_do_vale() -> void:
+	assert_eq(ValleyForest.PINE_SCENE, "res://shared/assets/rrb/arena/kit/kit_pine_far.glb")
+	assert_false(FileAccess.file_exists("res://shared/assets/rrb/arena/pine_valley.glb"))
+
+
 func test_pinheiro_carrega_com_o_material_do_vale() -> void:
 	var pine := _forest._pine()
 	assert_not_null(pine)
 	var material := pine.get_active_material(0)
 	assert_not_null(material, "use_external do .import perdido: copa branca")
-	assert_eq(material.resource_path, "res://shared/resources/materials/valley_pine.tres")
+	assert_eq(material.resource_path, "res://shared/resources/materials/kit/kit_pine_far.tres")
 	pine.free()
 
 

@@ -15,6 +15,9 @@ uniform float roughness : hint_range(0.0, 1.0) = 0.75;
 uniform float specular_amount : hint_range(0.0, 1.0) = 0.3;
 // Luz que atravessa a folha no contraluz (fracao do albedo).
 uniform float backlight_amount : hint_range(0.0, 1.0) = 0.35;
+// Preenchimento de quem fica fora do bake e das sondas (floresta do vale, F96): multiplica o
+// albedo, como o ambient_lift do triplanar_pbr. 0 no resto da folhagem.
+uniform vec3 ambient_lift : source_color = vec3(0.0);
 
 group_uniforms vento;
 uniform vec2 wind_direction = vec2(0.8, 0.6);
@@ -50,4 +53,5 @@ void fragment() {
 	ROUGHNESS = roughness;
 	SPECULAR = specular_amount;
 	BACKLIGHT = ALBEDO * backlight_amount;
+	EMISSION = ALBEDO * ambient_lift;
 }
