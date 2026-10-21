@@ -57,6 +57,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0029](adr/0029-tutorial-e-resultado-offline-no-contrato.md) | Contrato: `--offline --tutorial` e `user://offline_result.cfg` (Game grava tipo e resultado do treino/tutorial; Launcher lê, apaga e envia ao backend para liberar a fila) | aceito | 2026-10-19 |
 | [0030](adr/0030-arena-estilo-eternal-return-no-blender.md) | Arena no estilo Eternal Return feita no Blender pelo Claude (PBR por UV ≤ 2K, folhagem por cartões com vento, até 1.600 tris por objeto); arena inteira em F94–F96 antes do playtest; emenda ADR-0006 itens 1 e 4 | aceito | 2026-10-20 |
 | [0031](adr/0031-escala-da-interface-do-jogo.md) | Escala da interface do jogo: `[ui] hud_scale` 0,70–1,00, padrão 0,85, aplicada em `root.content_scale_factor`; Launcher e ⚙ da partida gravam; emenda o §5.3 do contrato `settings.cfg` | aceito | 2026-10-21 |
+| [0032](adr/0032-carrasco-heroi-11.md) | Carrasco, 11º herói (Tanque): Couraça (−15 % de básico de herói), Dor, Espinhos, Penitência, Correntes do Julgamento com execução < 25 %; modelo realista do Tripo pago + Mixamo, nada do KayKit; supera a SPEC-093 (F93 cancelada) | aceito | 2026-10-21 |
 | [0028](adr/0028-skin-no-contrato-da-partida.md) | Skin na partida: o backend devolve heróis liberados e skin equipada na validação do token; game server replica; nada de skin por argumento do Launcher | aceito | 2026-10-19 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)

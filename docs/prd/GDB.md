@@ -66,7 +66,7 @@ $$\text{Velocidade de Ataque} \mathrel{+}= 60\% \times f \qquad \text{Roubo de V
 - O bônus de velocidade de ataque entra **depois** da fórmula D (multiplica o intervalo por $1/(1+0.6f)$). O roubo de vida cura o Berserker em $25\%\,f$ do dano **do ataque básico** efetivamente causado (depois da Defesa do alvo); skills não roubam vida.
 - Durante **Ragnarök** (§4.8), $f = 1$ independentemente do HP.
 - Nome **Frenesi** para não confundir com a passiva *Fúria* da Arma Épica (§6.1-A), que é outra regra.
-- Única passiva de herói do jogo; `HeroData.passive` (`PassiveData.FRENZY`), aplicada no `_rollback_tick` do próprio herói.
+- Primeira passiva de herói do jogo (a segunda é a Couraça do Carrasco, §4.11); `HeroData.passive` (`PassiveData.FRENZY`), aplicada no `_rollback_tick` do próprio herói.
 
 #### F. Maldição do Ocultista (debuff, ADR-0016, F77)
 $$\text{DEF}_{\text{efetiva}} = \max\!\left(0,\ \text{DEF} - m \times 6\right), \qquad m \in \{0, 1, 2, 3\}$$
@@ -462,6 +462,47 @@ O nível máximo é **10**. Cada nível concede 1 Ponto de Habilidade (Total: 9 
   - **Alvo:** o alvo travado do Ocultista, se houver e estiver a até $9.0\text{ u}$; senão o herói inimigo mais próximo a até $9.0\text{ u}$; senão o monstro mais próximo (boss incluído) a até $9.0\text{ u}$ — sempre **visível ao Ocultista** (§7.3). Sem alvo: seguem o Ocultista.
   - Podem ser alvo de ataques, skills e do alvo travado; morrem ao zerar o HP ou no fim da duração. **Matar um servo não dá nada** (sem XP, sem drop, não conta kill). **Dano e kill do servo contam para o Ocultista** (como a Torreta, §4.6). O ataque do servo não revela o Ocultista.
   - Cooldown Base: $[55.0, 46.0]\text{ s}$.
+
+---
+
+### 4.11 Carrasco (Tanque — Melee) — ADR-0032, SPEC-098
+- **Papel:** tanque que pune quem fica perto: segura dano canalizando a Penitência, prende com raiz e executa com as Correntes do Julgamento. 3º Tanque (com Cavaleiro §4.1 e Paladino §4.9).
+- **Modelo:** gerado pelo PI no Tripo (plano pago), realista, com rig e animações do Mixamo — **nada do KayKit** (ADR-0032). Espada e escudo do modelo; elmo de chifres.
+- **Velocidade Base:** $5.8\text{ u/s}$.
+- *Números aprovados pelo PI em 2026-10-21 como proposta, a conferir no soak do F98. Q e E escalam ATK (regra do §2.1).*
+
+#### Atributos Base e Crescimento
+| Atributo | Nível 1 | Ganho / Nível | Nível 10 (Sem Itens) |
+|---|---|---|---|
+| **HP** | 600 | +45 | 1005 |
+| **Defesa** | 26 | +2.6 | 49.4 |
+| **Ataque** | 42 | +3.6 | 74.4 |
+| **Inteligência** | 14 | +1.4 | 26.6 (CDR: 13.3%) |
+| **Agilidade** | 10 | +1.0 | 19 |
+
+#### Habilidades do Carrasco
+- **Passiva — Couraça:** dano de **ataque básico de herói** inimigo recebido $\times 0.85$, depois da Defesa (fórmula A). Servo, monstro, skills e zona não contam.
+- **Dor (recurso):** $+1$ por acerto do básico (herói, servo ou monstro) e $+1$ a cada $0.5\text{ s}$ canalizando a Penitência; máximo $6$; dura $6.0\text{ s}$ fora da Penitência (renova a cada ganho); a explosão da Penitência consome tudo.
+- **Ataque Básico (Espada):**
+  - Tipo: Melee em arco cônico ($70^\circ$, raio $2.2\text{ u}$).
+  - Cooldown: $1.0\text{ s}$.
+  - Dano: $100\%\text{ ATK}$.
+- **Q — Espinhos:**
+  - Golpe em cone $90^\circ$, raio $3.0\text{ u}$: dano e **lentidão $30\%$ por $1.5\text{ s}$** em todos os atingidos.
+  - **Recast** em até $3.0\text{ s}$: projétil de espinhos (velocidade $20\text{ u/s}$, alcance $7.0\text{ u}$, raio $0.4\text{ u}$), para no 1º alvo, sem lentidão, bloqueado pela Muralha.
+  - Cooldown Base: $[10.0, 9.5, 9.0, 8.5, 8.0]\text{ s}$, contado depois do recast ou do fim da janela.
+  - Dano (golpe): $[50, 80, 110, 140, 170] + (0.6 \times \text{ATK})$.
+  - Dano (recast): $[30, 50, 70, 90, 110] + (0.4 \times \text{ATK})$.
+- **E — Penitência:**
+  - Canaliza até $2.0\text{ s}$, **imóvel** (sem andar, atacar ou usar outra skill); **mitiga $40\%$** do dano recebido (depois da Defesa); pode encerrar antes apertando E. **Atordoamento cancela** sem explosão.
+  - Cura total: $[60, 90, 120, 150, 180] + (0.4 \times \text{ATK}) + 10 \times \text{Dor}$, distribuída pela canalização. Não passa do HP máximo.
+  - Fim: explosão de raio $3.0\text{ u}$, dano $[50, 80, 110, 140, 170] + (0.5 \times \text{ATK}) + 10 \times \text{Dor}$; **Dor $\geq 4$ → raiz $1.0\text{ s}$**, senão **lentidão $40\%$ por $1.5\text{ s}$**. Consome a Dor.
+  - Cooldown Base: $[14.0, 13.0, 12.0, 11.0, 10.0]\text{ s}$.
+- **R — Correntes do Julgamento (Ultimate, Nv 6+):**
+  - Projétil (velocidade $24\text{ u/s}$, alcance $6.0\text{ u}$) que para no 1º **herói**, bloqueado pela Muralha: dano e **raiz $[1.25, 1.5]\text{ s}$**; cria um **raio de luz de $2.5\text{ u}$** fixo no ponto do acerto pela mesma duração.
+  - **Execução:** enquanto a luz existir, alvo dentro dela com **HP $< 25\%$** morre (dano igual ao HP restante, ignora Defesa; kill do Carrasco). Imunidade a dano (Bênção Inviolável, §4.9) bloqueia; imunidade a controle (Ragnarök, §4.8) impede a raiz, não a execução.
+  - Cooldown Base: $[70.0, 60.0]\text{ s}$.
+  - Dano: $[120, 200] + (1.0 \times \text{INT})$.
 
 ---
 
