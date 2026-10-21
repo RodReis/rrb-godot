@@ -252,6 +252,8 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 	var woke := state == MonsterRules.State.IDLE and next == MonsterRules.State.CHASE
 	if woke and not provoked and _target != null:
 		_alert_camp(_target)
+	if state == MonsterRules.State.RESET and next == MonsterRules.State.IDLE:
+		global_basis = _home_basis  # chegou em casa: olha como nasceu, nao de costas (F95)
 	state = next
 	match state:
 		MonsterRules.State.CHASE:
