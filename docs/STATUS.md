@@ -134,7 +134,7 @@ Prosa curta. Detalhe histórico vai para `STATUS-ARQUIVO.md`. O **Índice Fatia 
 | F94 / SPEC-094 | MVP4 | game, shared, art | Slice 4.7 — Arena nova, parte 1: bases A e B da arena oficial com o kit do F84 (cor do time B dourada) e folhagem com vento; sai a variante do spike (ADR-0030) | todo (#266) |
 | F95 / SPEC-095 | MVP4 | game, shared, art | Slice 4.8 — Arena nova, parte 2: rio, lagoas, pontes, centro, rochas, selva, mato alto (mesma área e leitura) e chão (ADR-0030) | todo (#267) |
 | F96 / SPEC-096 | MVP4 | game, shared, art | Slice 4.9 — Arena nova, parte 3: borda da ilha (floresta, tochas, cristais, defesas, bastiões, cascatas) e vale (ADR-0030) | todo (#268) |
-| F97 / SPEC-097 | MVP4 | game, launcher, shared | Slice 4.10 — Escala da interface do jogo: `[ui] hud_scale` 70–120 %, padrão 85 %, no Launcher e no ⚙ da partida; `content_scale_factor` na raiz (ADR-0031) | doing (#272) |
+| F97 / SPEC-097 | MVP4 | game, launcher, shared | Slice 4.10 — Escala da interface do jogo: `[ui] hud_scale` 70–100 %, padrão 85 %, no Launcher e no ⚙ da partida; `content_scale_factor` na raiz (ADR-0031) | doing (#272) |
 | [GATE] | MVP4 | — | Playtest 10+ pessoas; critérios PRD §9.2; decisão câmera/duração/3x3; abrir ou não o EA | planejado (#255) |
 | F87 / SPEC-087 | MVP5 | backend, launcher, game, shared | Slice 5.1 — Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre; pick online validado no servidor (ADR-0026) | planejado (#256) |
 | F88 / SPEC-088 | MVP5 | backend, launcher, shared | Slice 5.2 — Recompensas de Patente e de login diário/semanal/mensal: emblemas e molduras de perfil (ADR-0025, ADR-0026) | planejado (#257) |

@@ -3,7 +3,8 @@ extends RefCounted
 ## Contrato user://settings.cfg (ARCHITECTURE-LAUNCHER §5.3): o Launcher escreve (F24), o Game le
 ## no boot. Valores num Dictionary secao -> chave -> valor, com os padroes de defaults(). Chave
 ## desconhecida e ignorada; tipo errado ou valor invalido vira o padrao (volume e sensibilidade
-## sao limitados a faixa; a distancia da camera fora da faixa volta ao padrao); schema diferente
+## sao limitados a faixa; a distancia da camera e a escala da interface fora da faixa voltam ao
+## padrao); schema diferente
 ## devolve os padroes e loga. Funcoes puras: rebind() devolve uma copia.
 
 const PATH: String = "user://settings.cfg"
@@ -51,6 +52,18 @@ const DISTANCE_MIN: float = 9.0
 const DISTANCE_MAX: float = 14.0
 const DISTANCE_STEP: float = 1.0
 const DISTANCE_DEFAULT: float = 11.0
+
+## [ui] da SPEC-097 (ADR-0031): escala da interface 2D do jogo (root.content_scale_factor).
+const UI: String = "ui"
+const HUD_SCALE: String = "hud_scale"
+const HUD_SCALE_MIN: float = 0.7
+## Teto 100 % (PI 2026-10-21): acima disso a area logica fica menor que a base 1920x1080 e a
+## selecao de herois sobrepoe os cartoes.
+const HUD_SCALE_MAX: float = 1.0
+const HUD_SCALE_STEP: float = 0.05
+const HUD_SCALE_DEFAULT: float = 0.85
+## Folga da faixa: o Range arredonda o passo em float (0,7 + 6 x 0,05 = 0,9999999999999999).
+const RANGE_EPSILON: float = 0.000001
 
 ## [training] do F81 (ADR-0021/0027): ultimo nivel do bot escolhido no Launcher (1..N de
 ## shared/data/rules/bot_levels.tres). O Launcher manda `--bot-difficulty`; o Game nao le a chave.
@@ -109,6 +122,7 @@ static func defaults() -> Dictionary:
 		CONTROLS: controls,
 		GRAPHICS: graphics,
 		CAMERA: {DISTANCE: DISTANCE_DEFAULT},
+		UI: {HUD_SCALE: HUD_SCALE_DEFAULT},
 		TRAINING: {BOT_DIFFICULTY: BotLevels.DEFAULT_NUMBER},
 	}
 
@@ -157,6 +171,14 @@ static func save_file(values: Dictionary, path: String = PATH) -> Error:
 	return write(values).save(path)
 
 
+## Grava so section/key, relendo o arquivo para nao desfazer o que o Launcher salvou: o Game grava
+## assim o zoom (F67) e a escala da interface (F97).
+static func save_value(section: String, key: String, value: Variant, path: String = PATH) -> Error:
+	var values := load_file(path)
+	values[section][key] = value
+	return save_file(values, path)
+
+
 static func keycode(values: Dictionary, action: StringName) -> Key:
 	return OS.find_keycode_from_string(values[CONTROLS][String(action)])
 
@@ -192,9 +214,11 @@ static func _valid(section: String, key: String, raw: Variant, fallback: Variant
 	if fallback is float:
 		if not (raw is float or raw is int):
 			return fallback
-		if section == CAMERA:  # fora da faixa nao e limitado: volta ao padrao (SPEC-067 §3)
-			var distance := float(raw)
-			return distance if distance >= DISTANCE_MIN and distance <= DISTANCE_MAX else fallback
+		# fora da faixa nao e limitado: volta ao padrao (SPEC-067 §3, SPEC-097)
+		if section == CAMERA:
+			return _in_range(float(raw), DISTANCE_MIN, DISTANCE_MAX, fallback)
+		if section == UI:
+			return _in_range(float(raw), HUD_SCALE_MIN, HUD_SCALE_MAX, fallback)
 		return _clamp_float(section, float(raw))
 	if typeof(raw) != typeof(fallback):
 		return fallback
@@ -206,6 +230,12 @@ static func _valid(section: String, key: String, raw: Variant, fallback: Variant
 	if section == VIDEO and key == WINDOW_MODE:
 		return raw if raw in WINDOW_MODES else fallback
 	return raw
+
+
+static func _in_range(value: float, low: float, high: float, fallback: float) -> float:
+	if value < low - RANGE_EPSILON or value > high + RANGE_EPSILON:
+		return fallback
+	return clampf(value, low, high)
 
 
 static func _clamp_float(section: String, value: float) -> float:

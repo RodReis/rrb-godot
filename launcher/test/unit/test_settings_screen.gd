@@ -148,6 +148,30 @@ func test_aba_de_controles_lista_e_remapeia_o_zoom_da_camera() -> void:
 	assert_not_null(_keycap("Z"))
 
 
+## SPEC-097 (ADR-0031): "Tamanho da interface na partida" vai de 70 a 100 %, abre em 85 % e
+## grava [ui] hud_scale ao salvar; restaurar padroes volta a 85 % (test_restaurar_padroes).
+func test_tamanho_da_interface_grava_a_escala_ao_salvar() -> void:
+	var sliders := _screen.find_children("*", "HSlider", true, false).filter(
+		func(node: Node) -> bool: return (node as HSlider).min_value == UserSettings.HUD_SCALE_MIN
+	)
+	assert_eq(sliders.size(), 1, "um slider de tamanho da interface")
+	var slider := sliders[0] as HSlider
+	assert_eq(slider.max_value, UserSettings.HUD_SCALE_MAX)
+	assert_almost_eq(slider.value, 0.85, 0.0001)
+	slider.value = 0.7
+	assert_almost_eq(_screen.draft()[UserSettings.UI][UserSettings.HUD_SCALE], 0.7, 0.0001)
+	var labels := _screen.find_children("*", "Label", true, false).filter(
+		func(node: Node) -> bool: return (node as Label).text == "70%"
+	)
+	assert_eq(labels.size(), 1, "valor em %")
+	var save := _screen.find_children("*", "Button", true, false).filter(
+		func(node: Node) -> bool: return (node as Button).theme_type_variation == &"LnButtonPrimary"
+	)
+	(save[0] as Button).pressed.emit()
+	var saved := SettingsStore.new(TMP_PATH).load_values()
+	assert_almost_eq(saved[UserSettings.UI][UserSettings.HUD_SCALE], 0.7, 0.0001)
+
+
 func test_salvar_nao_mexe_na_distancia_da_camera_do_rascunho() -> void:
 	var values := UserSettings.defaults()
 	values[UserSettings.CAMERA][UserSettings.DISTANCE] = 9.0

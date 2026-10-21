@@ -377,9 +377,10 @@ func start_client(host: String, port: int) -> void:
 	print("[client] NetworkTime sincronizado, tick %d" % NetworkTime.tick)
 
 
-## settings.cfg do Launcher (ARCHITECTURE-LAUNCHER §5.3, F24): controles, audio, video e a
-## sensibilidade do giro da camera. O [graphics] fica com a arena (GraphicsSettings). Headless
-## (servidor dedicado, testes) nao tem janela, audio nem jogador local: nao le o arquivo.
+## settings.cfg do Launcher (ARCHITECTURE-LAUNCHER §5.3, F24): controles, audio, video, escala
+## da interface (F97) e a sensibilidade do giro da camera. O [graphics] fica com a arena
+## (GraphicsSettings). Headless (servidor dedicado, testes) nao tem janela, audio nem jogador
+## local: nao le o arquivo.
 func _apply_user_settings() -> void:
 	if DisplayServer.get_name() == "headless":
 		return
@@ -390,6 +391,7 @@ func _apply_user_settings() -> void:
 	for arg: String in OS.get_cmdline_args():
 		cli_window = cli_window or arg.get_slice("=", 0) in WINDOW_ARGS
 	SettingsApplier.apply_video(values, get_window(), not cli_window)
+	SettingsApplier.apply_ui(values, get_window())
 	camera.orbit_sensitivity *= values[UserSettings.CONTROLS][UserSettings.MOUSE_SENSITIVITY]
 	camera.set_distance(values[UserSettings.CAMERA][UserSettings.DISTANCE])
 	camera.distance_changed.connect(_on_camera_distance_changed)
@@ -398,9 +400,7 @@ func _apply_user_settings() -> void:
 ## Zoom do jogador (SPEC-067): grava so a distancia, relendo o arquivo para nao desfazer o que o
 ## Launcher tenha salvo desde o boot. Falha ao gravar so avisa; o zoom da sessao segue valendo.
 func _on_camera_distance_changed(distance: float) -> void:
-	var values := UserSettings.load_file()
-	values[UserSettings.CAMERA][UserSettings.DISTANCE] = distance
-	var err := UserSettings.save_file(values)
+	var err := UserSettings.save_value(UserSettings.CAMERA, UserSettings.DISTANCE, distance)
 	if err != OK:
 		push_warning("[settings] zoom nao gravado: %s" % error_string(err))
 

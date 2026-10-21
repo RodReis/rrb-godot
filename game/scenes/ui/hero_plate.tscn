@@ -95,6 +95,25 @@ button_pressed = true
 text = "Aviso do chefão"
 flat = true
 
+[node name="HudScaleRow" type="HBoxContainer" parent="Gear/GearMenu/GearColumn"]
+layout_mode = 2
+
+[node name="HudScaleLabel" type="Label" parent="Gear/GearMenu/GearColumn/HudScaleRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tamanho da interface"
+
+[node name="HudScaleValue" type="Label" parent="Gear/GearMenu/GearColumn/HudScaleRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "85%"
+
+[node name="HudScale" type="HSlider" parent="Gear/GearMenu/GearColumn"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+focus_mode = 0
+
 [node name="GearButton" type="Button" parent="Gear"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(56, 56)

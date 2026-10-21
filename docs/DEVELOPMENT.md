@@ -212,6 +212,14 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
     - frame time alternado: borda +0,07, canto NO +0,01 e cinemática +0,08 ms;
     - soak 50/50; rede 3/3 a 100 ms (0 `past the history limit`, warm-up de 446 instâncias, checkpoints 6/6);
     - capturas em `docs/evidencias/f96/`. Verificação do PI aprovada em 2026-10-21.
+- [x] **F97** (#272) — **Escala da interface do jogo** (ADR-0031, SPEC-097, decisão do PI na verificação do F95).
+  - **Contrato:** `[ui] hud_scale` em `UserSettings`, de 0,70 a 1,00, passo 0,05, padrão 0,85. Fora da faixa, volta ao padrão. `UserSettings.save_value` grava uma chave relendo o arquivo; o zoom do F67 passou a usar.
+  - **Game:** `SettingsApplier.apply_ui` põe a escala em `root.content_scale_factor` no boot. Ela vale para toda a interface 2D; o 3D não muda.
+  - **Na partida:** a engrenagem do `HeroPlate` ganhou "Tamanho da interface". Enquanto arrasta, só o % muda; ao soltar, aplica e grava.
+  - **Launcher:** "Tamanho da interface na partida" fica no card de gráficos das Configurações.
+  - **Teto 100 %:** o PI decidiu em 2º pop-up, porque acima de 100 % a área lógica fica menor que 1920x1080 e a seleção de heróis sobrepõe os cartões.
+  - **Vitrines:** `hud_showcase`, `hero_select_showcase` e `match_end_showcase` aceitam `--ui-scale <x>`.
+  - **Prova:** testes de contrato, applier, engrenagem e Configurações; capturas a 70, 85 e 100 % em `docs/evidencias/f97/`.
 - [ ] **F29** — telemetria (ping médio, duração, líder F1 × vencedor, "teleportes" reportados) no backend; painel de KPIs no Histórico; `tools/export-matches.ps1`.
 - [ ] **F30** — ajustes de balanceamento (só `.tres`).
 - [ ] **[GATE] MVP4** — critérios PRD §9.2; decisões câmera/duração/3x3.

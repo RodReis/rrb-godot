@@ -4,6 +4,7 @@ extends SceneTree
 ## 2. Ferramenta de autoria (comparar com docs/prd/telas/HUD Moderno/screen.png, captura do
 ## roadmap), fora do jogo. Precisa de janela (nao roda em --headless). Uso, na raiz:
 ##   godot --path game --resolution 1920x1080 -s <repo>/tools/ui/hud_showcase.gd -- --out <pasta>
+## --ui-scale <x>: escala da interface (root.content_scale_factor, F97).
 ## Sai sozinha no fim. Relogio parado no inicio; o estado e de exemplo (nao vem de partida).
 
 ## Tudo carregado em tempo de execucao: script de SceneTree compila antes dos autoloads.
@@ -28,6 +29,9 @@ func _initialize() -> void:
 	var at := args.find("--out")
 	if at >= 0 and at + 1 < args.size():
 		_out_dir = args[at + 1]
+	at = args.find("--ui-scale")
+	if at >= 0 and at + 1 < args.size():  # escala da interface do jogo (F97, ADR-0031)
+		root.content_scale_factor = args[at + 1].to_float()
 	_run.call_deferred()
 
 

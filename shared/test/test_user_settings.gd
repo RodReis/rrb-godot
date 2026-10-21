@@ -248,6 +248,50 @@ func test_arquivo_sem_secao_camera_usa_o_padrao() -> void:
 	assert_eq(values[UserSettings.CAMERA][UserSettings.DISTANCE], UserSettings.DISTANCE_DEFAULT)
 
 
+## SPEC-097 (ADR-0031): escala da interface do jogo, 0,70 a 1,00, padrao 0,85.
+func test_escala_da_interface_padrao_85_por_cento() -> void:
+	assert_eq(UserSettings.defaults()[UserSettings.UI][UserSettings.HUD_SCALE], 0.85)
+	assert_eq(UserSettings.HUD_SCALE_DEFAULT, 0.85)
+	assert_eq(UserSettings.HUD_SCALE_MIN, 0.7)
+	assert_eq(UserSettings.HUD_SCALE_MAX, 1.0)
+
+
+func test_escala_da_interface_aceita_os_limites_e_o_passo_do_slider() -> void:
+	# 0,7 + 6 x 0,05 = 0,9999999999999999 e 20 x 0,05 (o Range arredonda assim): dentro da faixa
+	for good: float in [0.7, 1.0, 0.7 + 6 * 0.05, 20 * 0.05, 0.95]:
+		var values := UserSettings.read(_config(UserSettings.UI, {UserSettings.HUD_SCALE: good}))
+		assert_almost_eq(values[UserSettings.UI][UserSettings.HUD_SCALE], good, 0.0001, str(good))
+
+
+func test_escala_da_interface_fora_da_faixa_ou_texto_vira_padrao() -> void:
+	for wrong: Variant in [0.5, 0.69, 1.01, 1.2, 2.0, -1.0, "grande"]:
+		var values := UserSettings.read(_config(UserSettings.UI, {UserSettings.HUD_SCALE: wrong}))
+		assert_eq(values[UserSettings.UI][UserSettings.HUD_SCALE], 0.85, str(wrong))
+
+
+func test_arquivo_sem_secao_ui_usa_a_escala_padrao() -> void:
+	var values := UserSettings.read(_config(UserSettings.VIDEO, {UserSettings.VSYNC: false}))
+	assert_eq(values[UserSettings.UI][UserSettings.HUD_SCALE], 0.85)
+
+
+func test_escala_da_interface_faz_round_trip_pelo_arquivo() -> void:
+	var values := UserSettings.defaults()
+	values[UserSettings.UI][UserSettings.HUD_SCALE] = 0.95
+	assert_eq(UserSettings.save_file(values, TMP_PATH), OK)
+	assert_eq(UserSettings.load_file(TMP_PATH)[UserSettings.UI][UserSettings.HUD_SCALE], 0.95)
+
+
+## O Game grava uma chave so (zoom do F67, escala do F97) relendo o arquivo: o resto fica.
+func test_gravar_uma_chave_nao_desfaz_as_outras() -> void:
+	var values := UserSettings.defaults()
+	values[UserSettings.CAMERA][UserSettings.DISTANCE] = 13.0
+	assert_eq(UserSettings.save_file(values, TMP_PATH), OK)
+	assert_eq(UserSettings.save_value(UserSettings.UI, UserSettings.HUD_SCALE, 0.75, TMP_PATH), OK)
+	var after := UserSettings.load_file(TMP_PATH)
+	assert_eq(after[UserSettings.UI][UserSettings.HUD_SCALE], 0.75)
+	assert_eq(after[UserSettings.CAMERA][UserSettings.DISTANCE], 13.0)
+
+
 func test_teclas_de_zoom_sao_remapeaveis_com_padrao_igual_e_menos() -> void:
 	var values := UserSettings.defaults()
 	assert_eq(UserSettings.keycode(values, InputActions.CAMERA_ZOOM_IN), KEY_EQUAL)
