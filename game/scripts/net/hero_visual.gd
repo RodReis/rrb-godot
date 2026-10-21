@@ -141,8 +141,8 @@ func use_items(items: ItemVisuals) -> void:
 		_show_equipment(_hero.equipment)
 
 
-## Liga (ou desliga) o heroi translucido no mato alto. O jogo liga so para o heroi controlado neste cliente;
-## o runner headless liga a mao.
+## Liga (ou desliga) o heroi translucido no mato alto. O jogo liga so para o heroi controlado neste
+## cliente; o runner headless liga a mao.
 func use_cover_silhouette(enabled: bool) -> void:
 	_tracks_cover = enabled
 	if not enabled:

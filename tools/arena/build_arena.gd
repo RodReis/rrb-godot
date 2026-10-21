@@ -276,7 +276,9 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	for i: int in range(BASE_T1.size()):
 		var t1_at := _local(BASE_T1[i], flip)
 		_monster(markers, "T1%s%d" % [tag, i], t1_at, team, 1, &"skeleton_t1").basis = hero.basis
-	var t2 := _monster(markers, "T2%s" % tag, _local(BASE_T2, flip), team, 2, &"skeleton_warrior_t2")
+	var t2 := _monster(
+		markers, "T2%s" % tag, _local(BASE_T2, flip), team, 2, &"skeleton_warrior_t2"
+	)
 	t2.basis = hero.basis
 	for i: int in range(GATE_GUARDS_T1.size()):
 		var guard_at := _local(GATE_GUARDS_T1[i], flip)
@@ -284,7 +286,9 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 		guard.basis = Basis.looking_at(_rotate_if(OUTSIDE_FACING_A[i], flip))
 	var outside_first := BASE_CHESTS.size() - GATE_GUARDS_T1.size()
 	for i: int in range(BASE_CHESTS.size()):
-		var chest := _common_chest(markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team)
+		var chest := _common_chest(
+			markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team
+		)
 		if i >= outside_first:
 			chest.basis = Basis.looking_at(_rotate_if(OUTSIDE_FACING_A[i - outside_first], flip))
 	var fountain := _scene(FOUNTAIN_SCENE).instantiate() as Fountain
@@ -420,9 +424,7 @@ func _build_yard(walls: StaticBody3D, flip: float) -> void:
 	_tall_grass(lagoon_grass, YARD_GRASS_SIZE, Basis(), "GrassLagoon%s" % tag, "kit_grass_4x4")
 	for i: int in range(AMBUSH_GRASS_A.size()):
 		var ambush := _world(AMBUSH_GRASS_A[i], flip)
-		_tall_grass(
-			ambush, YARD_GRASS_SIZE, Basis(), "GrassAmbush%s%d" % [tag, i], "kit_grass_4x4"
-		)
+		_tall_grass(ambush, YARD_GRASS_SIZE, Basis(), "GrassAmbush%s%d" % [tag, i], "kit_grass_4x4")
 
 
 ## Muro em arco em volta do spawn, raio = spawn -> portao, com a abertura do portao, ate os
@@ -472,7 +474,9 @@ func _build_center(walls: StaticBody3D) -> void:
 		var golem_at := _polar(az, FIELD_RADIUS)
 		_monster(markers, "Golem%d" % i, golem_at, neutral, 3, &"golem_t3").basis = facing
 		var warrior_at := _polar(az + FIELD_SPREAD_DEG, FIELD_RADIUS)
-		var warrior := _monster(markers, "Warrior%d" % i, warrior_at, neutral, 2, &"skeleton_warrior_t2")
+		var warrior := _monster(
+			markers, "Warrior%d" % i, warrior_at, neutral, 2, &"skeleton_warrior_t2"
+		)
 		warrior.basis = facing
 		var mage_at := _polar(az - FIELD_SPREAD_DEG, FIELD_RADIUS)
 		_monster(markers, "Mage%d" % i, mage_at, neutral, 2, &"skeleton_mage_t2").basis = facing

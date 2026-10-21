@@ -28,9 +28,10 @@ const TEXTURE_AREAS: Dictionary[String, String] = {
 	"planks": "wood",
 }
 const TERRAIN_LAYERS: Array[String] = ["grass", "moss", "dirt", "paving", "rock"]
-## Chao no estilo novo (F95, ADR-0030): conjuntos PBR CC0 do Poly Haven em shared/assets/textures/kit/
-## (grass_ground, forest_ground_04, rocky_trail, cobblestone_floor_04, dark_rock) e repeticao por
-## u (1 / metros reais da textura). As rochas e a folhagem triplanar seguem nos conjuntos do F73.
+## Chao no estilo novo (F95, ADR-0030): conjuntos PBR CC0 do Poly Haven em
+## shared/assets/textures/kit/ (grass_ground, forest_ground_04, rocky_trail, cobblestone_floor_04,
+## dark_rock) e repeticao por u (1 / metros reais da textura). As rochas e a folhagem triplanar
+## seguem nos conjuntos do F73.
 const TERRAIN_SETS: Dictionary[String, String] = {
 	"grass": "kit/grass/grass",
 	"moss": "kit/forest/forest",

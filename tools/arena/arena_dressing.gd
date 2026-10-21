@@ -586,8 +586,8 @@ func _waterfall(parent: Node3D, flip: float) -> void:
 	_add(parent, particles)
 
 
-## Sprite redondo e macio (alpha radial) para fumaca e brasa: [param glow] acende (aditivo, emissivo);
-## sem ele a cor vem da rampa da particula e a luz da cena nao interfere (unshaded).
+## Sprite redondo e macio (alpha radial) para fumaca e brasa: [param glow] acende (aditivo,
+## emissivo); sem ele a cor vem da rampa da particula e a luz da cena nao interfere (unshaded).
 func _puff_mesh(size: float, color: Color, glow: bool) -> QuadMesh:
 	var mesh := QuadMesh.new()
 	mesh.size = Vector2(size, size)

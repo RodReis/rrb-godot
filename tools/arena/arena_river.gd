@@ -57,7 +57,9 @@ func _build_river_dressing() -> void:
 				continue
 			var s := lerpf(scale_range.x, scale_range.y, _hash(p + Vector2(2.2, 8.8)))
 			var piece := _asset(group, model, "Bank%d" % count)
-			var basis := Basis(Vector3.UP, TAU * _hash(p + Vector2(5.5, 1.1))).scaled(Vector3.ONE * s)
+			var basis := Basis(Vector3.UP, TAU * _hash(p + Vector2(5.5, 1.1))).scaled(
+				Vector3.ONE * s
+			)
 			piece.transform = Transform3D(basis, Vector3(p.x, _bank_height(d), p.y))
 			count += 1
 	print("[arena] margem do rio: %d pedras e juncos" % count)
@@ -94,6 +96,10 @@ func _on_bridge(p: Vector2) -> bool:
 		var axis := _flat(_polar(azimuth, 1.0))
 		var s := p.dot(axis)
 		var l := absf(p.dot(Vector2(-axis.y, axis.x)))
-		if s > RING_IN - BRIDGE_CLEAR and s < RING_OUT + BRIDGE_CLEAR and l <= BRIDGE_HALF + BRIDGE_CLEAR:
+		if (
+			s > RING_IN - BRIDGE_CLEAR
+			and s < RING_OUT + BRIDGE_CLEAR
+			and l <= BRIDGE_HALF + BRIDGE_CLEAR
+		):
 			return true
 	return false

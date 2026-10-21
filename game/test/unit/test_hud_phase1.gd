@@ -41,8 +41,8 @@ func _node(path: String) -> Node:
 	return _hud.get_node(path)
 
 
-## Contador da fase 1 com a arena real (F36, F55): 28 baus, 38 monstros (sem o boss; +4 guardas do portao no F95); morto sai
-## da conta e o renascido volta.
+## Contador da fase 1 com a arena real (F36, F55): 28 baus, 38 monstros (sem o boss; +4 guardas do
+## portao no F95); morto sai da conta e o renascido volta.
 func test_loot_counter_counts_lateral_fields_and_respawned_monsters() -> void:
 	add_child_autofree(ARENA.instantiate())
 	var spawns := add_child_autofree(SpawnDirector.new()) as SpawnDirector
