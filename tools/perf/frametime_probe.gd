@@ -28,6 +28,8 @@ extends SceneTree
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
 ## --at=<x>,<z>: o heroi controlado fica nesse ponto do mundo a medicao inteira (F95: MID e centro).
 ## --shot=<arquivo.png>: grava o viewport do jogo (so ele, nunca a tela) no meio da medicao.
+## --intro: mede a cinematica de abertura (F69, visao aberta da ilha e do vale; F96): sem
+## aquecimento, de quando os herois nascem (na INTRO) ate INTRO_SECONDS.
 ## Sai com 1 se os herois nao nascerem em SPAWN_TIMEOUT segundos.
 
 const MAIN: String = "res://scenes/main.tscn"
@@ -37,6 +39,8 @@ const SPAWN_TIMEOUT: float = 60.0
 ## Depois do spawn: compila o que faltar e deixa a camera chegar no heroi.
 const WARMUP_SECONDS: float = 5.0
 const MEASURE_SECONDS: float = 30.0
+## Voo da IntroCamera ate o close no heroi (~5,5 s ate o blend; F69).
+const INTRO_SECONDS: float = 5.0
 const P99: float = 0.99
 ## Nova nuvem antes de a anterior (3 s) acabar.
 const SMOKE_SECONDS: float = 2.5
@@ -97,6 +101,7 @@ var _patch: Node3D
 ## --at: ponto onde o heroi fica; NAN = sem --at.
 var _at: Vector3 = Vector3(NAN, 0, NAN)
 var _shot: String = ""
+var _intro: bool = false
 var _turret_wait: float = 0.0
 var _shot_wait: float = 0.0
 var _crate_wait: float = 0.0
@@ -127,6 +132,8 @@ func _initialize() -> void:
 			_at = Vector3(xz[0], 0, xz[1])
 		elif arg.begins_with("--shot="):
 			_shot = arg.trim_prefix("--shot=")
+		elif arg == "--intro":
+			_intro = true
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = 0
 	var main := (load(MAIN) as PackedScene).instantiate()
@@ -167,7 +174,7 @@ func _process(delta: float) -> bool:
 				push_error("[frametime] herois nao nasceram em %.0f s" % SPAWN_TIMEOUT)
 				quit(1)
 		1:
-			if _elapsed >= WARMUP_SECONDS:
+			if _intro or _elapsed >= WARMUP_SECONDS:
 				_next_phase()
 		2:
 			_cpu_ms.append(delta * 1000.0)
@@ -176,10 +183,11 @@ func _process(delta: float) -> bool:
 			)
 			if gpu > 0.0:  # 0 = sem medicao neste quadro
 				_gpu_ms.append(gpu)
-			if _shot != "" and _elapsed >= MEASURE_SECONDS / 2.0:
+			var length := INTRO_SECONDS if _intro else MEASURE_SECONDS
+			if _shot != "" and _elapsed >= length / 2.0:
 				root.get_viewport().get_texture().get_image().save_png(_shot)
 				_shot = ""
-			if _elapsed >= MEASURE_SECONDS:
+			if _elapsed >= length:
 				_report()
 				quit(0)
 	return false

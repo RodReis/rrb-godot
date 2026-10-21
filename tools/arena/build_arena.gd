@@ -720,8 +720,7 @@ func _rock(walls: StaticBody3D, at: Vector3, label: String) -> void:
 		at + Vector3(cos(yaw) * 0.25, 2.55, sin(yaw) * 0.25),
 		false,
 		label + "Crystal",
-		yaw,
-		true
+		yaw
 	)
 
 

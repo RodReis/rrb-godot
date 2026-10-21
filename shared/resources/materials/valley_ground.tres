@@ -2,11 +2,11 @@
 
 [ext_resource type="Shader" path="res://shared/shaders/triplanar_pbr.gdshader" id="1_d63on"]
 [ext_resource type="Texture2D" path="res://shared/assets/kaykit/medieval_hexagon/hexagons_medieval.png" id="2_2wwo1"]
-[ext_resource type="Texture2D" path="res://shared/assets/textures/rock/rock_albedo.jpg" id="3_bcbdy"]
-[ext_resource type="Texture2D" path="res://shared/assets/textures/rock/rock_normal.jpg" id="4_7v6lx"]
-[ext_resource type="Texture2D" path="res://shared/assets/textures/rock/rock_rough.jpg" id="5_qbsog"]
-[ext_resource type="Texture2D" path="res://shared/assets/textures/terrain/moss_albedo.jpg" id="6_246ox"]
-[ext_resource type="Texture2D" path="res://shared/assets/textures/terrain/moss_normal.jpg" id="7_i4avl"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/kit/cliff/cliff_albedo.jpg" id="3_bcbdy"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/kit/cliff/cliff_normal.jpg" id="4_7v6lx"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/kit/cliff/cliff_rough.jpg" id="5_qbsog"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/kit/forest/forest_albedo.jpg" id="6_246ox"]
+[ext_resource type="Texture2D" path="res://shared/assets/textures/kit/forest/forest_normal.jpg" id="7_i4avl"]
 
 [resource]
 render_priority = 0
@@ -14,13 +14,13 @@ shader = ExtResource("1_d63on")
 shader_parameter/base_albedo = ExtResource("3_bcbdy")
 shader_parameter/base_normal = ExtResource("4_7v6lx")
 shader_parameter/base_rough = ExtResource("5_qbsog")
-shader_parameter/base_tile = 0.12
+shader_parameter/base_tile = 0.14
 shader_parameter/base_tint = Color(0.7, 0.72, 0.75, 1)
 shader_parameter/min_roughness = null
 shader_parameter/specular_amount = null
 shader_parameter/moss_albedo = ExtResource("6_246ox")
 shader_parameter/moss_normal = ExtResource("7_i4avl")
-shader_parameter/moss_tile = 0.22
+shader_parameter/moss_tile = 0.2
 shader_parameter/moss_tint = Color(0.5, 0.62, 0.4, 1)
 shader_parameter/moss_from = 0.55
 shader_parameter/moss_amount = 0.92

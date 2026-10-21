@@ -8,7 +8,8 @@ extends Node3D
 ## servidor headless o node sai da arvore no _ready, sem alocar nada.
 
 const TILE_SIZE: float = 40.0
-const PINE_SCENE: String = "res://shared/assets/rrb/arena/pine_valley.glb"
+## Pinheiro leve de cartoes (F96, art/arena/build_rim_kit.py): so a copa, uma superficie.
+const PINE_SCENE: String = "res://shared/assets/rrb/arena/kit/kit_pine_far.glb"
 
 ## Uma arvore por item: (x, y, z, escala uniforme). O giro sai de um hash da posicao.
 @export var trees: PackedVector4Array = PackedVector4Array()
@@ -57,7 +58,7 @@ func _tile(key: Vector2i, data: PackedVector4Array, pine: MeshInstance3D) -> Mul
 	var node := MultiMeshInstance3D.new()
 	node.name = "Tile_%d_%d" % [key.x, key.y]
 	node.multimesh = multi
-	# O material externo do .import (valley_pine.tres) fica no node, nao na malha.
+	# O material externo do .import (kit_pine_far.tres) fica no node, nao na malha.
 	node.material_override = pine.get_active_material(0)
 	# Sem sombra (o sol so projeta ate 65 u e a copa ja e escura) e fora do bake e das sondas.
 	node.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF

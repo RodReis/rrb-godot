@@ -10,9 +10,9 @@ const JUNGLE_JSON: String = "../tools/arena/jungle.json"
 const CAPSULE_RADIUS: float = 0.4
 const CAPSULE_HEIGHT: float = 1.8
 const LIFT: float = 0.05
-## Pegada horizontal da rocha com escala 1 (art/arena/build_island.py: raio >= 1,05 no pe).
+## Pegada horizontal da rocha com escala 1 (art/arena/build_world_kit.py: raio >= 1,05 no pe).
 const OUTCROP_FOOT: float = 1.05
-## Altura minima do modelo da rocha com escala 1 (art/arena/build_island.py, rock_outcrop_*).
+## Altura minima do modelo da rocha com escala 1 (art/arena/build_world_kit.py, kit_outcrop_*).
 const OUTCROP_MIN_HEIGHT: float = 1.35
 const SAMPLE_STEP: float = 0.5
 

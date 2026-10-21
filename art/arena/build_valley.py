@@ -1,7 +1,8 @@
 """Vale em volta da arena (F56, ADR-0012): faixa externa so visual que substitui o abismo da
 Ilha Flutuante. Relevo (piso de floresta, encostas e cristas), riacho que sai da poca do canto
-NO/SE e o pinheiro leve da floresta, em .glb (ADR-0005); mais as posicoes das arvores em JSON
-para o builder da arena (tools/arena/arena_valley.gd).
+NO/SE, em .glb (ADR-0005); mais as posicoes das arvores e da margem do riacho em JSON para o
+builder da arena (tools/arena/arena_valley.gd). O pinheiro e o kit_pine_far (build_rim_kit.py, F96)
+e a margem usa as pedras e os juncos do kit do meio do mapa (F95).
 
 Reusa as medidas e utilidades do build_island.py (mesmas coordenadas do Godot: x leste, y para
 cima, z sul, origem no centro da cratera). Nenhuma malha traz colisao nem navmesh: o vale fica
@@ -11,7 +12,7 @@ a malha comeca exatamente no contorno do labio, na mesma altura (sem fresta).
 Uso (na raiz do repo):
   blender --background --factory-startup --python art/arena/build_valley.py -- <repo>
 Saida: art/arena/valley.blend (fonte), art/arena/preview_valley.png, shared/assets/rrb/arena/
-valley_terrain.glb, valley_stream.glb, pine_valley.glb e tools/arena/valley_trees.json.
+valley_terrain.glb, valley_stream.glb e tools/arena/valley_trees.json.
 """
 import json
 import math
@@ -51,6 +52,9 @@ STREAM_BED_HALF = 1.6
 STREAM_BANK = 2.4
 STREAM_DEPTH = 0.75
 STREAM_STEP = 1.2
+# A fita do riacho comeca no leito, depois da queda do vertedouro (a cortina kit_falls_sheet cobre
+# o canal e a queda e emenda nela).
+STREAM_FROM_SD = bi.LIP + 1.0
 POND_RADIUS = 4.2
 POND_BANK = 3.2
 POND_DEPTH = 1.1
@@ -68,6 +72,14 @@ TREE_NEAR_FACTOR = 0.32
 TREE_SINK = 0.25
 TREE_CLEAR_STREAM = 3.0
 TREE_CLEAR_POND = 6.5
+
+# Margem do riacho (F96): a cada BANK_STEP u dos dois lados da fita e em volta da lagoa, pedra
+# (kind 0) ou junco (kind 1) do kit, a BANK_OFFSET u alem da agua; o resto fica vazio.
+BANK_STEP = 0.9
+BANK_OFFSET = (0.15, 0.9)
+BANK_STONE_CHANCE = 0.34
+BANK_REED_CHANCE = 0.3
+BANK_SCALE = ((0.7, 1.5), (0.8, 1.3))
 
 
 def smooth(a, b, x):
@@ -146,7 +158,8 @@ def height(x, z):
     ground = LIP_Y + (roll + rise + detail - beyond - LIP_Y) * smooth(FLOOR_RAMP[0], FLOOR_RAMP[1], sd) \
         if sd < FLOOR_RAMP[1] else roll + rise + detail - beyond
     for path, pond in zip(STREAMS, PONDS):
-        along = smooth(0.0, 3.0, bi.island_sd(x, z) - bi.LIP)
+        # Leito fundo ja logo depois do labio: a agua do vertedouro da poca cai nele (F96).
+        along = smooth(0.0, 1.0, bi.island_sd(x, z) - bi.LIP)
         c = path_distance(x, z, path)
         carve = STREAM_DEPTH * (1.0 - smooth(STREAM_BED_HALF, STREAM_BED_HALF + STREAM_BANK, c)) * along
         pd = math.hypot(x - pond[0], z - pond[1])
@@ -183,9 +196,10 @@ def build_terrain():
         vecs, [], [list(range(n_out)), list(range(n_out, n_out + n_lip))], 2, 1e-5)
     kit = bi.Kit("valley_terrain")
     for c in coords:
-        # O labio fica exatamente na altura do labio da ilha (sem degrau na emenda).
+        # O labio fica exatamente na altura do labio da ilha (sem degrau na emenda; no vertedouro
+        # da poca o labio desce com o canal).
         on_lip = bi.island_sd(c.x, c.y) < bi.LIP + 0.01
-        kit.verts.append((c.x, LIP_Y if on_lip else height(c.x, c.y), c.y))
+        kit.verts.append((c.x, bi.island_height(c.x, c.y) if on_lip else height(c.x, c.y), c.y))
     for f in faces:
         kit.faces.append(tuple(f))
         kit.cells.append((bi.GRASS, (0.5, 0.5)))
@@ -224,6 +238,7 @@ def build_stream(probe):
     kit = bi.Kit("valley_stream")
     pieces = []
     for path, pond in zip(STREAMS, PONDS):
+        path = [q for q in path if bi.island_sd(q[0], q[1]) >= STREAM_FROM_SD]
         strip = []
         for k, (x, z) in enumerate(path):
             a, b = path[min(k + 1, len(path) - 1)], path[max(k - 1, 0)]
@@ -279,17 +294,6 @@ def build_stream(probe):
     return face_up(obj)
 
 
-def build_pine_valley():
-    """Pinheiro leve da floresta do vale: tronco e 4 saias de galhos (~110 triangulos), ~4,6 u.
-    Mesma celula/material do pine_dark (pine_foliage.tres no .import)."""
-    kit = bi.Kit("pine_valley")
-    kit.add(bi.prism(0, 0, 0.0, 1.5, 0.22, 0.12, 6, jitter=0.02, seed=31), bi.BROWN_DARK, (0.3, 0.6))
-    layers = ((0.7, 1.6, 1.5), (1.6, 1.25, 1.4), (2.5, 0.9, 1.3), (3.3, 0.55, 1.3))
-    for k, (y, r, h) in enumerate(layers):
-        kit.add(bi.star_cone(y, y + h, r, 7, 37.0 * k, 40.0 + k), bi.GREEN_DARK, (0.25, 0.75))
-    return bi.build(kit)
-
-
 def scatter_trees(probe):
     trees = []
     n = int(OUTER / TREE_STEP)
@@ -317,24 +321,64 @@ def scatter_trees(probe):
     return trees
 
 
+def bank_piece(x, z, probe, out):
+    """Pedra ou junco em (x, z), sorteado pelo hash da posicao (sem RNG: sai igual a cada rodada)."""
+    roll = hash01(x + 4.4, z + 1.9)
+    if roll < BANK_STONE_CHANCE:
+        kind = 0
+    elif roll > 1.0 - BANK_REED_CHANCE:
+        kind = 1
+    else:
+        return
+    y, _ny = probe(x, z)
+    if y is None:
+        return
+    lo, hi = BANK_SCALE[kind]
+    scale = lo + (hi - lo) * hash01(x + 2.2, z + 8.8)
+    out.append([round(x, 2), round(y, 2), round(z, 2), round(scale, 2), kind])
+
+
+def scatter_banks(probe):
+    """Margem dos dois riachos: dos dois lados da fita (so onde ela existe, depois da queda) e em
+    volta da lagoa."""
+    banks = []
+    for path, pond in zip(STREAMS, PONDS):
+        path = [q for q in path if bi.island_sd(q[0], q[1]) >= STREAM_FROM_SD]
+        for a, b in zip(path, path[1:]):
+            tx, tz = b[0] - a[0], b[1] - a[1]
+            length = math.hypot(tx, tz)
+            nx, nz = -tz / length, tx / length
+            for k in range(max(1, int(length / BANK_STEP))):
+                cx, cz = a[0] + tx * k * BANK_STEP / length, a[1] + tz * k * BANK_STEP / length
+                for side in (-1.0, 1.0):
+                    off = STREAM_HALF + BANK_OFFSET[0] + (BANK_OFFSET[1] - BANK_OFFSET[0]) * hash01(cx * side, cz)
+                    bank_piece(cx + nx * off * side, cz + nz * off * side, probe, banks)
+        count = int(2 * math.pi * POND_RADIUS / BANK_STEP)
+        for k in range(count):
+            a = 2 * math.pi * k / count
+            r = POND_RADIUS + BANK_OFFSET[0] + (BANK_OFFSET[1] - BANK_OFFSET[0]) * hash01(pond[0] + k, pond[1])
+            bank_piece(pond[0] + math.cos(a) * r, pond[1] + math.sin(a) * r, probe, banks)
+    return banks
+
+
 def main():
     os.makedirs(bi.OUT, exist_ok=True)
     bi.reset_scene()
     terrain = build_terrain()
     probe = surface_probe(terrain)
     stream = build_stream(probe)
-    pine = build_pine_valley()
     trees = scatter_trees(probe)
+    banks = scatter_banks(probe)
     with open(TREES_JSON, "w", encoding="utf-8", newline="\n") as f:
-        json.dump({"trees": trees}, f, separators=(",", ":"))
+        json.dump({"trees": trees, "banks": banks}, f, separators=(",", ":"))
         f.write("\n")
-    for obj, name in ((terrain, "valley_terrain"), (stream, "valley_stream"), (pine, "pine_valley")):
+    for obj, name in ((terrain, "valley_terrain"), (stream, "valley_stream")):
         bi.export(obj, name)
     bi.save("valley")
-    pine.location = Vector((200.0, 0.0, 0.0))  # fora do quadro da previa
     bi.preview("valley", [terrain, stream], top=True)
     print("[valley] triangulos: " + ", ".join("%s %d" % (k, v) for k, v in bi.TRIS.items()))
-    print("[valley] arvores: %d -> %s" % (len(trees), TREES_JSON))
+    print("[valley] arvores: %d, margem: %d -> %s" % (len(trees), len(banks), TREES_JSON))
 
 
-main()
+if __name__ == "__main__":
+    main()
