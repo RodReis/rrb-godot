@@ -6,6 +6,12 @@ extends SceneTree
 
 const OUT: String = "res://scenes/arena/ilha_arcana.tscn"
 const RRB_ARENA: String = "res://shared/assets/rrb/arena/"
+## Kit das bases no estilo Eternal Return (ADR-0030, F94): art/arena/build_castle_kit.py.
+const KIT: String = RRB_ARENA + "kit/"
+## Tecido do time (estandarte, escudo, flamula): ciano no kit; a base B troca pelo dourado
+## (SPEC-007 §5).
+const CLOTH_A: String = "kit_cloth.tres"
+const CLOTH_B: String = "res://shared/resources/materials/kit/kit_cloth_b.tres"
 const GATE_SCENE: String = "res://scenes/world/gate.tscn"
 const FOUNTAIN_SCENE: String = "res://scenes/world/fountain.tscn"
 const MATERIALS: String = "res://shared/resources/materials/"
@@ -52,6 +58,59 @@ const RIM_BALLISTA_A: Vector2 = Vector2(-6, -41.2)
 ## rotacao); desde o F56 (ADR-0012) cai num degrau curto e vira o riacho do vale.
 const FALLS_A: Vector2 = Vector2(-43.0, -43.0)
 const CRYSTAL_MATERIALS: Array[String] = ["magenta", "cyan", "green"]
+
+# Decoracao das bases (F94, ADR-0030; posicoes do spike F84), metade A em (x, z) do mundo; a B e
+# a rotacao de 180 graus. Sem colisao: rente a muro e casa, fora do spawn, dos baus, dos monstros
+# e da fonte.
+const BASE_SPAWN_A: Vector2 = Vector2(-24, 24)
+## [asset, (x, z), yaw em graus; NAN = +x virado para o spawn da base].
+const BASE_PROPS_A: Array[Array] = [
+	["kit_banner", Vector2(-18.66, 13.58), NAN],
+	["kit_banner", Vector2(-13.58, 18.66), NAN],
+	["kit_lantern", Vector2(-26.87, 12.73), NAN],
+	["kit_lantern", Vector2(-12.73, 26.87), NAN],
+	["kit_lantern", Vector2(-26.30, 21.78), NAN],
+	["kit_lantern", Vector2(-21.78, 26.30), NAN],
+	["kit_rack", Vector2(-29.13, 25.45), NAN],
+	["kit_rack", Vector2(-25.45, 29.13), NAN],
+	["kit_barrel", Vector2(-32.94, 18.37), 0.0],
+	["kit_barrel", Vector2(-33.60, 19.10), 40.0],
+	["kit_crate", Vector2(-32.70, 17.30), 15.0],
+	["kit_barrel", Vector2(-18.37, 32.94), 0.0],
+	["kit_crate", Vector2(-17.30, 32.70), -20.0],
+	["kit_crate", Vector2(-19.20, 33.70), 35.0],
+	["kit_cart", Vector2(-33.20, 32.60), 120.0],
+	["kit_banner", Vector2(-29.20, 30.20), NAN],
+	["kit_barrel", Vector2(-34.70, 29.00), 10.0],
+	["kit_crate", Vector2(-29.00, 34.60), 5.0],
+]
+## Folhagem solta (x, z): [asset, posicao].
+const BASE_FOLIAGE_A: Array[Array] = [
+	["kit_shrub", Vector2(-39.0, 21.5)],
+	["kit_shrub", Vector2(-21.5, 39.0)],
+	["kit_bush", Vector2(-34.0, 34.0)],
+	["kit_bush", Vector2(-38.0, 28.5)],
+	["kit_bush", Vector2(-28.5, 38.0)],
+	["kit_flowers", Vector2(-34.8, 24.3)],
+	["kit_flowers", Vector2(-34.9, 30.2)],
+	["kit_flowers", Vector2(-31.0, 34.8)],
+	["kit_flowers", Vector2(-24.3, 34.8)],
+]
+## Folhagem rente ao arco por dentro: raio e azimute (graus) a partir da direcao spawn -> centro
+## (-80 e a fonte), alternando moita e arbusto alto.
+const BASE_RING_RADIUS: float = 11.6
+const BASE_RING_DEG: Array[float] = [-46.0, -24.0, 24.0, 46.0, 80.0]
+const BASE_RING_ASSETS: Array[String] = ["kit_bush", "kit_shrub"]
+## Touceiras floridas em (s, l) da base: ao lado da fonte e dos postes do spawn.
+const BASE_FLOWERS_LOCAL: Array[Vector2] = [
+	Vector2(33.5, 12.0), Vector2(34.5, 4.2), Vector2(34.5, -4.2)
+]
+## Escala-base por asset (a touceira florida baixa sumia na camera do jogo; PI 2026-10-20).
+const FOLIAGE_SCALE: Dictionary[String, float] = {"kit_flowers": 1.4}
+## Vidro da lanterna no espaco do prop (build_castle_kit.py, build_props) e a luz dela.
+const LANTERN_GLASS: Vector3 = Vector3(0.55, 2.18, 0.0)
+const LANTERN_LIGHT_RANGE: float = 5.5
+const LANTERN_LIGHT_ENERGY: float = 1.0
 
 # Ambientacao (cliente): luzes e particulas.
 const MAGMA_LIGHT_RANGE: float = 12.0
@@ -101,6 +160,8 @@ const PROBE_CENTER: Vector3 = Vector3(0, 6, 0)
 var _root: Node3D
 var _scenes: Dictionary = {}
 var _crystal_count: int = 0
+## Vidros das lanternas das bases (mundo); o _build_ambience acende uma luz em cada.
+var _lanterns: Array[Vector3] = []
 
 # --- ambiente e luz (F38), enfeite (F40): beira da ilha, sem colisao -------------------------
 
@@ -210,6 +271,76 @@ func _build_rim_decor(flip: float) -> void:
 	var ballista := _asset(decor, RRB_ARENA + "ballista.glb", "Ballista%s" % tag)
 	var ballista_at := _world(RIM_BALLISTA_A, flip)
 	ballista.transform = Transform3D(Basis.looking_at(-ballista_at.normalized()), ballista_at)
+
+
+## Praca, props e folhagem da base de [param flip] (F94): a praca vem em coordenadas do mundo da
+## base A e gira 180 graus na B; props com o tecido do time.
+func _build_base_dressing(flip: float) -> void:
+	var tag := _team_tag(flip)
+	var group := _group("BaseDecor")
+	var turn := Basis() if flip > 0 else Basis(Vector3.UP, PI)
+	_asset(group, KIT + "kit_plaza.glb", "Plaza%s" % tag).transform = Transform3D(
+		turn, Vector3.ZERO
+	)
+	var spawn := BASE_SPAWN_A * flip
+	for i: int in range(BASE_PROPS_A.size()):
+		var spec: Array = BASE_PROPS_A[i]
+		var asset: String = spec[0]
+		var at: Vector2 = spec[1] * flip
+		var yaw: float = spec[2]
+		var angle := (
+			_yaw_to(at, spawn) if is_nan(yaw) else deg_to_rad(yaw) + (0.0 if flip > 0 else PI)
+		)
+		var where := Transform3D(Basis(Vector3.UP, angle), Vector3(at.x, 0, at.y))
+		var label := "%s%s%d" % [asset.trim_prefix("kit_").capitalize(), tag, i]
+		var prop := _asset(group, KIT + asset + ".glb", label)
+		prop.transform = where
+		_team_cloth(prop, flip)
+		if asset == "kit_lantern":
+			_lanterns.append(where * LANTERN_GLASS)
+	var spots: Array[Array] = BASE_FOLIAGE_A.duplicate()
+	var to_center := (-BASE_SPAWN_A).normalized()
+	for i: int in range(BASE_RING_DEG.size()):
+		var ring := (
+			BASE_SPAWN_A + to_center.rotated(deg_to_rad(BASE_RING_DEG[i])) * BASE_RING_RADIUS
+		)
+		spots.append([BASE_RING_ASSETS[i % BASE_RING_ASSETS.size()], ring])
+	for local: Vector2 in BASE_FLOWERS_LOCAL:
+		spots.append(["kit_flowers", _flat(AXIS_A * local.x + LATERAL * local.y)])
+	for i: int in range(spots.size()):
+		var asset: String = spots[i][0]
+		var at: Vector2 = spots[i][1] * flip
+		var size := 0.85 + 0.35 * fposmod(absf(at.x) * 0.37 + absf(at.y) * 0.61, 1.0)
+		size *= FOLIAGE_SCALE.get(asset, 1.0)
+		var basis := Basis(Vector3.UP, at.x * 1.3 + at.y * 0.7).scaled(Vector3.ONE * size)
+		var label := "%s%s%d" % [asset.trim_prefix("kit_").capitalize(), tag, i]
+		_asset(group, KIT + asset + ".glb", label).transform = Transform3D(
+			basis, Vector3(at.x, 0, at.y)
+		)
+
+
+## Yaw que vira o +x do prop (braco da lanterna, frente do estandarte) para [param target].
+func _yaw_to(at: Vector2, target: Vector2) -> float:
+	var dir := target - at
+	return atan2(-dir.y, dir.x)
+
+
+## Base B: o tecido do time (kit_cloth) vira dourado. Instancia editavel: o override fica gravado
+## na cena empacotada.
+func _team_cloth(node: Node3D, flip: float) -> void:
+	if flip > 0:
+		return
+	var cloth := load(CLOTH_B) as Material
+	var edited := false
+	for child: Node in node.find_children("*", "MeshInstance3D", true, false):
+		var mi := child as MeshInstance3D
+		for i: int in range(mi.get_surface_override_material_count()):
+			var active := mi.get_active_material(i)
+			if active != null and active.resource_path.ends_with(CLOTH_A):
+				if not edited:
+					_root.set_editable_instance(node, true)
+					edited = true
+				mi.set_surface_override_material(i, cloth)
 
 
 ## Pontos da floresta da borda (metade A): duas fileiras com passo e recuo variados por posicao,
@@ -322,6 +453,10 @@ func _build_ambience() -> void:
 			var color := Color(1.0, 0.6, 0.25)
 			var label := "RimTorch%s%d" % [tag, i]
 			_light(ambience, label, at, color, TORCH_LIGHT_RANGE, RIM_TORCH_LIGHT_ENERGY)
+	for i: int in range(_lanterns.size()):
+		var color := Color(1.0, 0.66, 0.34)
+		var label := "Lantern%d" % i
+		_light(ambience, label, _lanterns[i], color, LANTERN_LIGHT_RANGE, LANTERN_LIGHT_ENERGY)
 	_embers(ambience)
 
 

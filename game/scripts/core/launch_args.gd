@@ -14,8 +14,6 @@ extends RefCounted
 ## --token=<match_token>: o cliente online apresenta o token da partida ao servidor (contrato com
 ## o Launcher, ARCHITECTURE-LAUNCHER §5.2). --no-backend: servidor dedicado de dev, sem backend:
 ## admite qualquer peer e nao reporta resultado (fora do contrato com o Launcher).
-## --arena=<variante>: cena variante da arena (dev, F84; fora do contrato com o Launcher); so as
-## de ARENA_VARIANTS, qualquer outro valor = a oficial.
 
 const DEFAULT_PORT: int = 7000
 const MAX_PORT: int = 65535
@@ -37,10 +35,6 @@ const HERO_PAIR_SIZE: int = 2
 ## --intro-ready-delay=S: o cliente atrasa o ready da cinematica de abertura em S segundos (dev,
 ## F69: prova o corte aos 8 s com um dos dois atrasado).
 const DEFAULT_INTRO_READY_DELAY: float = 0.0
-## --arena: variantes aceitas (nome -> cena); a oficial e a de main.tscn.
-const ARENA_VARIANTS: Dictionary[String, String] = {
-	"spike_f84": "res://scenes/arena/spike_f84.tscn",
-}
 
 
 static func parse(args: PackedStringArray) -> Dictionary:
@@ -65,7 +59,6 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"probe": false,
 		"token": "",
 		"no_backend": false,
-		"arena": "",
 	}
 	for arg: String in args:
 		if arg == "--server":
@@ -93,9 +86,6 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["probe"] = true
 		elif arg == "--no-backend":
 			result["no_backend"] = true
-		elif arg.begins_with("--arena="):
-			var name := arg.trim_prefix("--arena=")
-			result["arena"] = name if ARENA_VARIANTS.has(name) else ""
 		elif arg.begins_with("--token="):
 			result["token"] = arg.trim_prefix("--token=")
 		elif arg.begins_with("--level="):
@@ -123,11 +113,6 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			if parts.size() > 1:
 				result["port"] = _port_or_default(parts[1])
 	return result
-
-
-## Cena da variante [param arena]; vazio = a oficial.
-static func arena_scene(arena: String) -> String:
-	return ARENA_VARIANTS.get(arena, "")
 
 
 ## Dois ids separados por virgula; qualquer outra forma = vazio (padrao do slot).

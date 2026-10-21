@@ -38,6 +38,7 @@ func _initialize() -> void:
 	for flip: float in [1.0, -1.0]:
 		_build_base(walls, flip)
 		_build_yard(walls, flip)
+		_build_base_dressing(flip)
 		_build_corner_field(flip)
 		_build_rim_decor(flip)
 	_build_center(walls)
@@ -243,11 +244,11 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	var tag := _team_tag(flip)
 	for i: int in range(BASE_WALLS.size()):
 		var seg: Array = BASE_WALLS[i]
-		_wall(walls, _local(seg[0], flip), _local(seg[1], flip), "W%s%d" % [tag, i], tag)
+		_wall(walls, _local(seg[0], flip), _local(seg[1], flip), "W%s%d" % [tag, i], INNER_WALL)
 	var arc_ends := _build_base_arc(walls, flip, tag)
 	for i: int in range(CLOSURE_WALLS_A.size()):
 		var seg: Array = CLOSURE_WALLS_A[i]
-		_wall(walls, _world(seg[0], flip), _world(seg[1], flip), "Close%s%d" % [tag, i], tag)
+		_wall(walls, _world(seg[0], flip), _world(seg[1], flip), "Close%s%d" % [tag, i])
 	var gate_basis := _tangent_basis(_rotate_if(LATERAL, flip))
 	var gate_at := _local(Vector2(GATE_S, 0), flip)
 	var gate := (_scene(GATE_SCENE).instantiate()) as Gate
@@ -289,9 +290,9 @@ func _build_castle(
 	arc_ends: Array[Vector3]
 ) -> void:
 	var castle := _group("Castle")
-	var kit := tag.to_lower()
-	var frame := _asset(castle, RRB_ARENA + "castle_gate_%s.glb" % kit, "Portal%s" % tag)
+	var frame := _asset(castle, KIT + "kit_gate.glb", "Portal%s" % tag)
 	frame.transform = Transform3D(gate_basis, gate_at)
+	_team_cloth(frame, flip)
 	var towers: Array[Vector3] = [
 		_local(Vector2(GATE_S, GATE_TOWER_L), flip), _local(Vector2(GATE_S, -GATE_TOWER_L), flip)
 	]
@@ -299,21 +300,27 @@ func _build_castle(
 	for seg: Array in CURTAIN_A:
 		towers.append(_world(seg[0], flip))
 	for i: int in range(towers.size()):
-		var tower := _asset(castle, RRB_ARENA + "castle_tower_%s.glb" % kit, "Tower%s%d" % [tag, i])
+		var tower := _asset(castle, KIT + "kit_tower.glb", "Tower%s%d" % [tag, i])
 		tower.transform = Transform3D(Basis().scaled(Vector3.ONE * TOWER_SCALE), towers[i])
+		_team_cloth(tower, flip)
 	for i: int in range(CURTAIN_A.size()):
 		var seg: Array = CURTAIN_A[i]
-		_curtain(_world(seg[0], flip), _world(seg[1], flip), "Curtain%s%d" % [tag, i], tag)
-	var keep := _asset(castle, RRB_ARENA + "castle_keep_%s.glb" % kit, "Keep%s" % tag)
+		_curtain(_world(seg[0], flip), _world(seg[1], flip), "Curtain%s%d" % [tag, i])
+	var keep := _asset(castle, KIT + "kit_keep.glb", "Keep%s" % tag)
 	var keep_basis := _tangent_basis(_rotate_if(LATERAL, flip)).scaled(Vector3.ONE * KEEP_SCALE)
 	keep.transform = Transform3D(keep_basis, _world(KEEP_A, flip))
+	_team_cloth(keep, flip)
 	for i: int in range(HOUSES_LOCAL.size()):
 		var spec: Array = HOUSES_LOCAL[i]
 		var at := _local(spec[0], flip)
 		var yaw: float = spec[1]
 		var basis := _tangent_basis(_rotate_if(LATERAL, flip)).rotated(Vector3.UP, yaw)
-		var house := _asset(castle, RRB_ARENA + "stone_house.glb", "House%s%d" % [tag, i])
+		var house := _asset(castle, KIT + "kit_house_stone.glb", "House%s%d" % [tag, i])
 		house.transform = Transform3D(basis, at)
+		var plants := _asset(
+			castle, KIT + "kit_house_stone_plants.glb", "HousePlants%s%d" % [tag, i]
+		)
+		plants.transform = house.transform
 		var box := BoxShape3D.new()
 		box.size = Vector3(HOUSE_HALF.x * 2, HOUSE_HEIGHT, HOUSE_HALF.y * 2)
 		var shape := _shape(walls, box, at + Vector3.UP * HOUSE_HEIGHT / 2)
@@ -329,8 +336,11 @@ func _build_village(walls: StaticBody3D, flip: float, tag: String) -> void:
 		var yaw: float = spec[2] + (0.0 if flip > 0 else 180.0)
 		var basis := Basis(Vector3.UP, deg_to_rad(yaw))
 		var at := _world(spec[1], flip)
-		var node := _asset(_group("Village"), RRB_ARENA + asset + ".glb", "Village%s%d" % [tag, i])
+		var node := _asset(_group("Village"), KIT + asset + ".glb", "Village%s%d" % [tag, i])
 		node.transform = Transform3D(basis, at)
+		if VILLAGE_PLANTS.has(asset):
+			var label := "VillagePlants%s%d" % [tag, i]
+			_asset(_group("Village"), KIT + VILLAGE_PLANTS[asset], label).transform = node.transform
 		var box: AABB = VILLAGE_BOXES[asset]
 		var shape := BoxShape3D.new()
 		shape.size = box.size
@@ -410,8 +420,7 @@ func _build_base_arc(walls: StaticBody3D, flip: float, tag: String) -> Array[Vec
 				walls,
 				_local(prev, flip),
 				_local(next, flip),
-				"Arc%s%s%d" % [tag, "L" if side > 0 else "R", i],
-				tag
+				"Arc%s%s%d" % [tag, "L" if side > 0 else "R", i]
 			)
 			prev = next
 			i += 1
@@ -636,7 +645,9 @@ func _overlap(corners: PackedVector2Array, axis: Vector2, span: Vector2) -> floa
 # --- construtores de colisao e marcadores -------------------------------------------------
 
 
-func _wall(walls: StaticBody3D, a: Vector3, b: Vector3, label: String, tag: String) -> void:
+func _wall(
+	walls: StaticBody3D, a: Vector3, b: Vector3, label: String, model: String = "kit_wall"
+) -> void:
 	var dir := (b - a).normalized()
 	var length := a.distance_to(b)
 	var basis := Basis(Vector3.UP, atan2(-dir.z, dir.x))
@@ -645,20 +656,21 @@ func _wall(walls: StaticBody3D, a: Vector3, b: Vector3, label: String, tag: Stri
 	var mid := (a + b) / 2
 	var shape := _shape(walls, box, mid + Vector3.UP * WALL_HEIGHT / 2)
 	shape.basis = basis
-	_curtain(a, b, label, tag)
+	_curtain(a, b, label, model)
 
 
-## Visual de muralha (castle_wall) entre [param a] e [param b], sem colisao propria: modulos de
-## WALL_MODULE repetidos, cada um ajustado so no proprio eixo X para fechar o vao (#130: escala
-## global cisalhava muro diagonal e engrossava muro ao longo de Z; um modulo por vao esticava).
-func _curtain(a: Vector3, b: Vector3, label: String, tag: String) -> void:
+## Visual de muralha ([param model] do kit: muralha ou mureta) entre [param a] e [param b], sem
+## colisao propria: modulos de WALL_MODULE repetidos, cada um ajustado so no proprio eixo X para
+## fechar o vao (#130: escala global cisalhava muro diagonal e engrossava muro ao longo de Z; um
+## modulo por vao esticava).
+func _curtain(a: Vector3, b: Vector3, label: String, model: String = "kit_wall") -> void:
 	var dir := (b - a).normalized()
 	var length := a.distance_to(b)
 	var count := maxi(1, roundi(length / WALL_MODULE))
 	var piece := length / count
 	var stretch := Basis.from_scale(Vector3(piece / WALL_MODULE, 1, 1))
 	var basis := Basis(Vector3.UP, atan2(-dir.z, dir.x)) * stretch
-	var path := RRB_ARENA + "castle_wall_%s.glb" % tag.to_lower()
+	var path := KIT + model + ".glb"
 	for i: int in range(count):
 		var visual := _asset(_group("Castle"), path, label if count == 1 else "%s_%d" % [label, i])
 		visual.transform = Transform3D(basis, a + dir * piece * (i + 0.5))

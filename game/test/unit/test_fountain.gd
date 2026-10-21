@@ -117,8 +117,8 @@ func test_heroi_ve_a_fonte_aberta_so_na_fase_1() -> void:
 	assert_false(_hero.fountain_open, "TRANSITION")
 
 
-## F64 (PI 2026-10-13): fonte remodelada no Blender (prop ate 800 triangulos), pedra PBR CC0 do
-## castelo e agua com o shader do F63; colisao igual (cilindro r 0,85 x h 1,2).
+## F64 (PI 2026-10-13) refeita no kit do F94 (ADR-0030: ate 1.600 triangulos por objeto): pedra
+## PBR CC0 do kit e agua com o shader do F63; colisao igual (cilindro r 0,85 x h 1,2).
 func test_modelo_com_pedra_realista_e_agua_do_f63() -> void:
 	var scene := (load(FOUNTAIN) as PackedScene).instantiate()
 	var mesh := scene.get_node("Model").find_children("*", "MeshInstance3D")[0] as MeshInstance3D
@@ -129,10 +129,11 @@ func test_modelo_com_pedra_realista_e_agua_do_f63() -> void:
 		tris += (
 			(mesh.mesh.surface_get_arrays(surface)[Mesh.ARRAY_INDEX] as PackedInt32Array).size() / 3
 		)
-	assert_eq(paths, ["castle_stone.tres", "fountain_water.tres"])
-	var water := mesh.get_active_material(1) as ShaderMaterial
+	assert_has(paths, "kit_stone.tres")
+	assert_has(paths, "fountain_water.tres")
+	var water := mesh.get_active_material(paths.find("fountain_water.tres")) as ShaderMaterial
 	assert_eq(water.shader.resource_path, "res://shared/shaders/arcane_river.gdshader")
-	assert_between(tris, 50, 800, "orcamento de prop (ADR-0006)")
+	assert_between(tris, 50, 1600, "orcamento de objeto (ADR-0030)")
 	var shape := scene.get_node("Body/Shape") as CollisionShape3D
 	var cylinder := shape.shape as CylinderShape3D
 	assert_almost_eq(cylinder.radius, 0.85, 0.001, "colisao igual")

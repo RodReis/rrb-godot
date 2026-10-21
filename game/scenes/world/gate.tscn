@@ -1,8 +1,8 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/world/gate.gd" id="1_gate"]
-[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/castle_door_l.glb" id="2_door_l"]
-[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/castle_door_r.glb" id="3_door_r"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/kit/kit_door_l.glb" id="2_door_l"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/arena/kit/kit_door_r.glb" id="3_door_r"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gate"]
 size = Vector3(5, 3, 1)

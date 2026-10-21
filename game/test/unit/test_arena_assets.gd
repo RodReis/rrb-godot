@@ -63,19 +63,33 @@ func test_moitas_usam_o_asset_do_tamanho_certo() -> void:
 	assert_eq(counts, {"tall_grass_4x4.glb": 8, "tall_grass_4x3.glb": 2})
 
 
-## Kit do F46 (decisao do PI 2026-10-10): torreao por time no canto e casas de pedra na base.
+## Kit do F46 (decisao do PI 2026-10-10) no estilo do ADR-0030 (F94): torreao por time no canto,
+## casas de pedra na base, praca e portal nas duas bases.
 func test_torreao_por_time_e_casas_na_base() -> void:
-	assert_eq(_instances_of("castle_keep_a.glb").size(), 1)
-	assert_eq(_instances_of("castle_keep_b.glb").size(), 1)
-	assert_eq(_instances_of("stone_house.glb").size(), 4)
+	assert_eq(_instances_of("kit/kit_keep.glb").size(), 2)
+	assert_eq(_instances_of("kit/kit_house_stone.glb").size(), 4)
+	assert_eq(_instances_of("kit/kit_plaza.glb").size(), 2)
+	assert_eq(_instances_of("kit/kit_gate.glb").size(), 2)
+
+
+## F94: o tecido do time (estandarte, escudo, flamula) e ciano na base A e dourado na B.
+func test_tecido_do_time_por_base() -> void:
+	for keep: Node3D in _instances_of("kit/kit_keep.glb"):
+		var files: Array[String] = []
+		for node: Node in keep.find_children("*", "MeshInstance3D", true, false):
+			var mi := node as MeshInstance3D
+			for i: int in range(mi.get_surface_override_material_count()):
+				files.append(mi.get_active_material(i).resource_path.get_file())
+		var expected := "kit_cloth.tres" if keep.global_position.x < 0.0 else "kit_cloth_b.tres"
+		assert_has(files, expected, "%s" % keep.name)
 
 
 ## #130: o modulo de muralha (2 u) so muda de comprimento no proprio eixo X: sem cisalhamento
 ## nem espessura/altura alteradas (escala global num muro diagonal ou ao longo de Z deformava a
 ## peca), e repetido em vez de esticado (uma peca por vao de 28,5 u virava rampa lisa).
 func test_muralha_em_modulos_sem_deformar() -> void:
-	var modules := _instances_of("castle_wall_a.glb")
-	modules.append_array(_instances_of("castle_wall_b.glb"))
+	var modules := _instances_of("kit/kit_wall.glb")
+	modules.append_array(_instances_of("kit/kit_wall_low.glb"))
 	assert_gt(modules.size(), 0)
 	for node: Node3D in modules:
 		var basis := node.global_basis
@@ -86,12 +100,12 @@ func test_muralha_em_modulos_sem_deformar() -> void:
 		assert_lt(basis.x.length(), MAX_WALL_STRETCH, "esticado: " + label)
 
 
-## F50 (PI 2026-10-11): patio de cada base com construcoes do MegaKit (2 casas de 2 andares,
-## 2 casinhas, 1 canto de carroca e caixotes) e caixa de colisao coberta pela malha.
-func test_patio_com_construcoes_do_megakit_cobrindo_a_colisao() -> void:
+## F50 (PI 2026-10-11) no kit do F94: patio de cada base com 2 sobrados, 2 casinhas e 1 galpao,
+## e a caixa de colisao do MegaKit coberta pela malha nova.
+func test_patio_cobrindo_a_colisao() -> void:
 	await wait_physics_frames(1)
 	var expected := {
-		"megakit_house_long.glb": 4, "megakit_house_small.glb": 4, "megakit_yard_corner.glb": 2
+		"kit/kit_house_long.glb": 4, "kit/kit_house_small.glb": 4, "kit/kit_yard.glb": 2
 	}
 	var boxes: Array[AABB] = []
 	for child: Node in _arena.get_node("Walls").get_children():
@@ -121,7 +135,7 @@ func test_duas_pontes_de_pedra_e_um_piso_unico() -> void:
 func test_terreno_e_cenario_com_material_realista() -> void:
 	var expected := {
 		"island_chassis.glb": "terrain.tres",
-		"castle_wall_a.glb": "castle_stone.tres",
+		"kit/kit_wall.glb": "kit_stone.tres",
 		"rock_outcrop_a.glb": "rock_moss.tres",
 		"pine_dark.glb": "pine_foliage.tres",
 	}
@@ -131,8 +145,10 @@ func test_terreno_e_cenario_com_material_realista() -> void:
 		var mi := (
 			instances[0].find_children("*", "MeshInstance3D", true, false)[0] as MeshInstance3D
 		)
-		var material := mi.get_active_material(0)
-		assert_true(material.resource_path.ends_with(expected[file]), "%s: %s" % [file, material])
+		var paths: Array[String] = []
+		for i: int in range(mi.get_surface_override_material_count()):
+			paths.append(mi.get_active_material(i).resource_path.get_file())
+		assert_has(paths, expected[file], file)
 	var terrain := load("res://shared/resources/materials/terrain.tres") as ShaderMaterial
 	var splat := terrain.get_shader_parameter("splat_map") as Texture2D
 	assert_not_null(splat, "rode o builder (mascara do terreno)")

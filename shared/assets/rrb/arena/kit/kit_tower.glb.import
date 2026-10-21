@@ -1,0 +1,123 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://b84s8wvgr1ps1"
+path="res://.godot/imported/kit_tower.glb-ca708f6acd3df31238dffa9ab672dd1a.scn"
+
+[deps]
+
+source_file="res://shared/assets/rrb/arena/kit/kit_tower.glb"
+dest_files=["res://.godot/imported/kit_tower.glb-ca708f6acd3df31238dffa9ab672dd1a.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+mesh_library/use_node_names_as_mesh_names=false
+array_mesh/deduplicate_surfaces=true
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=2
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"materials": {
+"fountain_water": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/fountain_water.tres",
+"use_external/path": "res://shared/resources/materials/fountain_water.tres"
+},
+"kit_blossom": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_blossom.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_blossom.tres"
+},
+"kit_cloth": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_cloth.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_cloth.tres"
+},
+"kit_cloth_b": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_cloth_b.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_cloth_b.tres"
+},
+"kit_cobble": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_cobble.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_cobble.tres"
+},
+"kit_door": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_door.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_door.tres"
+},
+"kit_foliage": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_foliage.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_foliage.tres"
+},
+"kit_glow": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_glow.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_glow.tres"
+},
+"kit_hay": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_hay.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_hay.tres"
+},
+"kit_metal": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_metal.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_metal.tres"
+},
+"kit_planks": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_planks.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_planks.tres"
+},
+"kit_plaster": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_plaster.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_plaster.tres"
+},
+"kit_roof": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_roof.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_roof.tres"
+},
+"kit_rubble": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_rubble.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_rubble.tres"
+},
+"kit_stone": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://shared/resources/materials/kit/kit_stone.tres",
+"use_external/path": "res://shared/resources/materials/kit/kit_stone.tres"
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1
+gltf/texture_map_mode=0
