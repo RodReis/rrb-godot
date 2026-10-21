@@ -38,9 +38,9 @@ const POSES: Array[Array] = [
 	["grama", "", GRASS_STANDOFF],
 	["vale", "", VALLEY_AT],
 ]
-## --poses=f84: closes da base A (SO) para o spike visual (SPEC-084 aceite 4), com a camera vinda
-## de dentro da base; servem a oficial e a variante (--arena=spike_f84), mesmo enquadramento.
-const POSES_F84: Array[Array] = [
+## --poses=base: closes da base A (SO) com a camera vinda de dentro da base (F84/F94: antes x
+## depois da arte nova, mesmo enquadramento).
+const POSES_BASE: Array[Array] = [
 	["portao", "GateA", Vector3(-6.0, 4.0, 6.0)],
 	["fonte", "FountainA", Vector3(3.5, 3.0, 5.0)],
 	["casa", "HouseA0", Vector3(5.5, 4.0, 2.0)],
@@ -63,8 +63,8 @@ func _initialize() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out = arg.trim_prefix("--out=")
-		elif arg == "--poses=f84":
-			_poses = POSES_F84
+		elif arg == "--poses=base":
+			_poses = POSES_BASE
 	_main = (load(MAIN) as PackedScene).instantiate()
 	root.add_child(_main)
 	current_scene = _main

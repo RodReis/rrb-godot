@@ -123,25 +123,6 @@ var _loading_started_msec: int = 0
 @onready var camera: FollowCamera = $Camera
 
 
-## --arena=<variante> (dev, F84): troca a Arena antes de a cena entrar na arvore, para os grupos
-## (marcadores, portoes, fontes) ja nascerem da variante.
-func _notification(what: int) -> void:
-	if what != NOTIFICATION_SCENE_INSTANTIATED:
-		return
-	var scene := LaunchArgs.arena_scene(LaunchArgs.parse(OS.get_cmdline_user_args())["arena"])
-	if scene.is_empty():
-		return
-	var official := $Arena as Node3D
-	var variant := (load(scene) as PackedScene).instantiate() as Node3D
-	variant.name = official.name
-	var index := official.get_index()
-	remove_child(official)
-	official.free()
-	add_child(variant)
-	move_child(variant, index)
-	print("[arena] variante %s" % scene)
-
-
 func _ready() -> void:
 	InputActions.ensure()
 	_apply_user_settings()

@@ -38,11 +38,36 @@ uniform float reveal_alpha : hint_range(0.0, 1.0) = 0.4;
 // Largura da borda macia, de dentro do raio para o centro.
 uniform float reveal_edge : hint_range(0.01, 5.0) = 1.0;
 
+group_uniforms vento;
+// Balanco de vento (PI 2026-10-20, F94): so o visual; a caixa da moita (SPEC-007), a abertura e a
+// silhueta (SPEC-072) nao mudam. Mesma direcao e fase de mundo da folhagem (foliage_wind).
+uniform vec2 wind_direction = vec2(0.8, 0.6);
+// Deslocamento maximo no topo da moita (u).
+uniform float wind_strength : hint_range(0.0, 0.5) = 0.12;
+uniform float wind_speed = 1.1;
+uniform float wind_scale = 0.25;
+// Altura da moita (u) onde o peso do balanco chega a 1; o pe fica preso ao chao.
+uniform float sway_height = 1.2;
+// Ondulacao fina ao longo da moita (u) e a frequencia dela.
+uniform float ripple : hint_range(0.0, 0.2) = 0.04;
+uniform float ripple_speed = 3.0;
+
 varying vec3 v_world_pos;
 varying vec3 v_world_normal;
 
 void vertex() {
-	v_world_pos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 world = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+	vec3 origin = MODEL_MATRIX[3].xyz;
+	float weight = clamp(VERTEX.y / sway_height, 0.0, 1.0);
+	weight *= weight;
+	vec2 dir = normalize(wind_direction);
+	float phase = dot(origin.xz, dir) * wind_scale - TIME * wind_speed;
+	float gust = 0.65 + 0.35 * sin(TIME * 0.37 + origin.x * 0.11);
+	float sway = (sin(phase) * 0.7 + sin(phase * 2.1 + 1.3) * 0.3) * wind_strength * gust;
+	float wave = sin(TIME * ripple_speed + dot(world.xz, vec2(2.3, 1.7))) * ripple;
+	vec3 offset = vec3(dir.x * (sway + wave), -abs(sway) * 0.3, dir.y * (sway + wave)) * weight;
+	VERTEX += (inverse(MODEL_MATRIX) * vec4(offset, 0.0)).xyz;
+	v_world_pos = world + offset;
 	v_world_normal = normalize(MODEL_NORMAL_MATRIX * NORMAL);
 }
 

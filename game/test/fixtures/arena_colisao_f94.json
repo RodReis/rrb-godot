@@ -1,0 +1,2480 @@
+{
+ "markers": [
+  [
+   "HeroA",
+   "Vector3(-23.999912, 0, 23.999912)"
+  ],
+  [
+   "T1A0",
+   "Vector3(-26.162949, 0, 17.67767)"
+  ],
+  [
+   "T1A1",
+   "Vector3(-17.67767, 0, 26.162949)"
+  ],
+  [
+   "T1A2",
+   "Vector3(-21.92031, 0, 15.556349)"
+  ],
+  [
+   "T1A3",
+   "Vector3(-15.556349, 0, 21.92031)"
+  ],
+  [
+   "T2A",
+   "Vector3(-17.819092, 0, 17.819092)"
+  ],
+  [
+   "ChestA0",
+   "Vector3(-26.870056, 0, 14.849242)"
+  ],
+  [
+   "ChestA1",
+   "Vector3(-14.849242, 0, 26.870056)"
+  ],
+  [
+   "ChestA2",
+   "Vector3(-29.698484, 0, 16.970564)"
+  ],
+  [
+   "ChestA3",
+   "Vector3(-16.970564, 0, 29.698484)"
+  ],
+  [
+   "ChestA4",
+   "Vector3(-22.627417, 0, 12.020815)"
+  ],
+  [
+   "ChestA5",
+   "Vector3(-12.020815, 0, 22.627417)"
+  ],
+  [
+   "T1ATop0",
+   "Vector3(-28.5, 0, -5.5)"
+  ],
+  [
+   "T1ATop1",
+   "Vector3(-23.5, 0, -5.5)"
+  ],
+  [
+   "T2ATop",
+   "Vector3(-26, 0, -2.5)"
+  ],
+  [
+   "ChestATop0",
+   "Vector3(-29, 0, -1.5)"
+  ],
+  [
+   "ChestATop1",
+   "Vector3(-23, 0, -1.5)"
+  ],
+  [
+   "T1ABot0",
+   "Vector3(1.5, 0, 24.5)"
+  ],
+  [
+   "T1ABot1",
+   "Vector3(6.5, 0, 24.5)"
+  ],
+  [
+   "T2ABot",
+   "Vector3(4, 0, 27.5)"
+  ],
+  [
+   "ChestABot0",
+   "Vector3(1, 0, 28.5)"
+  ],
+  [
+   "ChestABot1",
+   "Vector3(7, 0, 28.5)"
+  ],
+  [
+   "GolemNO",
+   "Vector3(-27.5, 0, -27.5)"
+  ],
+  [
+   "WolfNO0",
+   "Vector3(-26.09, 0, -28.91)"
+  ],
+  [
+   "WolfNO1",
+   "Vector3(-28.91, 0, -26.09)"
+  ],
+  [
+   "ReinforcedNO0",
+   "Vector3(-25, 0, -28.5)"
+  ],
+  [
+   "ReinforcedNO1",
+   "Vector3(-28.5, 0, -25)"
+  ],
+  [
+   "HeroB",
+   "Vector3(23.999912, 0, -23.999912)"
+  ],
+  [
+   "T1B0",
+   "Vector3(26.162949, 0, -17.67767)"
+  ],
+  [
+   "T1B1",
+   "Vector3(17.67767, 0, -26.162949)"
+  ],
+  [
+   "T1B2",
+   "Vector3(21.92031, 0, -15.556349)"
+  ],
+  [
+   "T1B3",
+   "Vector3(15.556349, 0, -21.92031)"
+  ],
+  [
+   "T2B",
+   "Vector3(17.819092, 0, -17.819092)"
+  ],
+  [
+   "ChestB0",
+   "Vector3(26.870056, 0, -14.849242)"
+  ],
+  [
+   "ChestB1",
+   "Vector3(14.849242, 0, -26.870056)"
+  ],
+  [
+   "ChestB2",
+   "Vector3(29.698484, 0, -16.970564)"
+  ],
+  [
+   "ChestB3",
+   "Vector3(16.970564, 0, -29.698484)"
+  ],
+  [
+   "ChestB4",
+   "Vector3(22.627417, 0, -12.020815)"
+  ],
+  [
+   "ChestB5",
+   "Vector3(12.020815, 0, -22.627417)"
+  ],
+  [
+   "T1BTop0",
+   "Vector3(28.5, 0, 5.5)"
+  ],
+  [
+   "T1BTop1",
+   "Vector3(23.5, 0, 5.5)"
+  ],
+  [
+   "T2BTop",
+   "Vector3(26, 0, 2.5)"
+  ],
+  [
+   "ChestBTop0",
+   "Vector3(29, 0, 1.5)"
+  ],
+  [
+   "ChestBTop1",
+   "Vector3(23, 0, 1.5)"
+  ],
+  [
+   "T1BBot0",
+   "Vector3(-1.5, 0, -24.5)"
+  ],
+  [
+   "T1BBot1",
+   "Vector3(-6.5, 0, -24.5)"
+  ],
+  [
+   "T2BBot",
+   "Vector3(-4, 0, -27.5)"
+  ],
+  [
+   "ChestBBot0",
+   "Vector3(-1, 0, -28.5)"
+  ],
+  [
+   "ChestBBot1",
+   "Vector3(-7, 0, -28.5)"
+  ],
+  [
+   "GolemSE",
+   "Vector3(27.5, 0, 27.5)"
+  ],
+  [
+   "WolfSE0",
+   "Vector3(26.09, 0, 28.91)"
+  ],
+  [
+   "WolfSE1",
+   "Vector3(28.91, 0, 26.09)"
+  ],
+  [
+   "ReinforcedSE0",
+   "Vector3(25, 0, 28.5)"
+  ],
+  [
+   "ReinforcedSE1",
+   "Vector3(28.5, 0, 25)"
+  ],
+  [
+   "Boss",
+   "Vector3(0, 0, 0)"
+  ],
+  [
+   "Golem0",
+   "Vector3(-7.071068, 0, -7.071068)"
+  ],
+  [
+   "Warrior0",
+   "Vector3(-8.660254, 0, -5)"
+  ],
+  [
+   "Mage0",
+   "Vector3(-5, 0, -8.660254)"
+  ],
+  [
+   "RareField0",
+   "Vector3(-8.838835, 0, -8.838835)"
+  ],
+  [
+   "Golem1",
+   "Vector3(7.071068, 0, 7.071068)"
+  ],
+  [
+   "Warrior1",
+   "Vector3(8.660254, 0, 5)"
+  ],
+  [
+   "Mage1",
+   "Vector3(5, 0, 8.660254)"
+  ],
+  [
+   "RareField1",
+   "Vector3(8.838835, 0, 8.838835)"
+  ],
+  [
+   "RareSide0",
+   "Vector3(-8, 0, -4.8984254e-16)"
+  ],
+  [
+   "RareSide1",
+   "Vector3(8, 0, 1.4695276e-15)"
+  ]
+ ],
+ "shapes": [
+  [
+   "Floor/@CollisionShape3D@2",
+   "BoxShape3D",
+   "Vector3(100, 1, 100)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@3",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@4",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@5",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@6",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@7",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@8",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@9",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@10",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@11",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@12",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@13",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@14",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@15",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@16",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@17",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@18",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@19",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@20",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@21",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@22",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@23",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@24",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@25",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@26",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@27",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@28",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@29",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@30",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@31",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@32",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@33",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@34",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@35",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@36",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@37",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@38",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@39",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@40",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@41",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@42",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@43",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@44",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@45",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@46",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@47",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@48",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@49",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@50",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@51",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@52",
+   "ConvexPolygonShape3D",
+   "10",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@53",
+   "ConvexPolygonShape3D",
+   "6",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@54",
+   "ConvexPolygonShape3D",
+   "6",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@55",
+   "ConvexPolygonShape3D",
+   "10",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@56",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@57",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@58",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@59",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@60",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@61",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@62",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@63",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@64",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@65",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@66",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@67",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@68",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@69",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@70",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@71",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@72",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@73",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@74",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@75",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@76",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@77",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@78",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@79",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@80",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@81",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@82",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@83",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@84",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@85",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@86",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@87",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@88",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@89",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@90",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@91",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@92",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@93",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@94",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@95",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@96",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@97",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@98",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@99",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@100",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@101",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@102",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@103",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@104",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@105",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@106",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@107",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@108",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@109",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@110",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@111",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@112",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@113",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@114",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@115",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@116",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@117",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@118",
+   "ConvexPolygonShape3D",
+   "10",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@119",
+   "ConvexPolygonShape3D",
+   "6",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@120",
+   "ConvexPolygonShape3D",
+   "6",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@121",
+   "ConvexPolygonShape3D",
+   "10",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@122",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@123",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@124",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@125",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@126",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@127",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@128",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@129",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@130",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@131",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@132",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@133",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@134",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@135",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@136",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@137",
+   "ConvexPolygonShape3D",
+   "10",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@138",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@139",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@140",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@141",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@142",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@143",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@144",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@145",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@146",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@147",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@148",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@149",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@150",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@151",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@152",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@153",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@154",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@155",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@156",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@157",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@158",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@159",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@160",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@161",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@162",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@163",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@164",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@165",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@166",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@167",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@168",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@169",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@170",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@171",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@172",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@173",
+   "CylinderShape3D",
+   "r5.0 h2.0",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26, 0, -18)"
+  ],
+  [
+   "River/@CollisionShape3D@174",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@175",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@176",
+   "ConvexPolygonShape3D",
+   "10",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@177",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@178",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@179",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@180",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@181",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@182",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@183",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@184",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@185",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@186",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@187",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@188",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@189",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@190",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@191",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@192",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@193",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@194",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@195",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@196",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@197",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@198",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@199",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@200",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@201",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@202",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@203",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@204",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@205",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@206",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@207",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@208",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@209",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@210",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@211",
+   "ConvexPolygonShape3D",
+   "8",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)"
+  ],
+  [
+   "River/@CollisionShape3D@212",
+   "CylinderShape3D",
+   "r5.0 h2.0",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 26, 0, 18)"
+  ],
+  [
+   "Border/@CollisionShape3D@213",
+   "BoxShape3D",
+   "Vector3(84, 4, 2)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -41)"
+  ],
+  [
+   "Border/@CollisionShape3D@214",
+   "BoxShape3D",
+   "Vector3(2, 4, 84)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -41, 2, 0)"
+  ],
+  [
+   "Border/@CollisionShape3D@215",
+   "BoxShape3D",
+   "Vector3(84, 4, 2)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 41)"
+  ],
+  [
+   "Border/@CollisionShape3D@216",
+   "BoxShape3D",
+   "Vector3(2, 4, 84)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 41, 2, 0)"
+  ],
+  [
+   "Walls/@CollisionShape3D@217",
+   "BoxShape3D",
+   "Vector3(3.9999988, 2.5, 0.8)",
+   "Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -20.506096, 1.25, 20.506096)"
+  ],
+  [
+   "Walls/@CollisionShape3D@218",
+   "BoxShape3D",
+   "Vector3(4.000001, 2.5, 0.8)",
+   "Transform3D(-0.70710695, 0, 0.7071066, 0, 1, 0, -0.7071066, 0, -0.70710695, -25.102291, 1.25, 13.788582)"
+  ],
+  [
+   "Walls/@CollisionShape3D@219",
+   "BoxShape3D",
+   "Vector3(4.000001, 2.5, 0.8)",
+   "Transform3D(0.7071067, 0, -0.7071069, 0, 1, 0, 0.7071069, 0, 0.7071067, -13.788582, 1.25, 25.102291)"
+  ],
+  [
+   "Walls/@CollisionShape3D@220",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(-0.8688697, 0, 0.4950408, 0, 1, 0, -0.4950408, 0, -0.8688697, -17.714375, 1.25, 12.967878)"
+  ],
+  [
+   "Walls/@CollisionShape3D@221",
+   "BoxShape3D",
+   "Vector3(1.7757214, 2.5, 0.8)",
+   "Transform3D(-0.9293102, 0, 0.3693001, 0, 1, 0, -0.3693001, 0, -0.9293102, -19.310907, 1.25, 12.200464)"
+  ],
+  [
+   "Walls/@CollisionShape3D@222",
+   "BoxShape3D",
+   "Vector3(1.7757199, 2.5, 0.8)",
+   "Transform3D(-0.97166276, 0, 0.23637141, 0, 1, 0, -0.23637141, 0, -0.97166276, -20.998707, 1.25, 11.662713)"
+  ],
+  [
+   "Walls/@CollisionShape3D@223",
+   "BoxShape3D",
+   "Vector3(1.7757223, 2.5, 0.8)",
+   "Transform3D(-0.9951032, 0, 0.09884158, 0, 1, 0, -0.09884158, 0, -0.9951032, -22.744919, 1.25, 11.365091)"
+  ],
+  [
+   "Walls/@CollisionShape3D@224",
+   "BoxShape3D",
+   "Vector3(1.7757188, 2.5, 0.8)",
+   "Transform3D(-0.999175, 0, -0.04061169, 0, 1, 0, 0.04061169, 0, -0.999175, -24.51556, 1.25, 11.313391)"
+  ],
+  [
+   "Walls/@CollisionShape3D@225",
+   "BoxShape3D",
+   "Vector3(1.7757225, 2.5, 0.8)",
+   "Transform3D(-0.9837989, 0, -0.17927538, 0, 1, 0, 0.17927538, 0, -0.9837989, -26.276165, 1.25, 11.508619)"
+  ],
+  [
+   "Walls/@CollisionShape3D@226",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(-0.94927454, 0, -0.3144485, 0, 1, 0, 0.3144485, 0, -0.94927454, -27.992464, 1.25, 11.946978)"
+  ],
+  [
+   "Walls/@CollisionShape3D@227",
+   "BoxShape3D",
+   "Vector3(1.7757212, 2.5, 0.8)",
+   "Transform3D(-0.89627343, 0, -0.44350195, 0, 1, 0, 0.44350195, 0, -0.89627343, -29.631054, 1.25, 12.619932)"
+  ],
+  [
+   "Walls/@CollisionShape3D@228",
+   "BoxShape3D",
+   "Vector3(1.7757196, 2.5, 0.8)",
+   "Transform3D(-0.8258276, 0, -0.5639227, 0, 1, 0, 0.5639227, 0, -0.8258276, -31.160038, 1.25, 13.514383)"
+  ],
+  [
+   "Walls/@CollisionShape3D@229",
+   "BoxShape3D",
+   "Vector3(1.4814233, 2.5, 0.8)",
+   "Transform3D(-0.7470576, 0, -0.6647593, 0, 1, 0, 0.6647593, 0, -0.7470576, -32.44661, 1.25, 14.507463)"
+  ],
+  [
+   "Walls/@CollisionShape3D@230",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(0.49504083, 0, -0.8688697, 0, 1, 0, 0.8688697, 0, 0.49504083, -12.967878, 1.25, 17.714375)"
+  ],
+  [
+   "Walls/@CollisionShape3D@231",
+   "BoxShape3D",
+   "Vector3(1.7757214, 2.5, 0.8)",
+   "Transform3D(0.36930013, 0, -0.9293102, 0, 1, 0, 0.9293102, 0, 0.36930013, -12.200464, 1.25, 19.310907)"
+  ],
+  [
+   "Walls/@CollisionShape3D@232",
+   "BoxShape3D",
+   "Vector3(1.7757199, 2.5, 0.8)",
+   "Transform3D(0.23637134, 0, -0.9716628, 0, 1, 0, 0.9716628, 0, 0.23637134, -11.662713, 1.25, 20.998707)"
+  ],
+  [
+   "Walls/@CollisionShape3D@233",
+   "BoxShape3D",
+   "Vector3(1.7757223, 2.5, 0.8)",
+   "Transform3D(0.098841615, 0, -0.9951032, 0, 1, 0, 0.9951032, 0, 0.098841615, -11.365091, 1.25, 22.744919)"
+  ],
+  [
+   "Walls/@CollisionShape3D@234",
+   "BoxShape3D",
+   "Vector3(1.7757188, 2.5, 0.8)",
+   "Transform3D(-0.040611703, 0, -0.999175, 0, 1, 0, 0.999175, 0, -0.040611703, -11.313391, 1.25, 24.51556)"
+  ],
+  [
+   "Walls/@CollisionShape3D@235",
+   "BoxShape3D",
+   "Vector3(1.7757225, 2.5, 0.8)",
+   "Transform3D(-0.17927527, 0, -0.983799, 0, 1, 0, 0.983799, 0, -0.17927527, -11.508619, 1.25, 26.276165)"
+  ],
+  [
+   "Walls/@CollisionShape3D@236",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(-0.3144485, 0, -0.94927454, 0, 1, 0, 0.94927454, 0, -0.3144485, -11.946978, 1.25, 27.992464)"
+  ],
+  [
+   "Walls/@CollisionShape3D@237",
+   "BoxShape3D",
+   "Vector3(1.7757212, 2.5, 0.8)",
+   "Transform3D(-0.44350195, 0, -0.89627343, 0, 1, 0, 0.89627343, 0, -0.44350195, -12.619932, 1.25, 29.631054)"
+  ],
+  [
+   "Walls/@CollisionShape3D@238",
+   "BoxShape3D",
+   "Vector3(1.7757196, 2.5, 0.8)",
+   "Transform3D(-0.5639227, 0, -0.8258276, 0, 1, 0, 0.8258276, 0, -0.5639227, -13.514383, 1.25, 31.160038)"
+  ],
+  [
+   "Walls/@CollisionShape3D@239",
+   "BoxShape3D",
+   "Vector3(1.4814233, 2.5, 0.8)",
+   "Transform3D(-0.6647593, 0, -0.7470576, 0, 1, 0, 0.7470576, 0, -0.6647593, -14.507463, 1.25, 32.44661)"
+  ],
+  [
+   "Walls/@CollisionShape3D@240",
+   "BoxShape3D",
+   "Vector3(7, 2.5, 0.8)",
+   "Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, -36.5, 1.25, 15)"
+  ],
+  [
+   "Walls/@CollisionShape3D@241",
+   "BoxShape3D",
+   "Vector3(7, 2.5, 0.8)",
+   "Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -15, 1.25, 36.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@242",
+   "BoxShape3D",
+   "Vector3(3.8, 3.4, 3.2)",
+   "Transform3D(-0.90670216, 0, 0.4217714, 0, 1, 0, -0.4217714, 0, -0.90670216, -31.466251, 1.7, 21.566757)"
+  ],
+  [
+   "Walls/@CollisionShape3D@243",
+   "BoxShape3D",
+   "Vector3(3.8, 3.4, 3.2)",
+   "Transform3D(-0.4217714, 0, 0.90670216, 0, 1, 0, -0.90670216, 0, -0.4217714, -21.566757, 1.7, 31.466251)"
+  ],
+  [
+   "Walls/@CollisionShape3D@244",
+   "BoxShape3D",
+   "Vector3(4, 6.24, 6)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.4, 3.12, 32.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@245",
+   "BoxShape3D",
+   "Vector3(4, 6.24, 6)",
+   "Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -32.5, 3.12, 37.4)"
+  ],
+  [
+   "Walls/@CollisionShape3D@246",
+   "BoxShape3D",
+   "Vector3(4, 3.12, 4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.4, 1.56, 25.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@247",
+   "BoxShape3D",
+   "Vector3(4, 3.12, 4)",
+   "Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -25.5, 1.56, 37.4)"
+  ],
+  [
+   "Walls/@CollisionShape3D@248",
+   "BoxShape3D",
+   "Vector3(3.4, 1.4, 3.4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -37.7, 0.7, 37.7)"
+  ],
+  [
+   "Walls/@CollisionShape3D@250",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.5",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.020458, 1.25, 19.162594)"
+  ],
+  [
+   "Walls/@CollisionShape3D@254",
+   "BoxShape3D",
+   "Vector3(3.9999988, 2.5, 0.8)",
+   "Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 20.506096, 1.25, -20.506096)"
+  ],
+  [
+   "Walls/@CollisionShape3D@255",
+   "BoxShape3D",
+   "Vector3(4.000001, 2.5, 0.8)",
+   "Transform3D(0.7071069, 0, -0.70710665, 0, 1, 0, 0.70710665, 0, 0.7071069, 25.102291, 1.25, -13.788582)"
+  ],
+  [
+   "Walls/@CollisionShape3D@256",
+   "BoxShape3D",
+   "Vector3(4.000001, 2.5, 0.8)",
+   "Transform3D(-0.7071066, 0, 0.70710695, 0, 1, 0, -0.70710695, 0, -0.7071066, 13.788582, 1.25, -25.102291)"
+  ],
+  [
+   "Walls/@CollisionShape3D@257",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(0.86886966, 0, -0.49504086, 0, 1, 0, 0.49504086, 0, 0.86886966, 17.714375, 1.25, -12.967878)"
+  ],
+  [
+   "Walls/@CollisionShape3D@258",
+   "BoxShape3D",
+   "Vector3(1.7757214, 2.5, 0.8)",
+   "Transform3D(0.9293102, 0, -0.3693001, 0, 1, 0, 0.3693001, 0, 0.9293102, 19.310907, 1.25, -12.200464)"
+  ],
+  [
+   "Walls/@CollisionShape3D@259",
+   "BoxShape3D",
+   "Vector3(1.7757199, 2.5, 0.8)",
+   "Transform3D(0.9716628, 0, -0.23637132, 0, 1, 0, 0.23637132, 0, 0.9716628, 20.998707, 1.25, -11.662713)"
+  ],
+  [
+   "Walls/@CollisionShape3D@260",
+   "BoxShape3D",
+   "Vector3(1.7757223, 2.5, 0.8)",
+   "Transform3D(0.9951032, 0, -0.09884157, 0, 1, 0, 0.09884157, 0, 0.9951032, 22.744919, 1.25, -11.365091)"
+  ],
+  [
+   "Walls/@CollisionShape3D@261",
+   "BoxShape3D",
+   "Vector3(1.7757188, 2.5, 0.8)",
+   "Transform3D(0.999175, 0, 0.04061169, 0, 1, 0, -0.04061169, 0, 0.999175, 24.51556, 1.25, -11.313391)"
+  ],
+  [
+   "Walls/@CollisionShape3D@262",
+   "BoxShape3D",
+   "Vector3(1.7757225, 2.5, 0.8)",
+   "Transform3D(0.9837989, 0, 0.17927529, 0, 1, 0, -0.17927529, 0, 0.9837989, 26.276165, 1.25, -11.508619)"
+  ],
+  [
+   "Walls/@CollisionShape3D@263",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(0.94927454, 0, 0.31444848, 0, 1, 0, -0.31444848, 0, 0.94927454, 27.992464, 1.25, -11.946978)"
+  ],
+  [
+   "Walls/@CollisionShape3D@264",
+   "BoxShape3D",
+   "Vector3(1.7757212, 2.5, 0.8)",
+   "Transform3D(0.89627343, 0, 0.44350186, 0, 1, 0, -0.44350186, 0, 0.89627343, 29.631054, 1.25, -12.619932)"
+  ],
+  [
+   "Walls/@CollisionShape3D@265",
+   "BoxShape3D",
+   "Vector3(1.7757196, 2.5, 0.8)",
+   "Transform3D(0.8258276, 0, 0.56392264, 0, 1, 0, -0.56392264, 0, 0.8258276, 31.160038, 1.25, -13.514383)"
+  ],
+  [
+   "Walls/@CollisionShape3D@266",
+   "BoxShape3D",
+   "Vector3(1.4814233, 2.5, 0.8)",
+   "Transform3D(0.7470576, 0, 0.6647593, 0, 1, 0, -0.6647593, 0, 0.7470576, 32.44661, 1.25, -14.507463)"
+  ],
+  [
+   "Walls/@CollisionShape3D@267",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(-0.4950408, 0, 0.8688697, 0, 1, 0, -0.8688697, 0, -0.4950408, 12.967878, 1.25, -17.714375)"
+  ],
+  [
+   "Walls/@CollisionShape3D@268",
+   "BoxShape3D",
+   "Vector3(1.7757214, 2.5, 0.8)",
+   "Transform3D(-0.3693001, 0, 0.9293102, 0, 1, 0, -0.9293102, 0, -0.3693001, 12.200464, 1.25, -19.310907)"
+  ],
+  [
+   "Walls/@CollisionShape3D@269",
+   "BoxShape3D",
+   "Vector3(1.7757199, 2.5, 0.8)",
+   "Transform3D(-0.23637131, 0, 0.9716628, 0, 1, 0, -0.9716628, 0, -0.23637131, 11.662713, 1.25, -20.998707)"
+  ],
+  [
+   "Walls/@CollisionShape3D@270",
+   "BoxShape3D",
+   "Vector3(1.7757223, 2.5, 0.8)",
+   "Transform3D(-0.098841585, 0, 0.9951032, 0, 1, 0, -0.9951032, 0, -0.098841585, 11.365091, 1.25, -22.744919)"
+  ],
+  [
+   "Walls/@CollisionShape3D@271",
+   "BoxShape3D",
+   "Vector3(1.7757188, 2.5, 0.8)",
+   "Transform3D(0.040611733, 0, 0.999175, 0, 1, 0, -0.999175, 0, 0.040611733, 11.313391, 1.25, -24.51556)"
+  ],
+  [
+   "Walls/@CollisionShape3D@272",
+   "BoxShape3D",
+   "Vector3(1.7757225, 2.5, 0.8)",
+   "Transform3D(0.1792753, 0, 0.9837989, 0, 1, 0, -0.9837989, 0, 0.1792753, 11.508619, 1.25, -26.276165)"
+  ],
+  [
+   "Walls/@CollisionShape3D@273",
+   "BoxShape3D",
+   "Vector3(1.7757202, 2.5, 0.8)",
+   "Transform3D(0.31444842, 0, 0.94927454, 0, 1, 0, -0.94927454, 0, 0.31444842, 11.946978, 1.25, -27.992464)"
+  ],
+  [
+   "Walls/@CollisionShape3D@274",
+   "BoxShape3D",
+   "Vector3(1.7757212, 2.5, 0.8)",
+   "Transform3D(0.44350186, 0, 0.89627343, 0, 1, 0, -0.89627343, 0, 0.44350186, 12.619932, 1.25, -29.631054)"
+  ],
+  [
+   "Walls/@CollisionShape3D@275",
+   "BoxShape3D",
+   "Vector3(1.7757196, 2.5, 0.8)",
+   "Transform3D(0.56392264, 0, 0.8258276, 0, 1, 0, -0.8258276, 0, 0.56392264, 13.514383, 1.25, -31.160038)"
+  ],
+  [
+   "Walls/@CollisionShape3D@276",
+   "BoxShape3D",
+   "Vector3(1.4814233, 2.5, 0.8)",
+   "Transform3D(0.6647593, 0, 0.7470576, 0, 1, 0, -0.7470576, 0, 0.6647593, 14.507463, 1.25, -32.44661)"
+  ],
+  [
+   "Walls/@CollisionShape3D@277",
+   "BoxShape3D",
+   "Vector3(7, 2.5, 0.8)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.5, 1.25, -15)"
+  ],
+  [
+   "Walls/@CollisionShape3D@278",
+   "BoxShape3D",
+   "Vector3(7, 2.5, 0.8)",
+   "Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 15, 1.25, -36.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@279",
+   "BoxShape3D",
+   "Vector3(3.8, 3.4, 3.2)",
+   "Transform3D(0.90670216, 0, -0.4217714, 0, 1, 0, 0.4217714, 0, 0.90670216, 31.466251, 1.7, -21.566757)"
+  ],
+  [
+   "Walls/@CollisionShape3D@280",
+   "BoxShape3D",
+   "Vector3(3.8, 3.4, 3.2)",
+   "Transform3D(0.4217714, 0, -0.90670216, 0, 1, 0, 0.90670216, 0, 0.4217714, 21.566757, 1.7, -31.466251)"
+  ],
+  [
+   "Walls/@CollisionShape3D@281",
+   "BoxShape3D",
+   "Vector3(4, 6.24, 6)",
+   "Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 37.4, 3.12, -32.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@282",
+   "BoxShape3D",
+   "Vector3(4, 6.24, 6)",
+   "Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 32.5, 3.12, -37.4)"
+  ],
+  [
+   "Walls/@CollisionShape3D@283",
+   "BoxShape3D",
+   "Vector3(4, 3.12, 4)",
+   "Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 37.4, 1.56, -25.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@284",
+   "BoxShape3D",
+   "Vector3(4, 3.12, 4)",
+   "Transform3D(1.1924881e-08, 0, -1, 0, 1, 0, 1, 0, 1.1924881e-08, 25.5, 1.56, -37.4)"
+  ],
+  [
+   "Walls/@CollisionShape3D@285",
+   "BoxShape3D",
+   "Vector3(3.4, 1.4, 3.4)",
+   "Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 37.7, 0.7, -37.7)"
+  ],
+  [
+   "Walls/@CollisionShape3D@287",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.5",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.020458, 1.25, -19.162594)"
+  ],
+  [
+   "Walls/@CollisionShape3D@291",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.5",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -9.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@292",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.5",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.163376e-15, 1.25, 9.5)"
+  ],
+  [
+   "Walls/@CollisionShape3D@293",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.5",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.808247, 1.25, 3.5587626)"
+  ],
+  [
+   "Walls/@CollisionShape3D@294",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.5",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.808247, 1.25, -3.5587626)"
+  ],
+  [
+   "Walls/Jungle0C0",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31, 1.1, -10.4)"
+  ],
+  [
+   "Walls/Jungle0C1",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.5, 1.1, -11.4)"
+  ],
+  [
+   "Walls/Jungle0C2",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.6, 1.1, -8.8)"
+  ],
+  [
+   "Walls/Jungle0C3",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.8, 1.1, -5.6)"
+  ],
+  [
+   "Walls/Jungle0C4",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.6, 1.1, -5)"
+  ],
+  [
+   "Walls/Jungle0S0",
+   "BoxShape3D",
+   "Vector3(6.576473, 2.2, 2.8)",
+   "Transform3D(0.9883717, 0, 0.15205719, 0, 1, 0, -0.15205719, 0, 0.9883717, -27.75, 1.1, -10.9)"
+  ],
+  [
+   "Walls/Jungle0S1",
+   "BoxShape3D",
+   "Vector3(4.687216, 2.2, 2.8)",
+   "Transform3D(0.8320503, 0, -0.55470014, 0, 1, 0, 0.55470014, 0, 0.8320503, -22.55, 1.1, -10.1)"
+  ],
+  [
+   "Walls/Jungle0S2",
+   "BoxShape3D",
+   "Vector3(3.298485, 2.2, 2.8)",
+   "Transform3D(0.24253593, 0, -0.9701424, 0, 1, 0, 0.9701424, 0, 0.24253593, -20.2, 1.1, -7.2)"
+  ],
+  [
+   "Walls/Jungle0S3",
+   "BoxShape3D",
+   "Vector3(1.3416398, 2.2, 2.8)",
+   "Transform3D(0.89442706, 0, -0.4472139, 0, 1, 0, 0.4472139, 0, 0.89442706, -19.2, 1.1, -5.3)"
+  ],
+  [
+   "Walls/Jungle1C0",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31, 1.1, 10.4)"
+  ],
+  [
+   "Walls/Jungle1C1",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.5, 1.1, 11.4)"
+  ],
+  [
+   "Walls/Jungle1C2",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.6, 1.1, 8.8)"
+  ],
+  [
+   "Walls/Jungle1C3",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.8, 1.1, 5.6)"
+  ],
+  [
+   "Walls/Jungle1C4",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.6, 1.1, 5)"
+  ],
+  [
+   "Walls/Jungle1S0",
+   "BoxShape3D",
+   "Vector3(6.576473, 2.2, 2.8)",
+   "Transform3D(-0.9883717, 0, -0.15205717, 0, 1, 0, 0.15205717, 0, -0.9883717, 27.75, 1.1, 10.9)"
+  ],
+  [
+   "Walls/Jungle1S1",
+   "BoxShape3D",
+   "Vector3(4.687216, 2.2, 2.8)",
+   "Transform3D(-0.8320503, 0, 0.5547002, 0, 1, 0, -0.5547002, 0, -0.8320503, 22.55, 1.1, 10.1)"
+  ],
+  [
+   "Walls/Jungle1S2",
+   "BoxShape3D",
+   "Vector3(3.298485, 2.2, 2.8)",
+   "Transform3D(-0.2425359, 0, 0.9701424, 0, 1, 0, -0.9701424, 0, -0.2425359, 20.2, 1.1, 7.2)"
+  ],
+  [
+   "Walls/Jungle1S3",
+   "BoxShape3D",
+   "Vector3(1.3416398, 2.2, 2.8)",
+   "Transform3D(-0.894427, 0, 0.44721395, 0, 1, 0, -0.44721395, 0, -0.894427, 19.2, 1.1, 5.3)"
+  ],
+  [
+   "Walls/Jungle2C0",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.2, 1.1, 1.4)"
+  ],
+  [
+   "Walls/Jungle2C1",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.6, 1.1, 2.8)"
+  ],
+  [
+   "Walls/Jungle2C2",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.4, 1.1, 3.6)"
+  ],
+  [
+   "Walls/Jungle2S0",
+   "BoxShape3D",
+   "Vector3(3.862642, 2.2, 2.2)",
+   "Transform3D(0.9320047, 0, -0.36244625, 0, 1, 0, 0.36244625, 0, 0.9320047, -29.400002, 1.1, 2.1)"
+  ],
+  [
+   "Walls/Jungle2S1",
+   "BoxShape3D",
+   "Vector3(3.2984853, 2.2, 2.2)",
+   "Transform3D(0.97014254, 0, -0.24253556, 0, 1, 0, 0.24253556, 0, 0.97014254, -26, 1.1, 3.1999998)"
+  ],
+  [
+   "Walls/Jungle3C0",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.2, 1.1, -1.4)"
+  ],
+  [
+   "Walls/Jungle3C1",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.6, 1.1, -2.8)"
+  ],
+  [
+   "Walls/Jungle3C2",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.4, 1.1, -3.6)"
+  ],
+  [
+   "Walls/Jungle3S0",
+   "BoxShape3D",
+   "Vector3(3.862642, 2.2, 2.2)",
+   "Transform3D(-0.9320047, 0, 0.36244622, 0, 1, 0, -0.36244622, 0, -0.9320047, 29.400002, 1.1, -2.1)"
+  ],
+  [
+   "Walls/Jungle3S1",
+   "BoxShape3D",
+   "Vector3(3.2984853, 2.2, 2.2)",
+   "Transform3D(-0.97014254, 0, 0.24253555, 0, 1, 0, -0.24253555, 0, -0.97014254, 26, 1.1, -3.1999998)"
+  ],
+  [
+   "Walls/Jungle4C0",
+   "CylinderShape3D",
+   "r1.0 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.8, 1.1, -16.6)"
+  ],
+  [
+   "Walls/Jungle4C1",
+   "CylinderShape3D",
+   "r1.0 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.6, 1.1, -13.4)"
+  ],
+  [
+   "Walls/Jungle4S0",
+   "BoxShape3D",
+   "Vector3(3.2062447, 2.2, 2)",
+   "Transform3D(0.062377892, 0, -0.9980526, 0, 1, 0, 0.9980526, 0, 0.062377892, -30.7, 1.1, -15)"
+  ],
+  [
+   "Walls/Jungle5C0",
+   "CylinderShape3D",
+   "r1.0 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.8, 1.1, 16.6)"
+  ],
+  [
+   "Walls/Jungle5C1",
+   "CylinderShape3D",
+   "r1.0 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.6, 1.1, 13.4)"
+  ],
+  [
+   "Walls/Jungle5S0",
+   "BoxShape3D",
+   "Vector3(3.2062447, 2.2, 2)",
+   "Transform3D(-0.062377863, 0, 0.9980526, 0, 1, 0, -0.9980526, 0, -0.062377863, 30.7, 1.1, 15)"
+  ],
+  [
+   "Walls/Jungle6C0",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.1, 21)"
+  ],
+  [
+   "Walls/Jungle6C1",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.1, 19.4)"
+  ],
+  [
+   "Walls/Jungle6C2",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.1, 19.6)"
+  ],
+  [
+   "Walls/Jungle6C3",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.4, 1.1, 20.8)"
+  ],
+  [
+   "Walls/Jungle6S0",
+   "BoxShape3D",
+   "Vector3(3.9395432, 2.2, 2.8)",
+   "Transform3D(0.9138115, 0, 0.40613854, 0, 1, 0, -0.40613854, 0, 0.9138115, 0.19999999, 1.1, 20.2)"
+  ],
+  [
+   "Walls/Jungle6S1",
+   "BoxShape3D",
+   "Vector3(4.004997, 2.2, 2.8)",
+   "Transform3D(0.99875236, 0, -0.049937803, 0, 1, 0, 0.049937803, 0, 0.99875236, 4, 1.1, 19.5)"
+  ],
+  [
+   "Walls/Jungle6S2",
+   "BoxShape3D",
+   "Vector3(2.6832807, 2.2, 2.8)",
+   "Transform3D(0.89442736, 0, -0.4472133, 0, 1, 0, 0.4472133, 0, 0.89442736, 7.2, 1.1, 20.2)"
+  ],
+  [
+   "Walls/Jungle7C0",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.1, -21)"
+  ],
+  [
+   "Walls/Jungle7C1",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.1, -19.4)"
+  ],
+  [
+   "Walls/Jungle7C2",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.1, -19.6)"
+  ],
+  [
+   "Walls/Jungle7C3",
+   "CylinderShape3D",
+   "r1.39999997615814 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.4, 1.1, -20.8)"
+  ],
+  [
+   "Walls/Jungle7S0",
+   "BoxShape3D",
+   "Vector3(3.9395432, 2.2, 2.8)",
+   "Transform3D(-0.9138115, 0, -0.4061386, 0, 1, 0, 0.4061386, 0, -0.9138115, -0.19999999, 1.1, -20.2)"
+  ],
+  [
+   "Walls/Jungle7S1",
+   "BoxShape3D",
+   "Vector3(4.004997, 2.2, 2.8)",
+   "Transform3D(-0.99875236, 0, 0.04993784, 0, 1, 0, -0.04993784, 0, -0.99875236, -4, 1.1, -19.5)"
+  ],
+  [
+   "Walls/Jungle7S2",
+   "BoxShape3D",
+   "Vector3(2.6832807, 2.2, 2.8)",
+   "Transform3D(-0.89442736, 0, 0.4472133, 0, 1, 0, -0.4472133, 0, -0.89442736, -7.2, 1.1, -20.2)"
+  ],
+  [
+   "Walls/Jungle8C0",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.8, 1.1, 30.6)"
+  ],
+  [
+   "Walls/Jungle8C1",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12.6, 1.1, 28.4)"
+  ],
+  [
+   "Walls/Jungle8C2",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.2, 1.1, 27.6)"
+  ],
+  [
+   "Walls/Jungle8S0",
+   "BoxShape3D",
+   "Vector3(3.5608993, 2.2, 2.6)",
+   "Transform3D(0.78631824, 0, 0.61782163, 0, 1, 0, -0.61782163, 0, 0.78631824, 11.200001, 1.1, 29.5)"
+  ],
+  [
+   "Walls/Jungle8S1",
+   "BoxShape3D",
+   "Vector3(0.99999905, 2.2, 2.6)",
+   "Transform3D(0.6, 0, 0.8, 0, 1, 0, -0.8, 0, 0.6, 12.9, 1.1, 28)"
+  ],
+  [
+   "Walls/Jungle9C0",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.8, 1.1, -30.6)"
+  ],
+  [
+   "Walls/Jungle9C1",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6, 1.1, -28.4)"
+  ],
+  [
+   "Walls/Jungle9C2",
+   "CylinderShape3D",
+   "r1.29999995231628 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 1.1, -27.6)"
+  ],
+  [
+   "Walls/Jungle9S0",
+   "BoxShape3D",
+   "Vector3(3.5608993, 2.2, 2.6)",
+   "Transform3D(-0.7863183, 0, -0.6178216, 0, 1, 0, 0.6178216, 0, -0.7863183, -11.200001, 1.1, -29.5)"
+  ],
+  [
+   "Walls/Jungle9S1",
+   "BoxShape3D",
+   "Vector3(0.99999905, 2.2, 2.6)",
+   "Transform3D(-0.6000001, 0, -0.79999995, 0, 1, 0, 0.79999995, 0, -0.6000001, -12.9, 1.1, -28)"
+  ],
+  [
+   "Walls/Jungle10C0",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.4, 1.1, 30.2)"
+  ],
+  [
+   "Walls/Jungle10C1",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.4, 1.1, 31)"
+  ],
+  [
+   "Walls/Jungle10S0",
+   "BoxShape3D",
+   "Vector3(3.1048343, 2.2, 2.2)",
+   "Transform3D(0.966235, 0, -0.25766245, 0, 1, 0, 0.25766245, 0, 0.966235, -7.8999996, 1.1, 30.6)"
+  ],
+  [
+   "Walls/Jungle11C0",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4, 1.1, -30.2)"
+  ],
+  [
+   "Walls/Jungle11C1",
+   "CylinderShape3D",
+   "r1.10000002384186 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.4, 1.1, -31)"
+  ],
+  [
+   "Walls/Jungle11S0",
+   "BoxShape3D",
+   "Vector3(3.1048343, 2.2, 2.2)",
+   "Transform3D(-0.966235, 0, 0.25766242, 0, 1, 0, -0.25766242, 0, -0.966235, 7.8999996, 1.1, -30.6)"
+  ],
+  [
+   "Walls/Jungle12C0",
+   "CylinderShape3D",
+   "r1.5 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 1.1, 21)"
+  ],
+  [
+   "Walls/Jungle12C1",
+   "CylinderShape3D",
+   "r1.5 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.4, 1.1, 24.4)"
+  ],
+  [
+   "Walls/Jungle12S0",
+   "BoxShape3D",
+   "Vector3(4.808326, 2.2, 3)",
+   "Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 18.7, 1.1, 22.7)"
+  ],
+  [
+   "Walls/Jungle13C0",
+   "CylinderShape3D",
+   "r1.5 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 1.1, -21)"
+  ],
+  [
+   "Walls/Jungle13C1",
+   "CylinderShape3D",
+   "r1.5 h2.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.4, 1.1, -24.4)"
+  ],
+  [
+   "Walls/Jungle13S0",
+   "BoxShape3D",
+   "Vector3(4.808326, 2.2, 3)",
+   "Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -18.7, 1.1, -22.7)"
+  ],
+  [
+   "Gates/GateA/Shape",
+   "BoxShape3D",
+   "Vector3(5, 3, 1)",
+   "Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -14.999855, 1.5, 14.999855)"
+  ],
+  [
+   "Gates/GateB/Shape",
+   "BoxShape3D",
+   "Vector3(5, 3, 1)",
+   "Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 14.999855, 1.5, -14.999855)"
+  ],
+  [
+   "Fountains/FountainA/Body/Shape",
+   "CylinderShape3D",
+   "r0.85000002384186 h1.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.40559, 0.6, 14.849242)"
+  ],
+  [
+   "Fountains/FountainB/Body/Shape",
+   "CylinderShape3D",
+   "r0.85000002384186 h1.20000004768372",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30.40559, 0.6, -14.849242)"
+  ],
+  [
+   "TallGrass/GrassBridgeA/@CollisionShape3D@249",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -18.384775, 1.2, 9.192389)"
+  ],
+  [
+   "TallGrass/GrassLagoonA/@CollisionShape3D@251",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19, 1.2, -29)"
+  ],
+  [
+   "TallGrass/GrassAmbushA0/@CollisionShape3D@252",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28.5, 1.2, 6)"
+  ],
+  [
+   "TallGrass/GrassAmbushA1/@CollisionShape3D@253",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.2, -28.5)"
+  ],
+  [
+   "TallGrass/GrassBridgeB/@CollisionShape3D@286",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70710677, 18.384775, 1.2, -9.192389)"
+  ],
+  [
+   "TallGrass/GrassLagoonB/@CollisionShape3D@288",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 1.2, 29)"
+  ],
+  [
+   "TallGrass/GrassAmbushB0/@CollisionShape3D@289",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.5, 1.2, -6)"
+  ],
+  [
+   "TallGrass/GrassAmbushB1/@CollisionShape3D@290",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 4)",
+   "Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.2, 28.5)"
+  ],
+  [
+   "TallGrass/GrassCenter0/@CollisionShape3D@295",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 3)",
+   "Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -12, 1.2, -7.347638e-16)"
+  ],
+  [
+   "TallGrass/GrassCenter1/@CollisionShape3D@296",
+   "BoxShape3D",
+   "Vector3(4, 2.4, 3)",
+   "Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 12, 1.2, 2.2042914e-15)"
+  ]
+ ]
+}
