@@ -2,9 +2,9 @@ class_name HeroPlate
 extends Control
 ## Base de combate das duas HUDs (DV telas 3 e 4; dock do prototipo HUD Moderno, F57): icone,
 ## nome, conjuntos, atributos, nivel, HP e XP, 4 slots, skills com recarga e pontos livres,
-## comandos, aviso de item equipado, o menu do bau (ChestChoiceMenu, F61) e a
-## engrenagem (Bestiario e switches de som da sessao). So le o estado replicado do heroi local e
-## nunca decide regra; a HUD dona chama update() no proprio _process.
+## comandos, aviso de item equipado, o menu do bau (ChestChoiceMenu, F61) e a engrenagem
+## (Bestiario, switches de som da sessao e tamanho da interface, F97). So le o estado replicado
+## do heroi local e nunca decide regra; a HUD dona chama update() no proprio _process.
 
 ## Indice = slot do SkillButton: basico, Q, E, R.
 ## Ataque basico no botao direito (SPEC-045 §2); Q/E/R vem do InputMap (remapeavel, F24).
@@ -15,6 +15,10 @@ const BASIC_HINT: String = "alvo / ataque"
 ## do default_bus_layout.tres). Valem so na sessao (FORA-DE-ESCOPO: gravar no settings.cfg).
 const BUS_GAME: StringName = &"Master"
 const BUS_BOSS: StringName = &"Boss"
+const PERCENT: float = 100.0
+
+## Onde o tamanho da interface e gravado (F97); o teste troca por um arquivo temporario.
+var settings_path: String = UserSettings.PATH
 
 var _hero: Hero
 var _skills: Array[SkillData] = []
@@ -59,6 +63,8 @@ var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 @onready var _bestiary_button: Button = %BestiaryButton
 @onready var _sound_game: CheckButton = %SoundGame
 @onready var _sound_boss: CheckButton = %SoundBoss
+@onready var _hud_scale: HSlider = %HudScale
+@onready var _hud_scale_value: Label = %HudScaleValue
 
 
 func _ready() -> void:
@@ -77,6 +83,11 @@ func _ready() -> void:
 	_bestiary_button.pressed.connect(_on_bestiary_button_pressed)
 	_sound_game.toggled.connect(_on_sound_game_toggled)
 	_sound_boss.toggled.connect(_on_sound_boss_toggled)
+	_hud_scale.min_value = UserSettings.HUD_SCALE_MIN
+	_hud_scale.max_value = UserSettings.HUD_SCALE_MAX
+	_hud_scale.step = UserSettings.HUD_SCALE_STEP
+	_hud_scale.value_changed.connect(_on_hud_scale_value_changed)
+	_hud_scale.drag_ended.connect(_on_hud_scale_drag_ended)
 
 
 ## Liga ao heroi local e redesenha tudo; o que ja esta equipado nao vira aviso.
@@ -270,6 +281,8 @@ func _on_gear_button_pressed() -> void:
 	if _gear_menu.visible:
 		_sound_game.set_pressed_no_signal(_bus_on(BUS_GAME))
 		_sound_boss.set_pressed_no_signal(_bus_on(BUS_BOSS))
+		_hud_scale.set_value_no_signal(get_window().content_scale_factor)
+		_on_hud_scale_value_changed(_hud_scale.value)
 
 
 ## Mesmo caminho da tecla B: o Bestiario (no main) nao e referenciado pela HUD.
@@ -290,3 +303,19 @@ func _on_sound_game_toggled(on: bool) -> void:
 
 func _on_sound_boss_toggled(on: bool) -> void:
 	_set_bus_on(BUS_BOSS, on)
+
+
+## Arrastando, so o numero muda: escalar a interface moveria o slider debaixo do mouse.
+func _on_hud_scale_value_changed(value: float) -> void:
+	_hud_scale_value.text = "%d%%" % roundi(value * PERCENT)
+
+
+## Ao soltar (clique no trilho tambem arrasta), aplica na janela e grava so [ui] hud_scale,
+## relendo o arquivo (F97, ADR-0031). Falha ao gravar so avisa; a escala da sessao segue.
+func _on_hud_scale_drag_ended(_changed: bool) -> void:
+	get_window().content_scale_factor = _hud_scale.value
+	var err := UserSettings.save_value(
+		UserSettings.UI, UserSettings.HUD_SCALE, _hud_scale.value, settings_path
+	)
+	if err != OK:
+		push_warning("[settings] tamanho da interface nao gravado: %s" % error_string(err))

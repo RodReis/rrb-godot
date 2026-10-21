@@ -52,6 +52,13 @@ static func apply_video(values: Dictionary, root: Window, window: bool = true) -
 	root.move_to_center()
 
 
+## Escala da interface 2D do jogo (SPEC-097, ADR-0031): stretch canvas_items multiplicado pelo
+## content_scale_factor da raiz (doc 4.7, Multiple resolutions > Stretch Scale); o 3D nao muda.
+## So o Game chama.
+static func apply_ui(values: Dictionary, root: Window) -> void:
+	root.content_scale_factor = values[UserSettings.UI][UserSettings.HUD_SCALE]
+
+
 ## Barramento ausente (o Launcher nao tem Music) e ignorado.
 static func apply_audio(values: Dictionary) -> void:
 	var audio: Dictionary = values[UserSettings.AUDIO]

@@ -94,6 +94,18 @@ func test_volume_vai_para_os_barramentos() -> void:
 	assert_true(AudioServer.is_bus_mute(_music_bus))
 
 
+## SPEC-097 (ADR-0031): a escala da interface vira o content_scale_factor da janela.
+func test_escala_da_interface_vira_o_fator_da_janela() -> void:
+	var window := Window.new()
+	var values := UserSettings.defaults()
+	SettingsApplier.apply_ui(values, window)
+	assert_almost_eq(window.content_scale_factor, 0.85, 0.0001)
+	values[UserSettings.UI][UserSettings.HUD_SCALE] = 0.7
+	SettingsApplier.apply_ui(values, window)
+	assert_almost_eq(window.content_scale_factor, 0.7, 0.0001)
+	window.free()
+
+
 func test_video_em_headless_nao_falha() -> void:
 	var fps := Engine.max_fps
 	var values := UserSettings.defaults()

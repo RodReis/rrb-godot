@@ -4,6 +4,7 @@ extends SceneTree
 ## autoria (prova do #228), fora do jogo. Precisa de janela (nao roda em --headless). Uso, na raiz:
 ##   godot --path game -s <repo>/tools/ui/hero_select_showcase.gd -- --out <pasta>
 ##     [--sizes 1280x720,1920x1080,2560x1440,3440x1440]
+## --ui-scale <x>: escala da interface (root.content_scale_factor, F97).
 ## Sai sozinha no fim. O tamanho pedido vira o tamanho da janela do jogo (root.size); o stretch do
 ## projeto (canvas_items, base 1920x1080, expand) faz o resto, como em tela cheia.
 
@@ -46,6 +47,9 @@ func _initialize() -> void:
 	at = args.find("--sizes")
 	if at >= 0 and at + 1 < args.size():
 		_sizes = args[at + 1].split(",")
+	at = args.find("--ui-scale")
+	if at >= 0 and at + 1 < args.size():  # escala da interface do jogo (F97, ADR-0031)
+		root.content_scale_factor = args[at + 1].to_float()
 	_run.call_deferred()
 
 

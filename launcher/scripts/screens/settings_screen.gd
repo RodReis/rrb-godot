@@ -326,6 +326,17 @@ func _graphics_card(column: VBoxContainer) -> void:
 		fps.controls.add_child(segment)
 	column.add_child(fps)
 	column.add_child(
+		_slider(
+			tr("Tamanho da interface na partida"),
+			UserSettings.UI,
+			UserSettings.HUD_SCALE,
+			UserSettings.HUD_SCALE_MIN,
+			UserSettings.HUD_SCALE_MAX,
+			UserSettings.HUD_SCALE_STEP,
+			func(value: float) -> String: return "%d%%" % roundi(value * PERCENT)
+		)
+	)
+	column.add_child(
 		_switch(
 			tr("Sincronização vertical (V-Sync)"),
 			tr("Menor latência de input quando OFF"),

@@ -371,6 +371,11 @@
           "tipo": "entregue"
         },
         {
+          "arquivo": "mvp4-f97-escala-hud.webp",
+          "legenda": "A interface da partida ficou menor e o jogador pode ajustar o tamanho de 70 % a 100 %, tanto nas configurações quanto na engrenagem dentro da partida. A esquerda mostra como era, e a direita o novo padrão de 85 %, que deixa mais arena à vista.",
+          "tipo": "entregue"
+        },
+        {
           "arquivo": "mvp4-f96-borda-vale.webp",
           "legenda": "A moldura em volta da partida fechou o visual novo: torre de vigia de madeira, tochas, cavalo-de-frisa e balista na beira da ilha, árvores com folhas que balançam, e a poça do canto com cantaria e uma cascata que cai no riacho do vale, agora com pedras e juncos na margem. A esquerda mostra como era.",
           "tipo": "entregue"
@@ -462,6 +467,7 @@
     "F94": "Arena nova: as bases dos dois times",
     "F95": "Arena nova: rio, pontes, centro, selva e mato alto",
     "F96": "Arena nova: borda da ilha e vale",
+    "F97": "Tamanho da interface do jogo ajustável",
     "F29": "Telemetria e indicadores",
     "F30": "Ajustes de balanceamento pós-playtest",
     "GATE": "Homologação do marco"

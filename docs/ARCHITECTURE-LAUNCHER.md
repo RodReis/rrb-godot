@@ -180,7 +180,7 @@ Ambos os projetos: `application/config/use_custom_user_dir=true`, `custom_user_d
 [graphics] fog=bool  ssil=bool  ssao=bool  grass=bool   ; padrão true; Game só desliga o que a arena traz ligado (F38, ADR-0006 item 8; grass = grama decorativa, F42)
 [training] bot_difficulty=int   ; último nível do bot do treino (1..N de shared/data/rules/bot_levels.tres); o Launcher manda `--bot-difficulty`, o Game não lê a chave (F81, ADR-0021/0027); inválido → 2
 [camera]  distance=float   ; 9.0–14.0 u, padrão 11.0; fora da faixa → padrão (F67, ADR-0015 item 5)
-[ui]      hud_scale=float  ; 0.70–1.20, passo 0.05, padrão 0.85; fora da faixa → padrão; Game aplica em root.content_scale_factor (toda a interface 2D do jogo) (F97, ADR-0031)
+[ui]      hud_scale=float  ; 0.70–1.00, passo 0.05, padrão 0.85; fora da faixa → padrão; Game aplica em root.content_scale_factor (toda a interface 2D do jogo) (F97, ADR-0031)
 [meta]    schema=1
 ```
 

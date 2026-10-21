@@ -5,6 +5,7 @@ extends GutTest
 const PLATE: PackedScene = preload("res://scenes/ui/hero_plate.tscn")
 const KNIGHT: PackedScene = preload("res://scenes/heroes/knight.tscn")
 const GUARD_HELM: ItemData = preload("res://shared/data/items/guard_set/guard_helm_t1.tres")
+const TMP_SETTINGS: String = "user://test_hero_plate_settings.cfg"
 
 var _hero: Hero
 var _spawns: Node3D
@@ -14,6 +15,8 @@ var _plate: HeroPlate
 func after_each() -> void:
 	for bus: StringName in [HeroPlate.BUS_GAME, HeroPlate.BUS_BOSS]:
 		AudioServer.set_bus_mute(AudioServer.get_bus_index(bus), false)
+	get_tree().root.content_scale_factor = 1.0
+	DirAccess.remove_absolute(TMP_SETTINGS)
 
 
 func before_each() -> void:
@@ -130,6 +133,31 @@ func test_sound_switches_mute_their_bus() -> void:
 	assert_true(AudioServer.is_bus_mute(game_bus))
 	(_node("%SoundGame") as CheckButton).button_pressed = true
 	assert_false(AudioServer.is_bus_mute(game_bus))
+
+
+## SPEC-097 (ADR-0031): o slider da engrenagem abre na escala atual da janela; ao soltar, aplica
+## no content_scale_factor e grava so [ui] hud_scale (o zoom ja salvo fica).
+func test_slider_de_tamanho_aplica_e_grava_so_a_escala() -> void:
+	await _bind_and_wait()
+	var saved := UserSettings.defaults()
+	saved[UserSettings.CAMERA][UserSettings.DISTANCE] = 13.0
+	assert_eq(UserSettings.save_file(saved, TMP_SETTINGS), OK)
+	_plate.settings_path = TMP_SETTINGS
+	get_tree().root.content_scale_factor = 0.85
+	(_node("%GearButton") as Button).pressed.emit()
+	var slider := _node("%HudScale") as HSlider
+	assert_almost_eq(slider.value, 0.85, 0.0001)
+	assert_eq((_node("%HudScaleValue") as Label).text, "85%")
+	assert_eq(slider.min_value, UserSettings.HUD_SCALE_MIN)
+	assert_eq(slider.max_value, UserSettings.HUD_SCALE_MAX)
+	slider.value = 0.7
+	assert_eq((_node("%HudScaleValue") as Label).text, "70%")
+	assert_almost_eq(get_tree().root.content_scale_factor, 0.85, 0.0001, "arrastando: nao aplica")
+	slider.drag_ended.emit(true)
+	assert_almost_eq(get_tree().root.content_scale_factor, 0.7, 0.0001)
+	var after := UserSettings.load_file(TMP_SETTINGS)
+	assert_almost_eq(after[UserSettings.UI][UserSettings.HUD_SCALE], 0.7, 0.0001)
+	assert_eq(after[UserSettings.CAMERA][UserSettings.DISTANCE], 13.0)
 
 
 ## As duas HUDs tem a sua engrenagem: ao abrir, o switch mostra o estado real do barramento.
