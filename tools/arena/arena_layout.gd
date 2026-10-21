@@ -59,13 +59,14 @@ const BASE_CHESTS: Array[Vector2] = [
 	Vector2(29.5, -8.5),
 	Vector2(33, 9),
 	Vector2(33, -9),
-	# Do lado de fora do arco, colados no muro ao lado do portao (PI 2026-10-21, F95): em (24,5,
-	# +-7,5) ficavam dentro da muralha (raio 12,7 do spawn).
-	Vector2(23.6, 9.0),
-	Vector2(23.6, -9.0),
+	# Do lado de fora do arco, no canto onde ele encontra o muro de fechamento (PI 2026-10-21, F95,
+	# na verificacao): em (24,5, +-7,5) ficavam dentro da muralha (raio 12,7 do spawn). Mundo A:
+	# (-31,8, 12,6) e (-12,6, 31,8), fora do corredor TOP.
+	Vector2(31.4, 13.58),
+	Vector2(31.4, -13.58),
 ]
 ## Esqueleto T1 de guarda de cada bau de fora do muro (PI 2026-10-21, F95).
-const GATE_GUARDS_T1: Array[Vector2] = [Vector2(22.0, 10.8), Vector2(22.0, -10.8)]
+const GATE_GUARDS_T1: Array[Vector2] = [Vector2(28.57, 13.58), Vector2(30.0, -14.42)]
 ## Fonte no canto esquerdo da base (#74), em (s, l).
 const FOUNTAIN_LOCAL: Vector2 = Vector2(32, 11)
 ## Torres do castelo ao lado do portao (l).

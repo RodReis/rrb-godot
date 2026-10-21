@@ -14,7 +14,7 @@ const KIND_MONSTER: int = 1
 const KIND_CHEST: int = 2
 const KIND_BOSS: int = 3
 ## Marcadores da base: ate esta distancia do proprio spawn (GDB: base e o raio de 12,7 u; com os
-## baus de fora do muro e os esqueletos de guarda ao lado do portao, PI 2026-10-21, F95: ate 16,1 u).
+## baus de fora do muro e os esqueletos de guarda ao lado do portao, PI 2026-10-21, F95: ate 14,6 u).
 const BASE_RADIUS: float = 16.5
 ## Marcadores de um mesmo campo ficam a ate esta distancia do vizinho mais proximo.
 const FIELD_LINK: float = 7.0
