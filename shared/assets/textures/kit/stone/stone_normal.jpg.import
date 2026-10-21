@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://mgcbo3ygedou"
-path.s3tc="res://.godot/imported/stone_normal.jpg-8a4a78736ce80f6791743737f1d72561.s3tc.ctex"
+path.s3tc="res://.godot/imported/stone_normal.jpg-694eefdd2ed95f74799e72668a241700.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/stone/stone_normal.jpg"
-dest_files=["res://.godot/imported/stone_normal.jpg-8a4a78736ce80f6791743737f1d72561.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/stone/stone_normal.jpg"
+dest_files=["res://.godot/imported/stone_normal.jpg-694eefdd2ed95f74799e72668a241700.s3tc.ctex"]
 
 [params]
 

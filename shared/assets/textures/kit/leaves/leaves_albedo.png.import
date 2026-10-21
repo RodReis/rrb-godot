@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byseylgs163jx"
-path.s3tc="res://.godot/imported/leaves_albedo.png-cc2d516803e22054f89a96b1fb5f05bc.s3tc.ctex"
+path.s3tc="res://.godot/imported/leaves_albedo.png-97593e7f2afbbe61a5c1c671618bb6aa.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/leaves/leaves_albedo.png"
-dest_files=["res://.godot/imported/leaves_albedo.png-cc2d516803e22054f89a96b1fb5f05bc.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/leaves/leaves_albedo.png"
+dest_files=["res://.godot/imported/leaves_albedo.png-97593e7f2afbbe61a5c1c671618bb6aa.s3tc.ctex"]
 
 [params]
 

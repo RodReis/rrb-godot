@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsh76tgak021k"
-path.s3tc="res://.godot/imported/stone_rough.jpg-d2da4b7c5b69f226790b004c06078447.s3tc.ctex"
+path.s3tc="res://.godot/imported/stone_rough.jpg-0ac7e949e5744c771996c5f69424fa1a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/stone/stone_rough.jpg"
-dest_files=["res://.godot/imported/stone_rough.jpg-d2da4b7c5b69f226790b004c06078447.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/stone/stone_rough.jpg"
+dest_files=["res://.godot/imported/stone_rough.jpg-0ac7e949e5744c771996c5f69424fa1a.s3tc.ctex"]
 
 [params]
 

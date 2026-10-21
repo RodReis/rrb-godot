@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://p4nb3qvbq2me"
-path.s3tc="res://.godot/imported/door_normal.jpg-2a23672e47d53fa3d4b9644ec6865e38.s3tc.ctex"
+path.s3tc="res://.godot/imported/door_normal.jpg-8cacd3e2e1da3aa6841abca6d7ef96e6.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/door/door_normal.jpg"
-dest_files=["res://.godot/imported/door_normal.jpg-2a23672e47d53fa3d4b9644ec6865e38.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/door/door_normal.jpg"
+dest_files=["res://.godot/imported/door_normal.jpg-8cacd3e2e1da3aa6841abca6d7ef96e6.s3tc.ctex"]
 
 [params]
 

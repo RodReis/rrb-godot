@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://2flis8d03cfo"
-path.s3tc="res://.godot/imported/roof_normal.jpg-e0e7a5f4cff7cccb1eadc344ea251c54.s3tc.ctex"
+path.s3tc="res://.godot/imported/roof_normal.jpg-cfbcf931f51589bb40e2b0766733b731.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/roof/roof_normal.jpg"
-dest_files=["res://.godot/imported/roof_normal.jpg-e0e7a5f4cff7cccb1eadc344ea251c54.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/roof/roof_normal.jpg"
+dest_files=["res://.godot/imported/roof_normal.jpg-cfbcf931f51589bb40e2b0766733b731.s3tc.ctex"]
 
 [params]
 

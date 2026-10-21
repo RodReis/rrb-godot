@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bfhcrv3di5w2a"
-path.s3tc="res://.godot/imported/planks_rough.jpg-f53db0f00ea6b653b8773677d557f34d.s3tc.ctex"
+path.s3tc="res://.godot/imported/planks_rough.jpg-0c26a1c785fc4bbc3ae273f4c79c6e5b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/planks/planks_rough.jpg"
-dest_files=["res://.godot/imported/planks_rough.jpg-f53db0f00ea6b653b8773677d557f34d.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/planks/planks_rough.jpg"
+dest_files=["res://.godot/imported/planks_rough.jpg-0c26a1c785fc4bbc3ae273f4c79c6e5b.s3tc.ctex"]
 
 [params]
 

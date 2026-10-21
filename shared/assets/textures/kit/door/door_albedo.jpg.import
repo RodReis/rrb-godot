@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://7dqlq5tk1n3d"
-path.s3tc="res://.godot/imported/door_albedo.jpg-89072c6f08a9f5397212cf0b29769337.s3tc.ctex"
+path.s3tc="res://.godot/imported/door_albedo.jpg-cfdd6358638f9d25dc0152ffb979776a.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/door/door_albedo.jpg"
-dest_files=["res://.godot/imported/door_albedo.jpg-89072c6f08a9f5397212cf0b29769337.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/door/door_albedo.jpg"
+dest_files=["res://.godot/imported/door_albedo.jpg-cfdd6358638f9d25dc0152ffb979776a.s3tc.ctex"]
 
 [params]
 

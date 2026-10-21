@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b8ur1alaoos3y"
-path.s3tc="res://.godot/imported/roof_rough.jpg-b9725831ad7ba8251f38b1e774510f73.s3tc.ctex"
+path.s3tc="res://.godot/imported/roof_rough.jpg-91d6bf810cd3c27712053d8c4175b493.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/roof/roof_rough.jpg"
-dest_files=["res://.godot/imported/roof_rough.jpg-b9725831ad7ba8251f38b1e774510f73.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/roof/roof_rough.jpg"
+dest_files=["res://.godot/imported/roof_rough.jpg-91d6bf810cd3c27712053d8c4175b493.s3tc.ctex"]
 
 [params]
 

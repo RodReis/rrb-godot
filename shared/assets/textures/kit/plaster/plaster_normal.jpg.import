@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c3driosau4e7a"
-path.s3tc="res://.godot/imported/plaster_normal.jpg-7e48d19d2f20e9315b4c0c9e30d6047c.s3tc.ctex"
+path.s3tc="res://.godot/imported/plaster_normal.jpg-47cd3b293591301cbd7427d428fa579b.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://shared/assets/textures/spike_f84/plaster/plaster_normal.jpg"
-dest_files=["res://.godot/imported/plaster_normal.jpg-7e48d19d2f20e9315b4c0c9e30d6047c.s3tc.ctex"]
+source_file="res://shared/assets/textures/kit/plaster/plaster_normal.jpg"
+dest_files=["res://.godot/imported/plaster_normal.jpg-47cd3b293591301cbd7427d428fa579b.s3tc.ctex"]
 
 [params]
 
