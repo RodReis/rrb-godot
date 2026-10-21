@@ -23,7 +23,6 @@ updated: 2026-10-21
 - [MVP4][SPEC-030][F30] Balanceamento pós-playtest dos 10 heróis (só .tres) (#254)
 - [MVP4][SPEC-029][F29] Telemetria: ping, duração, líder F1 × vencedor e KPIs no histórico (#253)
 - [MVP4][SPEC-086][F86] Publicação no itch.io: página do jogo e build a cada Release (#252)
-- [MVP4][SPEC-093][F93] Spike visual: Cavaleiro comissionado estilo Eternal Return jogável na cena do F84 (#248)
 
 ### [MVP3] Meta + deploy (#76)
 
@@ -33,6 +32,7 @@ updated: 2026-10-21
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-093][F93] Spike visual: Cavaleiro comissionado estilo Eternal Return jogável na cena do F84 (#248)
 - [MVP4][SPEC-085][F85] Tutorial guiado: obrigatório na 1ª vez, pulável, libera a fila online (#251)
 
 ## Em Andamento
