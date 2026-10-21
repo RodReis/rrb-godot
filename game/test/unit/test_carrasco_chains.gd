@@ -1,8 +1,8 @@
 extends CarrascoTestBase
-## Correntes do Julgamento do Carrasco (GDB §4.11, F98; SPEC-098 §6 item 1): projetil (6 u) que passa
-## por monstro e para no 1o heroi: dano, raiz e raio de luz de 2,5 u pela duracao da raiz; o heroi
-## preso dentro da luz com HP < 25 % e executado (kill do Carrasco); a Bencao Inviolavel bloqueia;
-## o Ragnarok impede a raiz, nao a execucao.
+## Correntes do Julgamento do Carrasco (GDB §4.11, F98; SPEC-098 §6 item 1): projetil (6 u) que
+## passa por monstro e para no 1o heroi: dano, raiz e raio de luz de 2,5 u pela duracao da raiz; o
+## heroi preso dentro da luz com HP < 25 % e executado (kill do Carrasco); a Bencao Inviolavel
+## bloqueia; o Ragnarok impede a raiz, nao a execucao.
 
 const LEVEL: int = 6
 const RANKS: Vector3i = Vector3i(1, 1, 1)
@@ -116,4 +116,3 @@ func test_ragnarok_impede_a_raiz_mas_nao_a_execucao() -> void:
 	berserker.hp = int(berserker.attributes.max_hp * 0.2)
 	_run(START + 4, 3)
 	assert_false(berserker.is_alive(), "parado na luz: executado")
-

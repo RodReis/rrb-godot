@@ -53,6 +53,11 @@ var _entered_fight: bool = false
 var _ultimate_ok: bool = true
 ## HP do heroi no think anterior: caiu = tomou golpe (Retribuicao do Paladino, SPEC-076).
 var _last_hp: int = 0
+## Carrasco (SPEC-098 §5): HP no think anterior, thinks seguidos tomando golpe (Penitencia) e o Q
+## apertado no think anterior (o recast so sai no toque: solta um think antes de apertar de novo).
+var _carrasco_hp: int = 0
+var _hits_in_row: int = 0
+var _q_tapped: bool = false
 
 
 ## Nivel numerico (`--bot-difficulty`); ausente ou fora de 1..N = Medio.
@@ -121,6 +126,7 @@ func think(tick: int) -> void:
 	_potion_when_hurt(view)
 	_rage_when_needed(view)
 	_paladin_reacts(view, enemy)
+	_carrasco_reacts(view)
 	_apply_level()
 
 
@@ -192,6 +198,25 @@ func _paladin_reacts(view: BotView, enemy: Hero) -> void:
 	var use := BotRules.paladin_skills(INF, _entered_fight, struck, view.hp_pct, in_zone, _profile)
 	skill_e = skill_e or (use.y == 1 and _skill_ready(SkillRules.SLOT_E))
 	skill_r = skill_r or (use.z == 1 and _skill_ready(SkillRules.SLOT_R))
+
+
+## Carrasco (SPEC-098 §5), em qualquer estado: Penitencia com o inimigo perto e HP baixo ou depois
+## de golpes seguidos. Canalizando, fica parado e nao aperta nada (E de novo encerraria antes).
+func _carrasco_reacts(view: BotView) -> void:
+	var carrasco := _hero as Carrasco
+	if carrasco == null:
+		return
+	_hits_in_row = _hits_in_row + 1 if carrasco.hp < _carrasco_hp else 0
+	_carrasco_hp = carrasco.hp
+	if carrasco.is_channeling():
+		skill_q = false
+		skill_e = false
+		skill_r = false
+		return
+	var use := BotRules.carrasco_skills(
+		view.enemy_distance, false, view.hp_pct, _hits_in_row, -1.0, _profile
+	)
+	skill_e = skill_e or (use.y == 1 and _skill_ready(SkillRules.SLOT_E))
 
 
 func _reset() -> void:
@@ -328,6 +353,8 @@ func _contest(tick: int) -> void:
 ## Ocultista pelo perfil (BotRules.occultist_skills): o basico acumula marcas, Praga no alvo,
 ## Circulo se o alvo se aproxima, Servos contra heroi ou boss. Paladino pelo perfil
 ## (BotRules.paladin_skills): Golpe Consagrado colado; Retribuicao e Bencao em _paladin_reacts.
+## Carrasco pelo perfil (BotRules.carrasco_skills): Espinhos colado e recast no toque quando o alvo
+## foge; Correntes quando a execucao e provavel; Penitencia em _carrasco_reacts.
 func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var where := _where(target)
 	var to := _flat(where)
@@ -351,6 +378,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	var berserker := _hero is Berserker
 	var occultist := _hero is Occultist
 	var paladin := _hero is Paladin
+	var carrasco := _hero as Carrasco
 	var use := Vector3i.ZERO
 	if barbarian:
 		use = BotRules.barbarian_skills(to.length(), data.basic_attack.attack_range, _profile)
@@ -391,6 +419,16 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 	elif paladin:  # Golpe Consagrado colado; Retribuicao e Bencao: _paladin_reacts
 		use = BotRules.paladin_skills(to.length(), false, false, 1.0, false, _profile)
 		skill_q = skills and use.x == 1
+	elif carrasco != null:  # Espinhos colado, recast no toque; Correntes; Penitencia: reacoes
+		var target_hp := -1.0
+		var hero := target as Hero
+		if hero != null:
+			target_hp = float(hero.hp) / hero.attributes.max_hp
+		var recast := carrasco.can_recast()
+		use = BotRules.carrasco_skills(to.length(), recast, 1.0, 0, target_hp, _profile)
+		skill_q = skills and use.x == 1 and not (recast and (_q_tapped or blocked))
+		_q_tapped = skill_q
+		skill_r = skills and use.z == 1 and not blocked and _skill_ready(SkillRules.SLOT_R)
 	# Sem linha de tiro (Arqueira, Bruxo), segue pelo navmesh ate o obstaculo sair do caminho.
 	if to.length() > data.basic_attack.attack_range - REACH_MARGIN or blocked:
 		_go(tick, where)
@@ -402,7 +440,7 @@ func _attack(tick: int, target: Combatant, skills: bool) -> void:
 		skill_r = skills and use.z == 1
 	elif wizard:
 		skill_e = skills and use.y == 1
-	elif rogue or engineer or druid or berserker or occultist or paladin:
+	elif rogue or engineer or druid or berserker or occultist or paladin or carrasco != null:
 		pass
 	else:
 		skill_e = skills and is_zero_approx(data.skill_e.distance)

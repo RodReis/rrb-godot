@@ -1,6 +1,7 @@
 extends CarrascoTestBase
 ## Carrasco (GDB §4.11, F98; SPEC-098 §6 item 1): atributos, Espada (100 % do ATK, +1 Dor por alvo),
-## Dor (teto e expiracao) e a Couraca (so basico de heroi, depois da DEF). Servidor = processo do teste.
+## Dor (teto e expiracao) e a Couraca (so basico de heroi, depois da DEF). Servidor = processo do
+## teste.
 
 
 func test_nivel_1_tem_os_atributos_base() -> void:
@@ -87,9 +88,7 @@ func test_couraca_vale_no_basico_de_um_heroi_de_verdade() -> void:
 	knight.input.attack = true
 	_run(START, 2)
 	var raw := roundi(SkillRules.amount(knight.hero_data.basic_attack, 1, knight.attributes))
-	assert_eq(
-		CARRASCO_HP - _carrasco.hp, roundi(CombatRules.mitigated(raw, CARRASCO_DEF) * 0.85)
-	)
+	assert_eq(CARRASCO_HP - _carrasco.hp, roundi(CombatRules.mitigated(raw, CARRASCO_DEF) * 0.85))
 
 
 func test_morte_zera_a_dor() -> void:

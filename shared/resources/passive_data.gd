@@ -1,7 +1,8 @@
 class_name PassiveData
 extends Resource
 ## Passiva de heroi (ADR-0015 item 13): regra que vale sempre, sem botao. Berserker (Frenesi, GDB
-## §2.2-E) e Carrasco (Couraca, com a Dor, GDB §4.11, ADR-0032); HeroData.passive nulo = sem passiva.
+## §2.2-E) e Carrasco (Couraca, com a Dor, GDB §4.11, ADR-0032); HeroData.passive nulo = sem
+## passiva.
 
 enum Kind { NONE, FRENZY, CUIRASS }
 

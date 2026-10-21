@@ -3,15 +3,21 @@ extends ProjectileHero
 ## Carrasco (GDB §4.11, F98, SPEC-098, ADR-0032): tanque que pune quem fica perto. Passiva Couraca
 ## (dano de basico de heroi x taken_factor, depois da DEF) e a Dor (recurso: +1 por alvo do basico e
 ## a cada pulso da Penitencia, teto e duracao na PassiveData). Basico Espada (arco do carrasco.tres,
-## Hero._melee); Q Espinhos (golpe em cone com lentidao que abre a janela do recast: Q de novo lanca o
-## projetil THORNS, que para no 1o alvo; a recarga conta depois do recast ou do fim da janela); E
+## Hero._melee); Q Espinhos (golpe em cone com lentidao que abre a janela do recast: Q de novo lanca
+## o projetil THORNS, que para no 1o alvo; a recarga conta depois do recast ou do fim da janela); E
 ## Penitencia (canaliza imovel: mitiga, cura aos poucos e soma Dor; no fim ou com E de novo explode
 ## com raiz ou lentidao pela Dor; atordoamento cancela sem explosao); R Correntes do Julgamento
-## (projetil CHAINS que passa por monstro e para no 1o heroi: dano, raiz e um raio de luz no ponto do
-## acerto; o heroi preso nele com HP abaixo de execute_hp_ratio e executado). Numeros de
+## (projetil CHAINS que passa por monstro e para no 1o heroi: dano, raiz e um raio de luz no ponto
+## do acerto; o heroi preso nele com HP abaixo de execute_hp_ratio e executado). Numeros de
 ## carrasco.tres; efeito em outro node pelo ledger do alvo (Hero._hit, ADR-0001); a execucao vai
 ## pelo slot PASSIVE do Carrasco, sem VFX de golpe (nao e golpe). O input chega segurado: o recast e
 ## o "E de novo" so valem no toque (CarrascoRules.pressed).
+
+## Servidor: as Correntes acenderam o raio de luz em [param center] no [param tick] (o ImpactRelay o
+## mostra aos dois jogadores, mesmo com o Carrasco escondido). [param kind] e sempre Zone.LIGHT.
+signal zone_started(kind: int, center: Vector3, tick: int)
+
+enum Zone { LIGHT }
 
 # Estado de rollback.
 ## Dor (0..pain_max) e ticks ate ela cair toda fora da Penitencia (renova a cada ganho).
@@ -35,29 +41,33 @@ var q_casts: int = 0
 var recasts: int = 0
 var blasts: int = 0
 
-## Toque de Q e de E neste tick (derivado do input e do estado no _simulate_effects; fora do estado).
+## Toque de Q e de E neste tick (derivado do input e do estado no _simulate_effects; fora do
+## estado).
 var _q_tap: bool = false
 var _e_tap: bool = false
 
 
 func _extra_state_properties() -> Array[String]:
 	var props := super()
-	props.append_array(
-		[
-			":pain",
-			":pain_ticks",
-			":q_window_ticks",
-			":q_held",
-			":e_held",
-			":penance_ticks",
-			":penance_healed",
-			":light_ticks",
-			":light_at",
-			":light_target",
-			":q_casts",
-			":recasts",
-			":blasts",
-		]
+	(
+		props
+		. append_array(
+			[
+				":pain",
+				":pain_ticks",
+				":q_window_ticks",
+				":q_held",
+				":e_held",
+				":penance_ticks",
+				":penance_healed",
+				":light_ticks",
+				":light_at",
+				":light_target",
+				":q_casts",
+				":recasts",
+				":blasts",
+			]
+		)
 	)
 	return props
 
@@ -219,8 +229,8 @@ func _count_recast_window() -> void:
 		_start_q_cooldown()
 
 
-## Um tick da Penitencia: atordoado cancela sem explodir (a cura dada fica); senao soma Dor no pulso,
-## da a fatia da cura e, no ultimo tick, explode.
+## Um tick da Penitencia: atordoado cancela sem explodir (a cura dada fica); senao soma Dor no
+## pulso, da a fatia da cura e, no ultimo tick, explode.
 func _channel(tick: int) -> void:
 	if not is_alive() or stun_ticks > 0:
 		penance_ticks = 0
@@ -253,7 +263,11 @@ func _explode(tick: int) -> void:
 	var e := hero_data.skill_e
 	if multiplayer.is_server():
 		var damage := CarrascoRules.with_pain(
-			SkillData.at_rank(e.base_amount, ranks.y), e.attack_ratio, attributes.attack, e.per_pain, pain
+			SkillData.at_rank(e.base_amount, ranks.y),
+			e.attack_ratio,
+			attributes.attack,
+			e.per_pain,
+			pain
 		)
 		var roots := CarrascoRules.explosion_roots(pain, e.root_min_pain)
 		_enemies_into(_targets)
@@ -287,7 +301,10 @@ func _judge(tick: int) -> void:
 		if other.combat_id() != light_target:
 			continue
 		var source := HitLedger.source_key(peer_id, HitLedger.Slot.PASSIVE)
-		if light_ticks > 0 and CombatRules.in_radius(light_at, other.global_position, r.light_radius):
+		if (
+			light_ticks > 0
+			and CombatRules.in_radius(light_at, other.global_position, r.light_radius)
+		):
 			var effect := HitEffect.new(0, light_at)
 			effect.attacker_id = peer_id
 			effect.execute_below = r.execute_hp_ratio
@@ -312,6 +329,7 @@ func _arrow_struck(arrow: Arrow, other: Combatant, at: Vector3, tick: int) -> bo
 			var effect := HitEffect.new(arrow.damage, at)
 			_slow(effect, 1.0, duration)
 			_hit(other, tick, HitLedger.Slot.R, effect)
+			zone_started.emit(Zone.LIGHT, light_at, tick)
 		return true
 	if multiplayer.is_server():
 		_struck_q.append(other)

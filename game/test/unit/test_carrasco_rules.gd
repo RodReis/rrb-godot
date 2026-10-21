@@ -8,7 +8,9 @@ const EPS: float = 0.0001
 
 func test_couraca_so_vale_para_basico_de_heroi() -> void:
 	assert_almost_eq(CarrascoRules.taken_factor(true, 0.85, false, 0.4), 0.85, EPS)
-	assert_almost_eq(CarrascoRules.taken_factor(false, 0.85, false, 0.4), 1.0, EPS, "skill, monstro")
+	assert_almost_eq(
+		CarrascoRules.taken_factor(false, 0.85, false, 0.4), 1.0, EPS, "skill, monstro"
+	)
 
 
 func test_penitencia_mitiga_40_por_cento_de_tudo() -> void:

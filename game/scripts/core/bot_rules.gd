@@ -213,6 +213,33 @@ static func paladin_skills(
 	)
 
 
+## Habilidades do Carrasco (SPEC-098 §5) contra um alvo a [param distance]: Espinhos (x) colado
+## (ate thorns_range) ou, com a janela do recast aberta ([param recast_open]), quando o alvo foge
+## (alem de thorns_range e ate recast_range); Penitencia (y) com o inimigo a ate penance_range e o
+## HP ([param hp_pct]) abaixo de penance_hp_pct ou depois de [param hits_in_row] golpes seguidos
+## (ate penance_hits); Correntes (z) contra heroi ([param target_hp_pct] >= 0) a ate chains_range
+## com o HP dele ate chains_hp_pct. 1 = usa (o Hero ainda confere recarga, rank e o toque do
+## recast).
+static func carrasco_skills(
+	distance: float,
+	recast_open: bool,
+	hp_pct: float,
+	hits_in_row: int,
+	target_hp_pct: float,
+	profile: BotProfile
+) -> Vector3i:
+	var fled := distance > profile.thorns_range and distance <= profile.recast_range
+	var thorns := fled if recast_open else distance <= profile.thorns_range
+	var near := distance <= profile.penance_range
+	var hurt := hp_pct < profile.penance_hp_pct or hits_in_row >= profile.penance_hits
+	var execute := (
+		target_hp_pct >= 0.0
+		and target_hp_pct <= profile.chains_hp_pct
+		and distance <= profile.chains_range
+	)
+	return Vector3i(int(thorns), int(near and hurt), int(execute))
+
+
 ## Velocidade (u/s) com que [param target_velocity] encurta a distancia ate o bot: projecao no eixo
 ## do bot ao alvo ([param to_target]); positivo = se aproximando.
 static func closing_speed(target_velocity: Vector3, to_target: Vector3) -> float:

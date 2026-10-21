@@ -20,12 +20,15 @@ const MIN_SCALE: float = 0.001
 ## Variacao do tamanho de cada raiz (fracao), fixa por indice.
 const SIZE_JITTER: Array[float] = [1.0, 0.8, 1.15, 0.9, 1.1, 0.85, 1.05, 0.95]
 
+## Peca que brota (padrao: a raiz do Druida; o Carrasco usa espinhos, F98).
+@export var tendril_scene: PackedScene = TENDRIL
+
 var _tendrils: Array[Node3D] = []
 
 
 func _ready() -> void:
 	for i: int in COUNT:
-		var tendril := TENDRIL.instantiate() as Node3D
+		var tendril := tendril_scene.instantiate() as Node3D
 		var angle := TAU * i / COUNT + 0.3 * (i % 2)
 		tendril.position = Vector3(cos(angle), 0.0, sin(angle)) * RING_RADIUS
 		tendril.rotation = Vector3(0.0, -angle, 0.0)

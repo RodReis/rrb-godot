@@ -37,7 +37,8 @@ var striker_id: int = TargetRules.NONE
 ## (F98). Servo e monstro golpeiam por receive_hit direto e nao marcam.
 var hero_basic: bool = false
 ## Correntes do Julgamento (F98): fracao do HP maximo abaixo da qual o alvo, depois do dano deste
-## efeito, morre (dano igual ao HP restante, ignora DEF); imunidade a dano bloqueia. 0 = nao executa.
+## efeito, morre (dano igual ao HP restante, ignora DEF); imunidade a dano bloqueia. 0 = nao
+## executa.
 var execute_below: float = 0.0
 
 

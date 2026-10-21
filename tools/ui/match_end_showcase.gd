@@ -24,6 +24,7 @@ const HEROES: Array[String] = [
 	"berserker",
 	"occultist",
 	"paladin",
+	"carrasco",
 ]
 const ME: int = 11
 const THEM: int = 22

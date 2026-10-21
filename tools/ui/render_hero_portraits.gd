@@ -17,8 +17,8 @@ const IDLE: StringName = &"Idle"
 ## Instante da animacao idle usado como pose (s).
 const POSE_TIME: float = 0.4
 ## id -> [cena, pecas escondidas] (as mesmas de game/scenes/heroes/<id>.tscn) e, opcionais, a
-## escala do modelo (o Barbarian_Large do Berserker e ~1,9x mais alto que o rig medio) e o clipe
-## de idle.
+## escala do modelo (o Barbarian_Large do Berserker e ~1,9x mais alto que o rig medio), o clipe
+## de idle e o giro em graus (o escudo do Carrasco, F98, cobre o rosto de frente).
 const HEROES: Dictionary[String, Array] = {
 	"knight":
 	[
@@ -42,6 +42,7 @@ const HEROES: Dictionary[String, Array] = {
 	"berserker": ["res://shared/assets/rrb/heroes/berserker.glb", [], 0.48, &"Idle_A"],
 	"occultist": ["res://shared/assets/rrb/heroes/occultist.glb", []],
 	"paladin": ["res://shared/assets/rrb/heroes/paladin.glb", []],
+	"carrasco": ["res://shared/assets/rrb/heroes/carrasco/carrasco.glb", [], 0.9, &"Idle", 35.0],
 }
 const BACKDROP: Color = Color(0.075, 0.106, 0.180)
 const AMBIENT: Color = Color(0.55, 0.62, 0.85)
@@ -106,6 +107,8 @@ func _render(
 	world.add_child(model)
 	if spec.size() > 2:
 		model.scale = Vector3.ONE * (spec[2] as float)
+	if spec.size() > 4:
+		model.rotation_degrees.y = spec[4] as float
 	for part: StringName in spec[1]:
 		var node := model.find_child(part) as Node3D
 		if node != null:

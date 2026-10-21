@@ -854,8 +854,11 @@ func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
 		var split := CombatRules.absorb(damage, shield_hp)
 		damage = split.x
 		shield_hp = split.y
-	if effect.execute_below > 0.0 and CarrascoRules.executes(
-		hp - damage, attributes.max_hp, effect.execute_below, invuln_ticks > 0
+	if (
+		effect.execute_below > 0.0
+		and CarrascoRules.executes(
+			hp - damage, attributes.max_hp, effect.execute_below, invuln_ticks > 0
+		)
 	):
 		damage = hp  # Correntes do Julgamento: executa, ignora DEF (F98)
 	if invuln_ticks == 0:

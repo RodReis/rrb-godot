@@ -3,7 +3,8 @@ extends Control
 ## Base de combate das duas HUDs (DV telas 3 e 4; dock do prototipo HUD Moderno, F57): icone,
 ## nome, conjuntos, atributos, nivel, HP e XP, 4 slots, skills com recarga e pontos livres,
 ## comandos, aviso de item equipado, o menu do bau (ChestChoiceMenu, F61) e a engrenagem
-## (Bestiario, switches de som da sessao e tamanho da interface, F97). So le o estado replicado
+## (Bestiario, switches de som da sessao e tamanho da interface, F97), e a Dor do Carrasco (F98,
+## SPEC-098 §3: um ponto por Dor, ate o teto da PassiveData). So le o estado replicado
 ## do heroi local e nunca decide regra; a HUD dona chama update() no proprio _process.
 
 ## Indice = slot do SkillButton: basico, Q, E, R.
@@ -16,6 +17,9 @@ const BASIC_HINT: String = "alvo / ataque"
 const BUS_GAME: StringName = &"Master"
 const BUS_BOSS: StringName = &"Boss"
 const PERCENT: float = 100.0
+## Pontos da Dor (F98): quadrados no cabecalho das habilidades; cheio em RED (fundo, nao texto).
+const PAIN_PIP_SIZE: Vector2 = Vector2(10, 10)
+const PAIN_EMPTY: Color = Color(UiTokens.BG_HIGHEST, 0.9)
 
 ## Onde o tamanho da interface e gravado (F97); o teste troca por um arquivo temporario.
 var settings_path: String = UserSettings.PATH
@@ -40,6 +44,8 @@ var _shown_target: Combatant
 ## Maior recarga vista desde que zerou, por botao (ticks): total da volta radial.
 var _cooldown_totals: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
+var _pain_pips: Array[ColorRect] = []
+var _shown_pain: int = -1
 
 @onready var _toast: Toast = %Toast
 @onready var _target_frame: TargetFrame = %TargetFrame
@@ -65,6 +71,7 @@ var _cooldowns: PackedInt32Array = PackedInt32Array([0, 0, 0, 0])
 @onready var _sound_boss: CheckButton = %SoundBoss
 @onready var _hud_scale: HSlider = %HudScale
 @onready var _hud_scale_value: Label = %HudScaleValue
+@onready var _pain_meter: HBoxContainer = %PainMeter
 
 
 func _ready() -> void:
@@ -108,6 +115,7 @@ func bind(hero: Hero) -> void:
 	_hero_name.text = data.display_name.to_upper()
 	_hero_icon.texture = data.basic_attack.icon
 	_refresh_equipment()
+	_bind_pain(data)
 
 
 ## Baus da partida, para o menu do bau (a HUD dona recolhe do SpawnDirector).
@@ -119,6 +127,7 @@ func update() -> void:
 	_update_plate()
 	_update_skills()
 	_update_target()
+	_update_pain()
 	if _hero.equipment != _shown_equipment:
 		_notify_equipped()
 		_refresh_equipment()
@@ -162,6 +171,34 @@ func _update_plate() -> void:
 		if _shown_level >= 0 and _hero.level > _shown_level:
 			_notify_free_point()
 		_shown_level = _hero.level
+
+
+## Um ponto por Dor ate o teto (so o Carrasco tem Dor); os outros herois escondem o medidor.
+func _bind_pain(data: HeroData) -> void:
+	for pip: ColorRect in _pain_pips:
+		pip.free()
+	_pain_pips.clear()
+	_shown_pain = -1
+	var carrasco := _hero is Carrasco and data.passive != null
+	_pain_meter.visible = carrasco
+	if not carrasco:
+		return
+	for i: int in data.passive.pain_max:
+		var pip := ColorRect.new()
+		pip.custom_minimum_size = PAIN_PIP_SIZE
+		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_pain_meter.add_child(pip)
+		_pain_pips.append(pip)
+	_pain_meter.tooltip_text = data.passive.description
+
+
+func _update_pain() -> void:
+	var carrasco := _hero as Carrasco
+	if carrasco == null or carrasco.pain == _shown_pain:
+		return
+	_shown_pain = carrasco.pain
+	for i: int in _pain_pips.size():
+		_pain_pips[i].color = UiTokens.RED if i < carrasco.pain else PAIN_EMPTY
 
 
 ## Moldura do alvo travado (F66): aparece quando o heroi tem alvo que o jogador ve, segue o HP

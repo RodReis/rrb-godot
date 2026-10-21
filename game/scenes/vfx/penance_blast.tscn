@@ -1,0 +1,116 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/scaled_vfx.gd" id="1_script"]
+[ext_resource type="Shader" path="res://scenes/vfx/shockwave.gdshader" id="2_shock"]
+
+[sub_resource type="Curve" id="Curve_grow"]
+_data = [Vector2(0, 0.1), 0.0, 2.5, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_grow"]
+curve = SubResource("Curve_grow")
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fade"]
+gradient = SubResource("Gradient_fade")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_wave"]
+resource_local_to_scene = true
+gravity = Vector3(0, 0, 0)
+scale_min = 2.0
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_grow")
+color_ramp = SubResource("GradientTexture1D_fade")
+
+[sub_resource type="ShaderMaterial" id="Mat_wave"]
+render_priority = 1
+shader = ExtResource("2_shock")
+shader_parameter/strength = 0.05
+shader_parameter/ring_width = 0.14
+shader_parameter/tint = Color(1, 0.08, 0.05, 1)
+shader_parameter/tint_amount = 0.75
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wave"]
+material = SubResource("Mat_wave")
+size = Vector2(1, 1)
+
+[sub_resource type="Gradient" id="G_ember"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.5, 0.3, 1, 0.9, 0.08, 0.05, 0.8, 0.4, 0.02, 0.02, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_ember"]
+gradient = SubResource("G_ember")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_ember"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.1
+emission_ring_radius = 0.35
+emission_ring_inner_radius = 0.1
+direction = Vector3(0, 0.5, 0)
+spread = 90.0
+flatness = 0.6
+initial_velocity_min = 2.0
+initial_velocity_max = 4.0
+gravity = Vector3(0, -4, 0)
+damping_min = 2.0
+damping_max = 3.0
+scale_min = 0.6
+scale_max = 1.2
+color_ramp = SubResource("Ramp_ember")
+
+[sub_resource type="StandardMaterial3D" id="Mat_ember"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(2.8, 0.6, 0.4, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="SphereMesh" id="Sphere_ember"]
+material = SubResource("Mat_ember")
+radius = 0.02
+height = 0.04
+radial_segments = 6
+rings = 3
+
+[node name="PenanceBlast" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 0.8
+light_seconds = 0.3
+fade_seconds = 0.3
+
+[node name="Wave" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+cast_shadow = 0
+emitting = false
+amount = 1
+lifetime = 0.55
+one_shot = true
+explosiveness = 1.0
+local_coords = true
+visibility_aabb = AABB(-1.5, -0.5, -1.5, 3, 1, 3)
+process_material = SubResource("PPM_wave")
+draw_pass_1 = SubResource("PlaneMesh_wave")
+
+[node name="Embers" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+cast_shadow = 0
+emitting = false
+amount = 40
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+local_coords = true
+visibility_aabb = AABB(-1.5, -0.5, -1.5, 3, 2, 3)
+process_material = SubResource("PPM_ember")
+draw_pass_1 = SubResource("Sphere_ember")
+
+[node name="Flash" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+light_color = Color(1, 0.15, 0.08, 1)
+light_energy = 3.5
+omni_range = 4.5

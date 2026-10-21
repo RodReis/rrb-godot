@@ -1,6 +1,6 @@
 extends CarrascoTestBase
-## Penitencia do Carrasco (GDB §4.11, F98; SPEC-098 §6 item 1): canaliza ate 2 s imovel, mitiga 40 %,
-## +1 Dor a cada 0,5 s, cura distribuida; explode em 3 u com raiz 1 s (Dor >= 4) ou lentidao 40 %
+## Penitencia do Carrasco (GDB §4.11, F98; SPEC-098 §6 item 1): canaliza ate 2 s imovel, mitiga 40
+## %, +1 Dor a cada 0,5 s, cura distribuida; explode em 3 u com raiz 1 s (Dor >= 4) ou lentidao 40 %
 ## por 1,5 s; E de novo encerra antes; atordoamento cancela sem explosao (a cura dada fica).
 
 const LEVEL: int = 2

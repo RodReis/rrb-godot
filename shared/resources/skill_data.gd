@@ -61,8 +61,9 @@ extends Resource
 ## Fracao do dano recebido (depois da DEF) devolvida ao atacante, por rank (Retribuicao do Paladino,
 ## F76); o alcance da origem do golpe e `attack_range` e o bonus de ATK e `attack_ratio`.
 @export var reflect_ratio: PackedFloat64Array
-## Recast (Espinhos do Carrasco, F98): janela em s para lancar o projetil depois do golpe, e dano dele
-## (base por rank + fracao do ATK). Velocidade, alcance e raio do projetil: speed, distance, radius.
+## Recast (Espinhos do Carrasco, F98): janela em s para lancar o projetil depois do golpe, e dano
+## dele (base por rank + fracao do ATK). Velocidade, alcance e raio do projetil: speed, distance,
+## radius.
 @export var recast_window: float
 @export var recast_amount: PackedFloat64Array
 @export var recast_attack_ratio: float
@@ -75,7 +76,8 @@ extends Resource
 @export var heal_attack_ratio: float
 ## Somado por ponto de Dor do Carrasco a cura e ao dano da Penitencia.
 @export var per_pain: float
-## Penitencia: com Dor >= root_min_pain a explosao prende (raiz por root_duration s); senao, lentidao.
+## Penitencia: com Dor >= root_min_pain a explosao prende (raiz por root_duration s); senao,
+## lentidao.
 @export var root_min_pain: int
 @export var root_duration: float
 ## Correntes do Julgamento: raio do raio de luz no ponto do acerto e fracao do HP maximo abaixo da

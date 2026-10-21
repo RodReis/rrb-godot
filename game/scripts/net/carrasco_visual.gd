@@ -1,8 +1,8 @@
 class_name CarrascoVisual
 extends HeroVisual
-## Visual do Carrasco (F98, SPEC-098 §4): o golpe dos Espinhos, o arremesso do recast e a explosao da
-## Penitencia saem dos contadores do estado (Carrasco.q_casts, recasts, blasts), porque a recarga do Q
-## so sobe no recast. A canalizacao usa o laco `channel`; o resto e o HeroVisual. So le estado.
+## Visual do Carrasco (F98, SPEC-098 §4): o golpe dos Espinhos, o arremesso do recast e a explosao
+## da Penitencia saem dos contadores do estado (Carrasco.q_casts, recasts, blasts), porque a recarga
+## do Q so sobe no recast. A canalizacao usa o laco `channel`; o resto e o HeroVisual. So le estado.
 
 ## Golpe em arco dos Espinhos, o arremesso do recast e a explosao da Penitencia, com as velocidades.
 @export var thorns: StringName = &""

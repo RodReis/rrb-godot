@@ -22,6 +22,7 @@ const FULL_ROSTER: Array[HeroData] = [
 	preload("res://shared/data/heroes/berserker.tres"),
 	preload("res://shared/data/heroes/occultist.tres"),
 	preload("res://shared/data/heroes/paladin.tres"),
+	preload("res://shared/data/heroes/carrasco.tres"),
 ]
 const KNIGHT_ONLY: Array[StringName] = [&"knight"]
 const ALL_SCENES: Array[StringName] = [
@@ -34,7 +35,8 @@ const ALL_SCENES: Array[StringName] = [
 	&"druid",
 	&"berserker",
 	&"occultist",
-	&"paladin"
+	&"paladin",
+	&"carrasco"
 ]
 const RATE: int = 30
 const START: int = 1000
@@ -174,10 +176,11 @@ func test_close_esconde() -> void:
 	assert_false(_screen.visible)
 
 
-## #228: com os 10 herois a tela inteira cabe na base do projeto (1920x1080, canvas_items): o minimo
-## do conteudo nao passa da base, senao o stretch nao salva e o topo e o rodape somem. Montada numa
-## SubViewport do tamanho da base: o minimo depende da largura (os textos quebram em linhas).
-func test_dez_herois_cabem_na_base_do_projeto() -> void:
+## #228: com os 11 herois (F98) a tela inteira cabe na base do projeto (1920x1080, canvas_items): o
+## minimo do conteudo nao passa da base, senao o stretch nao salva e o topo e o rodape somem.
+## Montada numa SubViewport do tamanho da base: o minimo depende da largura (os textos quebram em
+## linhas).
+func test_onze_herois_cabem_na_base_do_projeto() -> void:
 	var base := Vector2i(
 		ProjectSettings.get_setting("display/window/size/viewport_width"),
 		ProjectSettings.get_setting("display/window/size/viewport_height")
@@ -195,9 +198,9 @@ func test_dez_herois_cabem_na_base_do_projeto() -> void:
 	assert_lte(need.x, float(base.x), "largura minima %s da base %s" % [need.x, base.x])
 
 
-func test_dez_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
+func test_onze_herois_com_cena_e_tecla_4_escolhe_o_bruxo() -> void:
 	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
-	assert_eq(screen._choices.get_child_count(), 10)
+	assert_eq(screen._choices.get_child_count(), 11)
 	_press(screen, KEY_4)
 	assert_eq(screen._player_name.text, "BRUXO DE FOGO")
 	assert_eq(screen._player_role.text, "MAGO")
@@ -210,6 +213,14 @@ func test_tecla_0_escolhe_o_paladino() -> void:
 	_press(screen, KEY_0)
 	assert_eq(screen._player_name.text, "PALADINO RADIANTE")
 	assert_eq(screen._player_role.text, "TANQUE")
+
+
+func test_tecla_menos_escolhe_o_carrasco() -> void:
+	var screen := _make_screen(FULL_ROSTER, ALL_SCENES)
+	_press(screen, KEY_MINUS)
+	assert_eq(screen._player_name.text, "CARRASCO")
+	assert_eq(screen._player_role.text, "TANQUE")
+	assert_true(screen._cards[10]._tag.visible)
 
 
 func test_tecla_5_escolhe_a_ladina() -> void:

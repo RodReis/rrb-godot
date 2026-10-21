@@ -82,6 +82,7 @@ func test_habilidades_tem_descricao_e_icone() -> void:
 		assert_not_null(skill.icon, "icone de %s" % skill.id)
 
 
-func test_id_no_fim_de_ids_all() -> void:
-	assert_eq(Ids.ALL[Ids.ALL.size() - 1], &"paladin", "id novo so no fim")
+func test_id_entrou_no_fim_de_ids_all() -> void:
+	# Entrou no fim no F76; o Carrasco (F98) veio depois dele. Numero nunca muda de lugar.
+	assert_eq(Ids.to_int(&"carrasco"), Ids.to_int(&"paladin") + 1, "id novo so no fim")
 	assert_eq(Ids.to_name(Ids.to_int(&"paladin")), &"paladin")

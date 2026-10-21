@@ -360,6 +360,18 @@ size_flags_horizontal = 3
 theme_type_variation = &"LabelBadge"
 text = "HABILIDADES"
 
+[node name="PainMeter" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/SkillsHeader"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 3
+
+[node name="PainTitle" type="Label" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn/SkillsHeader/PainMeter"]
+layout_mode = 2
+theme_type_variation = &"LabelMuted"
+text = "DOR"
+
 [node name="SkillsRow" type="HBoxContainer" parent="Bottom/BottomColumn/Dock/DockColumn/Modules/Skills/SkillsColumn"]
 layout_mode = 2
 

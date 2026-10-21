@@ -40,7 +40,7 @@
 
   "pilares": [
     {
-      "titulo": "Dez heróis",
+      "titulo": "Onze heróis",
       "itens": [
         { "nome": "Cavaleiro", "papel": "Tanque", "texto": "Investida que empurra, muralha que absorve dano e bloqueia projéteis, e um terremoto que atordoa." },
         { "nome": "Arqueiro", "papel": "Ranger", "texto": "Flecha que atravessa inimigos, rolamento para escapar e uma chuva de flechas em área." },
@@ -51,7 +51,8 @@
         { "nome": "Protetor da Selva", "papel": "Controle", "texto": "Raízes que prendem o inimigo no lugar, poção verde que cura numa zona e um pântano que atrasa e fere quem pisa nele." },
         { "nome": "Berserker", "papel": "Lutador", "texto": "Dois machados e uma fúria que cresce com o ferimento: quanto menos vida, mais rápido ele bate e mais vida rouba. No Ragnarök pega fogo e ignora qualquer controle por quatro segundos." },
         { "nome": "Paladino Radiante", "papel": "Tanque", "texto": "Tanque que responde: golpe de maça que atordoa o primeiro que chega, Retribuição que devolve parte do dano de quem bate de perto e uma bênção que cura e deixa imune a qualquer dano, até à zona." },
-        { "nome": "Ocultista", "papel": "Mago", "texto": "Mago de dano contínuo: cada tiro deixa uma marca que derrete a defesa, a Praga corrói por quatro segundos, o Círculo Profano prende o alvo e, no nível seis, dois servos do Vazio perseguem o adversário." }
+        { "nome": "Ocultista", "papel": "Mago", "texto": "Mago de dano contínuo: cada tiro deixa uma marca que derrete a defesa, a Praga corrói por quatro segundos, o Círculo Profano prende o alvo e, no nível seis, dois servos do Vazio perseguem o adversário." },
+        { "nome": "Carrasco", "papel": "Tanque", "texto": "O primeiro herói realista: espada e escudo, espinhos que deixam lento e voltam como projétil, uma penitência em que ele se ajoelha, aguenta o dano e explode prendendo quem está perto, e correntes de luz que executam quem estiver com pouca vida." }
       ]
     },
     {

@@ -58,6 +58,17 @@ extends Resource
 ## HP abaixo de blessing_hp_pct (fracao) ou dentro da zona.
 @export var consecrate_range: float
 @export var blessing_hp_pct: float
+## Carrasco (SPEC-098 §5): Espinhos com o alvo a ate thorns_range; recast com a janela aberta e o
+## alvo fugindo (alem de thorns_range e ate recast_range); Penitencia com o inimigo a ate
+## penance_range e HP abaixo de penance_hp_pct ou depois de penance_hits golpes seguidos; Correntes
+## contra heroi a ate chains_range com o HP dele ate chains_hp_pct (execucao provavel).
+@export var thorns_range: float
+@export var recast_range: float
+@export var penance_range: float
+@export var penance_hp_pct: float
+@export var penance_hits: int
+@export var chains_range: float
+@export var chains_hp_pct: float
 ## Fase 2 (F19): a menos disto da borda da zona (ou fora dela) o bot foge para dentro. Escolha do
 ## Code: nenhum documento fixa o valor; a zona encolhe ~0,15 u/s, 2 u sao ~13 s de folga.
 @export var zone_margin: float

@@ -5,7 +5,8 @@ extends GutTest
 ## Protetor da Selva (F74), ADR-0011 item 3 e ADR-0013 item 7: elmo sem peca (o capuz e o chapeu
 ## ficam), mas com icone. Berserker (F75): elmo de chifres fixo; o Rig_Large tem os mesmos ossos.
 ## Ocultista (F77, ADR-0016 item 8): capuz proprio fixo, elmo sem peca. Paladino (F76): sem elmo
-## (excecao do ADR-0011 item 3, rosto a mostra), elmo sem peca.
+## (excecao do ADR-0011 item 3, rosto a mostra), elmo sem peca. Carrasco (F98, ADR-0032 item 4):
+## rig do Mixamo, sem peca nenhuma (espada e escudo do modelo), so os icones.
 
 const CATALOG: String = "res://shared/data/items/catalog.tres"
 ## Heroi -> modelo (mesmo rig KayKit nos dois).
@@ -65,6 +66,16 @@ func test_todo_item_tem_peca_e_icone_em_cada_heroi() -> void:
 			else:
 				assert_null(piece, "%s: %s nao aparece" % [hero, item.id])
 			assert_not_null(visuals.icon(item), "%s: icone de %s" % [hero, item.id])
+
+
+func test_carrasco_tem_so_icones() -> void:
+	var visuals := ItemVisuals.for_hero(&"carrasco")
+	assert_not_null(visuals)
+	assert_true(visuals.pieces.is_empty(), "o equipamento nao troca o visual (ADR-0032)")
+	for part: StringName in visuals.pack_parts:
+		assert_eq(part, &"")
+	for item: ItemData in _catalog.items:
+		assert_not_null(visuals.icon(item), "icone de %s" % item.id)
 
 
 func test_heroi_sem_visual_e_nulo() -> void:

@@ -25,6 +25,7 @@ const HEROES: Array[String] = [
 	"berserker",
 	"occultist",
 	"paladin",
+	"carrasco",
 ]
 const DEFAULT_SIZES: String = "1280x720,1920x1080,2560x1440,3440x1440"
 const TICK_RATE: int = 30
