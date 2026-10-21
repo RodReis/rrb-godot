@@ -8,7 +8,7 @@ const PROTOTYPE_NUMBERS: Array[String] = [
 	"432", "24 × 18", "12+4", "1.5%", "6% HP", "18g", "-1,8", "-15%", "14.5", "68°", "20s", "8s"
 ]
 const CHEST_TOTAL: int = 28
-const MONSTER_TOTAL: int = 35
+const MONSTER_TOTAL: int = 39  # 4 guardas T1 dos baus de fora do muro (F95, PI 2026-10-21)
 
 var _catalog: CatalogService
 var _data: ArenaMapData
@@ -144,7 +144,7 @@ func test_crater_card_follows_the_boss_and_the_clock() -> void:
 func test_base_card_counts_the_real_markers() -> void:
 	var text := _info_text(ArenaMapPois.BASE_A)
 	for expected: String in [
-		"Base A", "4× Esqueleto", "1× Esqueleto Guerreiro", "6 baús comuns", "05:00"
+		"Base A", "6× Esqueleto", "1× Esqueleto Guerreiro", "6 baús comuns", "05:00"
 	]:
 		assert_string_contains(text, expected)
 	assert_string_contains(_info_text(ArenaMapPois.BASE_B), "Base B")

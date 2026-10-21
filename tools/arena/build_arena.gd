@@ -269,6 +269,9 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	for i: int in range(BASE_T1.size()):
 		_monster(markers, "T1%s%d" % [tag, i], _local(BASE_T1[i], flip), team, 1, &"skeleton_t1")
 	_monster(markers, "T2%s" % tag, _local(BASE_T2, flip), team, 2, &"skeleton_warrior_t2")
+	for i: int in range(GATE_GUARDS_T1.size()):
+		var guard_at := _local(GATE_GUARDS_T1[i], flip)
+		_monster(markers, "T1Gate%s%d" % [tag, i], guard_at, team, 1, &"skeleton_t1")
 	for i: int in range(BASE_CHESTS.size()):
 		_common_chest(markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team)
 	var fountain := _scene(FOUNTAIN_SCENE).instantiate() as Fountain

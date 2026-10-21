@@ -152,13 +152,16 @@ def build_bridge():
             at = (sx * 3.07, SPAN_CY + math.cos(a) * r_mid, math.sin(a) * r_mid)
             size = (0.34, extra + (0.1 if key else 0.0), chord * (1.2 if key else 1.0))
             ring.box("kit_stone", at, size, rot=(math.degrees(a), 0.0, 0.0), tint=1.05 if key else None)
+    # Parapeito e pilares so sobre a agua (|z| <= 1,8; o rio vai de z -2 a 2): ali a colisao do rio ja
+    # segura o heroi. Nas pontas em terra fica so o piso, livre para virar a direita ou a esquerda
+    # entre a ponte e as torres do portao (PI 2026-10-21: o heroi atravessava o pilar da ponta).
     wall = Piece("kit_bridge_parapet", bevel=0.035)
     for sx in (-1.0, 1.0):
         x = sx * 2.85
-        for k in range(6):
-            wall.box("kit_stone", (x, 0.225, -2.5 + k), (0.5, 0.65, 0.94))
-        wall.box("kit_stone", (x, 0.64, 0.0), (0.64, 0.16, 6.1), bevel=True, tint=1.06)
-        for z in (-2.82, 2.82):
+        for k in range(4):
+            wall.box("kit_stone", (x, 0.225, -1.2 + k * 0.8), (0.5, 0.65, 0.76))
+        wall.box("kit_stone", (x, 0.64, 0.0), (0.64, 0.16, 3.4), bevel=True, tint=1.06)
+        for z in (-1.45, 1.45):
             wall.box("kit_stone", (x, 0.5, z), (0.74, 1.2, 0.7), tint=1.02)
             wall.box("kit_stone", (x, 1.14, z), (0.84, 0.14, 0.8), tint=1.08)
     return [body.build(), ring.build(), wall.build()]
@@ -269,16 +272,23 @@ class Blades(K.Foliage):
             self.faces.append((a, a + 1, a + 3, a + 2))
             self.face_mats.append(self.mats.index(mat))
 
-    def tuft(self, mat, at, rng, height, width, count=3, spread=0.5, rows=(0.0, 0.55, 1.0)):
-        """Touceira de [param count] laminas abertas em leque."""
+    def tuft(self, mat, at, rng, height, width, count=3, spread=0.5, rows=(0.0, 0.55, 1.0), bounds=None):
+        """Touceira de [param count] laminas abertas em leque. Com [param bounds] (meia caixa x, z), a
+        lamina que pendesse para fora da caixa pende para dentro (o capim nao cobre o que esta ao lado)."""
         tone = rng.uniform(0.8, 1.15)
         hue = (tone * rng.uniform(0.92, 1.05), tone, tone * rng.uniform(0.85, 1.0))
         face = rng.uniform(0.0, math.tau)
         for i in range(count):
             yaw = face + (i - (count - 1) / 2.0) * spread + rng.uniform(-0.15, 0.15)
-            self.blade(mat, (at[0] + rng.uniform(-0.04, 0.04), 0.0, at[1] + rng.uniform(-0.04, 0.04)), yaw,
-                       height * rng.uniform(0.75, 1.15), width * rng.uniform(0.85, 1.15),
-                       height * rng.uniform(0.18, 0.4), hue, rows)
+            base = (at[0] + rng.uniform(-0.04, 0.04), 0.0, at[1] + rng.uniform(-0.04, 0.04))
+            h = height * rng.uniform(0.75, 1.15)
+            lean = height * rng.uniform(0.18, 0.4)
+            if bounds is not None:
+                tip_x = base[0] + math.cos(yaw) * lean
+                tip_z = base[2] + math.sin(yaw) * lean
+                if abs(tip_x) > bounds[0] or abs(tip_z) > bounds[1]:
+                    yaw += math.pi
+            self.blade(mat, base, yaw, h, width * rng.uniform(0.85, 1.15), lean, hue, rows)
 
 
 def build_tall_grass(name, size, seed):
@@ -297,7 +307,7 @@ def build_tall_grass(name, size, seed):
             z = max(-half[1], min(half[1], z))
             edge = min(half[0] - abs(x), half[1] - abs(z))
             h = 1.1 * (0.6 + 0.4 * min(edge / 0.4, 1.0)) * r.uniform(0.85, 1.12)
-            f.tuft("kit_grass", (x, z), r, h, 0.22, count=3, spread=0.55, rows=(0.0, 1.0))
+            f.tuft("kit_grass", (x, z), r, h, 0.22, count=3, spread=0.55, rows=(0.0, 1.0), bounds=half)
     return [f.build()]
 
 

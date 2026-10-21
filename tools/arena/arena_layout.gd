@@ -59,9 +59,13 @@ const BASE_CHESTS: Array[Vector2] = [
 	Vector2(29.5, -8.5),
 	Vector2(33, 9),
 	Vector2(33, -9),
-	Vector2(24.5, 7.5),
-	Vector2(24.5, -7.5),
+	# Do lado de fora do arco, colados no muro ao lado do portao (PI 2026-10-21, F95): em (24,5,
+	# +-7,5) ficavam dentro da muralha (raio 12,7 do spawn).
+	Vector2(23.6, 9.0),
+	Vector2(23.6, -9.0),
 ]
+## Esqueleto T1 de guarda de cada bau de fora do muro (PI 2026-10-21, F95).
+const GATE_GUARDS_T1: Array[Vector2] = [Vector2(22.0, 10.8), Vector2(22.0, -10.8)]
 ## Fonte no canto esquerdo da base (#74), em (s, l).
 const FOUNTAIN_LOCAL: Vector2 = Vector2(32, 11)
 ## Torres do castelo ao lado do portao (l).
@@ -126,7 +130,9 @@ const LAGOON_GRASS_A: Vector2 = Vector2(-19, -29)
 ## Moitas de emboscada (F73, decisao do PI em 2026-10-17): rente aos corredores TOP (O e N), fora
 ## deles (SPEC-046 §2.3), dos bolsoes de selva e do campo de canto; em (x, z) do mundo na metade A,
 ## a B e a rotacao (corredores BOT). Mesma moita 4x4 do patio.
-const AMBUSH_GRASS_A: Array[Vector2] = [Vector2(-28.5, 6.0), Vector2(-5.0, -28.5)]
+## A do corredor N saiu de x -5 para -11,5 (PI 2026-10-21, F95): a moita cobria o campo lateral Bot
+## da base B (o T2 ficava dentro e o bau sumia no capim).
+const AMBUSH_GRASS_A: Array[Vector2] = [Vector2(-28.5, 6.0), Vector2(-11.5, -28.5)]
 
 # Campos de canto (SPEC-055 §2, ADR-0011), no bolso da curva TOP (NO); o SE e a rotacao. Neutros:
 # os dois times chegam pela propria rota. Golem no centro, lobos e baus reforcados em volta.

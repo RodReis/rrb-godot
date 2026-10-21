@@ -32,7 +32,7 @@ const ITEMS: Dictionary = {
 
 ## id -> [tier, qtd, hp, dano, intervalo, xp, comum, raro, epico] (GDB §5.1; mago: PI 2026-10-09).
 const MONSTERS: Dictionary = {
-	&"skeleton_t1": [MonsterData.Tier.T1, 16, 160, 14, 1.2, 35, 0.2, 0, 0],
+	&"skeleton_t1": [MonsterData.Tier.T1, 20, 160, 14, 1.2, 35, 0.2, 0, 0],  # +4 guardas do portao (F95)
 	&"skeleton_warrior_t2": [MonsterData.Tier.T2, 8, 360, 28, 1.1, 85, 1, 0, 0],
 	&"skeleton_mage_t2": [MonsterData.Tier.T2, 2, 260, 38, 1.5, 80, 0.35, 0.65, 0],
 	&"golem_t3": [MonsterData.Tier.T3, 2, 680, 50, 1.6, 190, 0, 1, 0],

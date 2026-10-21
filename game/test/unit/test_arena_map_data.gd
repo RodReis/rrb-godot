@@ -75,7 +75,7 @@ func test_map_counts_match_the_gdb_distribution() -> void:
 			for id: String in group["monsters"]:
 				monsters += int(group["monsters"][id])
 	assert_eq(chests, 28, "GDB §6.2: 28 baus")
-	assert_eq(monsters, 35, "GDB §5.1: 34 monstros + o Rei Esqueleto")
+	assert_eq(monsters, 39, "GDB §5.1: 38 monstros (4 guardas do portao, F95) + o Rei Esqueleto")
 
 
 func test_every_anchor_projects_inside_the_image() -> void:
