@@ -271,9 +271,13 @@ func _build_base(walls: StaticBody3D, flip: float) -> void:
 	_monster(markers, "T2%s" % tag, _local(BASE_T2, flip), team, 2, &"skeleton_warrior_t2")
 	for i: int in range(GATE_GUARDS_T1.size()):
 		var guard_at := _local(GATE_GUARDS_T1[i], flip)
-		_monster(markers, "T1Gate%s%d" % [tag, i], guard_at, team, 1, &"skeleton_t1")
+		var guard := _monster(markers, "T1Gate%s%d" % [tag, i], guard_at, team, 1, &"skeleton_t1")
+		guard.basis = Basis.looking_at(_rotate_if(OUTSIDE_FACING_A[i], flip))
+	var outside_first := BASE_CHESTS.size() - GATE_GUARDS_T1.size()
 	for i: int in range(BASE_CHESTS.size()):
-		_common_chest(markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team)
+		var chest := _common_chest(markers, "Chest%s%d" % [tag, i], _local(BASE_CHESTS[i], flip), team)
+		if i >= outside_first:
+			chest.basis = Basis.looking_at(_rotate_if(OUTSIDE_FACING_A[i - outside_first], flip))
 	var fountain := _scene(FOUNTAIN_SCENE).instantiate() as Fountain
 	fountain.name = "Fountain%s" % tag
 	fountain.team = team
@@ -717,19 +721,21 @@ func _tall_grass(at: Vector3, size: Vector2, basis: Basis, label: String, model:
 
 func _monster(
 	parent: Node3D, label: String, at: Vector3, team: int, tier: int, id: StringName
-) -> void:
+) -> SpawnMarker:
 	var m := _marker(parent, label, at)
 	m.kind = SpawnMarker.Kind.MONSTER
 	m.team = team
 	m.tier = tier
 	m.monster_id = id
+	return m
 
 
-func _common_chest(parent: Node3D, label: String, at: Vector3, team: int) -> void:
+func _common_chest(parent: Node3D, label: String, at: Vector3, team: int) -> SpawnMarker:
 	var m := _marker(parent, label, at)
 	m.kind = SpawnMarker.Kind.CHEST
 	m.team = team
 	m.chest_kind = ChestRules.Kind.COMMON
+	return m
 
 
 func _rare_chest(parent: Node3D, label: String, at: Vector3) -> void:

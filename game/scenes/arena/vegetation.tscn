@@ -18,7 +18,7 @@ shader_parameter/gust_scale = null
 shader_parameter/fade_start = null
 shader_parameter/fade_end = null
 
-[node name="Vegetation" type="MultiMeshInstance3D" unique_id=1456052333]
+[node name="Vegetation" type="MultiMeshInstance3D" unique_id=1011091737]
 material_override = SubResource("ShaderMaterial_3s35m")
 cast_shadow = 0
 gi_mode = 0

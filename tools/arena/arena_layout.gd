@@ -68,6 +68,9 @@ const BASE_CHESTS: Array[Vector2] = [
 ]
 ## Esqueleto T1 de guarda de cada bau de fora do muro (PI 2026-10-21, F95).
 const GATE_GUARDS_T1: Array[Vector2] = [Vector2(33.75, 16.3), Vector2(33.75, -16.3)]
+## Para onde olham guarda e bau de fora do muro, no mundo da metade A: para fora do muro de
+## fechamento, de frente para quem chega (PI 2026-10-21, F95: o da direita olhava para a ponte).
+const OUTSIDE_FACING_A: Array[Vector3] = [Vector3(0, 0, -1), Vector3(1, 0, 0)]
 ## Fonte no canto esquerdo da base (#74), em (s, l).
 const FOUNTAIN_LOCAL: Vector2 = Vector2(32, 11)
 ## Torres do castelo ao lado do portao (l).
