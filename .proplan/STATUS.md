@@ -37,9 +37,7 @@ updated: 2026-10-21
 
 ## Em Andamento
 
-### [MVP4] Playtest (#246)
-
-- [MVP4][SPEC-097][F97] Escala da interface do jogo no Launcher e na partida (#272)
+_(vazio)_
 
 ## Feito
 
@@ -49,6 +47,7 @@ _(vazio)_
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-097][F97] Escala da interface do jogo no Launcher e na partida (#272, finalizado em: 2026-10-21)
 - [MVP4][SPEC-096][F96] Arena nova, parte 3: borda da ilha e vale (#268, finalizado em: 2026-10-21)
 - [MVP4][SPEC-095][F95] Arena nova, parte 2: rio, pontes, centro, selva e mato alto (#267, finalizado em: 2026-10-21)
 - [MVP4][SPEC-084][F84] Spike visual: canto SO estilo Eternal Return em cena jogável (#247, finalizado em: 2026-10-21)
