@@ -364,6 +364,11 @@
           "arquivo": "mvp4-f94-bases-arena.webp",
           "legenda": "O teste de arte aprovado chegou à arena da partida: as bases dos dois times ganharam muralhas de cantaria, casas de enxaimel com telhado de telha, praça calçada, lanternas e plantas que balançam com o vento. A esquerda mostra como era; o time dourado tem estandartes da própria cor.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp4-f95-meio-arena.webp",
+          "legenda": "O meio do mapa também ganhou o visual novo: ponte de pedra lavrada, margem do rio com pedras e juncos, borda da cratera em colunas de basalto, fumaça suave saindo da lava, rochas com cristal e mato alto que balança com o vento. A esquerda mostra como era.",
+          "tipo": "entregue"
         }
       ]
     }
