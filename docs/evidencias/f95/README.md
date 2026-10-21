@@ -38,7 +38,10 @@ Os testes do F32 e do F72 seguem verdes: área, abertura em volta do herói e he
 
 ## Rede e soak (aceite 4)
 
-Preenchido ao fim das rodadas.
+- `soak.ps1 -Count 50 -Parallel 8` deu `SOAK OK: 50/50 terminadas, todas <= 10:00, todas com vencedor`. Todas acabaram por kill_goal, com duração entre 351 e 485 s. As vitórias por lado foram 19 da A e 31 da B. O mapa é simétrico por rotação, e esse desvio não foi investigado neste card. Fica registrado para o F30 (balanceamento).
+- `net-measure.ps1 -DelayMs 100 -Minutes 1`, 3 rodadas com o servidor em Docker já com a arena nova. Nas 3 deu zero `past the history limit`, zero `Node not found`, zero `Reference tick missing` e nenhum ERROR. O warm-up aqueceu 446 instâncias, entre 1,4 e 3,2 s.
+- Nas rodadas 2 e 3, os 6 checkpoints dos dois clientes bateram com os do servidor. Na rodada 1, 5 bateram e 1 ficou sem par no cliente, sem nenhum diferente.
+- Os logs ficaram em `logs/f95-soak/` e `logs/f95-net-{1,2,3}/`, fora do git.
 
 ## Decisões do PI na verificação (2026-10-21)
 
