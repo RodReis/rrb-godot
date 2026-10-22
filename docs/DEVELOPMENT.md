@@ -239,7 +239,7 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
 
     Malhas em `art/vfx/build_carrasco_vfx.py`, sem shader novo.
   - **HUD:** medidor de Dor de 6 pontos no cabeçalho das habilidades (`HeroPlate`).
-  - **Seleção:** 11º card, grade de 6 colunas, tecla `-`.
+  - **Seleção:** 11º card, tecla `-`. Grade de 5 por fileira (decisão do PI na verificação), com os cards menores (204 px, retrato 116 px) para as 3 fileiras caberem em 1920x1080 a 100 %. `HeroVisual.portrait_band` e `portrait_turn` deixam o Carrasco enquadrado da cintura para cima e girado no card.
   - **Launcher e site:** só dados e retratos; os testes que contavam 10 heróis passaram a contar 11. O pilar do roteiro virou "Onze heróis". A arte da tela de loading e do login (`render_loading`) continua com os 10 heróis, porque refazê-la ficou fora do card.
   - **Bot:** `BotRules.carrasco_skills`, com perfil `thorns_range` 2,8, `recast_range` 6,5, `penance_range` 3, `penance_hp_pct` 0,6, `penance_hits` 2, `chains_range` 5,5 e `chains_hp_pct` 0,4. O bot solta o Q um think antes do recast e não aperta nada canalizando.
   - **Decisões do Code:**
