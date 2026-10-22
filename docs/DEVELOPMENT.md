@@ -257,6 +257,14 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
     - soak 50/50, com o Carrasco vencendo 34/46 fora do espelho (74 %, para o F30);
     - rede 3/3 a 100 ms contra Cavaleiro, Berserker e Paladino (0 `past the history limit`);
     - frame time de GPU +0,29 ms.
+- [x] **Ajustes de combate e HUD (PI, 2026-10-22; sem fatia, `[FIX]` a abrir).** Pedidos do PI na verificação do F85/F98, na branch `fix/ajustes-combate-hud`.
+  - **Revide:** `HitEffect.aggressor_id` (herói, monstro e servo) + `TargetRules.retaliate`; o alvo trava o agressor no próprio `_rollback_tick` se não tem alvo válido. Testes de vítima passiva usam `NoRetaliation.mute`.
+  - **Seleção de heróis:** `submit_hero_preview` (RPC) guarda o herói em destaque (`Seat.shown`) e o timeout o usa (`PickRules.default_hero(..., shown)`); o Carrasco ganhou o clipe `Portrait` (pose de descanso, `carrasco.blend` e `.glb`) para o card e os retratos, sem o giro de 35°.
+  - **Placa de HP:** `WorldHealthBar` refeita (selo de nível/tier/coroa, divisões a cada 100 de vida, rastro do dano, escudo na barra); sem `HpLabel`. Status de controle viram `StatusMark` (estrelas, correntes, setas), com `StatusRules`; o monstro replica atordoado/lento.
+  - **HUD:** alerta de dano (`DamageVignette`, `[ui] damage_alert`, 25 %), clique na skill ou no selo Ctrl+tecla para aprender, seta verde/vermelha no card do baú (`OfferCompare.verdict`), placar da fase 2 só com avatares e números (`ScoreBanner`, `IconFont`) e painéis de zona, respawn, portão e chefe resumidos.
+  - **Tela de carregamento e splash:** `render_loading.gd` ganhou o Carrasco e limpa os props do palco; arenas dia/noite, splash, fileira de heróis e faixa do Login renderizadas com a arena nova; boot do Game com fundo preto (a janela abre em 1280x720 e vira tela cheia: o azul aparecia como retângulo). Retrato do Carrasco com câmera própria (peito para cima, de frente).
+  - **Site:** seção Arena em duas colunas iguais; vitrine com as duas capturas novas (`mvp4-ajustes-*`).
+  - **Prova:** game 1958/1958 e launcher 831/831; soak 50/50; frame time de GPU média 3,8 ms (p99 4,5 ms) com as placas novas.
 - [ ] **F29** — telemetria (ping médio, duração, líder F1 × vencedor, "teleportes" reportados) no backend; painel de KPIs no Histórico; `tools/export-matches.ps1`.
 - [ ] **F30** — ajustes de balanceamento (só `.tres`).
 - [ ] **[GATE] MVP4** — critérios PRD §9.2; decisões câmera/duração/3x3.

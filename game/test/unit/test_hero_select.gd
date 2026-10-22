@@ -297,7 +297,19 @@ func test_carrasco_traz_a_faixa_e_o_giro_do_card() -> void:
 	assert_almost_eq(
 		float(model.get_meta(&"portrait_height")), 2.16, 0.001, "corpo inteiro no grande"
 	)
-	assert_almost_eq(float(model.get_meta(&"portrait_turn")), 35.0, 0.001)
+	# Pose de descanso (escudo ao lado, PI 2026-10-22): de frente no card, sem o giro do F98.
+	assert_almost_eq(float(model.get_meta(&"portrait_turn")), 0.0, 0.001)
+	# PI 2026-10-22: na selecao, pose de descanso (o Idle dele e guarda de combate).
+	assert_eq(model.get_meta(&"idle"), &"Portrait")
+	var player := model.find_child("AnimationPlayer") as AnimationPlayer
+	assert_true(player.has_animation(&"Portrait"), "clipe exportado no carrasco.glb")
 	var knight := HeroSelect.model_of(&"knight")
 	autofree(knight)
 	assert_eq(knight.get_meta(&"portrait_band"), Vector2.ZERO, "KayKit: enquadramento comum")
+
+
+## Destaque sem lock-in (PI 2026-10-22): a tela avisa o servidor do heroi mostrado.
+func test_heroi_mostrado_vira_o_destaque_no_servidor() -> void:
+	for seat: MatchController.Seat in _match.seats():
+		if seat.peer == multiplayer.get_unique_id():
+			assert_eq(seat.shown, &"knight", "o aberto ja conta")

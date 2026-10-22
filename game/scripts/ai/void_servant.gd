@@ -95,7 +95,7 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	visible = _concealment.is_shown()
 	hp_bar.visible = is_alive() and not PlayerInput.cinematic
-	hp_bar.set_ratio(float(hp) / maxi(max_hp, 1))
+	hp_bar.set_hp(hp, max_hp)
 
 
 ## Pelo Ocultista [param hero] no _ready dele, nos dois lados: servo [param index] (0 ou 1).
@@ -304,6 +304,7 @@ func _attack(tick: int) -> void:
 	var effect := HitEffect.new(_damage, global_position)
 	effect.attacker_id = summoner.peer_id
 	effect.striker_id = uid  # golpe direto: a Retribuicao do Paladino devolve ao servo (F76)
+	effect.aggressor_id = uid
 	_target.receive_hit(tick + 1, HitLedger.source_key(uid, HitLedger.Slot.BASIC), effect)
 
 

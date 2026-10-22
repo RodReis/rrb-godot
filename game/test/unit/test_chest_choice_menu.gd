@@ -119,6 +119,8 @@ func test_item_pior_mostra_a_comparacao_negativa() -> void:
 	assert_gt(rows.get_child_count(), 0)
 	var delta := (rows.get_child(0) as HBoxContainer).get_child(1) as Label
 	assert_string_starts_with(delta.text, "−")
+	assert_eq(_cards()[0].verdict, -1, "seta vermelha: nao vale trocar")
+	assert_eq(_cards()[1].verdict, 1, "slot vazio: seta verde")
 
 
 func test_longe_ou_escolhido_o_menu_fecha() -> void:

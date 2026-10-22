@@ -99,7 +99,7 @@ O que vai em `shared/core` e não em `game/scripts/core`: o que o Launcher tamb�
 `MatchController` (um por partida, existe **só no servidor**; clientes recebem o estado por `StateSynchronizer` + RPCs) é uma máquina de estados:
 
 ```
-LOBBY_WAIT ─(2 jogadores conectados e token válido)─▶ HERO_PICK ─(ambos lock-in ou timeout 24 s)─▶
+LOBBY_WAIT ─(2 jogadores conectados e token válido)─▶ HERO_PICK ─(ambos lock-in ou timeout 24 s; no timeout vale o herói em destaque, que o cliente manda a cada troca por `submit_hero_preview`, validado como o lock-in)─▶
 INTRO ─(≥ 5 s e `ready` dos 2, ou 8 s)─▶ PHASE1 (5:00) ─(relógio)─▶ TRANSITION (5 s) ─▶ PHASE2
   ─(4:00 da fase 2)─▶ SUDDEN_DEATH ─▶ ENDED          └─(meta de kills)───────────────────▶ ENDED
 ```

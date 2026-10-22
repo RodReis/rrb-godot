@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## Base de combate das HUDs (HeroPlate) ligada a um Cavaleiro de verdade: so mostra o estado do
 ## heroi e dos baus.
@@ -182,6 +183,45 @@ func test_level_up_with_free_point_notifies() -> void:
 	assert_eq((_node("%SkillE").get_node("%Cooldown") as Label).text, "Ctrl+E")
 
 
+## Clique tambem aprende (PI 2026-10-22): botao com ponto livre ou o selo Ctrl+tecla pedem o
+## ponto pelo input; cursor de mao so quando da para aprender.
+func test_clique_na_skill_upavel_pede_o_ponto() -> void:
+	await _bind_and_wait()
+	_hero.level = 2
+	_hero.xp = XpTable.xp_for_level(_hero.xp_curve, 2)
+	_plate.update()
+	var skill_e := _node("%SkillE") as SkillButton
+	assert_eq(skill_e.mouse_default_cursor_shape, Control.CURSOR_POINTING_HAND)
+	skill_e._gui_input(_left_click())
+	assert_eq(_hero.input._pending_learn, SkillRules.SLOT_E)
+
+
+func test_clique_no_selo_de_aprender_pede_o_ponto() -> void:
+	await _bind_and_wait()
+	_hero.level = 2
+	_hero.xp = XpTable.xp_for_level(_hero.xp_curve, 2)
+	_plate.update()
+	var badge := _node("%LearnE") as Control
+	assert_eq(badge.mouse_default_cursor_shape, Control.CURSOR_POINTING_HAND)
+	badge.gui_input.emit(_left_click())
+	assert_eq(_hero.input._pending_learn, SkillRules.SLOT_E)
+
+
+func test_skill_sem_ponto_nao_aprende_no_clique() -> void:
+	await _bind_and_wait()
+	var skill_q := _node("%SkillQ") as SkillButton
+	assert_ne(skill_q.mouse_default_cursor_shape, Control.CURSOR_POINTING_HAND)
+	skill_q._gui_input(_left_click())
+	assert_eq(_hero.input._pending_learn, PlayerInput.LEARN_NONE)
+
+
+func _left_click() -> InputEventMouseButton:
+	var click := InputEventMouseButton.new()
+	click.button_index = MOUSE_BUTTON_LEFT
+	click.pressed = true
+	return click
+
+
 func test_medidor_de_dor_so_no_carrasco() -> void:
 	await _bind_and_wait()
 	assert_false((_plate.get_node("%PainMeter") as Control).visible, "Cavaleiro nao tem Dor")
@@ -204,3 +244,14 @@ func test_medidor_de_dor_acende_um_ponto_por_dor() -> void:
 	for pip: ColorRect in _plate._pain_pips:
 		lit += int(pip.color == UiTokens.RED)
 	assert_eq(lit, 4)
+
+
+## Alerta de dano (PI 2026-10-22): o switch da engrenagem vale na hora e grava so [ui].
+func test_switch_do_alerta_de_dano_aplica_e_grava() -> void:
+	_plate.settings_path = TMP_SETTINGS
+	await _bind_and_wait()
+	(_node("%DamageAlert") as CheckButton).toggled.emit(false)
+	assert_false(DamageVignette.enabled)
+	var values := UserSettings.load_file(TMP_SETTINGS)
+	assert_false(values[UserSettings.UI][UserSettings.DAMAGE_ALERT])
+	DamageVignette.enabled = true

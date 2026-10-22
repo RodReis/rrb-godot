@@ -2,12 +2,12 @@ class_name HudPhase2
 extends CanvasLayer
 ## HUD da fase 2 (DV tela 4, ARCHITECTURE-GAME §3.6), da TRANSITION (5:00) ao fim: relogio ate o
 ## colapso, placar de kills (ScoreBanner), painel da zona (raio, dano fora, proximo fechamento),
-## minimapa com o ZoneRadar por cima, estado do respawn (ativo ate a morte subita, desligado
-## depois), aviso dos portoes na transicao, aviso da morte subita e vinheta vermelha quando o
-## heroi local esta fora da zona. So consome sinais (phase_changed, kill_scored, zone_updated) e
-## estado replicado (heroi, relogio); tempos e numeros vem de MatchRules. A base de combate e a
-## mesma da fase 1 (HeroPlate). Escondida ate o HudController ativar. No match_ended para e sai
-## da tela: a tela de fim (MatchEnd, F18) assume.
+## minimapa com o ZoneRadar por cima, estado do respawn (ativo ate a morte subita, desligado depois;
+## paineis so com icone e numero, PI 2026-10-22), aviso dos portoes na transicao, aviso da morte
+## subita e vinheta vermelha quando o heroi local esta fora da zona. So consome sinais
+## (phase_changed, kill_scored, zone_updated) e estado replicado (heroi, relogio); tempos e numeros
+## vem de MatchRules. A base de combate e a mesma da fase 1 (HeroPlate). Escondida ate o
+## HudController ativar. No match_ended para e sai da tela: a tela de fim (MatchEnd, F18) assume.
 
 ## Aviso de fase some sozinho (PATTERNS P7); a transicao fica os 5 s dela.
 const BANNER_SECONDS: float = 3.0
@@ -45,12 +45,12 @@ var _shake_tween: Tween
 var _ended: bool = false
 
 @onready var _vignette: ColorRect = %ZoneVignette
-@onready var _phase_title: Label = %PhaseTitle
 @onready var _phase_timer: TimerLabel = %PhaseTimer
 @onready var _score: ScoreBanner = %ScoreBanner
 @onready var _zone_radius: Label = %ZoneRadius
 @onready var _zone_damage: Label = %ZoneDamage
 @onready var _zone_timer: TimerLabel = %ZoneTimer
+@onready var _zone_next: Label = %NextLabel
 @onready var _minimap: Minimap = %Minimap
 @onready var _radar: ZoneRadar = %ZoneRadar
 @onready var _respawn_state: Label = %RespawnState
@@ -75,6 +75,9 @@ func _ready() -> void:
 	shader.set_shader_parameter(&"color", UiTokens.RED)
 	shader.set_shader_parameter(&"pulse_period", UiTokens.PULSE_ZONE)
 	_vignette.visible = false
+	_zone_next.text = UiIcons.TIMER
+	for label: Label in [_zone_radius, _zone_damage, _zone_next, _respawn_state, _respawn_hint]:
+		IconFont.apply(label)
 
 
 ## Liga a HUD ao heroi local, ao mundo e aos sinais da partida. [param players] = pai dos herois.
@@ -132,12 +135,6 @@ func _update_clock(elapsed: float) -> void:
 	var sudden := _match.state == MatchState.State.SUDDEN_DEATH
 	_phase_timer.set_seconds(HudMath.until(_rules.max_match_duration, elapsed))
 	_phase_timer.set_state(TimerLabel.State.DANGER if sudden else TimerLabel.State.NORMAL)
-	if _match.state == MatchState.State.TRANSITION:
-		_phase_title.text = tr("OS PORTÕES CAÍRAM")
-	elif sudden:
-		_phase_title.text = tr("MORTE SÚBITA")
-	else:
-		_phase_title.text = tr("FASE 2: CONFRONTO")
 	_transition_timer.set_seconds(
 		HudMath.until(_rules.phase1_duration + _rules.transition_duration, elapsed)
 	)
@@ -146,13 +143,13 @@ func _update_clock(elapsed: float) -> void:
 ## Respawn ativo ate a morte subita (9:00); depois desligado, contando ate o colapso (10:00).
 func _update_respawn_state(elapsed: float) -> void:
 	if _match.state == MatchState.State.SUDDEN_DEATH:
-		_respawn_state.text = tr("RESPAWN DESLIGADO")
-		_respawn_hint.text = tr("Colapso total em")
+		_respawn_state.text = "%s %s" % [UiIcons.RESTART_ALT, tr("OFF")]
+		_respawn_hint.text = UiIcons.CRISIS_ALERT  # colapso total em
 		_respawn_timer.set_seconds(HudMath.until(_rules.max_match_duration, elapsed))
 		_respawn_timer.set_state(TimerLabel.State.DANGER)
 		return
-	_respawn_state.text = tr("RESPAWN ATIVO: %s s") % HudMath.decimal(_rules.respawn_phase2)
-	_respawn_hint.text = tr("Morte súbita em")
+	_respawn_state.text = "%s %ss" % [UiIcons.RESTART_ALT, HudMath.short(_rules.respawn_phase2)]
+	_respawn_hint.text = UiIcons.SKULL  # morte subita em
 	var sudden_at := _rules.phase1_duration + _rules.respawn_off_at
 	var left := HudMath.until(sudden_at, elapsed)
 	_respawn_timer.set_seconds(left)
@@ -206,8 +203,9 @@ func _update_respawn() -> void:
 
 
 func _refresh_score() -> void:
+	var data := _hero.hero_data
 	var me := ScoreBanner.PlayerScore.new(
-		_hero.hero_data.display_name.to_upper(), _kills.get(_hero.peer_id, 0), true
+		data.display_name.to_upper(), _kills.get(_hero.peer_id, 0), true, data.id
 	)
 	var them := ScoreBanner.PlayerScore.new(tr("OPONENTE"), 0, false)
 	for node: Node in _players.get_children():
@@ -215,6 +213,7 @@ func _refresh_score() -> void:
 		if other != null and other != _hero:
 			them.name = other.hero_data.display_name.to_upper()
 			them.kills = _kills.get(other.peer_id, 0)
+			them.hero_id = other.hero_data.id
 	_score.bind(me, them, _rules.kill_goal)
 
 
@@ -320,9 +319,7 @@ func _on_zone_updated(
 ) -> void:
 	_damage_pct = damage_pct
 	var fraction := HudMath.zone_fraction(_rules, radius)
-	_zone_radius.text = (
-		tr("Raio %d%% · %s u") % [roundi(fraction * PERCENT), HudMath.decimal(radius)]
-	)
-	_zone_damage.text = tr("Dano fora: %s%% do HP/s") % HudMath.decimal(damage_pct * PERCENT)
+	_zone_radius.text = "%s %d%%" % [UiIcons.RADAR, roundi(fraction * PERCENT)]
+	_zone_damage.text = "%s %s%%/s" % [UiIcons.HEART_BROKEN, HudMath.short(damage_pct * PERCENT)]
 	_zone_timer.set_seconds(t_next)
 	_radar.set_zone(fraction, HudMath.zone_fraction(_rules, next_radius), t_next)

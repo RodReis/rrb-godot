@@ -2,19 +2,24 @@ extends GutTest
 ## ScoreBanner e ZoneRadar, componentes da HUD da fase 2 (COMPONENTS.md, regra 2; F17).
 
 
-func test_score_banner_names_kills_and_target() -> void:
+## Enxuto (PI 2026-10-22): so numeros e avatares; o nome fica no tooltip do avatar.
+func test_score_banner_avatars_kills_and_target() -> void:
 	var banner: ScoreBanner = add_child_autofree(ScoreBanner.new())
-	var me := ScoreBanner.PlayerScore.new("CAVALEIRO", 3, true)
-	var them := ScoreBanner.PlayerScore.new("ARQUEIRA", 2, false)
+	var me := ScoreBanner.PlayerScore.new("CAVALEIRO", 3, true, &"knight")
+	var them := ScoreBanner.PlayerScore.new("ARQUEIRA", 2, false, &"ranger")
 	banner.bind(me, them, 5)
 	var texts: Array[String] = []
 	for label: Node in banner.find_children("*", "Label", true, false):
 		texts.append((label as Label).text)
-	assert_has(texts, "CAVALEIRO (VOCÊ)")
-	assert_has(texts, "ARQUEIRA (OPONENTE)")
 	assert_has(texts, "3")
 	assert_has(texts, "2")
-	assert_has(texts, "META: 5 KILLS")
+	assert_has(texts, "%s 5" % UiIcons.EMOJI_EVENTS)
+	assert_does_not_have(texts, "CAVALEIRO (VOCÊ)", "sem nome escrito")
+	var sides := banner.find_children("*", "PanelCard", true, false)
+	assert_eq((sides[0] as PanelCard).tooltip_text, "CAVALEIRO (VOCÊ)")
+	var avatars := banner.find_children("*", "TextureRect", true, false)
+	assert_eq((avatars[0] as TextureRect).texture, ScoreBanner.portrait(&"knight"))
+	assert_not_null(ScoreBanner.portrait(&"ranger"))
 
 
 func test_score_banner_leader_gets_gold_and_tie_none() -> void:
@@ -24,8 +29,10 @@ func test_score_banner_leader_gets_gold_and_tie_none() -> void:
 	var banner: ScoreBanner = add_child_autofree(ScoreBanner.new())
 	banner.bind(ScoreBanner.PlayerScore.new("A", 0, true), ScoreBanner.PlayerScore.new("B", 1), 5)
 	var sides := banner.find_children("*", "PanelCard", true, false)
-	assert_eq((sides[0] as PanelCard).accent, PanelCard.Accent.NONE)
-	assert_eq((sides[1] as PanelCard).accent, PanelCard.Accent.GOLD)
+	assert_eq((sides[0] as PanelCard).accent, PanelCard.Accent.GREEN, "voce, atras: verde")
+	assert_eq((sides[1] as PanelCard).accent, PanelCard.Accent.GOLD, "lider: dourado")
+	banner.bind(ScoreBanner.PlayerScore.new("A", 1, true), ScoreBanner.PlayerScore.new("B", 1), 5)
+	assert_eq((sides[1] as PanelCard).accent, PanelCard.Accent.RED, "empate: cor do time")
 
 
 func test_score_banner_local_kills_green_enemy_red() -> void:

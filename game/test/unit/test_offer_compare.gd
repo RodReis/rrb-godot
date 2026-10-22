@@ -56,6 +56,32 @@ func test_delta_zero_fica_sem_texto() -> void:
 	assert_eq(OfferCompare.delta_text(_row(rows, "HP")), "")
 
 
+func test_veredito_slot_vazio_vale_trocar() -> void:
+	assert_eq(OfferCompare.verdict(OfferCompare.rows(null, _item(&"guard_chest_t1"))), 1)
+
+
+func test_veredito_item_melhor_vale_trocar() -> void:
+	var rows := OfferCompare.rows(_item(&"guard_chest_t1"), _item(&"guard_chest_t2"))
+	assert_eq(OfferCompare.verdict(rows), 1)
+
+
+func test_veredito_item_pior_nao_vale() -> void:
+	var rows := OfferCompare.rows(_item(&"guard_chest_t2"), _item(&"guard_chest_t1"))
+	assert_eq(OfferCompare.verdict(rows), -1)
+
+
+func test_veredito_igual_fica_neutro() -> void:
+	var rows := OfferCompare.rows(_item(&"guard_chest_t1"), _item(&"guard_chest_t1"))
+	assert_eq(OfferCompare.verdict(rows), 0)
+
+
+func test_veredito_e_a_soma_dos_deltas() -> void:
+	var rows: Array[OfferCompare.Row] = [
+		OfferCompare.Row.new("HP", 0, -35), OfferCompare.Row.new("ATK", 40, 40)
+	]
+	assert_eq(OfferCompare.verdict(rows), 1)
+
+
 func test_conjuntos_antes_e_depois() -> void:
 	var equipment := _equipped([&"guard_helm_t1", &"guard_chest_t1", &"hunter_boots_t1"])
 	var text := OfferCompare.set_change(equipment, _item(&"hunter_chest_t1"), CATALOG)

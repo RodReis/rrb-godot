@@ -85,6 +85,7 @@ func test_couraca_nao_vale_para_skill_nem_monstro() -> void:
 func test_couraca_vale_no_basico_de_um_heroi_de_verdade() -> void:
 	_spawn_carrasco()
 	var knight := _spawn_enemy(KNIGHT, AHEAD * 1.5)
+	knight.basic_cooldown = 0  # este e quem ataca: sem o mute das vitimas
 	knight.input.attack = true
 	_run(START, 2)
 	var raw := roundi(SkillRules.amount(knight.hero_data.basic_attack, 1, knight.attributes))

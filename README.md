@@ -1,6 +1,6 @@
 # rrb-godot — Loot Start
 
-MOBA 3D de 2 tempos (preparação de 5 min → confronto com zona que fecha), 1x1, em **Godot 4.7.2** (Forward+), com **servidor autoritativo** e 10 heróis jogáveis.
+MOBA 3D de 2 tempos (preparação de 5 min → confronto com zona que fecha), 1x1, em **Godot 4.7.2** (Forward+), com **servidor autoritativo** e 11 heróis jogáveis.
 Escopo: `docs/prd/PRD.md`. Andamento: `docs/STATUS.md`. Decisões: `docs/DECISIONS.md`.
 
 São dois programas independentes que se falam por processo e argumentos (`docs/ARCHITECTURE-LAUNCHER.md` §5):

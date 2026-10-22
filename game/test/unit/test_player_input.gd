@@ -44,3 +44,12 @@ func test_mira_fica_parada_durante_o_giro() -> void:
 	_input._gather()
 	assert_eq(_input.aim, Vector3.RIGHT)
 	assert_eq(_input.aim_distance, 5.0)
+
+
+## Clique na HUD (PI 2026-10-22): o ponto pedido sai num tick so.
+func test_ponto_pedido_pelo_clique_sai_uma_vez() -> void:
+	_input.queue_learn(SkillRules.SLOT_E)
+	_input._gather()
+	assert_eq(_input.learn, SkillRules.SLOT_E)
+	_input._gather()
+	assert_eq(_input.learn, PlayerInput.LEARN_NONE)

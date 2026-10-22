@@ -156,6 +156,16 @@ func test_timeout_com_a_arqueira_indisponivel_da_o_cavaleiro_ao_p2() -> void:
 	assert_eq(_hero_of(P2), &"knight")
 
 
+## Bug do PI (2026-10-22): escolheu sem confirmar e entrava o Cavaleiro; agora entra o destacado.
+func test_timeout_fica_com_o_heroi_em_destaque_sem_lock_in() -> void:
+	_to_pick()
+	_match.preview_pick(P1, &"ranger")
+	_match.preview_pick(P2, &"golem_t3")  # nao e heroi: ignorado, fica o padrao
+	_run(START, START + 24 * RATE)
+	assert_eq(_hero_of(P1), &"ranger")
+	assert_eq(_hero_of(P2), &"ranger")
+
+
 func test_so_quem_nao_confirmou_recebe_o_padrao() -> void:
 	_to_pick()
 	_match.submit_pick(P2, &"knight", START + 1)

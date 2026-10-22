@@ -39,6 +39,8 @@ class Seat:
 	var connected: bool = true
 	## &"" ate o lock-in; no fim da selecao, o padrao do slot.
 	var hero: StringName = &""
+	## Heroi em destaque na tela de selecao (sem lock-in): o timeout fica com ele.
+	var shown: StringName = &""
 	## INTRO: o cliente terminou a cinematica. Bot e quem caiu entram ja prontos.
 	var ready: bool = false
 
@@ -170,6 +172,16 @@ func submit_pick(peer: int, hero: StringName, tick: int) -> bool:
 	return true
 
 
+## Servidor: heroi em destaque de [param peer] (sem lock-in), para o timeout. Ignora fora da
+## HERO_PICK, quem ja confirmou e heroi indisponivel.
+func preview_pick(peer: int, hero: StringName) -> void:
+	var seat := _seat(peer)
+	if state != MatchState.State.HERO_PICK or seat == null or seat.hero != &"":
+		return
+	if PickRules.can_pick(hero, available_heroes):
+		seat.shown = hero
+
+
 ## Servidor: ready da cinematica (INTRO). Recusa fora da INTRO ou de peer sem vaga.
 func submit_ready(peer: int, tick: int) -> bool:
 	var seat := _seat(peer)
@@ -270,6 +282,17 @@ func submit_hero_selection(hero_id: int) -> void:
 			print("[match] lock-in recusado: peer %d, heroi %d" % [peer, hero_id])
 
 
+## Cliente -> servidor: heroi mostrado na tela, sem lock-in (numero de Ids). Validado aqui.
+@rpc("any_peer", "call_local", "reliable")
+func submit_hero_preview(hero_id: int) -> void:
+	if not multiplayer.is_server():
+		return
+	var peer := multiplayer.get_remote_sender_id()
+	if peer == 0:
+		peer = multiplayer.get_unique_id()
+	preview_pick(peer, Ids.to_name(hero_id))
+
+
 ## Servidor: [param peer] e um cliente conectado (o bot e o jogador do host nao recebem RPC).
 func _connected(peer: int) -> bool:
 	return multiplayer.get_peers().has(peer)
@@ -293,7 +316,7 @@ func _ticks(seconds: float) -> int:
 
 func _pick_default(seat: Seat, tick: int) -> void:
 	var slot := SLOT_TEAMS.find(seat.team)
-	seat.hero = PickRules.default_hero(rules.default_heroes, slot, available_heroes)
+	seat.hero = PickRules.default_hero(rules.default_heroes, slot, available_heroes, seat.shown)
 	_picked.rpc(tick, seat.peer, Ids.to_int(seat.hero))
 
 

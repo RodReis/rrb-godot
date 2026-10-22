@@ -64,3 +64,36 @@ func test_decimal_uses_comma() -> void:
 	assert_eq(HudMath.decimal(17.5), "17,5")
 	assert_eq(HudMath.decimal(3.0), "3,0")
 	assert_eq(HudMath.decimal(0.02 * 100.0), "2,0")
+
+
+## Alerta de dano nas laterais (PI 2026-10-22): acende ao perder HP e some em FLASH_SECONDS.
+func test_flash_acende_ao_perder_hp() -> void:
+	assert_eq(HudMath.damage_flash(0.0, true, 0.016, 0.5), 1.0)
+
+
+func test_flash_some_no_tempo_e_nao_fica_negativo() -> void:
+	assert_almost_eq(HudMath.damage_flash(1.0, false, 0.25, 0.5), 0.5, 0.0001)
+	assert_eq(HudMath.damage_flash(0.1, false, 0.25, 0.5), 0.0)
+
+
+func test_vinheta_de_dano_e_suave() -> void:
+	var peak := HudMath.damage_vignette(1.0, 1.0, true)
+	assert_gt(peak, 0.0)
+	assert_lt(peak, 1.0, "suave: nunca a vinheta cheia")
+
+
+func test_hp_baixo_mantem_a_vinheta_mais_forte_quanto_menor() -> void:
+	assert_eq(HudMath.damage_vignette(0.0, 0.25, true), 0.0, "de 25 % para cima: nada continuo")
+	var low := HudMath.damage_vignette(0.0, 0.2, true)
+	var lower := HudMath.damage_vignette(0.0, 0.05, true)
+	assert_gt(low, 0.0)
+	assert_gt(lower, low)
+
+
+func test_morto_sem_vinheta_de_dano() -> void:
+	assert_eq(HudMath.damage_vignette(1.0, 0.0, false), 0.0)
+
+
+func test_short_tira_a_casa_quando_inteiro() -> void:
+	assert_eq(HudMath.short(6.0), "6")
+	assert_eq(HudMath.short(3.5), "3,5")

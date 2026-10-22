@@ -97,7 +97,7 @@ func test_late_join_after_boss_spawn_gets_no_banner() -> void:
 
 
 ## Rei Esqueleto vivo aos 5:00 sai do mapa sem drop (R-PEND-06, F20): o painel nao diz mais
-## "NO CENTRO".
+## "No centro".
 func test_boss_status_follows_the_boss_after_5_00() -> void:
 	add_child_autofree(ARENA.instantiate())
 	var spawns := add_child_autofree(SpawnDirector.new()) as SpawnDirector
@@ -106,7 +106,7 @@ func test_boss_status_follows_the_boss_after_5_00() -> void:
 	var status := _node("%BossStatus") as Label
 	spawns.spawn_boss()
 	_hud._update_clock(RULES.boss_spawn_time + 1.0)
-	assert_eq(status.text, "NO CENTRO")
+	assert_eq(status.text, "No centro")
 	spawns.dismiss_boss()
 	_hud._update_clock(RULES.phase1_duration)
-	assert_eq(status.text, "SAIU DO MAPA")
+	assert_eq(status.text, "Fora do mapa")

@@ -34,6 +34,10 @@ Comum = borda `RARITY_COMMON` + texto "Comum"; Raro = `RARITY_RARE` + "Raro"; É
 
 `ColorRect` full-rect com `ShaderMaterial` de vinheta `RED`; intensidade = `dano/s ÷ 5%` (0–1); `PULSE_ZONE`. Só quando fora da zona (estado replicado `outside_zone`). Não fazer: calcular "fora da zona" no cliente por posição — usar o flag do servidor.
 
+## P8b — Alerta de dano (HUD F1 e F2)
+
+Mesmo shader da vinheta de zona, em `RED`, mais fraco (`DAMAGE_FLASH_PEAK` 0,55): acende quando o HP do herói local cai e apaga linear em 0,5 s; abaixo de 25 % do HP fica um pulso contínuo que cresce até `LOW_HP_PEAK`. Só lê o HP replicado (`HudMath.damage_flash`, `HudMath.damage_vignette`). Pode ser desligado em `[ui] damage_alert` (Launcher ou engrenagem da partida).
+
 ## P9 — Barras de atributo com animação
 
 `StatBar.animate_to(value, DUR_BASE)` ao trocar herói/item; `max_ref` = maior valor entre os heróis da fatia para que as barras sejam comparáveis (pick e forja). HP próprio `GREEN`, inimigo `RED`, XP `GOLD_BRIGHT`, atributos `BLUE`.

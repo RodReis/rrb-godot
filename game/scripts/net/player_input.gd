@@ -47,6 +47,7 @@ var disconnected: bool = false
 
 var _learn_held: int = LEARN_NONE
 var _pending_pick: int = PICK_NONE
+var _pending_learn: int = LEARN_NONE
 var _attack_held: bool = false
 var _tap_pending: bool = false
 var _cancel_held: bool = false
@@ -70,6 +71,11 @@ func _exit_tree() -> void:
 		var hook: Callable = connection["callable"]
 		if hook.get_object() == self:
 			NetworkTime.before_tick_loop.disconnect(hook)
+
+
+## Clique na skill ou no selo de aprender da HUD (HeroPlate): sai no proximo tick, uma vez.
+func queue_learn(slot: int) -> void:
+	_pending_learn = slot
 
 
 ## Clique no menu do bau (ChestChoiceMenu): sai no proximo tick, uma vez.
@@ -102,6 +108,9 @@ func _gather() -> void:
 	skill_r = Input.is_action_pressed(InputActions.SKILL_R)
 	interact_hold = Input.is_action_pressed(InputActions.INTERACT)
 	_gather_learn()
+	if learn == LEARN_NONE:
+		learn = _pending_learn
+	_pending_learn = LEARN_NONE
 	if _gamepad:
 		aim = _stick_aim(yaw)
 		aim_distance = INF
@@ -185,6 +194,7 @@ func _gather_idle() -> void:
 	skill_e = false
 	skill_r = false
 	learn = LEARN_NONE
+	_pending_learn = LEARN_NONE
 	interact_hold = false
 
 

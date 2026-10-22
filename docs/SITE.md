@@ -1,6 +1,6 @@
 # SITE.md — Site público "Loot Start"
 
-Landing page do jogo, em `site/`. Atualizada em 2026-10-19 (autorizada pelo PI) para os 10 heróis, o MVP2.8 entregue e o MVP3 em andamento. **No ar:** https://lootstart.cloud (VPS, desde 2026-10-19, #237; antes GitHub Pages em `rodreis.github.io/rrb-godot`). Download do jogo em https://lootstart.cloud/download/ e roadmap completo em https://lootstart.cloud/roadmap/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
+Landing page do jogo, em `site/`. Atualizada em 2026-10-19 (autorizada pelo PI) para os 11 heróis, o MVP4 em andamento, a arena nova (F94 a F96) e a vitrine com as capturas dos ajustes de 2026-10-22. **No ar:** https://lootstart.cloud (VPS, desde 2026-10-19, #237; antes GitHub Pages em `rodreis.github.io/rrb-godot`). Download do jogo em https://lootstart.cloud/download/ e roadmap completo em https://lootstart.cloud/roadmap/. Decisão: [ADR-0017](adr/0017-site-publico-loot-start.md). Spec e plano originais: `docs/superpowers/specs/2026-10-18-site-loot-start-design.md` e `docs/superpowers/plans/2026-10-18-site-loot-start.md`.
 
 Não é fatia nem card do board: foi pedido direto pelo PI em 2026-10-18 (PR #218). Desde o F82 (ADR-0022), "Loot Start" é o nome do jogo inteiro, não só do site.
 
@@ -29,7 +29,7 @@ site/
 
 | No site | Fonte | Observação |
 |---|---|---|
-| Heróis: nome, papel, arma, resumo, Q/E/R | `shared/data/heroes/*.tres` | cresce sozinho quando entra herói novo; hoje são 10 |
+| Heróis: nome, papel, arma, resumo, Q/E/R | `shared/data/heroes/*.tres` | cresce sozinho quando entra herói novo; hoje são 11 |
 | Ordem dos heróis na seção | pilar "Heróis" de `historia.json` (ordem de lançamento) | herói fora da lista vai para o fim e o `extract` avisa |
 | Ícones de habilidade | `shared/ui/icons/*.svg` | copiados para `public/icons` |
 | Retrato de cada herói | `shared/assets/ui/heroes/large/<id>.png` | WebP 384 px |
@@ -70,7 +70,7 @@ O `base` é `/` (site na raiz do domínio); `SITE_BASE` troca, se o site voltar 
 ## Como mexer
 
 - **Novo herói:** nada no código do site. Entrando em `shared/data/heroes`, ícones e retrato (`shared/ui/icons/<id>_{q,e,r}.svg`, `shared/assets/ui/heroes/large/<id>.png`), o próximo build o mostra. Sem retrato, o card sai sem imagem e o `extract` avisa. Para ele sair na ordem de lançamento, acrescente-o ao fim do pilar "Heróis" de `docs/roadmap/historia.json` (nome igual ao `display_name`); se faltar, ele aparece por último.
-- **Arena:** o texto da seção (`Arena.tsx`) descreve o mapa à mão (80 × 80 m, castelos em cantos opostos, rio, pontes, cratera central, mato alto, Rei Esqueleto aos 3:30). Se a arena mudar, revisar esse texto e o `shared/assets/ui/arena_map.png`.
+- **Arena:** as duas imagens da seção são 16:9 em colunas iguais (`Arena.css`, quadros esticados para a mesma altura: simetria); dia e noite vêm de `shared/assets/ui/loading/arena_{day,night}.png` e o mapa de `shared/assets/ui/arena_map.png`, então regere-os (`tools/ui/render_loading.gd`, `tools/ui/render_arena_map.gd`) quando a arena mudar. O texto da seção (`Arena.tsx`) descreve o mapa à mão (80 × 80 m, castelos em cantos opostos, rio, pontes, cratera central, mato alto, Rei Esqueleto aos 3:30). Se a arena mudar, revisar esse texto e o `shared/assets/ui/arena_map.png`.
 - **Nova seção:** componente em `src/components/`, tipos em `src/data.ts`, entrada em `App.tsx` e âncora na `Nav`. Dado novo vem do `extract.mjs`, não de texto à mão.
 - **Texto público:** edita-se `docs/roadmap/historia.json`; vale para o site e para o roadmap longo.
 

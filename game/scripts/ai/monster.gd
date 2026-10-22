@@ -61,7 +61,6 @@ var _target: Hero
 var _provoker: Hero
 var _seen: HitLedger = HitLedger.new()  # golpes ja aplicados: ressimular o heroi nao duplica
 
-@onready var hp_label: Label3D = $HpLabel
 @onready var hp_bar: WorldHealthBar = $HpBar
 
 
@@ -75,6 +74,8 @@ func _ready() -> void:
 	if not present:
 		collision_mask = 0
 	axis_lock_linear_y = true
+	# Selo da placa (PI 2026-10-22): tier no lugar do nome; o chefe ganha coroa.
+	hp_bar.set_badge(str(data.tier + 1), data.tier == MonsterData.Tier.BOSS)
 
 	var sync := StateSynchronizer.new()
 	sync.name = "StateSynchronizer"
@@ -87,6 +88,9 @@ func _ready() -> void:
 		":present",
 		":curse_stacks",
 		":dot_ticks",
+		":_stun_ticks",  # animacao de status no cliente (StatusMark, PI 2026-10-22)
+		":_slow_ticks",
+		":_slow_pct",
 	]
 	add_child(sync)
 	_concealment = Concealment.guard(self, seen_by, sync)
@@ -106,10 +110,8 @@ func _process(_delta: float) -> void:
 	if _concealment.on_client():
 		collision_layer = _layer if shown else 0
 	var plate := is_alive() and not PlayerInput.cinematic  # sem placas na cinematica (F69)
-	hp_label.visible = plate
 	hp_bar.visible = plate
-	hp_label.text = data.display_name
-	hp_bar.set_ratio(hp / data.hp)
+	hp_bar.set_hp(hp, data.hp)
 
 
 func is_alive() -> bool:
@@ -127,6 +129,10 @@ func effective_damage(raw: int) -> int:
 
 func combat_id() -> int:
 	return uid
+
+
+func status() -> StatusRules.Status:
+	return StatusRules.shown(_stun_ticks, _slow_ticks, _slow_pct)
 
 
 ## Marcador onde nasce e para onde volta (leash): lugar fixo do mapa, nao estado de partida.
@@ -324,7 +330,9 @@ func _effect_on(hero: Hero) -> HitEffect:
 	var away := hero.global_position - global_position
 	away.y = 0.0
 	var push := CombatRules.push_vector(away.normalized(), data.knockback)
-	return HitEffect.new(roundi(data.damage), global_position, push)
+	var effect := HitEffect.new(roundi(data.damage), global_position, push)
+	effect.aggressor_id = uid
+	return effect
 
 
 ## XP de monstro com catch-up contra o heroi do outro time de maior nivel.

@@ -3,7 +3,8 @@ extends Control
 ## Base de combate das duas HUDs (DV telas 3 e 4; dock do prototipo HUD Moderno, F57): icone,
 ## nome, conjuntos, atributos, nivel, HP e XP, 4 slots, skills com recarga e pontos livres,
 ## comandos, aviso de item equipado, o menu do bau (ChestChoiceMenu, F61) e a engrenagem
-## (Bestiario, switches de som da sessao e tamanho da interface, F97), e a Dor do Carrasco (F98,
+## (Bestiario, switches de som da sessao, tamanho da interface F97 e alerta de dano), e a Dor do
+## Carrasco (F98,
 ## SPEC-098 §3: um ponto por Dor, ate o teto da PassiveData). So le o estado replicado
 ## do heroi local e nunca decide regra; a HUD dona chama update() no proprio _process.
 
@@ -69,6 +70,7 @@ var _shown_pain: int = -1
 @onready var _bestiary_button: Button = %BestiaryButton
 @onready var _sound_game: CheckButton = %SoundGame
 @onready var _sound_boss: CheckButton = %SoundBoss
+@onready var _damage_alert: CheckButton = %DamageAlert
 @onready var _hud_scale: HSlider = %HudScale
 @onready var _hud_scale_value: Label = %HudScaleValue
 @onready var _pain_meter: HBoxContainer = %PainMeter
@@ -85,11 +87,16 @@ func _ready() -> void:
 		_buttons[i + 1].hotkey = skill_keys[i]
 		_learn_badges[i].key = learn_key
 		_buttons[i + 1].learn_key = learn_key
+		_buttons[i + 1].learn_requested.connect(_on_learn_requested.bind(i))
+		_learn_badges[i].mouse_filter = Control.MOUSE_FILTER_STOP
+		_learn_badges[i].mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		_learn_badges[i].gui_input.connect(_on_learn_badge_gui_input.bind(i))
 	_gear_menu.visible = false
 	_gear_button.pressed.connect(_on_gear_button_pressed)
 	_bestiary_button.pressed.connect(_on_bestiary_button_pressed)
 	_sound_game.toggled.connect(_on_sound_game_toggled)
 	_sound_boss.toggled.connect(_on_sound_boss_toggled)
+	_damage_alert.toggled.connect(_on_damage_alert_toggled)
 	_hud_scale.min_value = UserSettings.HUD_SCALE_MIN
 	_hud_scale.max_value = UserSettings.HUD_SCALE_MAX
 	_hud_scale.step = UserSettings.HUD_SCALE_STEP
@@ -251,7 +258,7 @@ func _notify_free_point() -> void:
 		return
 	var keys := InputActions.skill_labels()
 	var text := (
-		tr("NÍVEL %d! Ponto de habilidade: aprenda com Ctrl+%s/%s/%s")
+		tr("NÍVEL %d! Ponto de habilidade: aprenda com Ctrl+%s/%s/%s ou clique")
 		% [_hero.level, keys[0], keys[1], keys[2]]
 	)
 	_toast.show_message(text, Toast.Kind.INFO)
@@ -318,6 +325,7 @@ func _on_gear_button_pressed() -> void:
 	if _gear_menu.visible:
 		_sound_game.set_pressed_no_signal(_bus_on(BUS_GAME))
 		_sound_boss.set_pressed_no_signal(_bus_on(BUS_BOSS))
+		_damage_alert.set_pressed_no_signal(DamageVignette.enabled)
 		_hud_scale.set_value_no_signal(get_window().content_scale_factor)
 		_on_hud_scale_value_changed(_hud_scale.value)
 
@@ -334,12 +342,35 @@ func _on_bestiary_button_pressed() -> void:
 	Input.parse_input_event(release)
 
 
+## Clique na skill upavel ou no selo Ctrl+tecla: o ponto sai pelo input, o servidor valida.
+func _on_learn_requested(slot: int) -> void:
+	if _hero != null:
+		_hero.input.queue_learn(slot)
+
+
+func _on_learn_badge_gui_input(event: InputEvent, slot: int) -> void:
+	var click := event as InputEventMouseButton
+	if click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
+		_on_learn_requested(slot)
+		_learn_badges[slot].accept_event()
+
+
 func _on_sound_game_toggled(on: bool) -> void:
 	_set_bus_on(BUS_GAME, on)
 
 
 func _on_sound_boss_toggled(on: bool) -> void:
 	_set_bus_on(BUS_BOSS, on)
+
+
+## Alerta de dano nas bordas (PI 2026-10-22): vale na hora e grava so [ui] damage_alert.
+func _on_damage_alert_toggled(on: bool) -> void:
+	DamageVignette.enabled = on
+	var err := UserSettings.save_value(
+		UserSettings.UI, UserSettings.DAMAGE_ALERT, on, settings_path
+	)
+	if err != OK:
+		push_warning("[settings] alerta de dano nao gravado: %s" % error_string(err))
 
 
 ## Arrastando, so o numero muda: escalar a interface moveria o slider debaixo do mouse.

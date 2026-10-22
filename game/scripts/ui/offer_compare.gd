@@ -51,6 +51,16 @@ static func set_change(equipment: Vector4i, incoming: ItemData, catalog: ItemCat
 	return " · ".join(parts)
 
 
+## Vale trocar? Sinal da soma dos deltas (PI 2026-10-22): 1 = sim (seta verde), -1 = nao
+## (vermelha), 0 = tanto faz (sem seta). Slot vazio da so ganho.
+# ponytail: soma crua, HP pesa mais que DEF/AGI%; ponderar por atributo se o PI estranhar.
+static func verdict(rows: Array[Row]) -> int:
+	var total := 0
+	for row: Row in rows:
+		total += row.delta
+	return signi(total)
+
+
 ## "+7" / "−3" (sinal de menos tipografico); vazio se igual.
 static func delta_text(row: Row) -> String:
 	if row.delta == 0:

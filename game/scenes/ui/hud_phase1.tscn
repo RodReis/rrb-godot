@@ -58,12 +58,6 @@ text = "●"
 layout_mode = 2
 theme_override_constants/separation = 0
 
-[node name="GateTitle" type="Label" parent="Root/TopBar/TopLeft/Gate/GateRow/GateColumn"]
-layout_mode = 2
-theme_type_variation = &"LabelBadge"
-theme_override_colors/font_color = Color(0.133, 0.773, 0.369, 1)
-text = "DEFESA"
-
 [node name="GateText" type="Label" parent="Root/TopBar/TopLeft/Gate/GateRow/GateColumn"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -86,13 +80,6 @@ size_flags_vertical = 0
 
 [node name="ClockColumn" type="VBoxContainer" parent="Root/TopBar/Clock"]
 layout_mode = 2
-
-[node name="PhaseTitle" type="Label" parent="Root/TopBar/Clock/ClockColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"LabelBadge"
-text = "FASE 1: PREPARAÇÃO"
-horizontal_alignment = 1
 
 [node name="PhaseTimer" type="Label" parent="Root/TopBar/Clock/ClockColumn"]
 unique_name_in_owner = true
@@ -133,11 +120,6 @@ layout_mode = 2
 
 [node name="BossRow" type="HBoxContainer" parent="Root/TopBar/Boss/BossLine/BossColumn"]
 layout_mode = 2
-
-[node name="BossName" type="Label" parent="Root/TopBar/Boss/BossLine/BossColumn/BossRow"]
-layout_mode = 2
-theme_type_variation = &"LabelH2"
-text = "REI ESQUELETO"
 
 [node name="BossTimer" type="Label" parent="Root/TopBar/Boss/BossLine/BossColumn/BossRow"]
 unique_name_in_owner = true

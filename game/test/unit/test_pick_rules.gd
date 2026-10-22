@@ -31,3 +31,13 @@ func test_aceita_so_heroi_disponivel() -> void:
 	assert_false(PickRules.can_pick(&"ranger", KNIGHT_ONLY))
 	assert_false(PickRules.can_pick(&"", BOTH))
 	assert_false(PickRules.can_pick(&"golem_t3", BOTH))
+
+
+## Timeout sem lock-in (PI 2026-10-22): fica o heroi em destaque na tela, se disponivel.
+func test_timeout_fica_com_o_heroi_em_destaque() -> void:
+	assert_eq(PickRules.default_hero(DEFAULTS, 0, BOTH, &"ranger"), &"ranger")
+
+
+func test_destaque_indisponivel_ou_vazio_cai_no_padrao() -> void:
+	assert_eq(PickRules.default_hero(DEFAULTS, 0, KNIGHT_ONLY, &"ranger"), &"knight")
+	assert_eq(PickRules.default_hero(DEFAULTS, 1, BOTH, &""), &"ranger")
