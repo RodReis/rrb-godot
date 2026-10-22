@@ -282,3 +282,8 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
   - **Launcher:** abre o tutorial uma vez após o nickname do 1º login; botão TUTORIAL no sub-menu do lobby; fila bloqueada com motivo e as ações "Fazer tutorial" e "Treinar contra bot"; lê e apaga o resultado em todo fim de Game e libera a conta (`POST /users/me/queue-unlock`); sem sessão não envia.
   - **Backend:** `users.queue_unlock_reason`, `queueUnlockReason` no perfil, `POST /users/me/queue-unlock`, `403 QUEUE_LOCKED` no `POST /queue`, migração 0004.
   - **Prova:** ver `docs/evidencias/f85/README.md`.
+- [x] **F86** (#252) — **Publicação no itch.io** (ADR-0024 item 2, SPEC-086). Aprovado pelo PI em 2026-10-22.
+  - **Build:** `tools/build-package.ps1 -Channel site|itch`; no `itch` o `build_config.cfg` leva `channel="itch"` e `update_url=""` (sem atualizador próprio); no `site` fica igual ao F83.
+  - **Launcher:** `BuildInfo.channel()` (padrão `site`); `LobbyScreen.channel` troca a mensagem do `426 CLIENT_OUTDATED` por "Atualize pelo app do itch.io" no canal `itch`. Testes em `test_update.gd` e `test_lobby_screen.gd`.
+  - **CI:** `release.yml` ganha a passada `-Channel itch` no `package` (depois do `makensis`) e o job `itch` (`needs: package`, só em tag): butler 15.21.0 fixado, `butler push` para `$ITCH_TARGET:windows`; segredo `BUTLER_API_KEY` e variável `ITCH_TARGET` (do PI). Ensaio manual só gera o artefato.
+  - **Página:** texto aprovado e capturas em `docs/ITCH.md`. A verificação final (SPEC §5.5) depende das pré-condições do PI (§2).
