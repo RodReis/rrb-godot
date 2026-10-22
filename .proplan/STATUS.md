@@ -30,9 +30,7 @@ updated: 2026-10-22
 
 ## A Fazer
 
-### [MVP4] Playtest (#246)
-
-- [MVP4][SPEC-085][F85] Tutorial guiado: obrigatório na 1ª vez, pulável, libera a fila online (#251)
+_(vazio)_
 
 ## Em Andamento
 
@@ -46,6 +44,7 @@ _(vazio)_
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-085][F85] Tutorial guiado: obrigatório na 1ª vez, pulável, libera a fila online (#251, finalizado em: 2026-10-22)
 - [MVP4][SPEC-098][F98] Carrasco, 11º herói (Tanque): modelo realista, Dor, Penitência e Correntes do Julgamento (#248, finalizado em: 2026-10-22)
 - [MVP4][SPEC-097][F97] Escala da interface do jogo no Launcher e na partida (#272, finalizado em: 2026-10-21)
 - [MVP4][SPEC-096][F96] Arena nova, parte 3: borda da ilha e vale (#268, finalizado em: 2026-10-21)
