@@ -16,6 +16,7 @@ const ME: Dictionary = {
 	"email": "duelista@rrb.dev",
 	"nickname": "RodReis",
 	"createdAt": "2026-10-15T12:00:00.000Z",
+	"queueUnlockReason": "history",  # fila liberada (F85): estes testes usam a fila
 }
 
 var _app: App

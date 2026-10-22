@@ -38,6 +38,7 @@ func _account(nickname: Variant) -> Dictionary:
 		"email": "duelista@rrb.dev",
 		"nickname": nickname,
 		"createdAt": "2026-10-15T12:00:00.000Z",
+		"queueUnlockReason": null,
 	}
 
 

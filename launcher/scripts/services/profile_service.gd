@@ -1,7 +1,8 @@
 class_name ProfileService
 extends RefCounted
 ## Perfil da conta (F35, ARCHITECTURE-LAUNCHER §3.3): le a conta (GET /users/me) e define o
-## nickname (PUT /users/me/nickname) uma unica vez, no 1o login. Valida o formato antes da rede
+## nickname (PUT /users/me/nickname) uma unica vez, no 1o login e registra a fila online liberada
+## (POST /users/me/queue-unlock, F85). Valida o formato antes da rede
 ## (FRONTEND-LAUNCHER §3.2, mesma regra do backend) e traduz o erro para a mensagem do campo.
 ## A sessao e o cache moram em memoria; o App faz clear() no logout.
 
@@ -18,6 +19,7 @@ const FIELD_CODES: Array[String] = ["INVALID_NICKNAME", "NICKNAME_TAKEN", "VALID
 const ME_PATH: String = "/users/me"
 const NICKNAME_PATH: String = "/users/me/nickname"
 const ALREADY_SET: String = "NICKNAME_ALREADY_SET"
+const QUEUE_UNLOCK_PATH: String = "/users/me/queue-unlock"
 
 ## Conta carregada; null = ainda nao buscada (ou limpa).
 var profile: UserProfile = null
@@ -45,6 +47,11 @@ func _init(api: ApiClient) -> void:
 ## A conta ja carregada ainda nao tem nickname: o App leva para a tela de definir (1o login).
 func needs_nickname() -> bool:
 	return profile != null and profile.nickname.is_empty()
+
+
+## A fila online esta liberada na conta (queueUnlockReason preenchido); sem conta carregada, nao.
+func queue_unlocked() -> bool:
+	return profile != null and not profile.queue_unlock_reason.is_empty()
 
 
 ## GET /users/me. true = `profile` pronto; falha guarda o codigo e nao inventa perfil.
@@ -81,6 +88,22 @@ func set_nickname(nickname: String) -> Result:
 		return _error(response.code() if not response.ok() else ApiClient.HTTP_ERROR)
 	profile = updated
 	return _ok()
+
+
+## Registra a liberacao da fila (`reason`: "tutorial" | "bot_win", OfflineResult.REASON_*). O
+## backend e idempotente e devolve a conta atualizada. false = rede ou recusa: `profile` nao muda.
+func unlock_queue(reason: String) -> bool:
+	var epoch := _epoch
+	var response: ApiClient.Response = await _api.request(
+		HTTPClient.METHOD_POST, QUEUE_UNLOCK_PATH, {"reason": reason}
+	)
+	if epoch != _epoch:
+		return false  # logout no meio: a conta que voltou nao e a mesma
+	var updated := UserProfile.from_dict(response.json) if response.ok() else null
+	if updated == null:
+		return false
+	profile = updated
+	return true
 
 
 func clear() -> void:
