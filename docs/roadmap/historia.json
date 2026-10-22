@@ -372,6 +372,16 @@
           "tipo": "entregue"
         },
         {
+          "arquivo": "mvp4-f98-carrasco-kit.webm",
+          "legenda": "O Carrasco, primeiro herói realista: golpe de espada, os espinhos que rompem do chão e voltam como projétil, a penitência em que ele se ajoelha e explode, e as correntes de luz.",
+          "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp4-f98-carrasco-luz.webp",
+          "legenda": "A coluna de luz das Correntes do Julgamento: quem estiver dentro dela com pouca vida é executado. No painel, a Dor do Carrasco acesa nos seis pontos.",
+          "tipo": "entregue"
+        },
+        {
           "arquivo": "mvp4-f97-escala-hud.webp",
           "legenda": "A interface da partida ficou menor e o jogador pode ajustar o tamanho de 70 % a 100 %, tanto nas configurações quanto na engrenagem dentro da partida. A esquerda mostra como era, e a direita o novo padrão de 85 %, que deixa mais arena à vista.",
           "tipo": "entregue"
@@ -469,6 +479,7 @@
     "F95": "Arena nova: rio, pontes, centro, selva e mato alto",
     "F96": "Arena nova: borda da ilha e vale",
     "F97": "Tamanho da interface do jogo ajustável",
+    "F98": "Carrasco, o 11º herói (Tanque)",
     "F29": "Telemetria e indicadores",
     "F30": "Ajustes de balanceamento pós-playtest",
     "GATE": "Homologação do marco"
