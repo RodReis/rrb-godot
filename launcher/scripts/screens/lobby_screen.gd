@@ -56,6 +56,9 @@ const RUNE_GLOW: Color = Color(UiTokens.GOLD_BRIGHT, 0.28)
 const PING_SECONDS: float = 0.8
 const TICK_SECONDS: float = 1.0
 
+## Canal da build (F86): no itch.io quem atualiza e o app do itch, nunca o Setup.
+var channel: String = BuildInfo.channel()
+
 var _queue: QueueService
 var _bot_difficulty: int = BotLevels.DEFAULT_NUMBER
 var _level_buttons: Array[Button] = []
@@ -675,10 +678,13 @@ func _on_queue_failed(reason: String) -> void:
 		_queue_locked = true  # Launcher desatualizado: o backend manda, o proximo clique nem sai
 		_show_locked()
 		return
+	var outdated := "Há uma versão nova do jogo. Atualize para jogar online."
+	if channel == BuildInfo.CHANNEL_ITCH:
+		outdated = "Há uma versão nova do jogo. Atualize pelo app do itch.io para jogar online."
 	var messages: Dictionary[String, String] = {
 		ApiClient.OFFLINE: "Servidor fora do ar. A fila não foi mantida.",
 		"ALREADY_QUEUED": "Esta conta já está na fila ou em uma partida.",
-		"CLIENT_OUTDATED": "Há uma versão nova do jogo. Atualize para jogar online.",
+		"CLIENT_OUTDATED": outdated,
 		QueueService.MATCH_GONE: "A partida encontrada não está mais disponível.",
 	}
 	_show_state(QueueState.ERROR, tr(messages.get(reason, "Não foi possível entrar na fila.")))

@@ -133,6 +133,20 @@ func test_backend_recusa_versao_velha_com_mensagem_propria() -> void:
 	assert_string_contains(_lobby.banner_text(), "versão nova")
 
 
+func test_backend_recusa_versao_velha_no_itch_manda_atualizar_pelo_app_do_itch() -> void:
+	_lobby.channel = BuildInfo.CHANNEL_ITCH
+	_api.reply("POST /queue", 426, {"code": "CLIENT_OUTDATED", "message": "Atualize"})
+	await _lobby.toggle_queue()
+	assert_string_contains(_lobby.banner_text(), "itch.io")
+	assert_false(_lobby.banner_text().contains("Setup"), "o itch nao oferece o instalador")
+
+
+func test_backend_recusa_versao_velha_no_site_nao_cita_o_itch() -> void:
+	_api.reply("POST /queue", 426, {"code": "CLIENT_OUTDATED", "message": "Atualize"})
+	await _lobby.toggle_queue()
+	assert_false(_lobby.banner_text().contains("itch.io"))
+
+
 func _level_buttons() -> Array:
 	return _lobby.find_children("*", "Button", true, false).filter(
 		func(b: Button) -> bool: return ["Fácil", "Médio", "Difícil"].has(b.text)

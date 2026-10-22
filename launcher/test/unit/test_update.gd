@@ -68,6 +68,19 @@ func test_versao_do_pacote_e_dev_sem_build_config() -> void:
 	assert_eq(BuildInfo.update_url("user://test_build_config.cfg"), MANIFEST_URL)
 
 
+func test_canal_do_pacote_le_do_arquivo_e_o_padrao_e_site() -> void:
+	assert_eq(BuildInfo.channel("user://nao_existe.cfg"), BuildInfo.CHANNEL_SITE)
+	var cfg := ConfigFile.new()
+	cfg.set_value("build", "version", "v0.2.0")
+	cfg.save("user://test_build_config_sem_canal.cfg")
+	assert_eq(BuildInfo.channel("user://test_build_config_sem_canal.cfg"), BuildInfo.CHANNEL_SITE)
+	cfg.set_value("build", "channel", BuildInfo.CHANNEL_ITCH)
+	cfg.set_value("build", "update_url", "")
+	cfg.save("user://test_build_config_itch.cfg")
+	assert_eq(BuildInfo.channel("user://test_build_config_itch.cfg"), BuildInfo.CHANNEL_ITCH)
+	assert_eq(BuildInfo.update_url("user://test_build_config_itch.cfg"), "")
+
+
 func test_check_acha_versao_nova() -> void:
 	_api.reply("GET " + MANIFEST_URL, 200, _manifest())
 	assert_eq(await _service().check(), _manifest())
