@@ -89,7 +89,7 @@ func show_model(model: Node3D) -> void:
 		model.get_meta(&"portrait_band", Vector2.ZERO) if model != null else Vector2.ZERO
 	)
 	if band != Vector2.ZERO:
-		_preview.frame_band(band, model.get_meta(&"portrait_turn", 0.0))
+		_preview.frame_band(band)
 
 
 func set_active(value: bool) -> void:

@@ -292,7 +292,10 @@ func test_carrasco_traz_a_faixa_e_o_giro_do_card() -> void:
 	# F98: o Carrasco, realista e esguio, mostra da cintura para cima e girado no card.
 	var model := HeroSelect.model_of(&"carrasco")
 	autofree(model)
-	assert_eq(model.get_meta(&"portrait_band"), Vector2(0.85, 1.92))
+	assert_eq(model.get_meta(&"portrait_band"), Vector2(0.98, 1.78))
+	assert_almost_eq(
+		float(model.get_meta(&"portrait_height")), 1.8, 0.001, "corpo inteiro no grande"
+	)
 	assert_almost_eq(float(model.get_meta(&"portrait_turn")), 35.0, 0.001)
 	var knight := HeroSelect.model_of(&"knight")
 	autofree(knight)
