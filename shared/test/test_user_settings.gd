@@ -313,3 +313,13 @@ func test_nivel_do_bot_de_tipo_errado_vira_o_padrao() -> void:
 		_config(UserSettings.TRAINING, {UserSettings.BOT_DIFFICULTY: "hard"})
 	)
 	assert_eq(read[UserSettings.TRAINING][UserSettings.BOT_DIFFICULTY], 2)
+
+
+## Alerta de dano (PI 2026-10-22): [ui] damage_alert, padrao ligado; valor nao booleano volta ao
+## padrao.
+func test_alerta_de_dano_padrao_ligado_e_le_o_arquivo() -> void:
+	assert_true(UserSettings.defaults()[UserSettings.UI][UserSettings.DAMAGE_ALERT])
+	var off := UserSettings.read(_config(UserSettings.UI, {UserSettings.DAMAGE_ALERT: false}))
+	assert_false(off[UserSettings.UI][UserSettings.DAMAGE_ALERT])
+	var bad := UserSettings.read(_config(UserSettings.UI, {UserSettings.DAMAGE_ALERT: "sim"}))
+	assert_true(bad[UserSettings.UI][UserSettings.DAMAGE_ALERT])

@@ -62,6 +62,8 @@ const HUD_SCALE_MIN: float = 0.7
 const HUD_SCALE_MAX: float = 1.0
 const HUD_SCALE_STEP: float = 0.05
 const HUD_SCALE_DEFAULT: float = 0.85
+## Alerta de dano nas bordas da tela na partida (DamageVignette, PI 2026-10-22); padrao ligado.
+const DAMAGE_ALERT: String = "damage_alert"
 ## Folga da faixa: o Range arredonda o passo em float (0,7 + 6 x 0,05 = 0,9999999999999999).
 const RANGE_EPSILON: float = 0.000001
 
@@ -122,7 +124,7 @@ static func defaults() -> Dictionary:
 		CONTROLS: controls,
 		GRAPHICS: graphics,
 		CAMERA: {DISTANCE: DISTANCE_DEFAULT},
-		UI: {HUD_SCALE: HUD_SCALE_DEFAULT},
+		UI: {HUD_SCALE: HUD_SCALE_DEFAULT, DAMAGE_ALERT: true},
 		TRAINING: {BOT_DIFFICULTY: BotLevels.DEFAULT_NUMBER},
 	}
 

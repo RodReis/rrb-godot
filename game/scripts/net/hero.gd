@@ -154,7 +154,6 @@ var _damage_taken: Dictionary = {}
 var _alive_layer: int = 0
 
 @onready var input: PlayerInput = $Input
-@onready var hp_label: Label3D = $HpLabel
 @onready var hp_bar: WorldHealthBar = $HpBar
 ## Volume da Muralha (so o Cavaleiro tem).
 @onready var _shield_blocker: Area3D = get_node_or_null("ShieldBlocker") as Area3D
@@ -312,15 +311,10 @@ func _process(_delta: float) -> void:
 	_refresh_body()
 	visible = _concealment.is_shown()
 	var plate := is_alive() and not PlayerInput.cinematic  # sem placas na cinematica (F69)
-	hp_label.visible = plate
 	hp_bar.visible = plate
-	var status := " +%d" % shield_hp if shield_ticks > 0 else ""
-	if stun_ticks > 0:
-		status += " (atordoado)"
-	elif slow_ticks > 0:
-		status += " (lento)"
-	hp_label.text = "Nv %d%s" % [level, status]
-	hp_bar.set_ratio(float(hp) / attributes.max_hp)
+	# Placa (PI 2026-10-22): nivel no selo, escudo em branco na barra; status viram VFX.
+	hp_bar.set_badge(str(level))
+	hp_bar.set_hp(hp, attributes.max_hp, shield_hp if shield_ticks > 0 else 0)
 
 
 func is_alive() -> bool:
@@ -799,6 +793,7 @@ func _enemies_into(out: Array[Combatant]) -> void:
 func _hit(other: Combatant, tick: int, slot: HitLedger.Slot, effect: HitEffect) -> void:
 	effect.attacker_id = peer_id
 	effect.hero_basic = slot == HitLedger.Slot.BASIC
+	effect.aggressor_id = combat_id()
 	other.receive_hit(tick + 1, HitLedger.source_key(peer_id, slot), effect)
 	# Forca ressimular o alvo a partir de tick+1 se ele ja foi simulado.
 	NetworkRollback.mutate(other, tick + 1)
@@ -871,6 +866,10 @@ func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
 	if damage > 0:
 		var pause := match_rules.fountain_damage_pause
 		heal_pause_ticks = SkillRules.seconds_to_ticks(pause, NetworkTime.tickrate)
+		# Revide: _lock_target valida o agressor (adversario, vivo, visivel) no mesmo tick.
+		target_id = TargetRules.retaliate(
+			target_id, _valid_target(target_id) != null, effect.aggressor_id
+		)
 	if hp == 0:
 		_die(effect)
 		return heal

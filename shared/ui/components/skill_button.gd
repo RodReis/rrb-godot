@@ -7,6 +7,9 @@ extends TextureProgressBar
 ## moldura dourada pulsando e, se ainda travada, troca o "Nv2" pelo atalho de aprender (F57).
 ## Cena: chame bind()/set_*() depois de entrar na arvore (os nos internos sao @onready).
 
+## Clique com ponto livre (upgradable): quem e dono pede o ponto (PI 2026-10-22).
+signal learn_requested
+
 enum State { LOCKED, READY, COOLING }
 
 const FRAME_READY: StringName = &"SkillFrame"
@@ -99,6 +102,7 @@ func set_upgradable(on: bool) -> void:
 	if on == upgradable:
 		return
 	upgradable = on
+	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND if on else Control.CURSOR_ARROW
 	_frame.theme_type_variation = FRAME_UPGRADABLE if on else FRAME_READY
 	if _pulse != null:
 		_pulse.kill()
@@ -110,6 +114,13 @@ func set_upgradable(on: bool) -> void:
 		_pulse.tween_property(_frame, ^"self_modulate:a", PULSE_MIN_ALPHA, half)
 		_pulse.tween_property(_frame, ^"self_modulate:a", 1.0, half)
 	_refresh()
+
+
+func _gui_input(event: InputEvent) -> void:
+	var click := event as InputEventMouseButton
+	if upgradable and click != null and click.pressed and click.button_index == MOUSE_BUTTON_LEFT:
+		learn_requested.emit()
+		accept_event()
 
 
 func _refresh() -> void:

@@ -61,6 +61,7 @@ func _spawn_enemy(path: String, at: Vector3, id: int = VICTIM, level: int = 1) -
 	hero.collision_mask = GateRules.hero_mask(GateRules.TEAM_B)
 	hero.transform = Transform3D(Basis(), at)
 	add_child_autofree(hero)
+	NoRetaliation.mute(hero)
 	if not at.is_zero_approx():
 		hero.look_at(Vector3(0, at.y, 0), Vector3.UP)
 	_others.append(hero)

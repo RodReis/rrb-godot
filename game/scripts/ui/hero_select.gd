@@ -4,7 +4,8 @@ extends CanvasLayer
 ## pelo main na HERO_PICK e fechada quando ela acaba. Card esquerdo = voce (heroi mostrado),
 ## grade = so herois com cena, card direito = oponente quando o servidor confirma. 1-9, 0 e -
 ## escolhem (o 11o heroi, F98, fica no -), Espaco ou o botao confirma; o lock-in vai ao servidor por
-## RPC e so vale quando volta como hero_picked (inclusive o padrao do timeout). So le sinais e
+## RPC e so vale quando volta como hero_picked (inclusive o timeout, que fica com o heroi mostrado:
+## cada troca vai ao servidor por submit_hero_preview). So le sinais e
 ## dados; quem decide e o servidor.
 
 const KEYS: Array[Key] = [
@@ -172,6 +173,8 @@ func select(index: int) -> void:
 	if not _available.has(_roster[index].id):
 		return
 	_show(index)
+	# Sem lock-in ate o fim do tempo, o servidor fica com o mostrado (PI 2026-10-22).
+	_match.submit_hero_preview.rpc_id(1, Ids.to_int(_roster[index].id))
 
 
 ## Envia o lock-in do heroi mostrado ao servidor (uma vez).
@@ -186,8 +189,9 @@ func lock_in() -> void:
 
 
 ## So o visual do heroi: o no Model da cena, com as pecas que o heroi nao usa escondidas, o clipe de
-## idle do HeroVisual em meta "idle" (o MonsterPreview3D toca esse), a altura de retrato dele em
-## meta "portrait_height" (0 = a padrao do card) e a faixa do card em meta "portrait_band".
+## retrato do HeroVisual (portrait_idle, senao o idle) em meta "idle" (o MonsterPreview3D toca
+## esse), a altura de retrato dele em meta "portrait_height" (0 = a padrao do card) e a faixa do
+## card em meta "portrait_band".
 static func model_of(hero_id: StringName) -> Node3D:
 	var path := Hero.SCENE_PATH % hero_id
 	if not ResourceLoader.exists(path):
@@ -202,7 +206,8 @@ static func model_of(hero_id: StringName) -> Node3D:
 			var node := model.find_child(part) as Node3D
 			if node != null:
 				node.hide()
-		model.set_meta(&"idle", visual.get(&"idle"))
+		var pose: StringName = visual.get(&"portrait_idle")
+		model.set_meta(&"idle", pose if not pose.is_empty() else visual.get(&"idle"))
 		model.set_meta(&"portrait_height", visual.get(&"portrait_height"))
 		model.set_meta(&"portrait_band", visual.get(&"portrait_band"))
 		model.set_meta(&"portrait_turn", visual.get(&"portrait_turn"))

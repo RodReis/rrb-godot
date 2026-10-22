@@ -59,13 +59,6 @@ corners = true
 [node name="ClockColumn" type="VBoxContainer" parent="Root/Top/Clock"]
 layout_mode = 2
 
-[node name="PhaseTitle" type="Label" parent="Root/Top/Clock/ClockColumn"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"LabelBadge"
-text = "FASE 2: CONFRONTO"
-horizontal_alignment = 1
-
 [node name="PhaseTimer" type="Label" parent="Root/Top/Clock/ClockColumn"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -90,6 +83,7 @@ mouse_filter = 2
 
 [node name="Zone" type="PanelContainer" parent="Root/TopLeft"]
 layout_mode = 2
+size_flags_horizontal = 0
 mouse_filter = 2
 script = ExtResource("card")
 variant = 3
@@ -102,14 +96,9 @@ theme_override_font_sizes/font_size = 12
 text = "FPS -- · PING -- · TICK --"
 script = ExtResource("telemetry")
 
-[node name="ZoneColumn" type="VBoxContainer" parent="Root/TopLeft/Zone"]
+[node name="ZoneColumn" type="HBoxContainer" parent="Root/TopLeft/Zone"]
 layout_mode = 2
 mouse_filter = 2
-
-[node name="ZoneTitle" type="Label" parent="Root/TopLeft/Zone/ZoneColumn"]
-layout_mode = 2
-theme_type_variation = &"LabelH2"
-text = "ZONA"
 
 [node name="ZoneRadius" type="Label" parent="Root/TopLeft/Zone/ZoneColumn"]
 unique_name_in_owner = true
@@ -126,11 +115,10 @@ layout_mode = 2
 mouse_filter = 2
 
 [node name="NextLabel" type="Label" parent="Root/TopLeft/Zone/ZoneColumn/NextRow"]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_type_variation = &"LabelMuted"
-text = "Próximo fechamento"
 
 [node name="ZoneTimer" type="Label" parent="Root/TopLeft/Zone/ZoneColumn/NextRow"]
 unique_name_in_owner = true
@@ -185,19 +173,18 @@ script = ExtResource("radar")
 
 [node name="RespawnCard" type="PanelContainer" parent="Root/Right"]
 layout_mode = 2
+size_flags_horizontal = 8
 mouse_filter = 2
 script = ExtResource("card")
 variant = 3
 
-[node name="RespawnColumn" type="VBoxContainer" parent="Root/Right/RespawnCard"]
+[node name="RespawnColumn" type="HBoxContainer" parent="Root/Right/RespawnCard"]
 layout_mode = 2
 mouse_filter = 2
 
 [node name="RespawnState" type="Label" parent="Root/Right/RespawnCard/RespawnColumn"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"LabelH2"
-text = "RESPAWN ATIVO"
 
 [node name="RespawnRow" type="HBoxContainer" parent="Root/Right/RespawnCard/RespawnColumn"]
 layout_mode = 2
@@ -206,10 +193,8 @@ mouse_filter = 2
 [node name="RespawnHint" type="Label" parent="Root/Right/RespawnCard/RespawnColumn/RespawnRow"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_vertical = 4
 theme_type_variation = &"LabelMuted"
-text = "Morte súbita em"
 
 [node name="RespawnTimer" type="Label" parent="Root/Right/RespawnCard/RespawnColumn/RespawnRow"]
 unique_name_in_owner = true

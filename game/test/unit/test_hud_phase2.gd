@@ -123,11 +123,12 @@ func test_morte_subita_mostra_o_aviso_e_desliga_o_respawn() -> void:
 	_phase(MatchState.State.TRANSITION)
 	_phase(MatchState.State.PHASE2)
 	assert_false((_node("%SuddenDeathBanner") as Control).visible)
-	assert_string_contains((_node("%RespawnState") as Label).text, "ATIVO")
+	_phase2._process(0.0)
+	assert_eq((_node("%RespawnState") as Label).text, "%s 6s" % UiIcons.RESTART_ALT)
 	_phase(MatchState.State.SUDDEN_DEATH)
 	assert_true((_node("%SuddenDeathBanner") as Control).visible)
 	_phase2._process(0.0)
-	assert_eq((_node("%RespawnState") as Label).text, "RESPAWN DESLIGADO")
+	assert_eq((_node("%RespawnState") as Label).text, "%s OFF" % UiIcons.RESTART_ALT)
 
 
 func test_kill_scored_atualiza_o_placar() -> void:
@@ -138,19 +139,20 @@ func test_kill_scored_atualiza_o_placar() -> void:
 	_match.kill_scored.emit(ME, 2, 120)
 	var banner := _node("%ScoreBanner") as ScoreBanner
 	var texts := _texts(banner)
-	assert_has(texts, "CAVALEIRO (VOCÊ)")
-	assert_has(texts, "ARQUEIRO (OPONENTE)")
 	assert_has(texts, "2")
 	assert_has(texts, "1")
-	assert_has(texts, "META: %d KILLS" % RULES.kill_goal)
+	assert_has(texts, "%s %d" % [UiIcons.EMOJI_EVENTS, RULES.kill_goal])
+	var sides := banner.find_children("*", "PanelCard", true, false)
+	assert_eq((sides[0] as PanelCard).tooltip_text, "CAVALEIRO (VOCÊ)")
+	assert_eq((sides[1] as PanelCard).tooltip_text, "ARQUEIRO (OPONENTE)")
 
 
 func test_zone_updated_atualiza_painel_e_radar() -> void:
 	_bind()
 	_phase(MatchState.State.TRANSITION)
 	_zone.zone_updated.emit(17.5, 8.75, 0.03, 45.0, 100)
-	assert_eq((_node("%ZoneRadius") as Label).text, "Raio 50% · 17,5 u")
-	assert_eq((_node("%ZoneDamage") as Label).text, "Dano fora: 3,0% do HP/s")
+	assert_eq((_node("%ZoneRadius") as Label).text, "%s 50%%" % UiIcons.RADAR)
+	assert_eq((_node("%ZoneDamage") as Label).text, "%s 3%%/s" % UiIcons.HEART_BROKEN)
 	assert_eq((_node("%ZoneTimer") as TimerLabel).text, "00:45")
 	var radar := _node("%ZoneRadar") as ZoneRadar
 	assert_almost_eq(radar.radius_pct, 0.5, 0.0001)

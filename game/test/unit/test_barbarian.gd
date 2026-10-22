@@ -42,6 +42,7 @@ func _spawn_knight(at: Vector3) -> Knight:
 	knight.team = GateRules.TEAM_B
 	knight.transform = Transform3D(Basis(), at)
 	add_child_autofree(knight)
+	NoRetaliation.mute(knight)
 	_others.append(knight)
 	return knight
 

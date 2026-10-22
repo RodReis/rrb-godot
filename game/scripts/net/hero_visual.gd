@@ -53,6 +53,9 @@ const GRASS: ShaderMaterial = preload("res://shared/resources/materials/tall_gra
 ## Giro em graus do modelo no card, junto com portrait_band (o escudo do Carrasco cobre o peito de
 ## frente).
 @export var portrait_turn: float = 0.0
+## Clipe de pose de descanso na selecao e nos retratos (o Idle do Carrasco e guarda de combate, PI
+## 2026-10-22); vazio = idle.
+@export var portrait_idle: StringName = &""
 
 var _hero: Hero
 var _player: AnimationPlayer

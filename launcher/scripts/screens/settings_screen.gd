@@ -338,6 +338,15 @@ func _graphics_card(column: VBoxContainer) -> void:
 	)
 	column.add_child(
 		_switch(
+			tr("Alerta de dano"),
+			tr("Bordas vermelhas ao levar dano e com HP baixo"),
+			UserSettings.UI,
+			UserSettings.DAMAGE_ALERT,
+			_draft[UserSettings.UI]
+		)
+	)
+	column.add_child(
+		_switch(
 			tr("Sincronização vertical (V-Sync)"),
 			tr("Menor latência de input quando OFF"),
 			UserSettings.VIDEO,

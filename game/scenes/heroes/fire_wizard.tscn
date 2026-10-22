@@ -68,15 +68,6 @@ skill_q = &"Throw"
 skill_e = &"Spellcast_Raise"
 skill_r = &"Spellcast_Long"
 
-[node name="HpLabel" type="Label3D" parent="."]
-layers = 2
-position = Vector3(0, 2.85, 0)
-pixel_size = 0.01
-billboard = 1
-text = "0 / 0"
-font_size = 56
-outline_size = 12
-
 [node name="HpBar" type="MeshInstance3D" parent="."]
 position = Vector3(0, 2.4, 0)
 script = ExtResource("hpbar_script")

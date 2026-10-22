@@ -5,6 +5,14 @@ extends RefCounted
 
 ## Ultimos segundos de um contador que piscam em aviso (PATTERNS P7).
 const WARNING_SECONDS: float = 30.0
+## Vinheta de dano (PI 2026-10-22, "suave"): pico do flash; abaixo de LOW_HP_RATIO do HP fica um
+## piso continuo de LOW_HP_FLOOR (no limiar) ate LOW_HP_PEAK (quase morto).
+const DAMAGE_FLASH_PEAK: float = 0.55
+const LOW_HP_RATIO: float = 0.25
+const LOW_HP_FLOOR: float = 0.15
+const LOW_HP_PEAK: float = 0.45
+## Piso do tempo de apagar do flash (evita dividir por zero).
+const MIN_FADE_SECONDS: float = 0.001
 
 
 ## XP dentro do nivel atual: x = ganho no nivel, y = necessario para o proximo; nivel maximo
@@ -45,9 +53,34 @@ static func zone_vignette(
 	return clampf(damage_pct / peak, 0.0, 1.0) * fade
 
 
+## Alerta de dano nas laterais (PI 2026-10-22): [param prev] (0-1) acende em 1 quando o HP caiu
+## neste quadro e apaga linear em [param fade_seconds].
+static func damage_flash(prev: float, hp_dropped: bool, delta: float, fade_seconds: float) -> float:
+	if hp_dropped:
+		return 1.0
+	return maxf(prev - delta / maxf(fade_seconds, MIN_FADE_SECONDS), 0.0)
+
+
+## Intensidade da vinheta de dano: o flash ate DAMAGE_FLASH_PEAK (suave) e, com HP abaixo de
+## LOW_HP_RATIO, um piso que cresce ate LOW_HP_PEAK quanto menor o HP. Morto: nada.
+static func damage_vignette(flash: float, hp_ratio: float, alive: bool) -> float:
+	if not alive:
+		return 0.0
+	var low := 0.0
+	if hp_ratio < LOW_HP_RATIO:
+		low = lerpf(LOW_HP_FLOOR, LOW_HP_PEAK, 1.0 - clampf(hp_ratio / LOW_HP_RATIO, 0.0, 1.0))
+	return maxf(flash * DAMAGE_FLASH_PEAK, low)
+
+
 ## Raio da zona como fracao do primeiro raio (a arena inteira = 1).
 static func zone_fraction(rules: MatchRules, radius: float) -> float:
 	return radius / rules.zone_radius[0]
+
+
+## Como [method decimal], sem a casa quando inteiro: 6 -> "6", 3,5 -> "3,5" (paineis enxutos).
+static func short(value: float) -> String:
+	var text := decimal(value)
+	return text.trim_suffix(",0")
 
 
 ## Uma casa decimal com virgula (pt-BR).

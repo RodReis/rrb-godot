@@ -4,7 +4,8 @@ extends PanelCard
 ## raridade (cor e texto, P6), atributos contra o equipado no mesmo slot (+/-) e conjuntos
 ## antes -> depois. Clicavel: emite chosen. So exibe; o servidor valida a escolha (Chest.pick).
 ## Borda cinza que clareia e ganha brilho com o mouse em cima (PI 2026-10-13: dourado parecia item
-## lendario).
+## lendario). Seta discreta no canto (PI 2026-10-22): verde para cima = vale trocar, vermelha para
+## baixo = nao vale (OfferCompare.verdict).
 
 ## Clique no card do item de indice [param index] no menu.
 signal chosen(index: int)
@@ -23,8 +24,14 @@ const GLOW_ALPHA: float = 0.5
 const GLOW_SECONDS: float = 0.15
 ## Fundo levemente mais claro sob o mouse.
 const HOVER_MODULATE: Color = Color(1.08, 1.08, 1.08)
+## Seta do veredito: tamanho (px), distancia do canto superior direito e opacidade.
+const ARROW_SIZE: float = 12.0
+const ARROW_MARGIN: float = 12.0
+const ARROW_ALPHA: float = 0.85
 
 var index: int = 0
+## OfferCompare.verdict do item mostrado: 1 = vale trocar, -1 = nao vale, 0 = sem seta.
+var verdict: int = 0
 ## 0 = parado, 1 = mouse em cima (animado por tween).
 var glow: float = 0.0:
 	set(value):
@@ -79,8 +86,11 @@ func show_item(hero: Hero, incoming: ItemData, catalog: ItemCatalog, icons: Item
 	for child: Node in _rows.get_children():
 		_rows.remove_child(child)
 		child.queue_free()
-	for row: OfferCompare.Row in OfferCompare.rows(current, incoming):
+	var rows := OfferCompare.rows(current, incoming)
+	for row: OfferCompare.Row in rows:
 		_rows.add_child(_row_node(row))
+	verdict = OfferCompare.verdict(rows)
+	queue_redraw()
 	_sets.text = OfferCompare.set_change(hero.equipment, incoming, catalog)
 	_sets.visible = not _sets.text.is_empty()
 
@@ -94,6 +104,21 @@ func _draw() -> void:
 	_border.shadow_color = Color(BORDER_HOVER, GLOW_ALPHA * glow)
 	_border.shadow_size = roundi(GLOW_SIZE * glow)
 	draw_style_box(_border, Rect2(Vector2.ZERO, size))
+	if verdict != 0:
+		_draw_arrow()
+
+
+## Triangulo no canto superior direito: para cima verde, para baixo vermelho.
+func _draw_arrow() -> void:
+	var center := Vector2(size.x - ARROW_MARGIN - ARROW_SIZE / 2.0, ARROW_MARGIN + ARROW_SIZE / 2.0)
+	var half := ARROW_SIZE / 2.0
+	var tip := Vector2(0.0, -half * verdict)
+	var base := Vector2(0.0, half * verdict)
+	var points := PackedVector2Array(
+		[center + tip, center + base + Vector2(half, 0.0), center + base - Vector2(half, 0.0)]
+	)
+	var color := UiTokens.GREEN if verdict > 0 else UiTokens.RED
+	draw_colored_polygon(points, Color(color, ARROW_ALPHA))
 
 
 func _gui_input(event: InputEvent) -> void:

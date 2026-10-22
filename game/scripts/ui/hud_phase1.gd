@@ -24,7 +24,6 @@ var _marker_radii: PackedFloat32Array = PackedFloat32Array()
 var _banner_tween: Tween
 
 @onready var _gate_text: Label = %GateText
-@onready var _phase_title: Label = %PhaseTitle
 @onready var _phase_timer: TimerLabel = %PhaseTimer
 @onready var _boss_timer: TimerLabel = %BossTimer
 @onready var _boss_status: Label = %BossStatus
@@ -44,6 +43,7 @@ var _banner_tween: Tween
 func _ready() -> void:
 	visible = false
 	set_process(false)
+	IconFont.apply(_gate_text)
 
 
 ## Liga a HUD ao heroi local e ao mundo da partida. [param players] = pai dos herois.
@@ -91,8 +91,8 @@ func _update_clock(elapsed: float) -> void:
 		TimerLabel.State.WARNING if HudMath.is_warning(phase_left) else TimerLabel.State.NORMAL
 	)
 	var gates_open := elapsed >= _rules.phase1_duration
-	_gate_text.text = tr("PORTÕES ABERTOS") if gates_open else tr("PORTÃO DA BASE: SEGURO")
-	_phase_title.text = tr("FASE 1 ENCERRADA") if gates_open else tr("FASE 1: PREPARAÇÃO")
+	# Paineis so com icone e o minimo de texto (PI 2026-10-22).
+	_gate_text.text = "%s %s" % [UiIcons.FORT, tr("Aberto") if gates_open else tr("Seguro")]
 	var boss_left := HudMath.until(_rules.boss_spawn_time, elapsed)
 	_boss_timer.visible = boss_left > 0.0
 	_boss_timer.set_seconds(boss_left)
@@ -100,14 +100,13 @@ func _update_clock(elapsed: float) -> void:
 		TimerLabel.State.WARNING if HudMath.is_warning(boss_left) else TimerLabel.State.NORMAL
 	)
 	var boss := _spawns.get_node_or_null(SpawnDirector.BOSS_NAME) as Monster
+	_boss_status.visible = boss_left <= 0.0  # contando: so a caveira e o relogio
 	if _spawns.has_node(SpawnDirector.BOSS_CHEST_NAME):
-		_boss_status.text = tr("DERROTADO")
-	elif boss_left > 0.0:
-		_boss_status.text = tr("surge no centro")
+		_boss_status.text = tr("Derrotado")
 	elif gates_open and boss != null and not boss.present:
-		_boss_status.text = tr("SAIU DO MAPA")  # vivo aos 5:00 (R-PEND-06)
+		_boss_status.text = tr("Fora do mapa")  # vivo aos 5:00 (R-PEND-06)
 	else:
-		_boss_status.text = tr("NO CENTRO")
+		_boss_status.text = tr("No centro")
 
 
 func _update_catch_up() -> void:

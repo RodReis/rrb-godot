@@ -418,6 +418,7 @@ func _apply_user_settings() -> void:
 		cli_window = cli_window or arg.get_slice("=", 0) in WINDOW_ARGS
 	SettingsApplier.apply_video(values, get_window(), not cli_window)
 	SettingsApplier.apply_ui(values, get_window())
+	DamageVignette.enabled = values[UserSettings.UI][UserSettings.DAMAGE_ALERT]
 	camera.orbit_sensitivity *= values[UserSettings.CONTROLS][UserSettings.MOUSE_SENSITIVITY]
 	camera.set_distance(values[UserSettings.CAMERA][UserSettings.DISTANCE])
 	camera.distance_changed.connect(_on_camera_distance_changed)

@@ -16,6 +16,7 @@ func test_golpe_da_maca_do_cavaleiro_volta_para_ele() -> void:
 	_spawn_paladin(2)
 	_paladin.ranks = Vector3i(1, 1, 0)
 	var knight := _spawn_enemy(KNIGHT, AHEAD * 1.8)
+	NoRetaliation.mute(_paladin)
 	knight.input.attack = true
 	knight.input.aim = Vector3(0, 0, 1)
 	_paladin.input.skill_e = true
@@ -89,6 +90,7 @@ func test_golpe_do_monstro_volta_para_o_monstro() -> void:
 func test_sem_laco_entre_dois_paladinos() -> void:
 	_retributing()
 	var other := _spawn_enemy(PALADIN, AHEAD * 1.5) as Paladin
+	NoRetaliation.mute(other)
 	other.ranks = Vector3i(1, 1, 0)
 	other.retribution_ticks = 90
 	var other_hp := other.hp

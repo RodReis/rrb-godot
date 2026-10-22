@@ -48,6 +48,23 @@ func test_pedido_vence_o_cancelar_do_mesmo_tick() -> void:
 	assert_eq(TargetRules.resolve(MONSTER, OTHER, true, true, true), OTHER)
 
 
+func test_revide_trava_o_agressor_quando_nao_ha_alvo() -> void:
+	assert_eq(TargetRules.retaliate(TargetRules.NONE, false, OTHER), OTHER)
+
+
+func test_revide_trava_o_agressor_quando_o_alvo_deixou_de_ser_valido() -> void:
+	assert_eq(TargetRules.retaliate(MONSTER, false, OTHER), OTHER)
+
+
+func test_revide_nao_troca_um_alvo_valido() -> void:
+	assert_eq(TargetRules.retaliate(MONSTER, true, OTHER), MONSTER)
+
+
+func test_revide_sem_agressor_mantem_o_alvo() -> void:
+	assert_eq(TargetRules.retaliate(MONSTER, true, TargetRules.NONE), MONSTER)
+	assert_eq(TargetRules.retaliate(TargetRules.NONE, false, TargetRules.NONE), TargetRules.NONE)
+
+
 func test_ataca_so_em_alcance_e_com_alvo_valido() -> void:
 	var from := Vector3.ZERO
 	assert_true(

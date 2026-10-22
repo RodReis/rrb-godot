@@ -35,6 +35,7 @@ const SHADERS: Array[String] = [
 	"res://scenes/vfx/shield_wall.gdshader",
 	"res://scenes/vfx/shockwave.gdshader",
 	"res://scenes/vfx/rage_fire.gdshader",
+	"res://scenes/vfx/status_star.gdshader",
 ]
 ## Quadros desenhados com tudo na tela (compilacao acontece no 1o; folga para o resto).
 const FRAMES: int = 4

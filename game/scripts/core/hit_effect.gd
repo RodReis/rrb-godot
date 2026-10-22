@@ -36,6 +36,9 @@ var striker_id: int = TargetRules.NONE
 ## Golpe de ataque basico de heroi (Hero._hit no slot BASIC): a Couraca do Carrasco so reduz esse
 ## (F98). Servo e monstro golpeiam por receive_hit direto e nao marcam.
 var hero_basic: bool = false
+## combat_id de quem causou o golpe (heroi, monstro ou servo; NONE = zona, saque, XP): o alvo trava
+## esse agressor e revida sozinho se estiver sem alvo (TargetRules.retaliate).
+var aggressor_id: int = TargetRules.NONE
 ## Correntes do Julgamento (F98): fracao do HP maximo abaixo da qual o alvo, depois do dano deste
 ## efeito, morre (dano igual ao HP restante, ignora DEF); imunidade a dano bloqueia. 0 = nao
 ## executa.

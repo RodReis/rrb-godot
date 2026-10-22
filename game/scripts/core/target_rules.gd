@@ -26,6 +26,13 @@ static func resolve(
 	return current
 
 
+## Revide: quem leva dano sem alvo valido trava o [param aggressor]; alvo valido nao e trocado.
+static func retaliate(current: int, current_valid: bool, aggressor: int) -> int:
+	if aggressor != NONE and not current_valid:
+		return aggressor
+	return current
+
+
 ## Auto-ataque: alvo valido a no maximo [param attack_range] (no plano) de [param from].
 static func can_attack(valid: bool, from: Vector3, to: Vector3, attack_range: float) -> bool:
 	return valid and CombatRules.in_radius(from, to, attack_range)
