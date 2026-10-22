@@ -17,11 +17,11 @@ updated: 2026-10-22
 - [MVP5][SPEC-088][F88] Recompensas de Patente e de login diário, semanal e mensal: emblemas e molduras (#257)
 - [MVP5][SPEC-087][F87] Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre (#256)
 
+## A Fazer
+
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
-
-## A Fazer
 
 ### [MVP4] Playtest (#246)
 
@@ -36,7 +36,9 @@ _(vazio)_
 
 ## Feito
 
-_(vazio)_
+### [MVP4] Playtest (#246)
+
+- [MVP4][FIX] Ajustes de combate, HUD e seleção do playtest (#276)
 
 ## Finalizado
 
