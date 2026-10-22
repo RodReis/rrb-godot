@@ -45,6 +45,7 @@ const ALL: Array[StringName] = [
 	&"berserker",
 	&"occultist",
 	&"paladin",
+	&"carrasco",
 ]
 
 

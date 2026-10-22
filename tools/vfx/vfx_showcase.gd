@@ -19,6 +19,7 @@ const START_DISTANCE: Dictionary = {
 	"berserker": 2.0,
 	"occultist": 5.0,
 	"paladin": 1.6,
+	"carrasco": 2.0,
 }
 ## Sequencia por heroi: [segundos desde o inicio, acao, segundos apertada]. Acao "end" encerra.
 const SCRIPTS: Dictionary = {
@@ -106,6 +107,19 @@ const SCRIPTS: Dictionary = {
 		[3.8, &"skill_q", 0.1],
 		[5.0, &"skill_r", 0.1],
 		[8.0, &"end", 0.0],
+	],
+	# Carrasco (F98): 2 golpes de Espada (contas de Dor na cintura), Espinhos (cone no chao) e o
+	# recast (Q de novo: feixe com rastro), Penitencia inteira (aro e brasas, explode com raiz) e as
+	# Correntes (grilhao puxando a corrente; a luz so acende em heroi) — R so com --level=6+.
+	"carrasco":
+	[
+		[0.6, &"primary_attack", 0.1],
+		[1.7, &"primary_attack", 0.1],
+		[2.8, &"skill_q", 0.1],
+		[3.6, &"skill_q", 0.1],
+		[4.8, &"skill_e", 0.1],
+		[7.8, &"skill_r", 0.1],
+		[10.0, &"end", 0.0],
 	],
 }
 

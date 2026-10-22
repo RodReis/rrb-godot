@@ -31,7 +31,9 @@ func _process(delta: float) -> void:
 
 
 ## Troca o modelo mostrado (nulo = vazio); toca em laco a meta "idle" do modelo (clipe proprio do
-## heroi, Berserker F75) ou [param animation], se o modelo tiver.
+## heroi, Berserker F75) ou [param animation], se o modelo tiver. Sem frame_height, enquadra pela
+## meta "portrait_height" do modelo, se houver (a caixa da malha com pele do Mixamo e a da pose de
+## bind, Carrasco F98), e gira o modelo pela meta "portrait_turn".
 func show_model(model: Node3D, animation: StringName = &"Idle") -> void:
 	for child: Node in _stage.get_children():
 		_stage.remove_child(child)
@@ -40,12 +42,26 @@ func show_model(model: Node3D, animation: StringName = &"Idle") -> void:
 	if model == null:
 		return
 	_stage.add_child(model)
-	_frame(frame_height if frame_height > 0.0 else _height(model))
+	var turn: float = model.get_meta(&"portrait_turn", 0.0)
+	_stage.rotation = Vector3(0.0, deg_to_rad(facing + turn), 0.0)
+	var height := frame_height
+	if height <= 0.0:
+		height = model.get_meta(&"portrait_height", 0.0)
+	_frame(height if height > 0.0 else _height(model))
 	var clip: StringName = model.get_meta(&"idle", animation)
 	var player := model.find_child("AnimationPlayer") as AnimationPlayer
 	if player != null and player.has_animation(clip):
 		player.get_animation(clip).loop_mode = Animation.LOOP_LINEAR
 		player.play(clip)
+
+
+## Enquadra so a faixa de altura [param band] (x = baixo, y = topo, em m): a camera mira o meio
+## dela, na distancia em que ela enche a altura do quadro.
+func frame_band(band: Vector2) -> void:
+	var middle := (band.x + band.y) / 2.0
+	var distance := (band.y - band.x) / 2.0 / tan(deg_to_rad(_camera.fov) / 2.0)
+	_camera.position = Vector3(0.0, middle, distance)
+	_camera.look_at(Vector3(0.0, middle, 0.0), Vector3.UP)
 
 
 func _frame(height: float) -> void:

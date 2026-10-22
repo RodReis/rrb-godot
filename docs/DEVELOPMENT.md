@@ -220,6 +220,43 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
   - **Teto 100 %:** o PI decidiu em 2º pop-up, porque acima de 100 % a área lógica fica menor que 1920x1080 e a seleção de heróis sobrepõe os cartões.
   - **Vitrines:** `hud_showcase`, `hero_select_showcase` e `match_end_showcase` aceitam `--ui-scale <x>`.
   - **Prova:** testes de contrato, applier, engrenagem e Configurações; capturas a 70, 85 e 100 % em `docs/evidencias/f97/`.
+- [x] **F98** (#248) — **Carrasco, 11º herói (Tanque)** (ADR-0032, SPEC-098, GDB §4.11; substitui o F93). Aprovado pelo PI em 2026-10-22.
+  - **Arte:** o modelo do PI (Tripo, 1,9 milhão de triângulos, sem rig) não aceitava rig. Foi refeito em pose T no Tripo, a partir de um render dele (image-to-image `t_pose` + image-to-model P1). O rig humanoide e os 12 clipes vêm do Mixamo (pacote espada e escudo, sprint, arremesso, conjuração). Espada e escudo foram gerados no Tripo e presos a `hand_r_slot`/`hand_l_slot`. Total de 5.992 triângulos, PBR 2K no corpo e 1K nas armas. Fonte em `art/heroes/carrasco/carrasco.blend`, glb em `shared/assets/rrb/heroes/carrasco/`, entradas em `art/spike/f93/`.
+  - **Dados:** `carrasco.tres`, com o id no fim de `Ids.ALL`. `PassiveData.Kind.CUIRASS` (`taken_factor`, `pain_max`, `pain_seconds`). `SkillData` ganha recast, `slow_duration`, `mitigation`, cura por Dor, raiz pela Dor, `light_radius` e `execute_hp_ratio`. 5 ícones SVG.
+  - **Kit** (`Carrasco`, `ProjectileHero`; regras puras em `CarrascoRules`):
+    - Couraça e Penitência pelo `Hero._taken_factor`, depois da Defesa.
+    - Dor no estado de rollback: o arco do básico é contado nos dois lados.
+    - Q: golpe em cone com lentidão e janela de 3 s. O recast é o projétil `THORNS`, disparado no toque (`q_held`); a recarga só começa no recast ou no fim da janela, e o golpe revela no mato à mão.
+    - E: canaliza imóvel (`_move_speed_bonus` −1), soma Dor a cada 0,5 s e cura em fatias (`heal_due`). Explode com raiz se Dor ≥ 4, senão lentidão; E de novo encerra antes e o atordoamento cancela.
+    - R: projétil `CHAINS`, que passa por monstro e servo e para no herói, com dano, raiz e luz.
+  - **Execução:** o alvo decide pelo próprio HP (`HitEffect.execute_below`, ledger `Slot.PASSIVE`, sem `struck`). `HitEffect.hero_basic` marca o básico de herói em `Hero._hit`.
+  - **Visual e VFX:** `CarrascoVisual` toca golpe, recast e explosão pelos contadores do estado (`q_casts`, `recasts`, `blasts`). `CarrascoVfx` mostra:
+    - espinhos rompendo do chão no cone e o feixe do recast;
+    - aro e brasas da Penitência e a onda da explosão, com gaiola de espinhos na raiz (`RootsVfx` ganhou a peça exportável);
+    - grilhão e corrente em voo e grilhões no alvo;
+    - a coluna de luz, que vem pelo `ImpactRelay` (`zone_started`) para ser vista pelos dois jogadores;
+    - as contas de Dor na cintura.
+
+    Malhas em `art/vfx/build_carrasco_vfx.py`, sem shader novo.
+  - **HUD:** medidor de Dor de 6 pontos no cabeçalho das habilidades (`HeroPlate`).
+  - **Seleção:** 11º card, tecla `-`. Grade de 5 por fileira (decisão do PI na verificação), com os cards menores (204 px, retrato 116 px) para as 3 fileiras caberem em 1920x1080 a 100 %. `HeroVisual.portrait_band` e `portrait_turn` deixam o Carrasco enquadrado da cintura para cima e girado no card.
+  - **Launcher e site:** só dados e retratos; os testes que contavam 10 heróis passaram a contar 11. O pilar do roteiro virou "Onze heróis". A arte da tela de loading e do login (`render_loading`) continua com os 10 heróis, porque refazê-la ficou fora do card.
+  - **Bot:** `BotRules.carrasco_skills`, com perfil `thorns_range` 2,8, `recast_range` 6,5, `penance_range` 3, `penance_hp_pct` 0,6, `penance_hits` 2, `chains_range` 5,5 e `chains_hp_pct` 0,4. O bot solta o Q um think antes do recast e não aperta nada canalizando.
+  - **Decisões do Code:**
+    - Raio do projétil das Correntes 0,4 u, igual ao do recast (o GDB não fixa).
+    - A mitigação da Penitência não vale para a zona (`true_damage`).
+    - A execução usa a posição de 1 tick antes.
+    - Velocidades dos clipes: básico ×1,8, Q e recast ×2,2, explosão ×1,6.
+  - **Ajustes da verificação do PI:**
+    - Corrida endireitada no Blender: tronco de 37° para 18°.
+    - `Attack_Basic` sem os 18 quadros de preparação: a espada desce 0,15 s depois do clique.
+    - Modelo na escala 1,2 na cena do herói (cabeça a 2,04 u), com barra de HP e enquadramento da seleção acompanhando.
+    - A luz das Correntes segue valendo depois da morte do Carrasco: o PI não pediu mudança.
+  - **Prova** (`docs/evidencias/f98/`):
+    - suítes game 1.874/1.874, launcher 781/781, backend 143/143;
+    - soak 50/50, com o Carrasco vencendo 34/46 fora do espelho (74 %, para o F30);
+    - rede 3/3 a 100 ms contra Cavaleiro, Berserker e Paladino (0 `past the history limit`);
+    - frame time de GPU +0,29 ms.
 - [ ] **F29** — telemetria (ping médio, duração, líder F1 × vencedor, "teleportes" reportados) no backend; painel de KPIs no Histórico; `tools/export-matches.ps1`.
 - [ ] **F30** — ajustes de balanceamento (só `.tres`).
 - [ ] **[GATE] MVP4** — critérios PRD §9.2; decisões câmera/duração/3x3.

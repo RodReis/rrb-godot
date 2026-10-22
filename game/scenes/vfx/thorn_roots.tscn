@@ -1,0 +1,53 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/roots_vfx.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/thorn_spike.glb" id="2_spike"]
+
+[sub_resource type="Gradient" id="G_blood"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0.95, 0.25, 0.15, 1, 0.6, 0.04, 0.03, 0.7, 0.3, 0.02, 0.02, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_blood"]
+gradient = SubResource("G_blood")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_blood"]
+emission_shape = 1
+emission_sphere_radius = 0.5
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 1.5
+initial_velocity_max = 3.5
+gravity = Vector3(0, -9, 0)
+scale_min = 0.6
+scale_max = 1.2
+color_ramp = SubResource("Ramp_blood")
+
+[sub_resource type="StandardMaterial3D" id="Mat_blood"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(2.4, 0.5, 0.35, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="BoxMesh" id="Box_blood"]
+material = SubResource("Mat_blood")
+size = Vector3(0.07, 0.07, 0.07)
+
+[node name="ThornRoots" type="Node3D"]
+script = ExtResource("1_script")
+tendril_scene = ExtResource("2_spike")
+lifetime = 1.0
+light_seconds = 0.01
+fade_seconds = 0.01
+
+[node name="Blood" type="GPUParticles3D" parent="."]
+cast_shadow = 0
+emitting = false
+amount = 14
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("PPM_blood")
+draw_pass_1 = SubResource("Box_blood")

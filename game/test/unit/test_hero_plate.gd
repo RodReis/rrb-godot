@@ -180,3 +180,27 @@ func test_level_up_with_free_point_notifies() -> void:
 	assert_true(toast.visible)
 	assert_string_contains((toast.get_child(0) as Label).text, "Ctrl+")
 	assert_eq((_node("%SkillE").get_node("%Cooldown") as Label).text, "Ctrl+E")
+
+
+func test_medidor_de_dor_so_no_carrasco() -> void:
+	await _bind_and_wait()
+	assert_false((_plate.get_node("%PainMeter") as Control).visible, "Cavaleiro nao tem Dor")
+
+
+func test_medidor_de_dor_acende_um_ponto_por_dor() -> void:
+	var carrasco := (
+		(load("res://scenes/heroes/carrasco.tscn") as PackedScene).instantiate() as Carrasco
+	)
+	carrasco.name = "2"
+	add_child_autofree(carrasco)
+	_hero = carrasco
+	await _bind_and_wait()
+	var meter := _plate.get_node("%PainMeter") as Control
+	assert_true(meter.visible)
+	assert_eq(_plate._pain_pips.size(), 6, "teto da Dor")
+	carrasco.pain = 4
+	_plate.update()
+	var lit := 0
+	for pip: ColorRect in _plate._pain_pips:
+		lit += int(pip.color == UiTokens.RED)
+	assert_eq(lit, 4)

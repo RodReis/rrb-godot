@@ -26,6 +26,8 @@ const GRASS: ShaderMaterial = preload("res://shared/resources/materials/tall_gra
 @export var block: StringName = &"Blocking"
 @export var stunned: StringName = &"Hit_B"
 @export var basic_attack: StringName = &"1H_Melee_Attack_Slice_Horizontal"
+## Velocidade da animacao do basico (o golpe do Mixamo do Carrasco dura mais que a recarga, F98).
+@export var basic_attack_speed: float = 1.0
 ## Vazio = o Q nao tem animacao propria (Investida usa a de avanco).
 @export var skill_q: StringName = &""
 ## Velocidade da animacao do Q (a Rajada da Ladina cabe a 1H_Ranged_Shooting na janela do disparo).
@@ -44,6 +46,13 @@ const GRASS: ShaderMaterial = preload("res://shared/resources/materials/tall_gra
 ## Altura (m) que o retrato da selecao enquadra; 0 = a do rig medio (HeroChoice). Berserker: o
 ## Barbarian_Large e mais alto (F75).
 @export var portrait_height: float = 0.0
+## Faixa de altura (m, de baixo ao topo) que o card da selecao mostra, no lugar do enquadramento
+## comum; zero = o comum. O Carrasco (F98), realista e mais esguio que o KayKit, ficava pequeno no
+## card: mostra da cintura para cima.
+@export var portrait_band: Vector2 = Vector2.ZERO
+## Giro em graus do modelo no card, junto com portrait_band (o escudo do Carrasco cobre o peito de
+## frente).
+@export var portrait_turn: float = 0.0
 
 var _hero: Hero
 var _player: AnimationPlayer
@@ -122,7 +131,7 @@ func _process(_delta: float) -> void:
 	elif started_e:
 		_once(skill_e)
 	elif started_basic:
-		_once(_basic_clip())
+		_once(_basic_clip(), basic_attack_speed)
 	elif _one_shot:
 		return
 	elif _hero.shield_ticks > 0:

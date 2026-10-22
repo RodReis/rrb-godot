@@ -23,6 +23,7 @@ const HEROES: Array[String] = [
 	"berserker",
 	"occultist",
 	"paladin",
+	"carrasco",
 ]
 const TICK_RATE: int = 30
 const START_TICK: int = 1000

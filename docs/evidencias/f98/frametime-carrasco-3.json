@@ -1,0 +1,19 @@
+{
+  "at": "",
+  "berserker": false,
+  "carrasco": true,
+  "cpu_mean_ms": 16.739490239822,
+  "cpu_p99_ms": 16.6666666666667,
+  "driver": "vulkan",
+  "equip": false,
+  "frames": 1793,
+  "gpu": "NVIDIA GeForce RTX 5060",
+  "gpu_mean_ms": 4.54993920477821,
+  "gpu_p99_ms": 5.08099985122681,
+  "grass": false,
+  "occultist": false,
+  "paladin": false,
+  "smoke": false,
+  "viewport": "2560x1440",
+  "window": "1920x1080"
+}

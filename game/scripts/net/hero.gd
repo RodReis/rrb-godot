@@ -440,7 +440,7 @@ func missing_hp() -> int:
 func effective_damage(raw: int) -> int:
 	if invuln_ticks > 0 or not is_alive():
 		return 0
-	return mini(CombatRules.mitigated(raw, _defense()), hp)
+	return mini(_scaled(CombatRules.mitigated(raw, _defense()), _taken_factor(true)), hp)
 
 
 ## DEF do momento: atributos + bonus temporario da subclasse (Grito de Guerra), menos a Maldicao
@@ -733,6 +733,19 @@ func _move_speed_bonus() -> float:
 	return 0.0
 
 
+## Fator do dano tomado depois da DEF (Couraca e Penitencia do Carrasco, F98); [param _hero_basic] =
+## o golpe e ataque basico de heroi. Sai do estado de rollback da subclasse.
+func _taken_factor(_hero_basic: bool) -> float:
+	return 1.0
+
+
+## [param damage] vezes [param factor], arredondado; fator 1 devolve o mesmo valor.
+static func _scaled(damage: int, factor: float) -> int:
+	if factor == 1.0:
+		return damage
+	return maxi(roundi(damage * factor), 0)
+
+
 ## Basico corpo a corpo (Cavaleiro, Barbaro): golpeia quem esta no arco do basic_attack.
 func _melee(tick: int) -> void:
 	if not multiplayer.is_server():
@@ -785,6 +798,7 @@ func _enemies_into(out: Array[Combatant]) -> void:
 ## (input dele atrasado) nao apaga o efeito. Servidor apenas: o cliente nunca altera HP.
 func _hit(other: Combatant, tick: int, slot: HitLedger.Slot, effect: HitEffect) -> void:
 	effect.attacker_id = peer_id
+	effect.hero_basic = slot == HitLedger.Slot.BASIC
 	other.receive_hit(tick + 1, HitLedger.source_key(peer_id, slot), effect)
 	# Forca ressimular o alvo a partir de tick+1 se ele ja foi simulado.
 	NetworkRollback.mutate(other, tick + 1)
@@ -800,7 +814,8 @@ func _miss(other: Combatant, tick: int, slot: HitLedger.Slot) -> void:
 ## (GDB §4.2: invulnerabilidade a dano). A zona (true_damage) ignora DEF e Muralha, nao a
 ## invulnerabilidade. Dano de heroi fica registrado por atacante (_hero_damage). XP so soma
 ## (I7). Saque: cura ate o HP max e item equipado no slot dele (a decisao de trocar ja foi do
-## Chest). Morto recebe XP e item, nada mais.
+## Chest). Morto recebe XP e item, nada mais. Couraca/Penitencia (F98) escalam o dano depois da DEF
+## (_taken_factor); a execucao das Correntes zera o HP de quem ficou abaixo do limiar.
 func _apply_hits(tick: int) -> void:
 	var heal := 0
 	# Pulso da Praga antes do ledger: sai so do estado do alvo, entao a ressimulacao o repete igual.
@@ -826,7 +841,9 @@ func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
 	var heal := maxi(effect.heal, 0)
 	if effect.true_damage > 0:
 		zone_ticks = SkillRules.seconds_to_ticks(ZONE_FLAG_SECONDS, NetworkTime.tickrate)
-	var damage := CombatRules.mitigated(effect.damage, _defense())
+	var damage := _scaled(
+		CombatRules.mitigated(effect.damage, _defense()), _taken_factor(effect.hero_basic)
+	)
 	if invuln_ticks > 0:
 		damage = 0
 	if (
@@ -837,6 +854,13 @@ func _apply_effect(effect: HitEffect, tick: int, blockable: bool = true) -> int:
 		var split := CombatRules.absorb(damage, shield_hp)
 		damage = split.x
 		shield_hp = split.y
+	if (
+		effect.execute_below > 0.0
+		and CarrascoRules.executes(
+			hp - damage, attributes.max_hp, effect.execute_below, invuln_ticks > 0
+		)
+	):
+		damage = hp  # Correntes do Julgamento: executa, ignora DEF (F98)
 	if invuln_ticks == 0:
 		damage += maxi(effect.true_damage, 0)
 	if damage > 0:

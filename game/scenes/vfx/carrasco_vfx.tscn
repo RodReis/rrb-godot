@@ -1,0 +1,150 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/carrasco_vfx.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/vfx/trail_ribbon.gd" id="2_trail"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/thorns_volley.glb" id="3_volley"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/shackle_head.glb" id="4_shackle"]
+[ext_resource type="PackedScene" path="res://shared/assets/rrb/vfx/retribution_ring.glb" id="5_ring"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_thorn_trail"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(2.2, 0.25, 0.18, 0.85)
+
+[sub_resource type="QuadMesh" id="QuadMesh_warmup"]
+size = Vector2(0.05, 0.05)
+
+[sub_resource type="MultiMesh" id="MultiMesh_chain"]
+transform_format = 1
+
+[sub_resource type="StandardMaterial3D" id="Mat_aura"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(2.4, 0.22, 0.14, 0.9)
+
+[sub_resource type="Gradient" id="G_ember"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 0.55, 0.3, 0, 0.95, 0.12, 0.06, 0.9, 0.4, 0.02, 0.02, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_ember"]
+gradient = SubResource("G_ember")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_ember"]
+emission_shape = 6
+emission_ring_axis = Vector3(0, 1, 0)
+emission_ring_height = 0.05
+emission_ring_radius = 1.25
+emission_ring_inner_radius = 0.6
+direction = Vector3(0, 1, 0)
+spread = 10.0
+initial_velocity_min = 0.6
+initial_velocity_max = 1.4
+gravity = Vector3(0, 0.6, 0)
+damping_min = 0.2
+damping_max = 0.6
+scale_min = 0.6
+scale_max = 1.2
+color_ramp = SubResource("Ramp_ember")
+
+[sub_resource type="StandardMaterial3D" id="Mat_ember"]
+transparency = 1
+blend_mode = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_color = Color(2.8, 0.6, 0.35, 1)
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="SphereMesh" id="Sphere_ember"]
+material = SubResource("Mat_ember")
+radius = 0.03
+height = 0.06
+radial_segments = 6
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="Mat_pip"]
+blend_mode = 1
+shading_mode = 0
+albedo_color = Color(2.6, 0.18, 0.12, 1)
+
+[sub_resource type="SphereMesh" id="Sphere_pip"]
+material = SubResource("Mat_pip")
+radius = 0.085
+height = 0.17
+radial_segments = 10
+rings = 5
+
+[node name="CarrascoVfx" type="Node3D"]
+script = ExtResource("1_script")
+aura_material = SubResource("Mat_aura")
+
+[node name="ThornTrail" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = SubResource("QuadMesh_warmup")
+material_override = SubResource("Mat_thorn_trail")
+script = ExtResource("2_trail")
+lifetime = 0.18
+width = 0.16
+
+[node name="ThornBody" parent="." instance=ExtResource("3_volley")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0)
+
+[node name="ShackleBody" parent="." instance=ExtResource("4_shackle")]
+transform = Transform3D(1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0)
+
+[node name="Chain" type="MultiMeshInstance3D" parent="."]
+cast_shadow = 0
+multimesh = SubResource("MultiMesh_chain")
+
+[node name="Aura" type="Node3D" parent="."]
+visible = false
+
+[node name="Ring" parent="Aura" instance=ExtResource("5_ring")]
+transform = Transform3D(1.25, 0, 0, 0, 1, 0, 0, 0, 1.25, 0, 0.04, 0)
+
+[node name="Embers" type="GPUParticles3D" parent="Aura"]
+cast_shadow = 0
+emitting = false
+amount = 28
+lifetime = 1.6
+visibility_aabb = AABB(-2, -0.5, -2, 4, 4, 4)
+process_material = SubResource("PPM_ember")
+draw_pass_1 = SubResource("Sphere_ember")
+
+[node name="AuraLight" type="OmniLight3D" parent="Aura"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_color = Color(1, 0.15, 0.08, 1)
+light_energy = 1.2
+omni_range = 3.0
+
+[node name="Pips" type="Node3D" parent="."]
+visible = false
+
+[node name="Pip0" type="MeshInstance3D" parent="Pips"]
+cast_shadow = 0
+mesh = SubResource("Sphere_pip")
+
+[node name="Pip1" type="MeshInstance3D" parent="Pips"]
+cast_shadow = 0
+mesh = SubResource("Sphere_pip")
+
+[node name="Pip2" type="MeshInstance3D" parent="Pips"]
+cast_shadow = 0
+mesh = SubResource("Sphere_pip")
+
+[node name="Pip3" type="MeshInstance3D" parent="Pips"]
+cast_shadow = 0
+mesh = SubResource("Sphere_pip")
+
+[node name="Pip4" type="MeshInstance3D" parent="Pips"]
+cast_shadow = 0
+mesh = SubResource("Sphere_pip")
+
+[node name="Pip5" type="MeshInstance3D" parent="Pips"]
+cast_shadow = 0
+mesh = SubResource("Sphere_pip")

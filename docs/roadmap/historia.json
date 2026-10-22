@@ -40,7 +40,7 @@
 
   "pilares": [
     {
-      "titulo": "Dez heróis",
+      "titulo": "Onze heróis",
       "itens": [
         { "nome": "Cavaleiro", "papel": "Tanque", "texto": "Investida que empurra, muralha que absorve dano e bloqueia projéteis, e um terremoto que atordoa." },
         { "nome": "Arqueiro", "papel": "Ranger", "texto": "Flecha que atravessa inimigos, rolamento para escapar e uma chuva de flechas em área." },
@@ -51,7 +51,8 @@
         { "nome": "Protetor da Selva", "papel": "Controle", "texto": "Raízes que prendem o inimigo no lugar, poção verde que cura numa zona e um pântano que atrasa e fere quem pisa nele." },
         { "nome": "Berserker", "papel": "Lutador", "texto": "Dois machados e uma fúria que cresce com o ferimento: quanto menos vida, mais rápido ele bate e mais vida rouba. No Ragnarök pega fogo e ignora qualquer controle por quatro segundos." },
         { "nome": "Paladino Radiante", "papel": "Tanque", "texto": "Tanque que responde: golpe de maça que atordoa o primeiro que chega, Retribuição que devolve parte do dano de quem bate de perto e uma bênção que cura e deixa imune a qualquer dano, até à zona." },
-        { "nome": "Ocultista", "papel": "Mago", "texto": "Mago de dano contínuo: cada tiro deixa uma marca que derrete a defesa, a Praga corrói por quatro segundos, o Círculo Profano prende o alvo e, no nível seis, dois servos do Vazio perseguem o adversário." }
+        { "nome": "Ocultista", "papel": "Mago", "texto": "Mago de dano contínuo: cada tiro deixa uma marca que derrete a defesa, a Praga corrói por quatro segundos, o Círculo Profano prende o alvo e, no nível seis, dois servos do Vazio perseguem o adversário." },
+        { "nome": "Carrasco", "papel": "Tanque", "texto": "O primeiro herói realista: espada e escudo, espinhos que deixam lento e voltam como projétil, uma penitência em que ele se ajoelha, aguenta o dano e explode prendendo quem está perto, e correntes de luz que executam quem estiver com pouca vida." }
       ]
     },
     {
@@ -371,6 +372,16 @@
           "tipo": "entregue"
         },
         {
+          "arquivo": "mvp4-f98-carrasco-kit.webm",
+          "legenda": "O Carrasco, primeiro herói realista: golpe de espada, os espinhos que rompem do chão e voltam como projétil, a penitência em que ele se ajoelha e explode, e as correntes de luz.",
+          "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp4-f98-carrasco-luz.webp",
+          "legenda": "A coluna de luz das Correntes do Julgamento: quem estiver dentro dela com pouca vida é executado. No painel, a Dor do Carrasco acesa nos seis pontos.",
+          "tipo": "entregue"
+        },
+        {
           "arquivo": "mvp4-f97-escala-hud.webp",
           "legenda": "A interface da partida ficou menor e o jogador pode ajustar o tamanho de 70 % a 100 %, tanto nas configurações quanto na engrenagem dentro da partida. A esquerda mostra como era, e a direita o novo padrão de 85 %, que deixa mais arena à vista.",
           "tipo": "entregue"
@@ -468,6 +479,7 @@
     "F95": "Arena nova: rio, pontes, centro, selva e mato alto",
     "F96": "Arena nova: borda da ilha e vale",
     "F97": "Tamanho da interface do jogo ajustável",
+    "F98": "Carrasco, o 11º herói (Tanque)",
     "F29": "Telemetria e indicadores",
     "F30": "Ajustes de balanceamento pós-playtest",
     "GATE": "Homologação do marco"

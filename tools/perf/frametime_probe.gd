@@ -24,6 +24,10 @@ extends SceneTree
 ## --paladin: cada Paladino fica com a Retribuicao e a Bencao ativas a medicao inteira (SPEC-076
 ## aceite: aro de espinhos, motes, aureola, brilho e luz); a sonda segura retribution_ticks e
 ## blessing_ticks (a imunidade nao: invuln_ticks fica como o jogo deixar).
+## --carrasco: cada Carrasco fica com a Dor no maximo (contas no corpo), canalizando a Penitencia
+## (aro, brasas e luz) e com o raio de luz das Correntes aceso no outro heroi a medicao inteira
+## (SPEC-098 §6 item 4): a sonda segura pain e penance_ticks e reemite o evento do ImpactRelay
+## (zone_shown) a cada CARRASCO_LIGHT_SECONDS.
 ## --grass: o heroi controlado fica no centro da primeira moita a medicao inteira (SPEC-072 §4: a
 ## silhueta e a abertura da moita ligam enquanto ele esta la).
 ## --at=<x>,<z>: o heroi controlado fica nesse ponto do mundo a medicao inteira (F95: MID e centro).
@@ -63,6 +67,10 @@ const CURSE_HOLD_TICKS: int = 120
 const RAGE_HOLD_TICKS: int = 120
 ## Ticks que o --paladin segura na Retribuicao e na Bencao (qualquer valor > 0 as mantem).
 const PALADIN_HOLD_TICKS: int = 120
+## Ticks que o --carrasco segura na Dor e na Penitencia, e o compasso do raio de luz (s, < 1,25 s
+## da raiz: a luz nunca apaga).
+const CARRASCO_HOLD_TICKS: int = 120
+const CARRASCO_LIGHT_SECONDS: float = 1.0
 ## Itens do --equip, por HeroData.id (um conjunto por heroi, arma epica).
 const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"knight": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
@@ -75,6 +83,7 @@ const EPIC_SETS: Dictionary[StringName, Array] = {
 	&"berserker": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
 	&"occultist": [&"sword_t3_epic", &"hunter_helm_t3", &"hunter_chest_t3", &"hunter_boots_t3"],
 	&"paladin": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
+	&"carrasco": [&"sword_t3_epic", &"guard_helm_t3", &"guard_chest_t3", &"guard_boots_t3"],
 }
 
 var _out: String = "frametime"
@@ -91,6 +100,8 @@ var _druid: bool = false
 var _berserker: bool = false
 var _occultist: bool = false
 var _paladin: bool = false
+var _carrasco: bool = false
+var _light_wait: float = 0.0
 var _circle_wait: float = 0.0
 var _servant_wait: float = 0.0
 var _potion_wait: float = 0.0
@@ -125,6 +136,8 @@ func _initialize() -> void:
 			_occultist = true
 		elif arg == "--paladin":
 			_paladin = true
+		elif arg == "--carrasco":
+			_carrasco = true
 		elif arg == "--grass":
 			_grass = true
 		elif arg.begins_with("--at="):
@@ -162,6 +175,8 @@ func _process(delta: float) -> bool:
 		_occultist_effects(delta)
 	if _paladin and _phase > 0:
 		_hold_paladins()
+	if _carrasco and _phase > 0:
+		_carrasco_effects(delta)
 	if (_grass or not is_nan(_at.x)) and _phase > 0 and not _grass_linked:
 		_grass_linked = true
 		root.get_node("NetworkRollback").connect(&"after_process_tick", _hold_in_grass)
@@ -266,6 +281,7 @@ func _report() -> void:
 		"berserker": _berserker,
 		"occultist": _occultist,
 		"paladin": _paladin,
+		"carrasco": _carrasco,
 	}
 	var text := JSON.stringify(result, "  ")
 	print("[frametime] ", text)
@@ -388,6 +404,26 @@ func _occultist_effects(delta: float) -> void:
 		_circle_wait = OCCULTIST_CIRCLE_SECONDS
 	if _servant_wait <= 0.0:
 		_servant_wait = OCCULTIST_SERVANT_SECONDS
+
+
+## Sem tipos do jogo: Dor e Penitencia seguradas em cada Carrasco; luz no outro heroi pelo relay.
+func _carrasco_effects(delta: float) -> void:
+	_light_wait -= delta
+	var relay := current_scene.get_node("ImpactRelay")
+	var tick: int = root.get_node("NetworkTime").get(&"tick")
+	for hero: Node in _players.get_children():
+		var data: Resource = hero.get(&"hero_data")
+		if data == null or data.get(&"id") != &"carrasco":
+			continue
+		hero.set(&"pain", 6)
+		hero.set(&"pain_ticks", CARRASCO_HOLD_TICKS)
+		hero.set(&"penance_ticks", CARRASCO_HOLD_TICKS)
+		var other := _other_than(hero)
+		if other != null and _light_wait <= 0.0:
+			var center: Vector3 = other.get(&"global_position")
+			relay.emit_signal(&"zone_shown", hero.name.to_int(), 0, center, tick)
+	if _light_wait <= 0.0:
+		_light_wait = CARRASCO_LIGHT_SECONDS
 
 
 ## Sem tipos do jogo: Retribuicao e Bencao seguradas em cada Paladino.

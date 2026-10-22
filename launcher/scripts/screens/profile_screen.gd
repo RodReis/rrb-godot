@@ -15,7 +15,7 @@ signal avatar_changed
 enum Mode { SETUP, EDIT }
 
 const CARD_WIDTH: float = 640.0
-## Colunas da grade (16 retratos: 10 herois + 6 monstros) e o lado de cada ficha.
+## Colunas da grade (17 retratos: 11 herois + 6 monstros) e o lado de cada ficha.
 const TILE_COLUMNS: int = 6
 const TILE_SIZE: Vector2 = Vector2(64, 64)
 ## Borda da ficha (LnAvatarTile): o retrato fica por dentro dela.

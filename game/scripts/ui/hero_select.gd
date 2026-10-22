@@ -2,11 +2,14 @@ class_name HeroSelect
 extends CanvasLayer
 ## Selecao de herois (F51, prototipo docs/prd/telas/Seleção de Heróis; CONVENTION §3): aberta
 ## pelo main na HERO_PICK e fechada quando ela acaba. Card esquerdo = voce (heroi mostrado),
-## grade = so herois com cena, card direito = oponente quando o servidor confirma. 1-9 e 0 escolhem,
-## Espaco ou o botao confirma; o lock-in vai ao servidor por RPC e so vale quando volta como
-## hero_picked (inclusive o padrao do timeout). So le sinais e dados; quem decide e o servidor.
+## grade = so herois com cena, card direito = oponente quando o servidor confirma. 1-9, 0 e -
+## escolhem (o 11o heroi, F98, fica no -), Espaco ou o botao confirma; o lock-in vai ao servidor por
+## RPC e so vale quando volta como hero_picked (inclusive o padrao do timeout). So le sinais e
+## dados; quem decide e o servidor.
 
-const KEYS: Array[Key] = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0]
+const KEYS: Array[Key] = [
+	KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS
+]
 ## Atributos do HeroData com o nome do PRD §4.2.
 const STAT_NAMES: Array[String] = [
 	"HP (Vida)", "DEF (Defesa)", "ATK (Ataque)", "INT (Inteligência)", "AGI (Agilidade)"
@@ -183,8 +186,8 @@ func lock_in() -> void:
 
 
 ## So o visual do heroi: o no Model da cena, com as pecas que o heroi nao usa escondidas, o clipe de
-## idle do HeroVisual em meta "idle" (o MonsterPreview3D toca esse) e a altura de retrato dele em
-## meta "portrait_height" (0 = a padrao do card).
+## idle do HeroVisual em meta "idle" (o MonsterPreview3D toca esse), a altura de retrato dele em
+## meta "portrait_height" (0 = a padrao do card) e a faixa do card em meta "portrait_band".
 static func model_of(hero_id: StringName) -> Node3D:
 	var path := Hero.SCENE_PATH % hero_id
 	if not ResourceLoader.exists(path):
@@ -201,6 +204,8 @@ static func model_of(hero_id: StringName) -> Node3D:
 				node.hide()
 		model.set_meta(&"idle", visual.get(&"idle"))
 		model.set_meta(&"portrait_height", visual.get(&"portrait_height"))
+		model.set_meta(&"portrait_band", visual.get(&"portrait_band"))
+		model.set_meta(&"portrait_turn", visual.get(&"portrait_turn"))
 	instance.free()
 	return model
 

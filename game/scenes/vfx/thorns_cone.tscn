@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/vfx/thorns_cone_vfx.gd" id="1_script"]
+
+[sub_resource type="Gradient" id="G_dust"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.45, 0.36, 0.3, 0.9, 0.32, 0.26, 0.22, 0.55, 0.25, 0.2, 0.18, 0)
+
+[sub_resource type="GradientTexture1D" id="Ramp_dust"]
+gradient = SubResource("G_dust")
+
+[sub_resource type="ParticleProcessMaterial" id="PPM_dust"]
+emission_shape = 3
+emission_box_extents = Vector3(0.5, 0.05, 0.45)
+direction = Vector3(0, 1, 0)
+spread = 50.0
+initial_velocity_min = 0.6
+initial_velocity_max = 1.6
+gravity = Vector3(0, -2, 0)
+damping_min = 1.0
+damping_max = 2.0
+scale_min = 1.0
+scale_max = 2.2
+color_ramp = SubResource("Ramp_dust")
+
+[sub_resource type="Gradient" id="G_soft"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.5, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="Tex_soft"]
+gradient = SubResource("G_soft")
+width = 64
+height = 64
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_dust"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("Tex_soft")
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="Quad_dust"]
+material = SubResource("Mat_dust")
+size = Vector2(0.3, 0.3)
+
+[node name="ThornsCone" type="Node3D"]
+script = ExtResource("1_script")
+lifetime = 0.85
+light_seconds = 0.2
+fade_seconds = 0.01
+
+[node name="Dust" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.62)
+cast_shadow = 0
+emitting = false
+amount = 18
+lifetime = 0.7
+one_shot = true
+explosiveness = 0.85
+visibility_aabb = AABB(-2, -0.5, -2, 4, 3, 4)
+process_material = SubResource("PPM_dust")
+draw_pass_1 = SubResource("Quad_dust")
+
+[node name="Flash" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -0.6)
+light_color = Color(1, 0.2, 0.12, 1)
+light_energy = 2.5
+omni_range = 1.4

@@ -5,6 +5,7 @@ extends SceneTree
 ##   godot --path game -s <repo>/tools/ui/hero_select_showcase.gd -- --out <pasta>
 ##     [--sizes 1280x720,1920x1080,2560x1440,3440x1440]
 ## --ui-scale <x>: escala da interface (root.content_scale_factor, F97).
+## --pick <id>: heroi destacado no card grande (padrao: o primeiro; F98 confere o Carrasco).
 ## Sai sozinha no fim. O tamanho pedido vira o tamanho da janela do jogo (root.size); o stretch do
 ## projeto (canvas_items, base 1920x1080, expand) faz o resto, como em tela cheia.
 
@@ -25,6 +26,7 @@ const HEROES: Array[String] = [
 	"berserker",
 	"occultist",
 	"paladin",
+	"carrasco",
 ]
 const DEFAULT_SIZES: String = "1280x720,1920x1080,2560x1440,3440x1440"
 const TICK_RATE: int = 30
@@ -35,6 +37,7 @@ const PICK_SECONDS: float = 24.0
 const SETTLE_SECONDS: float = 1.5
 
 var _out_dir: String = "user://"
+var _pick: String = ""
 var _sizes: PackedStringArray = DEFAULT_SIZES.split(",")
 var _screen: Node
 
@@ -47,6 +50,9 @@ func _initialize() -> void:
 	at = args.find("--sizes")
 	if at >= 0 and at + 1 < args.size():
 		_sizes = args[at + 1].split(",")
+	at = args.find("--pick")
+	if at >= 0 and at + 1 < args.size():
+		_pick = args[at + 1]
 	at = args.find("--ui-scale")
 	if at >= 0 and at + 1 < args.size():  # escala da interface do jogo (F97, ADR-0031)
 		root.content_scale_factor = args[at + 1].to_float()
@@ -75,6 +81,8 @@ func _run() -> void:
 	root.add_child(_screen)
 	_screen.call("bind", controller, roster, available)
 	_screen.call("open", PICK_SECONDS)
+	if not _pick.is_empty():
+		_screen.call("select", HEROES.find(_pick))
 	for size_text: String in _sizes:
 		await _shot(size_text)
 	quit()

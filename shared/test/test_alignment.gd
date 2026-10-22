@@ -78,6 +78,19 @@ func test_tem_tile_e_modelos_da_arena() -> void:
 		assert_not_null(_scene.get_node_or_null(node_name), node_name)
 
 
+func test_carrasco_tem_a_altura_do_heroi() -> void:
+	# F98: modelo do Tripo com rig do Mixamo em metros, escala 1,2 na cena do heroi (Tanque maior que
+	# o Cavaleiro, pedido do PI). A caixa da malha com pele e a da pose de bind, entao a altura sai do
+	# osso do topo da cabeca; os chifres passam dele.
+	await wait_process_frames(2)
+	var skeleton := _scene.get_node("Carrasco").find_child("Skeleton3D") as Skeleton3D
+	var top := skeleton.find_bone("mixamorig_HeadTop_End")
+	assert_gt(top, -1)
+	var head := (skeleton.global_transform * skeleton.get_bone_global_pose(top)).origin.y
+	gut.p("Carrasco: topo da cabeca a %.2f u" % head)
+	assert_between(head, HERO_HEIGHT + 0.1, HERO_HEIGHT + 0.4)
+
+
 func test_berserker_cobre_a_capsula_e_se_distingue_do_barbaro() -> void:
 	# F75: Barbarian_Large (escala 0,58 na cena do heroi) com elmo de chifres, ao lado do Barbaro (rig
 	# medio): a malha cobre a capsula de colisao (h 1,8) e e bem mais alta (silhueta distinta).

@@ -4,7 +4,8 @@ extends Node
 ## por HeroData.id) e entrega o impacto confirmado pelo servidor (ImpactRelay) ao efeito do
 ## atacante, a nuvem da Ladina (F58) ao efeito dela e a Torreta e a caixa do Engenheiro (F59) ao
 ## dele, a Pocao Verde e o Pantano do Protetor da Selva (F74) ao dele e o Circulo Profano do
-## Ocultista (F77) ao dele; as marcas e a Praga sobre o alvo sao do CurseMarks. Nunca existe
+## Ocultista (F77) e o raio de luz das Correntes do Carrasco (F98) ao dele; as marcas e a Praga
+## sobre o alvo sao do CurseMarks. Nunca existe
 ## no servidor headless (bloco visual regra 1): a main so o cria quando wanted().
 ## O heroi nao ganha filho: os efeitos ficam aqui e o seguem.
 
@@ -21,6 +22,7 @@ const DRIVERS: Dictionary = {
 	&"berserker": preload("res://scenes/vfx/berserker_vfx.tscn"),
 	&"occultist": preload("res://scenes/vfx/occultist_vfx.tscn"),
 	&"paladin": preload("res://scenes/vfx/paladin_vfx.tscn"),
+	&"carrasco": preload("res://scenes/vfx/carrasco_vfx.tscn"),
 }
 
 ## Pai dos herois (Main/Players) e o relay de impactos; definidos antes de entrar na arvore.
@@ -101,3 +103,5 @@ func _on_relay_zone_shown(caster_id: int, kind: int, center: Vector3, tick: int)
 		(driver as DruidVfx).zone(kind, center, tick)
 	elif is_instance_valid(driver) and driver is OccultistVfx:
 		(driver as OccultistVfx).zone(kind, center, tick)
+	elif is_instance_valid(driver) and driver is CarrascoVfx:
+		(driver as CarrascoVfx).zone(kind, center, tick)

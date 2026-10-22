@@ -1,0 +1,120 @@
+[gd_resource type="Resource" script_class="HeroData" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/hero_data.gd" id="1_script"]
+[ext_resource type="Script" path="res://shared/resources/skill_data.gd" id="2_skill"]
+[ext_resource type="Script" path="res://shared/resources/passive_data.gd" id="3_passive"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/carrasco_basic.svg" id="icon_basic"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/carrasco_q.svg" id="icon_q"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/carrasco_e.svg" id="icon_e"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/carrasco_r.svg" id="icon_r"]
+[ext_resource type="Texture2D" path="res://shared/ui/icons/carrasco_passive.svg" id="icon_passive"]
+
+[sub_resource type="Resource" id="basic"]
+script = ExtResource("2_skill")
+id = &"carrasco_basic"
+icon = ExtResource("icon_basic")
+display_name = "Espada"
+description = "Golpe corpo a corpo em cone de 70° à frente (2,2 u). Cada acerto em herói, servo ou monstro dá +1 Dor. Dano: 100% do ATQ."
+max_rank = 1
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(1.0)
+attack_ratio = 1.0
+attack_range = 2.2
+arc_degrees = 70.0
+
+[sub_resource type="Resource" id="q"]
+script = ExtResource("2_skill")
+id = &"carrasco_q"
+icon = ExtResource("icon_q")
+display_name = "Espinhos"
+description = "Golpe em cone de 90° (3 u): fere e deixa 30% mais lento por 1,5 s todos os atingidos. Em até 3 s, Q de novo lança os espinhos (7 u), que ferem o primeiro alvo. Dano: base do rank + 60% do ATQ (recast: base + 40% do ATQ)."
+max_rank = 5
+required_hero_level = PackedInt32Array(1)
+cooldown = PackedFloat64Array(10, 9.5, 9, 8.5, 8)
+base_amount = PackedFloat64Array(50, 80, 110, 140, 170)
+attack_ratio = 0.6
+attack_range = 3.0
+radius = 0.4
+arc_degrees = 90.0
+speed = 20.0
+distance = 7.0
+slow = 0.3
+recast_window = 3.0
+recast_amount = PackedFloat64Array(30, 50, 70, 90, 110)
+recast_attack_ratio = 0.4
+slow_duration = 1.5
+
+[sub_resource type="Resource" id="e"]
+script = ExtResource("2_skill")
+id = &"carrasco_e"
+icon = ExtResource("icon_e")
+display_name = "Penitência"
+description = "Canaliza até 2 s sem se mover: toma 40% menos dano, se cura aos poucos e ganha +1 Dor a cada 0,5 s. E de novo encerra antes. No fim, explode (3 u): com 4+ Dor prende por 1 s, senão deixa 40% mais lento por 1,5 s. Atordoado, cancela sem explodir. Cura e dano: base do rank + ATQ + 10 por Dor."
+max_rank = 5
+required_hero_level = PackedInt32Array(2)
+cooldown = PackedFloat64Array(14, 13, 12, 11, 10)
+base_amount = PackedFloat64Array(50, 80, 110, 140, 170)
+attack_ratio = 0.5
+radius = 3.0
+duration = PackedFloat64Array(2.0)
+pulse_interval = 0.5
+slow = 0.4
+slow_duration = 1.5
+mitigation = 0.4
+heal_amount = PackedFloat64Array(60, 90, 120, 150, 180)
+heal_attack_ratio = 0.4
+per_pain = 10.0
+root_min_pain = 4
+root_duration = 1.0
+
+[sub_resource type="Resource" id="r"]
+script = ExtResource("2_skill")
+id = &"carrasco_r"
+icon = ExtResource("icon_r")
+display_name = "Correntes do Julgamento"
+description = "Lança correntes (6 u) que param no primeiro herói: fere e o prende por 1,25 s (1,5 s no rank 2) sob um raio de luz de 2,5 u. Quem estiver na luz com menos de 25% do HP é executado. Dano: base do rank + 100% da INT."
+max_rank = 2
+required_hero_level = PackedInt32Array(6, 10)
+cooldown = PackedFloat64Array(70, 60)
+base_amount = PackedFloat64Array(120, 200)
+intelligence_ratio = 1.0
+radius = 0.4
+speed = 24.0
+distance = 6.0
+duration = PackedFloat64Array(1.25, 1.5)
+light_radius = 2.5
+execute_hp_ratio = 0.25
+
+[sub_resource type="Resource" id="passive"]
+script = ExtResource("3_passive")
+kind = 2
+display_name = "Couraça"
+description = "Toma 15% menos dano de ataques básicos de heróis. Acumula Dor (até 6) acertando o básico e canalizando a Penitência; a Dor dura 6 s e fortalece a Penitência."
+icon = ExtResource("icon_passive")
+taken_factor = 0.85
+pain_max = 6
+pain_seconds = 6.0
+
+[resource]
+script = ExtResource("1_script")
+id = &"carrasco"
+display_name = "Carrasco"
+role = "Tanque"
+weapon_name = "Espada"
+summary = "Tanque que pune quem fica perto: segura dano canalizando a Penitência, prende com raiz e executa com as Correntes do Julgamento."
+base_move_speed = 5.8
+base_hp = 600.0
+hp_per_level = 45.0
+base_defense = 26.0
+defense_per_level = 2.6
+base_attack = 42.0
+attack_per_level = 3.6
+base_intelligence = 14.0
+intelligence_per_level = 1.4
+base_agility = 10.0
+agility_per_level = 1.0
+basic_attack = SubResource("basic")
+skill_q = SubResource("q")
+skill_e = SubResource("e")
+skill_r = SubResource("r")
+passive = SubResource("passive")

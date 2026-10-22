@@ -33,6 +33,13 @@ var dot_interval_ticks: int = 0
 ## golpeou; TargetRules.NONE = nao direto. So esse golpe a Retribuicao do Paladino devolve (F76), e
 ## o dano devolvido nao e direto (sem laco).
 var striker_id: int = TargetRules.NONE
+## Golpe de ataque basico de heroi (Hero._hit no slot BASIC): a Couraca do Carrasco so reduz esse
+## (F98). Servo e monstro golpeiam por receive_hit direto e nao marcam.
+var hero_basic: bool = false
+## Correntes do Julgamento (F98): fracao do HP maximo abaixo da qual o alvo, depois do dano deste
+## efeito, morre (dano igual ao HP restante, ignora DEF); imunidade a dano bloqueia. 0 = nao
+## executa.
+var execute_below: float = 0.0
 
 
 func _init(

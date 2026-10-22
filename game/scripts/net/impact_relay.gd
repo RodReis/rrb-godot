@@ -89,6 +89,9 @@ func _on_players_child_entered_tree(node: Node) -> void:
 	var occultist := node as Occultist
 	if occultist != null:
 		occultist.zone_started.connect(_on_occultist_zone_started.bind(occultist))
+	var carrasco := node as Carrasco
+	if carrasco != null:
+		carrasco.zone_started.connect(_on_carrasco_zone_started.bind(carrasco))
 
 
 ## O heroi do jogador [param peer] ve o ponto [param at] (time de [param caster] sempre ve).
@@ -171,6 +174,21 @@ func _on_occultist_zone_started(
 			_show_zone.rpc_id(peer, occultist.peer_id, Occultist.Zone.CIRCLE, center, tick)
 	if _sees_point(multiplayer.get_unique_id(), center, occultist):
 		zone_shown.emit(occultist.peer_id, Occultist.Zone.CIRCLE, center, tick)
+
+
+## Raio de luz das Correntes do Carrasco (F98, SPEC-098): mesmo caminho do Circulo (zone_shown),
+## slot R.
+func _on_carrasco_zone_started(kind: int, center: Vector3, tick: int, carrasco: Carrasco) -> void:
+	if not multiplayer.is_server():
+		return
+	if not _announced.first(tick, carrasco.peer_id, HitLedger.Slot.R, 0):
+		return
+	zones_announced += 1
+	for peer: int in multiplayer.get_peers():
+		if _sees_point(peer, center, carrasco):
+			_show_zone.rpc_id(peer, carrasco.peer_id, kind, center, tick)
+	if _sees_point(multiplayer.get_unique_id(), center, carrasco):
+		zone_shown.emit(carrasco.peer_id, kind, center, tick)
 
 
 func _on_hero_struck(target: Combatant, slot: HitLedger.Slot, tick: int, hero: Hero) -> void:
