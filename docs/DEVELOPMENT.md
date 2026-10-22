@@ -268,7 +268,7 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
 3. Regra pura nova → GUT. UI nova → prova por tela (`FRONTEND-LAUNCHER.md` §6). Rede nova → roteiro em `game/test/net` executado.
 4. `DEVELOPMENT.md` (este) e progresso em `STATUS.md` atualizados **na mesma PR**.
 5. Comentário de encerramento na issue (`fechar-card`) → `proplan:done`. Aceite (`finalizado`) é do PI.
-- [ ] **F85** (#251) — **Tutorial guiado** (ADR-0026, ADR-0029, SPEC-085). Aguardando a verificação do PI.
+- [x] **F85** (#251) — **Tutorial guiado** (ADR-0026, ADR-0029, SPEC-085). Aprovado pelo PI em 2026-10-22.
   - **Contrato:** `shared/core/offline_result.gd` grava, lê e consome `user://offline_result.cfg` (`kind`, `outcome`, `bot_difficulty`, `finished_at`); `unlock_reason` decide `tutorial` ou `bot_win`.
   - **Game:** `--tutorial` (implica `--offline`, dispensa `--bot`). `TutorialRules` (6 passos, regra pura), `TutorialDirector` (observa o herói e o mundo, marca monstro e baú, completa o XP do passo 4, solta o bot na fase 2), `TutorialOverlay` (cartão do passo e "Pular tutorial" com confirmação). `MatchClock.hold/release/jump_to_phase1_end`. `BotInput.paused`. Todo treino e o tutorial gravam o resultado.
   - **Launcher:** abre o tutorial uma vez após o nickname do 1º login; botão TUTORIAL no sub-menu do lobby; fila bloqueada com motivo e as ações "Fazer tutorial" e "Treinar contra bot"; lê e apaga o resultado em todo fim de Game e libera a conta (`POST /users/me/queue-unlock`); sem sessão não envia.

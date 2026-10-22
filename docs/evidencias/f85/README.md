@@ -20,7 +20,9 @@ Testes novos: `test_offline_result` (10), `test_tutorial_rules` (14), `test_laun
 
 ## Verificação do PI (aceite 5) e capturas (aceite 6)
 
-Pendente: tutorial completo (1º login até o lobby com a fila liberada) e pular + liberar por vitória contra o bot Fácil. Os passos 2 a 6 do tutorial só foram exercitados por testes de regra; no jogo real, só o boot até a fase 1 foi visto sem erro de script.
+Aprovada pelo PI em 2026-10-22 numa sessão de `game -- --offline --tutorial`. O log da sessão (`[tutorial] passo ...`) mostra os seis passos percorridos em ordem, o relógio saltando para a fase 2 e o bot entrando; a sessão terminou por saída do jogador (`tutorial/quit`), então o caminho "venceu o bot → `completed`" e a liberação da fila pelo Launcher **não foram vistos ao vivo**; ficam cobertos só pelos testes (`OfflineResult.for_match`, `test_tutorial_flow`).
+
+Captura no roadmap: `docs/roadmap/img/mvp4-f85-tutorial-passo1.webp` (cartão do passo 1/6 com o relógio parado, tirada com `tools/screenshot.ps1`).
 
 ## Decisões de implementação
 
