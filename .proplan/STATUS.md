@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-21
+updated: 2026-10-22
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -32,7 +32,6 @@ updated: 2026-10-21
 
 ### [MVP4] Playtest (#246)
 
-- [MVP4][SPEC-093][F93] Spike visual: Cavaleiro comissionado estilo Eternal Return jogável na cena do F84 (#248)
 - [MVP4][SPEC-085][F85] Tutorial guiado: obrigatório na 1ª vez, pulável, libera a fila online (#251)
 
 ## Em Andamento
@@ -47,6 +46,7 @@ _(vazio)_
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-098][F98] Carrasco, 11º herói (Tanque): modelo realista, Dor, Penitência e Correntes do Julgamento (#248, finalizado em: 2026-10-22)
 - [MVP4][SPEC-097][F97] Escala da interface do jogo no Launcher e na partida (#272, finalizado em: 2026-10-21)
 - [MVP4][SPEC-096][F96] Arena nova, parte 3: borda da ilha e vale (#268, finalizado em: 2026-10-21)
 - [MVP4][SPEC-095][F95] Arena nova, parte 2: rio, pontes, centro, selva e mato alto (#267, finalizado em: 2026-10-21)
