@@ -644,6 +644,9 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 		return
 	if not _offline_kind.is_empty():
 		var outcome := OfflineResult.for_match(_offline_kind, winner, multiplayer.get_unique_id())
+		var finished_script := _tutorial != null and _tutorial.step == TutorialRules.Step.PHASE2
+		if _tutorial_mode and not finished_script:
+			outcome = OfflineResult.QUIT  # venceu sem cumprir o roteiro: o tutorial nao conta
 		_write_offline_result(outcome)
 	if _tutorial != null:
 		_tutorial.report_match_ended(winner)

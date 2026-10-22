@@ -71,3 +71,30 @@ func test_salto_antes_de_comecar_e_ignorado() -> void:
 	add_child_autofree(idle)
 	idle.jump_to_phase1_end(NOW)
 	assert_false(idle.is_started())
+
+
+func test_relogio_parado_nao_dispara_nem_avanca() -> void:
+	var held_at := NOW
+	_clock.hold(held_at)
+	var elapsed := _clock.elapsed(held_at)
+	_run(held_at, held_at + 400 * RATE)  # passa de 5:00 de relogio real
+	assert_eq(_fired[&"boss_warning"], [])
+	assert_eq(_fired[&"phase1_ended"], [])
+	assert_eq(_clock.elapsed(held_at + 400 * RATE), elapsed)
+
+
+func test_soltar_retoma_do_ponto_em_que_parou() -> void:
+	_clock.hold(NOW)
+	var elapsed := _clock.elapsed(NOW)
+	var later := NOW + 100 * RATE
+	_clock.release(later)
+	assert_almost_eq(_clock.elapsed(later), elapsed, 0.1)
+	assert_almost_eq(_clock.elapsed(later + RATE), elapsed + 1.0, 0.1)
+
+
+func test_salto_solta_o_relogio_parado() -> void:
+	_clock.hold(NOW)
+	var later := NOW + 100 * RATE
+	_clock.jump_to_phase1_end(later)
+	_run(later, later + 2 * RATE)
+	assert_eq(_fired[&"phase1_ended"].size(), 1)

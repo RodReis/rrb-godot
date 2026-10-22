@@ -23,6 +23,9 @@ const PHASE1_ENDED_EVENT: int = 2
 var start_tick: int = 0
 
 var _started: bool = false
+## Relogio parado (tutorial): o tick em que parou; update() nao dispara nada e elapsed() nao avanca.
+var _held: bool = false
+var _held_tick: int = 0
 var _tickrate: int = 0
 var _event_ticks: PackedInt64Array = PackedInt64Array()
 var _events: Array[Signal] = []
@@ -49,6 +52,8 @@ func start(tick: int, tickrate: int, elapsed_seconds: float = 0.0) -> void:
 func elapsed(tick: int) -> float:
 	if not is_started():
 		return 0.0
+	if _held:
+		tick = _held_tick
 	return float(tick - start_tick) / _tickrate
 
 
@@ -59,9 +64,24 @@ func phase2_elapsed(tick: int) -> float:
 
 ## Emite, uma vez cada, os eventos cujo tick ja chegou.
 func update(tick: int) -> void:
+	if _held:
+		return
 	while _next_event < _events.size() and tick >= _event_ticks[_next_event]:
 		_events[_next_event].emit(tick)
 		_next_event += 1
+
+
+## Servidor apenas (tutorial, SPEC-085): para o relogio em [param tick] ate release() ou o salto.
+## Os passos de aprendizado nao correm contra a fase 1.
+func hold(tick: int) -> void:
+	if is_started() and not _held:
+		_hold.rpc(tick)
+
+
+## Servidor apenas: retoma do ponto em que parou, sem perder o tempo parado.
+func release(tick: int) -> void:
+	if _held:
+		_release.rpc(tick)
 
 
 ## Servidor apenas (tutorial, SPEC-085 passo 6): leva o relogio ao fim da fase 1 no [param tick].
@@ -81,7 +101,22 @@ func _begin(p_start_tick: int, tickrate: int) -> void:
 
 
 @rpc("authority", "call_local", "reliable")
+func _hold(tick: int) -> void:
+	_held = true
+	_held_tick = tick
+
+
+@rpc("authority", "call_local", "reliable")
+func _release(tick: int) -> void:
+	if not _held:
+		return
+	_held = false
+	_schedule(start_tick + tick - _held_tick)
+
+
+@rpc("authority", "call_local", "reliable")
 func _jump(tick: int) -> void:
+	_held = false
 	_schedule(tick - SkillRules.seconds_to_ticks(rules.phase1_duration, _tickrate))
 	_next_event = maxi(_next_event, PHASE1_ENDED_EVENT)
 

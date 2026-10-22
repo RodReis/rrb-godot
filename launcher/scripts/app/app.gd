@@ -179,6 +179,8 @@ func check_backend() -> void:
 ## Lanca o Game; true se abriu (mostra o overlay e trava a navegacao).
 func launch_game(game_args: PackedStringArray, practice: bool) -> bool:
 	_ended_by_player = false
+	# Resultado velho (dev, Game fechado sem passar pelo Launcher) nao pode liberar a conta de agora.
+	OfflineResult.consume(offline_result_path)
 	if game.launch(game_args) < 0:
 		return false
 	_match.open(practice)

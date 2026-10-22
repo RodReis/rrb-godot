@@ -42,6 +42,9 @@ var _last_position: Vector3 = Vector3.ZERO
 var _last_yaw: float = 0.0
 var _last_cooldowns: Vector3i = Vector3i.ZERO
 var _level_at_entry: int = 1
+## Baus ja abertos ao entrar no passo 5: so conta o que o jogador abre dali em diante.
+var _opened_before: Dictionary[Chest, bool] = {}
+var _opened_chest: Chest
 var _points_at_entry: int = 0
 
 
@@ -95,9 +98,17 @@ func report_match_ended(winner: int) -> void:
 func _process(delta: float) -> void:
 	if not is_bound():
 		return
+	_hold_clock()
 	_track()
 	_advance_while_complete()
 	_update_marker(delta)
+
+
+## Os passos de aprendizado nao correm contra a fase 1: o relogio fica parado ate o passo 6, que o
+## adianta (senao o boss, a zona e o bot chegariam no meio da lição).
+func _hold_clock() -> void:
+	if step < TutorialRules.Step.PHASE2 and _clock.is_started():
+		_clock.hold(NetworkTime.tick)
 
 
 ## Quadro a quadro: anda, gira, recargas. So o passo atual aproveita o que viu.
@@ -139,13 +150,23 @@ func _fired(before: int, now: int) -> bool:
 
 
 func _track_chest() -> void:
-	var chest := _focus as Chest
-	if chest != null and chest.opened and chest.opener == _hero.peer_id:
+	if _opened_chest == null:
+		_opened_chest = _chest_opened_by_hero()
+	if _opened_chest != null:
 		progress.chest_opened = true
 		# Item levado = o menu de escolha esvaziou (bau de cura nao tem menu).
-		progress.item_taken = chest.choices.is_empty()
+		progress.item_taken = _opened_chest.choices.is_empty()
 	if _bestiary.visible and _bestiary.is_hero_tab():
 		progress.sheet_opened = progress.chest_opened
+
+
+## Primeiro bau aberto pelo heroi depois de entrar no passo 5 (qualquer um, nao so o marcado).
+func _chest_opened_by_hero() -> Chest:
+	for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+		var chest := node as Chest
+		if chest.opened and chest.opener == _hero.peer_id and not _opened_before.has(chest):
+			return chest
+	return null
 
 
 func _advance_while_complete() -> void:
@@ -164,6 +185,12 @@ func _enter(new_step: TutorialRules.Step) -> void:
 			_level_at_entry = XpTable.level_for_xp(_hero.xp_curve, _hero.xp)
 			_points_at_entry = _ranks_total()
 			_top_up_xp()
+		TutorialRules.Step.CHEST_SHEET:
+			_opened_chest = null
+			_opened_before.clear()
+			for node: Node in get_tree().get_nodes_in_group(Chest.GROUP):
+				if (node as Chest).opened:
+					_opened_before[node as Chest] = true
 		TutorialRules.Step.PHASE2:
 			_clock.jump_to_phase1_end(NetworkTime.tick)
 	_pick_focus()
@@ -215,7 +242,9 @@ func _pick_focus() -> void:
 			_focus = _nearest_monster()
 		TutorialRules.Step.CHEST_SHEET:
 			# O bau aberto continua marcado ate o jogador levar o item.
-			if not (_focus is Chest and (_focus as Chest).opened):
+			if _opened_chest != null:
+				_focus = _opened_chest
+			else:
 				_focus = _nearest_chest()
 		_:
 			_focus = null
