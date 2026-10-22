@@ -220,7 +220,7 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
   - **Teto 100 %:** o PI decidiu em 2º pop-up, porque acima de 100 % a área lógica fica menor que 1920x1080 e a seleção de heróis sobrepõe os cartões.
   - **Vitrines:** `hud_showcase`, `hero_select_showcase` e `match_end_showcase` aceitam `--ui-scale <x>`.
   - **Prova:** testes de contrato, applier, engrenagem e Configurações; capturas a 70, 85 e 100 % em `docs/evidencias/f97/`.
-- [ ] **F98** (#248) — **Carrasco, 11º herói (Tanque)** (ADR-0032, SPEC-098, GDB §4.11; substitui o F93). Verificação visual do PI pendente.
+- [x] **F98** (#248) — **Carrasco, 11º herói (Tanque)** (ADR-0032, SPEC-098, GDB §4.11; substitui o F93). Aprovado pelo PI em 2026-10-22.
   - **Arte:** o modelo do PI (Tripo, 1,9 milhão de triângulos, sem rig) não aceitava rig. Foi refeito em pose T no Tripo, a partir de um render dele (image-to-image `t_pose` + image-to-model P1). O rig humanoide e os 12 clipes vêm do Mixamo (pacote espada e escudo, sprint, arremesso, conjuração). Espada e escudo foram gerados no Tripo e presos a `hand_r_slot`/`hand_l_slot`. Total de 5.992 triângulos, PBR 2K no corpo e 1K nas armas. Fonte em `art/heroes/carrasco/carrasco.blend`, glb em `shared/assets/rrb/heroes/carrasco/`, entradas em `art/spike/f93/`.
   - **Dados:** `carrasco.tres`, com o id no fim de `Ids.ALL`. `PassiveData.Kind.CUIRASS` (`taken_factor`, `pain_max`, `pain_seconds`). `SkillData` ganha recast, `slow_duration`, `mitigation`, cura por Dor, raiz pela Dor, `light_radius` e `execute_hp_ratio`. 5 ícones SVG.
   - **Kit** (`Carrasco`, `ProjectileHero`; regras puras em `CarrascoRules`):
@@ -247,8 +247,13 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
     - A mitigação da Penitência não vale para a zona (`true_damage`).
     - A execução usa a posição de 1 tick antes.
     - Velocidades dos clipes: básico ×1,8, Q e recast ×2,2, explosão ×1,6.
+  - **Ajustes da verificação do PI:**
+    - Corrida endireitada no Blender: tronco de 37° para 18°.
+    - `Attack_Basic` sem os 18 quadros de preparação: a espada desce 0,15 s depois do clique.
+    - Modelo na escala 1,2 na cena do herói (cabeça a 2,04 u), com barra de HP e enquadramento da seleção acompanhando.
+    - A luz das Correntes segue valendo depois da morte do Carrasco: o PI não pediu mudança.
   - **Prova** (`docs/evidencias/f98/`):
-    - suítes game 1.873/1.873, launcher 781/781, backend 143/143;
+    - suítes game 1.874/1.874, launcher 781/781, backend 143/143;
     - soak 50/50, com o Carrasco vencendo 34/46 fora do espelho (74 %, para o F30);
     - rede 3/3 a 100 ms contra Cavaleiro, Berserker e Paladino (0 `past the history limit`);
     - frame time de GPU +0,29 ms.
