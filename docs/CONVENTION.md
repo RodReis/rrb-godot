@@ -14,7 +14,7 @@
 | Herói | `hero` | um dos 10 heróis (GDB §4.1–§4.10; ids em `shared/data/heroes/`). |
 | Atributos | `stats` | HP, DEF, ATK, INT, AGI (GDB §2.1). |
 | Habilidade | `skill` | Q, E (5 níveis), R (2 níveis, nível 6+); mais o ataque básico. |
-| Passiva | `passive` | regra do herói sem botão (`HeroData.passive`): o Frenesi do Berserker (§4.5) e a Couraça do Carrasco, com a Dor (GDB §4.11, ADR-0032). |
+| Passiva | `passive` | regra do herói sem botão (`HeroData.passive`); só o Frenesi do Berserker (§4.5). |
 | Nível / XP | `level`, `xp` | 1–10; tabela GDB §3.2. |
 | Monstro | `monster` | 5 tipos, tier 1–3 + boss (GDB §5.1). Não respawna. |
 | Baú | `chest` | comum, reforçado (campo de canto) ou raro (centro); abre uma vez (GDB §6.2). |
@@ -90,8 +90,8 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - Monstros comuns não respawnam na fase 2; os que sobraram continuam vivos e dão XP. O **Rei Esqueleto** existe até morrer ou até 5:00: vivo na transição, sai do mapa **sem drop** (decisão do PI 2026-10-10, R-PEND-06).
 
 ### 4.5 Heróis
-- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015 —, §4.9 (Paladino Radiante) e §4.10 (Ocultista) — pelo ADR-0016 — e §4.11 (Carrasco) — pelo ADR-0032.
-- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo; Protetor da Selva projétil 20 u/s, 6,5 u, raio 0,35 u; Berserker arco 90°/2,4 u; Paladino Radiante arco 60°/2,0 u; Ocultista projétil 15 u/s, 7,5 u, raio 0,4 u; Carrasco arco 70°/2,2 u.
+- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015 —, §4.9 (Paladino Radiante) e §4.10 (Ocultista) — pelo ADR-0016.
+- Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo; Protetor da Selva projétil 20 u/s, 6,5 u, raio 0,35 u; Berserker arco 90°/2,4 u; Paladino Radiante arco 60°/2,0 u; Ocultista projétil 15 u/s, 7,5 u, raio 0,4 u.
 - **Orientação e alvo travado (ADR-0015, F66):** o herói encara a direção do movimento; ao atacar/usar skill vira para a mira (ou o alvo travado) por 0,4 s. `target_id` vem no input e o servidor só aceita alvo — herói inimigo, monstro ou servo inimigo — vivo e **visível para aquele peer** (§4.6, §4.7, §4.9); recusado, vale como nenhum alvo. Com alvo em alcance o básico dispara sozinho, fora do alcance não anda. Destrava ao morrer, sumir da visão, `Esc` ou clique no chão.
 - **Passiva (ADR-0015, F75):** `HeroData.passive` (`PassiveData`); só `FRENZY` (Berserker, GDB §2.2-E). Aplicada no `_rollback_tick` do próprio herói.
 - **Raiz = lentidão 100 %** (Raízes Vivas, GDB §4.7): o enraizado mira, ataca e usa skill, só não anda. **Imunidade a controle** (Ragnarök, GDB §4.8): lentidão, raiz, atordoamento, empurrão e puxão não se aplicam e os ativos são limpos; dano, Maldição e Praga continuam valendo.
