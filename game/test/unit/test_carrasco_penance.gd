@@ -57,6 +57,7 @@ func test_canalizacao_inteira_da_4_dor_cura_tudo_e_prende() -> void:
 	assert_almost_eq(knight.slow_pct, 1.0, 0.001, "Dor 4: raiz")
 	assert_eq(_carrasco.pain, 0, "a explosao consome a Dor")
 	assert_eq(_carrasco.blasts, 1)
+	assert_true(_carrasco.blast_rooted, "o VFX le a raiz daqui (ultimo pulso no tick da explosao)")
 	assert_almost_eq(e.radius, 3.0, EPS)
 
 
@@ -70,6 +71,7 @@ func test_e_de_novo_encerra_antes_com_lentidao() -> void:
 	assert_false(_carrasco.is_channeling())
 	assert_eq(_carrasco.blasts, 1)
 	assert_almost_eq(knight.slow_pct, 0.4, 0.001, "Dor 0: lentidao")
+	assert_false(_carrasco.blast_rooted)
 	assert_lt(knight.hp, KNIGHT_HP)
 
 

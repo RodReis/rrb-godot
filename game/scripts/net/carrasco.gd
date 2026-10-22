@@ -40,6 +40,9 @@ var light_target: int = TargetRules.NONE
 var q_casts: int = 0
 var recasts: int = 0
 var blasts: int = 0
+## A ultima explosao da Penitencia prendeu (Dor >= root_min_pain no tick dela): o VFX le aqui,
+## porque o ultimo pulso de Dor e a explosao caem no mesmo tick.
+var blast_rooted: bool = false
 
 ## Toque de Q e de E neste tick (derivado do input e do estado no _simulate_effects; fora do
 ## estado).
@@ -66,6 +69,7 @@ func _extra_state_properties() -> Array[String]:
 				":q_casts",
 				":recasts",
 				":blasts",
+				":blast_rooted",
 			]
 		)
 	)
@@ -162,10 +166,13 @@ func _simulate_effects(tick: int) -> void:
 		pain_ticks -= 1
 		if pain_ticks == 0:
 			pain = 0
-	_enemies_into(_targets)
-	_judge(tick)
-	if _arrows_flying():
-		_advance_arrows(tick)
+	# Inimigos so com luz acesa ou projetil no ar (get_nodes_in_group aloca a lista).
+	var flying := _arrows_flying()
+	if light_ticks > 0 or flying:
+		_enemies_into(_targets)
+		_judge(tick)
+		if flying:
+			_advance_arrows(tick)
 
 
 func _die(effect: HitEffect) -> void:
@@ -261,6 +268,7 @@ func _channel(tick: int) -> void:
 ## Dor.
 func _explode(tick: int) -> void:
 	var e := hero_data.skill_e
+	blast_rooted = CarrascoRules.explosion_roots(pain, e.root_min_pain)
 	if multiplayer.is_server():
 		var damage := CarrascoRules.with_pain(
 			SkillData.at_rank(e.base_amount, ranks.y),
@@ -269,12 +277,11 @@ func _explode(tick: int) -> void:
 			e.per_pain,
 			pain
 		)
-		var roots := CarrascoRules.explosion_roots(pain, e.root_min_pain)
 		_enemies_into(_targets)
 		for other: Combatant in _targets:
 			if CombatRules.in_radius(global_position, other.global_position, e.radius):
 				var effect := HitEffect.new(damage, global_position)
-				if roots:
+				if blast_rooted:
 					_slow(effect, 1.0, e.root_duration)
 				else:
 					_slow(effect, e.slow, e.slow_duration)

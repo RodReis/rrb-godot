@@ -19,9 +19,10 @@ var _last_blasts: int = 0
 
 func _process(delta: float) -> void:
 	var carrasco := _hero as Carrasco
-	var cast := carrasco.q_casts != _last_casts
-	var threw := carrasco.recasts != _last_recasts
-	var blew := carrasco.blasts != _last_blasts
+	# So subida: correcao do servidor que volta o contador nao repete a animacao.
+	var cast := carrasco.q_casts > _last_casts
+	var threw := carrasco.recasts > _last_recasts
+	var blew := carrasco.blasts > _last_blasts
 	_last_casts = carrasco.q_casts
 	_last_recasts = carrasco.recasts
 	_last_blasts = carrasco.blasts

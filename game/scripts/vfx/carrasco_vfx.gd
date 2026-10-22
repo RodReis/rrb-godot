@@ -45,8 +45,6 @@ var _arrows: Array[Arrow] = []
 var _thorn_bodies: Array[Node3D] = []
 var _shackle_bodies: Array[Node3D] = []
 var _thorn_trails: Array[TrailRibbon] = []
-## Dor no quadro anterior (a explosao consome a Dor: a raiz depende da de antes).
-var _last_pain: int = 0
 ## A ultima explosao prendeu (Dor >= root_min_pain): o impacto do E confirmado vira raizes.
 var _blast_rooted: bool = false
 var _pip_angle: float = 0.0
@@ -94,7 +92,6 @@ func zone(_kind: int, center: Vector3, tick: int) -> void:
 
 func _bound() -> void:
 	_carrasco = hero as Carrasco
-	_last_pain = _carrasco.pain
 	for node: Node in hero.get_node("Arrows").get_children():
 		var arrow := node as Arrow
 		for child: Node in arrow.get_children():  # corpo provisorio da cena do heroi, se houver
@@ -138,9 +135,8 @@ func _refresh(shown: bool, delta: float) -> void:
 		)
 	if _started(&"blasts", _carrasco.blasts):
 		var e := hero.hero_data.skill_e
-		_blast_rooted = CarrascoRules.explosion_roots(_last_pain, e.root_min_pain)
+		_blast_rooted = _carrasco.blast_rooted
 		pool.spawn(PENANCE_BLAST, Transform3D(Basis.IDENTITY, hero.global_position), e.radius)
-	_last_pain = _carrasco.pain
 	var channeling := shown and _carrasco.is_channeling()
 	_aura.visible = channeling
 	_embers.emitting = channeling

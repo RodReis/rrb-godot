@@ -110,11 +110,13 @@ func test_uma_conta_por_ponto_de_dor() -> void:
 	assert_eq(_visible_pips(), 0)
 
 
-func test_explosao_com_dor_alta_vira_raizes_no_impacto() -> void:
+func test_explosao_que_prendeu_vira_raizes_no_impacto() -> void:
+	# A raiz vem do estado (blast_rooted): o ultimo pulso de Dor cai no tick da explosao.
 	_bind()
-	_hero.pain = 4
+	_hero.pain = 3
 	_frame()
 	_hero.pain = 0  # a explosao consome a Dor
+	_hero.blast_rooted = true
 	_hero.blasts += 1
 	_frame()
 	_driver.impact(HitLedger.Slot.E, Vector3(0, 0, -2))
@@ -123,7 +125,7 @@ func test_explosao_com_dor_alta_vira_raizes_no_impacto() -> void:
 	assert_almost_eq(roots.lifetime, 1.0 + RootsVfx.SHRINK_SECONDS, EPS)
 
 
-func test_explosao_com_pouca_dor_vira_estouro() -> void:
+func test_explosao_que_nao_prendeu_vira_estouro() -> void:
 	_bind()
 	_hero.pain = 3
 	_frame()
