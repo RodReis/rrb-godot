@@ -1,4 +1,4 @@
-import { SetNicknameSchema } from './users.dto';
+import { QueueUnlockSchema, SetNicknameSchema } from './users.dto';
 
 function firstMessage(nickname: unknown): string | undefined {
   const result = SetNicknameSchema.safeParse({ nickname });
@@ -27,5 +27,19 @@ describe('SetNicknameSchema', () => {
   it('corpo sem campo ou com tipo errado cai em erro de validação', () => {
     expect(SetNicknameSchema.safeParse({}).success).toBe(false);
     expect(SetNicknameSchema.safeParse({ nickname: 42 }).success).toBe(false);
+  });
+});
+
+describe('QueueUnlockSchema', () => {
+  it.each(['tutorial', 'bot_win'])('aceita %s', (reason) => {
+    expect(QueueUnlockSchema.safeParse({ reason }).success).toBe(true);
+  });
+
+  it.each([['history'], ['outro'], [''], [42], [null], [undefined]])('rejeita reason %p', (reason) => {
+    expect(QueueUnlockSchema.safeParse({ reason }).success).toBe(false);
+  });
+
+  it('corpo sem o campo é rejeitado', () => {
+    expect(QueueUnlockSchema.safeParse({}).success).toBe(false);
   });
 });

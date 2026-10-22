@@ -24,6 +24,7 @@ describe('UsersService', () => {
       id: 'u1',
       email: 'a@b.com',
       nickname: null,
+      queueUnlockReason: null,
       createdAt: '2026-01-01T12:00:00.000Z',
     });
   });
@@ -59,5 +60,29 @@ describe('UsersService', () => {
   it('conta inexistente → USER_NOT_FOUND', async () => {
     expect(await errorCode(service.profile('nao-existe'))).toBe('USER_NOT_FOUND');
     expect(await errorCode(service.setNickname('nao-existe', 'RodReis'))).toBe('USER_NOT_FOUND');
+  });
+
+  describe('liberação da fila (SPEC-085)', () => {
+    it.each(['tutorial', 'bot_win'] as const)('registra %s e o perfil passa a expor o motivo', async (reason) => {
+      expect((await service.unlockQueue('u1', reason)).queueUnlockReason).toBe(reason);
+      expect((await service.profile('u1')).queueUnlockReason).toBe(reason);
+      expect((await service.profile('u2')).queueUnlockReason).toBeNull();
+    });
+
+    it('idempotente: conta já liberada mantém o motivo original e não dá erro', async () => {
+      await service.unlockQueue('u1', 'tutorial');
+      const again = await service.unlockQueue('u1', 'bot_win');
+      expect(again.queueUnlockReason).toBe('tutorial');
+      expect(repo.rows[0]?.queueUnlockReason).toBe('tutorial');
+    });
+
+    it('conta liberada pela migração (history) não é sobrescrita', async () => {
+      repo.rows[0]!.queueUnlockReason = 'history';
+      expect((await service.unlockQueue('u1', 'tutorial')).queueUnlockReason).toBe('history');
+    });
+
+    it('conta inexistente → USER_NOT_FOUND', async () => {
+      expect(await errorCode(service.unlockQueue('nao-existe', 'tutorial'))).toBe('USER_NOT_FOUND');
+    });
   });
 });

@@ -1,9 +1,11 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## F35: ProfileService: le a conta (GET /users/me) e define o nickname (PUT /users/me/nickname).
 ## Valida o formato antes da rede e leva o erro do backend para a mensagem do campo.
 
 const ME_PATH: String = "GET /users/me"
 const SET_PATH: String = "PUT /users/me/nickname"
+const UNLOCK_PATH: String = "POST /users/me/queue-unlock"
 
 var _api: FakeApiClient
 var _profile: ProfileService
@@ -21,6 +23,7 @@ func _me(nickname: Variant) -> Dictionary:
 		"email": "duelista@rrb.dev",
 		"nickname": nickname,
 		"createdAt": "2026-10-15T12:00:00.000Z",
+		"queueUnlockReason": null,
 	}
 
 
@@ -127,4 +130,66 @@ func test_resposta_de_conta_antiga_depois_do_clear_e_descartada() -> void:
 	_api.reply(ME_PATH, 200, _me("ContaAntiga"))
 	_api.during_call = func(_call: String) -> void: _profile.clear()  # logout no meio da busca
 	assert_false(await _profile.fetch())
+	assert_null(_profile.profile)
+
+
+## F85: fila online liberada na conta (queueUnlockReason).
+func _me_unlocked(reason: Variant) -> Dictionary:
+	var me := _me("RodReis")
+	me["queueUnlockReason"] = reason
+	return me
+
+
+func test_fila_liberada_vem_do_motivo_no_perfil() -> void:
+	for reason: String in ["tutorial", "bot_win", "history"]:
+		_api.reply(ME_PATH, 200, _me_unlocked(reason))
+		assert_true(await _profile.fetch())
+		assert_eq(_profile.profile.queue_unlock_reason, reason)
+		assert_true(_profile.queue_unlocked(), reason)
+
+
+func test_motivo_nulo_ou_ausente_deixa_a_fila_bloqueada() -> void:
+	_api.reply(ME_PATH, 200, _me_unlocked(null))
+	await _profile.fetch()
+	assert_false(_profile.queue_unlocked(), "null = bloqueada")
+	_api.reply(ME_PATH, 200, _me("RodReis"))  # backend antigo: o campo nem vem
+	assert_true(await _profile.fetch())
+	assert_false(_profile.queue_unlocked(), "ausente = bloqueada")
+
+
+func test_motivo_com_tipo_errado_quebra_o_contrato() -> void:
+	_api.reply(ME_PATH, 200, _me_unlocked(7))
+	assert_false(await _profile.fetch())
+
+
+func test_sem_conta_a_fila_nao_esta_liberada() -> void:
+	assert_false(_profile.queue_unlocked())
+
+
+func test_liberar_a_fila_envia_o_motivo_e_atualiza_o_perfil() -> void:
+	_api.reply(ME_PATH, 200, _me_unlocked(null))
+	await _profile.fetch()
+	_api.reply(UNLOCK_PATH, 200, _me_unlocked("tutorial"))
+	assert_true(await _profile.unlock_queue("tutorial"))
+	assert_eq(_api.bodies[1], {"reason": "tutorial"})
+	assert_true(_profile.queue_unlocked())
+	assert_eq(_profile.profile.queue_unlock_reason, "tutorial")
+
+
+func test_liberar_a_fila_com_erro_do_backend_devolve_false_e_nao_muda_o_perfil() -> void:
+	_api.reply(ME_PATH, 200, _me_unlocked(null))
+	await _profile.fetch()
+	_api.reply(UNLOCK_PATH, 400, {"code": "VALIDATION_FAILED"})
+	assert_false(await _profile.unlock_queue("bot_win"))
+	assert_false(_profile.queue_unlocked())
+
+
+func test_liberar_a_fila_com_backend_fora_devolve_false() -> void:
+	assert_false(await _profile.unlock_queue("tutorial"))
+
+
+func test_liberar_a_fila_depois_do_clear_descarta_a_resposta() -> void:
+	_api.reply(UNLOCK_PATH, 200, _me_unlocked("tutorial"))
+	_api.during_call = func(_call: String) -> void: _profile.clear()  # logout no meio
+	assert_false(await _profile.unlock_queue("tutorial"))
 	assert_null(_profile.profile)

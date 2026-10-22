@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import type { Match, QueueTicket, User } from '../../drizzle/schema';
+import type { Match, QueueTicket, QueueUnlockReason, User } from '../../drizzle/schema';
 import { Clock } from '../../src/common/clock';
 import {
   HistoryEntry,
@@ -67,6 +67,7 @@ export class InMemoryUsersRepository extends UsersRepository {
       email,
       passwordHash,
       nickname: null,
+      queueUnlockReason: null,
       createdAt: new Date('2026-01-01T12:00:00.000Z'),
     };
     this.rows.push(user);
@@ -87,6 +88,11 @@ export class InMemoryUsersRepository extends UsersRepository {
     if (this.rows.some((u) => u.nickname?.toLowerCase() === nickname.toLowerCase())) return { status: 'taken' };
     user.nickname = nickname;
     return { status: 'ok', user };
+  }
+
+  async unlockQueue(id: string, reason: QueueUnlockReason): Promise<void> {
+    const user = this.rows.find((u) => u.id === id);
+    if (user && user.queueUnlockReason === null) user.queueUnlockReason = reason;
   }
 }
 

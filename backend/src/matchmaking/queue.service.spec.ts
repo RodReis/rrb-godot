@@ -1,4 +1,9 @@
-import { FakeClock, InMemoryMatchesRepository, InMemoryQueueRepository } from '../../test/support/fakes';
+import {
+  FakeClock,
+  InMemoryMatchesRepository,
+  InMemoryQueueRepository,
+  InMemoryUsersRepository,
+} from '../../test/support/fakes';
 import type { AppConfig } from '../config';
 import type { MatchesService } from '../matches/matches.service';
 import type { AssignedMatch, MatchAssignment, OrchestratorService } from '../orchestrator/orchestrator.service';
@@ -9,6 +14,7 @@ const A = 'user-a';
 const B = 'user-b';
 const C = 'user-c';
 const D = 'user-d';
+const LOCKED = 'user-locked';
 
 /** Orquestrador de mentira: grava a partida como o real e deixa o teste cortar a capacidade. */
 class FakeOrchestrator {
@@ -60,6 +66,7 @@ async function code(promise: Promise<unknown>): Promise<unknown> {
 }
 
 describe('QueueService', () => {
+  let users: InMemoryUsersRepository;
   let tickets: InMemoryQueueRepository;
   let matches: InMemoryMatchesRepository;
   let clock: FakeClock;
@@ -67,13 +74,26 @@ describe('QueueService', () => {
   let matchesService: { abort: jest.Mock };
   let service: QueueService;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    // Contas A–D liberadas (ids = os nomes usados nos testes); a E é a que está bloqueada.
+    users = new InMemoryUsersRepository();
+    for (const id of [A, B, C, D, LOCKED]) {
+      users.rows.push({
+        id,
+        email: `${id}@rrb.dev`,
+        passwordHash: 'x',
+        nickname: null,
+        queueUnlockReason: id === LOCKED ? null : 'tutorial',
+        createdAt: new Date(),
+      });
+    }
     tickets = new InMemoryQueueRepository();
     matches = new InMemoryMatchesRepository();
     clock = new FakeClock();
     orchestrator = new FakeOrchestrator(matches, clock);
     matchesService = { abort: jest.fn().mockResolvedValue(true) };
     service = new QueueService(
+      users,
       tickets,
       matches,
       matchesService as unknown as MatchesService,
@@ -84,6 +104,23 @@ describe('QueueService', () => {
   });
 
   describe('join', () => {
+    it('conta sem fila liberada → 403 QUEUE_LOCKED, sem ticket nem pareamento', async () => {
+      const error = await service.join(LOCKED).catch((e: { getStatus(): number; getResponse(): object }) => e);
+      expect(error).toMatchObject({ response: { code: 'QUEUE_LOCKED', message: expect.any(String) } });
+      expect((error as { getStatus(): number }).getStatus()).toBe(403);
+      expect(await tickets.listWaiting(10)).toEqual([]);
+      expect(orchestrator.assigned).toEqual([]);
+    });
+
+    it.each(['tutorial', 'bot_win', 'history'] as const)('conta liberada por %s entra na fila', async (reason) => {
+      users.rows.find((u) => u.id === A)!.queueUnlockReason = reason;
+      await expect(service.join(A)).resolves.toMatchObject({ status: 'waiting' });
+    });
+
+    it('conta inexistente → QUEUE_LOCKED (sem motivo = bloqueada)', async () => {
+      expect(await code(service.join('fantasma'))).toBe('QUEUE_LOCKED');
+    });
+
     it('cria ticket waiting e fica procurando enquanto não há par', async () => {
       const ticket = await service.join(A);
 

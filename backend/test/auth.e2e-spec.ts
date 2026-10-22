@@ -154,6 +154,7 @@ describe('auth e users (e2e)', () => {
       id: expect.any(String),
       email: credentials.email,
       nickname: null,
+      queueUnlockReason: null,
       createdAt: expect.any(String),
     });
   });
@@ -230,6 +231,61 @@ describe('auth e users (e2e)', () => {
       const loser = x.status === 409 ? x : y;
       expect(loser.body).toMatchObject({ code: 'NICKNAME_TAKEN' });
     });
+  });
+
+  describe('liberação da fila (SPEC-085)', () => {
+    const server = (): App => app.getHttpServer();
+    const unlock = (auth: string, reason: unknown) =>
+      request(server()).post('/users/me/queue-unlock').set('Authorization', auth).send({ reason });
+    const profile = async (auth: string) =>
+      (await request(server()).get('/users/me').set('Authorization', auth)).body as {
+        queueUnlockReason: string | null;
+      };
+    const accounts = ['lib1', 'lib2', 'lib3'].map((name) => ({ email: `${name}@rrb.dev`, password: 'senha1234' }));
+    let auths: string[];
+
+    beforeAll(async () => {
+      auths = [];
+      for (const account of accounts) {
+        await request(server()).post('/auth/register').send(account);
+        const login = await request(server()).post('/auth/login').send(account);
+        auths.push(`Bearer ${(login.body as { accessToken: string }).accessToken}`);
+      }
+    });
+
+    it('sem token → 401', async () => {
+      const res = await request(server()).post('/users/me/queue-unlock').send({ reason: 'tutorial' });
+      expect(res.status).toBe(401);
+    });
+
+    it.each([
+      ['tutorial', 0],
+      ['bot_win', 1],
+    ] as const)('registra %s (200) e o perfil expõe o motivo', async (reason, i) => {
+      expect((await profile(auths[i]!)).queueUnlockReason).toBeNull();
+
+      const res = await unlock(auths[i]!, reason);
+
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({ queueUnlockReason: reason });
+      expect((await profile(auths[i]!)).queueUnlockReason).toBe(reason);
+    });
+
+    it('idempotente: segunda chamada com outro motivo → 200 e mantém o original', async () => {
+      const res = await unlock(auths[0]!, 'bot_win');
+      expect(res.status).toBe(200);
+      expect(res.body).toMatchObject({ queueUnlockReason: 'tutorial' });
+    });
+
+    it.each([['history'], ['outro'], [42], [null], [undefined]])(
+      'reason %p → 400 VALIDATION_FAILED e a conta segue bloqueada',
+      async (reason) => {
+        const res = await unlock(auths[2]!, reason);
+        expect(res.status).toBe(400);
+        expect(res.body).toMatchObject({ code: 'VALIDATION_FAILED' });
+        expect((await profile(auths[2]!)).queueUnlockReason).toBeNull();
+      },
+    );
   });
 });
 

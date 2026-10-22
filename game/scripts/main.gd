@@ -102,6 +102,14 @@ var _leaving: bool = false
 ## Servidor: herois de jogadores que cairam (log periodico).
 var _disconnected: Array[Hero] = []
 var _disconnected_log: Timer
+## --tutorial (F85, SPEC-085): Cavaleiro fixo, bot parado ate o passo 6, roteiro no Director.
+var _tutorial_mode: bool = false
+var _tutorial: TutorialDirector
+var _tutorial_overlay: TutorialOverlay
+## Treino e tutorial gravam o resultado para o Launcher (ADR-0029): OfflineResult.KIND_*; vazio =
+## este processo nao grava (online, servidor dedicado, dev sem bot, bot jogando pelo heroi local).
+var _offline_kind: String = ""
+var _result_written: bool = false
 ## Cliente: tela de loading do boot ate a selecao (F68); null no servidor e depois de dispensada.
 var _loading: LoadingScreen
 var _loading_started_msec: int = 0
@@ -171,6 +179,17 @@ func _ready() -> void:
 	_bot_hero = args["bot_hero"]
 	_bot_pilot = args["bot_pilot"]
 	_token = args["token"]
+	_tutorial_mode = args["tutorial"]
+	if _tutorial_mode:
+		# A vaga do bot mantem a partida de 2; ele fica parado ate o passo 6 (SPEC-085).
+		_hero_level = TutorialRules.START_LEVEL
+		_wants_bot = true
+		_bot_difficulty = TutorialRules.BOT_LEVEL
+	if args["offline"] and not _bot_pilot:
+		if _tutorial_mode:
+			_offline_kind = OfflineResult.KIND_TUTORIAL
+		elif _wants_bot:
+			_offline_kind = OfflineResult.KIND_BOT
 	if IntroCamera.wanted():  # cinematica de abertura (F69): so quem desenha
 		var intro := IntroCamera.new()
 		intro.name = "IntroCamera"
@@ -207,6 +226,8 @@ func _ready() -> void:
 		_connection_lost.exit_requested.connect(_on_connection_lost_exit_requested)
 		add_child(_connection_lost)
 		_exit_menu = ExitMenu.new()
+		if _tutorial_mode:
+			_start_tutorial()
 		_exit_menu.set_online(not args["offline"])  # --offline e treino: sair nao tem consequencia
 		_exit_menu.can_open = _can_open_exit_menu
 		_exit_menu.leave_confirmed.connect(_on_exit_confirmed)
@@ -217,6 +238,10 @@ func _process(_delta: float) -> void:
 	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
 	if hero == null:
 		return  # servidor dedicado, ou cliente ainda sem heroi
+	if _tutorial != null and not _tutorial.is_bound():
+		_tutorial.bind(
+			hero, camera, spawns, clock, match_controller, bestiary, _tutorial_overlay, players
+		)
 	if not hud.is_bound():
 		hud.bind(hero, clock, spawns, players, match_controller, zone)
 		bestiary.bind_hero(hero)
@@ -496,7 +521,9 @@ func _spawn_player(data: Dictionary) -> Node:
 	var piloted: bool = _bot_pilot and data["id"] == multiplayer.get_unique_id()
 	if hero.is_bot or piloted:
 		hero.get_node("Input").set_script(BotInput)
-		(hero.get_node("Input") as BotInput).set_difficulty(_bot_level_of(team))
+		var bot_input := hero.get_node("Input") as BotInput
+		bot_input.set_difficulty(_bot_level_of(team))
+		bot_input.paused = _tutorial_mode and hero.is_bot
 	if piloted:
 		_bake_bot_nav(team)
 	hero.collision_mask = GateRules.hero_mask(team)
@@ -569,7 +596,7 @@ func _on_disconnected_log_timeout() -> void:
 func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 	if to != MatchState.State.LOBBY_WAIT:
 		_dismiss_loading()
-	if not _dedicated and to == MatchState.State.HERO_PICK:
+	if not _dedicated and to == MatchState.State.HERO_PICK and not _tutorial_mode:
 		var ticks_left := match_controller.deadline_tick - tick
 		hero_select.open(float(ticks_left) / NetworkTime.tickrate)
 		if _bot_pilot:
@@ -588,6 +615,8 @@ func _on_match_phase_changed(_from: int, to: int, tick: int) -> void:
 				if PickRules.can_pick(wanted, _available_heroes()):
 					hero_id = wanted
 				match_controller.submit_pick(seat.peer, hero_id, tick)
+		if _tutorial_mode:  # sem selecao: o Cavaleiro e fixo
+			match_controller.submit_pick(multiplayer.get_unique_id(), TutorialRules.HERO_ID, tick)
 	elif to == MatchState.State.INTRO:
 		_spawn_heroes()  # no spawn, sem input, durante a cinematica (F69)
 
@@ -613,6 +642,14 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 	if _leaving:
 		get_tree().quit(ExitCodes.OK)  # saiu pelo menu: o resultado ja e do servidor
 		return
+	if not _offline_kind.is_empty():
+		var outcome := OfflineResult.for_match(_offline_kind, winner, multiplayer.get_unique_id())
+		var finished_script := _tutorial != null and _tutorial.step == TutorialRules.Step.PHASE2
+		if _tutorial_mode and not finished_script:
+			outcome = OfflineResult.QUIT  # venceu sem cumprir o roteiro: o tutorial nao conta
+		_write_offline_result(outcome)
+	if _tutorial != null:
+		_tutorial.report_match_ended(winner)
 	if _dedicated:
 		# Uma linha em JSON para o tools/soak.ps1 (F19) ler sem depender da prosa acima.
 		var summary := {"winner": winner, "reason": reason, "tick": tick, "stats": stats.to_dict()}
@@ -627,7 +664,7 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 func _can_open_exit_menu() -> bool:
 	if match_controller.state == MatchState.State.ENDED or _connection_lost.visible:
 		return false
-	if PlayerInput.suspended:
+	if PlayerInput.suspended or (_tutorial_overlay != null and _tutorial_overlay.is_confirming()):
 		return false
 	var hero := players.get_node_or_null(str(multiplayer.get_unique_id())) as Hero
 	return hero == null or hero.target_id == TargetRules.NONE
@@ -638,6 +675,7 @@ func _can_open_exit_menu() -> bool:
 ## (match_ended, tratado acima); sem resposta no prazo, sai assim mesmo (vira desconexao).
 func _on_exit_confirmed() -> void:
 	if multiplayer.is_server():
+		_write_offline_result(OfflineResult.QUIT)
 		get_tree().quit(ExitCodes.OK)
 		return
 	_leaving = true
@@ -645,6 +683,38 @@ func _on_exit_confirmed() -> void:
 	match_controller.report_leave.rpc_id(MultiplayerPeer.TARGET_PEER_SERVER)
 	await get_tree().create_timer(LEAVE_TIMEOUT_SECONDS).timeout
 	get_tree().quit(ExitCodes.OK)
+
+
+## Tutorial (F85): o cartao de instrucao e o roteiro, so em quem desenha. "Pular" confirmado grava a
+## saida e fecha o processo; o Launcher volta ao lobby (SPEC-085 §2).
+func _start_tutorial() -> void:
+	if DisplayServer.get_name() == "headless":
+		return
+	_tutorial_overlay = TutorialOverlay.new()
+	_tutorial_overlay.skip_confirmed.connect(_on_tutorial_skip_confirmed)
+	add_child(_tutorial_overlay)
+	_tutorial = TutorialDirector.new()
+	_tutorial.name = "TutorialDirector"
+	add_child(_tutorial)
+
+
+func _on_tutorial_skip_confirmed() -> void:
+	_write_offline_result(OfflineResult.QUIT)
+	get_tree().quit(ExitCodes.OK)
+
+
+## Grava o resultado do treino ou do tutorial uma unica vez (ADR-0029). Falha so avisa: o jogo
+## acabou, o jogador so nao libera a fila agora. Nivel do bot ausente = Medio (BotLevels).
+func _write_offline_result(outcome: String) -> void:
+	if _offline_kind.is_empty() or _result_written:
+		return
+	_result_written = true
+	var level := _bot_difficulty if _bot_difficulty > 0 else BotLevels.DEFAULT_NUMBER
+	var err := OfflineResult.write(_offline_kind, outcome, level)
+	if err != OK:
+		push_warning("[offline] resultado nao gravado: %s" % error_string(err))
+	else:
+		print("[offline] resultado %s/%s" % [_offline_kind, outcome])
 
 
 ## "Jogar novamente" e "Voltar": o Game nao tem fila; o processo acaba e o Launcher decide.

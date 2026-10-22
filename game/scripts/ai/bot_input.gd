@@ -21,6 +21,8 @@ const WAYPOINT_REACHED: float = 0.5
 const REACH_MARGIN: float = 0.4
 
 var state: BotRules.State = BotRules.State.FARM
+## Bot parado, sem decidir nada (tutorial, SPEC-085: o bot so entra em acao no passo 6).
+var paused: bool = false
 
 ## Nivel do bot (F81, ADR-0021/0027) e o perfil dele; o padrao e o Medio, o bot de antes do F81.
 var _level: BotLevel = LEVELS.pick(BotLevels.DEFAULT_NUMBER)
@@ -67,7 +69,7 @@ func set_difficulty(number: int) -> void:
 
 
 func _gather() -> void:
-	if PlayerInput.cinematic:  # --autopilot=bot na cinematica (F69): o servidor segura o heroi
+	if paused or PlayerInput.cinematic:  # cinematica (F69, --autopilot=bot) ou tutorial: parado
 		_gather_idle()
 		return
 	think(NetworkTime.tick)

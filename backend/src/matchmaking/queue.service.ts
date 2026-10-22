@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { QueueTicket } from '../../drizzle/schema';
 import { APP_CONFIG } from '../common/app-config';
 import { errorMessage } from '../common/error-message';
@@ -8,6 +8,7 @@ import type { AppConfig } from '../config';
 import { MatchesRepository } from '../matches/matches.repository';
 import { MatchesService } from '../matches/matches.service';
 import { MatchAssignment, OrchestratorService } from '../orchestrator/orchestrator.service';
+import { UsersRepository } from '../users/users.repository';
 import { QueueRepository } from './queue.repository';
 
 /** Vocabulário do Launcher (`QueueService.searching | matched | cancelled`, ARCHITECTURE-LAUNCHER §3.3). */
@@ -38,6 +39,7 @@ export class QueueService {
   private readonly lock = new Mutex();
 
   constructor(
+    private readonly users: UsersRepository,
     private readonly tickets: QueueRepository,
     private readonly matches: MatchesRepository,
     private readonly matchesService: MatchesService,
@@ -48,6 +50,13 @@ export class QueueService {
 
   join(userId: string): Promise<QueueTicket> {
     return this.lock.run(async () => {
+      // SPEC-085: a garantia é do servidor; o Launcher só espelha o bloqueio.
+      if (!(await this.users.findById(userId))?.queueUnlockReason) {
+        throw new ForbiddenException({
+          code: 'QUEUE_LOCKED',
+          message: 'A fila online está bloqueada: faça o tutorial ou vença um treino contra o bot',
+        });
+      }
       const alreadyQueued = (): ConflictException =>
         new ConflictException({ code: 'ALREADY_QUEUED', message: 'Esta conta já está na fila ou em partida' });
       if (await this.matches.userHasActiveMatch(userId)) throw alreadyQueued();

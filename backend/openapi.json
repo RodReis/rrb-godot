@@ -216,6 +216,51 @@
         ]
       }
     },
+    "/users/me/queue-unlock": {
+      "post": {
+        "operationId": "UsersController_unlockQueue",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueueUnlockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Idempotente: conta já liberada mantém o motivo original",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED (reason diferente de tutorial | bot_win)"
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "404": {
+            "description": "USER_NOT_FOUND"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "users"
+        ]
+      }
+    },
     "/queue": {
       "post": {
         "operationId": "QueueController_join",
@@ -233,6 +278,9 @@
           },
           "401": {
             "description": "UNAUTHORIZED"
+          },
+          "403": {
+            "description": "QUEUE_LOCKED (conta sem fila liberada: tutorial ou vitória contra bot)"
           },
           "409": {
             "description": "ALREADY_QUEUED (ticket ativo ou partida em andamento)"
@@ -701,6 +749,11 @@
             "type": "string",
             "nullable": true
           },
+          "queueUnlockReason": {
+            "type": "string",
+            "nullable": true,
+            "description": "`tutorial` | `bot_win` | `history`; nulo = fila online bloqueada (SPEC-085)"
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time",
@@ -711,6 +764,7 @@
           "id",
           "email",
           "nickname",
+          "queueUnlockReason",
           "createdAt"
         ]
       },
@@ -725,6 +779,22 @@
         },
         "required": [
           "nickname"
+        ]
+      },
+      "QueueUnlockDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "enum": [
+              "tutorial",
+              "bot_win"
+            ],
+            "description": "Por que a fila online foi liberada"
+          }
+        },
+        "required": [
+          "reason"
         ]
       },
       "QueueTicketDto": {

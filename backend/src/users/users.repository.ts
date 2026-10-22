@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DrizzleQueryError } from 'drizzle-orm/errors';
 import { and, eq, isNull } from 'drizzle-orm';
-import { User, users } from '../../drizzle/schema';
+import { QueueUnlockReason, User, users } from '../../drizzle/schema';
 import { Database } from '../db/database';
 
 /** Resultado de `setNickname`: gravado, em uso por outra conta (sem diferenciar maiúsculas) ou já definido. */
@@ -18,6 +18,8 @@ export abstract class UsersRepository {
   abstract findById(id: string): Promise<User | null>;
   /** Grava o nickname só se a conta ainda não tem um; a unicidade é do índice `lower(nickname)`. */
   abstract setNickname(id: string, nickname: string): Promise<SetNicknameResult>;
+  /** Grava o motivo só se a conta ainda está bloqueada: nunca sobrescreve (idempotente). */
+  abstract unlockQueue(id: string, reason: QueueUnlockReason): Promise<void>;
 }
 
 @Injectable()
@@ -59,5 +61,12 @@ export class DrizzleUsersRepository extends UsersRepository {
       if ((cause as { code?: string }).code === UNIQUE_VIOLATION) return { status: 'taken' };
       throw error;
     }
+  }
+
+  async unlockQueue(id: string, reason: QueueUnlockReason): Promise<void> {
+    await this.database.db
+      .update(users)
+      .set({ queueUnlockReason: reason })
+      .where(and(eq(users.id, id), isNull(users.queueUnlockReason)));
   }
 }

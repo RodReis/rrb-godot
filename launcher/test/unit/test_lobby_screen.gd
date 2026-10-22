@@ -1,3 +1,4 @@
+# gdlint: ignore=max-public-methods
 extends GutTest
 ## F25: tela do Lobby (FRONTEND-LAUNCHER §3, §8; ARCHITECTURE-LAUNCHER §3.4-§3.5) com a fila sobre
 ## ApiClient falso: estados do console (pronto, procurando com relogio, pareado, erro com tentar
@@ -188,3 +189,93 @@ func test_bind_do_nivel_lembrado_marca_sem_avisar() -> void:
 	assert_eq(_lobby.bot_difficulty(), 1)
 	assert_true((_level_buttons()[0] as Button).button_pressed)
 	assert_signal_not_emitted(_lobby, "bot_difficulty_changed")
+
+
+## F85 (SPEC-085 §4): botao Tutorial e fila bloqueada ate o tutorial ou a vitoria contra o bot.
+func _buttons_with(text: String) -> Array:
+	return _lobby.find_children("*", "Button", true, false).filter(
+		func(b: Button) -> bool: return b.is_visible_in_tree() and b.text.contains(text)
+	)
+
+
+func test_botao_tutorial_no_submenu_avisa_o_app() -> void:
+	var buttons := _buttons_with("TUTORIAL")
+	assert_eq(buttons.size(), 1)
+	(buttons[0] as Button).pressed.emit()
+	assert_signal_emitted(_lobby, "tutorial_requested")
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.IDLE, "tutorial nao entra na fila")
+
+
+func test_fila_nasce_liberada_e_so_o_app_bloqueia() -> void:
+	assert_false(_lobby.queue_locked())
+
+
+func test_fila_bloqueada_mostra_o_motivo_e_nao_chama_a_rede() -> void:
+	_lobby.set_queue_locked(true)
+	_api.reply("POST /queue", 201, TICKET_JSON)
+	await _lobby.toggle_queue()
+	assert_does_not_have(_api.calls, "POST /queue", "nem chega ao backend")
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.ERROR)
+	assert_string_contains(_lobby.banner_text(), "tutorial")
+	assert_string_contains(_lobby.banner_text(), "bot")
+
+
+func test_fila_bloqueada_oferece_tutorial_e_treino() -> void:
+	_lobby.set_queue_locked(true)
+	assert_eq(_buttons_with("Fazer tutorial").size(), 0, "so aparecem com o aviso")
+	await _lobby.toggle_queue()
+	assert_eq(_buttons_with("Fazer tutorial").size(), 1)
+	assert_eq(_buttons_with("Treinar contra bot").size(), 1)
+	assert_eq(_buttons_with("Tentar de novo").size(), 0, "tentar de novo nao adianta")
+
+
+func test_fazer_tutorial_do_aviso_avisa_o_app() -> void:
+	_lobby.set_queue_locked(true)
+	await _lobby.toggle_queue()
+	(_buttons_with("Fazer tutorial")[0] as Button).pressed.emit()
+	assert_signal_emitted(_lobby, "tutorial_requested")
+
+
+func test_treinar_contra_bot_do_aviso_abre_a_aba_de_treino_e_limpa_o_aviso() -> void:
+	_lobby.set_queue_locked(true)
+	await _lobby.toggle_queue()
+	(_buttons_with("Treinar contra bot")[0] as Button).pressed.emit()
+	assert_eq(_lobby.mode(), LobbyScreen.Mode.TRAIN)
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.IDLE)
+	assert_eq(_lobby.banner_text(), "")
+	assert_eq(_buttons_with("Fazer tutorial").size(), 0)
+	assert_signal_not_emitted(_lobby, "practice_requested", "escolhe o nivel antes de iniciar")
+
+
+func test_treino_continua_liberado_com_a_fila_bloqueada() -> void:
+	_lobby.set_queue_locked(true)
+	_lobby.select_mode(LobbyScreen.Mode.TRAIN)
+	_lobby.cta().pressed.emit()
+	assert_signal_emitted(_lobby, "practice_requested")
+
+
+func test_liberar_a_fila_tira_o_aviso_e_volta_ao_fluxo_normal() -> void:
+	_lobby.set_queue_locked(true)
+	await _lobby.toggle_queue()
+	_lobby.set_queue_locked(false)
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.IDLE)
+	assert_eq(_buttons_with("Fazer tutorial").size(), 0)
+	_api.reply("POST /queue", 201, TICKET_JSON)
+	await _lobby.toggle_queue()
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.SEARCHING)
+
+
+func test_liberar_a_fila_nao_apaga_outro_erro() -> void:
+	await _lobby.toggle_queue()  # backend fora
+	_lobby.set_queue_locked(false)
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.ERROR)
+	assert_string_contains(_lobby.banner_text(), "fora do ar")
+
+
+func test_backend_recusa_fila_bloqueada_com_a_mesma_mensagem() -> void:
+	_api.reply("POST /queue", 403, {"code": "QUEUE_LOCKED", "message": "Bloqueada"})
+	await _lobby.toggle_queue()
+	assert_eq(_lobby.queue_state(), LobbyScreen.QueueState.ERROR)
+	assert_string_contains(_lobby.banner_text(), "tutorial")
+	assert_eq(_buttons_with("Fazer tutorial").size(), 1)
+	assert_true(_lobby.queue_locked(), "o proximo clique nem chama o backend")

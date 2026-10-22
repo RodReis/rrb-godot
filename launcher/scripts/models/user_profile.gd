@@ -7,6 +7,7 @@ extends RefCounted
 var id: String = ""
 var email: String = ""
 var nickname: String = ""
+var queue_unlock_reason: String = ""
 var created_at: String = ""
 
 
@@ -31,6 +32,12 @@ static func from_dict(raw: Variant) -> UserProfile:
 		if not data["nickname"] is String:
 			return null
 		model.nickname = data["nickname"]
+	if not data.has("queueUnlockReason"):
+		return null
+	if data["queueUnlockReason"] != null:
+		if not data["queueUnlockReason"] is String:
+			return null
+		model.queue_unlock_reason = data["queueUnlockReason"]
 	if not data.has("createdAt"):
 		return null
 	if not data["createdAt"] is String:

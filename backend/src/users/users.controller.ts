@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Put, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Put, Req, UseGuards } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -10,7 +10,7 @@ import {
 } from '@nestjs/swagger';
 import type { AuthenticatedRequest } from '../common/jwt.guard';
 import { JwtGuard } from '../common/jwt.guard';
-import { SetNicknameDto, UserProfile, UserProfileDto } from './users.dto';
+import { QueueUnlockDto, SetNicknameDto, UserProfile, UserProfileDto } from './users.dto';
 import { UsersService } from './users.service';
 
 @ApiTags('users')
@@ -37,5 +37,15 @@ export class UsersController {
   @ApiConflictResponse({ description: 'NICKNAME_TAKEN | NICKNAME_ALREADY_SET' })
   setNickname(@Req() req: AuthenticatedRequest, @Body() body: SetNicknameDto): Promise<UserProfile> {
     return this.users.setNickname(req.userId, body.nickname);
+  }
+
+  @Post('me/queue-unlock')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: UserProfileDto, description: 'Idempotente: conta já liberada mantém o motivo original' })
+  @ApiBadRequestResponse({ description: 'VALIDATION_FAILED (reason diferente de tutorial | bot_win)' })
+  @ApiUnauthorizedResponse({ description: 'UNAUTHORIZED' })
+  @ApiNotFoundResponse({ description: 'USER_NOT_FOUND' })
+  unlockQueue(@Req() req: AuthenticatedRequest, @Body() body: QueueUnlockDto): Promise<UserProfile> {
+    return this.users.unlockQueue(req.userId, body.reason);
   }
 }

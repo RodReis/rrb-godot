@@ -8,8 +8,13 @@ extends LauncherScreen
 ## a conta (sair). Fora do prototipo (issue #81, §8.3): ELO, 2v2/3v3, Herois e MUDAR, fila media,
 ## jogadores na fila, historico (F26), versao, netfox e jitter.
 ## A fila e um estado do lobby: chama o QueueService; o App lanca o Game no matched.
+## F85 (SPEC-085 §4): botao TUTORIAL no sub-menu; conta sem a fila liberada (tutorial ou vitoria
+## contra o bot) nao chama o backend: o banner de erro do console diz o motivo e oferece "Fazer
+## tutorial" e "Treinar contra bot". Quem sabe se a conta esta liberada e o App (set_queue_locked).
 
 signal practice_requested
+## Botao TUTORIAL do sub-menu ou "Fazer tutorial" do aviso de fila bloqueada (F85).
+signal tutorial_requested
 ## O jogador escolheu o nivel do bot do treino (1..N de bot_levels.tres, F81).
 signal bot_difficulty_changed(number: int)
 signal settings_requested
@@ -26,6 +31,8 @@ const RULES: MatchRules = preload("res://shared/data/rules/match_pacing.tres")
 const BOT_LEVELS: BotLevels = preload("res://shared/data/rules/bot_levels.tres")
 const DIORAMA: PackedScene = preload("res://scenes/diorama/lobby_diorama.tscn")
 const SECONDS_PER_MINUTE: float = 60.0
+## POST /queue com a conta sem a fila liberada (403, F85).
+const QUEUE_LOCKED: String = "QUEUE_LOCKED"
 ## lg:col-span-6 xl:col-span-7 / 5; area do heroi h-[580px].
 const LEFT_COLUMNS: float = 7.0
 const RIGHT_COLUMNS: float = 5.0
@@ -65,6 +72,11 @@ var _tick: Timer = Timer.new()
 var _diorama: LobbyDiorama
 var _cta: CtaButton = CtaButton.new()
 var _update_version: String = ""
+## Conta sem a fila online liberada (F85); o App atualiza a cada login e a cada liberacao.
+var _queue_locked: bool = false
+## O banner de erro mostra o aviso de fila bloqueada (com as duas acoes).
+var _lock_shown: bool = false
+var _lock_actions: HBoxContainer = HBoxContainer.new()
 var _play: Button = Button.new()
 var _status_cell: Label = Label.new()
 var _time_cell: Label = Label.new()
@@ -191,6 +203,18 @@ func set_update_required(version: String) -> void:
 	_update_version = version
 
 
+## Fila online barrada na conta (F85): o treino e o tutorial continuam liberados. Ao liberar, o
+## aviso de bloqueio some (outro erro no banner fica).
+func set_queue_locked(locked: bool) -> void:
+	_queue_locked = locked
+	if not locked and _lock_shown:
+		_show_state(QueueState.IDLE)
+
+
+func queue_locked() -> bool:
+	return _queue_locked
+
+
 func toggle_queue() -> void:
 	if _queue == null:
 		return
@@ -199,6 +223,9 @@ func toggle_queue() -> void:
 		await _queue.leave()
 		_cta.disabled = _state in [QueueState.JOINING, QueueState.MATCHED]
 	elif _state in [QueueState.IDLE, QueueState.ERROR]:
+		if _queue_locked:
+			_show_locked()
+			return
 		if not _update_version.is_empty():
 			_show_state(QueueState.ERROR, _outdated_text())
 			update_requested.emit()
@@ -247,8 +274,28 @@ func _on_play_pressed() -> void:
 		toggle_queue()
 
 
+## Aviso de fila bloqueada no banner de erro, com "Fazer tutorial" e "Treinar contra bot" no lugar
+## do "Tentar de novo" (repetir nao libera nada).
+func _show_locked() -> void:
+	_show_state(
+		QueueState.ERROR,
+		tr("Faça o tutorial ou vença um treino contra o bot para liberar a fila online.")
+	)
+	_retry.visible = false
+	_lock_actions.visible = true
+	_lock_shown = true
+
+
+## "Treinar contra bot" do aviso: abre a aba de treino (o jogador escolhe o nivel e inicia).
+func _on_train_from_lock_pressed() -> void:
+	_show_state(QueueState.IDLE)
+	select_mode(Mode.TRAIN)
+
+
 func _show_state(state: QueueState, message: String = "") -> void:
 	_state = state
+	_lock_shown = false
+	_lock_actions.visible = false
 	var searching := state == QueueState.SEARCHING
 	_play.disabled = state in [QueueState.JOINING, QueueState.MATCHED]
 	_refresh_cta()
@@ -299,7 +346,7 @@ func _backdrop() -> Backdrop:
 	return backdrop
 
 
-## Sub-menu central: JOGAR (busca partida), TREINO BOT IA e CONFIGURACOES.
+## Sub-menu central: JOGAR (busca partida), TREINO VS BOT, TUTORIAL e CONFIGURACOES.
 func _sub_nav() -> CenterContainer:
 	var center := CenterContainer.new()
 	var track := GlassPanel.new(GlassPanel.BLUR_XL)
@@ -316,6 +363,11 @@ func _sub_nav() -> CenterContainer:
 	_train_tab.text = "%s %s" % [UiIcons.SMART_TOY, tr("TREINO VS BOT")]
 	_train_tab.pressed.connect(select_mode.bind(Mode.TRAIN))
 	row.add_child(_train_tab)
+	var tutorial := Button.new()
+	tutorial.theme_type_variation = &"LnSubNav"
+	tutorial.text = "%s %s" % [UiIcons.MENU_BOOK, tr("TUTORIAL")]
+	tutorial.pressed.connect(tutorial_requested.emit)
+	row.add_child(tutorial)
 	var settings := Button.new()
 	settings.theme_type_variation = &"LnSubNav"
 	settings.text = "%s %s" % [UiIcons.TUNE, tr("CONFIGURAÇÕES")]
@@ -442,9 +494,12 @@ func _cell(caption: String, value: Label) -> PanelContainer:
 
 
 func _queue_banner() -> PanelContainer:
+	var box := VBoxContainer.new()
+	box.theme_type_variation = &"LnVGapSm"
+	_banner.add_child(box)
 	var row := HBoxContainer.new()
 	row.theme_type_variation = &"LnHGapSm"
-	_banner.add_child(row)
+	box.add_child(row)
 	_banner_dot.theme_type_variation = &"LnDotGold"
 	_banner_dot.custom_minimum_size = QUEUE_DOT
 	_banner_dot.size_flags_vertical = SIZE_SHRINK_CENTER
@@ -458,7 +513,20 @@ func _queue_banner() -> PanelContainer:
 	_retry.text = "%s %s" % [UiIcons.RESTART_ALT, tr("Tentar de novo")]
 	_retry.pressed.connect(toggle_queue)
 	row.add_child(_retry)
+	_lock_actions.theme_type_variation = &"LnHGapSm"
+	_lock_actions.visible = false
+	box.add_child(_lock_actions)
+	_lock_actions.add_child(_lock_button(tr("Fazer tutorial"), tutorial_requested.emit))
+	_lock_actions.add_child(_lock_button(tr("Treinar contra bot"), _on_train_from_lock_pressed))
 	return _banner
+
+
+func _lock_button(text: String, on_pressed: Callable) -> Button:
+	var button := Button.new()
+	button.theme_type_variation = &"LnButtonSmall"
+	button.text = text
+	button.pressed.connect(on_pressed)
+	return button
 
 
 ## Modo de batalha (um so na fatia: o 1v1 ativo; 2v2/3v3 sao roadmap e sairam, §8.3).
@@ -603,6 +671,10 @@ func _outdated_text() -> String:
 
 
 func _on_queue_failed(reason: String) -> void:
+	if reason == QUEUE_LOCKED:
+		_queue_locked = true  # Launcher desatualizado: o backend manda, o proximo clique nem sai
+		_show_locked()
+		return
 	var messages: Dictionary[String, String] = {
 		ApiClient.OFFLINE: "Servidor fora do ar. A fila não foi mantida.",
 		"ALREADY_QUEUED": "Esta conta já está na fila ou em uma partida.",

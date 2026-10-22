@@ -8,6 +8,10 @@ extends Control
 ## raiz; 401 sem renovacao volta ao Login. Fila pareada -> lanca o Game; saida do Game pela
 ## tabela do §5.2 (codigo 0 de partida online volta ao Lobby com o card "Resultado da partida",
 ## F70). Telas emitem; quem navega e confirma e o App.
+## F85 (SPEC-085 §4, ADR-0029): o 1o login abre o tutorial uma vez, depois do nickname; o botao
+## Tutorial do lobby o refaz; a fila online fica barrada no lobby enquanto a conta nao a tiver
+## liberada; ao fim de qualquer Game le e apaga o offline_result.cfg e, com sessao, libera a fila
+## no backend se foi tutorial concluido ou vitoria contra o bot.
 ## --gallery (depois do --) abre a galeria do design system, a prova visual dos componentes.
 ## Splash "Loot Start" (F68, F82): cobre a janela ate a 1a checagem do backend
 ## (minimo SPLASH_MIN_SECONDS, teto SPLASH_MAX_SECONDS).
@@ -18,6 +22,8 @@ const TOAST_WIDTH: float = 360.0
 ## Status e ping do backend (GET /health) a cada 10 s.
 const HEALTH_SECONDS: float = 10.0
 const OFFLINE_ARGS: PackedStringArray = ["--offline", "--bot"]
+## Tutorial roteirizado com o Cavaleiro (ADR-0029); nao combina com --bot.
+const TUTORIAL_ARGS: PackedStringArray = ["--offline", "--tutorial"]
 ## Splash: fica no minimo SPLASH_MIN_SECONDS (PI, 2026-10-19: "aparecendo muito rapido") e sai na
 ## 1a checagem do backend depois disso; teto SPLASH_MAX_SECONDS se o backend demorar a responder.
 const SPLASH_MIN_SECONDS: float = 3.0
@@ -44,6 +50,8 @@ var result_retry_seconds: float = RESULT_RETRY_SECONDS
 var splash_min_seconds: float = SPLASH_MIN_SECONDS
 ## E-mail da sessao aberta (cartao "Sua conta" do lobby), o do backend; vazio sem sessao.
 var account_email: String = ""
+## Onde o Game grava o resultado do treino e do tutorial (o teste troca por um caminho temporario).
+var offline_result_path: String = OfflineResult.PATH
 
 var _bar: AppBar = AppBar.new()
 var _stack: ScreenStack = ScreenStack.new()
@@ -70,6 +78,8 @@ var _match_id: String = ""
 var _ended_by_player: bool = false
 ## Partida do card de resultado aberto (para "Tentar de novo" buscar a mesma).
 var _result_match_id: String = ""
+## Este login caiu no Perfil sem nickname (1o login): ao concluir, abre o tutorial uma vez.
+var _first_login: bool = false
 
 
 func _ready() -> void:
@@ -169,6 +179,8 @@ func check_backend() -> void:
 ## Lanca o Game; true se abriu (mostra o overlay e trava a navegacao).
 func launch_game(game_args: PackedStringArray, practice: bool) -> bool:
 	_ended_by_player = false
+	# Resultado velho (dev, Game fechado sem passar pelo Launcher) nao pode liberar a conta de agora.
+	OfflineResult.consume(offline_result_path)
 	if game.launch(game_args) < 0:
 		return false
 	_match.open(practice)
@@ -283,19 +295,30 @@ func practice_args() -> PackedStringArray:
 
 
 func _start_practice() -> void:
+	_launch_offline(practice_args())
+
+
+func _start_tutorial() -> void:
+	_launch_offline(TUTORIAL_ARGS)
+
+
+## Treino ou tutorial: sai da fila antes (os dois juntos pareariam com o jogo ocupado) e lanca o
+## Game sem partida online; sem executavel, avisa que a instalacao esta incompleta.
+func _launch_offline(args: PackedStringArray) -> void:
 	if game.is_running():
 		return
 	if queue.is_searching():
-		await queue.leave()  # treino e fila juntos pareariam com o jogo ocupado
+		await queue.leave()
 	var lobby := _stack.current() as LobbyScreen
 	if lobby != null:
 		lobby.reset_queue()
 	_match_id = ""
-	if not launch_game(practice_args(), true):
+	if not launch_game(args, true):
 		show_toast(tr("Instalação incompleta: o jogo não foi encontrado."), Toast.Kind.ERROR)
 
 
 func _logout() -> void:
+	_first_login = false
 	_result.close()
 	if queue.is_searching():
 		await queue.leave()
@@ -356,6 +379,7 @@ func _on_stack_screen_pushed(_route: StringName, screen: Control) -> void:
 		lobby.bind(queue, account_email)
 		lobby.set_backend_status(_online, _ping_ms, _checked)
 		lobby.practice_requested.connect(_start_practice)
+		lobby.tutorial_requested.connect(_start_tutorial)
 		lobby.bind_bot_difficulty(settings.bot_difficulty())
 		lobby.bot_difficulty_changed.connect(settings.remember_bot_difficulty)
 		lobby.settings_requested.connect(_stack.push.bind(Router.SETTINGS))
@@ -370,6 +394,8 @@ func _on_stack_screen_changed(route: StringName) -> void:
 	var gated := route == Router.LOGIN or (route == Router.PROFILE and profile.needs_nickname())
 	_bar.set_nav_visible(not gated)
 	_bar.set_brand_visible(route != Router.LOGIN)
+	if route == Router.LOBBY:
+		_refresh_queue_lock()
 	_refresh_footer()
 
 
@@ -386,7 +412,8 @@ func _on_login_authenticated() -> void:
 		show_toast(tr("Não foi possível carregar sua conta. Tente de novo."), Toast.Kind.ERROR)
 		return
 	account_email = profile.profile.email
-	if profile.needs_nickname():
+	_first_login = profile.needs_nickname()
+	if _first_login:
 		_stack.reset(Router.PROFILE)
 	else:
 		_open_lobby()
@@ -397,9 +424,21 @@ func _open_lobby() -> void:
 	_refresh_profile_chip()
 
 
-## Nickname definido no 1o login: segue para o lobby.
+## Nickname definido no 1o login: segue para o lobby e abre o tutorial (uma vez; o Perfil aberto
+## depois pelo chip, so para o avatar, tambem emite `completed` e nao abre nada).
 func _on_profile_completed() -> void:
+	var first_login := _first_login
+	_first_login = false
 	_open_lobby()
+	if first_login:
+		_start_tutorial()
+
+
+## A fila do lobby espelha a conta: bloqueada ate o tutorial ou a vitoria contra o bot (SPEC-085).
+func _refresh_queue_lock() -> void:
+	var lobby := _stack.current() as LobbyScreen
+	if lobby != null:
+		lobby.set_queue_locked(not profile.queue_unlocked())
 
 
 ## Chip do cabecalho: #nickname e avatar local; o V-D vem do historico (sem ele a linha some).
@@ -468,6 +507,7 @@ func _on_bar_quit_requested() -> void:
 
 ## Sessao expirada sem renovacao (§3.3): volta ao Login com aviso.
 func _on_api_unauthorized() -> void:
+	_first_login = false
 	_result.close()
 	queue.reset()
 	history.clear()
@@ -509,6 +549,7 @@ func _show_lobby_error(message: String) -> void:
 ## da partida" (F70); o treino contra o bot nao grava partida: lobby sem card. Qualquer outra saida
 ## de partida online descarta o cache do historico.
 func _on_game_exited(code: int) -> void:
+	_consume_offline_result()
 	_match.close()
 	_stack.locked = false
 	var match_id := _match_id
@@ -542,6 +583,28 @@ func _on_game_exited(code: int) -> void:
 		return
 	var kind := Toast.Kind.WARN if outcome.kind == GameProcess.Kind.WARNING else Toast.Kind.ERROR
 	show_toast(tr(outcome.message), kind)
+
+
+## Le e apaga o offline_result.cfg (sempre, com ou sem sessao: cada resultado vale uma vez). Com
+## sessao e tutorial concluido ou vitoria contra o bot, libera a fila na conta e no lobby. Falha ao
+## liberar: o arquivo ja se foi, entao so avisa; o jogador refaz o tutorial ou o treino.
+func _consume_offline_result() -> void:
+	var reason := OfflineResult.unlock_reason(OfflineResult.consume(offline_result_path))
+	if reason.is_empty() or not auth.is_logged_in() or profile.profile == null:
+		return
+	if profile.queue_unlocked():
+		return  # ja liberada (ex.: tinha partida online): nada a registrar
+	var unlocked := await profile.unlock_queue(reason)
+	if not auth.is_logged_in():
+		return  # saiu da conta enquanto a chamada voltava
+	if not unlocked:
+		show_toast(
+			tr("Não foi possível liberar a fila online agora. Refaça o tutorial ou vença o bot."),
+			Toast.Kind.WARN
+		)
+		return
+	_refresh_queue_lock()
+	show_toast(tr("Fila online liberada."), Toast.Kind.SUCCESS)
 
 
 ## Partida online acabou (de qualquer jeito): descarta o cache e, se o Historico ja esta aberto,

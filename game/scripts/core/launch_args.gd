@@ -2,6 +2,8 @@ class_name LaunchArgs
 extends RefCounted
 ## Interpreta os argumentos de usuario (depois de `--` na linha de comando do Godot).
 ## --offline: modo host (servidor + jogador local no mesmo processo); --bot: heroi bot no 2o slot.
+## --tutorial (F85, ADR-0029): tutorial roteirizado, implica --offline e dispensa --bot (o proprio
+## roteiro decide quando o bot entra).
 ## --autopilot: o heroi local anda em circulo; --autopilot=bot: o BotInput joga pelo heroi local
 ## (so le estado replicado). --probe: sonda de rede (NetProbe, F20), para medir replicacao.
 ## --daynight=day|night: forca o inicio da luz no servidor (F49); fora do contrato com o Launcher.
@@ -49,6 +51,7 @@ static func parse(args: PackedStringArray) -> Dictionary:
 		"daynight": DAYNIGHT_AUTO,
 		"intro_ready_delay": DEFAULT_INTRO_READY_DELAY,
 		"offline": false,
+		"tutorial": false,
 		"bot": false,
 		"bot_hero": &"",
 		"bot_difficulty": NO_DIFFICULTY,
@@ -65,6 +68,8 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["mode"] = "server"
 		elif arg == "--offline":
 			result["offline"] = true
+		elif arg == "--tutorial":
+			result["tutorial"] = true
 		elif arg == "--bot":
 			result["bot"] = true
 		elif arg == "--bots":
@@ -112,6 +117,11 @@ static func parse(args: PackedStringArray) -> Dictionary:
 			result["host"] = parts[0]
 			if parts.size() > 1:
 				result["port"] = _port_or_default(parts[1])
+	if result["tutorial"]:
+		# O tutorial roteiriza a entrada do bot (SPEC-085): nao combina com --bot (ADR-0029).
+		result["offline"] = true
+		result["bot"] = false
+		result["bot_difficulty"] = NO_DIFFICULTY
 	return result
 
 
