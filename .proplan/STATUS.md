@@ -7,11 +7,6 @@ updated: 2026-10-22
 
 ## Backlog
 
-### [MVP4] Playtest (#246)
-
-- [MVP4][GATE] Playtest com 10+ pessoas: critérios do PRD §9.2 e decisão de abrir o Early Access (#255)
-- [MVP4][SPEC-086][F86] Publicação no itch.io: página do jogo e build a cada Release (#252)
-
 ### [MVP5] Early Access (#250)
 
 - [MVP5][GATE] Abertura do Early Access no site e no itch.io (#262)
@@ -30,6 +25,8 @@ updated: 2026-10-22
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][GATE] Playtest com 10+ pessoas: critérios do PRD §9.2 e decisão de abrir o Early Access (#255)
+- [MVP4][SPEC-086][F86] Publicação no itch.io: página do jogo e build a cada Release (#252)
 - [MVP4][SPEC-030][F30] Balanceamento pós-playtest dos 11 heróis (só .tres) (#254)
 - [MVP4][SPEC-029][F29] Telemetria: ping, duração, líder F1 × vencedor e KPIs no histórico (#253)
 
