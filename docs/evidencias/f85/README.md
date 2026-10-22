@@ -12,7 +12,7 @@ Evidência de aceite (issue #251, ADR-0026 itens 5–6, ADR-0029).
 | Backend e2e (`pnpm -C backend test:e2e`), inclusive a migração 0004 | **não rodou localmente** (sem Postgres/Docker); fica para a CI |
 | `gdformat` / `gdlint` nos `.gd` tocados | sem problemas |
 
-Testes novos: `test_offline_result` (11), `test_tutorial_rules` (14), `test_launch_args_tutorial` (3), `test_match_clock_tutorial` (8), `test_tutorial_flow` e ampliações de `test_lobby_screen` e `test_profile_service` no Launcher, `users`/`queue` no backend.
+Testes novos: `test_offline_result` (10), `test_tutorial_rules` (14), `test_launch_args_tutorial` (3), `test_match_clock_tutorial` (8), `test_tutorial_flow` e ampliações de `test_lobby_screen` e `test_profile_service` no Launcher, `users`/`queue` no backend.
 
 ## Soak (aceite 4)
 
