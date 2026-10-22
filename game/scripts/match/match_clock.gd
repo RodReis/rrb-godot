@@ -14,6 +14,8 @@ signal sudden_death_started(tick: int)
 signal collapsed(tick: int)
 
 const GROUP: StringName = &"match_clock"
+## Posicao de phase1_ended na lista de eventos (_schedule).
+const PHASE1_ENDED_EVENT: int = 2
 
 @export var rules: MatchRules
 
@@ -62,13 +64,31 @@ func update(tick: int) -> void:
 		_next_event += 1
 
 
+## Servidor apenas (tutorial, SPEC-085 passo 6): leva o relogio ao fim da fase 1 no [param tick].
+## Os eventos que sobrariam antes dele (aviso e chegada do boss) sao descartados sem disparar.
+func jump_to_phase1_end(tick: int) -> void:
+	if is_started():
+		_jump.rpc(tick)
+
+
 @rpc("authority", "call_local", "reliable")
 func _begin(p_start_tick: int, tickrate: int) -> void:
 	if is_started():
 		return
 	_started = true
-	start_tick = p_start_tick
 	_tickrate = tickrate
+	_schedule(p_start_tick)
+
+
+@rpc("authority", "call_local", "reliable")
+func _jump(tick: int) -> void:
+	_schedule(tick - SkillRules.seconds_to_ticks(rules.phase1_duration, _tickrate))
+	_next_event = maxi(_next_event, PHASE1_ENDED_EVENT)
+
+
+## Ancora o relogio em [param p_start_tick] e calcula o tick de cada evento.
+func _schedule(p_start_tick: int) -> void:
+	start_tick = p_start_tick
 	_events = [
 		boss_warning, boss_spawned, phase1_ended, transition_ended, sudden_death_started, collapsed
 	]
@@ -82,7 +102,7 @@ func _begin(p_start_tick: int, tickrate: int) -> void:
 	]
 	_event_ticks = PackedInt64Array()
 	for seconds: float in times:
-		_event_ticks.append(start_tick + SkillRules.seconds_to_ticks(seconds, tickrate))
+		_event_ticks.append(start_tick + SkillRules.seconds_to_ticks(seconds, _tickrate))
 
 
 func _on_network_tick(_delta: float, tick: int) -> void:

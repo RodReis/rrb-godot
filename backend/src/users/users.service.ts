@@ -1,10 +1,16 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import type { User } from '../../drizzle/schema';
+import type { QueueUnlockReason, User } from '../../drizzle/schema';
 import type { UserProfile } from './users.dto';
 import { UsersRepository } from './users.repository';
 
 function toProfile(user: User): UserProfile {
-  return { id: user.id, email: user.email, nickname: user.nickname, createdAt: user.createdAt.toISOString() };
+  return {
+    id: user.id,
+    email: user.email,
+    nickname: user.nickname,
+    queueUnlockReason: user.queueUnlockReason,
+    createdAt: user.createdAt.toISOString(),
+  };
 }
 
 @Injectable()
@@ -27,6 +33,14 @@ export class UsersService {
     }
     if (result.status === 'already_set') throw alreadySet();
     return toProfile(result.user);
+  }
+
+  /** SPEC-085: o Launcher registra tutorial/vitória contra bot; já liberada mantém o motivo original. */
+  async unlockQueue(userId: string, reason: QueueUnlockReason): Promise<UserProfile> {
+    const user = await this.find(userId);
+    if (user.queueUnlockReason !== null) return toProfile(user);
+    await this.users.unlockQueue(userId, reason);
+    return toProfile(await this.find(userId));
   }
 
   private async find(userId: string): Promise<User> {

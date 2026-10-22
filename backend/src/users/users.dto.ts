@@ -13,6 +13,14 @@ export const SetNicknameSchema = z.object({
 });
 export class SetNicknameDto extends createZodDto(SetNicknameSchema) {}
 
+/** Motivos que o Launcher pode registrar; `history` (migração) não vem do cliente. */
+export const CLIENT_QUEUE_UNLOCK_REASONS = ['tutorial', 'bot_win'] as const;
+
+export const QueueUnlockSchema = z.object({
+  reason: z.enum(CLIENT_QUEUE_UNLOCK_REASONS).meta({ description: 'Por que a fila online foi liberada' }),
+});
+export class QueueUnlockDto extends createZodDto(QueueUnlockSchema) {}
+
 /**
  * `nickname` nulo = a conta ainda não passou pela tela de definir nickname (F35). O `meta` fixa o
  * OpenAPI 3.0 (`nullable`): com `type: [string, null]` no topo o @nestjs/swagger lê um array.
@@ -21,6 +29,11 @@ export const UserProfileSchema = z.object({
   id: z.uuid(),
   email: z.email(),
   nickname: z.string().nullable().meta({ type: 'string', nullable: true }),
+  queueUnlockReason: z.string().nullable().meta({
+    type: 'string',
+    nullable: true,
+    description: '`tutorial` | `bot_win` | `history`; nulo = fila online bloqueada (SPEC-085)',
+  }),
   createdAt: z.iso.datetime(),
 });
 export class UserProfileDto extends createZodDto(UserProfileSchema) {}

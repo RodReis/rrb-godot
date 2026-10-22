@@ -79,15 +79,18 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
    * Conta direto no banco + access token assinado aqui: o cadastro/login real é do auth.e2e-spec, e
    * hashear senha com argon2 (64 MiB) a cada teste só deixaria este arquivo lento.
    */
-  async function register(n: number): Promise<User> {
+  async function insertUser(n: number, unlockReason: string | null): Promise<User> {
     const [row] = await rows<{ id: string }>(
-      'INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id',
-      [`jogador${n}@rrb.dev`, 'hash-nao-usado'],
+      'INSERT INTO users (email, password_hash, queue_unlock_reason) VALUES ($1, $2, $3) RETURNING id',
+      [`jogador${n}@rrb.dev`, 'hash-nao-usado', unlockReason],
     );
     const id = row!.id;
     const accessToken = await jwt.signAsync({ sub: id, typ: 'access' }, { expiresIn: '15m' });
     return { id, auth: `Bearer ${accessToken}` };
   }
+
+  /** Conta com a fila liberada (SPEC-085); `insertUser(n, null)` cria a bloqueada. */
+  const register = (n: number): Promise<User> => insertUser(n, 'tutorial');
 
   const server = (): App => app.getHttpServer();
   const join = (user: User) => request(server()).post('/queue').set('Authorization', user.auth);
@@ -123,6 +126,23 @@ describe('fila 1x1 e orquestrador (e2e, Docker mock)', () => {
   });
 
   describe('fila', () => {
+    it('conta sem fila liberada → 403 QUEUE_LOCKED e nenhum ticket; liberada, entra (SPEC-085)', async () => {
+      const locked = await insertUser(9, null);
+
+      const refused = await join(locked);
+
+      expect(refused.status).toBe(403);
+      expect(refused.body).toMatchObject({ statusCode: 403, code: 'QUEUE_LOCKED', message: expect.any(String) });
+      expect(await rows('SELECT 1 FROM queue_tickets WHERE user_id = $1', [locked.id])).toEqual([]);
+
+      await request(server())
+        .post('/users/me/queue-unlock')
+        .set('Authorization', locked.auth)
+        .send({ reason: 'bot_win' })
+        .expect(200);
+      expect((await join(locked)).status).toBe(201);
+    });
+
     it('POST /queue → ticket searching; GET → searching enquanto não há par', async () => {
       const [a] = users as [User];
 

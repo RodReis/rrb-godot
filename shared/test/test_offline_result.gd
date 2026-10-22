@@ -69,6 +69,20 @@ func test_consume_apaga_tambem_o_arquivo_invalido() -> void:
 	assert_false(FileAccess.file_exists(TMP_PATH))
 
 
+func test_resultado_do_fim_de_partida_para_o_jogador_local() -> void:
+	var me := 1
+	var cases: Array[Array] = [
+		[OfflineResult.KIND_BOT, me, OfflineResult.WIN],
+		[OfflineResult.KIND_BOT, 2, OfflineResult.LOSS],
+		[OfflineResult.KIND_BOT, 0, OfflineResult.QUIT],
+		[OfflineResult.KIND_TUTORIAL, me, OfflineResult.COMPLETED],
+		[OfflineResult.KIND_TUTORIAL, 2, OfflineResult.QUIT],
+		[OfflineResult.KIND_TUTORIAL, 0, OfflineResult.QUIT],
+	]
+	for row: Array in cases:
+		assert_eq(OfflineResult.for_match(row[0], row[1], me), row[2], str(row))
+
+
 func test_unlock_reason_so_para_tutorial_concluido_e_vitoria_sobre_o_bot() -> void:
 	var cases: Array[Array] = [
 		[OfflineResult.KIND_TUTORIAL, OfflineResult.COMPLETED, 0, OfflineResult.REASON_TUTORIAL],

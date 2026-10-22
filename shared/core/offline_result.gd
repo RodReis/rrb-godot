@@ -72,6 +72,16 @@ static func consume(path: String = PATH) -> Dictionary:
 	return result
 
 
+## Resultado do fim de uma partida offline para o jogador [param local_peer]. [param winner] 0 =
+## ninguem venceu (abandono): conta como saida. Derrota no tutorial tambem nao o conclui.
+static func for_match(kind: String, winner: int, local_peer: int) -> String:
+	if winner == 0:
+		return QUIT
+	if kind == KIND_TUTORIAL:
+		return COMPLETED if winner == local_peer else QUIT
+	return WIN if winner == local_peer else LOSS
+
+
 ## REASON_* que libera a fila para esse resultado, ou "" (derrota, saida no meio, vazio).
 static func unlock_reason(result: Dictionary) -> String:
 	if result.is_empty():

@@ -15,6 +15,13 @@ import {
 } from 'drizzle-orm/pg-core';
 
 /**
+ * Por que a fila online está liberada (SPEC-085, ADR-0026): `tutorial` e `bot_win` vêm do Launcher;
+ * `history` só a migração 0004 grava (conta que já jogou online). Sem motivo (`null`) = fila bloqueada.
+ */
+export const QUEUE_UNLOCK_REASONS = ['tutorial', 'bot_win', 'history'] as const;
+export type QueueUnlockReason = (typeof QUEUE_UNLOCK_REASONS)[number];
+
+/**
  * ARCHITECTURE-LAUNCHER.md §4.3. `nickname` é nulo até o 1º login definir (F35); único sem
  * diferenciar maiúsculas (índice em `lower(nickname)`), e a grafia escolhida é a exibida.
  */
@@ -25,6 +32,7 @@ export const users = pgTable(
     email: text('email').notNull().unique(),
     passwordHash: text('password_hash').notNull(),
     nickname: text('nickname'),
+    queueUnlockReason: text('queue_unlock_reason').$type<QueueUnlockReason>(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [uniqueIndex('users_nickname_lower_idx').on(sql`lower(${table.nickname})`)],
