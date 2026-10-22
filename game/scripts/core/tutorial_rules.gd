@@ -30,6 +30,30 @@ const ORBIT_RADIANS: float = 0.35
 ## Passo 4: o abate tem de fechar o nivel; falta este tanto de XP para o proximo nivel.
 const XP_LEFT_BEFORE_LEVEL_UP: int = 1
 
+const TEXT_MOVE_CAMERA: String = (
+	"Ande com %s. Segure o %s e arraste para girar a câmera. "
+	+ "Use a roda do mouse (ou %s e %s) para o zoom."
+)
+const TEXT_TARGET_ATTACK: String = (
+	"Clique com o %s no monstro marcado para travar o alvo. "
+	+ "O herói ataca sozinho quando ele está ao alcance; chegue perto."
+)
+const TEXT_SKILLS: String = (
+	"Use as três habilidades contra o monstro: %s, %s e %s. " + "Cada uma tem recarga."
+)
+const TEXT_MONSTER_XP: String = (
+	"Derrote o monstro para ganhar XP e subir de nível. "
+	+ "Depois gaste o ponto de habilidade com Ctrl + %s, %s ou %s."
+)
+const TEXT_CHEST_SHEET: String = (
+	"Chegue ao baú marcado e aperte %s. Clique em um dos itens para levá-lo. "
+	+ "Depois abra a ficha do herói com %s."
+)
+const TEXT_PHASE2: String = (
+	"A zona está fechando e um bot entrou na arena. " + "Vença o bot para concluir o tutorial."
+)
+const TEXT_DONE: String = "Pronto! Você já sabe jogar."
+
 const KEY_ORBIT: String = "botão esquerdo do mouse"
 const KEY_ATTACK: String = "botão direito do mouse"
 
@@ -97,88 +121,54 @@ static func xp_top_up(curve: XpCurve, xp: int) -> int:
 
 
 static func title(step: Step) -> String:
-	match step:
-		Step.MOVE_CAMERA:
-			return TranslationServer.translate("Mover e câmera")
-		Step.TARGET_ATTACK:
-			return TranslationServer.translate("Alvo e ataque")
-		Step.SKILLS:
-			return TranslationServer.translate("Habilidades")
-		Step.MONSTER_XP:
-			return TranslationServer.translate("Monstro e XP")
-		Step.CHEST_SHEET:
-			return TranslationServer.translate("Baú e ficha")
-		Step.PHASE2:
-			return TranslationServer.translate("Fase 2")
-	return TranslationServer.translate("Tutorial concluído")
+	var titles: Dictionary[Step, String] = {
+		Step.MOVE_CAMERA: "Mover e câmera",
+		Step.TARGET_ATTACK: "Alvo e ataque",
+		Step.SKILLS: "Habilidades",
+		Step.MONSTER_XP: "Monstro e XP",
+		Step.CHEST_SHEET: "Baú e ficha",
+		Step.PHASE2: "Fase 2",
+	}
+	return TranslationServer.translate(titles.get(step, "Tutorial concluído"))
 
 
 ## Instrucao do passo com as teclas de verdade (remapeadas no Launcher, F24).
 static func instruction(step: Step) -> String:
 	match step:
 		Step.MOVE_CAMERA:
-			return (
-				(
-					TranslationServer
-					. translate(
-						"Ande com %s%s%s%s. Segure o %s e arraste para girar a câmera. Use a roda do mouse (ou %s e %s) para o zoom."
-					)
-				)
-				% [
-					InputActions.key_label(InputActions.MOVE_FORWARD),
-					InputActions.key_label(InputActions.MOVE_LEFT),
-					InputActions.key_label(InputActions.MOVE_BACK),
-					InputActions.key_label(InputActions.MOVE_RIGHT),
+			var walk: String = (
+				InputActions.key_label(InputActions.MOVE_FORWARD)
+				+ InputActions.key_label(InputActions.MOVE_LEFT)
+				+ InputActions.key_label(InputActions.MOVE_BACK)
+				+ InputActions.key_label(InputActions.MOVE_RIGHT)
+			)
+			return _say(
+				TEXT_MOVE_CAMERA,
+				[
+					walk,
 					TranslationServer.translate(KEY_ORBIT),
 					InputActions.key_label(InputActions.CAMERA_ZOOM_IN),
 					InputActions.key_label(InputActions.CAMERA_ZOOM_OUT),
 				]
 			)
 		Step.TARGET_ATTACK:
-			return (
-				(
-					TranslationServer
-					. translate(
-						"Clique com o %s no monstro marcado para travar o alvo. O herói ataca sozinho quando ele está ao alcance; chegue perto."
-					)
-				)
-				% TranslationServer.translate(KEY_ATTACK)
-			)
+			return _say(TEXT_TARGET_ATTACK, [TranslationServer.translate(KEY_ATTACK)])
 		Step.SKILLS:
-			return (
-				TranslationServer.translate(
-					"Use as três habilidades contra o monstro: %s, %s e %s. Cada uma tem recarga."
-				)
-				% InputActions.skill_labels()
-			)
+			return _say(TEXT_SKILLS, InputActions.skill_labels())
 		Step.MONSTER_XP:
-			return (
-				(
-					TranslationServer
-					. translate(
-						"Derrote o monstro para ganhar XP e subir de nível. Depois gaste o ponto de habilidade com Ctrl + %s, %s ou %s."
-					)
-				)
-				% InputActions.skill_labels()
-			)
+			return _say(TEXT_MONSTER_XP, InputActions.skill_labels())
 		Step.CHEST_SHEET:
-			return (
-				(
-					TranslationServer
-					. translate(
-						"Chegue ao baú marcado e aperte %s. Clique em um dos itens para levá-lo. Depois abra a ficha do herói com %s."
-					)
-				)
-				% [
+			return _say(
+				TEXT_CHEST_SHEET,
+				[
 					InputActions.key_label(InputActions.INTERACT),
 					InputActions.key_label(InputActions.OPEN_BESTIARY),
 				]
 			)
 		Step.PHASE2:
-			return (
-				TranslationServer
-				. translate(
-					"A zona está fechando e um bot entrou na arena. Vença o bot para concluir o tutorial."
-				)
-			)
-	return TranslationServer.translate("Pronto! Você já sabe jogar.")
+			return TranslationServer.translate(TEXT_PHASE2)
+	return TranslationServer.translate(TEXT_DONE)
+
+
+static func _say(text: String, args: Array) -> String:
+	return TranslationServer.translate(text) % args
