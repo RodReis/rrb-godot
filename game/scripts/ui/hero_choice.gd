@@ -5,8 +5,9 @@ extends Button
 ## de teclado: Espaco e sempre o lock-in.
 
 const PREVIEW: PackedScene = preload("res://shared/ui/components/monster_preview_3d.tscn")
-const CARD_HEIGHT: float = 250.0
-const PORTRAIT_SIZE: Vector2 = Vector2(150, 150)
+## 11 herois em 5 colunas = 3 fileiras que cabem em 1920x1080 a 100 % (PI 2026-10-21, F98).
+const CARD_HEIGHT: float = 204.0
+const PORTRAIT_SIZE: Vector2 = Vector2(116, 116)
 ## Retrato: camera perto, de frente, enquadrando cabeca e tronco (multiplos da altura do modelo).
 const PORTRAIT_DISTANCE: float = 1.15
 const PORTRAIT_HEIGHT: float = 0.7
@@ -78,11 +79,17 @@ func setup(data: HeroData) -> void:
 
 
 ## Retrato do heroi (nulo = vazio); so dentro da arvore. Heroi mais alto que o rig medio traz a
-## altura dele (HeroVisual.portrait_height, Berserker F75).
+## altura dele (HeroVisual.portrait_height, Berserker F75); heroi de outras proporcoes, a faixa que
+## o card mostra (HeroVisual.portrait_band, Carrasco F98).
 func show_model(model: Node3D) -> void:
 	var height: float = model.get_meta(&"portrait_height", 0.0) if model != null else 0.0
 	_preview.frame_height = height if height > 0.0 else PORTRAIT_FRAME_HEIGHT
 	_preview.show_model(model)
+	var band: Vector2 = (
+		model.get_meta(&"portrait_band", Vector2.ZERO) if model != null else Vector2.ZERO
+	)
+	if band != Vector2.ZERO:
+		_preview.frame_band(band, model.get_meta(&"portrait_turn", 0.0))
 
 
 func set_active(value: bool) -> void:

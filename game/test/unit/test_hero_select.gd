@@ -286,3 +286,14 @@ func test_modelo_so_do_heroi_com_cena() -> void:
 	assert_not_null(ranger)
 	ranger.free()
 	assert_null(HeroSelect.model_of(&"mage"))
+
+
+func test_carrasco_traz_a_faixa_e_o_giro_do_card() -> void:
+	# F98: o Carrasco, realista e esguio, mostra da cintura para cima e girado no card.
+	var model := HeroSelect.model_of(&"carrasco")
+	autofree(model)
+	assert_eq(model.get_meta(&"portrait_band"), Vector2(0.85, 1.92))
+	assert_almost_eq(float(model.get_meta(&"portrait_turn")), 35.0, 0.001)
+	var knight := HeroSelect.model_of(&"knight")
+	autofree(knight)
+	assert_eq(knight.get_meta(&"portrait_band"), Vector2.ZERO, "KayKit: enquadramento comum")

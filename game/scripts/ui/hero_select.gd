@@ -186,8 +186,8 @@ func lock_in() -> void:
 
 
 ## So o visual do heroi: o no Model da cena, com as pecas que o heroi nao usa escondidas, o clipe de
-## idle do HeroVisual em meta "idle" (o MonsterPreview3D toca esse) e a altura de retrato dele em
-## meta "portrait_height" (0 = a padrao do card).
+## idle do HeroVisual em meta "idle" (o MonsterPreview3D toca esse), a altura de retrato dele em
+## meta "portrait_height" (0 = a padrao do card) e a faixa do card em meta "portrait_band".
 static func model_of(hero_id: StringName) -> Node3D:
 	var path := Hero.SCENE_PATH % hero_id
 	if not ResourceLoader.exists(path):
@@ -204,6 +204,8 @@ static func model_of(hero_id: StringName) -> Node3D:
 				node.hide()
 		model.set_meta(&"idle", visual.get(&"idle"))
 		model.set_meta(&"portrait_height", visual.get(&"portrait_height"))
+		model.set_meta(&"portrait_band", visual.get(&"portrait_band"))
+		model.set_meta(&"portrait_turn", visual.get(&"portrait_turn"))
 	instance.free()
 	return model
 

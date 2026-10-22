@@ -48,6 +48,17 @@ func show_model(model: Node3D, animation: StringName = &"Idle") -> void:
 		player.play(clip)
 
 
+## Enquadra so a faixa de altura [param band] (x = baixo, y = topo, em m): a camera mira o meio
+## dela, na distancia em que ela enche a altura do quadro; o modelo gira [param turn] graus alem do
+## facing.
+func frame_band(band: Vector2, turn: float = 0.0) -> void:
+	_stage.rotation = Vector3(0.0, deg_to_rad(facing + turn), 0.0)
+	var middle := (band.x + band.y) / 2.0
+	var distance := (band.y - band.x) / 2.0 / tan(deg_to_rad(_camera.fov) / 2.0)
+	_camera.position = Vector3(0.0, middle, distance)
+	_camera.look_at(Vector3(0.0, middle, 0.0), Vector3.UP)
+
+
 func _frame(height: float) -> void:
 	_camera.position = Vector3(0.0, height * camera_height, height * camera_distance)
 	_camera.look_at(Vector3(0.0, height * look_height, 0.0), Vector3.UP)
