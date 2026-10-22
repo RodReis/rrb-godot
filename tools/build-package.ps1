@@ -11,7 +11,9 @@
 param(
     [Parameter(Mandatory)][ValidatePattern('^https?://[^\s/]+[^\s]*$')][string]$ApiUrl,
     [ValidatePattern('^[A-Za-z0-9._-]+$')][string]$Version = 'dev',
-    [ValidatePattern('^https?://[^\s/]+[^\s]*$')][string]$UpdateUrl = 'https://lootstart.cloud/download/latest.json'
+    [ValidatePattern('^https?://[^\s/]+[^\s]*$')][string]$UpdateUrl = 'https://lootstart.cloud/download/latest.json',
+    # F86 (ADR-0024): "itch" grava update_url vazio (o app do itch.io atualiza; o atualizador proprio nao roda).
+    [ValidateSet('site', 'itch')][string]$Channel = 'site'
 )
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
@@ -35,9 +37,9 @@ New-Item -ItemType Directory -Force (Join-Path $package 'game'), (Join-Path $bui
 
 $config = Join-Path $repo 'launcher/build_config.cfg'
 try {
-    Set-Content -Path $config -Encoding utf8 -Value (
-        "[backend]`nurl=`"$($ApiUrl.TrimEnd('/'))`"`n`n" +
-        "[build]`nversion=`"$Version`"`nupdate_url=`"$UpdateUrl`"`n")
+    $buildSection = "[build]`nversion=`"$Version`"`nupdate_url=`"$UpdateUrl`"`n"
+    if ($Channel -eq 'itch') { $buildSection = "[build]`nversion=`"$Version`"`nchannel=`"itch`"`nupdate_url=`"`"`n" }
+    Set-Content -Path $config -Encoding utf8 -Value ("[backend]`nurl=`"$($ApiUrl.TrimEnd('/'))`"`n`n" + $buildSection)
     $ErrorActionPreference = 'Continue'   # Godot escreve avisos em stderr
     foreach ($module in 'game', 'launcher') {
         & $cli --headless --path (Join-Path $repo $module) --import 2>&1 | Out-Null

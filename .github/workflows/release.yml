@@ -76,6 +76,22 @@ jobs:
           path: build/LootStart-Setup-dev.exe
           retention-days: 3
 
+      # F86 (ADR-0024, SPEC-086): ZIP portatil do canal itch.io, sem atualizador proprio. Vem depois do
+      # makensis porque o build-package.ps1 apaga build/package; o ZIP do canal site nao e publicado.
+      - name: Gerar o ZIP do itch.io
+        shell: pwsh
+        env:
+          RRB_API_URL: ${{ vars.RRB_API_URL }}
+          RRB_VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}
+        run: ./tools/build-package.ps1 -ApiUrl $env:RRB_API_URL -Version $env:RRB_VERSION -Channel itch
+
+      - name: Anexar o ZIP do itch.io
+        uses: actions/upload-artifact@v4
+        with:
+          name: LootStart-itch-${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}
+          path: build/LootStart-*-win64.zip
+          retention-days: ${{ github.ref_type == 'tag' && 7 || 3 }}
+
       - name: Publicar o Release
         if: github.ref_type == 'tag'
         env:
@@ -125,3 +141,44 @@ jobs:
           scp -i ~/.ssh/upload_key build/latest.json "rrbdl@${VPS_HOST}:$dir/latest.json.tmp"
           ssh -i ~/.ssh/upload_key "rrbdl@${VPS_HOST}" \
             "ln -sfn $setup $dir/LootStart-Setup.exe && mv -f $dir/latest.json.tmp $dir/latest.json"
+
+  # F86 (SPEC-086): envia o ZIP ao itch.io com o butler. Job separado: falha aqui nao desfaz o Release
+  # nem o envio ao VPS, e da para rodar de novo sozinho. Precisa do segredo BUTLER_API_KEY e da variavel
+  # ITCH_TARGET (usuario/projeto) — o PI grava; sem eles o job falha com erro explicito.
+  itch:
+    needs: package
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # Versao fixada do butler (https://broth.itch.zone/butler); sem 'LATEST'.
+      BUTLER_VERSION: 15.21.0
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: LootStart-itch-${{ github.ref_name }}
+          path: build
+
+      - name: Enviar o ZIP com o butler
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_TARGET: ${{ vars.ITCH_TARGET }}
+          # Nome de tag e entrada nao confiavel: vai por variavel de ambiente, nunca no texto do script.
+          TAG: ${{ github.ref_name }}
+        run: |
+          if [ -z "$BUTLER_API_KEY" ]; then
+            echo "::error::Defina o segredo BUTLER_API_KEY (API key do itch.io)."
+            exit 1
+          fi
+          if [ -z "$ITCH_TARGET" ]; then
+            echo "::error::Defina a variavel de repositorio ITCH_TARGET (usuario/projeto do itch.io)."
+            exit 1
+          fi
+          case "$TAG" in *[!A-Za-z0-9._-]*) echo "::error::tag invalida: $TAG"; exit 1;; esac
+          case "$ITCH_TARGET" in *[!A-Za-z0-9._/-]*) echo "::error::ITCH_TARGET invalido (usuario/projeto)."; exit 1;; esac
+          curl -fsSL -o /tmp/butler.zip \
+            "https://broth.itch.zone/butler/linux-amd64/${BUTLER_VERSION}/archive/default"
+          unzip -q /tmp/butler.zip -d /tmp/butler
+          chmod +x /tmp/butler/butler
+          /tmp/butler/butler push "build/LootStart-${TAG}-win64.zip" "${ITCH_TARGET}:windows" \
+            --userversion "$TAG"
