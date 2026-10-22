@@ -19,6 +19,9 @@ const POSE_TIME: float = 0.4
 ## id -> [cena, pecas escondidas] (as mesmas de game/scenes/heroes/<id>.tscn) e, opcionais, a
 ## escala do modelo (o Barbarian_Large do Berserker e ~1,9x mais alto que o rig medio), o clipe
 ## de idle e o giro em graus (o escudo do Carrasco, F98, cobre o rosto de frente).
+## SMALL_CAMERAS: olho, alvo e giro (graus) proprios do retrato 128 (o Carrasco tem proporcao
+## realista: a camera comum, feita para a cabeca grande dos KayKit, pega o corpo todo; de frente,
+## o escudo da pose de descanso fica ao lado).
 const HEROES: Dictionary[String, Array] = {
 	"knight":
 	[
@@ -42,7 +45,11 @@ const HEROES: Dictionary[String, Array] = {
 	"berserker": ["res://shared/assets/rrb/heroes/berserker.glb", [], 0.48, &"Idle_A"],
 	"occultist": ["res://shared/assets/rrb/heroes/occultist.glb", []],
 	"paladin": ["res://shared/assets/rrb/heroes/paladin.glb", []],
-	"carrasco": ["res://shared/assets/rrb/heroes/carrasco/carrasco.glb", [], 0.9, &"Idle", 35.0],
+	"carrasco":
+	["res://shared/assets/rrb/heroes/carrasco/carrasco.glb", [], 0.9, &"Portrait", 35.0],
+}
+const SMALL_CAMERAS: Dictionary[String, Array] = {
+	"carrasco": [Vector3(0.0, 1.4, 1.35), Vector3(0.0, 1.3, 0.0), 0.0],
 }
 const BACKDROP: Color = Color(0.075, 0.106, 0.180)
 const AMBIENT: Color = Color(0.55, 0.62, 0.85)
@@ -77,7 +84,9 @@ func _run() -> void:
 	for hero_id: String in HEROES:
 		if not only.is_empty() and hero_id != only:
 			continue
-		if not await _render(hero_id, OUT_DIR, SIZE, CAMERA_EYE, CAMERA_TARGET):
+		var small: Array = SMALL_CAMERAS.get(hero_id, [CAMERA_EYE, CAMERA_TARGET])
+		var turn: float = small[2] if small.size() > 2 else -1.0
+		if not await _render(hero_id, OUT_DIR, SIZE, small[0], small[1], false, turn):
 			failed = true
 		if not await _render(
 			hero_id, OUT_DIR_LARGE, SIZE_LARGE, CAMERA_EYE_LARGE, CAMERA_TARGET_LARGE, true
@@ -92,7 +101,8 @@ func _render(
 	size: Vector2i,
 	eye: Vector3,
 	target: Vector3,
-	fit: bool = false
+	fit: bool = false,
+	turn: float = -1.0
 ) -> bool:
 	var spec: Array = HEROES[hero_id]
 	var viewport := SubViewport.new()
@@ -107,7 +117,9 @@ func _render(
 	world.add_child(model)
 	if spec.size() > 2:
 		model.scale = Vector3.ONE * (spec[2] as float)
-	if spec.size() > 4:
+	if turn >= 0.0:
+		model.rotation_degrees.y = turn
+	elif spec.size() > 4:
 		model.rotation_degrees.y = spec[4] as float
 	for part: StringName in spec[1]:
 		var node := model.find_child(part) as Node3D

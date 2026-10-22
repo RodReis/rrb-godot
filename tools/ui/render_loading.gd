@@ -61,12 +61,18 @@ const STAGE_EXTENTS: Dictionary[String, Vector2] = {
 	"berserker": Vector2(0.95, 1.65),
 	"occultist": Vector2(0.85, 0.95),
 	"paladin": Vector2(1.0, 0.95),
+	"carrasco": Vector2(0.75, 0.9),
 }
 const STAGE_ARC_DEPTH: float = 0.35
-const STAGE_CAMERA_BACK: float = 12.5
+const STAGE_CAMERA_BACK: float = 14.5
 const STAGE_CAMERA_HEIGHT: float = 1.5
 const STAGE_TARGET_HEIGHT: float = 0.4
 const STAGE_FOV: float = 34.0
+## Palco limpo (arena nova, F94-F96): props menores que STAGE_PROP_MAX (u, maior lado) entre a
+## camera e a fileira, ate STAGE_CLEAR_SIDE (u) para cada lado, somem do render; muralha fica.
+const STAGE_PROP_MAX: float = 7.0
+const STAGE_CLEAR_SIDE: float = 10.0
+const STAGE_CLEAR_BEHIND: float = 1.5
 ## Arte do Login (F82): ~2x a moldura de ~1067 x 360 px; mesma largura de cena do heroes.png (FOV
 ## horizontal equivalente a STAGE_FOV em 16:9) e a vista sobe para a fileira caber na faixa.
 const LOGIN_ART: String = "res://shared/assets/ui/login_duel.png"
@@ -103,6 +109,8 @@ const HEROES: Dictionary[String, Array] = {
 	"berserker": ["res://shared/assets/rrb/heroes/berserker.glb", [], 0.74, &"Idle_A"],
 	"occultist": ["res://shared/assets/rrb/heroes/occultist.glb", []],
 	"paladin": ["res://shared/assets/rrb/heroes/paladin.glb", []],
+	# Carrasco (F98): realista, escala 1,2 no jogo; pose de descanso (o Idle e guarda de combate).
+	"carrasco": ["res://shared/assets/rrb/heroes/carrasco/carrasco.glb", [], 1.54, &"Portrait"],
 }
 ## Marca empilhada do splash (BrandLogo, F82): lado do icone e tamanho do wordmark (px @1080p).
 const BRAND_ICON: float = 240.0
@@ -147,9 +155,10 @@ func _arena_shot(file: String, night: float) -> bool:
 ## Fileira dos herois; [param size] diferente de SIZE = faixa larga do Login (largura fixa).
 func _heroes_shot(path: String, night: float, size: Vector2i = SIZE) -> bool:
 	var viewport := _new_viewport(size)
-	_new_arena(viewport, night)
+	var arena := _new_arena(viewport, night)
 	var facing := STAGE_FACING.normalized()
 	var across := Vector3.UP.cross(facing).normalized()
+	_clear_stage(arena, facing, across)
 	var ids := HEROES.keys()
 	var extents: Array[Vector2] = []
 	var used := 0.0
@@ -180,6 +189,21 @@ func _heroes_shot(path: String, night: float, size: Vector2i = SIZE) -> bool:
 	viewport.add_child(key)
 	key.look_at_from_position(eye - across * KEY_SIDE + Vector3.UP * KEY_HEIGHT, STAGE_CENTER)
 	return _save_to(await _capture(viewport), path)
+
+
+## Esconde os props pequenos na frente da fileira (entre ela e a camera).
+func _clear_stage(arena: Node3D, facing: Vector3, across: Vector3) -> void:
+	for node: Node in arena.find_children("*", "GeometryInstance3D", true, false):
+		var geometry := node as GeometryInstance3D
+		var box := geometry.global_transform * geometry.get_aabb()
+		if box.size[box.get_longest_axis_index()] > STAGE_PROP_MAX:
+			continue
+		var rel := box.get_center() - STAGE_CENTER
+		var ahead := rel.dot(facing)
+		if ahead < -STAGE_CLEAR_BEHIND or ahead > STAGE_CAMERA_BACK:
+			continue
+		if absf(rel.dot(across)) < STAGE_CLEAR_SIDE:
+			geometry.visible = false
 
 
 ## O splash e o entardecer da arena com o nome do jogo por cima (Control no proprio viewport).
