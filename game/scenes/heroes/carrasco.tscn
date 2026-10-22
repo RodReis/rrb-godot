@@ -27,7 +27,7 @@ position = Vector3(0, 0.9, 0)
 shape = SubResource("CapsuleShape3D_hero")
 
 [node name="Model" parent="." instance=ExtResource("6_model")]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+transform = Transform3D(-1.2, 0, 0, 0, 1.2, 0, 0, 0, -1.2, 0, 0, 0)
 
 [node name="Visual" type="Node" parent="." node_paths=PackedStringArray("model")]
 script = ExtResource("3_visual")
@@ -44,8 +44,8 @@ skill_e = &""
 skill_r = &"Skill_R"
 channel = &"Skill_E_Channel"
 death = &"Death"
-portrait_height = 1.8
-portrait_band = Vector2(0.98, 1.78)
+portrait_height = 2.16
+portrait_band = Vector2(1.18, 2.14)
 portrait_turn = 35.0
 thorns = &"Skill_Q"
 thorns_speed = 2.2
@@ -56,7 +56,7 @@ blast_speed = 1.6
 
 [node name="HpLabel" type="Label3D" parent="."]
 layers = 2
-position = Vector3(0, 2.85, 0)
+position = Vector3(0, 3.1, 0)
 pixel_size = 0.01
 billboard = 1
 text = "0 / 0"
@@ -64,7 +64,7 @@ font_size = 56
 outline_size = 12
 
 [node name="HpBar" type="MeshInstance3D" parent="."]
-position = Vector3(0, 2.4, 0)
+position = Vector3(0, 2.65, 0)
 script = ExtResource("hpbar_script")
 
 [node name="Input" type="Node" parent="."]

@@ -68,3 +68,12 @@ JSONs: `frametime-base-<n>.json` e `frametime-carrasco-<n>.json`. Capturas da so
 | `vfx-folha.webp` | VFX de perto: espinhos do Q, aro da Penitência, explosão com raiz, coluna de luz e correntes em voo |
 | `frametime-carrasco-2.webp` | partida com a coluna de luz e o medidor de Dor cheio na HUD |
 | `../../roadmap/img/mvp4-f98-carrasco-kit.webm` | kit na câmera do jogo (Movie Maker do `vfx_showcase.gd`, só o viewport) |
+
+## Ajustes da verificação visual do PI (2026-10-21)
+
+| Pedido do PI | Ajuste |
+|---|---|
+| Corrida "meio agachada" | Coluna da `Run` endireitada no Blender: inclinação quadril→pescoço de 37° para 18° (idle: 13°), pescoço compensado para a cabeça seguir olhando para a frente |
+| Atraso entre o clique e o golpe | `Attack_Basic` sem os 18 quadros de preparação: o pico da espada sai 0,15 s depois do clique (antes, 0,48 s; Cavaleiro, 0,25 s) |
+| Pequeno perto do Cavaleiro | Modelo na escala 1,2 na cena do herói (topo da cabeça a 2,04 u), barra de HP e enquadramento da seleção acompanham |
+| R não acerta boss nem monstros | Comportamento da SPEC-098 §2: as Correntes só param em herói; monstro e boss não são alvo (passa direto) |
