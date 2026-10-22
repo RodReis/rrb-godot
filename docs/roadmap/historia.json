@@ -155,7 +155,7 @@
         { "arquivo": "mvp2-f46-rift-vista-de-cima.webp", "legenda": "A ilha ganhou o layout definitivo, inspirado nos mapas clássicos de arena: um quadrado de 80 por 80 metros com um castelo em cada canto oposto, o rio de mana desenhando um S entre as duas metades e terminando em duas lagoas, e três caminhos — um pela borda de cada lado e um pelo meio, que cruza o rio por duas pontes de pedra e passa pela cratera do Rei Esqueleto. Nos cantos entre as rotas, a selva: acampamentos de Esqueletos protegidos por rochas.", "tipo": "entregue" },
         { "arquivo": "mvp2-f46-rift-portao-e-centro.webp", "legenda": "Do portão do castelo dá para ver a ponte, a cratera e, do outro lado, o castelo adversário com o torreão no canto. Dentro das muralhas agora há casas de pedra; nos cantos vazios da ilha, cascatas de mana caem no abismo.", "tipo": "entregue" },
         { "arquivo": "mvp2-f46-rift-base-a-no-jogo.webp", "legenda": "A base vista do jogo: pátio de pedra, casas atrás do ponto de renascimento, a fonte no canto, os baús e os Esqueletos de sempre. No minimapa, o desenho em S do rio e as duas lagoas.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f48-equipamento-na-partida.webp", "legenda": "O que sai do baú agora aparece no herói: o Cavaleiro com o elmo da Guarda, a espada rara e o peitoral do Caçador. No painel de equipamento, cada item tem o próprio ícone, com a cor da raridade na moldura.", "tipo": "entregue", "vitrine": "Confronto 1v1: a zona fecha e o Cavaleiro, com o equipamento dos baús no corpo, caça a Arqueira." },
+        { "arquivo": "mvp2-f48-equipamento-na-partida.webp", "legenda": "O que sai do baú agora aparece no herói: o Cavaleiro com o elmo da Guarda, a espada rara e o peitoral do Caçador. No painel de equipamento, cada item tem o próprio ícone, com a cor da raridade na moldura.", "tipo": "entregue" },
         { "arquivo": "mvp2-f48-vitrine-equipamento.webp", "legenda": "Os dois conjuntos nos dois heróis, nas três raridades: placa de metal da Guarda e capuz de couro do Caçador. A forma é a mesma; o comum é liso, o raro ganha um friso azul e o épico, friso dourado e uma gema roxa. Armas também mudam: espada e arco com fio azul ou guarda dourada.", "tipo": "em-construcao" },
         { "arquivo": "mvp2-f49-dia.webp", "legenda": "A luz agora anda com o relógio da partida. Uma partida pode começar de dia — céu azul, sol alto, sombras nítidas — e terminar de noite; outra faz o caminho inverso. O sentido é sorteado quando a partida começa e vale igual para os dois jogadores.", "tipo": "entregue" },
         { "arquivo": "mvp2-f49-entardecer.webp", "legenda": "No meio da partida, aos 5 minutos, é entardecer: sol baixo e alaranjado, sombras longas, o magma e os cristais já brilhando mais.", "tipo": "entregue" },
@@ -177,7 +177,7 @@
         { "arquivo": "mvp2-f65-minimapa-claro.webp", "legenda": "O mapa que aparece no minimapa: a arena vista de cima, clara e colorida, com o rio, as pontes, as trilhas, as bases e o magma no centro. Antes o minimapa filmava a cena ao vivo e ficava escuro como ela; agora é sempre fácil de ler, até de noite.", "tipo": "entregue" },
         { "arquivo": "mvp2-f61-bau-com-menu.webp", "legenda": "O baú agora abre um menu com 3 itens: você vê o que cada um muda no seu herói (verde ganha, vermelho perde) e escolhe um com o mouse. O baú fica guardado para quem abriu.", "tipo": "entregue", "vitrine": "Cada baú oferece 3 itens: você escolhe um e vê na hora o que ele muda no herói." },
         { "arquivo": "mvp2-f62-ficha-do-heroi.webp", "legenda": "A tecla B agora abre a ficha do seu herói: o modelo girando, nível, atributos, os itens que você carrega e as quatro habilidades explicadas, com o rank e a recarga de cada uma. O bestiário dos monstros continua na aba ao lado.", "tipo": "entregue" },
-        { "arquivo": "mvp2-f63-agua-do-rio.webp", "legenda": "A água do rio ganhou vida: ondas que correm com a correnteza, transparência para ver o fundo no raso, reflexo do céu e espuma nas margens.", "tipo": "entregue", "vitrine": "A arena: duas bases, o rio, as pontes e a cratera do Rei Esqueleto no centro." },
+        { "arquivo": "mvp2-f63-agua-do-rio.webp", "legenda": "A água do rio ganhou vida: ondas que correm com a correnteza, transparência para ver o fundo no raso, reflexo do céu e espuma nas margens.", "tipo": "entregue" },
         { "arquivo": "mvp2-f64-fonte-de-cura.webp", "legenda": "A fonte de cura da base foi refeita: pedra de verdade, água com ondas e reflexo do céu na bacia e na taça, e a água caindo da taça com respingo. Continua curando no mesmo lugar e com o mesmo alcance.", "tipo": "entregue" }
       ]
     },
@@ -395,6 +395,18 @@
           "arquivo": "mvp4-f96-borda-vale.webp",
           "legenda": "A moldura em volta da partida fechou o visual novo: torre de vigia de madeira, tochas, cavalo-de-frisa e balista na beira da ilha, árvores com folhas que balançam, e a poça do canto com cantaria e uma cascata que cai no riacho do vale, agora com pedras e juncos na margem. A esquerda mostra como era.",
           "tipo": "entregue"
+        },
+        {
+          "arquivo": "mvp4-ajustes-base-fase1.webp",
+          "legenda": "As placas de vida ficaram mais claras: um selo com o nível do herói (ou o tipo do monstro) ao lado de uma barra dividida a cada 100 de vida, com um rastro claro do dano que acabou de entrar e o escudo em branco. Os textos em cima das cabeças saíram, e os painéis do canto agora mostram só o essencial. Ao subir de nível, basta clicar na habilidade para aprender.",
+          "tipo": "entregue",
+          "vitrine": "Na base, o selo de nível ao lado da barra de vida dividida, com o rastro do dano, e os painéis do canto enxutos."
+        },
+        {
+          "arquivo": "mvp4-ajustes-carrasco-fase2.webp",
+          "legenda": "A HUD da fase 2 só com números e avatares: o placar com o rosto de cada herói, a meta de kills, a zona (raio, dano e tempo para fechar) e o respawn. O Carrasco, o décimo primeiro herói, mostra a Dor no painel de habilidades.",
+          "tipo": "entregue",
+          "vitrine": "Fase 2: placar com o avatar de cada herói, painéis de zona e respawn resumidos e a Dor do Carrasco."
         }
       ]
     }

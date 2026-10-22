@@ -1,5 +1,6 @@
-.arena-showcase { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.25rem; margin-bottom: 3rem; align-items: start; }
-.arena-frame { margin: 0; padding: 0.6rem; display: grid; gap: 0.6rem; }
+/* Duas colunas iguais: as imagens sao 16:9 e os quadros esticam para a mesma altura (simetria). */
+.arena-showcase { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 3rem; align-items: stretch; }
+.arena-frame { margin: 0; padding: 0.6rem; display: grid; grid-template-rows: auto 1fr; gap: 0.6rem; }
 .arena-frame img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-sm); }
 .arena-frame figcaption { color: var(--text-muted); font-size: 0.88rem; padding: 0 0.4rem 0.4rem; }
 .arena-daynight { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-sm); overflow: hidden; }
