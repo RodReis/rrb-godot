@@ -30,7 +30,7 @@ updated: 2026-10-22
 
 ### [MVP4] Playtest (#246)
 
-- [MVP4][SPEC-030][F30] Balanceamento pós-playtest dos 10 heróis (só .tres) (#254)
+- [MVP4][SPEC-030][F30] Balanceamento pós-playtest dos 11 heróis (só .tres) (#254)
 - [MVP4][SPEC-029][F29] Telemetria: ping, duração, líder F1 × vencedor e KPIs no histórico (#253)
 
 ## Em Andamento
