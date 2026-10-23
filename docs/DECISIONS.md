@@ -59,6 +59,7 @@ Fonte: `docs/prd/PRD.md` §2. Resumo para referência rápida; o texto normativo
 | [0031](adr/0031-escala-da-interface-do-jogo.md) | Escala da interface do jogo: `[ui] hud_scale` 0,70–1,00, padrão 0,85, aplicada em `root.content_scale_factor`; Launcher e ⚙ da partida gravam; emenda o §5.3 do contrato `settings.cfg` | aceito | 2026-10-21 |
 | [0032](adr/0032-carrasco-heroi-11.md) | Carrasco, 11º herói (Tanque): Couraça (−15 % de básico de herói), Dor, Espinhos, Penitência, Correntes do Julgamento com execução < 25 %; modelo realista do Tripo pago + Mixamo, nada do KayKit; supera a SPEC-093 (F93 cancelada) | aceito | 2026-10-21 |
 | [0028](adr/0028-skin-no-contrato-da-partida.md) | Skin na partida: o backend devolve heróis liberados e skin equipada na validação do token; game server replica; nada de skin por argumento do Launcher | aceito | 2026-10-19 |
+| [0033](adr/0033-web-admin-e-telemetria.md) | Web-admin (`admin/`, React + Vite, servido pelo backend) e telemetria de partida: papel `admin` por seed, ping/duração/nível F1 do servidor, teleporte medido no cliente; emenda o ADR-0002 | aceito | 2026-10-23 |
 
 ## Decisões de processo fixadas em documento (não precisam de ADR)
 
