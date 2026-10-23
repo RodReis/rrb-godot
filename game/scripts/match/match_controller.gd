@@ -25,9 +25,6 @@ signal kill_scored(peer: int, total: int, tick: int)
 signal match_ended(winner: int, reason: StringName, stats: MatchStats, tick: int)
 
 const NO_WINNER: int = VictoryRules.NO_WINNER
-## Maior total de teleportes aceito de um cliente (F29, SPEC-029 §3.1).
-const MAX_TELEPORTS: int = 10000
-const TELEPORT_WAIT_STEP: float = 0.1
 const REASON_ABANDONED: StringName = VictoryRules.ABANDONED
 ## Times na ordem dos slots: P1, P2.
 const SLOT_TEAMS: Array[int] = [GateRules.TEAM_A, GateRules.TEAM_B]
@@ -61,6 +58,13 @@ var start_seconds: float = 0.0
 var match_seed: int = 0
 ## Servidor: media de RTT por peer (F29); null = sem medicao. Definida pelo main.
 var ping: PingAverage
+## Servidor: totais de teleportes que os clientes mandam no fim (F29).
+var teleports: TeleportCollector = TeleportCollector.new()
+## Servidor: as estatisticas completas da partida, com a telemetria que nao viaja na rede (F29).
+## O match_ended entrega aos clientes (e ao proprio servidor) uma copia sem ela.
+var server_stats: MatchStats:
+	get:
+		return _stats
 ## Servidor: --daynight (LaunchArgs); vazio sorteia o sentido da luz pela seed (F49).
 var forced_daynight: String = LaunchArgs.DAYNIGHT_AUTO
 ## Sentido da luz (F49): verdadeiro = comeca de dia e termina de noite. O servidor sorteia ao abrir
@@ -81,10 +85,10 @@ var _stats: MatchStats = MatchStats.new()
 var _dead: Dictionary = {}  # peer -> morto no ultimo tick visto
 var _levels: Dictionary = {}  # peer -> maior nivel ja avisado
 var _refusals_logged: Dictionary = {}  # peer -> true: log de lock-in recusado uma vez por peer
-var _teleports_reported: Dictionary = {}  # peer -> true: o total de teleportes ja chegou (F29)
 
 
 func _ready() -> void:
+	teleports.is_pending = _teleports_pending
 	NetworkTime.on_tick.connect(_on_network_tick)
 	if clock != null:
 		clock.phase1_ended.connect(_on_clock_phase1_ended)
@@ -308,48 +312,30 @@ func submit_teleport_count(count: int) -> void:
 	var peer := multiplayer.get_remote_sender_id()
 	if peer == 0:
 		peer = multiplayer.get_unique_id()
-	if not record_teleports(peer, count):
+	if not _record_teleports(peer, count):
 		print("[match] total de teleportes recusado: peer %d, valor %d" % [peer, count])
 
 
-## Servidor: guarda o total de teleportes de [param peer]. False se o peer nao tem vaga, ja
-## enviou ou o valor esta fora da faixa.
-func record_teleports(peer: int, count: int) -> bool:
-	if _seat(peer) == null or _teleports_reported.has(peer):
+## Servidor: [param peer] e um cliente conectado (o bot e o jogador do host nao recebem RPC).
+## Guarda o total de teleportes de [param peer]. False se o peer nao tem vaga, ja enviou ou o valor
+## esta fora da faixa.
+func _record_teleports(peer: int, count: int) -> bool:
+	if _seat(peer) == null or not teleports.accept(peer, count):
 		return false
-	if count < 0 or count > MAX_TELEPORTS:
-		return false
-	_teleports_reported[peer] = true
 	_counted(peer).teleports = count
 	return true
 
 
-## Servidor: ainda falta o total de teleportes de algum cliente conectado.
-func teleports_pending() -> bool:
+## Ainda falta o total de teleportes de algum cliente conectado (bot e desconectado nao mandam).
+func _teleports_pending() -> bool:
 	for seat: Seat in _seats:
 		if seat.is_bot or not seat.connected or not _connected(seat.peer):
 			continue
-		if not _teleports_reported.has(seat.peer):
+		if not teleports.has_reported(seat.peer):
 			return true
 	return false
 
 
-## Servidor, depois do match_ended: espera os clientes mandarem o total, no maximo
-## [param timeout] segundos. Quem nao mandou fica sem valor no resultado.
-func await_teleport_reports(timeout: float) -> void:
-	var waited := 0.0
-	while waited < timeout and teleports_pending():
-		await get_tree().create_timer(TELEPORT_WAIT_STEP).timeout
-		waited += TELEPORT_WAIT_STEP
-
-
-## Servidor: as estatisticas completas da partida, com a telemetria que nao viaja na rede (F29).
-## O match_ended entrega aos clientes (e ao proprio servidor) uma copia sem ela.
-func server_stats() -> MatchStats:
-	return _stats
-
-
-## Servidor: [param peer] e um cliente conectado (o bot e o jogador do host nao recebem RPC).
 func _connected(peer: int) -> bool:
 	return multiplayer.get_peers().has(peer)
 

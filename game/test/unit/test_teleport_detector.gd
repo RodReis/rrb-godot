@@ -88,3 +88,42 @@ func test_o_limite_vem_da_regra_nao_de_um_numero_fixo() -> void:
 	var loose := TeleportDetector.new(rules)
 	loose.observe(HERO, Vector3.ZERO, FRAME, 0.0, false)
 	assert_false(loose.observe(HERO, Vector3(3.0, 0.0, 0.0), FRAME, 0.0, false))
+
+
+func test_maior_salto_guarda_o_maior_excesso_visto() -> void:
+	_detector.observe(HERO, Vector3.ZERO, FRAME, 0.0, false)
+	_detector.observe(HERO, Vector3(0.4, 0.0, 0.0), FRAME, 0.0, false)
+	_detector.observe(HERO, Vector3(3.4, 0.0, 0.0), FRAME, 0.0, false)
+	_detector.observe(HERO, Vector3(3.5, 0.0, 0.0), FRAME, 0.0, false)
+	assert_almost_eq(_detector.max_excess(), 3.0, 0.001)
+
+
+func test_quadro_isento_nao_entra_no_maior_salto() -> void:
+	_detector.observe(HERO, Vector3.ZERO, FRAME, 0.0, false)
+	_detector.observe(HERO, Vector3(40.0, 0.0, 0.0), FRAME, 0.0, true)
+	assert_almost_eq(_detector.max_excess(), 0.0, 0.001)
+
+
+func test_heroi_vivo_visivel_andando_nao_e_isento() -> void:
+	assert_false(TeleportDetector.is_exempt(true, true, true, true, false, false))
+
+
+func test_avanco_ou_empurrao_de_habilidade_isenta() -> void:
+	assert_true(TeleportDetector.is_exempt(true, true, true, true, true, false))
+
+
+func test_respawn_isenta_no_quadro_em_que_volta_e_no_que_estava_morto() -> void:
+	assert_true(TeleportDetector.is_exempt(true, false, true, true, false, false), "voltou agora")
+	assert_true(TeleportDetector.is_exempt(false, false, true, true, false, false), "morto")
+	assert_true(
+		TeleportDetector.is_exempt(false, true, true, true, false, false), "acabou de morrer"
+	)
+
+
+func test_heroi_escondido_isenta_ate_reaparecer() -> void:
+	assert_true(TeleportDetector.is_exempt(true, true, false, true, false, false), "sumiu")
+	assert_true(TeleportDetector.is_exempt(true, true, true, false, false, false), "reapareceu")
+
+
+func test_cinematica_isenta_todos() -> void:
+	assert_true(TeleportDetector.is_exempt(true, true, true, true, false, true))

@@ -9,3 +9,8 @@ enum State { LOBBY_WAIT, HERO_PICK, INTRO, PHASE1, TRANSITION, PHASE2, SUDDEN_DE
 ## A TRANSITION ja conta como fase 2: o relogio da fase 2 comeca aos 5:00 (PI 2026-10-10).
 static func is_phase2(state: State) -> bool:
 	return state >= State.TRANSITION and state < State.ENDED
+
+
+## Da fase 1 a morte subita: a partida corre (herois em campo, relogio andando).
+static func is_running(state: State) -> bool:
+	return state >= State.PHASE1 and state < State.ENDED

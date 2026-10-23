@@ -48,6 +48,8 @@ const BOT_ID_TEAM_A: int = 3
 ## Servidor dedicado: espera antes de sair no fim, para os RPCs confiaveis do fim (estado ENDED,
 ## ultima morte, match_ended com o placar) chegarem mesmo com perda; sair na hora descarta a fila.
 const EXIT_DELAY_SECONDS: float = 2.0
+## Servidor: espera, depois do match_ended, o total de teleportes dos clientes (F29).
+const TELEPORT_WAIT_SECONDS: float = 3.0
 ## Codigo de saida do cliente que perdeu o servidor no meio da partida: erro interno, o Launcher
 ## mostra o erro generico (ARCHITECTURE-LAUNCHER §5.2).
 const EXIT_CONNECTION_LOST: int = 4
@@ -99,6 +101,8 @@ var _connection_lost: ConnectionLostScreen
 var _exit_menu: ExitMenu
 ## Cliente online que confirmou "Sair do jogo": o proximo match_ended encerra o processo.
 var _leaving: bool = false
+## Cliente online (F29): conta os teleportes e manda o total ao servidor no fim; null no resto.
+var _teleports: TeleportMonitor
 ## Servidor: herois de jogadores que cairam (log periodico).
 var _disconnected: Array[Hero] = []
 var _disconnected_log: Timer
@@ -215,6 +219,10 @@ func _ready() -> void:
 		_dedicated = true
 		if not _start_session(args["no_backend"]):
 			return
+		var pings := PingSampler.new()
+		pings.name = "PingSampler"
+		add_child(pings)
+		pings.bind(match_controller)
 		start_server(args["port"])
 	elif args["host"] != "":
 		start_client(args["host"], args["port"])
@@ -401,6 +409,11 @@ func start_client(host: String, port: int) -> void:
 	await NetworkTime.after_sync
 	_report_loading(WAIT_SYNCED, LoadingProgress.Stage.WAIT)
 	print("[client] NetworkTime sincronizado, tick %d" % NetworkTime.tick)
+	_teleports = TeleportMonitor.new()
+	_teleports.name = "TeleportMonitor"
+	_teleports.players = players
+	_teleports.match_controller = match_controller
+	add_child(_teleports)
 
 
 ## settings.cfg do Launcher (ARCHITECTURE-LAUNCHER §5.3, F24): controles, audio, video, escala
@@ -651,11 +664,16 @@ func _on_match_ended(winner: int, reason: StringName, stats: MatchStats, tick: i
 		_write_offline_result(outcome)
 	if _tutorial != null:
 		_tutorial.report_match_ended(winner)
+	if _teleports != null:
+		match_controller.submit_teleport_count.rpc_id(1, _teleports.total())
 	if _dedicated:
 		# Uma linha em JSON para o tools/soak.ps1 (F19) ler sem depender da prosa acima.
 		var summary := {"winner": winner, "reason": reason, "tick": tick, "stats": stats.to_dict()}
 		print("[soak] ", JSON.stringify(summary))
-		var code := await _server.report(winner, reason, stats, match_controller.match_seed)
+		await match_controller.teleports.wait(get_tree(), TELEPORT_WAIT_SECONDS)
+		var code := await _server.report(
+			winner, reason, match_controller.server_stats, match_controller.match_seed
+		)
 		await get_tree().create_timer(EXIT_DELAY_SECONDS).timeout
 		get_tree().quit(code)
 

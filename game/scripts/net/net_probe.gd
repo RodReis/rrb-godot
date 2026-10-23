@@ -14,6 +14,9 @@ extends Node
 ##   nao manda o estado dele) e os baus sao o ultimo estado visto (subconjunto do servidor).
 ## - "[probe] neblina": ciclos escondido -> visivel de herois e monstros no cliente e, deles,
 ##   quantos receberam estado de um tick em que o servidor dizia "escondido" (deve ser 0).
+## - "[probe] salto" (F29): maior salto visual dos herois, alem do que a velocidade explica, e o
+##   total de teleportes contados pelo TeleportMonitor (so cliente online). Calibra o limite de
+##   shared/data/rules/teleport_rules.tres (SPEC-029 §3.2): com a rede limpa (cenario A) deve ser 0.
 ## - "[probe] vfx" (F41): servidor = bordas do estado autoritativo por "peer:chave" (basico, R,
 ##   inicio e fim do avanco) e impactos anunciados; cliente = os mesmos eventos mostrados pelo
 ##   HeroVfx e impactos recebidos/repetidos. VFX duplicada = cliente acima do servidor ou
@@ -136,6 +139,14 @@ func _report_window() -> void:
 			% [Concealment.hidden_cycles, Concealment.state_leaks]
 		)
 	)
+	var monitor := get_node_or_null("../TeleportMonitor") as TeleportMonitor
+	if monitor != null:
+		print(
+			(
+				"[probe] salto maximo %.2f u, teleportes %d"
+				% [monitor.detector.max_excess(), monitor.total()]
+			)
+		)
 	_total_moving += _window_moving
 	_total_stopped += _window_stopped
 	print(

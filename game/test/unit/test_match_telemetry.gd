@@ -1,7 +1,7 @@
 extends GutTest
 ## Telemetria do servidor no MatchController (F29, SPEC-029 §3.1): nivel congelado na saida da fase
 ## 1, conjunto ativo, media de ping e total de teleportes vindo do cliente. A copia que vai pela
-## rede (MatchStats.from_dict) nao leva nada disso: o main usa server_stats().
+## rede (MatchStats.from_dict) nao leva nada disso: o main usa server_stats.
 
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const RULES: String = "res://shared/data/rules/match_pacing.tres"
@@ -69,7 +69,7 @@ func _level_of(hero: Hero, xp: int) -> int:
 ## P2 sai pelo menu na fase 1: a partida acaba e o servidor fecha as estatisticas.
 func _finish_match(tick: int) -> MatchStats:
 	assert_true(_match.leave_by_menu(P2, tick))
-	return _match.server_stats()
+	return _match.server_stats
 
 
 func test_nivel_e_congelado_na_saida_da_fase_1() -> void:
@@ -86,14 +86,14 @@ func test_nivel_e_congelado_na_saida_da_fase_1() -> void:
 
 func test_antes_do_fim_da_fase_1_nao_ha_nivel() -> void:
 	_run(START, _at(299))
-	assert_eq(_match.server_stats().player(P1).level_at_phase1_end, MatchStats.NO_VALUE)
+	assert_eq(_match.server_stats.player(P1).level_at_phase1_end, MatchStats.NO_VALUE)
 
 
 func test_quem_nao_tem_heroi_na_saida_da_fase_1_fica_sem_nivel() -> void:
 	_b.remove_from_group(Hero.GROUP)
 	_run(START, _at(300))
-	assert_eq(_match.server_stats().player(P2).level_at_phase1_end, MatchStats.NO_VALUE)
-	assert_ne(_match.server_stats().player(P1).level_at_phase1_end, MatchStats.NO_VALUE)
+	assert_eq(_match.server_stats.player(P2).level_at_phase1_end, MatchStats.NO_VALUE)
+	assert_ne(_match.server_stats.player(P1).level_at_phase1_end, MatchStats.NO_VALUE)
 
 
 func test_media_de_ping_vai_para_as_estatisticas() -> void:
@@ -136,54 +136,54 @@ func test_conjunto_incompleto_nao_e_ativo() -> void:
 
 
 func test_total_de_teleportes_do_proprio_peer_e_guardado() -> void:
-	assert_true(_match.record_teleports(P1, 7))
-	assert_eq(_match.server_stats().player(P1).teleports, 7)
-	assert_eq(_match.server_stats().player(P2).teleports, MatchStats.NO_VALUE)
+	assert_true(_match._record_teleports(P1, 7))
+	assert_eq(_match.server_stats.player(P1).teleports, 7)
+	assert_eq(_match.server_stats.player(P2).teleports, MatchStats.NO_VALUE)
 
 
 func test_zero_teleportes_e_valor_valido() -> void:
-	assert_true(_match.record_teleports(P1, 0))
-	assert_eq(_match.server_stats().player(P1).teleports, 0)
+	assert_true(_match._record_teleports(P1, 0))
+	assert_eq(_match.server_stats.player(P1).teleports, 0)
 
 
 func test_segundo_envio_do_mesmo_peer_e_recusado() -> void:
-	assert_true(_match.record_teleports(P1, 3))
-	assert_false(_match.record_teleports(P1, 9))
-	assert_eq(_match.server_stats().player(P1).teleports, 3)
+	assert_true(_match._record_teleports(P1, 3))
+	assert_false(_match._record_teleports(P1, 9))
+	assert_eq(_match.server_stats.player(P1).teleports, 3)
 
 
 func test_valor_fora_da_faixa_e_recusado() -> void:
-	assert_false(_match.record_teleports(P1, -1))
-	assert_false(_match.record_teleports(P1, MatchController.MAX_TELEPORTS + 1))
-	assert_eq(_match.server_stats().player(P1).teleports, MatchStats.NO_VALUE)
-	assert_true(_match.record_teleports(P1, MatchController.MAX_TELEPORTS), "o teto vale")
+	assert_false(_match._record_teleports(P1, -1))
+	assert_false(_match._record_teleports(P1, TeleportCollector.MAX_TELEPORTS + 1))
+	assert_eq(_match.server_stats.player(P1).teleports, MatchStats.NO_VALUE)
+	assert_true(_match._record_teleports(P1, TeleportCollector.MAX_TELEPORTS), "o teto vale")
 
 
 func test_recusa_nao_gasta_o_unico_envio() -> void:
-	assert_false(_match.record_teleports(P1, -5))
-	assert_true(_match.record_teleports(P1, 4))
+	assert_false(_match._record_teleports(P1, -5))
+	assert_true(_match._record_teleports(P1, 4))
 
 
 func test_peer_sem_vaga_e_recusado() -> void:
-	assert_false(_match.record_teleports(STRANGER, 2))
-	assert_false(_match.server_stats().has(STRANGER))
+	assert_false(_match._record_teleports(STRANGER, 2))
+	assert_false(_match.server_stats.has(STRANGER))
 
 
 func test_rpc_usa_o_peer_do_transporte_e_nao_um_argumento() -> void:
 	# Sem rede, quem chama e o proprio peer local (1), que nao tem vaga: nada e gravado.
 	_match.submit_teleport_count(5)
-	assert_eq(_match.server_stats().player(P1).teleports, MatchStats.NO_VALUE)
-	assert_eq(_match.server_stats().player(P2).teleports, MatchStats.NO_VALUE)
+	assert_eq(_match.server_stats.player(P1).teleports, MatchStats.NO_VALUE)
+	assert_eq(_match.server_stats.player(P2).teleports, MatchStats.NO_VALUE)
 
 
 func test_sem_cliente_conectado_nao_ha_o_que_esperar() -> void:
-	assert_false(_match.teleports_pending())
+	assert_false(_match._teleports_pending())
 
 
 func test_estatisticas_pela_rede_nao_levam_a_telemetria() -> void:
 	_a.xp = EARLY_XP
 	_run(START, _at(300))
-	_match.record_teleports(P1, 4)
-	var copy := MatchStats.from_dict(_match.server_stats().to_dict())
+	_match._record_teleports(P1, 4)
+	var copy := MatchStats.from_dict(_match.server_stats.to_dict())
 	assert_eq(copy.player(P1).teleports, MatchStats.NO_VALUE)
 	assert_eq(copy.player(P1).level_at_phase1_end, MatchStats.NO_VALUE)
