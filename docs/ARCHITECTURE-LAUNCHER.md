@@ -112,12 +112,15 @@ backend/
     matchmaking/   POST /queue, DELETE /queue/:ticket, GET /queue/:ticket — fila FIFO 1x1 em memória + Postgres como fallback
     orchestrator/  pool de N containers pré-aquecidos; aloca ip:porta; gera token de partida; heartbeat
     matches/       POST /internal/matches/:id/validate (servidor), POST /internal/matches/:id/result (servidor), GET /matches (jogador)
-    telemetry/     ping médio, duração, líder de nível F1 × vencedor (MVP4)
+    telemetry/     web-admin (F29, ADR-0033): `AdminGuard` (JWT + `users.role = admin` lido do banco), `GET /admin/kpis`, `/admin/matches`, `/admin/matches.csv`; KPIs de ping, duração, líder de nível F1 × vencedor e teleportes
+    (seed)         `ADMIN_EMAILS` promove contas existentes a `admin` na subida (nunca rebaixa); o build de `admin/` é servido em `/admin-ui`
     common/        guards (JwtGuard, InternalGuard por segredo compartilhado), filtros, zod pipe
   drizzle/         schema.ts, migrations/
   test/            unit (services com repositórios falsos) + e2e (supertest, Postgres em container)
   openapi.json     gerado no build; o Launcher gera `models/` a partir dele (script em tools/)
 ```
+
+**Web-admin (`admin/`, F29, ADR-0033):** React 19 + Vite + TypeScript, sem código em comum com Game, Launcher ou `site/`. Fala só com a API (`/auth/login` e `/admin/*`), gera os tipos de `backend/openapi.json` (`pnpm -C admin gen:api`) e é servido pelo backend em `/admin-ui`, sem CORS aberto. A imagem do backend é construída a partir da raiz do repo para incluir o build dele. Só `admin` entra; as respostas nunca trazem e-mail, hash, token nem id de conta.
 
 ### 4.2 Fluxo de partida
 
@@ -134,7 +137,7 @@ Heartbeat: game server `POST /internal/matches/:id/heartbeat` a cada 10 s; 3 fal
 
 ### 4.3 Dados (Postgres)
 
-`users(id, email unique, password_hash, nickname unique case-insensitive nullable até o 1º login (F35), created_at)` · `matches(id, status, server_host, server_port, token_hash, created_at, started_at, ended_at, winner_user_id, end_reason, duration_s, seed)` · `match_players(match_id, user_id, hero_id, kills, deaths, final_level, damage_dealt, damage_taken, monsters_killed, chests_opened, boss_kill bool, set_active, level_at_phase1_end, avg_ping_ms)` · `queue_tickets(id, user_id, created_at, status, match_id)`.
+`users(id, email unique, password_hash, nickname unique case-insensitive nullable até o 1º login (F35), role player ou admin, created_at)` · `matches(id, status, server_host, server_port, token_hash, created_at, started_at, ended_at, winner_user_id, end_reason, duration_s, seed)` · `match_players(match_id, user_id, hero_id, kills, deaths, final_level, damage_dealt, damage_taken, monsters_killed, chests_opened, boss_kill bool, set_active, level_at_phase1_end, avg_ping_ms, teleport_count)` — o servidor autoritativo preenche `set_active`, `level_at_phase1_end` e `avg_ping_ms`; `teleport_count` vem do cliente e é **dado não confiável** (F29) · `queue_tickets(id, user_id, created_at, status, match_id)`.
 
 Inventário, moedas, gemas, skins: **não existem** na fatia (PRD §7). Quando existirem, ficam aqui, nunca no cliente.
 

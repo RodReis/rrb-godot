@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 import {
   boolean,
+  check,
   doublePrecision,
   index,
   integer,
@@ -21,6 +22,10 @@ import {
 export const QUEUE_UNLOCK_REASONS = ['tutorial', 'bot_win', 'history'] as const;
 export type QueueUnlockReason = (typeof QUEUE_UNLOCK_REASONS)[number];
 
+/** Papel da conta (SPEC-029, ADR-0033): `admin` só por seed na subida do backend (`ADMIN_EMAILS`). */
+export const USER_ROLES = ['player', 'admin'] as const;
+export type UserRole = (typeof USER_ROLES)[number];
+
 /**
  * ARCHITECTURE-LAUNCHER.md §4.3. `nickname` é nulo até o 1º login definir (F35); único sem
  * diferenciar maiúsculas (índice em `lower(nickname)`), e a grafia escolhida é a exibida.
@@ -33,9 +38,13 @@ export const users = pgTable(
     passwordHash: text('password_hash').notNull(),
     nickname: text('nickname'),
     queueUnlockReason: text('queue_unlock_reason').$type<QueueUnlockReason>(),
+    role: text('role').$type<UserRole>().notNull().default('player'),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
-  (table) => [uniqueIndex('users_nickname_lower_idx').on(sql`lower(${table.nickname})`)],
+  (table) => [
+    uniqueIndex('users_nickname_lower_idx').on(sql`lower(${table.nickname})`),
+    check('users_role_check', sql`${table.role} in ('player', 'admin')`),
+  ],
 );
 
 export type User = typeof users.$inferSelect;
@@ -93,6 +102,8 @@ export const matchPlayers = pgTable(
     setActive: text('set_active'),
     levelAtPhase1End: integer('level_at_phase1_end'),
     avgPingMs: integer('avg_ping_ms'),
+    /** Contagem do cliente (dado não confiável, SPEC-029); nulo = o cliente não enviou. */
+    teleportCount: integer('teleport_count'),
   },
   (table) => [primaryKey({ columns: [table.matchId, table.userId] }), index('match_players_user_idx').on(table.userId)],
 );

@@ -25,6 +25,11 @@ import { DockerRuntime } from './orchestrator/docker-runtime';
 import { MatchTokenService } from './orchestrator/match-token.service';
 import { OrchestratorService } from './orchestrator/orchestrator.service';
 import { SweeperService } from './sweeper.service';
+import { AdminGuard } from './telemetry/admin.guard';
+import { AdminSeedService } from './telemetry/admin-seed.service';
+import { TelemetryController } from './telemetry/telemetry.controller';
+import { DrizzleTelemetryRepository, TelemetryRepository } from './telemetry/telemetry.repository';
+import { TelemetryService } from './telemetry/telemetry.service';
 import { UsersController } from './users/users.controller';
 import { DrizzleUsersRepository, UsersRepository } from './users/users.repository';
 import { UsersService } from './users/users.service';
@@ -62,6 +67,7 @@ export class AppModule {
         QueueController,
         MatchesController,
         InternalMatchesController,
+        TelemetryController,
       ],
       providers: [
         { provide: APP_CONFIG, useValue: config },
@@ -71,6 +77,7 @@ export class AppModule {
         { provide: UsersRepository, useClass: DrizzleUsersRepository },
         { provide: MatchesRepository, useClass: DrizzleMatchesRepository },
         { provide: QueueRepository, useClass: DrizzleQueueRepository },
+        { provide: TelemetryRepository, useClass: DrizzleTelemetryRepository },
         { provide: APP_PIPE, useClass: ZodValidationPipe },
         { provide: APP_FILTER, useClass: HttpErrorFilter },
         AuthService,
@@ -80,7 +87,10 @@ export class AppModule {
         MatchesService,
         QueueService,
         SweeperService,
+        TelemetryService,
+        AdminSeedService,
         JwtGuard,
+        AdminGuard,
         InternalGuard,
         ClientVersionGuard,
       ],

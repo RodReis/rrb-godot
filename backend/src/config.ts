@@ -44,6 +44,18 @@ const EnvSchema = z
     .optional()
     .transform((value) => (value ? value : undefined))
     .refine((value) => value === undefined || /^v?\d+\.\d+\.\d+$/.test(value), 'MIN_CLIENT_VERSION fora de vX.Y.Z'),
+  /** E-mails promovidos a `admin` na subida (SPEC-029): lista por vírgula, sem diferenciar caixa. Só promove, nunca rebaixa. */
+  ADMIN_EMAILS: z
+    .string()
+    .optional()
+    .transform((value) =>
+      (value ?? '')
+        .split(',')
+        .map((email) => email.trim().toLowerCase())
+        .filter((email) => email !== ''),
+    ),
+  /** Pasta do build do web-admin servido em `/admin-ui` (relativa ao cwd). */
+  ADMIN_UI_DIR: z.string().min(1).default('admin-ui'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent']).default('info'),
   })
   .refine((env) => env.INTERNAL_SECRET !== env.JWT_SECRET, {

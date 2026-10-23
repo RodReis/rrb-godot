@@ -24,6 +24,7 @@ jobs:
       infra: ${{ steps.filter.outputs.infra }}
       docs: ${{ steps.filter.outputs.docs }}
       site: ${{ steps.filter.outputs.site }}
+      admin: ${{ steps.filter.outputs.admin }}
       gd_files: ${{ steps.filter.outputs.gd_files }}
     steps:
       - uses: actions/checkout@v4
@@ -40,6 +41,7 @@ jobs:
             infra: ['infra/**', '.github/**', 'tools/ci/**']
             docs: ['docs/**', '*.md']
             site: ['site/**', 'tools/roadmap/**', 'shared/data/heroes/**', 'docs/roadmap/historia.json', 'docs/STATUS.md']
+            admin: ['admin/**', 'backend/openapi.json']
             gd:
               - added|modified: '**/*.gd'
 
@@ -225,9 +227,32 @@ jobs:
         run: node --test ../tools/roadmap/build-roadmap.test.mjs
       - run: pnpm build
 
+  admin:
+    needs: changes
+    if: needs.changes.outputs.admin == 'true' || needs.changes.outputs.infra == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    defaults:
+      run:
+        working-directory: admin
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: admin/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: admin/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      # vitest (componentes) + models.ts em dia com backend/openapi.json
+      - run: pnpm test
+      - run: pnpm build
+
   gate:
     runs-on: ubuntu-latest
-    needs: [changes, lint-gd, test-game, test-launcher, test-backend, site]
+    needs: [changes, lint-gd, test-game, test-launcher, test-backend, site, admin]
     if: always()
     steps:
       # Job pulado por path filter conta como sucesso; changes pulado ou falho, não.

@@ -1,0 +1,13 @@
+# Contexto do build do backend (BuildKit usa este arquivo no lugar do .dockerignore da raiz): so o
+# backend e o web-admin, que a imagem serve em /admin-ui.
+*
+!backend
+!admin
+backend/node_modules
+backend/dist
+backend/coverage
+backend/.env
+backend/.env.*
+!backend/.env.example
+admin/node_modules
+admin/dist

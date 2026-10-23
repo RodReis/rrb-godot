@@ -84,6 +84,7 @@ describe('QueueService', () => {
         passwordHash: 'x',
         nickname: null,
         queueUnlockReason: id === LOCKED ? null : 'tutorial',
+        role: 'player',
         createdAt: new Date(),
       });
     }

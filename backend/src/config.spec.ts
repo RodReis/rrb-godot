@@ -28,3 +28,19 @@ describe('loadConfig', () => {
     expect(loadConfig({ ...base, GAMESERVER_NETWORK: '' }).GAMESERVER_NETWORK).toBeUndefined();
   });
 });
+
+describe('loadConfig: admin (SPEC-029)', () => {
+  it('ADMIN_EMAILS vira lista sem distinção de caixa, sem espaços nem itens vazios; ausente = lista vazia', () => {
+    expect(loadConfig(base).ADMIN_EMAILS).toEqual([]);
+    expect(loadConfig({ ...base, ADMIN_EMAILS: '' }).ADMIN_EMAILS).toEqual([]);
+    expect(loadConfig({ ...base, ADMIN_EMAILS: ' Dono@Rrb.dev, ,outro@rrb.dev ,' }).ADMIN_EMAILS).toEqual([
+      'dono@rrb.dev',
+      'outro@rrb.dev',
+    ]);
+  });
+
+  it('ADMIN_UI_DIR é opcional (padrão admin-ui)', () => {
+    expect(loadConfig(base).ADMIN_UI_DIR).toBe('admin-ui');
+    expect(loadConfig({ ...base, ADMIN_UI_DIR: '../admin/dist' }).ADMIN_UI_DIR).toBe('../admin/dist');
+  });
+});
