@@ -15,7 +15,7 @@
 | 5.4 | F90 / SPEC-090 | loja (`backend`, `launcher`, `admin`): catálogo, pedido, Mercado Pago (Pix e cartão), webhook, inventário, estorno remove item, relatório de vendas; tela Loja no Launcher | ADR-0025; `spec/SPEC-090.md` |
 | 5.5 | F91 / SPEC-091 | skin na partida (`backend`, `game`, `launcher`, `shared`): validação do token devolve heróis liberados e skin equipada; game server replica; treino offline com visual padrão | ADR-0028; `spec/SPEC-091.md` |
 | 5.6 | F92 / SPEC-092 | primeiras skins (`shared`, `art`): 1 por herói KayKit (10) + skin exclusiva do Pacote de Fundador no Carrasco | ADR-0025, ADR-0034; `spec/SPEC-092.md` |
-| gate | `[GATE]` | abertura do Early Access no site e no itch.io | ADR-0024 |
+| gate | `[GATE]` | abertura do Early Access no site e no itch.io; a data é marcada pelo PI quando o MVP5 fechar (primeiro passo do gate); o texto público do EA é redigido pelo Cowork, só com o que o jogo já faz, e aprovado pelo PI (decisão de 2026-10-23) | ADR-0024 |
 
 ## Ordem prevista
 
