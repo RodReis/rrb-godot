@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Loja — Loot Start (protótipo)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}}::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-thumb{background:#2d3449;border-radius:3px}::-webkit-scrollbar-track{background:transparent}
+.chamfer{clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.chamfer-sm{clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
+.btn-gold{box-shadow:0 4px 0 #78350F,0 0 14px rgba(245,158,11,.35)}.btn-gold:active{transform:translateY(2px);box-shadow:0 2px 0 #78350F}
+.btn-blue{box-shadow:0 4px 0 #0369A1}.btn-blue:active{transform:translateY(2px);box-shadow:0 2px 0 #0369A1}
+.sheen{background:linear-gradient(115deg,transparent 30%,rgba(255,221,184,.18) 45%,transparent 60%);background-size:250% 100%;animation:sheen 4.5s ease-in-out infinite}
+@keyframes sheen{0%{background-position:150% 0}55%,100%{background-position:-60% 0}}
+.skel{background:linear-gradient(90deg,#171f33 0%,#222a3d 50%,#171f33 100%);background-size:200% 100%;animation:skel 1.4s linear infinite}
+@keyframes skel{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.state{display:none}.state.on{display:flex}
+.qr{background-image:linear-gradient(90deg,#0b1326 50%,transparent 50%),linear-gradient(#0b1326 50%,transparent 50%);background-size:14px 14px,14px 14px}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#ffb3ad", "on-background": "#dae2fd", "on-secondary-fixed": "#001d31", "inverse-on-surface": "#283044", "error-container": "#93000a", "surface": "#0b1326", "surface-tint": "#ffb95f", "tertiary-fixed": "#ffdad7", "surface-container": "#171f33", "tertiary-container": "#ff938c", "secondary-fixed": "#cce5ff", "on-secondary": "#003351", "inverse-primary": "#855300", "on-surface-variant": "#d8c3ad", "on-error": "#690005", "surface-container-high": "#222a3d", "secondary-fixed-dim": "#93ccff", "secondary-container": "#3198dc", "on-primary-fixed-variant": "#653e00", "outline-variant": "#534434", "on-primary-fixed": "#2a1700", "on-tertiary-container": "#8d0012", "primary-fixed": "#ffddb8", "surface-container-low": "#131b2e", "on-primary": "#472a00", "tertiary": "#ffbcb7", "on-tertiary-fixed-variant": "#930013", "secondary": "#93ccff", "error": "#ffb4ab", "primary-fixed-dim": "#ffb95f", "inverse-surface": "#dae2fd", "on-surface": "#dae2fd", "surface-variant": "#2d3449", "on-tertiary-fixed": "#410004", "on-primary-container": "#613b00", "on-secondary-fixed-variant": "#004b73", "on-secondary-container": "#002c47", "outline": "#a08e7a", "surface-bright": "#31394d", "surface-dim": "#0b1326", "surface-container-lowest": "#060e20", "on-tertiary": "#68000a", "surface-container-highest": "#2d3449", "primary": "#ffc174", "background": "#0b1326", "on-error-container": "#ffdad6", "primary-container": "#f59e0b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2rem", "space-sm": "0.5rem", "margin": "1rem", "space-md": "0.75rem", "gutter": "0.75rem", "space-lg": "1.25rem", "space-xs": "0.25rem" }, "fontFamily": { "label-numeric-md": [ "JetBrains Mono" ], "headline-lg": [ "Space Grotesk" ], "headline-sm": [ "Space Grotesk" ], "body-sm": [ "Outfit" ], "headline-md": [ "Space Grotesk" ], "body-lg": [ "Outfit" ], "label-numeric-lg": [ "JetBrains Mono" ], "label-numeric-sm": [ "JetBrains Mono" ], "body-md": [ "Outfit" ], "display-hero": [ "Space Grotesk" ], "hotkey-cap": [ "Space Grotesk" ] }, "fontSize": { "label-numeric-md": [ "14px", { "lineHeight": "18px", "fontWeight": "700" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-sm": [ "18px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ], "headline-md": [ "22px", { "lineHeight": "28px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "22px", "fontWeight": "500" } ], "label-numeric-lg": [ "20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-numeric-sm": [ "11px", { "lineHeight": "14px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "hotkey-cap": [ "11px", { "lineHeight": "12px", "letterSpacing": "0.05em", "fontWeight": "700" } ] } } } }</script>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md select-none">
+
+<!-- ================= CABEÇALHO (igual ao Launcher atual: marca, menu, status, perfil) ================= -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+<div class="h-20 w-full px-gutter flex items-center justify-between max-w-[1600px] mx-auto">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[28px]">swords</span><div class="flex flex-col leading-none"><span class="font-headline-sm text-headline-sm tracking-wider uppercase text-primary">LOOT START</span></div></div>
+<div class="h-8 w-px bg-surface-variant/40"></div>
+<nav class="flex items-center gap-space-xs">
+<a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">LOBBY</a>
+<a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">HERÓIS</a>
+<a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide bg-primary-container text-on-primary-container shadow-[0_0_12px_rgba(245,158,11,0.4)]" href="#">LOJA</a>
+<a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">ARENA &amp; MAPA</a>
+<a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">GUIA &amp; BESTIÁRIO</a>
+<a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">HISTÓRICO</a>
+<a class="px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" href="#">AJUSTES</a>
+</nav>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-low"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">SERVIDOR</span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary">ONLINE</span></div>
+<div class="flex items-center gap-space-sm pl-space-xs">
+<div class="text-right leading-tight"><div class="font-headline-sm text-headline-sm text-on-surface">#Duelista_01</div></div>
+<div class="w-9 h-9 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[20px]">person</span></div>
+</div>
+<button class="w-9 h-9 rounded flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high"><span class="material-symbols-outlined">settings</span></button>
+<button class="w-9 h-9 rounded flex items-center justify-center text-error hover:bg-error-container/40"><span class="material-symbols-outlined">power_settings_new</span></button>
+</div>
+</div>
+</header>
+
+<main class="w-full pt-20 bg-background min-h-screen flex flex-col">
+<!-- ================= SUBCABEÇALHO ================= -->
+<section class="w-full bg-surface-container-lowest px-gutter py-space-sm border-b border-surface-variant/20 shadow-md">
+<div class="max-w-[1600px] mx-auto flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs text-on-surface-variant">
+<span class="font-label-numeric-sm text-label-numeric-sm tracking-wider uppercase">LOBBY</span><span class="font-label-numeric-sm text-label-numeric-sm text-outline">▸</span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-wide uppercase font-bold">LOJA</span>
+<span class="h-4 w-px bg-surface-variant mx-space-xs"></span>
+<div class="flex items-center gap-1.5 px-2 py-0.5 rounded bg-surface-container-high/80 border border-outline-variant/30"><span class="material-symbols-outlined text-[14px] text-primary">verified</span><span class="font-label-numeric-sm text-label-numeric-sm text-primary tracking-tight">SÓ VISUAL · SEM SORTEIO · PREÇO EM REAIS</span></div>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-lg" id="tabs">
+<button data-tab="todos" class="tab px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-primary bg-primary shadow-[0_2px_10px_rgba(255,193,116,0.35)]">TODOS</button>
+<button data-tab="pacote" class="tab px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">PACOTE</button>
+<button data-tab="skins" class="tab px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">SKINS</button>
+<button data-tab="meus" class="tab px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">NO INVENTÁRIO</button>
+</div>
+</div>
+</section>
+
+<!-- ================= CORPO: catálogo ================= -->
+<section class="flex-1 w-full px-gutter py-space-md max-w-[1600px] mx-auto grid grid-cols-12 gap-space-md" id="catalogo">
+
+<!-- ---------- PACOTE DE FUNDADOR (destaque) ---------- -->
+<aside class="col-span-4 flex flex-col bg-surface-container-low rounded-xl shadow-xl overflow-hidden border border-primary-container/40" id="fundador">
+<div class="relative h-[270px] shrink-0 bg-[radial-gradient(ellipse_at_50%_35%,#3a2a12_0%,#171f33_55%,#060e20_100%)] flex items-end justify-center overflow-hidden">
+<div class="absolute inset-0 sheen pointer-events-none"></div>
+<div class="absolute top-space-md left-space-md flex gap-space-xs">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-numeric-sm text-label-numeric-sm">EXCLUSIVO</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-highest/90 text-on-surface-variant font-label-numeric-sm text-label-numeric-sm">1 POR CONTA</span>
+</div>
+<!-- Render do Carrasco com a skin do Fundador (F92) entra aqui -->
+<div class="mb-space-lg flex flex-col items-center gap-space-xs text-primary/80">
+<span class="material-symbols-outlined text-[150px] leading-none" style="font-variation-settings:'FILL' 1">shield_person</span>
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant/70 tracking-widest">RENDER · CARRASCO — SKIN DO FUNDADOR</span>
+</div>
+</div>
+<div class="flex flex-col gap-space-md p-space-lg flex-1 min-h-0">
+<div>
+<div class="font-label-numeric-sm text-label-numeric-sm text-primary tracking-widest">PACOTE</div>
+<h2 class="font-headline-lg text-headline-lg uppercase text-on-surface">Pacote de Fundador</h2>
+</div>
+<ul class="flex flex-col gap-space-xs">
+<li class="flex items-center gap-space-sm bg-surface-container px-space-sm py-space-xs rounded-lg"><span class="material-symbols-outlined text-primary">checkroom</span><span class="font-body-lg text-body-lg">Skin exclusiva do Carrasco</span></li>
+<li class="flex items-center gap-space-sm bg-surface-container px-space-sm py-space-xs rounded-lg"><span class="material-symbols-outlined text-primary">military_tech</span><span class="font-body-lg text-body-lg">Emblema “Fundador”</span></li>
+</ul>
+<!-- Aviso: só aparece se o Carrasco ainda não estiver liberado -->
+<div class="flex gap-space-sm items-start bg-secondary-container/15 border border-secondary-container/50 rounded-lg p-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">lock_clock</span>
+<div class="flex flex-col gap-1">
+<span class="font-body-md text-body-md text-on-surface">O Carrasco libera na <b class="text-secondary">Patente 11</b>. A skin fica guardada no seu inventário até lá.</span>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">PATENTE 6</span>
+<div class="flex-1 h-1.5 rounded-full bg-surface-container-highest overflow-hidden"><div class="h-full w-[50%] bg-secondary"></div></div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary">11</span>
+</div>
+</div>
+</div>
+<div class="mt-auto flex items-end justify-between gap-space-md">
+<div class="flex flex-col"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">PREÇO</span><span class="font-label-numeric-lg text-[32px] leading-[36px] text-primary">R$ 29,90</span></div>
+<button class="btn-gold chamfer flex items-center gap-space-sm px-space-xl py-space-md bg-primary-container text-on-primary-container font-headline-md text-headline-md uppercase" onclick="abrir('confirmar','fundador')"><span class="material-symbols-outlined">shopping_bag</span>Comprar</button>
+</div>
+</div>
+</aside>
+
+<!-- ---------- SKINS AVULSAS ---------- -->
+<div class="col-span-8 flex flex-col bg-surface-container-low rounded-xl shadow-xl p-space-md gap-space-md min-h-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary">checkroom</span><h2 class="font-headline-md text-headline-md uppercase tracking-wide">Skins</h2><span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary font-label-numeric-sm text-label-numeric-sm">10 SKINS · R$ 9,90 CADA</span></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Só muda o visual. O adversário vê a sua skin na partida.</span>
+</div>
+<div class="grid grid-cols-5 gap-space-md overflow-y-auto pr-1" id="grade"></div>
+</div>
+</section>
+
+<!-- ================= ESTADOS ALTERNATIVOS DO CORPO ================= -->
+<section class="state flex-1 w-full px-gutter py-space-md max-w-[1600px] mx-auto gap-space-md" id="carregando">
+<div class="w-1/3 rounded-xl skel"></div>
+<div class="flex-1 grid grid-cols-5 gap-space-md content-start">
+<div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div>
+<div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div><div class="h-[280px] rounded-xl skel"></div>
+</div>
+</section>
+<section class="state flex-1 w-full items-center justify-center" id="erro">
+<div class="flex flex-col items-center gap-space-md bg-surface-container-low rounded-xl p-space-xl max-w-[460px] text-center shadow-xl">
+<span class="material-symbols-outlined text-error text-[48px]">cloud_off</span>
+<h2 class="font-headline-md text-headline-md uppercase">Loja indisponível</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Não foi possível falar com o servidor. Os seus itens continuam no inventário.</p>
+<button class="btn-blue chamfer-sm px-space-lg py-space-sm bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm uppercase">Tentar de novo</button>
+</div>
+</section>
+
+<!-- ================= RODAPÉ ================= -->
+<footer class="w-full bg-surface-container-lowest border-t border-surface-variant/20">
+<div class="max-w-[1600px] mx-auto px-gutter h-10 flex items-center justify-between">
+<div class="flex items-center gap-space-sm text-on-surface-variant"><span class="material-symbols-outlined text-[16px]">lock</span><span class="font-label-numeric-sm text-label-numeric-sm tracking-wider">PAGAMENTO PELO MERCADO PAGO · PIX E CARTÃO</span></div>
+<a class="flex items-center gap-1 font-label-numeric-sm text-label-numeric-sm text-secondary tracking-wider hover:underline" href="#">TERMOS DE COMPRA E REEMBOLSO<span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+</div>
+</footer>
+</main>
+
+<!-- ================= MODAL DE COMPRA (fluxo) ================= -->
+<div class="fixed inset-0 z-50 hidden items-center justify-center bg-surface-container-lowest/80 backdrop-blur-sm" id="modal">
+<div class="w-[620px] bg-surface-container rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] border border-outline-variant/40 overflow-hidden">
+
+<!-- 1. Confirmar e escolher a forma de pagamento -->
+<div class="passo flex-col" id="p-confirmar">
+<div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-variant/40"><h3 class="font-headline-md text-headline-md uppercase">Confirmar compra</h3><button class="text-on-surface-variant" onclick="fechar()"><span class="material-symbols-outlined">close</span></button></div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div class="flex gap-space-md items-center bg-surface-container-low rounded-lg p-space-sm">
+<div class="w-20 h-20 rounded-lg bg-[radial-gradient(circle,#3a2a12,#060e20)] flex items-center justify-center"><span class="material-symbols-outlined text-primary text-[44px] item-icone" style="font-variation-settings:'FILL' 1">shield_person</span></div>
+<div class="flex-1 flex flex-col"><span class="font-label-numeric-sm text-label-numeric-sm text-primary item-tipo">PACOTE</span><span class="font-headline-sm text-headline-sm item-nome">Pacote de Fundador</span><span class="font-body-sm text-body-sm text-on-surface-variant item-desc">Skin exclusiva do Carrasco + emblema “Fundador”</span></div>
+<span class="font-label-numeric-lg text-label-numeric-lg text-primary item-preco">R$ 29,90</span>
+</div>
+<div class="flex gap-space-sm items-start bg-secondary-container/15 border border-secondary-container/50 rounded-lg p-space-sm item-aviso"><span class="material-symbols-outlined text-secondary text-[20px]">lock_clock</span><span class="font-body-md text-body-md item-aviso-txt">O Carrasco libera na Patente 11. A skin fica guardada no seu inventário até lá.</span></div>
+<div class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant tracking-widest">FORMA DE PAGAMENTO</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<label id="m-pix" onclick="escolher('pix')" class="metodo cursor-pointer flex flex-col gap-1 p-space-md rounded-lg border-2 border-primary-container bg-primary-container/10"><span class="flex items-center gap-space-xs font-headline-sm text-headline-sm"><span class="material-symbols-outlined text-primary">qr_code_2</span>PIX</span><span class="font-body-sm text-body-sm text-on-surface-variant">QR na tela. Confirma sozinho quando você pagar.</span></label>
+<label id="m-cartao" onclick="escolher('cartao')" class="metodo cursor-pointer flex flex-col gap-1 p-space-md rounded-lg border-2 border-surface-variant hover:border-outline"><span class="flex items-center gap-space-xs font-headline-sm text-headline-sm"><span class="material-symbols-outlined text-secondary">credit_card</span>CARTÃO</span><span class="font-body-sm text-body-sm text-on-surface-variant">Abre o Mercado Pago no navegador.</span></label>
+</div>
+</div>
+<div class="flex items-center justify-between px-space-lg py-space-md bg-surface-container-low border-t border-surface-variant/40">
+<a class="flex items-center gap-1 font-label-numeric-sm text-label-numeric-sm text-secondary hover:underline" href="#">TERMOS DE COMPRA E REEMBOLSO<span class="material-symbols-outlined text-[14px]">open_in_new</span></a>
+<div class="flex gap-space-sm"><button class="px-space-lg py-space-sm rounded font-headline-sm text-headline-sm text-on-surface-variant hover:bg-surface-container-high" onclick="fechar()">CANCELAR</button><button class="btn-gold chamfer-sm px-space-lg py-space-sm bg-primary-container text-on-primary-container font-headline-sm text-headline-sm" onclick="passo(metodo)">CONTINUAR</button></div>
+</div>
+</div>
+
+<!-- 2a. Pix na tela -->
+<div class="passo flex-col" id="p-pix">
+<div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-variant/40"><h3 class="font-headline-md text-headline-md uppercase flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary">qr_code_2</span>Pague com Pix</h3><button class="text-on-surface-variant" onclick="fechar()"><span class="material-symbols-outlined">close</span></button></div>
+<div class="p-space-lg flex gap-space-lg">
+<div class="w-[220px] h-[220px] bg-[#dae2fd] rounded-lg p-3 shrink-0"><div class="w-full h-full qr rounded"></div></div>
+<div class="flex flex-col gap-space-md flex-1">
+<p class="font-body-md text-body-md text-on-surface-variant">Abra o app do seu banco, escolha Pix e leia o QR, ou use o código copia-e-cola.</p>
+<div class="flex flex-col gap-1"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">COPIA-E-COLA</span><div class="flex gap-space-xs"><div class="flex-1 truncate bg-surface-container-lowest rounded px-space-sm py-2 font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">00020126580014br.gov.bcb.pix0136…</div><button class="btn-blue chamfer-sm px-space-sm bg-secondary-container text-on-secondary-container flex items-center gap-1 font-headline-sm text-headline-sm"><span class="material-symbols-outlined text-[18px]">content_copy</span>COPIAR</button></div></div>
+<div class="flex items-center justify-between bg-surface-container-low rounded-lg p-space-sm"><span class="font-body-md text-body-md item-nome">Pacote de Fundador</span><span class="font-label-numeric-md text-label-numeric-md text-primary item-preco">R$ 29,90</span></div>
+<div class="flex items-center gap-space-sm text-secondary"><span class="material-symbols-outlined animate-spin">progress_activity</span><span class="font-headline-sm text-headline-sm">Aguardando pagamento…</span></div>
+</div>
+</div>
+<div class="flex items-center justify-end gap-space-sm px-space-lg py-space-md bg-surface-container-low border-t border-surface-variant/40"><button class="px-space-lg py-space-sm rounded font-headline-sm text-headline-sm text-on-surface-variant hover:bg-surface-container-high" onclick="fechar()">CANCELAR</button></div>
+</div>
+
+<!-- 2b. Cartão no navegador -->
+<div class="passo flex-col" id="p-cartao">
+<div class="flex items-center justify-between px-space-lg py-space-md border-b border-surface-variant/40"><h3 class="font-headline-md text-headline-md uppercase flex items-center gap-space-xs"><span class="material-symbols-outlined text-secondary">credit_card</span>Continue no navegador</h3><button class="text-on-surface-variant" onclick="fechar()"><span class="material-symbols-outlined">close</span></button></div>
+<div class="p-space-lg flex flex-col items-center text-center gap-space-md">
+<span class="material-symbols-outlined text-secondary text-[56px]">open_in_browser</span>
+<p class="font-body-lg text-body-lg">Abrimos o checkout do Mercado Pago no seu navegador.</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Esta janela atualiza sozinha quando o pagamento for confirmado. Os dados do cartão ficam só no Mercado Pago.</p>
+<div class="flex items-center gap-space-sm text-secondary"><span class="material-symbols-outlined animate-spin">progress_activity</span><span class="font-headline-sm text-headline-sm">Aguardando confirmação…</span></div>
+</div>
+<div class="flex items-center justify-end gap-space-sm px-space-lg py-space-md bg-surface-container-low border-t border-surface-variant/40"><button class="px-space-lg py-space-sm rounded font-headline-sm text-headline-sm text-on-surface-variant hover:bg-surface-container-high" onclick="fechar()">CANCELAR</button><button class="btn-blue chamfer-sm px-space-lg py-space-sm bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm flex items-center gap-1"><span class="material-symbols-outlined text-[18px]">open_in_new</span>ABRIR DE NOVO</button></div>
+</div>
+
+<!-- 3a. Concluída -->
+<div class="passo flex-col" id="p-ok">
+<div class="p-space-xl flex flex-col items-center text-center gap-space-md">
+<span class="material-symbols-outlined text-primary text-[64px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+<h3 class="font-headline-lg text-headline-lg uppercase">Compra confirmada</h3>
+<p class="font-body-lg text-body-lg"><span class="item-nome">Pacote de Fundador</span> está no seu inventário.</p>
+<p class="font-body-md text-body-md text-on-surface-variant item-aviso-ok">A skin do Carrasco fica guardada até a Patente 11. O emblema “Fundador” já pode ser equipado no perfil.</p>
+<div class="flex gap-space-sm"><button class="px-space-lg py-space-sm rounded font-headline-sm text-headline-sm text-on-surface-variant hover:bg-surface-container-high" onclick="fechar()">FECHAR</button><button class="btn-gold chamfer-sm px-space-lg py-space-sm bg-primary-container text-on-primary-container font-headline-sm text-headline-sm">VER NO PERFIL</button></div>
+</div>
+</div>
+
+<!-- 3b. Não aprovado -->
+<div class="passo flex-col" id="p-recusado">
+<div class="p-space-xl flex flex-col items-center text-center gap-space-md">
+<span class="material-symbols-outlined text-error text-[64px]">error</span>
+<h3 class="font-headline-lg text-headline-lg uppercase">Pagamento não aprovado</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">O Mercado Pago não aprovou o pagamento. Nenhum item foi entregue.</p>
+<div class="flex gap-space-sm"><button class="px-space-lg py-space-sm rounded font-headline-sm text-headline-sm text-on-surface-variant hover:bg-surface-container-high" onclick="fechar()">FECHAR</button><button class="btn-gold chamfer-sm px-space-lg py-space-sm bg-primary-container text-on-primary-container font-headline-sm text-headline-sm" onclick="passo('confirmar')">TENTAR DE NOVO</button></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ================= SELETOR DE ESTADO (só do protótipo; não vai para o Launcher) ================= -->
+<div class="fixed bottom-14 right-gutter z-[60] flex items-center gap-1 bg-surface-container-lowest/95 border border-outline-variant/50 rounded-lg p-1 shadow-xl" id="seletor">
+<span class="px-2 font-label-numeric-sm text-label-numeric-sm text-outline">PROTÓTIPO ·</span>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="catalogo">CATÁLOGO</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="carregando">CARREGANDO</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="erro">ERRO/OFFLINE</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="confirmar">CONFIRMAR</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="pix">PIX</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="cartao">CARTÃO</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="ok">CONFIRMADA</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="recusado">NÃO APROVADO</button>
+</div>
+
+<script>
+// Catálogo de exemplo. Nomes das skins e Patente/posse são ilustrativos: no Launcher vêm de shared/data (F92) e do backend (F87, F90).
+const SKINS = [
+  {heroi:"Cavaleiro", skin:"Aço Rubro", icone:"shield", cor:"#7f1d1d", estado:"possui"},
+  {heroi:"Arqueiro", skin:"Folha de Outono", icone:"target", cor:"#9a3412", estado:"livre"},
+  {heroi:"Bárbaro", skin:"Pele de Inverno", icone:"swords", cor:"#1e3a5f", estado:"livre"},
+  {heroi:"Bruxo de Fogo", skin:"Brasa Azul", icone:"local_fire_department", cor:"#1d4ed8", estado:"livre"},
+  {heroi:"Ladina", skin:"Sombra Verde", icone:"visibility_off", cor:"#14532d", estado:"bloqueado"},
+  {heroi:"Engenheiro", skin:"Latão Polido", icone:"construction", cor:"#78350f", estado:"livre"},
+  {heroi:"Protetor da Selva", skin:"Musgo Antigo", icone:"forest", cor:"#365314", estado:"bloqueado"},
+  {heroi:"Berserker", skin:"Gelo do Norte", icone:"ac_unit", cor:"#0c4a6e", estado:"bloqueado"},
+  {heroi:"Paladino Radiante", skin:"Alvorada", icone:"wb_sunny", cor:"#854d0e", estado:"livre"},
+  {heroi:"Ocultista", skin:"Vazio Escarlate", icone:"auto_awesome", cor:"#581c87", estado:"bloqueado"},
+];
+const grade = document.getElementById("grade");
+SKINS.forEach((s,i)=>{
+  const possui = s.estado==="possui", bloq = s.estado==="bloqueado";
+  const el = document.createElement("div");
+  el.className = "flex flex-col rounded-xl overflow-hidden bg-surface-container border "+(possui?"border-secondary/50":"border-surface-variant/50 hover:border-primary-container/70")+" transition-all";
+  el.dataset.meu = possui ? "1" : "0";
+  el.innerHTML = `
+  <div class="relative h-[196px] flex items-center justify-center" style="background:radial-gradient(circle at 50% 40%, ${s.cor} 0%, #131b2e 70%)">
+    <span class="material-symbols-outlined text-[86px] text-on-surface/85" style="font-variation-settings:'FILL' 1">${s.icone}</span>
+    ${possui?'<span class="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-numeric-sm text-label-numeric-sm">NO INVENTÁRIO</span>':''}
+    ${bloq?'<span class="absolute top-2 right-2 w-7 h-7 rounded bg-surface-container-lowest/80 flex items-center justify-center" title="Herói ainda não liberado"><span class="material-symbols-outlined text-[16px] text-on-surface-variant">lock</span></span>':''}
+  </div>
+  <div class="flex flex-col gap-1 p-space-sm flex-1">
+    <span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant uppercase">${s.heroi}</span>
+    <span class="font-headline-sm text-headline-sm leading-tight">${s.skin}</span>
+    ${bloq?'<span class="font-body-sm text-body-sm text-secondary">Herói bloqueado: fica guardada até liberar.</span>':(possui?'<span class="font-body-sm text-body-sm text-on-surface-variant">Equipe na Tela Heróis.</span>':'<span class="font-body-sm text-body-sm text-transparent">.</span>')}
+    <div class="mt-auto pt-space-xs flex items-center justify-between">
+      ${possui
+        ? '<span class="flex items-center gap-1 text-secondary font-label-numeric-sm text-label-numeric-sm whitespace-nowrap py-1"><span class="material-symbols-outlined text-[16px]">check</span>JÁ POSSUI</span>'
+        : `<span class="font-label-numeric-md text-label-numeric-md text-primary">R$ 9,90</span><button class="btn-gold chamfer-sm px-space-sm py-1 bg-primary-container text-on-primary-container font-headline-sm text-[14px] leading-5" onclick="abrir('confirmar',${i})">COMPRAR</button>`}
+    </div>
+  </div>`;
+  grade.appendChild(el);
+});
+
+const modal = document.getElementById("modal");
+function preencher(item){
+  const f = item==="fundador";
+  const s = f?null:SKINS[item];
+  document.querySelectorAll(".item-nome").forEach(e=>e.textContent = f?"Pacote de Fundador":`${s.heroi} — ${s.skin}`);
+  document.querySelectorAll(".item-preco").forEach(e=>e.textContent = f?"R$ 29,90":"R$ 9,90");
+  document.querySelectorAll(".item-tipo").forEach(e=>e.textContent = f?"PACOTE":"SKIN");
+  document.querySelectorAll(".item-desc").forEach(e=>e.textContent = f?"Skin exclusiva do Carrasco + emblema “Fundador”":`Skin do ${s.heroi}. Só visual.`);
+  document.querySelectorAll(".item-icone").forEach(e=>e.textContent = f?"shield_person":s.icone);
+  const bloq = f || s.estado==="bloqueado";
+  document.querySelectorAll(".item-aviso").forEach(e=>e.style.display = bloq?"flex":"none");
+  document.querySelectorAll(".item-aviso-txt").forEach(e=>e.textContent = f?"O Carrasco libera na Patente 11. A skin fica guardada no seu inventário até lá.":`${s ? s.heroi : ""} ainda está bloqueado. A skin fica guardada no seu inventário até você liberar o herói.`);
+  document.querySelectorAll(".item-aviso-ok").forEach(e=>e.textContent = f?"A skin do Carrasco fica guardada até a Patente 11. O emblema “Fundador” já pode ser equipado no perfil.":(bloq?`A skin fica guardada até você liberar o ${s.heroi}.`:`Equipe a skin na Tela Heróis.`));
+}
+let metodo="pix";
+function escolher(m){metodo=m;document.querySelectorAll(".metodo").forEach(l=>{const on=l.id==="m-"+m;l.className="metodo cursor-pointer flex flex-col gap-1 p-space-md rounded-lg border-2 "+(on?"border-primary-container bg-primary-container/10":"border-surface-variant hover:border-outline");});}
+function passo(id){document.querySelectorAll(".passo").forEach(p=>p.style.display="none");document.getElementById("p-"+id).style.display="flex";}
+function abrir(id,item){preencher(item);modal.style.display="flex";passo(id);}
+function fechar(){modal.style.display="none";}
+document.querySelectorAll(".passo").forEach(p=>p.style.display="none");
+
+const corpo = {catalogo:document.getElementById("catalogo"),carregando:document.getElementById("carregando"),erro:document.getElementById("erro")};
+function estado(s){
+  fechar();
+  Object.values(corpo).forEach(c=>{c.classList.remove("on");c.style.display="none";});
+  if(corpo[s]){corpo[s].style.display = s==="catalogo"?"grid":"flex";}
+  else {corpo.catalogo.style.display="grid"; abrir(s,"fundador");}
+  document.querySelectorAll(".sel").forEach(b=>{const on=b.dataset.s===s;b.className="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm "+(on?"bg-primary text-on-primary":"text-on-surface-variant hover:bg-surface-container-high");});
+}
+document.querySelectorAll(".sel").forEach(b=>b.onclick=()=>estado(b.dataset.s));
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(o=>o.className="tab px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high");
+  t.className="tab px-space-md py-1 rounded font-headline-sm text-headline-sm text-on-primary bg-primary shadow-[0_2px_10px_rgba(255,193,116,0.35)]";
+  const v=t.dataset.tab;
+  document.getElementById("fundador").style.display = (v==="skins"||v==="meus")?"none":"flex";
+  grade.parentElement.style.display = v==="pacote"?"none":"flex";
+  grade.parentElement.className = grade.parentElement.className.replace(/col-span-\d+/, (v==="skins"||v==="meus")?"col-span-12":"col-span-8");
+  [...grade.children].forEach(c=>c.style.display = (v==="meus"&&c.dataset.meu!=="1")?"none":"flex");
+});
+const q = new URLSearchParams(location.search).get("estado");
+if(new URLSearchParams(location.search).get("shot")) document.getElementById("seletor").style.display="none";
+estado(q || "catalogo");
+</script>
+</body></html>
