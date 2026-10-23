@@ -1,5 +1,7 @@
 # ITCH.md — Página do Loot Start no itch.io
 
+**No ar (2026-10-23):** página https://rodreisb.itch.io/loot-start, em **Restricted** (acesso por senha); canal `windows` com o `v0.4.0` (primeiro Release com o job `itch`, run `39883625301`). Site do jogo: https://lootstart.cloud/ (ver `docs/SITE.md`).
+
 Publicação do canal itch.io (ADR-0024 item 2, SPEC-086, F86). O texto da §2 foi aprovado pelo PI em 2026-10-22 (SPEC-086 §4) e é a cópia para colar no painel do itch. Quem cola é o PI; o Code não configura a página.
 
 ## 1. Como funciona
@@ -32,14 +34,25 @@ Sem `BUTLER_API_KEY` ou `ITCH_TARGET`, o job `itch` falha com erro explícito.
 - **Preço:** grátis.
 - **Canal do upload:** `windows` (o butler cria sozinho no primeiro envio).
 
-## 4. Capturas (até 5; escolha do Code, o PI aprova)
+## 4. Capturas (tiradas em 2026-10-23, jogo e Launcher atuais)
 
-Todas já versionadas, em WebP; o itch.io aceita PNG, JPG e GIF, então converta antes de subir (ex.: `magick entrada.webp saida.png`).
+Versionadas em `docs/evidencias/f86/` (WebP; o itch.io aceita PNG, JPG e GIF, então converta antes de subir, ex.: `magick entrada.webp saida.png`). Geradas por `tools/perf/frametime_probe.gd --shot=` (só o viewport, 1920×1080, com `--bot-hero=<id>` para o herói) e `tools/ui/capture_launcher.gd`. Todas são da fase de preparação: a sonda só mede essa fase.
 
-1. `docs/roadmap/img/mvp3-f82-loot-start-login.webp` — Launcher: marca e os 10 heróis.
-2. `docs/roadmap/img/mvp4-ajustes-base-fase1.webp` — preparação: pátio da base, HUD, minimapa.
-3. `docs/roadmap/img/mvp2.8-f77-ocultista-circulo.webp` — herói em ação (Ocultista) na preparação.
-4. `docs/roadmap/img/mvp2.5-f57-hud-moderna.webp` — confronto: zona fechando, placar, HUD.
-5. `docs/roadmap/img/mvp4-ajustes-carrasco-fase2.webp` — confronto à noite, o Carrasco em chamas.
+1. `01-arena-castelo-vista-aerea.webp` — base com o castelo e o pátio (`--intro`).
+2. `02-preparacao-paladino.webp` — Paladino Radiante no pátio (`--bot-hero=paladin --paladin`).
+3. `03-carrasco-centro.webp` — Carrasco, o 11º herói, no centro com a Dor e a luz das Correntes (`--bot-hero=carrasco --carrasco --at=0,0`).
+4. `04-berserker.webp` — Berserker em chamas (`--bot-hero=berserker --berserker`).
+5. `05-launcher-11-herois.webp` — login do Launcher com os 11 heróis.
 
-Limites: a 4 é de antes dos ajustes de arte recentes; a 2 e a 5 são as mais atuais. Não há captura atual da seleção de heróis (a mais recente, `mvp2.7-f71-tela-herois.webp`, mostra 6 heróis e a marca antiga "ARENA 1V1"); se o PI quiser uma, o Code tira numa verificação visual.
+Capa (630×500): `capa-630x500.webp`, recorte central da 1. Alternativas (prefixo `extra-`): heróis do Launcher, Ocultista e Cavaleiro na cratera.
+
+## 5. Metadados da página (painel do itch.io)
+
+Classificação: Keyboard e Mouse; sessão "A few minutes"; "Server-based networked multiplayer"; jogadores mín. 1 (treino contra o bot) e máx. 2 (duelo 1v1); idioma Portuguese (Brazil); acessibilidade e conteúdo sensível sem declarar nada. Licenças, data de lançamento, publisher, links externos e imagens promocionais ficam em branco/"No license" até decisão do PI.
+
+## 6. Divergências do texto aprovado (aguardam o PI)
+
+O texto da §3 é o aprovado na SPEC-086 §4 e não foi alterado. Duas coisas já não batem com o jogo:
+
+- "**10** heróis jogáveis" e a lista sem o Carrasco: o jogo tem 11 heróis desde o F98.
+- "o último **time** de pé vence": o jogo é duelo 1v1.
