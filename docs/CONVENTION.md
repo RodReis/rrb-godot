@@ -11,14 +11,14 @@
 | Ticket de fila | `queue_ticket` | pedido de partida 1x1; `waiting → matched \| cancelled \| expired`. |
 | Partida | `match` | uma execução do Game com 2 jogadores; `assigned → running → finished \| aborted \| abandoned`. |
 | Jogador | `player` | participante de uma partida (peer + conta + herói). |
-| Herói | `hero` | um dos 10 heróis (GDB §4.1–§4.10; ids em `shared/data/heroes/`). |
+| Herói | `hero` | um dos 11 heróis (GDB §4.1–§4.11; ids em `shared/data/heroes/`). |
 | Atributos | `stats` | HP, DEF, ATK, INT, AGI (GDB §2.1). |
 | Habilidade | `skill` | Q, E (5 níveis), R (2 níveis, nível 6+); mais o ataque básico. |
 | Passiva | `passive` | regra do herói sem botão (`HeroData.passive`); só o Frenesi do Berserker (§4.5). |
-| Nível / XP | `level`, `xp` | 1–10; tabela GDB §3.2. |
+| Nível / XP | `level`, `xp` | 1–10; tabela GDB §3.2. Só do herói, dentro da partida. |
 | Monstro | `monster` | 5 tipos, tier 1–3 + boss (GDB §5.1). Não respawna. |
 | Baú | `chest` | comum, reforçado (campo de canto) ou raro (centro); abre uma vez (GDB §6.2). |
-| Item | `item` | 21 itens, 4 slots, 3 raridades (GDB §6.1). |
+| Item | `item` | 21 itens, 4 slots, 3 raridades (GDB §6.1). Item **de partida**; não confundir com item de perfil nem com skin. |
 | Conjunto | `set` | Guarda ou Caçador; bônus com 3/3 peças de armadura. |
 | Fase | `phase` | ver §3. |
 | Zona | `zone` | círculo que encolhe na fase 2 (GDB §7.1). |
@@ -28,18 +28,31 @@
 | Golpe direto | `striker_id` | golpe de contato (não projétil, zona, área nem pulso); só ele aciona a Retribuição (§4.5). |
 | Servidor de partida | `game_server` | processo headless do Game, 1 por partida. |
 | Pool | `pool` | containers pré-aquecidos do orquestrador. |
+| Patente | `rank` | progressão da conta, 1 a 11 (ADR-0026, ADR-0034, §4.10). "Nível" fica só para o herói na partida. |
+| Pontos de Patente | `rank_points` | soma dos pontos das partidas online da conta (§4.10). |
+| Herói liberado | `owned_hero` | herói que a conta pode escolher no pick online e no treino (§4.10). |
+| Escolha de herói | `hero_choice` | crédito pendente de liberar 1 herói KayKit, ganho ao chegar numa Patente da 2 à 10 (§4.10). |
+| Herói KayKit | `kaykit` (marca no `.tres`) | um dos 10 heróis liberáveis da Patente 1 à 10; os demais (hoje, o Carrasco) liberam na Patente 11. |
+| Emblema / Moldura | `emblem`, `frame` | item de perfil, só visual (§4.11). |
+| Dia de presença | `login_day` | dia (horário de Brasília) com pelo menos um login no Launcher (§4.11). |
+| Skin | `skin` | visual alternativo de um herói; só aparência (§4.12, ADR-0028). |
+| Pacote de Fundador | `founder_pack` | skin exclusiva do Carrasco + emblema "Fundador"; um por conta (§4.12). |
+| Pedido | `order` | compra na Loja; `pending → paid \| cancelled`; `paid → refunded` (§4.12). |
+| Inventário | `inventory` | o que a conta possui: skins e itens de perfil (§4.11, §4.12). |
+| Partida contra bot | `vs_bot` (marca da partida) | partida da fila online em que o adversário é o bot (§4.13). |
 
 ## 2. Entidades e quem é dono
 
 | Entidade | Dono da verdade | Quem lê |
 |---|---|---|
 | `user`, `session`, `queue_ticket`, `match` (registro), `match_players` | Backend | Launcher (sua conta), Game server (validar/reportar) |
+| Patente, pontos, heróis liberados, escolhas pendentes, inventário (skins e itens de perfil), skin equipada por herói, emblema e moldura equipados, dias de presença, pedidos (MVP5 — SPEC-087 a SPEC-091) | Backend | Launcher (sua conta); Game server, pela validação do token: heróis liberados, skin equipada, emblema e moldura de cada jogador (ADR-0028, ADR-0034); web-admin (pedidos, sem dado de conta — SPEC-090) |
 | Estado da partida (posições, HP, XP, itens, zona, kills, relógio) | Game **server** | Game client (replicado) |
 | Servo do Vazio (invocação do Ocultista — ADR-0016, F78): posição, HP, alvo, tempo restante | Game **server** | Game client (posição e HP replicados, filtrados por visão como monstro) |
 | `settings.cfg` | Launcher | Game |
-| `shared/data/*.tres` | repositório (Cowork/PI) | ambos |
+| `shared/data/*.tres` (inclui catálogo de skins, itens de perfil e marca KayKit dos heróis no MVP5) | repositório (Cowork/PI) | ambos; backend espelha o catálogo da Loja (SPEC-090) |
 
-Nada de gameplay é persistido pelo cliente. Nada de conta é lido pelo Game client.
+Nada de gameplay é persistido pelo cliente. Nada de conta é lido pelo Game client: ele só recebe do servidor, replicados, a skin, o emblema e a moldura de cada jogador (ADR-0028, ADR-0034).
 
 ## 3. Estados da partida (`MatchState`)
 
@@ -74,6 +87,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - XP acumulado por nível: GDB §3.2. Nível máximo 10. 1 ponto por nível a partir do 2 (9 pontos).
 - Q e E: máx. 5 níveis cada. R: desbloqueia no 6, nível 2 no 10.
 - Fórmulas de DEF, CDR, velocidade de movimento e de ataque: GDB §2.2 — implementadas **uma vez** em `shared/core/stats.gd` e usadas por servidor e Forja.
+- Progressão **da conta** (fora da partida) é a Patente (§4.10), não o nível.
 
 ### 4.3 Itens
 - 4 slots: arma, elmo, peitoral, botas. Catálogo GDB §6.1.
@@ -90,7 +104,7 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 - Monstros comuns não respawnam na fase 2; os que sobraram continuam vivos e dão XP. O **Rei Esqueleto** existe até morrer ou até 5:00: vivo na transição, sai do mapa **sem drop** (decisão do PI 2026-10-10, R-PEND-06).
 
 ### 4.5 Heróis
-- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015 —, §4.9 (Paladino Radiante) e §4.10 (Ocultista) — pelo ADR-0016.
+- Base, crescimento e habilidades: GDB §4.1 (Cavaleiro), §4.2 (Arqueiro), §4.3 (Bárbaro), §4.4 (Bruxo de Fogo) — pelo ADR-0011 —, §4.5 (Ladina) e §4.6 (Engenheiro) — pelo ADR-0013 —, §4.7 (Protetor da Selva) e §4.8 (Berserker) — pelo ADR-0015 —, §4.9 (Paladino Radiante) e §4.10 (Ocultista) — pelo ADR-0016 — e §4.11 (Carrasco) — pelo ADR-0032.
 - Ataque básico: Cavaleiro arco 70°/2,2 u; Arqueiro projétil 20 u/s, 9 u, raio 0,3 u; Bárbaro arco 90°/2,4 u; Bruxo de Fogo projétil 16 u/s, 8 u, raio 0,4 u; Ladina projétil 24 u/s, 7 u, raio 0,3 u; Engenheiro cone 40°/4,5 u instantâneo; Protetor da Selva projétil 20 u/s, 6,5 u, raio 0,35 u; Berserker arco 90°/2,4 u; Paladino Radiante arco 60°/2,0 u; Ocultista projétil 15 u/s, 7,5 u, raio 0,4 u.
 - **Orientação e alvo travado (ADR-0015, F66):** o herói encara a direção do movimento; ao atacar/usar skill vira para a mira (ou o alvo travado) por 0,4 s. `target_id` vem no input e o servidor só aceita alvo — herói inimigo, monstro ou servo inimigo — vivo e **visível para aquele peer** (§4.6, §4.7, §4.9); recusado, vale como nenhum alvo. Com alvo em alcance o básico dispara sozinho, fora do alcance não anda. Destrava ao morrer, sumir da visão, `Esc` ou clique no chão. **Revide (PI, 2026-10-22):** quem leva dano de herói, monstro ou servo e está sem alvo válido trava o agressor (`HitEffect.aggressor_id`) e o auto-ataque começa sozinho; alvo válido nunca é trocado, e o servidor aplica a mesma validação (inimigo, vivo, visível). Zona, saque, XP e Praga não têm agressor.
 - **Passiva (ADR-0015, F75):** `HeroData.passive` (`PassiveData`); só `FRENZY` (Berserker, GDB §2.2-E). Aplicada no `_rollback_tick` do próprio herói.
@@ -126,9 +140,35 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 ### 4.8 Conta e fila
 - Conta: e-mail + senha (PRD §8.4). Sem verificação de e-mail, sem recuperação de senha na fatia (**R-PEND-07** — não está no PRD; registrado em `FORA-DE-ESCOPO.md`).
 - Senha: mínimo 8 caracteres, com pelo menos uma letra e um número (decisão do PI 2026-10-10).
-- Nickname (F35): obrigatório no 1º login; 3–16 caracteres `A–Z a–z 0–9 _`; único sem diferenciar maiúsculas; exibido com prefixo `#`, que não é guardado. Avatar só local no Launcher (PNG/JPG ≤ 1 MB, 256×256). Sem XP de conta (R-PEND-02, decisões de 2026-10-09 e 2026-10-10).
-- Fila 1x1 FIFO, sem rating (PRD §8.4). Um ticket por conta por vez.
+- Nickname (F35): obrigatório no 1º login; 3–16 caracteres `A–Z a–z 0–9 _`; único sem diferenciar maiúsculas; exibido com prefixo `#`, que não é guardado. Avatar só local no Launcher (PNG/JPG ≤ 1 MB, 256×256). A conta não tinha progressão até o MVP4 (R-PEND-02); no MVP5 ganha a **Patente** (§4.10), que supera a parte "sem XP de conta" (ADR-0026).
+- Fila 1x1 FIFO, sem rating (PRD §8.4) e sem olhar Patente (ADR-0034). Um ticket por conta por vez. No MVP5, sem humano em 30 s entra o bot (§4.13).
 - Histórico: partidas da própria conta, com os campos de `match_players` (`ARCHITECTURE-LAUNCHER.md` §4.3). Oponente identificado pelo herói e, a partir do F35, pelo `#nickname`; nunca pelo e-mail.
+
+### 4.10 Patente e heróis liberados (MVP5 — ADR-0026, ADR-0034, SPEC-087)
+- **Patente 1 a 11**, grátis, sem trava paga. Patente = mínimo entre 11 e 1 + ⌊pontos ÷ 3⌋.
+- **Pontos por partida online com resultado:** vitória 2, derrota 1, derrota por abandono (`left`, ADR-0020) 0. Partida sem resultado (`interrupted`, `aborted`) não dá ponto. Partida contra o bot da fila conta igual (§4.13). Treino offline e tutorial não dão ponto.
+- **Heróis:** conta nova com o Cavaleiro. Da Patente 2 à 10, uma **escolha** de herói KayKit bloqueado por Patente; a escolha fica pendente até ser feita. A Patente 11 libera todos os heróis que não são KayKit (hoje, o Carrasco), inclusive os que entrarem depois.
+- **Pick online** só com herói liberado, validado no **servidor** a partir da validação do token. **Treino offline** só com herói liberado (`--heroes`, ADR-0034); o tutorial segue com o Cavaleiro.
+- Contas anteriores ao MVP5: Patente pelo histórico online, todos os heróis mantidos.
+
+### 4.11 Recompensas de perfil e presença (MVP5 — ADR-0025, ADR-0026, SPEC-088)
+- Emblema por Patente (2 a 11), moldura na Patente 5 e na 10; emblema semanal e moldura mensal fixos, com contador ×N; emblema "Fundador" só pelo Pacote de Fundador. Grátis e só visuais; nada é vendido avulso.
+- **Presença:** dia = horário de Brasília, contado no 1º login no Launcher. Semana (segunda a domingo): 5 dias dão o emblema semanal. Mês do calendário: 20 dias dão a moldura mensal. Dia perdido não zera; a contagem recomeça na semana ou no mês seguinte. O login diário sozinho não dá item.
+- A conta equipa 1 emblema e 1 moldura (ou nenhum). Na partida, o servidor replica os equipados de cada jogador (ADR-0034 item 8); treino offline sem emblema.
+
+### 4.12 Loja, inventário e skins (MVP5 — ADR-0025, ADR-0028, SPEC-090 a SPEC-092)
+- Só cosmético, preço em reais, sem moeda virtual e sem sorteio pago; conteúdo e preço visíveis antes da compra. Catálogo inicial e preços: ADR-0025.
+- Pagamento pelo Mercado Pago (Pix na tela, cartão no navegador); o item só entra no inventário com pagamento confirmado pelo Mercado Pago; estorno, reembolso ou chargeback **retiram** o item (skin equipada volta ao padrão). Conta não compra o que já possui; Pacote de Fundador um por conta.
+- Skin de herói ainda não liberado pode ser comprada e fica guardada; só equipa com o herói liberado (inclui a skin do Fundador, do Carrasco, na Patente 11).
+- **Skin** é só visual: mesma colisão, rig, animações e números. Uma skin equipada por herói, guardada no backend. Na partida online, o servidor recebe a skin pela validação do token e a replica; os dois clientes desenham o mesmo visual. Treino offline e tutorial: visual padrão. O Launcher nunca passa skin ao Game (ADR-0028).
+- O Game nunca vende nem decide posse (ADR-0002, ADR-0025).
+
+### 4.13 Bot na fila online (MVP5 — ADR-0027, SPEC-089)
+- Sem humano em **30 s** desde a criação do ticket, a partida começa contra o bot no servidor do VPS.
+- Nível do bot pela Patente do jogador: 1–3 → 1 (Fácil), 4–7 → 2 (Médio), 8–11 → 3 (Difícil). Herói do bot sorteado entre todos, com a mesma chance.
+- Conta no histórico (marcada `vs_bot`) e na Patente; **não** conta no V–D do perfil.
+- Aviso na fila aos 30 s e selo BOT no adversário na seleção de heróis.
+- O bot segue a invariante de honestidade (§4.6).
 
 ## 5. Invariantes globais (testáveis)
 
@@ -143,6 +183,10 @@ Invariantes: a partida **sempre** termina em ≤ 10:00 (PRD §9.2); **nunca** h�
 | I7 | XP acumulado é monotônico; nível nunca cai | `XpTable` GUT |
 | I8 | Um ticket ativo por conta | backend e2e |
 | I9 | Launcher não contém referência a `netfox`, `ENet` ou `res://scenes/arena` | lint de CI (`CI-PR.md` §4) |
+| I10 | Pontos de Patente nunca diminuem; Patente nunca cai (MVP5) | regra pura em `shared/core` GUT + teste do backend (SPEC-087) |
+| I11 | Pick online só com herói liberado, decidido no servidor (MVP5) | teste do game server + soak (SPEC-087) |
+| I12 | Item pago só entra no inventário com pagamento confirmado; webhook idempotente; estorno retira o item (MVP5) | testes do backend (SPEC-090) |
+| I13 | Nada vendido dá poder de combate; skin, emblema e moldura não mudam números nem colisão (MVP5) | revisão de PR + teste GUT do visual a partir do dado replicado (SPEC-091) |
 
 ## 6. Nomes de ações de input (InputMap)
 
