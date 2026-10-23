@@ -9,7 +9,7 @@
 
 | Slice | F / SPEC | Entrega | Fontes |
 |---|---|---|---|
-| 4.1 | F29 / SPEC-029 | telemetria (ping, duração, líder F1 × vencedor, teleportes reportados), KPIs no histórico, `tools/export-matches.ps1` | PRD §8.5, §9.2; DV tela 9; BM §5 |
+| 4.1 | F29 / SPEC-029 | telemetria (`backend`, `game`, `shared`, `admin`): ping, duração, líder F1 × vencedor e teleportes detectados no cliente; web-admin com KPIs globais, lista de partidas e CSV, só para `admin` | ADR-0033; PRD §8.5, §9.2; `spec/SPEC-029.md` |
 | 4.2 | F30 / SPEC-030 | ajustes de balanceamento pós-playtest (só `.tres`) | GDB §1.1 |
 | 4.3 | F84 / SPEC-084 | spike visual, parte 1 (`game`, `shared`, `art`): canto SO (base A + pátio) no estilo Eternal Return, feito pelo Claude no Blender, em cena variante jogável com o Cavaleiro atual; frame time medido; arena oficial intacta | ADR-0024 item 5; `spec/SPEC-084.md` |
 | 4.4 | F85 / SPEC-085 | tutorial guiado offline (`game`, `launcher`, `backend`, `shared`): obrigatório na 1ª vez, pulável; fila online libera após o tutorial ou 1 vitória contra o bot | ADR-0026 itens 5–6; ADR-0029; `spec/SPEC-085.md` |
