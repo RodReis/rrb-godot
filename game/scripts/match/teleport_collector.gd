@@ -23,6 +23,11 @@ func accept(peer: int, count: int) -> bool:
 	return true
 
 
+## [param peer] saiu: nao ha total a esperar dele, e um envio tardio e recusado.
+func skip(peer: int) -> void:
+	_reported[peer] = true
+
+
 func has_reported(peer: int) -> bool:
 	return _reported.has(peer)
 

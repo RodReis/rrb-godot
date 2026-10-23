@@ -161,6 +161,7 @@ func leave_by_menu(peer: int, tick: int) -> bool:
 	var verdict := VictoryRules.forfeit(_contenders(), peer)
 	if not verdict.is_over():
 		return false
+	teleports.skip(peer)  # quem sai pelo menu nao manda o total: o servidor nao o espera
 	for seat: Seat in _seats:
 		if seat.hero == &"":
 			_pick_default(seat, tick)
@@ -317,10 +318,12 @@ func submit_teleport_count(count: int) -> void:
 
 
 ## Servidor: [param peer] e um cliente conectado (o bot e o jogador do host nao recebem RPC).
-## Guarda o total de teleportes de [param peer]. False se o peer nao tem vaga, ja enviou ou o valor
-## esta fora da faixa.
+## Guarda o total de teleportes de [param peer]. False antes do fim da partida (o cliente honesto so
+## manda depois do match_ended), se o peer nao tem vaga, ja enviou ou o valor esta fora da faixa.
 func _record_teleports(peer: int, count: int) -> bool:
-	if _seat(peer) == null or not teleports.accept(peer, count):
+	if state != MatchState.State.ENDED or _seat(peer) == null:
+		return false
+	if not teleports.accept(peer, count):
 		return false
 	_counted(peer).teleports = count
 	return true
@@ -486,7 +489,7 @@ func _active_set(hero: Hero) -> StringName:
 ## O nivel de cada heroi na saida da fase 1 (telemetria, F29): mesma conta do nivel final.
 func _freeze_phase1_levels(tick: int) -> void:
 	for hero: Hero in _heroes():
-		_stats.player(hero.peer_id).level_at_phase1_end = XpTable.level_for_xp(
+		_counted(hero.peer_id).level_at_phase1_end = XpTable.level_for_xp(
 			hero.xp_curve, hero.xp_with_pending(tick + 1)
 		)
 

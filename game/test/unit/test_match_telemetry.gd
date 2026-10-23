@@ -72,6 +72,12 @@ func _finish_match(tick: int) -> MatchStats:
 	return _match.server_stats
 
 
+## Fim rapido da partida: P2 sai pelo menu. Os totais de teleporte so valem depois dele.
+func _end_match() -> void:
+	_run(START, _at(10))
+	_finish_match(_at(10))
+
+
 func test_nivel_e_congelado_na_saida_da_fase_1() -> void:
 	_run(START, _at(299))
 	_a.xp = EARLY_XP
@@ -136,23 +142,27 @@ func test_conjunto_incompleto_nao_e_ativo() -> void:
 
 
 func test_total_de_teleportes_do_proprio_peer_e_guardado() -> void:
+	_end_match()
 	assert_true(_match._record_teleports(P1, 7))
 	assert_eq(_match.server_stats.player(P1).teleports, 7)
 	assert_eq(_match.server_stats.player(P2).teleports, MatchStats.NO_VALUE)
 
 
 func test_zero_teleportes_e_valor_valido() -> void:
+	_end_match()
 	assert_true(_match._record_teleports(P1, 0))
 	assert_eq(_match.server_stats.player(P1).teleports, 0)
 
 
 func test_segundo_envio_do_mesmo_peer_e_recusado() -> void:
+	_end_match()
 	assert_true(_match._record_teleports(P1, 3))
 	assert_false(_match._record_teleports(P1, 9))
 	assert_eq(_match.server_stats.player(P1).teleports, 3)
 
 
 func test_valor_fora_da_faixa_e_recusado() -> void:
+	_end_match()
 	assert_false(_match._record_teleports(P1, -1))
 	assert_false(_match._record_teleports(P1, TeleportCollector.MAX_TELEPORTS + 1))
 	assert_eq(_match.server_stats.player(P1).teleports, MatchStats.NO_VALUE)
@@ -160,16 +170,19 @@ func test_valor_fora_da_faixa_e_recusado() -> void:
 
 
 func test_recusa_nao_gasta_o_unico_envio() -> void:
+	_end_match()
 	assert_false(_match._record_teleports(P1, -5))
 	assert_true(_match._record_teleports(P1, 4))
 
 
 func test_peer_sem_vaga_e_recusado() -> void:
+	_end_match()
 	assert_false(_match._record_teleports(STRANGER, 2))
 	assert_false(_match.server_stats.has(STRANGER))
 
 
 func test_rpc_usa_o_peer_do_transporte_e_nao_um_argumento() -> void:
+	_end_match()
 	# Sem rede, quem chama e o proprio peer local (1), que nao tem vaga: nada e gravado.
 	_match.submit_teleport_count(5)
 	assert_eq(_match.server_stats.player(P1).teleports, MatchStats.NO_VALUE)
@@ -183,7 +196,23 @@ func test_sem_cliente_conectado_nao_ha_o_que_esperar() -> void:
 func test_estatisticas_pela_rede_nao_levam_a_telemetria() -> void:
 	_a.xp = EARLY_XP
 	_run(START, _at(300))
+	_finish_match(_at(301))
 	_match._record_teleports(P1, 4)
 	var copy := MatchStats.from_dict(_match.server_stats.to_dict())
 	assert_eq(copy.player(P1).teleports, MatchStats.NO_VALUE)
 	assert_eq(copy.player(P1).level_at_phase1_end, MatchStats.NO_VALUE)
+
+
+func test_total_antes_do_fim_da_partida_e_recusado() -> void:
+	_run(START, _at(10))
+	assert_false(_match._record_teleports(P1, 3))
+	assert_false(_match.teleports.has_reported(P1), "a recusa nao gasta o envio")
+	_finish_match(_at(11))
+	assert_true(_match._record_teleports(P1, 3))
+
+
+func test_quem_saiu_pelo_menu_nao_e_esperado_e_nao_envia_depois() -> void:
+	_end_match()
+	assert_true(_match.teleports.has_reported(P2))
+	assert_false(_match._record_teleports(P2, 5))
+	assert_eq(_match.server_stats.player(P2).teleports, MatchStats.NO_VALUE)

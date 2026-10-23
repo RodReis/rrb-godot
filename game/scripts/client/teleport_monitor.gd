@@ -37,6 +37,8 @@ func total() -> int:
 
 func _observe(hero: Hero, delta: float) -> void:
 	var key := hero.peer_id
+	if not _was_alive.has(key):
+		hero.tree_exiting.connect(_forget.bind(key), CONNECT_ONE_SHOT)
 	var alive := hero.is_alive()
 	var shown := hero.visible
 	var exempt := TeleportDetector.is_exempt(
@@ -50,3 +52,10 @@ func _observe(hero: Hero, delta: float) -> void:
 	detector.observe(key, hero.global_position, delta, hero.velocity.length(), exempt)
 	_was_alive[key] = alive
 	_was_shown[key] = shown
+
+
+## O heroi saiu da arvore (reconexao cria outro com o mesmo peer_id): recomeca do zero.
+func _forget(key: int) -> void:
+	detector.forget(key)
+	_was_alive.erase(key)
+	_was_shown.erase(key)

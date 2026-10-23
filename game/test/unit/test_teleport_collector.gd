@@ -29,6 +29,12 @@ func test_fora_da_faixa_e_recusado_sem_gastar_o_envio() -> void:
 	assert_true(_collector.accept(PEER, TeleportCollector.MAX_TELEPORTS))
 
 
+func test_quem_saiu_nao_e_esperado_e_o_envio_tardio_e_recusado() -> void:
+	_collector.skip(PEER)
+	assert_true(_collector.has_reported(PEER))
+	assert_false(_collector.accept(PEER, 4))
+
+
 func test_zero_e_total_valido() -> void:
 	assert_true(_collector.accept(PEER, 0))
 
