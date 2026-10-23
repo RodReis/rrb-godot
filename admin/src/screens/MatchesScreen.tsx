@@ -146,7 +146,7 @@ function FilterForm({ applied, onApply }: { applied: MatchFilters; onApply: (fil
     onApply(NO_FILTERS);
   };
   return (
-    <form className="filters" onSubmit={submit}>
+    <form className="filters glass" onSubmit={submit}>
       <label className="field">
         <span>Motivo do fim</span>
         <input value={draft.endReason} onChange={(e) => setDraft({ ...draft, endReason: e.target.value })} />

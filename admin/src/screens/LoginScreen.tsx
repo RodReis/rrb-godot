@@ -1,5 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Api, ApiError } from '../api/client';
+import { Logo } from '../brand/Logo';
 
 interface LoginScreenProps {
   api: Api;
@@ -45,8 +46,9 @@ export function LoginScreen({ api, notice, onSuccess }: LoginScreenProps) {
   const message = error ?? notice;
   return (
     <main className="login">
-      <div className="login-plate">
-        <p className="eyebrow">Loot Start · Playtest</p>
+      <div className="login-plate glass">
+        <Logo variant="stacked" size={20} />
+        <p className="eyebrow">Painel de playtest</p>
         <h1>Entrar</h1>
         <p className="login-lede">Painel interno de KPIs e partidas. Use a conta de jogador marcada como admin.</p>
         <form onSubmit={(event) => void submit(event)} noValidate>

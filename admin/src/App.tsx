@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react';
 import { Api, createApi } from './api/client';
+import { Logo } from './brand/Logo';
 import { KpiScreen } from './screens/KpiScreen';
 import { LoginScreen } from './screens/LoginScreen';
 import { MatchesScreen } from './screens/MatchesScreen';
@@ -50,10 +51,11 @@ export function App({ api = defaultApi }: { api?: Api }) {
 
   return (
     <div className="shell">
-      <header className="topbar">
-        <p className="brand">
-          Loot Start <span>Painel de playtest</span>
-        </p>
+      <header className="topbar glass">
+        <div className="brand">
+          <Logo size={28} />
+          <p className="eyebrow">Painel de playtest</p>
+        </div>
         <nav aria-label="Seções">
           {TABS.map((tab) => (
             <button

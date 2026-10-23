@@ -120,7 +120,7 @@ backend/
   openapi.json     gerado no build; o Launcher gera `models/` a partir dele (script em tools/)
 ```
 
-**Web-admin (`admin/`, F29, ADR-0033):** React 19 + Vite + TypeScript, sem código em comum com Game, Launcher ou `site/`. Fala só com a API (`/auth/login` e `/admin/*`), gera os tipos de `backend/openapi.json` (`pnpm -C admin gen:api`) e é servido pelo backend em `/admin-ui`, sem CORS aberto. A imagem do backend é construída a partir da raiz do repo para incluir o build dele. Só `admin` entra; as respostas nunca trazem e-mail, hash, token nem id de conta.
+**Web-admin (`admin/`, F29, ADR-0033):** React 19 + Vite + TypeScript, sem código em comum com Game, Launcher ou `site/`. Fala só com a API (`/auth/login` e `/admin/*`), gera os tipos de `backend/openapi.json` (`pnpm -C admin gen:api`) e é servido pelo backend em `/admin-ui`, sem CORS aberto. A imagem do backend é construída a partir da raiz do repo para incluir o build dele. Visual no mesmo padrão do `site/` (tema escuro, tokens do `TOKENS.md` §1, Cinzel/Outfit/JetBrains Mono, painel vidro, botão dourado, logo), com os valores copiados e não importados. Só `admin` entra; as respostas nunca trazem e-mail, hash, token nem id de conta.
 
 ### 4.2 Fluxo de partida
 

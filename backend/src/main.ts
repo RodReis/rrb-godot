@@ -19,9 +19,12 @@ function serveAdminUi(app: NestExpressApplication, dir: string): void {
   }
   app.useStaticAssets(root, {
     prefix: '/admin-ui',
-    // O token do admin fica em sessionStorage: sem recurso de fora, sem iframe, sem sniffing.
+    // O token do admin fica em sessionStorage: só as fontes do Google (como o site/), sem iframe, sem sniffing.
     setHeaders: (res) => {
-      res.setHeader('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'");
+      res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; frame-ancestors 'none'",
+      );
       res.setHeader('X-Content-Type-Options', 'nosniff');
     },
   });
