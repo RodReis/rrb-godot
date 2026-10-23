@@ -147,7 +147,9 @@ jobs:
   # ITCH_TARGET (usuario/projeto) — o PI grava; sem eles o job falha com erro explicito.
   itch:
     needs: package
-    if: github.ref_type == 'tag'
+    # !cancelled(): roda mesmo se o package falhar depois de anexar o ZIP (ex.: VPS fora do ar, v0.4.0).
+    # Se falhar antes do ZIP, o download-artifact falha com erro explicito.
+    if: ${{ !cancelled() && github.ref_type == 'tag' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
