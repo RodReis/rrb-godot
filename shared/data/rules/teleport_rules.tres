@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TeleportRules" format=3]
+
+[ext_resource type="Script" path="res://shared/resources/teleport_rules.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+teleport_threshold_u = 1.0
+teleport_cooldown_s = 0.5

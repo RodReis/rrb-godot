@@ -17,3 +17,9 @@ static func active(items: Array[ItemData], bonuses: Array[SetBonusData]) -> Arra
 		if count_pieces(items, bonus.set_id) >= bonus.pieces_required:
 			result.append(bonus)
 	return result
+
+
+## Nome unico do conjunto ativo (telemetria, F29); vazio se nenhum ou mais de um esta ativo.
+static func active_set_id(items: Array[ItemData], bonuses: Array[SetBonusData]) -> StringName:
+	var complete := active(items, bonuses)
+	return complete[0].set_id if complete.size() == 1 else &""

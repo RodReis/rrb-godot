@@ -8,6 +8,8 @@ extends RefCounted
 
 ## Jogadores aceitos vindos da rede (1x1).
 const MAX_PLAYERS: int = 2
+## Telemetria sem valor (F29): vira campo ausente no resultado do backend.
+const NO_VALUE: int = -1
 ## Campos de Player que viajam na rede, com o tipo checado na chegada.
 const FIELDS: Array[String] = [
 	"peer",
@@ -41,6 +43,12 @@ class Player:
 	var boss_killed: bool = false
 	## Numero de Ids por ItemData.Slot (Inventory).
 	var equipment: Vector4i = Inventory.NONE
+	## Telemetria do F29, so no servidor: fora de FIELDS, nao viaja para os clientes.
+	var level_at_phase1_end: int = NO_VALUE
+	var avg_ping_ms: int = NO_VALUE
+	## Total contado pelo cliente (dado nao confiavel).
+	var teleports: int = NO_VALUE
+	var set_active: StringName = &""
 
 
 ## Segundos de partida no fim (relogio desde o inicio da fase 1).
