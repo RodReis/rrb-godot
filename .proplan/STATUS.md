@@ -27,23 +27,23 @@ updated: 2026-10-23
 
 - [MVP4][GATE] Playtest com 10+ pessoas: critérios do PRD §9.2 e decisão de abrir o Early Access (#255)
 - [MVP4][SPEC-030][F30] Balanceamento pós-playtest dos 11 heróis (só .tres) (#254)
-- [MVP4][SPEC-029][F29] Telemetria: ping, duração, líder F1 × vencedor e KPIs no histórico (#253)
 
 ## Em Andamento
+
+_(vazio)_
+
+## Feito
 
 ### Sem épico
 
 - [MVP4][FIX] .env da raiz está versionado no git (#281)
 - [MVP4][SPEC-086][FIX] Job itch do release.yml é barrado por falha no envio ao VPS (#280)
 
-## Feito
-
-_(vazio)_
-
 ## Finalizado
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-029][F29] Telemetria de partida e web-admin de KPIs (#253, finalizado em: 2026-10-23)
 - [MVP4][FIX] Ajustes de combate, HUD e seleção do playtest (#276, finalizado em: 2026-10-23)
 - [MVP4][SPEC-086][F86] Publicação no itch.io: página do jogo e build a cada Release (#252, finalizado em: 2026-10-23)
 - [MVP4][SPEC-085][F85] Tutorial guiado: obrigatório na 1ª vez, pulável, libera a fila online (#251, finalizado em: 2026-10-22)
