@@ -265,7 +265,13 @@ Ordem: F76 → F77 → F78 (o PI pôs o F77 antes do F76 em 2026-10-18; F78 depe
   - **Tela de carregamento e splash:** `render_loading.gd` ganhou o Carrasco e limpa os props do palco; arenas dia/noite, splash, fileira de heróis e faixa do Login renderizadas com a arena nova; boot do Game com fundo preto (a janela abre em 1280x720 e vira tela cheia: o azul aparecia como retângulo). Retrato do Carrasco com câmera própria (peito para cima, de frente).
   - **Site:** seção Arena em duas colunas iguais; vitrine com as duas capturas novas (`mvp4-ajustes-*`).
   - **Prova:** game 1958/1958 e launcher 831/831; soak 50/50; frame time de GPU média 3,8 ms (p99 4,5 ms) com as placas novas.
-- [ ] **F29** — telemetria (ping médio, duração, líder F1 × vencedor, "teleportes" reportados) no backend; painel de KPIs no Histórico; `tools/export-matches.ps1`.
+- [ ] **F29** (#253) — **Telemetria de partida e web-admin de KPIs** (SPEC-029, ADR-0033). Em PR; aguarda a partida real no VPS e o aceite do PI.
+  - **Game (servidor):** `PingSampler` amostra o RTT a cada 1 s (`PingAverage`); `MatchController` congela o nível ao fim da fase 1, deriva o conjunto ativo (`SetBonus.active_set_id`) e recebe o total de teleportes por `submit_teleport_count` (peer do transporte, uma vez, 0 a 10.000, só depois do fim); o servidor espera os totais até 3 s antes de reportar e `MatchResultBuilder` leva os quatro campos.
+  - **Game (cliente):** `TeleportMonitor` + `TeleportDetector` (regra pura): excesso de deslocamento somado numa janela de 50 ms (igual a 60 e a 144 fps), assentamento de 100 ms depois de avanço, empurrão, respawn ou herói escondido, quadro de travada ignorado. Limite 1,0 u e cooldown 0,5 s em `shared/data/rules/teleport_rules.tres`. Só no cliente online.
+  - **Backend:** migration 0005 (`match_players.teleport_count`, `users.role`), seed `ADMIN_EMAILS`, `AdminGuard`, `/admin/kpis`, `/admin/matches`, `/admin/matches.csv`, `/admin-ui` com CSP.
+  - **Web-admin** (`admin/`): React + Vite + TS no padrão visual do `site/`; login, KPIs e partidas com CSV.
+  - **Prova:** game 2022 testes, backend 218 + 86 e2e, admin 40; soak 50/50; calibração A/B/C com cenário A = 0 teleportes (`docs/evidencias/f29/`). Fica para o PI: partida real no VPS e verificação visual.
+  - **Fora (não pedido):** `tools/export-matches.ps1` (o CSV do web-admin cobre) e o painel de KPIs no Histórico do Launcher (a decisão do PI levou os KPIs ao web-admin).
 - [ ] **F30** — ajustes de balanceamento (só `.tres`).
 - [ ] **[GATE] MVP4** — critérios PRD §9.2; decisões câmera/duração/3x3.
 
