@@ -6,6 +6,7 @@ const MAX_DURATION_S = 24 * 60 * 60;
 const MAX_NAME_LENGTH = 64;
 const MAX_COUNT = 2_147_483_647; // int4 do Postgres
 const count = z.number().int().min(0).max(MAX_COUNT);
+const MAX_TELEPORTS = 10_000;
 
 export const ValidateSchema = z.object({ token: z.string().min(1).max(MAX_TOKEN_LENGTH) });
 export class ValidateDto extends createZodDto(ValidateSchema) {}
@@ -33,6 +34,8 @@ const PlayerResultSchema = z.object({
   setActive: z.string().max(MAX_NAME_LENGTH).nullish(),
   levelAtPhase1End: count.nullish(),
   avgPingMs: count.nullish(),
+  /** Contagem do cliente (SPEC-029): dado não confiável, repassado pelo game server. */
+  teleportCount: z.number().int().min(0).max(MAX_TELEPORTS).nullish(),
 });
 
 /** Sem `players` ou com a lista vazia = partida encerrada sem estatística (ex.: `abandoned`). */

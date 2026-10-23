@@ -36,6 +36,7 @@ Você atua como **engenheiro sênior de Godot 4 / GDScript** neste repositório.
   - **Game** (`game/`): partida — cliente + servidor dedicado. Seleção de heróis, HUDs, fim de partida. `docs/ARCHITECTURE-GAME.md`.
   - **Launcher** (`launcher/` + `backend/`): fora da partida — login, lobby, fila, histórico, bestiário, forja, arena & mapa, configurações; backend de auth/fila/orquestração. `docs/ARCHITECTURE-LAUNCHER.md`.
   - Comum: `shared/` (Resources `.tres`, regras puras, Theme, assets), montado nos dois por junction (`tools/link-shared.ps1`, ADR-0003). Contrato Launcher ↔ Game: processo + argumentos + `settings.cfg` (`ARCHITECTURE-LAUNCHER.md` §5). Mudar o contrato exige ADR.
+  - **Web-admin** (`admin/`, ADR-0033, emenda ao ADR-0002): KPIs e lista de partidas da telemetria (ping, duração, líder de nível F1 × vencedor, teleportes) em React + Vite, servido pelo backend em `/admin-ui`; só a conta `admin` (seed `ADMIN_EMAILS`) entra; sem código em comum com Game, Launcher ou `site/`. `ARCHITECTURE-LAUNCHER.md` §4.
   - **Site público** (`site/`, ADR-0017, emenda ao ADR-0002): landing "Loot Start" em React + Vite no GitHub Pages, sem relação de código com Game, Launcher ou Backend; lê `shared/data/heroes`, `docs/roadmap/` e `docs/STATUS.md` em build. `docs/SITE.md`. "Loot Start" é o nome do jogo inteiro desde o F82 (ADR-0022): janelas, Launcher, splash, `LootStart.exe`; repo, pastas e código seguem `rrb-*`.
 - Estrutura (`shared/` entra nos dois projetos por junction — `tools/link-shared.ps1`):
 
@@ -63,6 +64,7 @@ shared/               comum, sem project.godot: core/, data/, resources/, assets
 backend/              NestJS + Postgres (auth, users, matchmaking, orchestrator, matches; telemetria só no MVP4)
 art/                  fontes .blend (Blender) — nunca importadas pelo Godot; exporta .glb para shared/assets/ (ADR-0005)
 infra/                Docker do game server, compose, deploy
+admin/                web-admin de KPIs (React + Vite + TS, servido pelo backend em /admin-ui) — ADR-0033
 site/                 site público (landing "Loot Start", React + Vite, GitHub Pages) — dados extraídos em build de shared/ e docs/roadmap/ (ADR-0017)
 tools/                scripts PowerShell (test, run, link-shared, soak, pacote) e geradores em .gd (arena, ui, vfx, perf), roadmap em .mjs
 docs/                 ver "Documentação do projeto"
@@ -88,6 +90,7 @@ docs/                 ver "Documentação do projeto"
 | Frame time e captura só do viewport | `& $env:GODOT_PATH --path game --resolution 1920x1080 -s <repo>/tools/perf/frametime_probe.gd -- --offline --bot --autopilot=bot --out=<saida> [--shot=<png>]` |
 | Bake do lightmap da arena | `.\tools\bake-lightmap.ps1` |
 | Pacote ZIP do jogo | `.\tools\build-package.ps1 -ApiUrl <url> -Version v0.x.y` |
+| Web-admin | `pnpm -C admin install` (uma vez) · `pnpm -C admin dev` · `pnpm -C admin test` · `pnpm -C admin build` · `pnpm -C admin gen:api` (tipos de `backend/openapi.json`) |
 | Site público | `pnpm -C site install` (uma vez) · `pnpm -C site dev` · `pnpm -C site test` · `pnpm -C site build` |
 
 - Para linha de comando use o `*_console.exe` (`$env:GODOT_PATH -replace '\.exe$','_console.exe'`); o `.exe` principal não imprime no terminal.

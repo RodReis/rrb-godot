@@ -40,7 +40,8 @@ services:
   backend:
     profiles: [backend]
     build:
-      context: ../backend
+      context: ..
+      dockerfile: backend/Dockerfile
     ports:
       - "127.0.0.1:3000:3000"
     environment:
@@ -48,6 +49,7 @@ services:
       JWT_SECRET: "${JWT_SECRET:-dev-local-apenas-nao-usar-em-producao-0123}"
       INTERNAL_SECRET: "${INTERNAL_SECRET:-dev-interno-apenas-nao-usar-em-producao-01}"
       PORT: "3000"
+      ADMIN_EMAILS: "${ADMIN_EMAILS:-}"
     depends_on:
       postgres:
         condition: service_healthy

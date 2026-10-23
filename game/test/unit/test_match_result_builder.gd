@@ -93,3 +93,44 @@ func test_o_resultado_serializa_em_json_de_ida_e_volta() -> void:
 	var again: Variant = JSON.parse_string(JSON.stringify(result))
 	assert_true(again is Dictionary)
 	assert_eq((again as Dictionary)["winnerUserId"], USER_A)
+
+
+func test_telemetria_sem_valor_fica_fora_do_resultado() -> void:
+	var result := MatchResultBuilder.build(_stats(), PEER_A, &"kill_goal", 1, _users())
+	var first: Dictionary = (result["players"] as Array)[0]
+	for key: String in ["levelAtPhase1End", "avgPingMs", "teleportCount", "setActive"]:
+		assert_false(first.has(key), key)
+
+
+func test_telemetria_do_f29_vai_no_resultado() -> void:
+	var stats := _stats()
+	var a := stats.player(PEER_A)
+	a.level_at_phase1_end = 6
+	a.avg_ping_ms = 48
+	a.teleports = 3
+	a.set_active = &"guard"
+	var result := MatchResultBuilder.build(stats, PEER_A, &"kill_goal", 1, _users())
+	var first: Dictionary = (result["players"] as Array)[0]
+	assert_eq(first["levelAtPhase1End"], 6)
+	assert_eq(first["avgPingMs"], 48)
+	assert_eq(first["teleportCount"], 3)
+	assert_eq(first["setActive"], "guard")
+
+
+func test_telemetria_zero_e_valor_valido() -> void:
+	var stats := _stats()
+	stats.player(PEER_A).teleports = 0
+	stats.player(PEER_A).avg_ping_ms = 0
+	var result := MatchResultBuilder.build(stats, PEER_A, &"kill_goal", 1, _users())
+	var first: Dictionary = (result["players"] as Array)[0]
+	assert_eq(first["teleportCount"], 0)
+	assert_eq(first["avgPingMs"], 0)
+
+
+func test_telemetria_do_servidor_nao_viaja_na_rede() -> void:
+	var stats := _stats()
+	stats.player(PEER_A).avg_ping_ms = 48
+	stats.player(PEER_A).teleports = 3
+	var copy := MatchStats.from_dict(stats.to_dict())
+	assert_eq(copy.player(PEER_A).avg_ping_ms, MatchStats.NO_VALUE)
+	assert_eq(copy.player(PEER_A).teleports, MatchStats.NO_VALUE)

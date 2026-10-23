@@ -56,6 +56,15 @@ var available_heroes: Array[StringName] = []
 var start_seconds: float = 0.0
 ## Servidor: seed da partida (a dos baus) para o sorteio do colapso.
 var match_seed: int = 0
+## Servidor: media de RTT por peer (F29); null = sem medicao. Definida pelo main.
+var ping: PingAverage
+## Servidor: totais de teleportes que os clientes mandam no fim (F29).
+var teleports: TeleportCollector = TeleportCollector.new()
+## Servidor: as estatisticas completas da partida, com a telemetria que nao viaja na rede (F29).
+## O match_ended entrega aos clientes (e ao proprio servidor) uma copia sem ela.
+var server_stats: MatchStats:
+	get:
+		return _stats
 ## Servidor: --daynight (LaunchArgs); vazio sorteia o sentido da luz pela seed (F49).
 var forced_daynight: String = LaunchArgs.DAYNIGHT_AUTO
 ## Sentido da luz (F49): verdadeiro = comeca de dia e termina de noite. O servidor sorteia ao abrir
@@ -79,6 +88,7 @@ var _refusals_logged: Dictionary = {}  # peer -> true: log de lock-in recusado u
 
 
 func _ready() -> void:
+	teleports.is_pending = _teleports_pending
 	NetworkTime.on_tick.connect(_on_network_tick)
 	if clock != null:
 		clock.phase1_ended.connect(_on_clock_phase1_ended)
@@ -151,6 +161,7 @@ func leave_by_menu(peer: int, tick: int) -> bool:
 	var verdict := VictoryRules.forfeit(_contenders(), peer)
 	if not verdict.is_over():
 		return false
+	teleports.skip(peer)  # quem sai pelo menu nao manda o total: o servidor nao o espera
 	for seat: Seat in _seats:
 		if seat.hero == &"":
 			_pick_default(seat, tick)
@@ -293,7 +304,41 @@ func submit_hero_preview(hero_id: int) -> void:
 	preview_pick(peer, Ids.to_name(hero_id))
 
 
+## Cliente -> servidor: total de teleportes que o cliente contou na partida (F29, SPEC-029 §3.1).
+## Dado do cliente, nao confiavel: so o peer do transporte, uma vez, de 0 a MAX_TELEPORTS.
+@rpc("any_peer", "call_local", "reliable")
+func submit_teleport_count(count: int) -> void:
+	if not multiplayer.is_server():
+		return
+	var peer := multiplayer.get_remote_sender_id()
+	if peer == 0:
+		peer = multiplayer.get_unique_id()
+	if not _record_teleports(peer, count):
+		print("[match] total de teleportes recusado: peer %d, valor %d" % [peer, count])
+
+
 ## Servidor: [param peer] e um cliente conectado (o bot e o jogador do host nao recebem RPC).
+## Guarda o total de teleportes de [param peer]. False antes do fim da partida (o cliente honesto so
+## manda depois do match_ended), se o peer nao tem vaga, ja enviou ou o valor esta fora da faixa.
+func _record_teleports(peer: int, count: int) -> bool:
+	if state != MatchState.State.ENDED or _seat(peer) == null:
+		return false
+	if not teleports.accept(peer, count):
+		return false
+	_counted(peer).teleports = count
+	return true
+
+
+## Ainda falta o total de teleportes de algum cliente conectado (bot e desconectado nao mandam).
+func _teleports_pending() -> bool:
+	for seat: Seat in _seats:
+		if seat.is_bot or not seat.connected or not _connected(seat.peer):
+			continue
+		if not teleports.has_reported(seat.peer):
+			return true
+	return false
+
+
 func _connected(peer: int) -> bool:
 	return multiplayer.get_peers().has(peer)
 
@@ -427,7 +472,26 @@ func _final_stats(tick: int) -> MatchStats:
 				one.level = XpTable.level_for_xp(hero.xp_curve, hero.xp_with_pending(tick + 1))
 				one.damage_taken = hero.damage_taken()
 				one.equipment = hero.equipment
+				one.set_active = _active_set(hero)
+		if ping != null:
+			one.avg_ping_ms = ping.average(seat.peer)
 	return _stats
+
+
+## Conjunto de equipamento ativo do heroi (telemetria, F29); vazio se nao ha um unico.
+func _active_set(hero: Hero) -> StringName:
+	if hero.item_catalog == null:
+		return &""
+	var items := Inventory.items(hero.equipment, hero.item_catalog)
+	return SetBonus.active_set_id(items, hero.item_catalog.set_bonuses)
+
+
+## O nivel de cada heroi na saida da fase 1 (telemetria, F29): mesma conta do nivel final.
+func _freeze_phase1_levels(tick: int) -> void:
+	for hero: Hero in _heroes():
+		_counted(hero.peer_id).level_at_phase1_end = XpTable.level_for_xp(
+			hero.xp_curve, hero.xp_with_pending(tick + 1)
+		)
 
 
 ## XP ao heroi que deu o golpe final (monstro e zona nao ganham); kill so na fase 2. Na fase 2
@@ -519,6 +583,7 @@ func _on_network_tick(_delta: float, tick: int) -> void:
 
 func _on_clock_phase1_ended(tick: int) -> void:
 	if _open and state == MatchState.State.PHASE1:
+		_freeze_phase1_levels(tick)
 		_enter(MatchState.State.TRANSITION, tick)
 
 

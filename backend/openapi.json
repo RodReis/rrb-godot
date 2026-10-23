@@ -629,6 +629,159 @@
           "internal"
         ]
       }
+    },
+    "/admin/kpis": {
+      "get": {
+        "operationId": "TelemetryController_kpis",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KpiReportDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "403": {
+            "description": "ADMIN_REQUIRED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/matches": {
+      "get": {
+        "operationId": "TelemetryController_matches",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "endReason",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^[a-z_]{1,32}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "heroId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 64,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminMatchListDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED"
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "403": {
+            "description": "ADMIN_REQUIRED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
+    },
+    "/admin/matches.csv": {
+      "get": {
+        "operationId": "TelemetryController_matchesCsv",
+        "parameters": [
+          {
+            "name": "endReason",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^[a-z_]{1,32}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "heroId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 64,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mesmo conteúdo de /admin/matches, todas as páginas, uma linha por jogador",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "VALIDATION_FAILED"
+          },
+          "401": {
+            "description": "UNAUTHORIZED"
+          },
+          "403": {
+            "description": "ADMIN_REQUIRED"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "admin"
+        ]
+      }
     }
   },
   "info": {
@@ -1157,6 +1310,12 @@
                   "minimum": 0,
                   "maximum": 2147483647,
                   "nullable": true
+                },
+                "teleportCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 10000,
+                  "nullable": true
                 }
               },
               "required": [
@@ -1179,6 +1338,305 @@
           "endReason",
           "durationS",
           "players"
+        ]
+      },
+      "KpiReportDto": {
+        "type": "object",
+        "properties": {
+          "matches": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991,
+            "description": "Partidas finished com pelo menos um jogador (base dos KPIs)"
+          },
+          "kpis": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Nulo = sem dados (n = 0)",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "unit": {
+                  "type": "string",
+                  "enum": [
+                    "ms",
+                    "percent",
+                    "s",
+                    "count"
+                  ]
+                },
+                "n": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Partidas ou jogador-partida que entraram no cálculo"
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "server",
+                    "client"
+                  ],
+                  "description": "`client` = relatado pelo cliente, dado não confiável"
+                },
+                "limit": {
+                  "description": "Limite do PRD §9.2; nulo = sem limite",
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "limitLabel": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "withinLimit": {
+                  "description": "Nulo = sem limite ou sem dados",
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "key",
+                "label",
+                "value",
+                "unit",
+                "n",
+                "source",
+                "limit",
+                "limitLabel",
+                "withinLimit"
+              ]
+            }
+          }
+        },
+        "required": [
+          "matches",
+          "kpis"
+        ]
+      },
+      "AdminMatchListDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "pageSize": {
+            "type": "number",
+            "enum": [
+              50
+            ]
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "matchId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "assigned",
+                    "running",
+                    "finished",
+                    "aborted"
+                  ]
+                },
+                "seed": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "serverHost": {
+                  "type": "string"
+                },
+                "serverPort": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "startedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "lastHeartbeatAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "endedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "endReason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "durationS": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "nullable": true
+                },
+                "players": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nickname": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "isWinner": {
+                        "type": "boolean"
+                      },
+                      "heroId": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "kills": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "deaths": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "finalLevel": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "damageDealt": {
+                        "type": "number"
+                      },
+                      "damageTaken": {
+                        "type": "number"
+                      },
+                      "monstersKilled": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "chestsOpened": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "bossKill": {
+                        "type": "boolean"
+                      },
+                      "setActive": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "levelAtPhase1End": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991,
+                        "nullable": true
+                      },
+                      "avgPingMs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991,
+                        "nullable": true
+                      },
+                      "teleportCount": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991,
+                        "nullable": true
+                      }
+                    },
+                    "required": [
+                      "nickname",
+                      "isWinner",
+                      "heroId",
+                      "kills",
+                      "deaths",
+                      "finalLevel",
+                      "damageDealt",
+                      "damageTaken",
+                      "monstersKilled",
+                      "chestsOpened",
+                      "bossKill",
+                      "setActive",
+                      "levelAtPhase1End",
+                      "avgPingMs",
+                      "teleportCount"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "matchId",
+                "status",
+                "seed",
+                "serverHost",
+                "serverPort",
+                "createdAt",
+                "startedAt",
+                "lastHeartbeatAt",
+                "endedAt",
+                "endReason",
+                "durationS",
+                "players"
+              ]
+            }
+          }
+        },
+        "required": [
+          "page",
+          "pageSize",
+          "total",
+          "matches"
         ]
       }
     }

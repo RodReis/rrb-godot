@@ -3,6 +3,8 @@
   Cruza os logs da sonda de rede (NetProbe, --probe, F20): servidor x clientes.
 .DESCRIPTION
   - Remoto parado: % acumulado da ultima linha "[probe] remoto" de cada cliente.
+  - Salto (F29): ultima linha "[probe] salto maximo" de cada cliente (maior salto visual e total de
+    teleportes; no cenario A o total deve ser 0).
   - Checkpoints: para cada "[probe] check <tick>" do servidor, compara monstros (HP, fora do mapa)
     e baus abertos de cada cliente no mesmo tick; mostra as primeiras diferencas.
     Neblina (F37): monstro "-" no cliente (fora da visao dele) nao conta; os baus abertos do
@@ -63,6 +65,8 @@ foreach ($client in $Clients) {
     $name = Split-Path -Leaf $client
     $last = Select-String -Path $client -Pattern '\[probe\] remoto' | Select-Object -Last 1
     if ($last) { Write-Host "${name}: $($last.Line.Trim())" } else { Write-Host "${name}: sem linha de remoto" }
+    $jump = Select-String -Path $client -Pattern '\[probe\] salto maximo' | Select-Object -Last 1
+    if ($jump) { Write-Host "${name}: $($jump.Line.Trim())" }
     $checks = Read-Checks $client
     $fog = Select-String -Path $client -Pattern '\[probe\] neblina: (\d+) .*, (\d+) com estado' | Select-Object -Last 1
     if ($fog) {

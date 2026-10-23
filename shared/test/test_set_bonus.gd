@@ -31,3 +31,23 @@ func test_incomplete_set_is_not_active() -> void:
 	var items: Array[ItemData] = [_item(&"guard"), _item(&"guard"), _item(&"hunter")]
 	var bonuses: Array[SetBonusData] = [_bonus(&"guard"), _bonus(&"hunter")]
 	assert_eq(SetBonus.active(items, bonuses).size(), 0)
+
+
+func test_active_set_id_is_the_complete_set() -> void:
+	var items: Array[ItemData] = [_item(&""), _item(&"hunter"), _item(&"hunter"), _item(&"hunter")]
+	var bonuses: Array[SetBonusData] = [_bonus(&"guard"), _bonus(&"hunter")]
+	assert_eq(SetBonus.active_set_id(items, bonuses), &"hunter")
+
+
+func test_active_set_id_is_empty_without_a_complete_set() -> void:
+	var items: Array[ItemData] = [_item(&"guard"), _item(&"guard"), _item(&"hunter")]
+	var bonuses: Array[SetBonusData] = [_bonus(&"guard"), _bonus(&"hunter")]
+	assert_eq(SetBonus.active_set_id(items, bonuses), &"")
+
+
+func test_active_set_id_is_empty_when_two_sets_are_active() -> void:
+	var items: Array[ItemData] = [_item(&"guard")]
+	var bonuses: Array[SetBonusData] = [_bonus(&"guard"), _bonus(&"hunter")]
+	bonuses[0].pieces_required = 1
+	bonuses[1].pieces_required = 0
+	assert_eq(SetBonus.active_set_id(items, bonuses), &"")

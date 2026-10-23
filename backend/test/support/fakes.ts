@@ -11,6 +11,8 @@ import {
 import { QueueRepository } from '../../src/matchmaking/queue.repository';
 import { SetNicknameResult, UsersRepository } from '../../src/users/users.repository';
 import { ContainerRuntime } from '../../src/orchestrator/container-runtime';
+import type { KpiMatch } from '../../src/telemetry/kpis';
+import { AdminMatchRow, MatchFilter, TelemetryRepository } from '../../src/telemetry/telemetry.repository';
 
 export class FakeClock extends Clock {
   constructor(private current = new Date('2026-01-01T12:00:00.000Z')) {
@@ -68,6 +70,7 @@ export class InMemoryUsersRepository extends UsersRepository {
       passwordHash,
       nickname: null,
       queueUnlockReason: null,
+      role: 'player',
       createdAt: new Date('2026-01-01T12:00:00.000Z'),
     };
     this.rows.push(user);
@@ -93,6 +96,12 @@ export class InMemoryUsersRepository extends UsersRepository {
   async unlockQueue(id: string, reason: QueueUnlockReason): Promise<void> {
     const user = this.rows.find((u) => u.id === id);
     if (user && user.queueUnlockReason === null) user.queueUnlockReason = reason;
+  }
+
+  async promoteToAdmin(emails: string[]): Promise<number> {
+    const promotable = this.rows.filter((u) => u.role !== 'admin' && emails.includes(u.email.toLowerCase()));
+    for (const user of promotable) user.role = 'admin';
+    return promotable.length;
   }
 }
 
@@ -301,5 +310,35 @@ export class InMemoryQueueRepository extends QueueRepository {
       }
     }
     return count;
+  }
+}
+
+/** Painel de playtest em memória: mesmas regras de filtro e ordem do SQL (mais recente primeiro). */
+export class InMemoryTelemetryRepository extends TelemetryRepository {
+  readonly rows: AdminMatchRow[] = [];
+
+  async kpiMatches(): Promise<KpiMatch[]> {
+    return this.rows
+      .filter((row) => row.status === 'finished' && row.players.length > 0)
+      .map((row) => ({ durationS: row.durationS, players: row.players }));
+  }
+
+  async listMatches(filter: MatchFilter, limit: number, offset: number): Promise<AdminMatchRow[]> {
+    return this.filtered(filter).slice(offset, offset + limit);
+  }
+
+  async countMatches(filter: MatchFilter): Promise<number> {
+    return this.filtered(filter).length;
+  }
+
+  async allMatches(filter: MatchFilter): Promise<AdminMatchRow[]> {
+    return this.filtered(filter);
+  }
+
+  private filtered(filter: MatchFilter): AdminMatchRow[] {
+    return this.rows
+      .filter((row) => filter.endReason === undefined || row.endReason === filter.endReason)
+      .filter((row) => filter.heroId === undefined || row.players.some((p) => p.heroId === filter.heroId))
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 }

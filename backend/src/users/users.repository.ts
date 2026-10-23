@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DrizzleQueryError } from 'drizzle-orm/errors';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, inArray, isNull, ne, sql } from 'drizzle-orm';
 import { QueueUnlockReason, User, users } from '../../drizzle/schema';
 import { Database } from '../db/database';
 
@@ -20,6 +20,8 @@ export abstract class UsersRepository {
   abstract setNickname(id: string, nickname: string): Promise<SetNicknameResult>;
   /** Grava o motivo só se a conta ainda está bloqueada: nunca sobrescreve (idempotente). */
   abstract unlockQueue(id: string, reason: QueueUnlockReason): Promise<void>;
+  /** Seed do `ADMIN_EMAILS` (SPEC-029): só promove contas existentes (e-mails em minúsculas), nunca rebaixa. Devolve quantas mudaram. */
+  abstract promoteToAdmin(emails: string[]): Promise<number>;
 }
 
 @Injectable()
@@ -68,5 +70,15 @@ export class DrizzleUsersRepository extends UsersRepository {
       .update(users)
       .set({ queueUnlockReason: reason })
       .where(and(eq(users.id, id), isNull(users.queueUnlockReason)));
+  }
+
+  async promoteToAdmin(emails: string[]): Promise<number> {
+    if (emails.length === 0) return 0;
+    const rows = await this.database.db
+      .update(users)
+      .set({ role: 'admin' })
+      .where(and(inArray(sql`lower(${users.email})`, emails), ne(users.role, 'admin')))
+      .returning({ id: users.id });
+    return rows.length;
   }
 }

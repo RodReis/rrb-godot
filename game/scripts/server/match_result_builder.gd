@@ -2,8 +2,8 @@ class_name MatchResultBuilder
 extends RefCounted
 ## Monta o MatchResult que o servidor manda ao backend (POST /internal/matches/:id/result,
 ## ARCHITECTURE-LAUNCHER §4.2 passo 7) a partir do estado final da partida. Os campos seguem o
-## contrato do backend (backend/src/matches/matches.dto.ts). Ficam de fora, por ainda nao existirem
-## no Game, `setActive`, `levelAtPhase1End` e `avgPingMs` (todos opcionais la).
+## contrato do backend (backend/src/matches/matches.dto.ts). `setActive`, `levelAtPhase1End`,
+## `avgPingMs` e `teleportCount` (F29) so entram quando o servidor tem o valor: sao opcionais la.
 
 
 ## [param users]: conta de cada peer (AuthSession.users). Jogador sem conta ou sem heroi escolhido
@@ -37,7 +37,7 @@ static func _player(one: MatchStats.Player, users: Dictionary[int, String]) -> D
 	var hero := Ids.to_name(one.hero)
 	if hero == &"" or not users.has(one.peer):
 		return {}
-	return {
+	var entry := {
 		"userId": users[one.peer],
 		"heroId": String(hero),
 		"kills": one.kills,
@@ -49,3 +49,17 @@ static func _player(one: MatchStats.Player, users: Dictionary[int, String]) -> D
 		"chestsOpened": one.chests,
 		"bossKill": one.boss_killed,
 	}
+	_add_telemetry(entry, one)
+	return entry
+
+
+## Telemetria do F29: campo sem valor fica fora do resultado (o backend grava nulo).
+static func _add_telemetry(entry: Dictionary, one: MatchStats.Player) -> void:
+	if one.level_at_phase1_end != MatchStats.NO_VALUE:
+		entry["levelAtPhase1End"] = one.level_at_phase1_end
+	if one.avg_ping_ms != MatchStats.NO_VALUE:
+		entry["avgPingMs"] = one.avg_ping_ms
+	if one.teleports != MatchStats.NO_VALUE:
+		entry["teleportCount"] = one.teleports
+	if one.set_active != &"":
+		entry["setActive"] = String(one.set_active)

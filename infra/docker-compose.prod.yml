@@ -26,7 +26,8 @@ services:
 
   backend:
     build:
-      context: ../backend
+      context: ..
+      dockerfile: backend/Dockerfile
     restart: unless-stopped
     depends_on:
       postgres:
@@ -55,6 +56,7 @@ services:
       GAMESERVER_BACKEND_URL: http://backend:3000
       LOG_LEVEL: ${LOG_LEVEL:-info}
       MIN_CLIENT_VERSION: ${MIN_CLIENT_VERSION:-}
+      ADMIN_EMAILS: ${ADMIN_EMAILS:-}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     # O processo roda como `node`; o socket pertence ao grupo docker do host (getent group docker).

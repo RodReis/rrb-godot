@@ -16,7 +16,8 @@ pelo orquestrador do backend). O Launcher fala HTTPS com o backend e UDP direto 
 2. Novo recurso **Public Git Repository** (não o card "Docker Compose", que não clona o repo), build pack
    **Docker Compose**, **Base Directory `/infra`** e **compose location `/docker-compose.prod.yml`**. Com a base na
    raiz (`/`) o Coolify roda o compose com `--project-directory` na raiz do repositório e `context: ../backend`
-   sai do repo (`path "/artifacts/backend" not found`).
+   sai do repo (`path "/artifacts/backend" not found`). Pelo mesmo motivo o build do backend usa a raiz do repo
+   como contexto (`context: ..`, `dockerfile: backend/Dockerfile`): a imagem leva o web-admin (`admin/`, F29) em `/admin-ui`.
 3. **Variáveis** (lista em `.env.example`; segredos com `openssl rand -hex 32`, `JWT_SECRET` ≠ `INTERNAL_SECRET`).
    `GAMESERVER_PUBLIC_HOST` = IP ou domínio do VPS; `DOCKER_GID` = `getent group docker | cut -d: -f3`;
    `GAMESERVER_NETWORK` = UUID do recurso (ver abaixo).

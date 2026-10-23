@@ -33,6 +33,7 @@ export interface PlayerResult {
   setActive?: string | null;
   levelAtPhase1End?: number | null;
   avgPingMs?: number | null;
+  teleportCount?: number | null;
 }
 
 /** `MatchResult` do game server (ARCHITECTURE-LAUNCHER §4.2 passo 7). */
