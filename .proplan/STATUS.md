@@ -34,10 +34,7 @@ _(vazio)_
 
 ## Feito
 
-### Sem épico
-
-- [MVP4][FIX] .env da raiz está versionado no git (#281)
-- [MVP4][SPEC-086][FIX] Job itch do release.yml é barrado por falha no envio ao VPS (#280)
+_(vazio)_
 
 ## Finalizado
 
@@ -184,6 +181,8 @@ _(vazio)_
 
 ### Sem épico
 
+- [MVP4][FIX] .env da raiz está versionado no git (#281, finalizado em: 2026-10-23)
+- [MVP4][SPEC-086][FIX] Job itch do release.yml é barrado por falha no envio ao VPS (#280, finalizado em: 2026-10-23)
 - [MVP3][SPEC-028][FIX] Galeria do site com 80+ capturas que não mostram o jogo: vitrine de no máximo 10 (#243, finalizado em: 2026-10-20)
 - [MVP3][SPEC-023][FIX] Container do game server não é preso à partida atribuída (#181, finalizado em: 2026-10-16)
 - [FIX] test_components deixa 14 nós órfãos (DetailCard) (#184, finalizado em: 2026-10-16)
