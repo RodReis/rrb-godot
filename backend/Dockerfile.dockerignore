@@ -9,5 +9,7 @@ backend/coverage
 backend/.env
 backend/.env.*
 !backend/.env.example
+admin/.env
+admin/.env.*
 admin/node_modules
 admin/dist

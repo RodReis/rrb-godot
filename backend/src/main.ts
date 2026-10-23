@@ -17,7 +17,14 @@ function serveAdminUi(app: NestExpressApplication, dir: string): void {
     app.get(Logger).warn(`web-admin não encontrado em ${root}; /admin-ui fica fora do ar`);
     return;
   }
-  app.useStaticAssets(root, { prefix: '/admin-ui' });
+  app.useStaticAssets(root, {
+    prefix: '/admin-ui',
+    // O token do admin fica em sessionStorage: sem recurso de fora, sem iframe, sem sniffing.
+    setHeaders: (res) => {
+      res.setHeader('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; frame-ancestors 'none'");
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+    },
+  });
 }
 
 async function bootstrap(): Promise<void> {
