@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Patente e Perfil — Loot Start (protótipo)</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@700&amp;family=Outfit:wght@400;500;600&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}}::-webkit-scrollbar{width:6px}::-webkit-scrollbar-thumb{background:#2d3449;border-radius:3px}
+.chamfer{clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.chamfer-sm{clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px)}
+.btn-gold{box-shadow:0 4px 0 #78350F,0 0 14px rgba(245,158,11,.35)}.btn-gold:active{transform:translateY(2px);box-shadow:0 2px 0 #78350F}
+.btn-blue{box-shadow:0 4px 0 #0369A1}.btn-blue:active{transform:translateY(2px);box-shadow:0 2px 0 #0369A1}
+.hex{clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.fill{font-variation-settings:'FILL' 1}
+.moldura-bronze{box-shadow:0 0 0 3px #b45309,0 0 0 5px #0b1326,0 0 0 7px #78350f}
+.moldura-prata{box-shadow:0 0 0 3px #cbd5e1,0 0 0 5px #0b1326,0 0 0 7px #64748b}
+.moldura-ouro{box-shadow:0 0 0 3px #f59e0b,0 0 0 5px #0b1326,0 0 0 7px #fde68a,0 0 18px rgba(245,158,11,.5)}
+.moldura-mensal{box-shadow:0 0 0 3px #3198dc,0 0 0 5px #0b1326,0 0 0 7px #93ccff}
+.glow{animation:glow 2.2s ease-in-out infinite}@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.0)}50%{box-shadow:0 0 22px 2px rgba(245,158,11,.45)}}
+.rise{animation:rise .5s ease-out}@keyframes rise{from{transform:translateY(12px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.tela{display:none}
+</style>
+<script src="https://cdn.tailwindcss.com"></script>
+<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#ffb3ad", "on-background": "#dae2fd", "on-secondary-fixed": "#001d31", "inverse-on-surface": "#283044", "error-container": "#93000a", "surface": "#0b1326", "surface-tint": "#ffb95f", "tertiary-fixed": "#ffdad7", "surface-container": "#171f33", "tertiary-container": "#ff938c", "secondary-fixed": "#cce5ff", "on-secondary": "#003351", "inverse-primary": "#855300", "on-surface-variant": "#d8c3ad", "on-error": "#690005", "surface-container-high": "#222a3d", "secondary-fixed-dim": "#93ccff", "secondary-container": "#3198dc", "on-primary-fixed-variant": "#653e00", "outline-variant": "#534434", "on-primary-fixed": "#2a1700", "on-tertiary-container": "#8d0012", "primary-fixed": "#ffddb8", "surface-container-low": "#131b2e", "on-primary": "#472a00", "tertiary": "#ffbcb7", "on-tertiary-fixed-variant": "#930013", "secondary": "#93ccff", "error": "#ffb4ab", "primary-fixed-dim": "#ffb95f", "inverse-surface": "#dae2fd", "on-surface": "#dae2fd", "surface-variant": "#2d3449", "on-tertiary-fixed": "#410004", "on-primary-container": "#613b00", "on-secondary-fixed-variant": "#004b73", "on-secondary-container": "#002c47", "outline": "#a08e7a", "surface-bright": "#31394d", "surface-dim": "#0b1326", "surface-container-lowest": "#060e20", "on-tertiary": "#68000a", "surface-container-highest": "#2d3449", "primary": "#ffc174", "background": "#0b1326", "on-error-container": "#ffdad6", "primary-container": "#f59e0b" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "space-xl": "2rem", "space-sm": "0.5rem", "margin": "1rem", "space-md": "0.75rem", "gutter": "0.75rem", "space-lg": "1.25rem", "space-xs": "0.25rem" }, "fontFamily": { "label-numeric-md": [ "JetBrains Mono" ], "headline-lg": [ "Space Grotesk" ], "headline-sm": [ "Space Grotesk" ], "body-sm": [ "Outfit" ], "headline-md": [ "Space Grotesk" ], "body-lg": [ "Outfit" ], "label-numeric-lg": [ "JetBrains Mono" ], "label-numeric-sm": [ "JetBrains Mono" ], "body-md": [ "Outfit" ], "display-hero": [ "Space Grotesk" ], "hotkey-cap": [ "Space Grotesk" ] }, "fontSize": { "label-numeric-md": [ "14px", { "lineHeight": "18px", "fontWeight": "700" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" } ], "headline-sm": [ "18px", { "lineHeight": "24px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "16px", "fontWeight": "400" } ], "headline-md": [ "22px", { "lineHeight": "28px", "fontWeight": "600" } ], "body-lg": [ "16px", { "lineHeight": "22px", "fontWeight": "500" } ], "label-numeric-lg": [ "20px", { "lineHeight": "24px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "label-numeric-sm": [ "11px", { "lineHeight": "14px", "fontWeight": "700" } ], "body-md": [ "14px", { "lineHeight": "20px", "fontWeight": "400" } ], "display-hero": [ "56px", { "lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "700" } ], "hotkey-cap": [ "11px", { "lineHeight": "12px", "letterSpacing": "0.05em", "fontWeight": "700" } ] } } } }</script>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md select-none">
+
+<!-- ================= CABEÇALHO (Launcher atual; chip do perfil ganha emblema e moldura) ================= -->
+<header class="fixed top-0 left-0 right-0 z-40 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,0,0,0.6)]">
+<div class="h-20 w-full px-gutter flex items-center justify-between max-w-[1600px] mx-auto">
+<div class="flex items-center gap-space-lg">
+<div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary text-[28px]">swords</span><span class="font-headline-sm text-headline-sm tracking-wider uppercase text-primary">LOOT START</span></div>
+<div class="h-8 w-px bg-surface-variant/40"></div>
+<nav class="flex items-center gap-space-xs" id="nav">
+<a data-n="lobby" class="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide" href="#">LOBBY</a>
+<a data-n="herois" class="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide" href="#">HERÓIS</a>
+<a data-n="loja" class="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide" href="#">LOJA</a>
+<a class="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide" href="#">ARENA &amp; MAPA</a>
+<a class="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide" href="#">GUIA &amp; BESTIÁRIO</a>
+<a class="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide" href="#">HISTÓRICO</a>
+<a class="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide" href="#">AJUSTES</a>
+</nav>
+</div>
+<div class="flex items-center gap-space-md">
+<div class="flex items-center gap-space-xs px-space-md py-space-xs rounded bg-surface-container-low"><span class="w-2 h-2 rounded-[999px] bg-secondary animate-pulse"></span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">SERVIDOR</span><span class="font-label-numeric-sm text-label-numeric-sm text-secondary">ONLINE</span></div>
+<button class="flex items-center gap-space-sm pl-space-xs pr-space-xs py-1 rounded-lg hover:bg-surface-container-high" id="chip">
+<div class="text-right leading-tight"><div class="font-headline-sm text-headline-sm text-on-surface">#Duelista_01</div><div class="font-label-numeric-sm text-label-numeric-sm text-primary">PATENTE 5</div></div>
+<div class="relative"><div class="w-9 h-9 rounded-[999px] bg-primary flex items-center justify-center moldura-prata"><span class="material-symbols-outlined text-on-primary text-[20px]">person</span></div>
+<div class="absolute -bottom-1 -right-2 w-5 h-5 hex bg-[linear-gradient(160deg,#cbd5e1,#64748b)] flex items-center justify-center"><span class="font-label-numeric-sm text-[9px] text-surface">5</span></div></div>
+</button>
+<button class="w-9 h-9 rounded flex items-center justify-center text-on-surface-variant"><span class="material-symbols-outlined">settings</span></button>
+<button class="w-9 h-9 rounded flex items-center justify-center text-error"><span class="material-symbols-outlined">power_settings_new</span></button>
+</div>
+</div>
+</header>
+
+<!-- ======================================================================= -->
+<!-- TELA 1 — PERFIL (rota profile: abre pelo chip do cabeçalho)              -->
+<!-- ======================================================================= -->
+<main class="tela w-full pt-20 min-h-screen flex-col" id="t-perfil">
+<section class="w-full bg-surface-container-lowest px-gutter py-space-sm border-b border-surface-variant/20 shadow-md">
+<div class="max-w-[1600px] mx-auto flex items-center gap-space-xs text-on-surface-variant">
+<span class="font-label-numeric-sm text-label-numeric-sm tracking-wider uppercase">LOBBY</span><span class="font-label-numeric-sm text-label-numeric-sm text-outline">▸</span>
+<span class="font-headline-sm text-headline-sm text-primary tracking-wide uppercase font-bold">PERFIL</span>
+</div>
+</section>
+<section class="flex-1 w-full px-gutter py-space-md max-w-[1600px] mx-auto grid grid-cols-12 gap-space-md">
+
+<!-- Coluna esquerda: identidade + Patente + presença -->
+<aside class="col-span-4 flex flex-col gap-space-md">
+<div class="bg-surface-container-low rounded-xl shadow-xl p-space-lg flex flex-col items-center gap-space-md">
+<div class="relative mt-space-sm">
+<div class="w-28 h-28 rounded-[999px] bg-[radial-gradient(circle,#ffc174,#f59e0b)] flex items-center justify-center moldura-prata"><span class="material-symbols-outlined fill text-on-primary text-[64px]">person</span></div>
+<div class="absolute -bottom-2 -right-3 w-12 h-12 hex bg-[linear-gradient(160deg,#e2e8f0,#64748b)] flex items-center justify-center shadow-xl"><span class="font-label-numeric-lg text-label-numeric-lg text-surface">5</span></div>
+</div>
+<div class="text-center"><div class="font-headline-lg text-headline-lg">#Duelista_01</div>
+<button class="mt-1 inline-flex items-center gap-1 font-label-numeric-sm text-label-numeric-sm text-secondary hover:underline"><span class="material-symbols-outlined text-[14px]">edit</span>TROCAR AVATAR</button></div>
+<!-- Patente -->
+<div class="w-full bg-surface-container rounded-lg p-space-md flex flex-col gap-space-sm">
+<div class="flex items-end justify-between">
+<div class="flex flex-col"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant tracking-widest">PATENTE</span><span class="font-display-hero text-[44px] leading-[48px] text-primary">5<span class="font-headline-md text-headline-md text-on-surface-variant"> / 11</span></span></div>
+<div class="text-right"><span class="font-label-numeric-md text-label-numeric-md text-on-surface">13 / 15 PONTOS</span><div class="font-body-sm text-body-sm text-on-surface-variant">faltam 2 para a Patente 6</div></div>
+</div>
+<div class="h-2.5 rounded-[999px] bg-surface-container-highest overflow-hidden"><div class="h-full w-[66%] bg-[linear-gradient(90deg,#f59e0b,#ffc174)]"></div></div>
+<div class="flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant"><span>Vitória 2 · derrota 1 · abandono 0</span><span>só partida online</span></div>
+</div>
+<div class="w-full grid grid-cols-2 gap-space-sm">
+<div class="bg-surface-container rounded-lg p-space-sm"><div class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HERÓIS</div><div class="font-label-numeric-lg text-label-numeric-lg">5 <span class="text-on-surface-variant text-[14px]">/ 11</span></div></div>
+<div class="bg-surface-container rounded-lg p-space-sm"><div class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">VITÓRIAS – DERROTAS</div><div class="font-label-numeric-lg text-label-numeric-lg">4 <span class="text-on-surface-variant text-[14px]">– 5</span></div></div>
+</div>
+</div>
+<!-- Presença: semana e mês -->
+<div class="bg-surface-container-low rounded-xl shadow-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary">event_available</span><h3 class="font-headline-sm text-headline-sm uppercase">Presença</h3></div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between"><span class="font-body-md text-body-md">Semana</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">3 / 5 DIAS · EMBLEMA SEMANAL</span></div>
+<div class="grid grid-cols-7 gap-1" id="semana"></div>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between"><span class="font-body-md text-body-md">Mês</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">12 / 20 DIAS · MOLDURA MENSAL</span></div>
+<div class="h-2 rounded-[999px] bg-surface-container-highest overflow-hidden"><div class="h-full w-[60%] bg-secondary"></div></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Conta o 1º login de cada dia (horário de Brasília). Dia perdido não zera nada.</p>
+</div>
+</aside>
+
+<!-- Coluna direita: trilha da Patente + inventário -->
+<div class="col-span-8 flex flex-col gap-space-md min-h-0">
+<div class="bg-surface-container-low rounded-xl shadow-xl p-space-md flex flex-col gap-space-sm">
+<div class="flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary">route</span><h3 class="font-headline-sm text-headline-sm uppercase">Trilha da Patente</h3></div><span class="font-body-sm text-body-sm text-on-surface-variant">Cada Patente: 3 pontos</span></div>
+<div class="grid grid-cols-11 gap-1" id="trilha"></div>
+</div>
+<div class="flex-1 bg-surface-container-low rounded-xl shadow-xl p-space-md flex flex-col gap-space-md min-h-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary">inventory_2</span><h3 class="font-headline-sm text-headline-sm uppercase">Inventário de perfil</h3></div>
+<div class="flex items-center gap-1 bg-surface-container p-1 rounded-lg"><button class="aba px-space-md py-1 rounded font-headline-sm text-headline-sm" data-a="emb">EMBLEMAS</button><button class="aba px-space-md py-1 rounded font-headline-sm text-headline-sm" data-a="mol">MOLDURAS</button></div>
+</div>
+<div class="grid grid-cols-6 gap-space-sm content-start" id="inv"></div>
+<div class="mt-auto flex items-center justify-between bg-surface-container rounded-lg p-space-sm">
+<div class="flex items-center gap-space-sm"><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">EQUIPADOS</span><span class="font-body-md text-body-md">Emblema da Patente 5 · Moldura da Patente 5</span></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Aparecem no lobby, na seleção de heróis, no carregamento e no fim da partida.</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+<!-- ======================================================================= -->
+<!-- TELA 2 — LOBBY (só a faixa de baixo muda: card "Sua conta")               -->
+<!-- ======================================================================= -->
+<main class="tela w-full pt-20 min-h-screen flex-col relative" id="t-lobby">
+<div class="absolute inset-0 top-20 bg-[radial-gradient(ellipse_at_30%_55%,#3a2a12_0%,#131b2e_45%,#0b1326_100%)]"></div>
+<div class="relative flex-1 flex flex-col max-w-[1600px] w-full mx-auto px-gutter">
+<div class="flex justify-center gap-space-md pt-space-lg"><span class="px-space-md py-1 rounded bg-primary-container text-on-primary-container font-headline-sm text-headline-sm">JOGAR</span><span class="px-space-md py-1 font-headline-sm text-headline-sm text-on-surface-variant">TREINO VS BOT</span><span class="px-space-md py-1 font-headline-sm text-headline-sm text-on-surface-variant">CONFIGURAÇÕES</span></div>
+<div class="flex-1 flex items-center justify-between">
+<div class="ml-[8%] flex flex-col items-center opacity-80"><span class="material-symbols-outlined fill text-[220px] text-on-surface-variant/40">shield</span><span class="font-label-numeric-sm text-label-numeric-sm text-outline">DIORAMA DO LOBBY (como hoje)</span></div>
+<div class="w-[460px] bg-surface-container-lowest/85 rounded-xl p-space-lg flex flex-col gap-space-md border border-surface-variant/40">
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary">MODO PRINCIPAL ATIVO</span>
+<span class="font-headline-lg text-headline-lg">Duelo 1v1</span>
+<div class="btn-gold chamfer bg-primary-container text-on-primary-container font-headline-lg text-headline-lg text-center py-space-md">BUSCAR PARTIDA 1V1</div>
+</div>
+</div>
+<!-- Faixa de baixo -->
+<div class="grid grid-cols-2 gap-space-md pb-space-lg">
+<div class="flex items-center gap-space-md bg-surface-container-lowest/90 rounded-xl p-space-md border border-surface-variant/30">
+<div class="w-11 h-11 rounded-lg bg-surface-container-high flex items-center justify-center"><span class="material-symbols-outlined text-secondary">smart_toy</span></div>
+<div class="flex-1"><div class="font-headline-sm text-headline-sm">Treino vs Bot</div><div class="font-body-sm text-body-sm text-on-surface-variant">Offline, sem fila. Só com os seus heróis liberados.</div></div>
+<span class="px-space-sm py-1 rounded bg-secondary-container text-on-secondary-container font-headline-sm text-[14px]">Iniciar</span>
+</div>
+<!-- Card "Sua conta" com Patente, emblema e moldura -->
+<div class="flex items-center gap-space-md bg-surface-container-lowest/90 rounded-xl p-space-md border border-primary-container/40">
+<div class="relative"><div class="w-12 h-12 rounded-[999px] bg-[radial-gradient(circle,#ffc174,#f59e0b)] flex items-center justify-center moldura-prata"><span class="material-symbols-outlined fill text-on-primary">person</span></div><div class="absolute -bottom-1 -right-2 w-6 h-6 hex bg-[linear-gradient(160deg,#e2e8f0,#64748b)] flex items-center justify-center"><span class="font-label-numeric-sm text-[10px] text-surface">5</span></div></div>
+<div class="flex-1 flex flex-col gap-1">
+<div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm">#Duelista_01</span><span class="px-1.5 py-0.5 rounded bg-primary-container/20 text-primary font-label-numeric-sm text-label-numeric-sm">PATENTE 5</span><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">HERÓIS 5/11</span></div>
+<div class="flex items-center gap-space-sm"><div class="flex-1 h-1.5 rounded-[999px] bg-surface-container-highest overflow-hidden"><div class="h-full w-[66%] bg-primary-container"></div></div><span class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">13/15</span></div>
+</div>
+<span class="px-space-sm py-1 rounded bg-surface-container-high text-on-surface-variant font-headline-sm text-[14px] flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">person</span>Perfil</span>
+<span class="px-space-sm py-1 rounded bg-surface-container-high text-on-surface-variant font-headline-sm text-[14px] flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">logout</span>Sair</span>
+</div>
+</div>
+</div>
+</main>
+
+<!-- ======================================================================= -->
+<!-- TELA 3 — TELA HERÓIS (trecho: estados de herói liberado / bloqueado)     -->
+<!-- ======================================================================= -->
+<main class="tela w-full pt-20 min-h-screen flex-col" id="t-herois">
+<section class="w-full px-gutter py-space-md max-w-[1600px] mx-auto flex items-end justify-between">
+<div><span class="font-label-numeric-sm text-label-numeric-sm text-primary">CATÁLOGO DO JOGO</span><h1 class="font-headline-lg text-headline-lg uppercase">Heróis &amp; Campeões</h1><p class="font-body-md text-body-md text-on-surface-variant">Classe, atributos e habilidades de cada herói.</p></div>
+<div class="flex gap-space-sm">
+<div class="bg-surface-container-low rounded-lg px-space-md py-space-sm text-right"><div class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">LIBERADOS</div><div class="font-label-numeric-lg text-label-numeric-lg text-primary">5 <span class="text-on-surface-variant text-[14px]">/ 11</span></div></div>
+<div class="bg-surface-container-low rounded-lg px-space-md py-space-sm text-right"><div class="font-label-numeric-sm text-label-numeric-sm text-on-surface-variant">PRÓXIMA ESCOLHA</div><div class="font-label-numeric-lg text-label-numeric-lg">PATENTE 6</div></div>
+</div>
+</section>
+<section class="w-full px-gutter max-w-[1600px] mx-auto bg-surface-container-low rounded-xl p-space-md">
+<div class="grid grid-cols-6 gap-space-md" id="grade-herois"></div>
+<div class="mt-space-md flex items-center gap-space-lg font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>Liberado</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">lock</span>Você escolhe a cada Patente, da 2 à 10</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px] text-primary">workspace_premium</span>Libera na Patente 11</span>
+<span class="ml-auto">O detalhe do herói (atributos e habilidades) continua como hoje, também para os bloqueados.</span>
+</div>
+</section>
+</main>
+
+<!-- ======================================================================= -->
+<!-- MODAIS                                                                  -->
+<!-- ======================================================================= -->
+<div class="fixed inset-0 z-50 hidden items-center justify-center bg-surface-container-lowest/85 backdrop-blur-sm" id="modal">
+
+<!-- A. Subiu de Patente com escolha de herói -->
+<div class="modal rise w-[900px] bg-surface-container rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] border border-primary-container/50 overflow-hidden flex-col" id="m-subiu">
+<div class="relative px-space-lg pt-space-lg pb-space-md flex items-center gap-space-lg bg-[radial-gradient(ellipse_at_15%_50%,#3a2a12,#171f33_70%)]">
+<div class="w-24 h-24 hex bg-[linear-gradient(160deg,#fde68a,#b45309)] flex items-center justify-center glow"><span class="font-display-hero text-[48px] leading-none text-surface">6</span></div>
+<div class="flex-1"><span class="font-label-numeric-sm text-label-numeric-sm text-primary tracking-widest">VOCÊ SUBIU DE PATENTE</span><h3 class="font-headline-lg text-headline-lg uppercase">Patente 6</h3>
+<div class="flex items-center gap-space-sm mt-1"><span class="font-body-md text-body-md text-on-surface-variant">Recompensas:</span><span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high font-body-sm text-body-sm"><span class="material-symbols-outlined text-[16px] text-primary">military_tech</span>Emblema da Patente 6</span><span class="flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high font-body-sm text-body-sm"><span class="material-symbols-outlined text-[16px] text-primary">person_add</span>1 herói à sua escolha</span></div></div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between"><h4 class="font-headline-sm text-headline-sm uppercase">Escolha um herói para liberar</h4><span class="font-body-sm text-body-sm text-on-surface-variant">Quer testar antes? A escolha fica guardada; você pode decidir depois.</span></div>
+<div class="grid grid-cols-5 gap-space-sm" id="escolha"></div>
+</div>
+<div class="flex items-center justify-between px-space-lg py-space-md bg-surface-container-low border-t border-surface-variant/40">
+<span class="font-body-md text-body-md text-on-surface-variant" id="escolha-txt">Selecionado: <b class="text-on-surface">Bárbaro</b></span>
+<div class="flex gap-space-sm"><button class="px-space-lg py-space-sm rounded font-headline-sm text-headline-sm text-on-surface-variant hover:bg-surface-container-high" onclick="fechar()">DEPOIS</button><button class="btn-gold chamfer-sm px-space-lg py-space-sm bg-primary-container text-on-primary-container font-headline-sm text-headline-sm" onclick="modal('liberado')">LIBERAR HERÓI</button></div>
+</div>
+</div>
+
+<!-- A2. Herói liberado -->
+<div class="modal rise w-[520px] bg-surface-container rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] border border-outline-variant/40 overflow-hidden flex-col" id="m-liberado">
+<div class="p-space-xl flex flex-col items-center text-center gap-space-md">
+<div class="w-28 h-28 rounded-xl bg-[radial-gradient(circle,#1e3a5f,#131b2e)] flex items-center justify-center"><span class="material-symbols-outlined fill text-[72px]">swords</span></div>
+<h3 class="font-headline-lg text-headline-lg uppercase">Bárbaro liberado</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Já aparece na seleção de heróis da fila online e no treino.</p>
+<div class="flex gap-space-sm"><button class="px-space-lg py-space-sm rounded font-headline-sm text-headline-sm text-on-surface-variant hover:bg-surface-container-high" onclick="fechar()">FECHAR</button><button class="btn-gold chamfer-sm px-space-lg py-space-sm bg-primary-container text-on-primary-container font-headline-sm text-headline-sm">VER NA TELA HERÓIS</button></div>
+</div>
+</div>
+
+<!-- B. Patente 11 -->
+<div class="modal rise w-[620px] bg-surface-container rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] border border-primary-container/60 overflow-hidden flex-col" id="m-p11">
+<div class="p-space-xl flex flex-col items-center text-center gap-space-md bg-[radial-gradient(ellipse_at_50%_20%,#3a2a12,#171f33_70%)]">
+<div class="w-28 h-28 hex bg-[linear-gradient(160deg,#fde68a,#f59e0b,#78350f)] flex items-center justify-center glow"><span class="font-display-hero text-[56px] leading-none text-surface">11</span></div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-primary tracking-widest">PATENTE MÁXIMA</span>
+<h3 class="font-headline-lg text-headline-lg uppercase">Todos os heróis liberados</h3>
+<div class="flex items-center gap-space-md bg-surface-container-low rounded-lg p-space-sm w-full">
+<div class="w-16 h-16 rounded-lg bg-[radial-gradient(circle,#3a1212,#060e20)] flex items-center justify-center"><span class="material-symbols-outlined fill text-primary text-[40px]">shield_person</span></div>
+<div class="text-left flex-1"><div class="font-headline-sm text-headline-sm">Carrasco</div><div class="font-body-sm text-body-sm text-on-surface-variant">Tanque. Já está na seleção de heróis.</div></div>
+<span class="flex items-center gap-1 px-2 py-0.5 rounded bg-primary-container/20 text-primary font-label-numeric-sm text-label-numeric-sm"><span class="material-symbols-outlined text-[14px]">military_tech</span>EMBLEMA DA PATENTE 11</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Se você comprou o Pacote de Fundador, a skin do Carrasco já pode ser equipada na Tela Heróis.</p>
+<button class="btn-gold chamfer-sm px-space-xl py-space-sm bg-primary-container text-on-primary-container font-headline-sm text-headline-sm" onclick="fechar()">CONTINUAR</button>
+</div>
+</div>
+
+<!-- C. Recompensa de presença (ao logar) -->
+<div class="modal rise w-[520px] bg-surface-container rounded-xl shadow-[0_20px_60px_rgba(0,0,0,0.7)] border border-secondary-container/60 overflow-hidden flex-col" id="m-presenca">
+<div class="p-space-xl flex flex-col items-center text-center gap-space-md">
+<div class="relative"><div class="w-24 h-24 hex bg-[linear-gradient(160deg,#93ccff,#0369a1)] flex items-center justify-center glow"><span class="material-symbols-outlined fill text-surface text-[48px]">calendar_month</span></div><span class="absolute -top-1 -right-4 px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-label-numeric-md text-label-numeric-md">×4</span></div>
+<span class="font-label-numeric-sm text-label-numeric-sm text-secondary tracking-widest">5 DIAS NESTA SEMANA</span>
+<h3 class="font-headline-lg text-headline-lg uppercase">Emblema semanal</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">É a 4ª vez que você ganha. O contador aparece no emblema.</p>
+<button class="btn-blue chamfer-sm px-space-xl py-space-sm bg-secondary-container text-on-secondary-container font-headline-sm text-headline-sm" onclick="fechar()">OK</button>
+</div>
+</div>
+</div>
+
+<!-- ================= SELETOR (só do protótipo) ================= -->
+<div class="fixed bottom-4 right-gutter z-[60] flex items-center gap-1 bg-surface-container-lowest/95 border border-outline-variant/50 rounded-lg p-1 shadow-xl" id="seletor">
+<span class="px-2 font-label-numeric-sm text-label-numeric-sm text-outline">PROTÓTIPO ·</span>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="perfil">PERFIL</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="molduras">PERFIL · MOLDURAS</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="lobby">LOBBY</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="herois">TELA HERÓIS</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="subiu">SUBIU DE PATENTE</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="liberado">HERÓI LIBERADO</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="p11">PATENTE 11</button>
+<button class="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm" data-s="presenca">PRESENÇA</button>
+</div>
+
+<script>
+// Dados de exemplo (conta na Patente 5, 13 pontos). No Launcher tudo vem do backend (F87, F88).
+const HEROIS = [
+ {n:"Cavaleiro", i:"shield", c:"#7f1d1d", e:"lib"},
+ {n:"Arqueiro", i:"target", c:"#9a3412", e:"lib"},
+ {n:"Bárbaro", i:"swords", c:"#1e3a5f", e:"bloq"},
+ {n:"Bruxo de Fogo", i:"local_fire_department", c:"#1d4ed8", e:"lib"},
+ {n:"Ladina", i:"visibility_off", c:"#14532d", e:"bloq"},
+ {n:"Engenheiro", i:"construction", c:"#78350f", e:"lib"},
+ {n:"Protetor da Selva", i:"forest", c:"#365314", e:"bloq"},
+ {n:"Berserker", i:"ac_unit", c:"#0c4a6e", e:"bloq"},
+ {n:"Paladino Radiante", i:"wb_sunny", c:"#854d0e", e:"lib"},
+ {n:"Ocultista", i:"auto_awesome", c:"#581c87", e:"bloq"},
+ {n:"Carrasco", i:"shield_person", c:"#3a1212", e:"p11"},
+];
+// Semana: seg..dom (3 de 5 dias; hoje = qui)
+const sem = ["SEG","TER","QUA","QUI","SEX","SÁB","DOM"], feitos=[1,0,1,1,0,0,0];
+document.getElementById("semana").innerHTML = sem.map((d,k)=>`<div class="flex flex-col items-center gap-1 py-1 rounded ${k===3?'bg-surface-container-high':''}"><span class="font-label-numeric-sm text-[10px] text-on-surface-variant">${d}</span><span class="w-7 h-7 rounded-[999px] flex items-center justify-center ${feitos[k]?'bg-secondary-container text-on-secondary-container':'bg-surface-container-highest text-outline'}"><span class="material-symbols-outlined text-[16px]">${feitos[k]?'check':(k<3?'close':'remove')}</span></span></div>`).join("");
+// Trilha 1..11
+const tr = document.getElementById("trilha"); let th="";
+for(let p=1;p<=11;p++){
+  const feito=p<=5, atual=p===6;
+  const premio = p===1?'<span class="material-symbols-outlined text-[16px]">shield</span><span>Cavaleiro</span>'
+    : p===11?'<span class="material-symbols-outlined text-[16px]">workspace_premium</span><span>todos os heróis</span>'
+    : `<span class="material-symbols-outlined text-[16px]">person_add</span><span>1 herói</span>`;
+  const extra = p>=2 ? `<span class="flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">military_tech</span>emblema</span>` : '';
+  const mold = (p===5||p===10) ? `<span class="flex items-center gap-0.5 text-primary"><span class="material-symbols-outlined text-[14px]">filter_frames</span>moldura</span>` : '';
+  th += `<div class="flex flex-col items-center gap-1 rounded-lg p-1.5 ${atual?'bg-primary-container/15 border border-primary-container/60':feito?'bg-surface-container':'bg-surface-container/50'}">
+    <div class="w-9 h-9 hex flex items-center justify-center ${feito?'bg-[linear-gradient(160deg,#ffc174,#b45309)] text-surface':atual?'bg-[linear-gradient(160deg,#fde68a,#f59e0b)] text-surface':'bg-surface-container-highest text-on-surface-variant'}"><span class="font-label-numeric-md text-label-numeric-md">${p}</span></div>
+    <div class="flex flex-col items-center font-body-sm text-[11px] leading-[14px] text-center ${feito?'text-on-surface':'text-on-surface-variant'}">${premio.replace('<span>','<span class="flex items-center gap-0.5">').replace('</span><span>',' ')}${extra}${mold}</div>
+    ${feito?'<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>':atual?'<span class="font-label-numeric-sm text-[10px] text-primary">13/15</span>':'<span class="font-label-numeric-sm text-[10px] text-outline">'+((p-1)*3)+' PTS</span>'}
+  </div>`;
+}
+tr.innerHTML = th;
+// Inventário
+const EMB = [];
+for(let p=2;p<=11;p++) EMB.push({nome:`Patente ${p}`, tem:p<=5, eq:p===5, dica:p<=5?'':'Patente '+p, tipo:'pat', p});
+EMB.push({nome:"Semanal", tem:true, cont:3, dica:'', tipo:'sem'});
+EMB.push({nome:"Fundador", tem:false, dica:'Pacote de Fundador (Loja)', tipo:'fun'});
+const MOL = [
+ {nome:"Patente 5", tem:true, eq:true, cls:"moldura-prata", dica:''},
+ {nome:"Patente 10", tem:false, cls:"moldura-ouro", dica:'Patente 10'},
+ {nome:"Mensal", tem:false, cls:"moldura-mensal", dica:'20 dias no mês'},
+];
+function emblema(e){
+  const g = e.tipo==='sem'?'linear-gradient(160deg,#93ccff,#0369a1)':e.tipo==='fun'?'linear-gradient(160deg,#fde68a,#f59e0b,#78350f)':(e.p>=10?'linear-gradient(160deg,#fde68a,#b45309)':e.p>=5?'linear-gradient(160deg,#e2e8f0,#64748b)':'linear-gradient(160deg,#fdba74,#9a3412)');
+  const dentro = e.tipo==='pat'?`<span class="font-label-numeric-lg text-label-numeric-lg text-surface">${e.p}</span>`:`<span class="material-symbols-outlined fill text-surface text-[30px]">${e.tipo==='sem'?'calendar_month':'military_tech'}</span>`;
+  return `<div class="w-16 h-16 hex flex items-center justify-center ${e.tem?'':'grayscale opacity-35'}" style="background:${g}">${dentro}</div>`;
+}
+function card(x, arte){
+  return `<div class="relative flex flex-col items-center gap-space-xs p-space-sm rounded-lg border ${x.eq?'border-primary-container bg-primary-container/10':'border-surface-variant/50 bg-surface-container'}">
+    ${x.eq?'<span class="absolute top-1 left-1 px-1 rounded bg-primary-container text-on-primary-container font-label-numeric-sm text-[10px]">EQUIPADO</span>':''}
+    ${x.cont?`<span class="absolute top-1 right-1 px-1 rounded bg-secondary-container text-on-secondary-container font-label-numeric-sm text-[10px]">×${x.cont}</span>`:''}
+    <div class="h-[76px] flex items-center justify-center">${arte}</div>
+    <span class="font-body-md text-body-md">${x.nome}</span>
+    ${x.tem ? (x.eq?'<span class="font-label-numeric-sm text-label-numeric-sm text-primary py-1">EM USO</span>':'<button class="px-space-sm py-1 rounded bg-surface-container-high hover:bg-surface-bright font-headline-sm text-[13px]">EQUIPAR</button>')
+            : `<span class="flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant py-1"><span class="material-symbols-outlined text-[14px]">lock</span>${x.dica}</span>`}
+  </div>`;
+}
+function inventario(a){
+  document.querySelectorAll(".aba").forEach(b=>b.className="aba px-space-md py-1 rounded font-headline-sm text-headline-sm "+(b.dataset.a===a?"text-on-primary bg-primary":"text-on-surface-variant hover:bg-surface-container-high"));
+  document.getElementById("inv").innerHTML = a==="emb"
+    ? EMB.map(e=>card(e, emblema(e))).join("")
+    : MOL.map(m=>card(m, `<div class="w-14 h-14 rounded-[999px] bg-[radial-gradient(circle,#ffc174,#f59e0b)] flex items-center justify-center ${m.cls} ${m.tem?'':'grayscale opacity-35'}"><span class="material-symbols-outlined fill text-on-primary text-[30px]">person</span></div>`)).join("")
+      + `<div class="col-span-3 flex items-center px-space-md font-body-sm text-body-sm text-on-surface-variant">Sem moldura também é uma opção: clique em EM USO para tirar.</div>`;
+}
+document.querySelectorAll(".aba").forEach(b=>b.onclick=()=>inventario(b.dataset.a));
+// Tela Heróis
+document.getElementById("grade-herois").innerHTML = HEROIS.map(h=>{
+  const lib=h.e==="lib", p11=h.e==="p11";
+  return `<div class="relative flex flex-col rounded-xl overflow-hidden border ${lib?'border-surface-variant/50':'border-surface-variant/30'} bg-surface-container">
+    <div class="relative h-[150px] flex items-center justify-center" style="background:radial-gradient(circle at 50% 40%, ${h.c} 0%, #131b2e 70%)">
+      <span class="material-symbols-outlined fill text-[78px] ${lib?'text-on-surface/90':'text-on-surface/35'}">${h.i}</span>
+      ${lib?'':'<div class="absolute inset-0 bg-surface-container-lowest/45"></div>'}
+      <span class="absolute top-2 right-2 w-7 h-7 rounded bg-surface-container-lowest/80 flex items-center justify-center"><span class="material-symbols-outlined text-[16px] ${lib?'text-secondary':p11?'text-primary':'text-on-surface-variant'}">${lib?'check_circle':p11?'workspace_premium':'lock'}</span></span>
+    </div>
+    <div class="p-space-sm flex flex-col gap-0.5"><span class="font-headline-sm text-headline-sm">${h.n}</span>
+    <span class="font-body-sm text-body-sm ${lib?'text-secondary':p11?'text-primary':'text-on-surface-variant'}">${lib?'Liberado':p11?'Libera na Patente 11':'Escolha numa próxima Patente'}</span></div>
+  </div>`;}).join("");
+// Escolha (só KayKit bloqueados)
+const bloqueados = HEROIS.filter(h=>h.e==="bloq");
+document.getElementById("escolha").innerHTML = bloqueados.map((h,k)=>`<button onclick="selecionar(${k})" data-k="${k}" class="esc flex flex-col rounded-xl overflow-hidden border-2 ${k===0?'border-primary-container':'border-surface-variant/50'} bg-surface-container text-left">
+  <div class="h-[120px] flex items-center justify-center" style="background:radial-gradient(circle at 50% 40%, ${h.c} 0%, #131b2e 70%)"><span class="material-symbols-outlined fill text-[64px]">${h.i}</span></div>
+  <div class="p-space-sm"><div class="font-headline-sm text-headline-sm">${h.n}</div><div class="font-body-sm text-body-sm text-secondary hover:underline">ver habilidades</div></div></button>`).join("");
+function selecionar(k){document.querySelectorAll(".esc").forEach(b=>b.className=b.className.replace(/border-primary-container|border-surface-variant\/50/, b.dataset.k==k?'border-primary-container':'border-surface-variant/50'));document.getElementById("escolha-txt").innerHTML='Selecionado: <b class="text-on-surface">'+bloqueados[k].n+'</b>';}
+
+const M = document.getElementById("modal");
+function modal(id){M.style.display="flex";document.querySelectorAll(".modal").forEach(m=>m.style.display="none");document.getElementById("m-"+id).style.display="flex";}
+function fechar(){M.style.display="none";}
+function tela(id){document.querySelectorAll(".tela").forEach(t=>t.style.display="none");document.getElementById("t-"+id).style.display="flex";
+  document.querySelectorAll(".nv").forEach(a=>a.className="nv px-space-md py-space-xs rounded font-headline-sm text-headline-sm tracking-wide "+(a.dataset.n===id?"bg-primary-container text-on-primary-container shadow-[0_0_12px_rgba(245,158,11,0.4)]":"text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface"));}
+function estado(s){
+  fechar();
+  if(s==="perfil"){tela("perfil");inventario("emb");}
+  else if(s==="molduras"){tela("perfil");inventario("mol");}
+  else if(s==="lobby"){tela("lobby");}
+  else if(s==="herois"){tela("herois");}
+  else {tela("lobby");modal(s);}
+  document.querySelectorAll(".sel").forEach(b=>b.className="sel px-2 py-1 rounded font-label-numeric-sm text-label-numeric-sm "+(b.dataset.s===s?"bg-primary text-on-primary":"text-on-surface-variant hover:bg-surface-container-high"));
+}
+document.querySelectorAll(".sel").forEach(b=>b.onclick=()=>estado(b.dataset.s));
+const u = new URLSearchParams(location.search);
+if(u.get("shot")) document.getElementById("seletor").style.display="none";
+estado(u.get("estado") || "perfil");
+</script>
+</body></html>
