@@ -1,6 +1,6 @@
 # SPEC-087 — Patente 1–11 grátis: Cavaleiro inicial, 1 herói KayKit por Patente, demais heróis na 11
 
-**Fatia:** F87 / SPEC-087 (MVP5, Slice 5.1) · **Issue:** #256 (issue-pai #250) · **Status:** decidida pelo PI em 2026-10-23 (pop-ups do Cowork: "Partida online, vitória vale mais"; "≈ 20 partidas"; "Cavaleiro fixo"; "liberar os 10 KayKit, depois do nível 10 os outros heróis"; "nível 11 já libera todos os heróis"; "usar as três recomendadas" — 3 pontos por Patente, contas atuais pelo histórico, fila FIFO; "Só os liberados" no treino)
+**Fatia:** F87 / SPEC-087 (MVP5, Slice 5.1) · **Issue:** #256 (issue-pai #250) · **Status:** decidida pelo PI em 2026-10-23 (pop-ups do Cowork: "Partida online, vitória vale mais"; "≈ 20 partidas"; "Cavaleiro fixo"; "liberar os 10 KayKit, depois do nível 10 os outros heróis"; "nível 11 já libera todos os heróis"; "usar as três recomendadas" — 3 pontos por Patente, contas atuais pelo histórico, fila FIFO; "Só os liberados" no treino; protótipo `Patente & Perfil/` "aprovado")
 **ADR:** ADR-0026, ADR-0034 · **Depende de:** [GATE] MVP4 #255 (ADR-0024 item 1)
 **Fontes:** `backend/src/users`, `matches`, `orchestrator/match-token.service.ts`; `POST /internal/matches/:id/validate` e `/result` (`ARCHITECTURE-LAUNCHER.md` §4.2); SPEC-085 (tutorial, fila liberada); ADR-0020 (`left`)
 **Escopo:** backend (Patente, posse de herói), Launcher (Patente, escolha de herói, trava no treino), Game (pick online e offline só com liberados), `shared` (marca KayKit no herói).
@@ -32,18 +32,17 @@
 - **Pick offline (treino):** só os heróis de `--heroes=<id>,…` (ADR-0034). Sem o argumento, todos (modo de dev). O tutorial não muda.
 
 ### 2.4 Launcher
-- Patente e barra de pontos no perfil e no lobby.
-- Ao subir de Patente com escolha pendente, o Launcher oferece a escolha (todos os KayKit bloqueados); pode adiar.
-- Tela Heróis (F71) mostra liberado × bloqueado e "libera na Patente 11" nos heróis não KayKit.
+- **UI fiel ao protótipo `docs/prd/telas/Patente & Perfil/`** (aprovado pelo PI em 2026-10-23; `FRONTEND-LAUNCHER.md` §8.1): chip do cabeçalho com Patente, Perfil (Patente, pontos, heróis liberados e trilha 1→11), card "Sua conta" do lobby e Tela Heróis (F71) com liberado × bloqueado × "libera na Patente 11". Herói bloqueado continua abrindo o detalhe.
+- Ao subir de Patente com escolha pendente, o Launcher abre o modal "Subiu de Patente" com os KayKit bloqueados; LIBERAR HERÓI ou DEPOIS. O modal abre na volta ao lobby depois da partida (F70) e no login, se houver escolha pendente; na Patente 11, o modal "Todos os heróis liberados". Se o modal de presença do F88 cair junto, o de Patente vem primeiro.
 - Treino vs Bot passa `--heroes` com os liberados da conta.
-- **Pré-condição de UI:** protótipo dos elementos novos (Patente, escolha de herói, bloqueado) em `docs/prd/telas/`, feito pelo Cowork e aprovado pelo PI, antes de o card ir para `todo` (`FRONTEND-LAUNCHER.md` §8).
 
 ## 3. Critério de aceite
 
 1. Testes GUT da regra pura e testes do backend para cada item do §1 (inclusive `left`, `interrupted`, Patente 11, escolha pendente, conta legada).
 2. Pick online com herói bloqueado recusado pelo servidor (teste) e soak verde (mexe em servidor/pick).
 3. Verificação do PI: conta nova sai do tutorial com o Cavaleiro, joga online, sobe de Patente, escolhe um herói e o vê no pick online e no treino.
-4. CI verde.
+4. Captura Godot × protótipo lado a lado (`FRONTEND-LAUNCHER.md` §8.5).
+5. CI verde.
 
 ## 4. Fora
 

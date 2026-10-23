@@ -1,6 +1,6 @@
 # SPEC-088 — Recompensas de Patente e de login diário, semanal e mensal: emblemas e molduras
 
-**Fatia:** F88 / SPEC-088 (MVP5, Slice 5.2) · **Issue:** #257 (issue-pai #250) · **Status:** decidida pelo PI em 2026-10-23 (pop-ups do Cowork: "1 emblema por Patente + 2 molduras"; "Só conta para semanal e mensal"; "Acumula no período, sem zerar"; "Fixos, com contador ×N"; "5 de 7"; emblema no perfil, lobby, pick e carregamento, fim de partida; "Claude gera, PI aprova")
+**Fatia:** F88 / SPEC-088 (MVP5, Slice 5.2) · **Issue:** #257 (issue-pai #250) · **Status:** decidida pelo PI em 2026-10-23 (pop-ups do Cowork: "1 emblema por Patente + 2 molduras"; "Só conta para semanal e mensal"; "Acumula no período, sem zerar"; "Fixos, com contador ×N"; "5 de 7"; emblema no perfil, lobby, pick e carregamento, fim de partida; "Claude gera, PI aprova"; protótipo `Patente & Perfil/` "aprovado")
 **ADR:** ADR-0025, ADR-0026, ADR-0034 item 8 · **Depende de:** F87
 **Escopo:** backend (recompensas, presença), Launcher (inventário de perfil, equipar), Game (mostrar emblema e moldura vindos do servidor), `shared` (arte e catálogo dos itens).
 
@@ -35,14 +35,15 @@ Todos grátis, exceto o Fundador, que vem no pacote pago. Nada é vendido avulso
 
 1. **Backend:** migration de itens de perfil, inventário de perfil e dias de login; entrega por Patente (no mesmo ponto em que o F87 sobe a Patente) e por login; `GET` do inventário de perfil com contadores; `POST` de equipar (só item possuído). Contas legadas recebem os emblemas e molduras das Patentes que o histórico já deu (F87 §1.6). Testes cobrindo §2 (virada de dia em Brasília, semana segunda–domingo, mês, 5/7, 20 dias, contador).
 2. **Arte:** as 15 peças do §1, feitas pelo Claude (SVG/PNG, tokens do design system) e aprovadas pelo PI antes do merge; catálogo dos itens em `shared/data/`.
-3. **Launcher:** inventário de perfil e equipar no perfil; emblema e moldura no lobby; progresso da semana e do mês visível. **Pré-condição:** protótipo em `docs/prd/telas/` (Cowork faz, PI aprova) antes do `todo`.
-4. **Game:** emblema e moldura no pick, no carregamento e no fim de partida, vindos do servidor.
+3. **Launcher:** fiel ao protótipo `docs/prd/telas/Patente & Perfil/` (aprovado pelo PI em 2026-10-23; `FRONTEND-LAUNCHER.md` §8.1): inventário de perfil com abas EMBLEMAS e MOLDURAS e equipar no Perfil; bloco Presença (semana e mês); emblema e moldura no chip do cabeçalho e no card "Sua conta" do lobby; modal de presença no login que completa a meta (depois do modal de Patente, se os dois caírem juntos).
+4. **Game:** emblema e moldura no pick, no carregamento e no fim de partida, vindos do servidor, ao lado do nome do jogador nos protótipos do Game que já existem.
 
 ## 5. Critério de aceite
 
 1. Testes do backend do §2 e da entrega por Patente; testes GUT do Launcher e do Game.
 2. Verificação do PI: arte aprovada; conta sobe de Patente e recebe o emblema; equipa e vê no lobby, no pick (os dois lados) e no fim de partida.
-3. CI verde.
+3. Captura Godot × protótipo lado a lado (`FRONTEND-LAUNCHER.md` §8.5).
+4. CI verde.
 
 ## 6. Fora
 

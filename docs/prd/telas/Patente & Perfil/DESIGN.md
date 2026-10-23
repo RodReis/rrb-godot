@@ -1,6 +1,6 @@
 # Patente & Perfil — protótipo (F87 / SPEC-087 e F88 / SPEC-088)
 
-**Autor:** Cowork, 2026-10-23 (pré-condição de UI do F87 e do F88). **Estado:** aguardando aprovação do PI. Depois da aprovação, a pasta entra na tabela §8.1 do `FRONTEND-LAUNCHER.md`.
+**Autor:** Cowork, 2026-10-23 (pré-condição de UI do F87 e do F88). **Estado:** **aprovado pelo PI em 2026-10-23**, como está, inclusive as três propostas do Cowork marcadas abaixo. Vale a regra de fidelidade do `FRONTEND-LAUNCHER.md` §8 (tabela §8.1).
 **Arquivos:** `code.html` (abre no navegador; o seletor "PROTÓTIPO" no canto inferior direito troca a tela e **não** entra no Launcher; `?estado=<nome>` abre uma), `screen.png` (Perfil, 1600×1000), `fluxo.png` (lobby, Tela Heróis, molduras, subiu de Patente, herói liberado, presença, Patente 11).
 **Tokens:** os mesmos de `Tela Herois/` e `Loja/`. Novos só no visual: emblema em hexágono (`.hex`), molduras de avatar por anel duplo (`.moldura-*`), brilho pulsante (`.glow`) e entrada de modal (`.rise`). Atenção: no tema do projeto `rounded-full` vale 0,75 rem; círculo de verdade é `rounded-[999px]`.
 
@@ -13,12 +13,12 @@
    - Direita: **Trilha da Patente** 1→11 (o que cada Patente dá: Cavaleiro na 1; 1 herói + emblema da 2 à 10; moldura na 5 e na 10; todos os heróis + emblema na 11), com as conquistadas marcadas, a atual com os pontos e as próximas com os pontos totais.
    - Direita: **Inventário de perfil** com abas EMBLEMAS e MOLDURAS. Card do item: arte, nome, EQUIPAR / EM USO, ou cadeado com o que falta. O emblema semanal mostra o contador (×N). O emblema Fundador aparece bloqueado com "Pacote de Fundador (Loja)". Rodapé: o que está equipado e onde aparece.
 3. **Lobby:** só muda o card "Sua conta" da faixa de baixo: avatar com moldura e emblema, `#nickname`, selo PATENTE N, HERÓIS N/11, barra de pontos e os botões Perfil e Sair. O card Treino vs Bot ganha a frase "Só com os seus heróis liberados" (ADR-0034).
-4. **Tela Heróis (F71):** contadores LIBERADOS N/11 e PRÓXIMA ESCOLHA; cada herói com o selo liberado / bloqueado / Patente 11 e a linha de estado embaixo do nome. Bloqueado fica escurecido, mas o detalhe (atributos e habilidades) continua abrindo, para o jogador conhecer antes de escolher (proposta do Cowork).
+4. **Tela Heróis (F71):** contadores LIBERADOS N/11 e PRÓXIMA ESCOLHA; cada herói com o selo liberado / bloqueado / Patente 11 e a linha de estado embaixo do nome. Bloqueado fica escurecido, mas o detalhe (atributos e habilidades) continua abrindo, para o jogador conhecer antes de escolher (proposta do Cowork, aprovada pelo PI).
 5. **Subiu de Patente (modal):** número da Patente nova, recompensas (emblema e, quando há, moldura; 1 herói à escolha) e a grade dos heróis KayKit bloqueados para escolher, com "ver habilidades". LIBERAR HERÓI ou DEPOIS (a escolha fica pendente — SPEC-087 §1.4). Depois: modal "Herói liberado".
 6. **Patente 11 (modal):** "Todos os heróis liberados", o Carrasco e o emblema da Patente 11; lembra que a skin do Fundador, se comprada, já pode ser equipada.
 7. **Presença (modal no login):** emblema semanal ganho, com o contador.
 
-## Onde o modal aparece (proposta do Cowork — o PI aprova junto com o protótipo)
+## Onde o modal aparece (proposta do Cowork, aprovada pelo PI em 2026-10-23)
 
 O modal de Patente nova abre no Launcher quando ele recebe o progresso depois da partida (volta ao lobby, F70) ou no login, se houver escolha pendente. O de presença abre no login que completa a meta. Ordem quando há mais de um: Patente primeiro, presença depois.
 

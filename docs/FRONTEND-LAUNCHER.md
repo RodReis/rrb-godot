@@ -108,6 +108,7 @@ Toda tela do Launcher é entregue **pronta e com acabamento**, fiel ao protótip
 | Card "Resultado da partida" (sobre o lobby) | sem pasta: linguagem dos cartões do `Histórico de Partidas — Duelos/` e do `Menu Principal/` | F70 (ADR-0015) |
 | Telas de loading do Game e splash | sem pasta: renders reais (dia, noite, heróis) + dica + barra; tema do Game (HUD v2) | F68 (ADR-0015) |
 | Loja (catálogo + modal de compra) | `Loja/` (`screen.png` = catálogo 1600×1000, `fluxo.png` = modal e erro; protótipo do Cowork aprovado pelo PI em 2026-10-23; o seletor "PROTÓTIPO" não entra; item LOJA depois de HERÓIS no menu) | F90 #259 (SPEC-090) |
+| Patente e inventário de perfil: chip do cabeçalho, Perfil (Patente, trilha, presença, emblemas e molduras), card "Sua conta" do lobby, Tela Heróis com liberado/bloqueado/Patente 11 e os modais de Patente nova, herói liberado, Patente 11 e presença | `Patente & Perfil/` (`screen.png` = Perfil 1600×1000, `fluxo.png` = as demais; protótipo do Cowork aprovado pelo PI em 2026-10-23; o seletor "PROTÓTIPO" não entra; amplia as linhas Perfil, Lobby e Heróis acima) | F87 #256 (SPEC-087), F88 #257 (SPEC-088) |
 
 As pastas `Seleção de Heróis/`, `Destaques da Tela de Fim de Partida/` e `Pop-up Tático In-Game/` são do Game ou sem requisito e ficam fora desta regra.
 
