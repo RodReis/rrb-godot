@@ -19,7 +19,7 @@
 
 ## Ordem prevista
 
-F87 → F88 → F89 → F90 → F91 → F92 → `[GATE]`. F89 pode subir antes do F87 se o playtest do MVP4 mostrar fila vazia (aí o nível do bot fica fixo em 2 até a Patente existir). A ordem final do board é do Cowork, com o PI.
+F87 → F88 → F89 → F90 → F91 → F92 → `[GATE]`. F89 depende da Patente do F87 (nível do bot); antecipá-lo, se o playtest do MVP4 mostrar fila vazia, é decisão do PI. A ordem final do board é do Cowork, com o PI.
 
 ## Fora deste marco
 
