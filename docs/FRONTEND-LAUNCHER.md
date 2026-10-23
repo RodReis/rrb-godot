@@ -107,6 +107,7 @@ Toda tela do Launcher é entregue **pronta e com acabamento**, fiel ao protótip
 | Heróis | `Tela Herois/` (1310×1600, com rolagem; sem epíteto/lore; "Arqueiro") | F71 (ADR-0015) |
 | Card "Resultado da partida" (sobre o lobby) | sem pasta: linguagem dos cartões do `Histórico de Partidas — Duelos/` e do `Menu Principal/` | F70 (ADR-0015) |
 | Telas de loading do Game e splash | sem pasta: renders reais (dia, noite, heróis) + dica + barra; tema do Game (HUD v2) | F68 (ADR-0015) |
+| Loja (catálogo + modal de compra) | `Loja/` (`screen.png` = catálogo 1600×1000, `fluxo.png` = modal e erro; protótipo do Cowork aprovado pelo PI em 2026-10-23; o seletor "PROTÓTIPO" não entra; item LOJA depois de HERÓIS no menu) | F90 #259 (SPEC-090) |
 
 As pastas `Seleção de Heróis/`, `Destaques da Tela de Fim de Partida/` e `Pop-up Tático In-Game/` são do Game ou sem requisito e ficam fora desta regra.
 

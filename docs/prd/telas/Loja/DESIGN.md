@@ -1,6 +1,6 @@
 # Loja — protótipo (F90 / SPEC-090)
 
-**Autor:** Cowork, a pedido do PI em 2026-10-23 (SPEC-090 §1.3). **Estado:** aguardando aprovação do PI. Depois da aprovação, a pasta entra na tabela §8.1 do `FRONTEND-LAUNCHER.md` e passa a valer a regra de fidelidade (§8).
+**Autor:** Cowork, a pedido do PI em 2026-10-23 (SPEC-090 §1.3). **Estado:** **aprovado pelo PI em 2026-10-23**, como está (item LOJA depois de HERÓIS, selo do subcabeçalho, sem contador de Pix e sem aceite de termos). Vale a regra de fidelidade do `FRONTEND-LAUNCHER.md` §8 (tabela §8.1).
 **Arquivos:** `code.html` (abre direto no navegador; o seletor "PROTÓTIPO" no canto inferior direito troca o estado e **não** entra no Launcher; `?estado=<nome>` abre um estado), `screen.png` (catálogo, 1600×1000), `fluxo.png` (confirmar, Pix, cartão, confirmada, não aprovado, erro).
 
 ## Tokens
@@ -9,7 +9,7 @@ Os mesmos de `Tela Herois/DESIGN.md` e do `Menu Principal/` (cores, tipografia S
 
 ## Composição
 
-1. **Cabeçalho** igual ao do Launcher atual (marca Loot Start, menu, status do servidor, `#nickname`, configurações, sair). Item novo **LOJA**, depois de HERÓIS (posição proposta, o PI confirma).
+1. **Cabeçalho** igual ao do Launcher atual (marca Loot Start, menu, status do servidor, `#nickname`, configurações, sair). Item novo **LOJA**, depois de HERÓIS.
 2. **Subcabeçalho:** trilha LOBBY ▸ LOJA, selo "SÓ VISUAL · SEM SORTEIO · PREÇO EM REAIS" (ADR-0025) e abas TODOS / PACOTE / SKINS / NO INVENTÁRIO.
 3. **Coluna esquerda (4/12): Pacote de Fundador.** Render do Carrasco com a skin do Fundador, selos EXCLUSIVO e 1 POR CONTA, o que vem no pacote (skin + emblema), preço R$ 29,90 e COMPRAR. Enquanto o Carrasco não estiver liberado aparece o aviso "O Carrasco libera na Patente 11. A skin fica guardada no seu inventário até lá.", com a barra de Patente da conta; com o Carrasco liberado, o aviso some. Depois de comprado, o card mostra JÁ POSSUI no lugar do botão.
 4. **Coluna direita (8/12): Skins.** Grade 5 × 2, uma skin por herói KayKit (SPEC-092). Card: render, herói, nome da skin, preço R$ 9,90 e COMPRAR. Estados do card: disponível; **herói bloqueado** (cadeado + "Herói bloqueado: fica guardada até liberar.", compra permitida, decisão do PI em 2026-10-23); **no inventário** (selo NO INVENTÁRIO, "Equipe na Tela Heróis.", JÁ POSSUI, sem botão).
