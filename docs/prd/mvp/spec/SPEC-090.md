@@ -1,14 +1,14 @@
 # SPEC-090 — Loja: catálogo, pedido, Mercado Pago (Pix e cartão), inventário e tela Loja
 
-**Fatia:** F90 / SPEC-090 (MVP5, Slice 5.4) · **Issue:** #259 (issue-pai #250) · **Status:** decidida pelo PI em 2026-10-23 (pop-ups do Cowork: "CNPJ que o PI já tem"; "Nota fiscal fora do sistema"; "Cowork rascunha os termos, PI revisa com advogado"; "Webhook remove o item"; "Cowork faz o protótipo, PI aprova"; "Skin do Fundador fica guardada até a Patente 11"; "Pix na tela + cartão no navegador"; "Skin de herói bloqueado: pode, fica guardada até liberar")
+**Fatia:** F90 / SPEC-090 (MVP5, Slice 5.4) · **Issue:** #259 (issue-pai #250) · **Status:** decidida pelo PI em 2026-10-23 (pop-ups do Cowork: "CNPJ que o PI já tem"; "Nota fiscal fora do sistema"; "Cowork rascunha os termos, PI revisa com advogado"; "Webhook remove o item"; "Cowork faz o protótipo, PI aprova"; "Skin do Fundador fica guardada até a Patente 11"; "Pix na tela + cartão no navegador"; "Skin de herói bloqueado: pode, fica guardada até liberar"; protótipo "aprovado")
 **ADR:** ADR-0025, ADR-0034 · **Depende de:** F87 (posse, Patente), F88 (emblema Fundador)
 **Escopo:** backend (catálogo, pedido, pagamento, inventário, relatório), Launcher (tela Loja), web-admin (relatório de vendas). O Game nunca vende nem decide posse (ADR-0002, ADR-0025 item 6).
 
 ## 1. Pré-condições do PI (fora do código)
 
 1. Conta Mercado Pago no **CNPJ que o PI já tem**, com Pix e cartão habilitados; credenciais gravadas como segredo do ambiente do backend (nunca no repositório).
-2. **Termos de compra e política de reembolso:** o Cowork rascunha; o PI revisa com advogado. O card não vai para `todo` sem o texto revisado.
-3. **Protótipo da tela Loja** em `docs/prd/telas/Loja/` (`code.html`, `DESIGN.md`, `screen.png`, `fluxo.png`), feito pelo Cowork em 2026-10-23; falta a aprovação do PI (`FRONTEND-LAUNCHER.md` §8).
+2. **Termos de compra e política de reembolso:** rascunho do Cowork em `docs/prd/TERMOS-DE-COMPRA-RASCUNHO.md` (2026-10-23), com as lacunas marcadas para o advogado; o PI revisa com advogado. O card não vai para `todo` sem o texto revisado.
+3. **Protótipo da tela Loja:** `docs/prd/telas/Loja/` (`code.html`, `DESIGN.md`, `screen.png`, `fluxo.png`), **aprovado pelo PI em 2026-10-23** e incluído no `FRONTEND-LAUNCHER.md` §8.1.
 4. Nota fiscal: emitida **fora do sistema** pelo PI ou pelo contador, a partir do relatório do §3.5.
 
 ## 2. Catálogo (ADR-0025)
