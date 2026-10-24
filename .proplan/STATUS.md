@@ -1,6 +1,6 @@
 ---
 proplan: v1
-updated: 2026-10-23
+updated: 2026-10-24
 ---
 <!-- gerado pelo ProPlan a partir das Issues — não edite à mão -->
 # Status
@@ -9,24 +9,25 @@ updated: 2026-10-23
 
 ### [MVP5] Early Access (#250)
 
-- [MVP5][GATE] Abertura do Early Access no site e no itch.io (#262)
-- [MVP5][SPEC-092][F92] Primeiras skins (variantes KayKit Extra) e skin do Pacote de Fundador (#261)
-- [MVP5][SPEC-091][F91] Skin na partida: token devolve heróis liberados e skin; game server replica (#260)
-- [MVP5][SPEC-090][F90] Loja: catálogo, pedido, Mercado Pago (Pix e cartão), inventário e tela Loja (#259)
-- [MVP5][SPEC-089][F89] Bot na fila online: sem humano em 30 s, partida contra bot com aviso (#258)
 - [MVP5][SPEC-088][F88] Recompensas de Patente e de login diário, semanal e mensal: emblemas e molduras (#257)
-- [MVP5][SPEC-087][F87] Patente 1–10 grátis: 1 herói inicial + 1 por Patente com escolha livre (#256)
+- [MVP5][SPEC-087][F87] Patente 1–11 grátis: Cavaleiro inicial, 1 herói KayKit por Patente, demais heróis na 11 (#256)
+- [MVP5][SPEC-090][F90] Loja: catálogo, pedido, Mercado Pago (Pix e cartão), inventário e tela Loja (#259)
+- [MVP5][GATE] Abertura do Early Access no site e no itch.io (#262)
+- [MVP5][SPEC-092][F92] Primeiras skins: 1 por herói KayKit e skin do Pacote de Fundador no Carrasco (#261)
+- [MVP5][SPEC-091][F91] Skin na partida: token devolve heróis liberados e skin; game server replica (#260)
+- [MVP5][SPEC-089][F89] Bot na fila online: sem humano em 30 s, partida contra bot com aviso (#258)
 
-## A Fazer
+### [MVP4] Playtest (#246)
+
+- [MVP4][GATE] Playtest com 10+ pessoas: critérios do PRD §9.2 e decisão de abrir o Early Access (#255)
 
 ### [MVP3] Meta + deploy (#76)
 
 - [MVP3][GATE] Homologação: dois amigos jogam pela internet sem intervenção do dev (#87)
 
-### [MVP4] Playtest (#246)
+## A Fazer
 
-- [MVP4][GATE] Playtest com 10+ pessoas: critérios do PRD §9.2 e decisão de abrir o Early Access (#255)
-- [MVP4][SPEC-030][F30] Balanceamento pós-playtest dos 11 heróis (só .tres) (#254)
+_(vazio)_
 
 ## Em Andamento
 
@@ -40,6 +41,7 @@ _(vazio)_
 
 ### [MVP4] Playtest (#246)
 
+- [MVP4][SPEC-030][F30] Balanceamento dos 11 heróis antes do playtest (só .tres) (#254, finalizado em: 2026-10-24)
 - [MVP4][SPEC-029][F29] Telemetria de partida e web-admin de KPIs (#253, finalizado em: 2026-10-23)
 - [MVP4][FIX] Ajustes de combate, HUD e seleção do playtest (#276, finalizado em: 2026-10-23)
 - [MVP4][SPEC-086][F86] Publicação no itch.io: página do jogo e build a cada Release (#252, finalizado em: 2026-10-23)
