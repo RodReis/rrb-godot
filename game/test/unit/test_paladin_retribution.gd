@@ -29,7 +29,7 @@ func test_golpe_da_maca_do_cavaleiro_volta_para_ele() -> void:
 
 func test_dano_devolvido_bate_com_o_gdb() -> void:
 	_retributing()
-	# rank 1: 25 % do que o Paladino tomou + 20 % do ATK (38 no nivel 1, 41,4 no 2).
+	# rank 1: 25 % do que o Paladino tomou + 20 % do ATK (43 no nivel 1, 46,6 no 2).
 	var taken := CombatRules.mitigated(100, _paladin._defense())
 	assert_eq(_reflected(100), roundi(taken * 0.25 + 0.2 * _paladin.attributes.attack))
 

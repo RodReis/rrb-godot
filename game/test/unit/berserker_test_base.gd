@@ -15,13 +15,16 @@ const EPS: float = 0.0001
 const AHEAD: Vector3 = Vector3(0, 0, -1)
 const SIDE: Vector3 = Vector3(1, 0, 0)
 ## HP e DEF do Cavaleiro no nivel 1 (GDB §4.1).
-const KNIGHT_HP: int = 600
+const KNIGHT_HP: int = 620
 const KNIGHT_DEF: float = 30.0
 const GOLEM_HP: int = 680
 ## HP, DEF e ATK do Berserker no nivel 1 (GDB §4.8).
-const BERSERKER_HP: int = 560
+const BERSERKER_HP: int = 500
 const BERSERKER_DEF: float = 18.0
-const BERSERKER_ATK: int = 58
+const BERSERKER_ATK: int = 42
+## Frenesi (GDB §4.8): +30% de velocidade de ataque e 10% de roubo de vida no maximo.
+const FRENZY_ATTACK_SPEED: float = 0.3
+const FRENZY_LIFESTEAL: float = 0.10
 ## 1,5 s, 2,0 s e 4,0 s a 30 ticks/s.
 const SLOW_TICKS: int = 45
 const SHOUT_TICKS: int = 60
@@ -85,7 +88,7 @@ func _hit_berserker(tick: int, slot: HitLedger.Slot, effect: HitEffect) -> void:
 
 
 func _interval_ticks(f: float) -> int:
-	var interval := BerserkerRules.attack_interval(_berserker.attributes.attack_interval, f, 0.6)
+	var interval := BerserkerRules.attack_interval(_berserker.attributes.attack_interval, f, FRENZY_ATTACK_SPEED)
 	return SkillRules.seconds_to_ticks(interval, 30)
 
 

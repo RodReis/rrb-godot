@@ -16,15 +16,15 @@ func before_all() -> void:
 
 
 func test_investida_rank_1_soma_75_por_cento_do_atk() -> void:
-	assert_almost_eq(SkillRules.amount(_knight.skill_q, 1, _lv1), 50.0 + 0.75 * 40.0, EPS)
+	assert_almost_eq(SkillRules.amount(_knight.skill_q, 1, _lv1), 50.0 + 0.75 * 47.0, EPS)
 
 
 func test_investida_rank_5() -> void:
-	assert_almost_eq(SkillRules.amount(_knight.skill_q, 5, _lv1), 170.0 + 0.75 * 40.0, EPS)
+	assert_almost_eq(SkillRules.amount(_knight.skill_q, 5, _lv1), 170.0 + 0.75 * 47.0, EPS)
 
 
 func test_muralha_soma_15_por_cento_do_hp_maximo() -> void:
-	assert_almost_eq(SkillRules.amount(_knight.skill_e, 1, _lv1), 120.0 + 0.15 * 600.0, EPS)
+	assert_almost_eq(SkillRules.amount(_knight.skill_e, 1, _lv1), 120.0 + 0.15 * 620.0, EPS)
 
 
 func test_terremoto_soma_110_por_cento_da_int() -> void:
@@ -32,7 +32,7 @@ func test_terremoto_soma_110_por_cento_da_int() -> void:
 
 
 func test_ataque_basico_e_100_por_cento_do_atk() -> void:
-	assert_almost_eq(SkillRules.amount(_knight.basic_attack, 1, _lv1), 40.0, EPS)
+	assert_almost_eq(SkillRules.amount(_knight.basic_attack, 1, _lv1), 47.0, EPS)
 
 
 func test_cooldown_em_ticks_com_cdr_da_int() -> void:

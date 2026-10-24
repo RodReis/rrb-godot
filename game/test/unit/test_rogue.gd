@@ -6,7 +6,7 @@ extends RogueTestBase
 
 func test_nivel_1_tem_os_atributos_base() -> void:
 	var rogue := _spawn_rogue(1)
-	assert_eq(rogue.hp, 400)
+	assert_eq(rogue.hp, 450)
 	assert_almost_eq(rogue.attributes.move_speed, 6.3 * (1.0 + 28.0 * 0.004), EPS)
 	assert_eq(rogue.ranks, Vector3i(1, 0, 0))
 

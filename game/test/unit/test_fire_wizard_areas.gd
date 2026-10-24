@@ -14,7 +14,7 @@ func test_anel_fere_e_empurra_2_u_para_fora() -> void:
 	_wizard.input.skill_e = true
 	_run(START, 15)
 	var damage := roundi(40.0 + 0.5 * _wizard.attributes.attack)
-	assert_eq(600 - knight.hp, CombatRules.mitigated(damage, 30.0))
+	assert_eq(KNIGHT_HP - knight.hp, CombatRules.mitigated(damage, 30.0))
 	assert_eq(680 - golem.hp, damage)
 	assert_eq(outside.hp, 680)
 	assert_almost_eq(knight.global_position, SIDE * 4.0, Vector3.ONE * 0.05)
@@ -89,7 +89,7 @@ func test_meteoro_no_heroi_passa_pelo_ledger() -> void:
 	_run(START, METEOR_TICKS + 2)
 	var attrs := _wizard.attributes
 	var damage := roundi(260.0 + 1.4 * attrs.intelligence + 0.6 * attrs.attack)
-	assert_eq(600 - knight.hp, CombatRules.mitigated(damage, 30.0))
+	assert_eq(KNIGHT_HP - knight.hp, CombatRules.mitigated(damage, 30.0))
 
 
 func test_meteoro_alem_do_alcance_cai_a_9_u() -> void:

@@ -91,7 +91,7 @@ func test_farm_completo_de_uma_base_da_225_xp_e_nivel_3() -> void:
 	assert_eq(_hero.xp, 225)
 	assert_eq(_hero.level, 3)
 	assert_eq(SkillRules.free_points(_hero.level, _hero.ranks), 2)
-	assert_eq(_hero.attributes.max_hp, 600 + 45 * 2)
+	assert_eq(_hero.attributes.max_hp, 620 + 45 * 2)
 
 
 ## Sem o SpawnDirector.update passar dos 90 s, morto continua morto (respawn: test_monster_respawn).

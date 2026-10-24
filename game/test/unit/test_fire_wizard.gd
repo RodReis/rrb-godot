@@ -7,7 +7,7 @@ extends FireWizardTestBase
 
 func test_nivel_1_tem_os_atributos_base() -> void:
 	var wizard := _spawn_wizard(1)
-	assert_eq(wizard.hp, 360)
+	assert_eq(wizard.hp, 450)
 	assert_almost_eq(wizard.attributes.move_speed, 6.0 * (1.0 + 15.0 * 0.004), EPS)
 	assert_eq(wizard.ranks, Vector3i(1, 0, 0))
 
@@ -37,7 +37,7 @@ func test_bola_de_fogo_no_heroi_passa_pela_def() -> void:
 	var knight := _spawn_knight(AHEAD * 5.0)
 	_wizard.input.attack = true
 	_run(START, 20)
-	assert_eq(knight.hp, 600 - CombatRules.mitigated(45, 30.0))
+	assert_eq(knight.hp, KNIGHT_HP - CombatRules.mitigated(45, 30.0))
 
 
 func test_muralha_bloqueia_a_bola_de_fogo() -> void:
@@ -48,7 +48,7 @@ func test_muralha_bloqueia_a_bola_de_fogo() -> void:
 	knight.shield_hp = 200
 	_wizard.input.attack = true
 	_run(START, 20)
-	assert_eq(knight.hp, 600)
+	assert_eq(knight.hp, KNIGHT_HP)
 	assert_eq(knight.shield_hp, 200, "bloqueada antes de chegar: nem o escudo absorve")
 	assert_eq(_active_balls(), 0)
 
@@ -102,7 +102,7 @@ func test_explosao_na_muralha() -> void:
 	var behind := _spawn_monster(GOLEM, -1, AHEAD * 7.0)
 	_wizard.input.skill_q = true
 	_run(START, 20)
-	assert_eq(knight.hp, 600, "a Muralha absorve a explosao que vem da frente")
+	assert_eq(knight.hp, KNIGHT_HP, "a Muralha absorve a explosao que vem da frente")
 	assert_eq(knight.shield_hp, 200 - CombatRules.mitigated(_q_damage(), 30.0))
 	assert_eq(behind.hp, 680)
 	assert_eq(_active_balls(), 0)

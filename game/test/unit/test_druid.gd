@@ -1,12 +1,12 @@
 extends DruidTestBase
 ## druid.tscn (GDB §4.7, F74; SPEC-074 aceite): Seiva (projetil que para no 1o alvo, 6,5 u,
-## bloqueado pela Muralha) e Raizes Vivas (enraiza heroi e monstro comum por 1,5 s, o chefe so toma
+## bloqueado pela Muralha) e Raizes Vivas (enraiza heroi e monstro comum por 1,0 s, o chefe so toma
 ## o dano). Servidor = processo do teste (peer offline).
 
 
 func test_nivel_1_tem_os_atributos_base() -> void:
 	var druid := _spawn_druid(1)
-	assert_eq(druid.hp, 470)
+	assert_eq(druid.hp, 440)
 	assert_almost_eq(druid.attributes.move_speed, 6.0 * (1.0 + 16.0 * 0.004), EPS)
 	assert_eq(druid.ranks, Vector3i(1, 0, 0))
 
@@ -17,8 +17,8 @@ func test_seiva_fere_o_primeiro_alvo_com_100_por_cento_do_atk() -> void:
 	var behind := _spawn_monster(GOLEM, -2, AHEAD * 5.0)
 	_druid.input.attack = true
 	_run(START, 30)
-	assert_eq(_basic_damage(), 44)
-	assert_eq(GOLEM_HP - front.hp, 44)
+	assert_eq(_basic_damage(), 40)
+	assert_eq(GOLEM_HP - front.hp, 40)
 	assert_eq(behind.hp, GOLEM_HP, "a seiva para no 1o toque")
 
 
@@ -27,7 +27,7 @@ func test_seiva_no_heroi_passa_pelo_ledger() -> void:
 	var knight := _spawn_knight(AHEAD * 4.0)
 	_druid.input.attack = true
 	_run(START, 30)
-	assert_eq(KNIGHT_HP - knight.hp, CombatRules.mitigated(44, KNIGHT_DEF))
+	assert_eq(KNIGHT_HP - knight.hp, CombatRules.mitigated(40, KNIGHT_DEF))
 	assert_eq(knight.slow_ticks, 0, "a seiva nao deixa lento")
 
 
@@ -53,7 +53,7 @@ func test_seiva_cadencia_de_1_s() -> void:
 		_druid.input.attack = true
 		_run(tick, 1)
 	# disparos nos ticks 0, 30 e 60 (recarga de 1,0 s)
-	assert_eq(GOLEM_HP - golem.hp, 3 * 44)
+	assert_eq(GOLEM_HP - golem.hp, 3 * 40)
 
 
 func test_muralha_bloqueia_a_seiva() -> void:
@@ -68,18 +68,18 @@ func test_muralha_bloqueia_a_seiva() -> void:
 	assert_eq(knight.shield_hp, 200, "bloqueada antes de chegar")
 
 
-func test_raizes_enraizam_o_heroi_por_1_5_s() -> void:
+func test_raizes_enraizam_o_heroi_por_1_0_s() -> void:
 	_spawn_druid(1)
 	var knight := _spawn_knight(AHEAD * 5.0)
 	_druid.input.skill_q = true
 	_run_until_slowed(knight, START)
 	assert_eq(KNIGHT_HP - knight.hp, CombatRules.mitigated(_q_damage(), KNIGHT_DEF))
-	assert_eq(_q_damage(), roundi(40.0 + 0.5 * 44.0))
+	assert_eq(_q_damage(), roundi(40.0 + 0.5 * 40.0))
 	assert_almost_eq(knight.slow_pct, 1.0, EPS, "enraizado = lentidao de 100 %")
-	assert_eq(knight.slow_ticks, ROOT_TICKS, "45 ticks = 1,5 s, contando o tick da aplicacao")
+	assert_eq(knight.slow_ticks, ROOT_TICKS, "30 ticks = 1,0 s, contando o tick da aplicacao")
 
 
-func test_enraizado_nao_anda_por_1_5_s_e_depois_volta_a_andar() -> void:
+func test_enraizado_nao_anda_por_1_0_s_e_depois_volta_a_andar() -> void:
 	_spawn_druid(1)
 	var knight := _spawn_knight(AHEAD * 5.0)
 	await wait_physics_frames(2)
@@ -155,7 +155,7 @@ func test_recarga_do_q_no_rank_1_e_10_s_com_cdr() -> void:
 		_druid.hero_data.skill_q, 1, _druid.attributes.intelligence, 30
 	)
 	assert_eq(_druid.q_cooldown, expected)
-	assert_gt(expected, 250, "perto de 10 s menos o CDR da INT 24")
+	assert_gt(expected, 250, "perto de 10 s menos o CDR da INT 20")
 
 
 func test_seiva_voa_a_20_u_s_e_a_raiz_a_18_u_s() -> void:

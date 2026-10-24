@@ -17,10 +17,10 @@ const EPS: float = 0.0001
 ## Frente do heroi sem rotacao: -Z.
 const AHEAD: Vector3 = Vector3(0, 0, -1)
 ## Carrasco e Cavaleiro no nivel 1 (GDB §4.11 e §4.1).
-const CARRASCO_HP: int = 600
-const CARRASCO_DEF: float = 26.0
-const CARRASCO_ATK: float = 42.0
-const KNIGHT_HP: int = 600
+const CARRASCO_HP: int = 560
+const CARRASCO_DEF: float = 24.0
+const CARRASCO_ATK: float = 38.0
+const KNIGHT_HP: int = 620
 const KNIGHT_DEF: float = 30.0
 const GOLEM_HP: int = 680
 const RESPAWN_SECONDS: float = 60.0

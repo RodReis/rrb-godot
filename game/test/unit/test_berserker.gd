@@ -65,7 +65,7 @@ func test_roubo_de_vida_cura_sobre_o_dano_depois_da_def() -> void:
 	b.input.attack = true
 	_run(START, 2)
 	var dealt := CombatRules.mitigated(BERSERKER_ATK, KNIGHT_DEF)
-	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(dealt, 1.0, 0.25))
+	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(dealt, 1.0, FRENZY_LIFESTEAL))
 	assert_gt(b.hp, before)
 
 
@@ -85,7 +85,7 @@ func test_roubo_de_vida_soma_os_alvos_do_arco() -> void:
 	var before := b.hp
 	b.input.attack = true
 	_run(START, 2)
-	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(2 * BERSERKER_ATK, 1.0, 0.25))
+	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(2 * BERSERKER_ATK, 1.0, FRENZY_LIFESTEAL))
 
 
 func test_errar_nao_cura() -> void:
@@ -235,19 +235,19 @@ func test_outro_heroi_nao_tem_frenesi_nem_imunidade() -> void:
 func test_golpe_que_mata_o_monstro_tambem_cura() -> void:
 	var b := _spawn_berserker(1)
 	var golem := _spawn_monster(GOLEM, -1, AHEAD * 1.5)
-	golem.hp = 30  # o golpe (58) mata; causou 30
+	golem.hp = 30  # o golpe (42) mata; causou 30
 	b.hp = roundi(BERSERKER_HP * 0.2)
 	var before := b.hp
 	b.input.attack = true
 	_run(START, 2)
 	assert_false(golem.is_alive())
-	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(30, 1.0, 0.25))
+	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(30, 1.0, FRENZY_LIFESTEAL))
 
 
 func test_ressimular_o_golpe_no_monstro_nao_encolhe_a_cura() -> void:
 	var b := _spawn_berserker(1)
 	var golem := _spawn_monster(GOLEM, -1, AHEAD * 1.5)
-	golem.hp = 100  # depois do 1o golpe sobram 42: recalcular daria 42, nao 58
+	golem.hp = 100  # depois do 1o golpe sobram 58: recalcular daria 58, nao 42
 	b.hp = roundi(BERSERKER_HP * 0.2)
 	var before := b.hp
 	b.input.attack = true
@@ -256,7 +256,7 @@ func test_ressimular_o_golpe_no_monstro_nao_encolhe_a_cura() -> void:
 	b.input.attack = true
 	b._rollback_tick(TICK, START, false)
 	_run(START + 1, 1)
-	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(BERSERKER_ATK, 1.0, 0.25))
+	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(BERSERKER_ATK, 1.0, FRENZY_LIFESTEAL))
 
 
 func test_cura_e_dano_fatal_no_mesmo_tick_nao_dependem_da_ordem() -> void:

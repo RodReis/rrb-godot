@@ -89,4 +89,4 @@ func test_i5_heroi_no_servidor_igual_a_shared_core() -> void:
 	hero._refresh_attributes()
 	var forge := Stats.attributes(build.hero, build.level, build.items, _catalog.set_bonuses)
 	_assert_same(hero.attributes, forge)
-	assert_eq(hero.attributes.max_hp, 1282)
+	assert_eq(hero.attributes.max_hp, 1305)

@@ -121,4 +121,4 @@ func test_pocao_escala_com_o_atk_do_nivel() -> void:
 	_cast_potion(5)
 	_run(START, 1)
 	var base := SkillData.at_rank(_druid.hero_data.skill_e.base_amount, _druid.ranks.y)
-	assert_eq(_potion_total(), roundi(base + 0.5 * (44.0 + 3.8 * 4.0)))
+	assert_eq(_potion_total(), roundi(base + 0.5 * (40.0 + 3.8 * 4.0)))
