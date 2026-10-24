@@ -1,0 +1,155 @@
+Soak: 132 partidas, 8 em paralelo, herois knight/ranger/barbarian/fire_wizard/rogue/engineer/druid/berserker/occultist/paladin/carrasco, seed 30, saida C:\Users\rodri\AppData\Local\Temp\claude\c--Desenv-Projetos-rrb-godot\fd5712c8-91bc-411b-a7f7-517a82a4c58e\scratchpad\iter1
+[  406s] #07 knight x berserker -> berserker (kill_goal), 393 s de jogo, Nv5:00 6/8 OK 
+[  438s] #03 knight x fire_wizard -> fire_wizard (kill_goal), 425,8 s de jogo, Nv5:00 5/5 OK 
+[  442s] #01 knight x ranger -> ranger (kill_goal), 428,6 s de jogo, Nv5:00 5/6 OK 
+[  442s] #04 knight x rogue -> rogue (kill_goal), 429,9 s de jogo, Nv5:00 5/5 OK 
+[  442s] #05 knight x engineer -> engineer (kill_goal), 429,7 s de jogo, Nv5:00 5/5 OK 
+[  446s] #06 knight x druid -> druid (kill_goal), 433,7 s de jogo, Nv5:00 5/6 OK 
+[  450s] #02 knight x barbarian -> knight (kill_goal), 436 s de jogo, Nv5:00 5/5 OK 
+[  490s] #00 knight x knight -> knight (kill_goal), 476,7 s de jogo, Nv5:00 6/5 OK 
+[  834s] #14 ranger x rogue -> ranger (kill_goal), 372,2 s de jogo, Nv5:00 7/5 OK 
+[  840s] #11 ranger x ranger -> ranger (kill_goal), 385,3 s de jogo, Nv5:00 7/7 OK 
+[  840s] #12 ranger x barbarian -> ranger (kill_goal), 386,4 s de jogo, Nv5:00 7/6 OK 
+[  842s] #08 knight x occultist -> knight (kill_goal), 423,1 s de jogo, Nv5:00 5/4 OK 
+[  848s] #13 ranger x fire_wizard -> ranger (kill_goal), 389,7 s de jogo, Nv5:00 7/5 OK 
+[  890s] #15 ranger x engineer -> engineer (kill_goal), 387,4 s de jogo, Nv5:00 7/5 OK 
+[  924s] #09 knight x paladin -> paladin (kill_goal), 473,5 s de jogo, Nv5:00 5/5 OK 
+[  930s] #10 knight x carrasco -> carrasco (kill_goal), 475,4 s de jogo, Nv5:00 5/5 OK 
+[1.223s] #18 ranger x occultist -> ranger (kill_goal), 371,2 s de jogo, Nv5:00 7/5 OK 
+[1.227s] #17 ranger x berserker -> berserker (kill_goal), 376,1 s de jogo, Nv5:00 7/8 OK 
+[1.257s] #16 ranger x druid -> druid (kill_goal), 408,1 s de jogo, Nv5:00 7/6 OK 
+[1.275s] #20 ranger x carrasco -> ranger (kill_goal), 416,4 s de jogo, Nv5:00 5/6 OK 
+[1.277s] #19 ranger x paladin -> ranger (kill_goal), 424,3 s de jogo, Nv5:00 7/5 OK 
+[1.296s] #21 barbarian x barbarian -> barbarian (kill_goal), 394,3 s de jogo, Nv5:00 6/5 OK 
+[1.322s] #23 barbarian x rogue -> barbarian (kill_goal), 379,6 s de jogo, Nv5:00 6/5 OK 
+[1.330s] #22 barbarian x fire_wizard -> fire_wizard (kill_goal), 394,8 s de jogo, Nv5:00 6/5 OK 
+[1.635s] #26 barbarian x berserker -> berserker (kill_goal), 366,7 s de jogo, Nv5:00 6/8 OK 
+[1.641s] #24 barbarian x engineer -> engineer (kill_goal), 407,2 s de jogo, Nv5:00 5/5 OK 
+[1.643s] #25 barbarian x druid -> druid (kill_goal), 405,4 s de jogo, Nv5:00 5/6 OK 
+[1.645s] #27 barbarian x occultist -> barbarian (kill_goal), 358,9 s de jogo, Nv5:00 5/4 OK 
+[1.702s] #28 barbarian x paladin -> paladin (kill_goal), 412,4 s de jogo, Nv5:00 5/6 OK 
+[1.722s] #29 barbarian x carrasco -> barbarian (kill_goal), 415 s de jogo, Nv5:00 7/5 OK 
+[1.728s] #30 fire_wizard x fire_wizard -> fire_wizard (kill_goal), 395,1 s de jogo, Nv5:00 4/5 OK 
+[1.736s] #31 fire_wizard x rogue -> rogue (kill_goal), 393,8 s de jogo, Nv5:00 4/5 OK 
+[2.033s] #34 fire_wizard x berserker -> berserker (kill_goal), 377 s de jogo, Nv5:00 5/8 OK 
+[2.039s] #32 fire_wizard x engineer -> engineer (kill_goal), 392,3 s de jogo, Nv5:00 4/5 OK 
+[2.047s] #33 fire_wizard x druid -> druid (kill_goal), 393,4 s de jogo, Nv5:00 4/6 OK 
+[2.053s] #35 fire_wizard x occultist -> occultist (kill_goal), 395,3 s de jogo, Nv5:00 4/4 OK 
+[2.135s] #36 fire_wizard x paladin -> fire_wizard (kill_goal), 422,8 s de jogo, Nv5:00 4/5 OK 
+[2.137s] #38 rogue x rogue -> rogue (kill_goal), 397,9 s de jogo, Nv5:00 5/6 OK 
+[2.143s] #37 fire_wizard x carrasco -> carrasco (kill_goal), 410,7 s de jogo, Nv5:00 4/5 OK 
+[2.157s] #39 rogue x engineer -> rogue (kill_goal), 411,2 s de jogo, Nv5:00 6/5 OK 
+[2.430s] #42 rogue x occultist -> rogue (kill_goal), 372,6 s de jogo, Nv5:00 6/5 OK 
+[2.434s] #41 rogue x berserker -> berserker (kill_goal), 384,1 s de jogo, Nv5:00 6/8 OK 
+[2.442s] #40 rogue x druid -> druid (kill_goal), 398,5 s de jogo, Nv5:00 5/6 OK 
+[2.469s] #43 rogue x paladin -> rogue (kill_goal), 403,7 s de jogo, Nv5:00 6/5 OK 
+[2.541s] #47 engineer x berserker -> berserker (kill_goal), 371,1 s de jogo, Nv5:00 6/8 OK 
+[2.547s] #45 engineer x engineer -> engineer (kill_goal), 398 s de jogo, Nv5:00 5/5 OK 
+[2.551s] #46 engineer x druid -> druid (kill_goal), 395,3 s de jogo, Nv5:00 5/6 OK 
+[2.559s] #44 rogue x carrasco -> carrasco (kill_goal), 412,6 s de jogo, Nv5:00 5/5 OK 
+[2.824s] #48 engineer x occultist -> engineer (kill_goal), 382,6 s de jogo, Nv5:00 5/5 OK 
+[2.874s] #49 engineer x paladin -> engineer (kill_goal), 429,1 s de jogo, Nv5:00 5/5 OK 
+[2.884s] #50 engineer x carrasco -> engineer (kill_goal), 429,9 s de jogo, Nv5:00 5/5 OK 
+[2.904s] #51 druid x druid -> druid (kill_goal), 424,8 s de jogo, Nv5:00 6/6 OK 
+[2.946s] #52 druid x berserker -> berserker (kill_goal), 394,8 s de jogo, Nv5:00 7/8 OK 
+[2.966s] #53 druid x occultist -> occultist (kill_goal), 408,4 s de jogo, Nv5:00 6/5 OK 
+[3.001s] #55 druid x carrasco -> druid (kill_goal), 429,6 s de jogo, Nv5:00 6/5 OK 
+[3.003s] #54 druid x paladin -> druid (kill_goal), 439,8 s de jogo, Nv5:00 6/5 OK 
+[3.203s] #56 berserker x berserker -> berserker (kill_goal), 368,8 s de jogo, Nv5:00 7/8 OK 
+[3.252s] #57 berserker x occultist -> berserker (kill_goal), 365,4 s de jogo, Nv5:00 8/5 OK 
+[3.304s] #58 berserker x paladin -> berserker (kill_goal), 407,8 s de jogo, Nv5:00 8/5 OK 
+[3.328s] #59 berserker x carrasco -> berserker (kill_goal), 411,5 s de jogo, Nv5:00 8/5 OK 
+[3.370s] #60 occultist x occultist -> occultist (kill_goal), 412,7 s de jogo, Nv5:00 4/4 OK 
+[3.400s] #61 occultist x paladin -> paladin (kill_goal), 421,7 s de jogo, Nv5:00 4/5 OK 
+[3.422s] #62 occultist x carrasco -> carrasco (kill_goal), 409,2 s de jogo, Nv5:00 4/5 OK 
+[3.468s] #63 paladin x paladin -> paladin (kill_goal), 453,5 s de jogo, Nv5:00 5/5 OK 
+[3.667s] #64 paladin x carrasco -> paladin (kill_goal), 452,9 s de jogo, Nv5:00 6/5 OK 
+[3.705s] #65 carrasco x carrasco -> carrasco (kill_goal), 441,7 s de jogo, Nv5:00 6/5 OK 
+[3.758s] #67 ranger x knight -> ranger (kill_goal), 418,9 s de jogo, Nv5:00 7/6 OK 
+[3.800s] #68 barbarian x knight -> barbarian (kill_goal), 418,8 s de jogo, Nv5:00 7/5 OK 
+[3.804s] #66 knight x knight -> knight (kill_goal), 488 s de jogo, Nv5:00 6/5 OK 
+[3.840s] #69 fire_wizard x knight -> knight (kill_goal), 427,8 s de jogo, Nv5:00 4/5 OK 
+[3.860s] #70 rogue x knight -> knight (kill_goal), 426,5 s de jogo, Nv5:00 5/5 OK 
+[3.926s] #71 engineer x knight -> knight (kill_goal), 447,6 s de jogo, Nv5:00 5/5 OK 
+[4.089s] #72 druid x knight -> druid (kill_goal), 410,5 s de jogo, Nv5:00 6/5 OK 
+[4.111s] #73 berserker x knight -> berserker (kill_goal), 393,9 s de jogo, Nv5:00 8/6 OK 
+[4.181s] #74 occultist x knight -> occultist (kill_goal), 412,2 s de jogo, Nv5:00 4/5 OK 
+[4.238s] #77 ranger x ranger -> ranger (kill_goal), 385 s de jogo, Nv5:00 6/7 OK 
+[4.270s] #78 barbarian x ranger -> barbarian (kill_goal), 398,5 s de jogo, Nv5:00 6/7 OK 
+[4.280s] #75 paladin x knight -> paladin (kill_goal), 467,2 s de jogo, Nv5:00 5/5 OK 
+[4.288s] #76 carrasco x knight -> carrasco (kill_goal), 469,8 s de jogo, Nv5:00 5/5 OK 
+[4.308s] #79 fire_wizard x ranger -> ranger (kill_goal), 371,1 s de jogo, Nv5:00 4/7 OK 
+[4.477s] #80 rogue x ranger -> ranger (kill_goal), 375,9 s de jogo, Nv5:00 6/7 OK 
+[4.513s] #81 engineer x ranger -> ranger (kill_goal), 390,3 s de jogo, Nv5:00 5/6 OK 
+[4.583s] #82 druid x ranger -> ranger (kill_goal), 390,1 s de jogo, Nv5:00 6/8 OK 
+[4.645s] #84 occultist x ranger -> ranger (kill_goal), 364,5 s de jogo, Nv5:00 5/7 OK 
+[4.675s] #83 berserker x ranger -> ranger (kill_goal), 426 s de jogo, Nv5:00 8/8 OK 
+[4.687s] #85 paladin x ranger -> ranger (kill_goal), 396,9 s de jogo, Nv5:00 5/6 OK 
+[4.707s] #86 carrasco x ranger -> ranger (kill_goal), 408,7 s de jogo, Nv5:00 5/6 OK 
+[4.715s] #87 barbarian x barbarian -> barbarian (kill_goal), 396,3 s de jogo, Nv5:00 6/5 OK 
+[4.892s] #88 fire_wizard x barbarian -> fire_wizard (kill_goal), 403,5 s de jogo, Nv5:00 4/5 OK 
+[4.908s] #89 rogue x barbarian -> rogue (kill_goal), 383,2 s de jogo, Nv5:00 6/5 OK 
+[5.000s] #90 engineer x barbarian -> engineer (kill_goal), 406,3 s de jogo, Nv5:00 5/5 OK 
+[5.065s] #91 druid x barbarian -> druid (kill_goal), 408,6 s de jogo, Nv5:00 6/6 OK 
+[5.085s] #92 berserker x barbarian -> berserker (kill_goal), 398 s de jogo, Nv5:00 8/7 OK 
+[5.089s] #93 occultist x barbarian -> barbarian (kill_goal), 389,5 s de jogo, Nv5:00 4/5 OK 
+[5.133s] #94 paladin x barbarian -> paladin (kill_goal), 414,7 s de jogo, Nv5:00 6/5 OK 
+[5.135s] #95 carrasco x barbarian -> carrasco (kill_goal), 408 s de jogo, Nv5:00 6/5 OK 
+[5.298s] #96 fire_wizard x fire_wizard -> fire_wizard (kill_goal), 394,5 s de jogo, Nv5:00 4/5 OK 
+[5.310s] #97 rogue x fire_wizard -> fire_wizard (kill_goal), 391,5 s de jogo, Nv5:00 6/6 OK 
+[5.416s] #98 engineer x fire_wizard -> engineer (kill_goal), 405,3 s de jogo, Nv5:00 5/5 OK 
+[5.442s] #99 druid x fire_wizard -> druid (kill_goal), 365,5 s de jogo, Nv5:00 7/5 OK 
+[5.501s] #101 occultist x fire_wizard -> occultist (kill_goal), 399,8 s de jogo, Nv5:00 5/5 OK 
+[5.511s] #100 berserker x fire_wizard -> berserker (kill_goal), 413,4 s de jogo, Nv5:00 8/6 OK 
+[5.553s] #103 carrasco x fire_wizard -> fire_wizard (kill_goal), 406,5 s de jogo, Nv5:00 5/6 OK 
+[5.567s] #102 paladin x fire_wizard -> fire_wizard (kill_goal), 421,7 s de jogo, Nv5:00 5/6 OK 
+[5.711s] #104 rogue x rogue -> rogue (kill_goal), 401,5 s de jogo, Nv5:00 5/5 OK 
+[5.715s] #105 engineer x rogue -> rogue (kill_goal), 394 s de jogo, Nv5:00 5/6 OK 
+[5.834s] #106 druid x rogue -> druid (kill_goal), 406,6 s de jogo, Nv5:00 6/6 OK 
+[5.894s] #108 occultist x rogue -> occultist (kill_goal), 383,3 s de jogo, Nv5:00 4/5 OK 
+[5.896s] #107 berserker x rogue -> berserker (kill_goal), 442,9 s de jogo, Nv5:00 8/7 OK 
+[5.916s] #109 paladin x rogue -> rogue (kill_goal), 394,5 s de jogo, Nv5:00 5/6 OK 
+[5.979s] #110 carrasco x rogue -> carrasco (kill_goal), 415 s de jogo, Nv5:00 5/5 OK 
+[6.001s] #111 engineer x engineer -> engineer (kill_goal), 422,7 s de jogo, Nv5:00 6/6 OK 
+[6.101s] #113 berserker x engineer -> berserker (kill_goal), 373,8 s de jogo, Nv5:00 8/5 OK 
+[6.137s] #112 druid x engineer -> druid (kill_goal), 414,6 s de jogo, Nv5:00 7/5 OK 
+[6.240s] #114 occultist x engineer -> occultist (kill_goal), 394,5 s de jogo, Nv5:00 6/5 OK 
+[6.318s] #117 druid x druid -> druid (kill_goal), 390,6 s de jogo, Nv5:00 6/6 OK 
+[6.324s] #115 paladin x engineer -> engineer (kill_goal), 418,9 s de jogo, Nv5:00 5/5 OK 
+[6.342s] #116 carrasco x engineer -> carrasco (kill_goal), 435,1 s de jogo, Nv5:00 5/5 OK 
+[6.390s] #118 berserker x druid -> berserker (kill_goal), 400,5 s de jogo, Nv5:00 8/6 OK 
+[6.394s] #119 occultist x druid -> druid (kill_goal), 381,8 s de jogo, Nv5:00 4/6 OK 
+[6.523s] #120 paladin x druid -> druid (kill_goal), 410,5 s de jogo, Nv5:00 5/6 OK 
+[6.571s] #121 carrasco x druid -> druid (kill_goal), 422,8 s de jogo, Nv5:00 5/6 OK 
+[6.642s] #122 berserker x berserker -> berserker (kill_goal), 390,2 s de jogo, Nv5:00 8/8 OK 
+[6.698s] #123 occultist x berserker -> berserker (kill_goal), 368 s de jogo, Nv5:00 5/8 OK 
+[6.732s] #124 paladin x berserker -> berserker (kill_goal), 397,5 s de jogo, Nv5:00 5/7 OK 
+[6.750s] #125 carrasco x berserker -> berserker (kill_goal), 395,6 s de jogo, Nv5:00 5/8 OK 
+[6.784s] #126 occultist x occultist -> occultist (kill_goal), 381,5 s de jogo, Nv5:00 6/5 OK 
+[6.814s] #127 paladin x occultist -> occultist (kill_goal), 409,1 s de jogo, Nv5:00 5/4 OK 
+[6.927s] #128 carrasco x occultist -> carrasco (kill_goal), 392,1 s de jogo, Nv5:00 5/4 OK 
+[7.033s] #129 paladin x paladin -> paladin (kill_goal), 451 s de jogo, Nv5:00 5/6 OK 
+[7.100s] #130 carrasco x paladin -> paladin (kill_goal), 446,7 s de jogo, Nv5:00 5/6 OK 
+[7.152s] #131 carrasco x carrasco -> carrasco (kill_goal), 443,2 s de jogo, Nv5:00 5/6 OK 
+
+Terminadas: 132/132; com vencedor: 132; falhas: 0
+Duracao de jogo: min 359 s, media 407 s, max 488 s (limite 600 s)
+Razao do fim:
+  kill_goal         132
+Vitorias por lado (A = spawn SO, B = NE):
+  A: 64
+  B: 68
+Nivel aos 5:00 por heroi (media, min-max):
+  knight       5,2  (5-6, 24 amostras)
+  ranger       6,8  (5-8, 24 amostras)
+  barbarian    5,6  (5-7, 24 amostras)
+  fire_wizard  4,7  (4-6, 24 amostras)
+  rogue        5,5  (5-7, 24 amostras)
+  engineer     5,1  (5-6, 24 amostras)
+  druid        6,1  (6-7, 24 amostras)
+  berserker    7,9  (7-8, 24 amostras)
+  occultist    4,5  (4-6, 24 amostras)
+  paladin      5,2  (5-6, 24 amostras)
+  carrasco     5,2  (5-6, 24 amostras)
+Tempo total: 7.152 s. Relatorio: C:\Users\rodri\AppData\Local\Temp\claude\c--Desenv-Projetos-rrb-godot\fd5712c8-91bc-411b-a7f7-517a82a4c58e\scratchpad\iter1
+SOAK OK: 132/132 terminadas, todas <= 10:00, todas com vencedor

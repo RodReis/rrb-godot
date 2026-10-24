@@ -19,8 +19,8 @@ const AHEAD: Vector3 = Vector3(0, 0, -1)
 ## Paladino e Cavaleiro no nivel 1 (GDB §4.9 e §4.1).
 const PALADIN_HP: int = 620
 const PALADIN_DEF: float = 28.0
-const PALADIN_ATK: float = 38.0
-const KNIGHT_HP: int = 600
+const PALADIN_ATK: float = 43.0
+const KNIGHT_HP: int = 620
 const KNIGHT_DEF: float = 30.0
 const GOLEM_HP: int = 680
 

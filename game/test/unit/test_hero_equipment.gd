@@ -125,7 +125,7 @@ func test_ladina_usa_a_besta_e_nao_mostra_elmo() -> void:
 	assert_eq(_pieces("guard_chest_t3__*").size(), 1)
 	assert_eq(_pieces("hunter_boots_t2__*").size(), 4)
 	_hero._refresh_attributes()
-	assert_eq(_hero.attributes.defense, 12.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
+	assert_eq(_hero.attributes.defense, 14.0 + 15.0 + 22.0, "o elmo vale sem aparecer")
 
 
 func test_engenheiro_usa_o_bacamarte_peitoral_sem_costas_e_nao_mostra_elmo() -> void:

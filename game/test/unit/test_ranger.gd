@@ -13,6 +13,9 @@ const START: int = 100
 const SHOOTER: int = 7
 const VICTIM: int = 8
 const EPS: float = 0.0001
+## ATK da Arqueira e HP do Cavaleiro no nivel 1 (GDB §4.2, §4.1).
+const RANGER_ATK: int = 46
+const KNIGHT_HP: int = 620
 ## Frente do heroi sem rotacao: -Z.
 const AHEAD: Vector3 = Vector3(0, 0, -1)
 
@@ -89,7 +92,7 @@ func test_basico_voa_e_some_ao_atingir_9_u() -> void:
 	_run(START, 1)
 	var arrow := _first_arrow()
 	assert_eq(arrow.kind, Arrow.Kind.BASIC)
-	assert_eq(arrow.damage, 55)
+	assert_eq(arrow.damage, RANGER_ATK)
 	_run(START + 1, 13)
 	assert_true(arrow.is_active(), "13 ticks = 8,67 u: ainda voando")
 	_run(START + 14, 1)
@@ -103,7 +106,7 @@ func test_basico_acerta_o_primeiro_e_para() -> void:
 	var far := _spawn_monster(SKELETON, -2, AHEAD * 7.0)
 	_ranger.input.attack = true
 	_run(START, 15)
-	assert_eq(near.hp, 160 - 55)
+	assert_eq(near.hp, 160 - RANGER_ATK)
 	assert_eq(far.hp, 160)
 	assert_eq(_active_arrows(), 0)
 
@@ -113,7 +116,7 @@ func test_basico_no_heroi_passa_pelo_ledger_e_pela_def() -> void:
 	var knight := _spawn_knight(AHEAD * 5.0)
 	_ranger.input.attack = true
 	_run(START, 15)
-	assert_eq(knight.hp, 600 - CombatRules.mitigated(55, 30.0))
+	assert_eq(knight.hp, KNIGHT_HP - CombatRules.mitigated(RANGER_ATK, 30.0))
 
 
 func test_q_atravessa_perdendo_15_por_cento_por_alvo() -> void:
@@ -123,7 +126,7 @@ func test_q_atravessa_perdendo_15_por_cento_por_alvo() -> void:
 	var third := _spawn_monster(GOLEM, -3, AHEAD * 10.5)
 	_ranger.input.skill_q = true
 	_run(START, 20)
-	var damage := roundi(65.0 + 0.95 * 55.0)
+	var damage := roundi(65.0 + 0.95 * RANGER_ATK)
 	assert_eq(680 - first.hp, damage)
 	assert_eq(680 - second.hp, roundi(damage * 0.85))
 	assert_eq(680 - third.hp, roundi(damage * 0.70), "alcance do Q: 11 u")
@@ -159,7 +162,7 @@ func test_muralha_ativa_bloqueia_a_flecha() -> void:
 	knight.shield_hp = 200
 	_ranger.input.attack = true
 	_run(START, 15)
-	assert_eq(knight.hp, 600)
+	assert_eq(knight.hp, KNIGHT_HP)
 	assert_eq(knight.shield_hp, 200, "bloqueada antes de chegar: nem o escudo absorve")
 	assert_eq(_active_arrows(), 0)
 

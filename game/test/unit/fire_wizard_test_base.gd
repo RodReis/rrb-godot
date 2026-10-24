@@ -7,6 +7,8 @@ const WIZARD: String = "res://scenes/heroes/fire_wizard.tscn"
 const KNIGHT: String = "res://scenes/heroes/knight.tscn"
 const SKELETON: String = "res://scenes/monsters/skeleton_t1.tscn"
 const GOLEM: String = "res://scenes/monsters/golem_t3.tscn"
+## HP do Cavaleiro no nivel 1 (GDB §4.1).
+const KNIGHT_HP: int = 620
 const TICK: float = 1.0 / 30.0
 const START: int = 100
 const CASTER: int = 7

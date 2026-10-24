@@ -16,11 +16,11 @@ const EPS: float = 0.0001
 const AHEAD: Vector3 = Vector3(0, 0, -1)
 const SIDE: Vector3 = Vector3(1, 0, 0)
 ## HP e DEF do Cavaleiro no nivel 1 (GDB §4.1).
-const KNIGHT_HP: int = 600
+const KNIGHT_HP: int = 620
 const KNIGHT_DEF: float = 30.0
 const GOLEM_HP: int = 680
-## 1,5 s, 3,0 s e 6,0 s a 30 ticks/s.
-const ROOT_TICKS: int = 45
+## 1,0 s, 3,0 s e 6,0 s a 30 ticks/s.
+const ROOT_TICKS: int = 30
 const POTION_TICKS: int = 90
 const SWAMP_TICKS: int = 180
 

@@ -22,7 +22,7 @@ func before_all() -> void:
 
 func test_hp_soma_peitoral_e_aplica_15_por_cento() -> void:
 	# (1005 + 110) x 1.15 = 1282.25 -> 1282. A DV mostra 1397; vale o GDB (ADR-0004).
-	assert_eq(_attrs.max_hp, 1282)
+	assert_eq(_attrs.max_hp, 1305)
 
 
 func test_def_soma_pecas_e_bonus_plano() -> void:
@@ -31,7 +31,7 @@ func test_def_soma_pecas_e_bonus_plano() -> void:
 
 
 func test_atk_soma_arma_epica() -> void:
-	assert_almost_eq(_attrs.attack, 116.5, EPS)
+	assert_almost_eq(_attrs.attack, 128.0, EPS)
 
 
 func test_int_e_cdr() -> void:

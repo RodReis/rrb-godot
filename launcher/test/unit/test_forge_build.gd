@@ -42,9 +42,9 @@ func test_atributos_iguais_ao_stats_do_servidor() -> void:
 
 func test_valores_de_referencia_do_gdb() -> void:
 	var attrs := _build_from_fixture().attributes(_catalog.set_bonuses)
-	assert_eq(attrs.max_hp, 1282, "(1005 + 110) x 1,15 — a DV mostra 1397, vale o GDB")
+	assert_eq(attrs.max_hp, 1305, "(1005 + 110) x 1,15 — a DV mostra 1397, vale o GDB")
 	assert_almost_eq(attrs.defense, 99.0, EPS)
-	assert_almost_eq(attrs.attack, 116.5, EPS)
+	assert_almost_eq(attrs.attack, 128.0, EPS)
 
 
 func test_equipar_no_mesmo_slot_troca() -> void:

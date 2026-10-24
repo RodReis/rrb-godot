@@ -138,10 +138,10 @@ func test_simulador_bate_com_shared_core_no_caso_de_referencia() -> void:
 	var fixture := load(FIXTURE) as BuildFixture
 	var server := Stats.attributes(fixture.hero, fixture.level, fixture.items, _catalog.set_bonuses)
 	assert_eq(_sim.hp_text(), CompendiumFormat.thousands(server.max_hp))
-	assert_eq(_sim.hp_text(), "1.282")
+	assert_eq(_sim.hp_text(), "1.305")
 	assert_eq(_sim.defense_text(), CompendiumFormat.decimal(server.defense))
 	assert_eq(_sim.absorption_text(), CompendiumFormat.percent(server.mitigation))
-	assert_eq(_sim.stat_text(&"attack"), "116,5")
+	assert_eq(_sim.stat_text(&"attack"), "128")
 	assert_almost_eq(_sim.build.attributes(_catalog.set_bonuses).attack, server.attack, EPS)
 
 
@@ -154,7 +154,7 @@ func test_bonus_de_conjunto_ativa_com_tres_pecas() -> void:
 	assert_string_contains(lines[1], "inativo")
 	_sim.choose(ItemData.Slot.CHEST, null)
 	assert_string_contains(_sim.set_lines_text()[0], "inativo")
-	assert_eq(_sim.hp_text(), "1.005", "sem o peitoral nem o bônus: só o HP do nível")
+	assert_eq(_sim.hp_text(), "1.025", "sem o peitoral nem o bônus: só o HP do nível")
 
 
 func test_escolher_o_mesmo_slot_troca_e_o_botao_acompanha() -> void:

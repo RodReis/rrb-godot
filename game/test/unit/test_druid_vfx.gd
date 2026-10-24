@@ -94,7 +94,7 @@ func test_impacto_da_raiz_solta_respingo_e_raizes_pelo_tempo_do_q() -> void:
 	assert_eq(_effects(), 2)
 	var roots := _last_effect() as RootsVfx
 	assert_not_null(roots)
-	assert_almost_eq(roots.lifetime, 1.5 + RootsVfx.SHRINK_SECONDS, 0.001)
+	assert_almost_eq(roots.lifetime, 1.0 + RootsVfx.SHRINK_SECONDS, 0.001)
 	assert_almost_eq(roots.global_position, Vector3(0, 0, -3), Vector3.ONE * 0.001)
 
 
@@ -117,7 +117,7 @@ func test_raizes_em_monstro_comum_duram_o_tempo_do_q() -> void:
 	add_child_autofree(golem)
 	_driver.impact(HitLedger.Slot.Q, Vector3(0, 0, -3))
 	var roots := _last_effect() as RootsVfx
-	assert_almost_eq(roots.lifetime, 1.5 + RootsVfx.SHRINK_SECONDS, 0.001)
+	assert_almost_eq(roots.lifetime, 1.0 + RootsVfx.SHRINK_SECONDS, 0.001)
 
 
 func test_raizes_brotam_de_zero_a_um_e_encolhem_no_fim() -> void:
@@ -129,7 +129,7 @@ func test_raizes_brotam_de_zero_a_um_e_encolhem_no_fim() -> void:
 	assert_lt(tendril.scale.x, 0.1, "comeca perto de zero")
 	roots._process(RootsVfx.GROW_SECONDS)
 	assert_almost_eq(tendril.scale.x, RootsVfx.SIZE_JITTER[0], 0.01, "pleno")
-	roots._process(1.5 - RootsVfx.GROW_SECONDS)
+	roots._process(1.0 - RootsVfx.GROW_SECONDS)
 	roots._process(RootsVfx.SHRINK_SECONDS)
 	assert_gt(tendril.scale.x, 0.0, "nunca singular")
 	assert_true(tendril.scale.is_finite())

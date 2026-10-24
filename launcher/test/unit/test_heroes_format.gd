@@ -27,12 +27,12 @@ func _row(rows: Array[HeroesFormat.StatRow], id: StringName) -> HeroesFormat.Sta
 func test_atributos_nivel_1_e_10_do_cavaleiro_batem_com_o_gdb() -> void:
 	# GDB §4.1: HP 600 -> 1005, DEF 30 -> 57, ATQ 40 -> 71,5, INT 10 -> 19, AGI 10 -> 19.
 	var rows := HeroesFormat.stat_rows(_hero(&"knight"))
-	assert_almost_eq(_row(rows, &"hp").low, 600.0, EPS)
-	assert_almost_eq(_row(rows, &"hp").high, 1005.0, EPS)
+	assert_almost_eq(_row(rows, &"hp").low, 620.0, EPS)
+	assert_almost_eq(_row(rows, &"hp").high, 1025.0, EPS)
 	assert_almost_eq(_row(rows, &"defense").low, 30.0, EPS)
 	assert_almost_eq(_row(rows, &"defense").high, 57.0, EPS)
-	assert_almost_eq(_row(rows, &"attack").low, 40.0, EPS)
-	assert_almost_eq(_row(rows, &"attack").high, 71.5, EPS)
+	assert_almost_eq(_row(rows, &"attack").low, 47.0, EPS)
+	assert_almost_eq(_row(rows, &"attack").high, 83.0, EPS)
 	assert_almost_eq(_row(rows, &"intelligence").high, 19.0, EPS)
 	assert_almost_eq(_row(rows, &"agility").high, 19.0, EPS)
 

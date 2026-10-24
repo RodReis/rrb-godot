@@ -7,7 +7,7 @@ extends OccultistTestBase
 
 func test_nivel_1_tem_os_atributos_base() -> void:
 	var occultist := _spawn_occultist(1)
-	assert_eq(occultist.hp, 370)
+	assert_eq(occultist.hp, 470)
 	assert_almost_eq(occultist.attributes.move_speed, 6.0 * (1.0 + 14.0 * 0.004), EPS)
 	assert_eq(occultist.ranks, Vector3i(1, 0, 0))
 
@@ -17,7 +17,7 @@ func test_projetil_sombrio_fere_90_por_cento_do_atk_e_marca() -> void:
 	var knight := _spawn_knight(AHEAD * 4.0)
 	_occultist.input.attack = true
 	_run(START, 20)
-	assert_eq(_basic_damage(), roundi(0.9 * 42.0))
+	assert_eq(_basic_damage(), roundi(0.9 * 50.0))
 	assert_eq(KNIGHT_HP - knight.hp, CombatRules.mitigated(_basic_damage(), KNIGHT_DEF))
 	assert_eq(knight.curse_stacks, 1)
 	assert_between(knight.curse_ticks, CURSE_TICKS - 20, CURSE_TICKS)

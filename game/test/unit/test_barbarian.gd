@@ -88,7 +88,7 @@ func _at_angle(degrees: float, distance: float) -> Vector3:
 
 func test_nivel_1_tem_os_atributos_base() -> void:
 	var barbarian := _spawn_barbarian(1)
-	assert_eq(barbarian.hp, 480)
+	assert_eq(barbarian.hp, 540)
 	assert_almost_eq(barbarian.attributes.move_speed, 6.0 * (1.0 + 20.0 * 0.004), EPS)
 	assert_eq(barbarian.ranks, Vector3i(1, 0, 0))
 
@@ -100,7 +100,7 @@ func test_basico_acerta_no_arco_de_90_graus_e_2_4_u() -> void:
 	var far := _spawn_monster(SKELETON, -3, AHEAD * 2.7)
 	_barbarian.input.attack = true
 	_run(START, 1)
-	assert_eq(inside.hp, 160 - 52)
+	assert_eq(inside.hp, 160 - roundi(_barbarian.attributes.attack))
 	assert_eq(wide.hp, 160)
 	assert_eq(far.hp, 160)
 
@@ -118,7 +118,7 @@ func test_salto_vai_ao_ponto_mirado_e_fere_uma_vez_na_aterrissagem() -> void:
 	assert_eq(near.hp, 160, "no ar ainda nao fere")
 	_run(START + LEAP_TICKS, 1)
 	assert_almost_eq(_barbarian.global_position, AHEAD * 5.0, Vector3.ONE * 0.01)
-	var damage := roundi(60.0 + 0.8 * 52.0)
+	var damage := roundi(60.0 + 0.8 * _barbarian.attributes.attack)
 	assert_eq(near.hp, 160 - damage)
 	assert_eq(away.hp, 160)
 	_run(START + LEAP_TICKS + 1, 30)
@@ -171,7 +171,7 @@ func test_rodopio_aplica_exatamente_3_pulsos_por_alvo() -> void:
 	assert_false(_barbarian.is_channeling())
 	var pulse := roundi(30.0 + 0.35 * _barbarian.attributes.attack)
 	assert_eq(680 - golem.hp, 3 * pulse)
-	assert_eq(600 - knight.hp, 3 * CombatRules.mitigated(pulse, 30.0))
+	assert_eq(620 - knight.hp, 3 * CombatRules.mitigated(pulse, 30.0))
 
 
 func test_rodopio_bloqueia_o_basico_enquanto_gira() -> void:
@@ -195,10 +195,11 @@ func test_execucao_soma_25_por_cento_do_hp_faltante_antes_da_def() -> void:
 	assert_eq(_barbarian.ranks.z, 1, "R aprendido no nivel 6")
 	var knight := _spawn_knight(AHEAD * 2.0)
 	knight.hp = 300
+	var missing := knight.missing_hp()
 	_barbarian.input.skill_r = true
 	_run(START, 2)
 	var attrs := _barbarian.attributes
-	var raw := roundi(200.0 + attrs.intelligence + 0.5 * attrs.attack + 0.25 * 300)
+	var raw := roundi(200.0 + attrs.intelligence + 0.5 * attrs.attack + 0.25 * missing)
 	assert_eq(knight.hp, 300 - CombatRules.mitigated(raw, 30.0))
 
 

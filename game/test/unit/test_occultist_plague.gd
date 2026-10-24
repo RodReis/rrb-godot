@@ -32,9 +32,9 @@ func test_praga_pulsa_8_vezes_a_cada_meio_segundo_pela_def() -> void:
 	var knight := _spawn_knight(AHEAD * 5.0)
 	_occultist.input.skill_q = true
 	var pulses := _pulses_of(knight, START, 200)
-	assert_eq(_q_total(), 80 + 42)
+	assert_eq(_q_total(), 80 + 50)
 	var raws := _plague_raws(_q_total(), 8)
-	assert_eq(raws, [15, 15, 15, 15, 16, 15, 16, 15], "122 / 8 sem perder o resto")
+	assert_eq(raws, [16, 16, 16, 16, 17, 16, 17, 16], "130 / 8 sem perder o resto")
 	assert_eq(pulses.size(), 8)
 	for i: int in pulses.size():
 		assert_eq(pulses[i].y, CombatRules.mitigated(raws[i], KNIGHT_DEF), "pulso %d" % i)
@@ -52,8 +52,8 @@ func test_pulso_usa_a_def_com_maldicao() -> void:
 	_occultist.input.skill_q = true
 	var pulses := _pulses_of(knight, START, 200)
 	assert_eq(pulses.size(), 8)
-	assert_eq(pulses[0].y, CombatRules.mitigated(15, KNIGHT_DEF - 18.0))
-	assert_gt(pulses[0].y, CombatRules.mitigated(15, KNIGHT_DEF))
+	assert_eq(pulses[0].y, CombatRules.mitigated(16, KNIGHT_DEF - 18.0))
+	assert_gt(pulses[0].y, CombatRules.mitigated(16, KNIGHT_DEF))
 
 
 func test_muralha_erguida_depois_nao_bloqueia_o_pulso() -> void:

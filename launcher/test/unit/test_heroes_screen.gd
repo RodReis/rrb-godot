@@ -151,7 +151,7 @@ func test_painel_mostra_classe_papel_arma_atributos_e_as_4_habilidades_com_descr
 	assert_true(texts.has(hero.summary), "papel curto")
 	assert_true(texts.has(hero.weapon_name), "arma")
 	assert_true(texts.has("%s u" % CompendiumFormat.decimal(hero.basic_attack.attack_range)))
-	assert_true(texts.has("600 → 1.005"), "vida nv 1 → nv 10: %s" % str(texts))
+	assert_true(texts.has("620 → 1.025"), "vida nv 1 → nv 10: %s" % str(texts))
 	assert_true(texts.has("30 → 57"), "defesa nv 1 → nv 10")
 	for slot: HeroesFormat.SkillSlot in HeroesFormat.skill_slots(hero):
 		assert_true(texts.has(slot.skill.display_name), slot.skill.display_name)

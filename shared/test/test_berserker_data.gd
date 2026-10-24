@@ -26,15 +26,15 @@ func test_berserker_no_nivel_1_e_10_bate_com_o_gdb() -> void:
 	assert_false(d.summary.is_empty())
 	assert_almost_eq(d.base_move_speed, 6.1, EPS)
 	var a1 := Stats.attributes(d, 1, [], [])
-	assert_eq(a1.max_hp, 560)
+	assert_eq(a1.max_hp, 500)
 	assert_almost_eq(a1.defense, 18.0, EPS)
-	assert_almost_eq(a1.attack, 58.0, EPS)
+	assert_almost_eq(a1.attack, 42.0, EPS)
 	assert_almost_eq(a1.intelligence, 8.0, EPS)
 	assert_almost_eq(a1.agility, 20.0, EPS)
 	var a10 := Stats.attributes(d, 10, [], [])
-	assert_eq(a10.max_hp, 956)
+	assert_eq(a10.max_hp, 842)
 	assert_almost_eq(a10.defense, 34.2, EPS)
-	assert_almost_eq(a10.attack, 103.0, EPS)
+	assert_almost_eq(a10.attack, 76.2, EPS)
 	assert_almost_eq(a10.intelligence, 15.2, EPS)
 	assert_almost_eq(a10.agility, 36.2, EPS)
 
@@ -45,8 +45,8 @@ func test_frenesi() -> void:
 	assert_eq(p.kind, PassiveData.Kind.FRENZY)
 	assert_false(p.display_name.is_empty())
 	assert_false(p.description.is_empty())
-	assert_almost_eq(p.attack_speed_bonus, 0.6, EPS)
-	assert_almost_eq(p.lifesteal, 0.25, EPS)
+	assert_almost_eq(p.attack_speed_bonus, 0.3, EPS)
+	assert_almost_eq(p.lifesteal, 0.1, EPS)
 	assert_almost_eq(p.full_at_hp_ratio, 0.2, EPS, "teto a 20 % de HP")
 
 
@@ -60,7 +60,7 @@ func test_machados_gemeos() -> void:
 	var b := BERSERKER.basic_attack
 	assert_almost_eq(b.attack_range, 2.4, EPS)
 	assert_almost_eq(b.arc_degrees, 90.0, EPS)
-	assert_eq(b.cooldown, PackedFloat64Array([0.9]))
+	assert_eq(b.cooldown, PackedFloat64Array([1.0]))
 	assert_almost_eq(b.attack_ratio, 1.0, EPS)
 	assert_eq(b.max_rank, 1)
 
