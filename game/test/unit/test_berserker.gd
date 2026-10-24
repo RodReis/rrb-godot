@@ -85,7 +85,9 @@ func test_roubo_de_vida_soma_os_alvos_do_arco() -> void:
 	var before := b.hp
 	b.input.attack = true
 	_run(START, 2)
-	assert_eq(b.hp - before, BerserkerRules.lifesteal_heal(2 * BERSERKER_ATK, 1.0, FRENZY_LIFESTEAL))
+	assert_eq(
+		b.hp - before, BerserkerRules.lifesteal_heal(2 * BERSERKER_ATK, 1.0, FRENZY_LIFESTEAL)
+	)
 
 
 func test_errar_nao_cura() -> void:

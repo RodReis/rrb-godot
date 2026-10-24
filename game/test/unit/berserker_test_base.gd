@@ -88,7 +88,9 @@ func _hit_berserker(tick: int, slot: HitLedger.Slot, effect: HitEffect) -> void:
 
 
 func _interval_ticks(f: float) -> int:
-	var interval := BerserkerRules.attack_interval(_berserker.attributes.attack_interval, f, FRENZY_ATTACK_SPEED)
+	var interval := BerserkerRules.attack_interval(
+		_berserker.attributes.attack_interval, f, FRENZY_ATTACK_SPEED
+	)
 	return SkillRules.seconds_to_ticks(interval, 30)
 
 
