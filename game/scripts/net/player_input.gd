@@ -54,6 +54,9 @@ var _cancel_held: bool = false
 
 var _gamepad: bool = false
 var _last_stick_aim: Vector3 = Vector3.ZERO
+## Corpos que a mira do mouse pode apontar neste tick (#287); reusados a cada tick.
+var _aim_feet: PackedVector3Array = PackedVector3Array()
+var _aim_radii: PackedFloat32Array = PackedFloat32Array()
 
 
 func _input(event: InputEvent) -> void:
@@ -213,8 +216,27 @@ func _gather_mouse_aim() -> void:
 	var origin := camera.project_ray_origin(mouse)
 	var ray := camera.project_ray_normal(mouse)
 	var player := (get_parent() as Node3D).global_position
-	aim = AimMath.aim_on_ground(origin, ray, player)
-	aim_distance = AimMath.offset_on_ground(origin, ray, player).length()
+	_collect_aim_bodies(get_parent() as Hero)
+	var offset := AimMath.offset_at_cursor(origin, ray, player, _aim_feet, _aim_radii, PICK_HEIGHT)
+	aim = AimMath.direction(offset)
+	aim_distance = offset.length()
+
+
+## Corpos sob os quais o cursor mira o pe (#287): heroi ou monstro vivo e visivel para [param hero],
+## de qualquer time, menos ele. Raio do corpo sem PICK_MARGIN: so o corpo, sem ima.
+func _collect_aim_bodies(hero: Hero) -> void:
+	_aim_feet.clear()
+	_aim_radii.clear()
+	if hero == null:
+		return
+	for node: Node in get_tree().get_nodes_in_group(Combatant.TARGETS_GROUP):
+		var other := node as Combatant
+		if other == hero or not other.is_alive() or not other.is_shown():
+			continue
+		if not other.seen_by(hero):
+			continue
+		_aim_feet.append(other.global_position)
+		_aim_radii.append(other.body_radius())
 
 
 ## Mira do analogico direito; solto, mantem a ultima direcao.
